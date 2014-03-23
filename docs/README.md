@@ -1,0 +1,1 @@
+All docs (diagrams, user manuals, etc.) will reside in this folder.
