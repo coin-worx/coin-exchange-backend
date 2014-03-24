@@ -1,1 +1,0 @@
-All trades management and matching engine bounded context source code will reside in this directory.

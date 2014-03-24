@@ -17,6 +17,22 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinExchange.Trades.Port.Ad
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinExchange.Trades.Port.Adapter.Rest", "Trades\CoinExchange.Trades.Port.Adapter.Rest\CoinExchange.Trades.Port.Adapter.Rest.csproj", "{9F4DE37E-D668-4145-8C10-304B633E0AA0}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Funds", "Funds", "{EF805F06-A034-4CFF-9BD5-0EBC0CCA7879}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinExchange.Funds.Domain.Model", "Funds\CoinExchange.Funds.Domain.Model\CoinExchange.Funds.Domain.Model.csproj", "{4C4F167D-3339-45F1-9A85-71159EF0D806}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinExchange.Funds.Application", "Funds\CoinExchange.Funds.Application\CoinExchange.Funds.Application.csproj", "{F6EDD751-080B-4C4E-8216-2E1ED3ED0A66}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinExchange.Funds.Infrastructure.Common", "Funds\CoinExchange.Funds.Infrastructure.Common\CoinExchange.Funds.Infrastructure.Common.csproj", "{4ED67F1A-B775-4C35-A175-E1E316955E6D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinExchange.Funds.Infrastructure.Persistence.NHibernate", "Funds\CoinExchange.Funds.Infrastructure.Persistence.NHibernate\CoinExchange.Funds.Infrastructure.Persistence.NHibernate.csproj", "{4CBA757A-C25F-49BF-BD1D-693A98A7C175}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinExchange.Funds.Infrastructure.Services", "Funds\CoinExchange.Funds.Infrastructure.Services\CoinExchange.Funds.Infrastructure.Services.csproj", "{27301EBA-3E81-4091-B877-DA0BE0BAE158}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinExchange.Funds.Port.Adapter.Rest", "Funds\CoinExchange.Funds.Port.Adapter.Rest\CoinExchange.Funds.Port.Adapter.Rest.csproj", "{62D77A23-3F0F-4481-A7D7-773D63D9917A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinExchange.Funds.Port.Adapter.Messaging", "Funds\CoinExchange.Funds.Port.Adapter.Messaging\CoinExchange.Funds.Port.Adapter.Messaging.csproj", "{8DB1B3EB-5262-4208-ACC5-8ACF284C5977}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +67,34 @@ Global
 		{9F4DE37E-D668-4145-8C10-304B633E0AA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9F4DE37E-D668-4145-8C10-304B633E0AA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9F4DE37E-D668-4145-8C10-304B633E0AA0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C4F167D-3339-45F1-9A85-71159EF0D806}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C4F167D-3339-45F1-9A85-71159EF0D806}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C4F167D-3339-45F1-9A85-71159EF0D806}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C4F167D-3339-45F1-9A85-71159EF0D806}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6EDD751-080B-4C4E-8216-2E1ED3ED0A66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6EDD751-080B-4C4E-8216-2E1ED3ED0A66}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6EDD751-080B-4C4E-8216-2E1ED3ED0A66}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6EDD751-080B-4C4E-8216-2E1ED3ED0A66}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4ED67F1A-B775-4C35-A175-E1E316955E6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4ED67F1A-B775-4C35-A175-E1E316955E6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4ED67F1A-B775-4C35-A175-E1E316955E6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4ED67F1A-B775-4C35-A175-E1E316955E6D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4CBA757A-C25F-49BF-BD1D-693A98A7C175}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4CBA757A-C25F-49BF-BD1D-693A98A7C175}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4CBA757A-C25F-49BF-BD1D-693A98A7C175}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4CBA757A-C25F-49BF-BD1D-693A98A7C175}.Release|Any CPU.Build.0 = Release|Any CPU
+		{27301EBA-3E81-4091-B877-DA0BE0BAE158}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27301EBA-3E81-4091-B877-DA0BE0BAE158}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27301EBA-3E81-4091-B877-DA0BE0BAE158}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27301EBA-3E81-4091-B877-DA0BE0BAE158}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62D77A23-3F0F-4481-A7D7-773D63D9917A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62D77A23-3F0F-4481-A7D7-773D63D9917A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62D77A23-3F0F-4481-A7D7-773D63D9917A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62D77A23-3F0F-4481-A7D7-773D63D9917A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DB1B3EB-5262-4208-ACC5-8ACF284C5977}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DB1B3EB-5262-4208-ACC5-8ACF284C5977}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DB1B3EB-5262-4208-ACC5-8ACF284C5977}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DB1B3EB-5262-4208-ACC5-8ACF284C5977}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -63,5 +107,12 @@ Global
 		{2247DD67-1747-430F-B93F-C5538A6DDA1E} = {9073B567-EC56-4B9A-B6F3-38678F825A88}
 		{69F83B70-0759-4C16-A4C4-6D17D50F4256} = {9073B567-EC56-4B9A-B6F3-38678F825A88}
 		{9F4DE37E-D668-4145-8C10-304B633E0AA0} = {9073B567-EC56-4B9A-B6F3-38678F825A88}
+		{4C4F167D-3339-45F1-9A85-71159EF0D806} = {EF805F06-A034-4CFF-9BD5-0EBC0CCA7879}
+		{F6EDD751-080B-4C4E-8216-2E1ED3ED0A66} = {EF805F06-A034-4CFF-9BD5-0EBC0CCA7879}
+		{4ED67F1A-B775-4C35-A175-E1E316955E6D} = {EF805F06-A034-4CFF-9BD5-0EBC0CCA7879}
+		{4CBA757A-C25F-49BF-BD1D-693A98A7C175} = {EF805F06-A034-4CFF-9BD5-0EBC0CCA7879}
+		{27301EBA-3E81-4091-B877-DA0BE0BAE158} = {EF805F06-A034-4CFF-9BD5-0EBC0CCA7879}
+		{62D77A23-3F0F-4481-A7D7-773D63D9917A} = {EF805F06-A034-4CFF-9BD5-0EBC0CCA7879}
+		{8DB1B3EB-5262-4208-ACC5-8ACF284C5977} = {EF805F06-A034-4CFF-9BD5-0EBC0CCA7879}
 	EndGlobalSection
 EndGlobal
