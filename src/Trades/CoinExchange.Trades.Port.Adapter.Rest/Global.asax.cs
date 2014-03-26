@@ -11,6 +11,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest
     {
         protected void Application_Start()
         {
+            //Enable attribute routing
             GlobalConfiguration.Configure(WebApiConfig.Register);
         }
     }
