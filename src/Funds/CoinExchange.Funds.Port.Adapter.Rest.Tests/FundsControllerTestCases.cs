@@ -24,8 +24,8 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Tests
         [Test]
         public void GetTradeBalanceTestCase()
         {
-            FundsController privateController = new FundsController();
-            IHttpActionResult httpActionResult = privateController.GetBalance(1);
+            FundsController fundsController = new FundsController();
+            IHttpActionResult httpActionResult = fundsController.PostBalance(new TraderId(1));
 
             // The result is and should be returned as IHttpActionResult, which contains content as well as response codes for
             // Http response messages sent to the client.  If it is not null, menas the request was successful
@@ -44,8 +44,12 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Tests
         [Test]
         public void GetLedgersInfoTestCase()
         {
-            FundsController privateController = new FundsController();
-            IHttpActionResult httpActionResult = privateController.GetLedger();
+            FundsController fundsController = new FundsController();
+            IHttpActionResult httpActionResult = fundsController.PostLedger(new TraderId(2), new LedgerInfoRequest()
+                                                                                                 {
+                                                                                                     AssetClass = "Currency",
+                                                                                                     Asset = "XBT"
+                                                                                                 });
 
             // The result is and should be returned as IHttpActionResult, which contains content as well as response codes for
             // Http response messages sent to the client.  If it is not null, menas the request was successful

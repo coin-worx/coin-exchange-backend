@@ -32,12 +32,13 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Controllers
         /// Returns the Account balance for a number of currencies for a particular user
         /// </summary>
         /// <returns></returns>
-        [Route("private/accountbalance/{userId:int}/{assetName?}/{assetClass?}")]
-        public IHttpActionResult GetBalance(int userId, string assetName = null, string assetClass = null)
+        [Route("private/balance")]
+        [HttpPost]
+        public IHttpActionResult PostBalance([FromBody]TraderId traderId, string assetClass = null, string asset = null)
         {
             try
             {
-                AccountBalance[] accountBalances = _privateRepository.GetAccBalance(assetName, assetClass);
+                AccountBalance[] accountBalances = _privateRepository.GetAccBalance();
 
                 if (accountBalances != null)
                 {
@@ -52,11 +53,13 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Controllers
         }
 
         /// <summary>
-        /// Returns the Ledger Info for all the Ledgers
+        /// Returns the queried Ledger Info for all or the specified ledger for the given Trader
         /// </summary>
         /// <returns></returns>
         [Route("private/ledgerinfo")]
-        public IHttpActionResult GetLedger()
+        [HttpPost]
+        // ToDo: Need to verify this call by sending data from URL
+        public IHttpActionResult PostLedger([FromBody]TraderId traderId, [FromBody]LedgerInfoRequest ledger)
         {
             try
             {
