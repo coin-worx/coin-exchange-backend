@@ -1,26 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using CoinExchange.Trades.Port.Adapter.Rest.Models;
+﻿using CoinExchange.Funds.Domain.Model;
 
 /*
  * Author: Waqas
  * Comany: Aurora Solutions
 */
 
-namespace CoinExchange.Trades.Port.Adapter.Rest.Services
+namespace CoinExchange.Funds.Port.Adapter.Rest.Services
 {
     /// <summary>
     /// A Service to serve requests considered private, like information regarding a user, portfolio, trades
     /// </summary>
-    public class PrivateRepository
+    public class FundsRepository
     {
         /// <summary>
         /// Returns the Account Balance for all the currencies associated to a User
         /// </summary>
         /// <returns></returns>
-        public AccountBalance[] GetAccBalance()
+        public AccountBalance[] GetAccBalance(string assetName = null, string assetClass = null)
         {
             return new AccountBalance[]
                        {

@@ -1,47 +1,43 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
-using CoinExchange.Trades.Port.Adapter.Rest.Models;
-using CoinExchange.Trades.Port.Adapter.Rest.Services;
+using CoinExchange.Funds.Domain.Model;
+using CoinExchange.Funds.Port.Adapter.Rest.Services;
 
 /*
  * Author: Waqas
  * Comany: Aurora Solutions
  */
 
-namespace CoinExchange.Trades.Port.Adapter.Rest.Controllers
+namespace CoinExchange.Funds.Port.Adapter.Rest.Controllers
 {
     /// <summary>
     /// Serves the requests that need a command to get fetched, like the data for a particular user, portfolio or balance details
     /// </summary>
-    public class PrivateController : ApiController
+    public class FundsController : ApiController
     {
         /// <summary>
         /// Gives access to the service responsible for carrying out operations for the Private Controller
         /// </summary>
-        private PrivateRepository _privateRepository;
+        private FundsRepository _privateRepository;
 
         /// <summary>
         /// Default Constructor
         /// </summary>
-        public PrivateController()
+        public FundsController()
         {
-            _privateRepository = new PrivateRepository();
+            _privateRepository = new FundsRepository();
         }
 
         /// <summary>
         /// Returns the Account balance for a number of currencies for a particular user
         /// </summary>
         /// <returns></returns>
-        [Route("private/accountbalance")]
-        public IHttpActionResult GetBalance()
+        [Route("private/accountbalance/{userId:int}/{assetName?}/{assetClass?}")]
+        public IHttpActionResult GetBalance(int userId, string assetName = null, string assetClass = null)
         {
             try
             {
-                AccountBalance[] accountBalances = _privateRepository.GetAccBalance();
+                AccountBalance[] accountBalances = _privateRepository.GetAccBalance(assetName, assetClass);
 
                 if (accountBalances != null)
                 {

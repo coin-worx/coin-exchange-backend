@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Web.Http;
 using System.Linq;
-using System.Web.Http;
 
-namespace CoinExchange.Funds.Port.Adapter.Rest
+namespace CoinExchange.Funds.Port.Adapter.Rest.App_Start
 {
     public static class WebApiConfig
     {

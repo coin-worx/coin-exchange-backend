@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{4C4F167D-3339-45F1-9A85-71159EF0D806}</ProjectGuid>
+    <ProjectGuid>{62991061-98B4-4213-8EB2-BC89183BBEFD}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CoinExchange.Funds.Domain.Model</RootNamespace>
-    <AssemblyName>CoinExchange.Funds.Domain.Model</AssemblyName>
+    <RootNamespace>CoinExchange.Funds.Application.Tests</RootNamespace>
+    <AssemblyName>CoinExchange.Funds.Application.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -39,8 +39,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AccountBalance.cs" />
-    <Compile Include="LedgerInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
