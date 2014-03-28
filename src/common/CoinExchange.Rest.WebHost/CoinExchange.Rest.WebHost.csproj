@@ -79,7 +79,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\FundsController.cs" />
     <Compile Include="Controllers\MarketDataRequestController.cs" />
+    <Compile Include="Controllers\TradesRequestController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -99,6 +101,14 @@
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Funds\CoinExchange.Funds.Domain.Model\CoinExchange.Funds.Domain.Model.csproj">
+      <Project>{4c4f167d-3339-45f1-9a85-71159ef0d806}</Project>
+      <Name>CoinExchange.Funds.Domain.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Funds\CoinExchange.Funds.Port.Adapter.RestService\CoinExchange.Funds.Port.Adapter.RestService.csproj">
+      <Project>{8f5b324f-7cb5-4286-a700-ff118d714845}</Project>
+      <Name>CoinExchange.Funds.Port.Adapter.RestService</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Trades\CoinExchange.Trades.Domain.Model\CoinExchange.Trades.Domain.Model.csproj">
       <Project>{32ac3710-adf8-4522-8f06-1f9c7a45e6e7}</Project>
       <Name>CoinExchange.Trades.Domain.Model</Name>
@@ -106,6 +116,10 @@
     <ProjectReference Include="..\..\Trades\CoinExchange.Trades.Port.Adapter.RestService\CoinExchange.Trades.Port.Adapter.RestService.csproj">
       <Project>{589924fb-d1ff-4970-894b-daad528d5498}</Project>
       <Name>CoinExchange.Trades.Port.Adapter.RestService</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CoinExchange.Common\CoinExchange.Common.csproj">
+      <Project>{d61dbd04-95dc-4eb1-ad54-1ff929ac2814}</Project>
+      <Name>CoinExchange.Common</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

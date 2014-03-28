@@ -3,17 +3,15 @@
  * Comany: Aurora Solutions
  */
 
-using System.Collections.Generic;
 using System.Web.Http;
 using System.Web.Http.Results;
-using CoinExchange.Funds.Domain.Model;
 using CoinExchange.Funds.Domain.Model.Entities;
 using CoinExchange.Funds.Domain.Model.VOs;
-using CoinExchange.Funds.Port.Adapter.Rest.Controllers;
+using CoinExchange.Rest.WebHost.Controllers;
 using NUnit.Framework;
 using System.Linq;
 
-namespace CoinExchange.Funds.Port.Adapter.Rest.IntegrationTests
+namespace CoinExchange.Rest.WebHost.Tests
 {
     /// <summary>
     /// Contians test cases for 'PrivateController'

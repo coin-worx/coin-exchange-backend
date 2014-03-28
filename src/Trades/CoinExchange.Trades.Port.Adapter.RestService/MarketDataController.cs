@@ -1,14 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
-using CoinExchange.Funds.Domain.Model.VOs;
-using CoinExchange.Trades.Domain.Model.Entities;
 using CoinExchange.Trades.Infrastructure.Services.Services;
 
-namespace CoinExchange.Trades.Port.Adapter.Rest.Controllers
+namespace CoinExchange.Trades.Port.Adapter.RestService
 {
     /// <summary>
     /// Serves the RESTful calls related to Market Data
@@ -34,7 +29,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Controllers
         /// 3. userRefId: Restrict results to given user reference id (optional)
         /// </summary>
         /// <returns></returns>
-        [Route("marketdata/orderbook")]
+        //[Route("marketdata/orderbook")]
         [HttpGet]
         public IHttpActionResult OpenOrderList(string currencyPair, int count = 0)
         {

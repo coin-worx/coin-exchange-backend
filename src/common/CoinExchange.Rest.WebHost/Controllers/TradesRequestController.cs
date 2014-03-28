@@ -6,19 +6,15 @@ using System.Net.Http;
 using System.Web.Http;
 using CoinExchange.Funds.Domain.Model.VOs;
 using CoinExchange.Trades.Domain.Model.Entities;
-using CoinExchange.Trades.Infrastructure.Services.Services;
+using CoinExchange.Trades.Port.Adapter.RestService;
 
-namespace CoinExchange.Trades.Port.Adapter.Rest.Controllers
+namespace CoinExchange.Rest.WebHost.Controllers
 {
-    public class TradesController : ApiController
+    /// <summary>
+    /// Controller to serve requests related to Trades
+    /// </summary>
+    public class TradesRequestController : ApiController
     {
-        private TradesService _tradesService;
-
-        public TradesController()
-        {
-            _tradesService = new TradesService();
-        }
-
         /// <summary>
         /// Returns orders that have not been executed but those that have been accepted on the server. Exception can be 
         /// provided in the second parameter
@@ -36,7 +32,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Controllers
             {
                 // ToDo: In the next sprint related to business logic behind RESTful calls, need to split the ledgersIds comma
                 // separated list
-                List<Order> openOrderList = _tradesService.GetOpenOrders();
+                List<Order> openOrderList = new TradesRestService().OpenOrderList(traderId, includeTrades, userRefId);
 
                 if (openOrderList != null)
                 {
@@ -60,12 +56,13 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Controllers
         /// <returns></returns>
         [Route("trades/closedorders")]
         [HttpPost]
-        public IHttpActionResult GetClosedOrders([FromBody]TraderId traderId, bool includeTrades = false, string userRefId = "", 
+        public IHttpActionResult GetClosedOrders([FromBody]TraderId traderId, bool includeTrades = false, string userRefId = "",
             string startTime = "", string endTime = "", string offset = "", string closetime = "both")
         {
             try
             {
-                List<Order> closedOrders = _tradesService.GetClosedOrders();
+                List<Order> closedOrders = new TradesRestService().GetClosedOrders(traderId, includeTrades, userRefId,
+                    startTime, endTime, offset, closetime);
 
                 if (closedOrders != null)
                 {
@@ -88,14 +85,14 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Controllers
         /// <param name="end">Ending unix timestamp or trade tx id of results (optional.  inclusive)</param>
         /// </summary>
         /// <returns></returns>
-        [Route("trades/tradesHistory")]
+        [Route("trades/tradehistory")]
         [HttpPost]
-        public IHttpActionResult GetTradeHistory([FromBody]TraderId traderId, string offset = "", string type = "all", 
+        public IHttpActionResult GetTradeHistory(TraderId traderId, string offset = "", string type = "all",
             bool trades = false, string start = "", string end = "")
         {
             try
             {
-                List<Order> closedOrders = _tradesService.GetTradesHistory();
+                List<Order> closedOrders = new TradesRestService().GetTradeHistory(traderId, offset, type, trades, start, end);
 
                 if (closedOrders != null)
                 {
@@ -122,7 +119,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Controllers
         {
             try
             {
-                List<Order> trades = _tradesService.GetTradesHistory();
+                List<Order> trades = new TradesRestService().FetchQueryTrades(traderId, txId, includeTrades);
 
                 if (trades != null)
                 {
@@ -149,7 +146,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Controllers
         {
             try
             {
-                List<Order> trades = _tradesService.GetTradesHistory();
+                List<Order> trades = new TradesRestService().TradeBalance(traderId, txId, includeTrades);
 
                 if (trades != null)
                 {

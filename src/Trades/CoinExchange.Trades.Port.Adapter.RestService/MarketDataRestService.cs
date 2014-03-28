@@ -4,14 +4,25 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CoinExchange.Trades.Domain.Model.VOs;
+using CoinExchange.Trades.Infrastructure.Services.Services;
 
 namespace CoinExchange.Trades.Port.Adapter.RestService
 {
     /// <summary>
     /// Market Data Service class rest expose
     /// </summary>
-    public class MarketDataService
+    public class MarketDataRestService
     {
+        private MarketDataService _marketDataService = null;
+
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        public MarketDataRestService()
+        {
+            _marketDataService = new MarketDataService();
+        }
+
         /// <summary>
         /// Get ticker info
         /// </summary>
@@ -62,6 +73,20 @@ namespace CoinExchange.Trades.Port.Adapter.RestService
             info.PairName = pair;
             info.Last = 102200;
             return info;
+        }
+
+        /// <summary>
+        /// Returns orders that have not been executed but those that have been accepted on the server. Exception can be 
+        /// provided in the second parameter
+        /// Params:
+        /// 1. TraderId(ValueObject)[FromBody]: Contains an Id of the trader, used for authentication of the trader
+        /// 2. includeTrades(bool): Include trades as well in the response(optional)
+        /// 3. userRefId: Restrict results to given user reference id (optional)
+        /// </summary>
+        /// <returns></returns>
+        public List<object> OpenOrderList(string currencyPair, int count = 0)
+        {
+            return _marketDataService.GetOrderBook(currencyPair);
         }
     }
 }

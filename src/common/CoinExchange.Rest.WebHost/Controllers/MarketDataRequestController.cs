@@ -20,7 +20,7 @@ namespace CoinExchange.Rest.WebHost.Controllers
         {
             try
             {
-                return Ok(new MarketDataService().GetTickerInfo(pair));
+                return Ok(new MarketDataRestService().GetTickerInfo(pair));
                 
             }
             catch (Exception ex)
@@ -36,7 +36,7 @@ namespace CoinExchange.Rest.WebHost.Controllers
         {
             try
             {
-                return Ok(new MarketDataService().GetOhlcInfo(pair,interval,since));
+                return Ok(new MarketDataRestService().GetOhlcInfo(pair,interval,since));
 
             }
             catch (Exception ex)
@@ -46,19 +46,32 @@ namespace CoinExchange.Rest.WebHost.Controllers
 
         }
 
-        // POST api/<controller>
-        public void Post([FromBody]string value)
+        /// <summary>
+        /// Returns orders that have not been executed but those that have been accepted on the server. Exception can be 
+        /// provided in the second parameter
+        /// Params:
+        /// 1. TraderId(ValueObject)[FromBody]: Contains an Id of the trader, used for authentication of the trader
+        /// 2. includeTrades(bool): Include trades as well in the response(optional)
+        /// 3. userRefId: Restrict results to given user reference id (optional)
+        /// </summary>
+        /// <returns></returns>
+        [Route("marketdata/orderbook")]
+        [HttpGet]
+        public IHttpActionResult OpenOrderList(string currencyPair, int count = 0)
         {
-        }
-
-        // PUT api/<controller>/5
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        // DELETE api/<controller>/5
-        public void Delete(int id)
-        {
+            try
+            {
+                List<object> list = new MarketDataRestService().OpenOrderList(currencyPair);
+                if (list != null)
+                {
+                    return Ok<List<object>>(list);
+                }
+                return NotFound();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
     }
 }

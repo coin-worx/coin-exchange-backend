@@ -1,36 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Web.Http;
-using CoinExchange.Funds.Domain.Model;
 using CoinExchange.Funds.Domain.Model.Entities;
 using CoinExchange.Funds.Domain.Model.VOs;
-using CoinExchange.Funds.Infrastructure.Services;
+using CoinExchange.Funds.Port.Adapter.RestService;
 
 /*
  * Author: Waqas
  * Comany: Aurora Solutions
  */
 
-namespace CoinExchange.Funds.Port.Adapter.Rest.Controllers
+namespace CoinExchange.Rest.WebHost.Controllers
 {
     /// <summary>
     /// Serves the requests that need a command to get fetched, like the data for a particular user, portfolio or balance details
     /// </summary>
     public class FundsController : ApiController
     {
-        /// <summary>
-        /// Gives access to the service responsible for carrying out operations for the Private Controller
-        /// </summary>
-        private FundsService _fundsRepository;
-
-        /// <summary>
-        /// Default Constructor
-        /// </summary>
-        public FundsController()
-        {
-            _fundsRepository = new FundsService();
-        }
-
         /// <summary>
         /// Returns the Account balance for a number of currencies for a particular user
         /// Params:
@@ -45,7 +30,7 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Controllers
         {
             try
             {
-                AccountBalance[] accountBalances = _fundsRepository.GetAccountBalance();
+                AccountBalance[] accountBalances = new FundsRestService().AccountBalance(traderId, assetClass, asset);
 
                 if (accountBalances != null)
                 {
@@ -73,7 +58,7 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Controllers
         {
             try
             {
-                TradeBalance tradebalance = _fundsRepository.GetTradeBalance();
+                TradeBalance tradebalance = new FundsRestService().TradeBalance(traderId, assetClass, asset);
 
                 if (tradebalance != null)
                 {
@@ -100,7 +85,7 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Controllers
         {
             try
             {
-                LedgerInfo[] ledgers = _fundsRepository.GetLedgers();
+                LedgerInfo[] ledgers = new FundsRestService().LedgerInfo(traderId, ledger);
 
                 if (ledgers != null)
                 {
@@ -130,7 +115,7 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Controllers
             {
                 // ToDo: In the next sprint related to business logc behind RESTful calls, need to split the ledgersIds comma
                 // separated list
-                LedgerInfo[] ledgers = _fundsRepository.GetLedgers();
+                LedgerInfo[] ledgers = new FundsRestService().FetchLedgers(traderId, ledgerIds);
 
                 if (ledgers != null)
                 {
