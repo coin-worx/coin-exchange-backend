@@ -3,7 +3,7 @@
  * Comany: Aurora Solutions
  */
 
-namespace CoinExchange.Funds.Domain.Model
+namespace CoinExchange.Funds.Domain.Model.Entities
 {
     /// <summary>
     /// Contains Ledger Info

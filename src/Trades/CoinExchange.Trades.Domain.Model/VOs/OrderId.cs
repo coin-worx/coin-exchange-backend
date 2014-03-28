@@ -1,20 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-/*
+﻿/*
  * Author: Waqas
  * Comany: Aurora Solutions
  */
 
-namespace CoinExchange.Funds.Domain.Model
+namespace CoinExchange.Trades.Domain.Model.VOs
 {
     /// <summary>
-    /// Value Object that represents the internal TraderId associated with a trader
+    /// Represents the ID for an order. ValueObject
     /// </summary>
-    public class TraderId
+    public class OrderId
     {
         private readonly int _id;
 
@@ -22,13 +16,13 @@ namespace CoinExchange.Funds.Domain.Model
         /// Default Constructor
         /// </summary>
         /// <param name="id"></param>
-        public TraderId(int id)
+        public OrderId(int id)
         {
             _id = id;
         }
 
         /// <summary>
-        /// The ID of the Trader
+        /// The ID of the Order
         /// </summary>
         public int Id { get { return _id; } }
     }

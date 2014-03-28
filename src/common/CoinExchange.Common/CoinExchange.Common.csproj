@@ -37,6 +37,7 @@
     <Compile Include="Domain.Model\HashCodeHelper.cs" />
     <Compile Include="Domain.Model\Identity.cs" />
     <Compile Include="Domain.Model\IIdentity.cs" />
+    <Compile Include="Domain.Model\TraderId.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
