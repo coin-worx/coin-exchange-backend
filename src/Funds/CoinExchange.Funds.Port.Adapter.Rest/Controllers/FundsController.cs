@@ -45,11 +45,39 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Controllers
         {
             try
             {
-                AccountBalance[] accountBalances = _fundsRepository.GetAccBalance();
+                AccountBalance[] accountBalances = _fundsRepository.GetAccountBalance();
 
                 if (accountBalances != null)
                 {
                     return Ok<AccountBalance[]>(accountBalances);
+                }
+                return NotFound();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        /// <summary>
+        /// Returns the Trade balance for a number of currencies for a particular user
+        /// Params:
+        /// 1. TraderId(ValueObject)[FromBody] : Contains an Id of the trader, used for authentication of the trader(required)
+        /// 2. AssetClass(string): e.g., currency (optional)
+        /// 3. asset(string): e.g., LTC (optional)
+        /// </summary>
+        /// <returns></returns>
+        [Route("funds/tradebalance")]
+        [HttpPost]
+        public IHttpActionResult TradeBalance([FromBody]TraderId traderId, string assetClass = null, string asset = null)
+        {
+            try
+            {
+                TradeBalance tradebalance = _fundsRepository.GetTradeBalance();
+
+                if (tradebalance != null)
+                {
+                    return Ok<TradeBalance>(tradebalance);
                 }
                 return NotFound();
             }

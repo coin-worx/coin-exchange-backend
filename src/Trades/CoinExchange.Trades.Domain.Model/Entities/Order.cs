@@ -37,14 +37,14 @@ namespace CoinExchange.Trades.Domain.Model.Entities
         }
 
         /// <summary>
-        /// Immutable ID for this order
-        /// </summary>
-        public OrderId OrderId { get { return _orderId; } }
-
-        /// <summary>
         /// Comma delimited list of transaction ids for order
         /// </summary>
         public string TxId { get; set; }
+
+        /// <summary>
+        /// Immutable ID for this order
+        /// </summary>
+        public OrderId OrderId { get { return _orderId; } }
 
         /// <summary>
         /// Expiration time. Optional
@@ -130,7 +130,7 @@ namespace CoinExchange.Trades.Domain.Model.Entities
         /// <summary>
         /// Timestamp of when order was placed
         /// </summary>
-        public string OpenTime { get; set; }
+        public DateTime OpenTime { get; set; }
 
         /// <summary>
         /// Timestamp of when order was closed
@@ -176,5 +176,20 @@ namespace CoinExchange.Trades.Domain.Model.Entities
         /// Comma delimited list of trade ids related to order 
         /// </summary>
         public string Trades { get; set; }
+
+        /// <summary>
+        /// In case of Open order, the opening time
+        /// </summary>
+        public string Opened { get; set; }
+
+        /// <summary>
+        /// The time when the order closed
+        /// </summary>
+        public string Closed { get; set; }
+
+        /// <summary>
+        /// The time when order executed
+        /// </summary>
+        public string Executed { get; set; }
     }
 }

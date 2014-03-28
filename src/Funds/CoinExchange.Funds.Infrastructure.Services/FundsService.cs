@@ -18,7 +18,7 @@ namespace CoinExchange.Funds.Infrastructure.Services
         /// Returns the Account Balance for all the currencies associated to a User
         /// </summary>
         /// <returns></returns>
-        public AccountBalance[] GetAccBalance(string assetName = null, string assetClass = null)
+        public AccountBalance[] GetAccountBalance(string assetName = null, string assetClass = null)
         {
             return new AccountBalance[]
                        {
@@ -47,6 +47,19 @@ namespace CoinExchange.Funds.Infrastructure.Services
                                     AssetName = "EUR",
                                     Balance = 968462500
                                }
+                       };
+        }
+
+        /// <summary>
+        /// Returns the Trade Balance for all the currencies associated to a User
+        /// </summary>
+        /// <returns></returns>
+        public TradeBalance GetTradeBalance(string assetName = null, string assetClass = null)
+        {
+            return new TradeBalance()
+                       {
+                           Asset = "XBT",
+                           Balance = (decimal) 234515000.8745
                        };
         }
 

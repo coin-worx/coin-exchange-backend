@@ -42,6 +42,7 @@
     <Compile Include="Entities\AccountBalance.cs" />
     <Compile Include="Entities\LedgerInfo.cs" />
     <Compile Include="Entities\LedgerInfoRequest.cs" />
+    <Compile Include="Entities\TradeBalance.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
