@@ -43,11 +43,20 @@
     <Compile Include="Enums\OrderStatus.cs" />
     <Compile Include="Enums\OrderType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VOs\AssetFee.cs" />
+    <Compile Include="VOs\CancelOrderRequest.cs" />
+    <Compile Include="VOs\CancelOrderResponse.cs" />
+    <Compile Include="VOs\Fees.cs" />
     <Compile Include="VOs\MarketData.cs" />
-    <Compile Include="VOs\OhlcData.cs" />
+    <Compile Include="VOs\OhlcValues.cs" />
     <Compile Include="VOs\OhlcInfo.cs" />
     <Compile Include="VOs\OrderId.cs" />
     <Compile Include="VOs\Pair.cs" />
+    <Compile Include="VOs\TradeableAsset.cs" />
+    <Compile Include="VOs\TradeEntries.cs" />
+    <Compile Include="VOs\TradeInfo.cs" />
+    <Compile Include="VOs\TradeVolumeRequest.cs" />
+    <Compile Include="VOs\TradeVolumeResponse.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

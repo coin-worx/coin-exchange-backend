@@ -4,8 +4,10 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Results;
 using CoinExchange.Funds.Domain.Model.VOs;
 using CoinExchange.Trades.Domain.Model.Entities;
+using CoinExchange.Trades.Domain.Model.VOs;
 using CoinExchange.Trades.Port.Adapter.RestService;
 
 namespace CoinExchange.Rest.WebHost.Controllers
@@ -153,6 +155,104 @@ namespace CoinExchange.Rest.WebHost.Controllers
                     return Ok<List<Order>>(trades);
                 }
                 return NotFound();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        /// <summary>
+        /// Public call to get recent trades
+        /// </summary>
+        /// <param name="pair"></param>
+        /// <param name="since"></param>
+        /// <returns></returns>
+        [Route("trades/recenttrades")]
+        [HttpGet]
+        public IHttpActionResult RecentTrades(string pair, string since="")
+        {
+            try
+            {
+                return Ok(new TradesRestService().GetRecentTrades(pair, since));
+
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+            
+        }
+
+        /// <summary>
+        /// private call to cancel user orders
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("trades/CancelOrder")]
+        [HttpPost]
+        public IHttpActionResult CancelOrder([FromBody]CancelOrderRequest request)
+        {
+            try
+            {
+                if (request != null)
+                {
+                    if (request.TraderId.Equals(string.Empty) || request.TxId.Equals(string.Empty))
+                    {
+                        return BadRequest();
+                    }
+                    return Ok(new TradesRestService().CancelOrder(request));
+                }
+                return BadRequest();
+
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        /// <summary>
+        /// private call to request trade volume
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("trades/TradeVolume")]
+        [HttpPost]
+        public IHttpActionResult TradeVolume([FromBody] TradeVolumeRequest request)
+        {
+            try
+            {
+                if (request != null)
+                {
+                    if (request.TraderId.Equals(string.Empty) || request.Pair.Equals(string.Empty))
+                    {
+                        return BadRequest();
+                    }
+                    return Ok(new TradesRestService().TradeVolume(request));
+                }
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+            
+        }
+
+        /// <summary>
+        /// Public call to get tradeable asset info
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="pair"></param>
+        /// <returns></returns>
+        [Route("trades/AssetPairs")]
+        [HttpGet]
+        public IHttpActionResult TradeableAssetPair(string info = "", string pair = "")
+        {
+            try
+            {
+                return Ok(new TradesRestService().TradeabelAssetPair(info, pair));
             }
             catch (Exception ex)
             {

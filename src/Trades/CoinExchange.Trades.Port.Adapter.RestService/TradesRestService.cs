@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Web.Http;
 using CoinExchange.Funds.Domain.Model.VOs;
 using CoinExchange.Trades.Domain.Model.Entities;
+using CoinExchange.Trades.Domain.Model.VOs;
 using CoinExchange.Trades.Infrastructure.Services.Services;
 
 namespace CoinExchange.Trades.Port.Adapter.RestService
@@ -86,6 +87,65 @@ namespace CoinExchange.Trades.Port.Adapter.RestService
         public List<Order> TradeBalance([FromBody]TraderId traderId, string txId = "", bool includeTrades = false)
         {
             return _tradesService.GetTradesHistory();
+        }
+
+        /// <summary>
+        /// Recent trades info
+        /// </summary>
+        /// <param name="pair"></param>
+        /// <param name="since"></param>
+        /// <returns></returns>
+        public TradeInfo GetRecentTrades(string pair, string since)
+        {
+            List<TradeEntries> list = new List<TradeEntries>();
+            TradeEntries entries = new TradeEntries(123.33m, 200, "Buy", "Limit", "", DateTime.UtcNow.ToString());
+            for (int i = 0; i < 5; i++)
+            {
+                list.Add(entries);
+            }
+            TradeInfo tradeInfo=new TradeInfo("234",list,pair);
+            return tradeInfo;
+
+        }
+
+        /// <summary>
+        /// Cancel the order of user
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public CancelOrderResponse CancelOrder(CancelOrderRequest request)
+        {
+            return new CancelOrderResponse(true,2);
+            
+        }
+
+        /// <summary>
+        /// Trade volum request handler
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public TradeVolumeResponse TradeVolume(TradeVolumeRequest request)
+        {
+            Fees fees = new Fees(100m, 234m, 34.5m, 25.5m, 23.5m, 0.005m);
+            TradeVolumeResponse response=new TradeVolumeResponse(fees,1000,"ZUSD");
+            return response;
+        }
+
+        public List<TradeableAsset> TradeabelAssetPair(string info, string pair)
+        {
+            AssetFee fee=new AssetFee(0.002m,100);
+            List<AssetFee> fees=new List<AssetFee>();
+            for (int i = 0; i < 10; i++)
+            {
+                fees.Add(fee);
+            }
+            TradeableAsset asset=new TradeableAsset(10,10,"USD",fees,null,10,2,2,"Unit","XXDG","currency","currency","LTCXDG");
+            List<TradeableAsset> assets=new List<TradeableAsset>();
+            for (int i = 0; i < 10; i++)
+            {
+                assets.Add(asset);
+            }
+            return assets;
         }
     }
 }

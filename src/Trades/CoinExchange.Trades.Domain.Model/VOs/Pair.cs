@@ -12,15 +12,29 @@ namespace CoinExchange.Trades.Domain.Model.VOs
     /// </summary>
     public class Pair
     {
-        public string PairName { get; set; }
-        public MarketData Ask { get; set; }
-        public MarketData Bid { get; set; }
-        public MarketData Last { get; set; }
-        public decimal[] Volume=new decimal[2];
-        public decimal[] WeightedVolumeAverage = new decimal[2];
-        public int[] NumberOfTrades = new int[2];
-        public decimal[] Low = new decimal[2];
-        public decimal[] High = new decimal[2];
-        public decimal OpeningPrice { get; set; }
+        public Pair(string pairName, MarketData ask, MarketData bid, MarketData last, decimal[] volume, decimal[] weightedVolumeAverage, int[] numberOfTrades, decimal[] low, decimal[] high, decimal openingPrice)
+        {
+            PairName = pairName;
+            Ask = ask;
+            Bid = bid;
+            Last = last;
+            Volume = volume;
+            WeightedVolumeAverage = weightedVolumeAverage;
+            NumberOfTrades = numberOfTrades;
+            Low = low;
+            High = high;
+            OpeningPrice = openingPrice;
+        }
+
+        public string PairName { get; private set; }
+        public MarketData Ask { get; private set; }
+        public MarketData Bid { get; private set; }
+        public MarketData Last { get; private set; }
+        public decimal[] Volume { get; private set; }
+        public decimal[] WeightedVolumeAverage { get; private set; }
+        public int[] NumberOfTrades { get; private set; }
+        public decimal[] Low { get; private set; }
+        public decimal[] High { get; private set; }
+        public decimal OpeningPrice { get;private set; }
     }
 }
