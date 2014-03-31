@@ -1,21 +1,17 @@
-﻿/*
- * Author: Waqas
- * Comany: Aurora Solutions
- */
-
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Results;
 using CoinExchange.Funds.Domain.Model.Entities;
 using CoinExchange.Funds.Domain.Model.VOs;
-using CoinExchange.Rest.WebHost.Controllers;
+using CoinExchange.Funds.Port.Adapter.Rest.Controllers;
 using NUnit.Framework;
-using System.Linq;
 
-namespace CoinExchange.Rest.WebHost.Tests
+namespace CoinExchange.Funds.Port.Adapter.Rest.IntegrationTests
 {
-    /// <summary>
-    /// Contians test cases for 'PrivateController'
-    /// </summary>
     [TestFixture]
     class FundsControllerTestCases
     {
@@ -25,15 +21,15 @@ namespace CoinExchange.Rest.WebHost.Tests
         [Test]
         public void GetTradeBalanceTestCase()
         {
-            FundsController fundsController = new FundsController();
+            FundsResource fundsController = new FundsResource();
             IHttpActionResult httpActionResult = fundsController.AccountBalance(new TraderId(1));
 
             // The result is and should be returned as IHttpActionResult, which contains content as well as response codes for
             // Http response messages sent to the client.  If it is not null, menas the request was successful
             Assert.IsNotNull(httpActionResult);
-            Assert.AreEqual(httpActionResult.GetType(), typeof (OkNegotiatedContentResult<AccountBalance[]>));
+            Assert.AreEqual(httpActionResult.GetType(), typeof(OkNegotiatedContentResult<AccountBalance[]>));
             OkNegotiatedContentResult<AccountBalance[]> okResponseMessage = (OkNegotiatedContentResult<AccountBalance[]>)httpActionResult;
-            
+
             // If the response message contains content and its count is greater than 0, our test is successful
             Assert.IsNotNull(okResponseMessage.Content);
             Assert.GreaterOrEqual(okResponseMessage.Content.Count(), 1, "Count of the contents in the OK response message");
@@ -45,12 +41,12 @@ namespace CoinExchange.Rest.WebHost.Tests
         [Test]
         public void GetLedgersInfoTestCase()
         {
-            FundsController fundsController = new FundsController();
+            FundsResource fundsController = new FundsResource();
             IHttpActionResult httpActionResult = fundsController.LedgerInfo(new TraderId(2), new LedgerInfoRequest()
-                                                                                                 {
-                                                                                                     AssetClass = "Currency",
-                                                                                                     Asset = "XBT"
-                                                                                                 });
+            {
+                AssetClass = "Currency",
+                Asset = "XBT"
+            });
 
             // The result is and should be returned as IHttpActionResult, which contains content as well as response codes for
             // Http response messages sent to the client.  If it is not null, menas the request was successful
@@ -69,7 +65,7 @@ namespace CoinExchange.Rest.WebHost.Tests
         [Test]
         public void FetchLedgersTestCase()
         {
-            FundsController fundsController = new FundsController();
+            FundsResource fundsController = new FundsResource();
             IHttpActionResult httpActionResult = fundsController.FetchLedgers(new TraderId(2), "1");
 
             // The result is and should be returned as IHttpActionResult, which contains content as well as response codes for

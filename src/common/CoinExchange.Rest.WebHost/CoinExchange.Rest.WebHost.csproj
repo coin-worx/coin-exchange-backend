@@ -106,9 +106,9 @@
       <Project>{4c4f167d-3339-45f1-9a85-71159ef0d806}</Project>
       <Name>CoinExchange.Funds.Domain.Model</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Funds\CoinExchange.Funds.Port.Adapter.RestService\CoinExchange.Funds.Port.Adapter.RestService.csproj">
-      <Project>{8f5b324f-7cb5-4286-a700-ff118d714845}</Project>
-      <Name>CoinExchange.Funds.Port.Adapter.RestService</Name>
+    <ProjectReference Include="..\..\Funds\CoinExchange.Funds.Port.Adapter.Rest\CoinExchange.Funds.Port.Adapter.Rest.csproj">
+      <Project>{62d77a23-3f0f-4481-a7d7-773d63d9917a}</Project>
+      <Name>CoinExchange.Funds.Port.Adapter.Rest</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Trades\CoinExchange.Trades.Domain.Model\CoinExchange.Trades.Domain.Model.csproj">
       <Project>{32ac3710-adf8-4522-8f06-1f9c7a45e6e7}</Project>

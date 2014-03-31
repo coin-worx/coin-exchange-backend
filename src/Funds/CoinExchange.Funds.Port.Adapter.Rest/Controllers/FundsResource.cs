@@ -1,21 +1,62 @@
-﻿/*using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Web.Http;
+using CoinExchange.Funds.Application.Commands;
 using CoinExchange.Funds.Domain.Model.Entities;
 using CoinExchange.Funds.Domain.Model.VOs;
-using CoinExchange.Funds.Port.Adapter.RestService;
 
-/*
- * Author: Waqas
- * Comany: Aurora Solutions
- #1#
-
-namespace CoinExchange.Rest.WebHost.Controllers
+namespace CoinExchange.Funds.Port.Adapter.Rest.Controllers
 {
     /// <summary>
-    /// Serves the requests that need a command to get fetched, like the data for a particular user, portfolio or balance details
+    /// Serves the requests for the resources related to funds
     /// </summary>
-    public class FundsController : ApiController
+   // [RoutePrefix("api/funds")]
+    public class FundsResource : ApiController
     {
+        /// <summary>
+        /// Gives access to the service responsible for carrying out operations for the Private Controller
+        /// </summary>
+        private FundsCommands _fundsCommands;
+
+        /// <summary>
+        /// Default Constructor
+        /// </summary>
+        public FundsResource()
+        {
+            _fundsCommands = new FundsCommands();
+        }
+
+        /// <summary>
+        /// Returns the Account balance for a number of currencies for a particular user
+        /// Params:
+        /// 1. TraderId(ValueObject)[FromBody] : Contains an Id of the trader, used for authentication of the trader(required)
+        /// 2. AssetClass(string): e.g., currency (optional)
+        /// 3. asset(string): e.g., LTC (optional)
+        /// </summary>
+        /// <returns></returns>
+        /*[Route("~/api/funds/balance")]
+        [HttpPost]
+        public IHttpActionResult GetFunds(int id)
+        {
+            try
+            {
+                AccountBalance[] accountBalances = _fundsCommands.GetAccountBalance();
+
+                if (accountBalances != null)
+                {
+                    return Ok<AccountBalance[]>(accountBalances);
+                }
+                return NotFound();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }*/
+
         /// <summary>
         /// Returns the Account balance for a number of currencies for a particular user
         /// Params:
@@ -30,7 +71,7 @@ namespace CoinExchange.Rest.WebHost.Controllers
         {
             try
             {
-                AccountBalance[] accountBalances = new FundsRestService().AccountBalance(traderId, assetClass, asset);
+                AccountBalance[] accountBalances = _fundsCommands.GetAccountBalance();
 
                 if (accountBalances != null)
                 {
@@ -58,7 +99,7 @@ namespace CoinExchange.Rest.WebHost.Controllers
         {
             try
             {
-                TradeBalance tradebalance = new FundsRestService().TradeBalance(traderId, assetClass, asset);
+                TradeBalance tradebalance = _fundsCommands.GetTradeBalance();
 
                 if (tradebalance != null)
                 {
@@ -85,7 +126,7 @@ namespace CoinExchange.Rest.WebHost.Controllers
         {
             try
             {
-                LedgerInfo[] ledgers = new FundsRestService().LedgerInfo(traderId, ledger);
+                LedgerInfo[] ledgers = _fundsCommands.GetLedgers();
 
                 if (ledgers != null)
                 {
@@ -115,7 +156,7 @@ namespace CoinExchange.Rest.WebHost.Controllers
             {
                 // ToDo: In the next sprint related to business logc behind RESTful calls, need to split the ledgersIds comma
                 // separated list
-                LedgerInfo[] ledgers = new FundsRestService().FetchLedgers(traderId, ledgerIds);
+                LedgerInfo[] ledgers = _fundsCommands.GetLedgers();
 
                 if (ledgers != null)
                 {
@@ -129,4 +170,4 @@ namespace CoinExchange.Rest.WebHost.Controllers
             }
         }
     }
-}*/
+}

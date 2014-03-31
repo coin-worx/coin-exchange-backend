@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
+using CoinExchange.Funds.Application.Commands;
 using CoinExchange.Funds.Domain.Model.Entities;
 using CoinExchange.Funds.Domain.Model.VOs;
-using CoinExchange.Funds.Infrastructure.Services;
 
 namespace CoinExchange.Funds.Port.Adapter.RestService
 {
@@ -18,14 +18,14 @@ namespace CoinExchange.Funds.Port.Adapter.RestService
         /// <summary>
         /// Gives access to the service responsible for carrying out operations for the Private Controller
         /// </summary>
-        private FundsService _fundsRepository;
+        private FundsCommands _fundsCommands;
 
         /// <summary>
         /// Default Constructor
         /// </summary>
         public FundsRestService()
         {
-            _fundsRepository = new FundsService();
+            _fundsCommands = new FundsCommands();
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace CoinExchange.Funds.Port.Adapter.RestService
         /// <returns></returns>
         public AccountBalance[] AccountBalance(TraderId traderId, string assetClass = null, string asset = null)
         {
-            return _fundsRepository.GetAccountBalance();
+            return _fundsCommands.GetAccountBalance();
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace CoinExchange.Funds.Port.Adapter.RestService
         /// <returns></returns>
         public TradeBalance TradeBalance(TraderId traderId, string assetClass = null, string asset = null)
         {
-            return _fundsRepository.GetTradeBalance();
+            return _fundsCommands.GetTradeBalance();
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace CoinExchange.Funds.Port.Adapter.RestService
         /// <returns></returns>
         public LedgerInfo[] LedgerInfo(TraderId traderId, LedgerInfoRequest ledger)
         {
-            return _fundsRepository.GetLedgers();
+            return _fundsCommands.GetLedgers();
         }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace CoinExchange.Funds.Port.Adapter.RestService
         {
             // ToDo: In the next sprint related to business logc behind RESTful calls, need to split the ledgersIds comma
             // separated list
-            return _fundsRepository.GetLedgers();
+            return _fundsCommands.GetLedgers();
         }
     }
 }

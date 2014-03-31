@@ -1,18 +1,16 @@
-﻿using System.Collections.Generic;
-using CoinExchange.Funds.Domain.Model;
-using CoinExchange.Funds.Domain.Model.Entities;
+﻿using CoinExchange.Funds.Domain.Model.Entities;
 
 /*
  * Author: Waqas
  * Comany: Aurora Solutions
 */
 
-namespace CoinExchange.Funds.Infrastructure.Services
+namespace CoinExchange.Funds.Application.Commands
 {
     /// <summary>
     /// A Service to serve requests considered private, like information regarding a user, portfolio, trades
     /// </summary>
-    public class FundsService
+    public class FundsCommands
     {
         /// <summary>
         /// Returns the Account Balance for all the currencies associated to a User
