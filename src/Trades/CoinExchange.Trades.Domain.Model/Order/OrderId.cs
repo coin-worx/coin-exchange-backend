@@ -3,7 +3,7 @@
  * Comany: Aurora Solutions
  */
 
-namespace CoinExchange.Trades.Domain.Model.VOs
+namespace CoinExchange.Trades.Domain.Model.Order
 {
     /// <summary>
     /// Represents the ID for an order. ValueObject

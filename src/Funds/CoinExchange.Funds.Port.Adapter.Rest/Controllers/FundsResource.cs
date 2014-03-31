@@ -4,12 +4,13 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using CoinExchange.Funds.Application.Commands;
+using CoinExchange.Funds.Application.Funds;
 using CoinExchange.Funds.Domain.Model.Entities;
 using CoinExchange.Funds.Domain.Model.VOs;
 
 namespace CoinExchange.Funds.Port.Adapter.Rest.Controllers
 {
+    // ToDo: Need to further divide this service into granular peices for Funds bounded contexts. For now, we leave it as it is 
     /// <summary>
     /// Serves the requests for the resources related to funds
     /// </summary>
@@ -19,14 +20,14 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Controllers
         /// <summary>
         /// Gives access to the service responsible for carrying out operations for the Private Controller
         /// </summary>
-        private FundsCommands _fundsCommands;
+        private FundsApplicationService _fundsApplicationService;
 
         /// <summary>
         /// Default Constructor
         /// </summary>
         public FundsResource()
         {
-            _fundsCommands = new FundsCommands();
+            _fundsApplicationService = new FundsApplicationService();
         }
 
         /// <summary>
@@ -37,13 +38,13 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Controllers
         /// 3. asset(string): e.g., LTC (optional)
         /// </summary>
         /// <returns></returns>
-        /*[Route("~/api/funds/balance")]
+        [Route("api/funds/balance")]
         [HttpPost]
         public IHttpActionResult GetFunds(int id)
         {
             try
             {
-                AccountBalance[] accountBalances = _fundsCommands.GetAccountBalance();
+                AccountBalance[] accountBalances = _fundsApplicationService.GetAccountBalance();
 
                 if (accountBalances != null)
                 {
@@ -55,7 +56,7 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Controllers
             {
                 return InternalServerError(ex);
             }
-        }*/
+        }
 
         /// <summary>
         /// Returns the Account balance for a number of currencies for a particular user
@@ -65,13 +66,13 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Controllers
         /// 3. asset(string): e.g., LTC (optional)
         /// </summary>
         /// <returns></returns>
-        [Route("funds/balance")]
+        [Route("~funds/balance")]
         [HttpPost]
         public IHttpActionResult AccountBalance([FromBody]TraderId traderId, string assetClass = null, string asset = null)
         {
             try
             {
-                AccountBalance[] accountBalances = _fundsCommands.GetAccountBalance();
+                AccountBalance[] accountBalances = _fundsApplicationService.GetAccountBalance();
 
                 if (accountBalances != null)
                 {
@@ -99,7 +100,7 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Controllers
         {
             try
             {
-                TradeBalance tradebalance = _fundsCommands.GetTradeBalance();
+                TradeBalance tradebalance = _fundsApplicationService.GetTradeBalance();
 
                 if (tradebalance != null)
                 {
@@ -126,7 +127,7 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Controllers
         {
             try
             {
-                LedgerInfo[] ledgers = _fundsCommands.GetLedgers();
+                LedgerInfo[] ledgers = _fundsApplicationService.GetLedgers();
 
                 if (ledgers != null)
                 {
@@ -156,7 +157,7 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Controllers
             {
                 // ToDo: In the next sprint related to business logc behind RESTful calls, need to split the ledgersIds comma
                 // separated list
-                LedgerInfo[] ledgers = _fundsCommands.GetLedgers();
+                LedgerInfo[] ledgers = _fundsApplicationService.GetLedgers();
 
                 if (ledgers != null)
                 {

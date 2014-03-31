@@ -10,13 +10,13 @@ namespace CoinExchange.Trades.Domain.Model.VOs
     {
         public TradeVolumeResponse(Fees fees, decimal volume, string currency)
         {
-            this.fees = fees;
+            this.Fees = fees;
             Volume = volume;
             Currency = currency;
         }
 
         public string Currency { get; private set; }
         public decimal Volume { get; private set; }
-        public Fees fees { get; private set; }
+        public Fees Fees { get; private set; }
     }
 }

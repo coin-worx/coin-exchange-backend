@@ -1,23 +1,55 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Web.Http;
-using CoinExchange.Trades.Infrastructure.Services.Services;
+using CoinExchange.Trades.Application.MarketData;
 
-namespace CoinExchange.Trades.Port.Adapter.RestService
+namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
 {
     /// <summary>
-    /// Serves the RESTful calls related to Market Data
+    /// Market Data Service class rest expose
     /// </summary>
-    public class MarketDataController : ApiController
+    public class MarketResource : ApiController
     {
-        private MarketDataService _marketDataService = null;
+        private MarketDataApplicationService _marketDataService = null;
 
         /// <summary>
         /// Default constructor
         /// </summary>
-        public MarketDataController()
+        public MarketResource()
         {
-            _marketDataService = new MarketDataService();
+            _marketDataService = new MarketDataApplicationService();
+        }
+
+        [HttpGet]
+        [Route("marketData/tickerinfo")]
+        public IHttpActionResult TickerInfo(string pair)
+        {
+            try
+            {
+                return Ok(_marketDataService.GetTickerInfo(pair));
+
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+
+        }
+
+        [HttpGet]
+        [Route("marketData/ohlcinfo")]
+        public IHttpActionResult OhlcInfo(string pair, int interval = 1, string since = "")
+        {
+            try
+            {
+                return Ok(_marketDataService.GetOhlcInfo(pair,interval, since));
+
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+
         }
 
         /// <summary>
@@ -29,7 +61,7 @@ namespace CoinExchange.Trades.Port.Adapter.RestService
         /// 3. userRefId: Restrict results to given user reference id (optional)
         /// </summary>
         /// <returns></returns>
-        //[Route("marketdata/orderbook")]
+        [Route("marketdata/orderbook")]
         [HttpGet]
         public IHttpActionResult OpenOrderList(string currencyPair, int count = 0)
         {

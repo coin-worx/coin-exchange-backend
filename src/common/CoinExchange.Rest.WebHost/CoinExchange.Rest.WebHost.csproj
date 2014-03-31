@@ -79,7 +79,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\FundsController.cs" />
     <Compile Include="Controllers\MarketDataRequestController.cs" />
     <Compile Include="Controllers\TradesRequestController.cs" />
     <Compile Include="Global.asax.cs">
@@ -114,9 +113,9 @@
       <Project>{32ac3710-adf8-4522-8f06-1f9c7a45e6e7}</Project>
       <Name>CoinExchange.Trades.Domain.Model</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Trades\CoinExchange.Trades.Port.Adapter.RestService\CoinExchange.Trades.Port.Adapter.RestService.csproj">
-      <Project>{589924fb-d1ff-4970-894b-daad528d5498}</Project>
-      <Name>CoinExchange.Trades.Port.Adapter.RestService</Name>
+    <ProjectReference Include="..\..\Trades\CoinExchange.Trades.Port.Adapter.Rest\CoinExchange.Trades.Port.Adapter.Rest.csproj">
+      <Project>{58d0962f-9a65-499c-820e-6ef9afa52f61}</Project>
+      <Name>CoinExchange.Trades.Port.Adapter.Rest</Name>
     </ProjectReference>
     <ProjectReference Include="..\CoinExchange.Common\CoinExchange.Common.csproj">
       <Project>{d61dbd04-95dc-4eb1-ad54-1ff929ac2814}</Project>

@@ -20,6 +20,18 @@ namespace CoinExchange.Rest.WebHost
                 defaults: new { id = RouteParameter.Optional }
             );
 
+            config.Routes.MapHttpRoute(
+                name: "trades",
+                routeTemplate: "trades",
+                defaults: new { ApiController = "TradeResource", id = RouteParameter.Optional }
+            );
+
+           /* config.Routes.MapHttpRoute(
+                name: "funds",
+                routeTemplate: "funds",
+                defaults: new { ApiController = "FundsResource", id = RouteParameter.Optional }
+            );*/
+
             //return Json format
             var appXmlType = config.Formatters.XmlFormatter.SupportedMediaTypes.FirstOrDefault(t => t.MediaType == "application/xml");
             config.Formatters.XmlFormatter.SupportedMediaTypes.Remove(appXmlType);

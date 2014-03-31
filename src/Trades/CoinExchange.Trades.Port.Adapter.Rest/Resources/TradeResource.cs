@@ -1,21 +1,25 @@
-﻿/*
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using CoinExchange.Funds.Domain.Model.VOs;
-using CoinExchange.Trades.Domain.Model.Entities;
+using CoinExchange.Trades.Application.Trades;
+using CoinExchange.Trades.Domain.Model.Order;
 using CoinExchange.Trades.Domain.Model.VOs;
 
-namespace CoinExchange.Rest.WebHost.Controllers
+namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
 {
     /// <summary>
-    /// Controller to serve requests related to Trades
+    /// Rest service for serving requests related to Trades
     /// </summary>
-    public class TradesRequestController : ApiController
+    public class TradeResource : ApiController
     {
+        private TradeQueryService _tradesService;
+        
+        public TradeResource()
+        {
+            _tradesService = new TradeQueryService();
+        }
+
         /// <summary>
         /// Returns orders that have not been executed but those that have been accepted on the server. Exception can be 
         /// provided in the second parameter
@@ -33,7 +37,7 @@ namespace CoinExchange.Rest.WebHost.Controllers
             {
                 // ToDo: In the next sprint related to business logic behind RESTful calls, need to split the ledgersIds comma
                 // separated list
-                List<Order> openOrderList = new TradeResource().OpenOrderList(traderId, includeTrades, userRefId);
+                List<Order> openOrderList = _tradesService.GetOpenOrders();
 
                 if (openOrderList != null)
                 {
@@ -57,13 +61,13 @@ namespace CoinExchange.Rest.WebHost.Controllers
         /// <returns></returns>
         [Route("trades/closedorders")]
         [HttpPost]
-        public IHttpActionResult GetClosedOrders([FromBody]TraderId traderId, bool includeTrades = false, string userRefId = "",
+        public IHttpActionResult GetClosedOrders(bool includeTrades = false, string userRefId = "",
             string startTime = "", string endTime = "", string offset = "", string closetime = "both")
         {
             try
             {
-                List<Order> closedOrders = new TradeResource().GetClosedOrders(traderId, includeTrades, userRefId,
-                    startTime, endTime, offset, closetime);
+                List<Order> closedOrders = _tradesService.GetClosedOrders(includeTrades, userRefId, startTime, endTime, offset,
+                    closetime);
 
                 if (closedOrders != null)
                 {
@@ -88,12 +92,12 @@ namespace CoinExchange.Rest.WebHost.Controllers
         /// <returns></returns>
         [Route("trades/tradehistory")]
         [HttpPost]
-        public IHttpActionResult GetTradeHistory(TraderId traderId, string offset = "", string type = "all",
+        public IHttpActionResult GetTradeHistory(string offset = "", string type = "all",
             bool trades = false, string start = "", string end = "")
         {
             try
             {
-                List<Order> closedOrders = new TradeResource().GetTradeHistory(traderId, offset, type, trades, start, end);
+                List<Order> closedOrders = _tradesService.GetTradesHistory(offset, type, trades, start, end);
 
                 if (closedOrders != null)
                 {
@@ -116,38 +120,11 @@ namespace CoinExchange.Rest.WebHost.Controllers
         /// <returns></returns>
         [Route("trades/querytrades")]
         [HttpPost]
-        public IHttpActionResult FetchQueryTrades([FromBody]TraderId traderId, string txId = "", bool includeTrades = false)
+        public IHttpActionResult QueryTrades([FromBody]TraderId traderId, string txId = "", bool includeTrades = false)
         {
             try
             {
-                List<Order> trades = new TradeResource().QueryTrades(traderId, txId, includeTrades);
-
-                if (trades != null)
-                {
-                    return Ok<List<Order>>(trades);
-                }
-                return NotFound();
-            }
-            catch (Exception ex)
-            {
-                return InternalServerError(ex);
-            }
-        }
-
-        /// <summary>
-        /// Returns orders of the user that have been filled/executed
-        /// <param name="traderId">Trader ID</param>
-        /// <param name="txId">Comma separated list of txIds</param>
-        /// <param name="includeTrades">Whether or not to include the trades</param>
-        /// </summary>
-        /// <returns></returns>
-        [Route("trades/tradebalance")]
-        [HttpPost]
-        public IHttpActionResult TradeBalance([FromBody]TraderId traderId, string txId = "", bool includeTrades = false)
-        {
-            try
-            {
-                List<Order> trades = new TradeResource().TradeBalance(traderId, txId, includeTrades);
+                List<Order> trades = _tradesService.GetTradesHistory();
 
                 if (trades != null)
                 {
@@ -169,46 +146,30 @@ namespace CoinExchange.Rest.WebHost.Controllers
         /// <returns></returns>
         [Route("trades/recenttrades")]
         [HttpGet]
-        public IHttpActionResult RecentTrades(string pair, string since="")
+        public IHttpActionResult RecentTrades(string pair, string since = "")
         {
             try
             {
-                return Ok(new TradeResource().GetRecentTrades(pair, since));
-
-            }
-            catch (Exception ex)
-            {
-                return InternalServerError(ex);
-            }
-            
-        }
-
-        /// <summary>
-        /// private call to cancel user orders
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        [Route("trades/CancelOrder")]
-        [HttpPost]
-        public IHttpActionResult CancelOrder([FromBody]CancelOrderRequest request)
-        {
-            try
-            {
-                if (request != null)
+                try
                 {
-                    if (request.TraderId.Equals(string.Empty) || request.TxId.Equals(string.Empty))
-                    {
-                        return BadRequest();
-                    }
-                    return Ok(new TradeResource().CancelOrder(request));
-                }
-                return BadRequest();
+                    TradeInfo trades = _tradesService.GetRecentTrades(pair, since);
 
+                    if (trades != null)
+                    {
+                        return Ok<TradeInfo>(trades);
+                    }
+                    return NotFound();
+                }
+                catch (Exception ex)
+                {
+                    return InternalServerError(ex);
+                }
             }
             catch (Exception ex)
             {
                 return InternalServerError(ex);
             }
+
         }
 
         /// <summary>
@@ -228,7 +189,7 @@ namespace CoinExchange.Rest.WebHost.Controllers
                     {
                         return BadRequest();
                     }
-                    return Ok(new TradeResource().TradeVolume(request));
+                    return Ok(_tradesService.TradeVolume(request));
                 }
                 return BadRequest();
             }
@@ -236,7 +197,7 @@ namespace CoinExchange.Rest.WebHost.Controllers
             {
                 return InternalServerError(ex);
             }
-            
+
         }
 
         /// <summary>
@@ -251,7 +212,7 @@ namespace CoinExchange.Rest.WebHost.Controllers
         {
             try
             {
-                return Ok(new TradeResource().TradeabelAssetPair(info, pair));
+                return Ok(_tradesService.TradeabelAssetPair(info, pair));
             }
             catch (Exception ex)
             {
@@ -260,4 +221,3 @@ namespace CoinExchange.Rest.WebHost.Controllers
         }
     }
 }
-*/

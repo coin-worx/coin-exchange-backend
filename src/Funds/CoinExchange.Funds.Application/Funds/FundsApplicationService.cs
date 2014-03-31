@@ -5,12 +5,13 @@
  * Comany: Aurora Solutions
 */
 
-namespace CoinExchange.Funds.Application.Commands
+namespace CoinExchange.Funds.Application.Funds
 {
+    // ToDo: Need to further divide this service into granular peices for Funds bounded contexts. For now, we leave it as it is 
     /// <summary>
     /// A Service to serve requests considered private, like information regarding a user, portfolio, trades
     /// </summary>
-    public class FundsCommands
+    public class FundsApplicationService
     {
         /// <summary>
         /// Returns the Account Balance for all the currencies associated to a User
@@ -73,7 +74,7 @@ namespace CoinExchange.Funds.Application.Commands
                                {
                                    RefId = 1423321,
                                    Asset = "XBT",
-                                   AClass = "Currency",
+                                   AssetClass = "Currency",
                                    Amount = 345221,
                                    Balance = 653000000,
                                    Fee = 0.25,
@@ -83,7 +84,7 @@ namespace CoinExchange.Funds.Application.Commands
                                {
                                    RefId = 1229821,
                                    Asset = "LTC",
-                                   AClass = "Currency",
+                                   AssetClass = "Currency",
                                    Amount = 345221,
                                    Balance = 653000000,
                                    Fee = 0.25,
@@ -93,7 +94,7 @@ namespace CoinExchange.Funds.Application.Commands
                                {
                                    RefId = 1900809,
                                    Asset = "USD",
-                                   AClass = "Currency",
+                                   AssetClass = "Currency",
                                    Amount = 345221,
                                    Balance = 653000000,
                                    Fee = 0.25,
@@ -103,7 +104,7 @@ namespace CoinExchange.Funds.Application.Commands
                                {
                                    RefId = 11099834,
                                    Asset = "EUR",
-                                   AClass = "Currency",
+                                   AssetClass = "Currency",
                                    Amount = 345221,
                                    Balance = 653000000,
                                    Fee = 0.25,

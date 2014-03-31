@@ -3,7 +3,7 @@
  * Comany: Aurora Solutions
  */
 
-namespace CoinExchange.Trades.Domain.Model.Enums
+namespace CoinExchange.Trades.Domain.Model.Order
 {
     /// <summary>
     /// Status of the CoinExchangeOrder

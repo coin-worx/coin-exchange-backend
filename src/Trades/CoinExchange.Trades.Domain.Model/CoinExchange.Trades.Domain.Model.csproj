@@ -39,18 +39,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Entities\Order.cs" />
-    <Compile Include="Enums\OrderStatus.cs" />
-    <Compile Include="Enums\OrderType.cs" />
+    <Compile Include="Order\Order.cs" />
+    <Compile Include="Order\OrderStatus.cs" />
+    <Compile Include="Order\OrderType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VOs\AssetFee.cs" />
-    <Compile Include="VOs\CancelOrderRequest.cs" />
-    <Compile Include="VOs\CancelOrderResponse.cs" />
+    <Compile Include="Order\CancelOrderRequest.cs" />
+    <Compile Include="Order\CancelOrderResponse.cs" />
     <Compile Include="VOs\Fees.cs" />
     <Compile Include="VOs\MarketData.cs" />
     <Compile Include="VOs\OhlcValues.cs" />
     <Compile Include="VOs\OhlcInfo.cs" />
-    <Compile Include="VOs\OrderId.cs" />
+    <Compile Include="Order\OrderId.cs" />
     <Compile Include="VOs\Pair.cs" />
     <Compile Include="VOs\TradeableAsset.cs" />
     <Compile Include="VOs\TradeEntries.cs" />

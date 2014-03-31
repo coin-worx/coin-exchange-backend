@@ -28,7 +28,7 @@ namespace CoinExchange.Funds.Domain.Model.Entities
         /// <summary>
         /// Asset class, e.g., Currency
         /// </summary>
-        public string AClass { get; set; }
+        public string AssetClass { get; set; }
 
         /// <summary>
         /// Asset, e.g., XXRP

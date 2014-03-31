@@ -3,8 +3,8 @@ using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Results;
 using CoinExchange.Funds.Domain.Model.VOs;
-using CoinExchange.Rest.WebHost.Controllers;
-using CoinExchange.Trades.Domain.Model.Entities;
+using CoinExchange.Trades.Domain.Model.Order;
+using CoinExchange.Trades.Port.Adapter.Rest.Resources;
 using NUnit.Framework;
 
 namespace CoinExchange.Rest.WebHost.Tests
@@ -20,7 +20,7 @@ namespace CoinExchange.Rest.WebHost.Tests
         [Test]
         public void GetOpenOrdersTestCase()
         {
-            TradesRequestController fundsController = new TradesRequestController();
+            TradeResource fundsController = new TradeResource();
             IHttpActionResult httpActionResult = fundsController.OpenOrderList(new TraderId(2));
 
             // The result is and should be returned as IHttpActionResult, which contains content as well as response codes for

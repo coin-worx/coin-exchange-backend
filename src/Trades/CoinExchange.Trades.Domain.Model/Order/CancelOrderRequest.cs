@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CoinExchange.Trades.Domain.Model.VOs
+﻿namespace CoinExchange.Trades.Domain.Model.Order
 {
+    // ToDo: May need remove this class
     /// <summary>
     /// VO to get the required parameters for cancelling order request
     /// </summary>

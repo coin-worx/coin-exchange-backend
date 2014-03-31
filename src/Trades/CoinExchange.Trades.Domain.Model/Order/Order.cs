@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using CoinExchange.Trades.Domain.Model.Enums;
-using CoinExchange.Trades.Domain.Model.VOs;
 
 /*
  * Author: Waqas
  * Comany: Aurora Solutions
  */
 
-namespace CoinExchange.Trades.Domain.Model.Entities
+namespace CoinExchange.Trades.Domain.Model.Order
 {
     /// <summary>
     /// CoinExchange Order
