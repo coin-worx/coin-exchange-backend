@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Web.Http;
-using CoinExchange.Funds.Domain.Model.VOs;
+using CoinExchange.Common.Domain.Model;
 using CoinExchange.Trades.Application.Order;
 using CoinExchange.Trades.Domain.Model.Order;
-using CoinExchange.Trades.Domain.Model.VOs;
 
 namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
 {
@@ -27,24 +26,19 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         /// <summary>
         /// private call to cancel user orders
         /// </summary>
-        /// <param name="request"></param>
+        /// <param name="txid"></param>
         /// <returns></returns>
         [Route("trades/CancelOrder")]
         [HttpPost]
-        public IHttpActionResult CancelOrder([FromBody]CancelOrderRequest request)
+        public IHttpActionResult CancelOrder([FromBody]string txid)
         {
             try
             {
-                if (request != null)
+                if (txid != string.Empty)
                 {
-                    if (request.TraderId.Equals(string.Empty) || request.TxId.Equals(string.Empty))
-                    {
-                        return BadRequest();
-                    }
-                    return Ok(_orderApplicationService.CancelOrder(request));
+                    return Ok(_orderApplicationService.CancelOrder(txid));
                 }
                 return BadRequest();
-
             }
             catch (Exception ex)
             {

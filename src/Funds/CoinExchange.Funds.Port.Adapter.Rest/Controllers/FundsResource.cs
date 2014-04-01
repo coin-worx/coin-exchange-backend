@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using CoinExchange.Common.Domain.Model;
 using CoinExchange.Funds.Application.Funds;
 using CoinExchange.Funds.Domain.Model.Entities;
 using CoinExchange.Funds.Domain.Model.VOs;
@@ -164,6 +165,26 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Controllers
                     return Ok<LedgerInfo[]>(ledgers);
                 }
                 return NotFound();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        /// <summary>
+        /// Public call to get tradeable asset info
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="pair"></param>
+        /// <returns></returns>
+        [Route("trades/AssetPairs")]
+        [HttpGet]
+        public IHttpActionResult TradeableAssetPair(string info = "", string pair = "")
+        {
+            try
+            {
+                return Ok(_fundsApplicationService.TradeabelAssetPair(info, pair));
             }
             catch (Exception ex)
             {

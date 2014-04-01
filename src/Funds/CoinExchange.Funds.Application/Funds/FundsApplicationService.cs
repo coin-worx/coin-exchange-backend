@@ -1,9 +1,10 @@
-﻿using CoinExchange.Funds.Domain.Model.Entities;
-
+﻿using System.Collections.Generic;
+using CoinExchange.Funds.Domain.Model.Entities;
 /*
  * Author: Waqas
  * Comany: Aurora Solutions
 */
+using CoinExchange.Funds.Domain.Model.VOs;
 
 namespace CoinExchange.Funds.Application.Funds
 {
@@ -111,6 +112,29 @@ namespace CoinExchange.Funds.Application.Funds
                                    Time = "01-07-17"
                                },
                        };
+        }
+
+        /// <summary>
+        /// Returns list of tradeable assets
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="pair"></param>
+        /// <returns></returns>
+        public List<TradeableAsset> TradeabelAssetPair(string info, string pair)
+        {
+            AssetFee fee = new AssetFee(0.002m, 100);
+            List<AssetFee> fees = new List<AssetFee>();
+            for (int i = 0; i < 10; i++)
+            {
+                fees.Add(fee);
+            }
+            TradeableAsset asset = new TradeableAsset(10, 10, "USD", fees, null, 10, 2, 2, "Unit", "XXDG", "currency", "currency", "LTCXDG");
+            List<TradeableAsset> assets = new List<TradeableAsset>();
+            for (int i = 0; i < 10; i++)
+            {
+                assets.Add(asset);
+            }
+            return assets;
         }
     }
 }
