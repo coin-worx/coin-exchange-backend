@@ -4,11 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoinExchange.Trades.Domain.Model.VOs
+namespace CoinExchange.Trades.Application.Trades.Representation
 {
-    public class Fees
+    /// <summary>
+    /// Serves the representation for trading fee.
+    /// </summary>
+    public class TradeFeeRepresentation
     {
-        public Fees(decimal tierVolume, decimal nextVoulme, decimal nextFee, decimal maxFee, decimal minFee, decimal fee)
+        public TradeFeeRepresentation(decimal tierVolume, decimal nextVoulme, decimal nextFee, decimal maxFee, decimal minFee, decimal fee)
         {
             TierVolume = tierVolume;
             NextVoulme = nextVoulme;
@@ -24,6 +27,5 @@ namespace CoinExchange.Trades.Domain.Model.VOs
         public decimal NextFee { get; set; }
         public decimal NextVoulme { get; set; }
         public decimal TierVolume { get; set; }
-        
     }
 }

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using CoinExchange.Trades.Domain.Model.VOs;
+using System.Net.NetworkInformation;
+using CoinExchange.Trades.Application.MarketData.Representation;
+using CoinExchange.Trades.Domain.Model.MarketData;
 
 namespace CoinExchange.Trades.Application.MarketData
 {
@@ -35,14 +37,14 @@ namespace CoinExchange.Trades.Application.MarketData
         /// </summary>
         /// <param name="pairs"></param>
         /// <returns></returns>
-        public Pair[] GetTickerInfo(string pairs)
+        public TickerRepresentation[] GetTickerInfo(string pairs)
         {
-            Domain.Model.VOs.MarketData marketData = new Domain.Model.VOs.MarketData(200, 200.33m);
-            Pair pair = new Pair(pairs, marketData, marketData, marketData, new decimal[] { 200, 300 },
+            Domain.Model.MarketData.MarketData marketData = new Domain.Model.MarketData.MarketData(200, 200.33m, "Bid");
+            TickerRepresentation representation = new TickerRepresentation(pairs, marketData, marketData, marketData, new decimal[] { 200, 300 },
                 new decimal[] { 200, 300 }, new[] { 200, 200 }, new decimal[] { 200, 300 }, new decimal[] { 200, 300 },
                 200m);
-            Pair[] PairsList = new Pair[3] { pair, pair, pair };
-            return PairsList;
+            TickerRepresentation[] representations = new TickerRepresentation[3] { representation, representation, representation };
+            return representations;
         }
 
         /// <summary>
@@ -52,16 +54,16 @@ namespace CoinExchange.Trades.Application.MarketData
         /// <param name="interval"></param>
         /// <param name="since"></param>
         /// <returns></returns>
-        public OhlcInfo GetOhlcInfo(string pair, int interval, string since)
+        public OhlcRepresentation GetOhlcInfo(string pair, int interval, string since)
         {
-            OhlcValues ohlcData = new OhlcValues(DateTime.UtcNow, 113, 111, 123, 114, 100, 1000, 23);
-            List<OhlcValues> dataList = new List<OhlcValues>();
+            Ohlc ohlcData = new Ohlc(DateTime.UtcNow, 113, 111, 123, 114, 100, 1000, 23);
+            List<Ohlc> dataList = new List<Ohlc>();
             for (int i = 0; i < 10; i++)
             {
                 dataList.Add(ohlcData);
             }
-            OhlcInfo info = new OhlcInfo(dataList, pair, 100);
-            return info;
+            OhlcRepresentation representation = new OhlcRepresentation(dataList, pair, 100);
+            return representation;
         }
     }
 }

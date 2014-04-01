@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoinExchange.Trades.Domain.Model.VOs
+namespace CoinExchange.Funds.Domain.Model.VOs
 {
     public class AssetFee
     {

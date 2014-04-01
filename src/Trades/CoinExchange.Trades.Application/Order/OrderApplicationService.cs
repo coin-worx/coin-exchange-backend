@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CoinExchange.Trades.Domain.Model.Order;
-using CoinExchange.Trades.Domain.Model.VOs;
 
 namespace CoinExchange.Trades.Application.Order
 {
@@ -18,7 +17,7 @@ namespace CoinExchange.Trades.Application.Order
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public CancelOrderResponse CancelOrder(CancelOrderRequest request)
+        public CancelOrderResponse CancelOrder(string txid)
         {
             return new CancelOrderResponse(true, 2);
         }

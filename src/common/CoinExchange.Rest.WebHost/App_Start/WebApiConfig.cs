@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Routing.Constraints;
 
-namespace CoinExchange.Rest.WebHost
+namespace CoinExchange.Rest.WebHost.App_Start
 {
     public static class WebApiConfig
     {

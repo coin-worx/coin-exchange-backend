@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Web.Http;
-using CoinExchange.Funds.Domain.Model.VOs;
+using CoinExchange.Common.Domain.Model;
 using CoinExchange.Trades.Application.Trades;
+using CoinExchange.Trades.Application.Trades.Representation;
 using CoinExchange.Trades.Domain.Model.Order;
-using CoinExchange.Trades.Domain.Model.VOs;
 
 namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
 {
@@ -91,11 +91,11 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
             {
                 try
                 {
-                    TradeInfo trades = _tradesService.GetRecentTrades(pair, since);
+                    TradeListRepresentation trades = _tradesService.GetRecentTrades(pair, since);
 
                     if (trades != null)
                     {
-                        return Ok<TradeInfo>(trades);
+                        return Ok(trades);
                     }
                     return NotFound();
                 }
@@ -118,17 +118,13 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         /// <returns></returns>
         [Route("trades/TradeVolume")]
         [HttpPost]
-        public IHttpActionResult TradeVolume([FromBody] TradeVolumeRequest request)
+        public IHttpActionResult TradeVolume([FromBody]string pair)
         {
             try
             {
-                if (request != null)
+                if (pair != string.Empty)
                 {
-                    if (request.TraderId.Equals(string.Empty) || request.Pair.Equals(string.Empty))
-                    {
-                        return BadRequest();
-                    }
-                    return Ok(_tradesService.TradeVolume(request));
+                    return Ok(_tradesService.TradeVolume(pair));
                 }
                 return BadRequest();
             }
@@ -139,24 +135,6 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
 
         }
 
-        /// <summary>
-        /// Public call to get tradeable asset info
-        /// </summary>
-        /// <param name="info"></param>
-        /// <param name="pair"></param>
-        /// <returns></returns>
-        [Route("trades/AssetPairs")]
-        [HttpGet]
-        public IHttpActionResult TradeableAssetPair(string info = "", string pair = "")
-        {
-            try
-            {
-                return Ok(_tradesService.TradeabelAssetPair(info, pair));
-            }
-            catch (Exception ex)
-            {
-                return InternalServerError(ex);
-            }
-        }
+        
     }
 }

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Results;
+using CoinExchange.Common.Domain.Model;
 using CoinExchange.Funds.Domain.Model.Entities;
 using CoinExchange.Funds.Domain.Model.VOs;
 using CoinExchange.Funds.Port.Adapter.Rest.Controllers;

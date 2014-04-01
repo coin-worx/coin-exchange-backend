@@ -4,14 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoinExchange.Trades.Domain.Model.VOs
+namespace CoinExchange.Trades.Domain.Model.MarketData
 {
     /// <summary>
     /// Contains ohlc data
     /// </summary>
-    public class OhlcValues
+    public class Ohlc
     {
-        public OhlcValues(DateTime time, decimal open, decimal low, decimal high, decimal close, decimal vwap, decimal volume, int count)
+        public Ohlc(DateTime time, decimal open, decimal low, decimal high, decimal close, decimal vwap, decimal volume, int count)
         {
             Time = time;
             Open = open;

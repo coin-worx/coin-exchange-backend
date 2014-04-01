@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using CoinExchange.Trades.Application.Trades.Representation;
 using CoinExchange.Trades.Domain.Model.Order;
-using CoinExchange.Trades.Domain.Model.VOs;
 
 namespace CoinExchange.Trades.Application.Trades
 {
@@ -88,16 +88,16 @@ namespace CoinExchange.Trades.Application.Trades
         /// <param name="pair"></param>
         /// <param name="since"></param>
         /// <returns></returns>
-        public TradeInfo GetRecentTrades(string pair, string since)
+        public TradeListRepresentation GetRecentTrades(string pair, string since)
         {
-            List<TradeEntries> list = new List<TradeEntries>();
-            TradeEntries entries = new TradeEntries(123.33m, 200, "Buy", "Limit", "", DateTime.UtcNow.ToString());
+            List<TradeRecord> list = new List<TradeRecord>();
+            TradeRecord entries = new TradeRecord(123.33m, 200, "Buy", "Limit", "", DateTime.UtcNow.ToString());
             for (int i = 0; i < 5; i++)
             {
                 list.Add(entries);
             }
-            TradeInfo tradeInfo = new TradeInfo("234", list, pair);
-            return tradeInfo;
+            TradeListRepresentation representation = new TradeListRepresentation("234", list, pair);
+            return representation;
         }
 
         /// <summary>
@@ -105,34 +105,13 @@ namespace CoinExchange.Trades.Application.Trades
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public TradeVolumeResponse TradeVolume(TradeVolumeRequest request)
+        public TradeVolumeRepresentation TradeVolume(string pair)
         {
-            Fees fees = new Fees(100m, 234m, 34.5m, 25.5m, 23.5m, 0.005m);
-            TradeVolumeResponse response = new TradeVolumeResponse(fees, 1000, "ZUSD");
+            TradeFeeRepresentation fees = new TradeFeeRepresentation(100m, 234m, 34.5m, 25.5m, 23.5m, 0.005m);
+            TradeVolumeRepresentation response = new TradeVolumeRepresentation(fees, 1000, "ZUSD");
             return response;
         }
 
-        /// <summary>
-        /// Returns list of tradeable assets
-        /// </summary>
-        /// <param name="info"></param>
-        /// <param name="pair"></param>
-        /// <returns></returns>
-        public List<TradeableAsset> TradeabelAssetPair(string info, string pair)
-        {
-            AssetFee fee = new AssetFee(0.002m, 100);
-            List<AssetFee> fees = new List<AssetFee>();
-            for (int i = 0; i < 10; i++)
-            {
-                fees.Add(fee);
-            }
-            TradeableAsset asset = new TradeableAsset(10, 10, "USD", fees, null, 10, 2, 2, "Unit", "XXDG", "currency", "currency", "LTCXDG");
-            List<TradeableAsset> assets = new List<TradeableAsset>();
-            for (int i = 0; i < 10; i++)
-            {
-                assets.Add(asset);
-            }
-            return assets;
-        }
+        
     }
 }

@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CoinExchange.Trades.Domain.Model.VOs
+﻿namespace CoinExchange.Trades.Domain.Model.Order
 {
+    //TODO: Can be removed in the future but for now it is a VO to hold a trade record.
     /// <summary>
-    /// VO to hold recent trade entries
+    /// VO to hold recent trade records
     /// </summary>
-    public class TradeEntries
+    public class TradeRecord
     {
-        public TradeEntries(decimal price, decimal volume, string side, string type, string miscellaneous, string dateTime)
+        public TradeRecord(decimal price, decimal volume, string side, string type, string miscellaneous, string dateTime)
         {
             Price = price;
             this.volume = volume;
