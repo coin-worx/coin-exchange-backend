@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="MarketData\MarketDataApplicationService.cs" />
     <Compile Include="Order\OrderApplicationService.cs" />
+    <Compile Include="Order\OrderQueryService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Trades\TradeQueryService.cs" />
   </ItemGroup>

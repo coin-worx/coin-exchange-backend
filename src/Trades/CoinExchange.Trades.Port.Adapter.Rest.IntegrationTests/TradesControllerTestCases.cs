@@ -7,7 +7,7 @@ using CoinExchange.Trades.Domain.Model.Order;
 using CoinExchange.Trades.Port.Adapter.Rest.Resources;
 using NUnit.Framework;
 
-namespace CoinExchange.Rest.WebHost.Tests
+namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
 {
     /// <summary>
     /// Test cases for the Trades Controller
@@ -20,8 +20,8 @@ namespace CoinExchange.Rest.WebHost.Tests
         [Test]
         public void GetOpenOrdersTestCase()
         {
-            TradeResource fundsController = new TradeResource();
-            IHttpActionResult httpActionResult = fundsController.OpenOrderList(new TraderId(2));
+            OrderResource orderResource = new OrderResource();
+            IHttpActionResult httpActionResult = orderResource.OpenOrderList(new TraderId(2));
 
             // The result is and should be returned as IHttpActionResult, which contains content as well as response codes for
             // Http response messages sent to the client.  If it is not null, menas the request was successful

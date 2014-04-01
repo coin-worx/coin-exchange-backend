@@ -21,67 +21,6 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         }
 
         /// <summary>
-        /// Returns orders that have not been executed but those that have been accepted on the server. Exception can be 
-        /// provided in the second parameter
-        /// Params:
-        /// 1. TraderId(ValueObject)[FromBody]: Contains an Id of the trader, used for authentication of the trader
-        /// 2. includeTrades(bool): Include trades as well in the response(optional)
-        /// 3. userRefId: Restrict results to given user reference id (optional)
-        /// </summary>
-        /// <returns></returns>
-        [Route("trades/openorderlist")]
-        [HttpPost]
-        public IHttpActionResult OpenOrderList([FromBody]TraderId traderId, bool includeTrades = false, string userRefId = "")
-        {
-            try
-            {
-                // ToDo: In the next sprint related to business logic behind RESTful calls, need to split the ledgersIds comma
-                // separated list
-                List<Order> openOrderList = _tradesService.GetOpenOrders();
-
-                if (openOrderList != null)
-                {
-                    return Ok<List<Order>>(openOrderList);
-                }
-                return NotFound();
-            }
-            catch (Exception ex)
-            {
-                return InternalServerError(ex);
-            }
-        }
-
-        /// <summary>
-        /// Returns orders of the user that have been filled/executed
-        /// Params:
-        /// 1. TraderId(ValueObject)[FromBody]: Contains an Id of the trader, used for authentication of the trader
-        /// 2. includeTrades(bool): Include trades as well in the response(optional)
-        /// 3. userRefId: Restrict results to given user reference id (optional)
-        /// </summary>
-        /// <returns></returns>
-        [Route("trades/closedorders")]
-        [HttpPost]
-        public IHttpActionResult GetClosedOrders(bool includeTrades = false, string userRefId = "",
-            string startTime = "", string endTime = "", string offset = "", string closetime = "both")
-        {
-            try
-            {
-                List<Order> closedOrders = _tradesService.GetClosedOrders(includeTrades, userRefId, startTime, endTime, offset,
-                    closetime);
-
-                if (closedOrders != null)
-                {
-                    return Ok<List<Order>>(closedOrders);
-                }
-                return NotFound();
-            }
-            catch (Exception ex)
-            {
-                return InternalServerError(ex);
-            }
-        }
-
-        /// <summary>
         /// Returns orders of the user that have been filled/executed
         /// <param name="offset">Result offset</param>
         /// <param name="type">Type of trade (optional) [all = all types (default), any position = any position (open or closed), closed position = positions that have been closed, closing position = any trade closing all or part of a position, no position = non-positional trades]</param>
