@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using System.Web.Http.Routing.Constraints;
 
 namespace CoinExchange.Rest.WebHost
 {
@@ -19,18 +20,6 @@ namespace CoinExchange.Rest.WebHost
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
-
-            config.Routes.MapHttpRoute(
-                name: "trades",
-                routeTemplate: "trades",
-                defaults: new { ApiController = "TradeResource", id = RouteParameter.Optional }
-            );
-
-           /* config.Routes.MapHttpRoute(
-                name: "funds",
-                routeTemplate: "funds",
-                defaults: new { ApiController = "FundsResource", id = RouteParameter.Optional }
-            );*/
 
             //return Json format
             var appXmlType = config.Formatters.XmlFormatter.SupportedMediaTypes.FirstOrDefault(t => t.MediaType == "application/xml");

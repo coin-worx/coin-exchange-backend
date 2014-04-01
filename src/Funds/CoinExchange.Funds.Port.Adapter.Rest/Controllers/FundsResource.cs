@@ -14,7 +14,6 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Controllers
     /// <summary>
     /// Serves the requests for the resources related to funds
     /// </summary>
-   // [RoutePrefix("api/funds")]
     public class FundsResource : ApiController
     {
         /// <summary>
@@ -39,34 +38,6 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Controllers
         /// </summary>
         /// <returns></returns>
         [Route("api/funds/balance")]
-        [HttpPost]
-        public IHttpActionResult GetFunds(int id)
-        {
-            try
-            {
-                AccountBalance[] accountBalances = _fundsApplicationService.GetAccountBalance();
-
-                if (accountBalances != null)
-                {
-                    return Ok<AccountBalance[]>(accountBalances);
-                }
-                return NotFound();
-            }
-            catch (Exception ex)
-            {
-                return InternalServerError(ex);
-            }
-        }
-
-        /// <summary>
-        /// Returns the Account balance for a number of currencies for a particular user
-        /// Params:
-        /// 1. TraderId(ValueObject)[FromBody] : Contains an Id of the trader, used for authentication of the trader(required)
-        /// 2. AssetClass(string): e.g., currency (optional)
-        /// 3. asset(string): e.g., LTC (optional)
-        /// </summary>
-        /// <returns></returns>
-        [Route("~funds/balance")]
         [HttpPost]
         public IHttpActionResult AccountBalance([FromBody]TraderId traderId, string assetClass = null, string asset = null)
         {
@@ -94,9 +65,9 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Controllers
         /// 3. asset(string): e.g., LTC (optional)
         /// </summary>
         /// <returns></returns>
-        [Route("funds/tradebalance")]
+        [Route("api/funds/tradebalance")]
         [HttpPost]
-        public IHttpActionResult TradeBalance([FromBody]TraderId traderId, string assetClass = null, string asset = null)
+        public IHttpActionResult PostTradeBalance([FromBody]TraderId traderId, string assetClass = null, string asset = null)
         {
             try
             {
@@ -121,7 +92,7 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Controllers
         /// 2. LedgerInfoRequest ledger[FromUri]: Member = AssetClass, Asset, Type, StartTime, EndTime, Offset (optional)
         /// </summary>
         /// <returns></returns>
-        [Route("funds/ledgersinfo")]
+        [Route("api/funds/ledgersinfo")]
         [HttpPost]
         public IHttpActionResult LedgerInfo([FromBody]TraderId traderId, [FromUri]LedgerInfoRequest ledger)
         {
@@ -149,7 +120,7 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Controllers
         /// 2. LedgerIds(int): comma separated list of ledgers (optional)
         /// </summary>
         /// <returns></returns>
-        [Route("funds/fetchledgers")]
+        [Route("api/funds/fetchledgers")]
         [HttpPost]
         public IHttpActionResult FetchLedgers([FromBody]TraderId traderId, string ledgerIds = "")
         {
