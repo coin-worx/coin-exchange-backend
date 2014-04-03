@@ -15,7 +15,7 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Controllers
     /// <summary>
     /// Serves the requests for the resources related to funds
     /// </summary>
-    public class FundsResource : ApiController
+    public class FundsController : ApiController
     {
         /// <summary>
         /// Gives access to the service responsible for carrying out operations for the Private Controller
@@ -25,7 +25,7 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Controllers
         /// <summary>
         /// Default Constructor
         /// </summary>
-        public FundsResource()
+        public FundsController()
         {
             _fundsApplicationService = new FundsApplicationService();
         }

@@ -44,6 +44,7 @@
     <Compile Include="MarketData\Representation\TickerRepresentation.cs" />
     <Compile Include="Order\OrderApplicationService.cs" />
     <Compile Include="Order\OrderQueryService.cs" />
+    <Compile Include="Trades\ITradeService.cs" />
     <Compile Include="Trades\Representation\TradeFeeRepresentation.cs" />
     <Compile Include="Trades\Representation\TradeListRepresentation.cs" />
     <Compile Include="Trades\Representation\TradeVolumeRepresentation.cs" />

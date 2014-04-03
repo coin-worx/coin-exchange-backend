@@ -20,8 +20,8 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
         [Test]
         public void GetOpenOrdersTestCase()
         {
-            OrderResource orderResource = new OrderResource();
-            IHttpActionResult httpActionResult = orderResource.OpenOrderList(new TraderId(2));
+            OrderController orderResource = new OrderController();
+            IHttpActionResult httpActionResult = orderResource.OpenOrderList();
 
             // The result is and should be returned as IHttpActionResult, which contains content as well as response codes for
             // Http response messages sent to the client.  If it is not null, menas the request was successful
