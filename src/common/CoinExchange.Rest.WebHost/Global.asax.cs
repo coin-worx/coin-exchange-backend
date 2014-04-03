@@ -5,6 +5,8 @@ using System.Web;
 using System.Web.Http;
 using System.Web.Routing;
 using CoinExchange.Rest.WebHost.App_Start;
+using Common.Logging;
+
 
 namespace CoinExchange.Rest.WebHost
 {
@@ -12,7 +14,8 @@ namespace CoinExchange.Rest.WebHost
     {
         protected void Application_Start()
         {
-            GlobalConfiguration.Configure(WebApiConfig.Register);
+          GlobalConfiguration.Configure(WebApiConfig.Register);
+          LogManager.GetCurrentClassLogger().Info("Application started...");
         }
     }
 }
