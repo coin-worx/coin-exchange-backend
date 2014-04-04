@@ -11,7 +11,7 @@ namespace CoinExchange.Trades.Application.Order
     /// <summary>
     /// Handles the query requests related to Orders
     /// </summary>
-    public class OrderQueryService
+    public class OrderQueryService:IOrderQueryService
     {
         /// <summary>
         /// Gets the list for the Open orders

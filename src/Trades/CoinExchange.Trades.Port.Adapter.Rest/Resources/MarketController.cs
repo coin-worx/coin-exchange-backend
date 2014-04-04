@@ -10,14 +10,14 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
     /// </summary>
     public class MarketController : ApiController
     {
-        private MarketDataApplicationService _marketDataService = null;
+        private IMarketDataApplicationService _marketDataService;
 
         /// <summary>
         /// Default constructor
         /// </summary>
-        public MarketController()
+        public MarketController(IMarketDataApplicationService marketDataApplicationService)
         {
-            _marketDataService = new MarketDataApplicationService();
+            _marketDataService = marketDataApplicationService;
         }
 
         [HttpGet]

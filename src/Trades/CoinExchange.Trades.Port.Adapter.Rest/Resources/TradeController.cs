@@ -17,9 +17,9 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
     /// </summary>
     public class TradeController : ApiController
     {
-        private TradeQueryServiceStub _tradeQueryService = null;
+        private ITradeService _tradeQueryService;
 
-        public TradeController(TradeQueryServiceStub tradeQueryService)
+        public TradeController(ITradeService tradeQueryService)
         {
             _tradeQueryService = tradeQueryService;
         }
@@ -34,6 +34,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         /// </summary>
         /// <returns></returns>
         [Route("trades/tradehistory")]
+        [Authorize]
         [HttpPost]
         public IHttpActionResult GetTradeHistory([FromBody]TradeHistoryParams tradeHistoryParams)
         {
@@ -61,6 +62,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         /// </summary>
         /// <returns></returns>
         [Route("trades/querytrades")]
+        [Authorize]
         [HttpPost]
         public IHttpActionResult QueryTrades([FromBody]QueryTradeParams queryTradeParams)
         {
@@ -114,6 +116,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         /// <param name="pair"> </param>
         /// <returns></returns>
         [Route("trades/TradeVolume")]
+        [Authorize]
         [HttpPost]
         public IHttpActionResult TradeVolume([FromBody]string pair)
         {
@@ -132,12 +135,6 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
 
         }
 
-        /// <summary>
-        /// TradeQueryService
-        /// </summary>
-        public TradeQueryServiceStub TradeQueryService
-        {
-            get { return _tradeQueryService; }
-        }
+        
     }
 }

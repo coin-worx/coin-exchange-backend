@@ -3,10 +3,10 @@
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xsi:schemaLocation="http://www.springframework.net http://www.springframework.net/xsd/spring-objects.xsd">
 
-  <object id="OrderController" type="CoinExchange.Trades.Port.Adapter.Rest.Resources.OrderController, CoinExchange.Trades.Port.Adapter.Rest" singleton="false">
-    <constructor-arg name="tradeQueryService" ref="TradeQueryServiceStub"/>
+  <object id="MarketController" type="CoinExchange.Trades.Port.Adapter.Rest.Resources.MarketController, CoinExchange.Trades.Port.Adapter.Rest" singleton="false">
+    <constructor-arg name="marketDataApplicationService" ref="MarketDataApplicationService"/>
   </object>
 
-  <object id="TradeQueryServiceStub" type="CoinExchange.Trades.Application.Trades.TradeQueryServiceStub, CoinExchange.Trades.Application"/>
+  <object id="MarketDataApplicationService" type="CoinExchange.Trades.Application.MarketData.MarketDataApplicationService, CoinExchange.Trades.Application"/>
 
 </objects>

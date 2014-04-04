@@ -10,7 +10,7 @@ namespace CoinExchange.Trades.Application.Order
     /// <summary>
     /// Serves the operations for resources related to Order
     /// </summary>
-    public class OrderApplicationService
+    public class OrderApplicationService:IOrderApplicationService
     {
         /// <summary>
         /// Cancel the order of user

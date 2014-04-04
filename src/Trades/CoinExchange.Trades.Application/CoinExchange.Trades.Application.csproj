@@ -39,9 +39,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MarketData\IMarketDataApplicationService.cs" />
     <Compile Include="MarketData\MarketDataApplicationService.cs" />
     <Compile Include="MarketData\Representation\OhlcRepresentation.cs" />
     <Compile Include="MarketData\Representation\TickerRepresentation.cs" />
+    <Compile Include="Order\IOrderApplicationService.cs" />
+    <Compile Include="Order\IOrderQueryService.cs" />
     <Compile Include="Order\OrderApplicationService.cs" />
     <Compile Include="Order\OrderQueryService.cs" />
     <Compile Include="Trades\ITradeService.cs" />

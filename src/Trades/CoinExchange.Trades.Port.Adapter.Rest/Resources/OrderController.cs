@@ -13,16 +13,16 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
     /// </summary>
     public class OrderController : ApiController
     {
-        private OrderApplicationService _orderApplicationService;
-        private OrderQueryService _orderQueryService;
+        private IOrderApplicationService _orderApplicationService;
+        private IOrderQueryService _orderQueryService;
 
         /// <summary>
         /// Default Constructor
         /// </summary>
-        public OrderController()
+        public OrderController(IOrderApplicationService orderApplicationService, IOrderQueryService orderQueryService)
         {
-            _orderApplicationService = new OrderApplicationService();
-            _orderQueryService = new OrderQueryService();
+            _orderApplicationService = orderApplicationService;
+            _orderQueryService = orderQueryService;
         }
 
         /// <summary>
@@ -31,6 +31,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         /// <param name="txid"></param>
         /// <returns></returns>
         [Route("trades/CancelOrder")]
+        [Authorize]
         [HttpPost]
         public IHttpActionResult CancelOrder([FromBody]string txid)
         {
@@ -48,7 +49,6 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
             }
         }
 
-
         /// <summary>
         /// Private call that returns orders that have not been executed but those that have been accepted on the server. Exception can be 
         /// provided in the second parameter
@@ -58,6 +58,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         /// </summary>
         /// <returns></returns>
         [Route("orders/openorders")]
+        [Authorize]
         [HttpPost]
         public IHttpActionResult QueryOpenOrders([FromBody] QueryOpenOrdersParams queryOpenOrdersParams)
         {
@@ -88,6 +89,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         /// </summary>
         /// <returns></returns>
         [Route("orders/closedorders")]
+        [Authorize]
         [HttpPost]
         public IHttpActionResult QueryClosedOrders([FromBody] QueryClosedOrdersParams closedOrdersParams)
         {

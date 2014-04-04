@@ -66,6 +66,7 @@
   <ItemGroup>
     <Compile Include="DTOs\MarketData\OhlcParams.cs" />
     <Compile Include="DTOs\MarketData\OrderBookParams.cs" />
+    <Compile Include="DTOs\Order\CreateOrderParam.cs" />
     <Compile Include="DTOs\Order\QueryClosedOrdersParams.cs" />
     <Compile Include="DTOs\Order\QueryOpenOrdersParams.cs" />
     <Compile Include="DTOs\Trade\QueryTradeParams.cs" />
@@ -97,10 +98,14 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </None>
-    <Content Include="Config\TradeApplicationServices.xml">
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Config\MarketControllerConfig.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
-    </Content>
+    </None>
+    <None Include="Config\OrderControllerConfig.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

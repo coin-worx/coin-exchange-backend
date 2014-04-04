@@ -4,9 +4,11 @@
                 xsi:schemaLocation="http://www.springframework.net http://www.springframework.net/xsd/spring-objects.xsd">
 
   <object id="OrderController" type="CoinExchange.Trades.Port.Adapter.Rest.Resources.OrderController, CoinExchange.Trades.Port.Adapter.Rest" singleton="false">
-    <constructor-arg name="tradeQueryService" ref="TradeQueryServiceStub"/>
+    <constructor-arg name="orderApplicationService" ref="OrderApplicationService"/>
+    <constructor-arg name="orderQueryService" ref="OrderQueryService"/>
   </object>
 
-  <object id="TradeQueryServiceStub" type="CoinExchange.Trades.Application.Trades.TradeQueryServiceStub, CoinExchange.Trades.Application"/>
+  <object id="OrderApplicationService" type="CoinExchange.Trades.Application.Order.OrderApplicationService, CoinExchange.Trades.Application"/>
+  <object id="OrderQueryService" type="CoinExchange.Trades.Application.Order.OrderQueryService, CoinExchange.Trades.Application"/>
 
 </objects>

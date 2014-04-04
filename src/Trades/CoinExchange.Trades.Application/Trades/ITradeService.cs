@@ -13,5 +13,11 @@ namespace CoinExchange.Trades.Application.Trades
     /// </summary>
     public interface ITradeService
     {
+        List<Domain.Model.Order.Order> GetTradesHistory(TraderId traderId, string offset = "", string type = "all",
+            bool trades = false, string start = "", string end = "");
+
+        List<Domain.Model.Order.Order> QueryTrades(TraderId traderId, string txId = "", bool includeTrades = false);
+        TradeListRepresentation GetRecentTrades(TraderId traderId, string pair, string since);
+        TradeVolumeRepresentation TradeVolume(string pair);
     }
 }
