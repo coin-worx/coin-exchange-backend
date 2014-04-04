@@ -52,6 +52,7 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="System.IdentityModel" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.Formatting, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -89,7 +90,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\MarketDataRequestController.cs" />
+    <Compile Include="AuthenticationHandler.cs" />
+    <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Controllers\TradesRequestController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -118,6 +120,10 @@
     <ProjectReference Include="..\..\Funds\CoinExchange.Funds.Port.Adapter.Rest\CoinExchange.Funds.Port.Adapter.Rest.csproj">
       <Project>{62d77a23-3f0f-4481-a7d7-773d63d9917a}</Project>
       <Name>CoinExchange.Funds.Port.Adapter.Rest</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\IdentityAccess\CoinExchange.IdentityAccess.Application\CoinExchange.IdentityAccess.Application.csproj">
+      <Project>{523daca3-bec6-45e9-90d4-8f6f8a1266d7}</Project>
+      <Name>CoinExchange.IdentityAccess.Application</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Trades\CoinExchange.Trades.Domain.Model\CoinExchange.Trades.Domain.Model.csproj">
       <Project>{32ac3710-adf8-4522-8f06-1f9c7a45e6e7}</Project>

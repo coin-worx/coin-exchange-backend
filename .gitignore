@@ -172,3 +172,6 @@ UpgradeLog*.htm
 
 # Microsoft Fakes
 FakesAssemblies/
+
+#Exclude logfiles
+src/common/CoinExchange.Rest.WebHost/Logs.txt

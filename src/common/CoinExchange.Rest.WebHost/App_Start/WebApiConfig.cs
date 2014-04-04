@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Web.Http;
+using CoinExchange.IdentityAccess.Application;
 using Common.Logging;
 
 namespace CoinExchange.Rest.WebHost.App_Start
@@ -35,6 +36,9 @@ namespace CoinExchange.Rest.WebHost.App_Start
             //return Json format
             var appXmlType = config.Formatters.XmlFormatter.SupportedMediaTypes.FirstOrDefault(t => t.MediaType == "application/xml");
             config.Formatters.XmlFormatter.SupportedMediaTypes.Remove(appXmlType);
+
+            //add authentication handler
+            config.MessageHandlers.Add(new AuthenticationHandler(new UserAuthentication()));
          
             log.Info("Application Initialized.");
         }

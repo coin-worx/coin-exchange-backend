@@ -84,6 +84,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinExchange.Trades.Port.Adapter.Rest", "Trades\CoinExchange.Trades.Port.Adapter.Rest\CoinExchange.Trades.Port.Adapter.Rest.csproj", "{58D0962F-9A65-499C-820E-6EF9AFA52F61}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IdentityAccess", "IdentityAccess", "{AA8A8F0B-1478-43D4-8392-2DEC3441AA8B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinExchange.IdentityAccess.Application", "IdentityAccess\CoinExchange.IdentityAccess.Application\CoinExchange.IdentityAccess.Application.csproj", "{523DACA3-BEC6-45E9-90D4-8F6F8A1266D7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client", "Client", "{36A9A006-E77F-42D7-818B-C437AE7C49F7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinExchange.Client", "Client\CoinExchange.Client\CoinExchange.Client.csproj", "{7B5B2BB2-D8A1-49BC-A332-FEFEC344DB27}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinExchange.Client.Console", "Client\CoinExchange.Client.Console\CoinExchange.Client.Console.csproj", "{27F0351B-4650-4217-8BF1-0CA41745D15E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -202,6 +212,18 @@ Global
 		{58D0962F-9A65-499C-820E-6EF9AFA52F61}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{58D0962F-9A65-499C-820E-6EF9AFA52F61}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{58D0962F-9A65-499C-820E-6EF9AFA52F61}.Release|Any CPU.Build.0 = Release|Any CPU
+		{523DACA3-BEC6-45E9-90D4-8F6F8A1266D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{523DACA3-BEC6-45E9-90D4-8F6F8A1266D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{523DACA3-BEC6-45E9-90D4-8F6F8A1266D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{523DACA3-BEC6-45E9-90D4-8F6F8A1266D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B5B2BB2-D8A1-49BC-A332-FEFEC344DB27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B5B2BB2-D8A1-49BC-A332-FEFEC344DB27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B5B2BB2-D8A1-49BC-A332-FEFEC344DB27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B5B2BB2-D8A1-49BC-A332-FEFEC344DB27}.Release|Any CPU.Build.0 = Release|Any CPU
+		{27F0351B-4650-4217-8BF1-0CA41745D15E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27F0351B-4650-4217-8BF1-0CA41745D15E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27F0351B-4650-4217-8BF1-0CA41745D15E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27F0351B-4650-4217-8BF1-0CA41745D15E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -243,5 +265,8 @@ Global
 		{D61DBD04-95DC-4EB1-AD54-1FF929AC2814} = {D9EFBBF7-E413-432F-A8DD-47607BA9C3A0}
 		{583A125D-9199-4122-B8BA-FD520068F083} = {D9EFBBF7-E413-432F-A8DD-47607BA9C3A0}
 		{611EF683-34FE-43F4-AD9A-DFD79731AB0A} = {D9EFBBF7-E413-432F-A8DD-47607BA9C3A0}
+		{523DACA3-BEC6-45E9-90D4-8F6F8A1266D7} = {AA8A8F0B-1478-43D4-8392-2DEC3441AA8B}
+		{7B5B2BB2-D8A1-49BC-A332-FEFEC344DB27} = {36A9A006-E77F-42D7-818B-C437AE7C49F7}
+		{27F0351B-4650-4217-8BF1-0CA41745D15E} = {36A9A006-E77F-42D7-818B-C437AE7C49F7}
 	EndGlobalSection
 EndGlobal
