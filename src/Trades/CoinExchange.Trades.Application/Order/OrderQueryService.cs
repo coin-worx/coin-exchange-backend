@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CoinExchange.Common.Domain.Model;
 using CoinExchange.Trades.Domain.Model.Order;
 
 namespace CoinExchange.Trades.Application.Order
@@ -16,7 +17,7 @@ namespace CoinExchange.Trades.Application.Order
         /// Gets the list for the Open orders
         /// </summary>
         /// <returns></returns>
-        public List<Domain.Model.Order.Order> GetOpenOrders()
+        public List<Domain.Model.Order.Order> GetOpenOrders(TraderId traderId, bool includeTrades = false, string userRefId = "")
         {
             List<Domain.Model.Order.Order> orderList = new List<Domain.Model.Order.Order>();
             orderList.Add(new Domain.Model.Order.Order()
@@ -81,7 +82,7 @@ namespace CoinExchange.Trades.Application.Order
         /// Gets the list for the Closed orders
         /// </summary>
         /// <returns></returns>
-        public List<Domain.Model.Order.Order> GetClosedOrders(bool includeTrades = false, string userRefId = "",
+        public List<Domain.Model.Order.Order> GetClosedOrders(TraderId traderId, bool includeTrades = false, string userRefId = "",
             string startTime = "", string endTime = "", string offset = "", string closetime = "both")
         {
             List<Domain.Model.Order.Order> orderList = new List<Domain.Model.Order.Order>();

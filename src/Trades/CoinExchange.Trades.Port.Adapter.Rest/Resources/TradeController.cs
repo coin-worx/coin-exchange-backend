@@ -5,19 +5,25 @@ using CoinExchange.Common.Domain.Model;
 using CoinExchange.Trades.Application.Trades;
 using CoinExchange.Trades.Application.Trades.Representation;
 using CoinExchange.Trades.Domain.Model.Order;
+using Spring.Context;
+using Spring.Context.Support;
 
 namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
 {
     /// <summary>
     /// Rest service for serving requests related to Trades
     /// </summary>
-    public class TradeResource : ApiController
+    public class TradeController : ApiController
     {
-        private TradeQueryService _tradesService;
+        private TradeQueryService _tradeQueryService = null;
         
-        public TradeResource()
+        public TradeController()
         {
-            _tradesService = new TradeQueryService();
+            // Get the context
+            IApplicationContext applicationContext = ContextRegistry.GetContext();
+
+            // Get the instance through Spring configuration
+            _tradeQueryService = (TradeQueryService)applicationContext["tradeQueryService"];
         }
 
         /// <summary>
@@ -36,7 +42,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         {
             try
             {
-                List<Order> closedOrders = _tradesService.GetTradesHistory(offset, type, trades, start, end);
+                List<Order> closedOrders = _tradeQueryService.GetTradesHistory(new TraderId(1), offset, type, trades, start, end);
 
                 if (closedOrders != null)
                 {
@@ -52,18 +58,17 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
 
         /// <summary>
         /// Returns orders of the user that have been filled/executed
-        /// <param name="traderId">Trader ID</param>
         /// <param name="txId">Comma separated list of txIds</param>
         /// <param name="includeTrades">Whether or not to include the trades</param>
         /// </summary>
         /// <returns></returns>
         [Route("trades/querytrades")]
         [HttpPost]
-        public IHttpActionResult QueryTrades([FromBody]TraderId traderId, string txId = "", bool includeTrades = false)
+        public IHttpActionResult QueryTrades(string txId = "", bool includeTrades = false)
         {
             try
             {
-                List<Order> trades = _tradesService.GetTradesHistory();
+                List<Order> trades = _tradeQueryService.QueryTrades(new TraderId(1), txId, includeTrades);
 
                 if (trades != null)
                 {
@@ -91,7 +96,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
             {
                 try
                 {
-                    TradeListRepresentation trades = _tradesService.GetRecentTrades(pair, since);
+                    TradeListRepresentation trades = _tradeQueryService.GetRecentTrades(new TraderId(1), pair, since);
 
                     if (trades != null)
                     {
@@ -114,7 +119,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         /// <summary>
         /// private call to request trade volume
         /// </summary>
-        /// <param name="request"></param>
+        /// <param name="pair"> </param>
         /// <returns></returns>
         [Route("trades/TradeVolume")]
         [HttpPost]
@@ -124,7 +129,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
             {
                 if (pair != string.Empty)
                 {
-                    return Ok(_tradesService.TradeVolume(pair));
+                    return Ok(_tradeQueryService.TradeVolume(pair));
                 }
                 return BadRequest();
             }

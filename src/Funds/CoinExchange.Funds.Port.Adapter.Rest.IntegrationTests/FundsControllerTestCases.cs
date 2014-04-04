@@ -22,7 +22,7 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.IntegrationTests
         [Test]
         public void GetTradeBalanceTestCase()
         {
-            FundsResource fundsController = new FundsResource();
+            FundsController fundsController = new FundsController();
             IHttpActionResult httpActionResult = fundsController.AccountBalance(new TraderId(1));
 
             // The result is and should be returned as IHttpActionResult, which contains content as well as response codes for
@@ -42,7 +42,7 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.IntegrationTests
         [Test]
         public void GetLedgersInfoTestCase()
         {
-            FundsResource fundsController = new FundsResource();
+            FundsController fundsController = new FundsController();
             IHttpActionResult httpActionResult = fundsController.LedgerInfo(new TraderId(2), new LedgerInfoRequest()
             {
                 AssetClass = "Currency",
@@ -66,7 +66,7 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.IntegrationTests
         [Test]
         public void FetchLedgersTestCase()
         {
-            FundsResource fundsController = new FundsResource();
+            FundsController fundsController = new FundsController();
             IHttpActionResult httpActionResult = fundsController.FetchLedgers(new TraderId(2), "1");
 
             // The result is and should be returned as IHttpActionResult, which contains content as well as response codes for

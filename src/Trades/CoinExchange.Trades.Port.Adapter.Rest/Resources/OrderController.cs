@@ -10,7 +10,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
     /// <summary>
     /// Handles HTTP requests related to Orders
     /// </summary>
-    public class OrderResource : ApiController
+    public class OrderController : ApiController
     {
         private OrderApplicationService _orderApplicationService;
         private OrderQueryService _orderQueryService;
@@ -18,9 +18,10 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         /// <summary>
         /// Default Constructor
         /// </summary>
-        public OrderResource()
+        public OrderController()
         {
             _orderApplicationService = new OrderApplicationService();
+            _orderQueryService = new OrderQueryService();
         }
 
         /// <summary>
@@ -58,13 +59,13 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         /// <returns></returns>
         [Route("trades/openorderlist")]
         [HttpPost]
-        public IHttpActionResult OpenOrderList([FromBody]TraderId traderId, bool includeTrades = false, string userRefId = "")
+        public IHttpActionResult OpenOrderList(bool includeTrades = false, string userRefId = "")
         {
             try
             {
                 // ToDo: In the next sprint related to business logic behind RESTful calls, need to split the ledgersIds comma
                 // separated list
-                List<Order> openOrderList = _orderQueryService.GetOpenOrders();
+                List<Order> openOrderList = _orderQueryService.GetOpenOrders(new TraderId(1), includeTrades, userRefId);
 
                 if (openOrderList != null)
                 {
@@ -81,9 +82,8 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         /// <summary>
         /// Returns orders of the user that have been filled/executed
         /// Params:
-        /// 1. TraderId(ValueObject)[FromBody]: Contains an Id of the trader, used for authentication of the trader
-        /// 2. includeTrades(bool): Include trades as well in the response(optional)
-        /// 3. userRefId: Restrict results to given user reference id (optional)
+        /// 1. includeTrades(bool): Include trades as well in the response(optional)
+        /// 2. userRefId: Restrict results to given user reference id (optional)
         /// </summary>
         /// <returns></returns>
         [Route("trades/closedorders")]
@@ -93,7 +93,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         {
             try
             {
-                List<Order> closedOrders = _orderQueryService.GetClosedOrders(includeTrades, userRefId, startTime, endTime, offset,
+                List<Order> closedOrders = _orderQueryService.GetClosedOrders(new TraderId(1), includeTrades, userRefId, startTime, endTime, offset,
                     closetime);
 
                 if (closedOrders != null)
