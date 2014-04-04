@@ -15,15 +15,22 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
     /// </summary>
     public class TradeController : ApiController
     {
-        private TradeQueryService _tradeQueryService = null;
-        
+        private TradeQueryServiceStub _tradeQueryService = null;
+
         public TradeController()
         {
-            // Get the context
+            _tradeQueryService = new TradeQueryServiceStub();
+        }
+
+        public TradeController(TradeQueryServiceStub tradeQueryService)
+        {
+            _tradeQueryService = tradeQueryService;
+
+            /*// Get the context
             IApplicationContext applicationContext = ContextRegistry.GetContext();
 
             // Get the instance through Spring configuration
-            _tradeQueryService = (TradeQueryService)applicationContext["tradeQueryService"];
+            _tradeQueryService = (TradeQueryServiceStub)applicationContext["TradeQueryServiceStub"];*/
         }
 
         /// <summary>
@@ -94,26 +101,18 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         {
             try
             {
-                try
-                {
-                    TradeListRepresentation trades = _tradeQueryService.GetRecentTrades(new TraderId(1), pair, since);
+                TradeListRepresentation trades = _tradeQueryService.GetRecentTrades(new TraderId(1), pair, since);
 
-                    if (trades != null)
-                    {
-                        return Ok(trades);
-                    }
-                    return NotFound();
-                }
-                catch (Exception ex)
+                if (trades != null)
                 {
-                    return InternalServerError(ex);
+                    return Ok(trades);
                 }
+                return NotFound();
             }
             catch (Exception ex)
             {
                 return InternalServerError(ex);
             }
-
         }
 
         /// <summary>
@@ -140,6 +139,10 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
 
         }
 
-        
+        public TradeQueryServiceStub TradeQueryService
+        {
+            get { return _tradeQueryService; }
+            set { _tradeQueryService = value; }
+        }
     }
 }

@@ -9,8 +9,16 @@ namespace CoinExchange.Trades.Application.Trades
     /// <summary>
     /// Service to serve operations related to Trades
     /// </summary>
-    public class TradeQueryService : ITradeService
+    public class TradeQueryServiceStub : ITradeService
     {
+        /// <summary>
+        /// Default Constructor
+        /// </summary>
+        public TradeQueryServiceStub()
+        {
+            
+        }
+
         /// <summary>
         /// Returns orders of the user that have been filled/executed
         /// </summary>

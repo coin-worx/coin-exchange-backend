@@ -49,7 +49,7 @@
     <Compile Include="Trades\Representation\TradeListRepresentation.cs" />
     <Compile Include="Trades\Representation\TradeVolumeRepresentation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Trades\TradeQueryService.cs" />
+    <Compile Include="Trades\TradeQueryServiceStub.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="MarketData\Commands\" />
