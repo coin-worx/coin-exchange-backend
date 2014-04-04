@@ -64,7 +64,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Resources\MarketResource.cs" />
+    <Compile Include="DTOs\MarketData\OhlcParams.cs" />
+    <Compile Include="DTOs\MarketData\OrderBookParams.cs" />
+    <Compile Include="DTOs\Order\QueryClosedOrdersParams.cs" />
+    <Compile Include="DTOs\Order\QueryOpenOrdersParams.cs" />
+    <Compile Include="DTOs\Trade\QueryTradeParams.cs" />
+    <Compile Include="DTOs\Trade\TradeHistoryParams.cs" />
+    <Compile Include="Resources\MarketController.cs" />
     <Compile Include="Resources\OrderController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\TradeController.cs" />
