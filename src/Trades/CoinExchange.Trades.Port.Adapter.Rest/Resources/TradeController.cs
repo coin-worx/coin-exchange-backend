@@ -17,10 +17,10 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
     {
         private TradeQueryServiceStub _tradeQueryService = null;
 
-        public TradeController()
-        {
-            _tradeQueryService = new TradeQueryServiceStub();
-        }
+        //public TradeController()
+        //{
+        //   // _tradeQueryService = new TradeQueryServiceStub();
+        //}
 
         public TradeController(TradeQueryServiceStub tradeQueryService)
         {

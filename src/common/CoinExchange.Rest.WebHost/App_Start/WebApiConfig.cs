@@ -8,7 +8,7 @@ namespace CoinExchange.Rest.WebHost.App_Start
     public static class WebApiConfig
     {
         //get current logger
-        private static ILog log = LogManager.GetCurrentClassLogger();
+       // private static ILog log = LogManager.GetCurrentClassLogger();
          
         public static void Register(HttpConfiguration config)
         {
@@ -28,7 +28,7 @@ namespace CoinExchange.Rest.WebHost.App_Start
             //add authentication handler
             config.MessageHandlers.Add(new AuthenticationHandler(new UserAuthentication()));
          
-            log.Info("Application Initialized.");
+           // log.Info("Application Initialized.");
         }
     }
 }
