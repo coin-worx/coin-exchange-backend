@@ -8,7 +8,6 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using CoinExchange.Rest.WebHost.App_Start;
 using Common.Logging;
-using Spring.Context;
 using Spring.Context.Support;
 
 namespace CoinExchange.Rest.WebHost

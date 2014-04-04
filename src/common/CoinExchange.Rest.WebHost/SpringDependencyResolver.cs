@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Http.Dependencies;
 using System.Web.Mvc;
 //using System.Web.Http.Dependencies;
 using Spring.Context;
@@ -11,7 +12,7 @@ namespace CoinExchange.Rest.WebHost
     /// <summary>
     /// SpringDependencyResolver required for Spring Dependency Injection
     /// </summary>
-    public class SpringDependencyResolver : IDependencyResolver
+    public class SpringDependencyResolver : System.Web.Mvc.IDependencyResolver
     {
         private readonly IApplicationContext _context;
 
