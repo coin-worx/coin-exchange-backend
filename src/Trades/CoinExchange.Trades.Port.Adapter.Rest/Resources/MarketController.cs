@@ -43,31 +43,27 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
             try
             {
                 return Ok(_marketDataService.GetOhlcInfo(pair,interval, since));
-
             }
             catch (Exception ex)
             {
                 return InternalServerError(ex);
             }
-
         }
 
         /// <summary>
-        /// Returns orders that have not been executed but those that have been accepted on the server. Exception can be 
-        /// provided in the second parameter
+        /// Public call that returns the Orders for a particular currency pair
         /// Params:
-        /// 1. TraderId(ValueObject)[FromBody]: Contains an Id of the trader, used for authentication of the trader
-        /// 2. includeTrades(bool): Include trades as well in the response(optional)
-        /// 3. userRefId: Restrict results to given user reference id (optional)
+        /// 1. currencyPair (Required)
+        /// 2. Count(optional)
         /// </summary>
         /// <returns></returns>
         [Route("marketdata/orderbook")]
         [HttpGet]
-        public IHttpActionResult OpenOrderList(string currencyPair, int count = 0)
+        public IHttpActionResult GetOrderBook(string currencyPair, int count = 0)
         {
             try
             {
-                List<object> list = _marketDataService.GetOrderBook(currencyPair);
+                List<object> list = _marketDataService.GetOrderBook(currencyPair, count);
                 if (list != null)
                 {
                     return Ok<List<object>>(list);

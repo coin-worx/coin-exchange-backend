@@ -12,27 +12,6 @@ namespace CoinExchange.Trades.Application.MarketData
     public class MarketDataApplicationService
     {
         /// <summary>
-        /// Returns the Order Book
-        /// </summary>
-        /// <returns></returns>
-        public List<object> GetOrderBook(string symbol)
-        {
-            List<object> list = new List<object>();
-            list.Add(symbol);
-            list.Add("asks");
-            list.Add(new object[] { "23", "1000", "204832014" });
-            list.Add(new object[] { "32", "1000", "204832014" });
-            list.Add(new object[] { "34", "1000", "204832014" });
-
-            list.Add("bids");
-            list.Add(new object[] { "23", "1000", "204832014" });
-            list.Add(new object[] { "23", "1000", "204832014" });
-            list.Add(new object[] { "23", "1000", "204832014" });
-
-            return list;
-        }
-
-        /// <summary>
         /// Get ticker info
         /// </summary>
         /// <param name="pairs"></param>
@@ -64,6 +43,27 @@ namespace CoinExchange.Trades.Application.MarketData
             }
             OhlcRepresentation representation = new OhlcRepresentation(dataList, pair, 100);
             return representation;
+        }
+
+        /// <summary>
+        /// Returns the Order Book
+        /// </summary>
+        /// <returns></returns>
+        public List<object> GetOrderBook(string symbol, int count)
+        {
+            List<object> list = new List<object>();
+            list.Add(symbol);
+            list.Add("asks");
+            list.Add(new object[] { "23", "1000", "204832014" });
+            list.Add(new object[] { "32", "1000", "204832014" });
+            list.Add(new object[] { "34", "1000", "204832014" });
+
+            list.Add("bids");
+            list.Add(new object[] { "23", "1000", "204832014" });
+            list.Add(new object[] { "23", "1000", "204832014" });
+            list.Add(new object[] { "23", "1000", "204832014" });
+
+            return list;
         }
     }
 }

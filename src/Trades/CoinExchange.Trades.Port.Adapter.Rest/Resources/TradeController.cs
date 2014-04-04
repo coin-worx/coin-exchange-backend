@@ -5,6 +5,8 @@ using CoinExchange.Common.Domain.Model;
 using CoinExchange.Trades.Application.Trades;
 using CoinExchange.Trades.Application.Trades.Representation;
 using CoinExchange.Trades.Domain.Model.Order;
+using CoinExchange.Trades.Port.Adapter.Rest.DTOs;
+using CoinExchange.Trades.Port.Adapter.Rest.DTOs.Trade;
 using Spring.Context;
 using Spring.Context.Support;
 
@@ -17,39 +19,28 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
     {
         private TradeQueryServiceStub _tradeQueryService = null;
 
-        //public TradeController()
-        //{
-        //   // _tradeQueryService = new TradeQueryServiceStub();
-        //}
-
         public TradeController(TradeQueryServiceStub tradeQueryService)
         {
             _tradeQueryService = tradeQueryService;
-
-            /*// Get the context
-            IApplicationContext applicationContext = ContextRegistry.GetContext();
-
-            // Get the instance through Spring configuration
-            _tradeQueryService = (TradeQueryServiceStub)applicationContext["TradeQueryServiceStub"];*/
         }
 
         /// <summary>
-        /// Returns orders of the user that have been filled/executed
-        /// <param name="offset">Result offset</param>
-        /// <param name="type">Type of trade (optional) [all = all types (default), any position = any position (open or closed), closed position = positions that have been closed, closing position = any trade closing all or part of a position, no position = non-positional trades]</param>
-        /// <param name="trades">Whether or not to include trades related to position in output (optional.  default = false)</param>
-        /// <param name="start">Starting unix timestamp or trade tx id of results (optional.  exclusive)</param>
-        /// <param name="end">Ending unix timestamp or trade tx id of results (optional.  inclusive)</param>
+        /// Private call that returns orders of the user that have been filled/executed
+        /// TradeHistoryParams.Offset: Result offset (Optional)
+        /// TradeHistoryParamsType.Type: Type of trade (optional) [all = all types (default), any position = any position (open or closed), closed position = positions that have been closed, closing position = any trade closing all or part of a position, no position = non-positional trades]</param>
+        /// TradeHistoryParamsType.Trades: Whether or not to include trades related to position in output (optional.  default = false)
+        /// TradeHistoryParamsType.Start: Starting unix timestamp or trade tx id of results (optional.  exclusive)
+        /// TradeHistoryParamsType.End: Ending unix timestamp or trade tx id of results (optional.  inclusive)
         /// </summary>
         /// <returns></returns>
         [Route("trades/tradehistory")]
         [HttpPost]
-        public IHttpActionResult GetTradeHistory(string offset = "", string type = "all",
-            bool trades = false, string start = "", string end = "")
+        public IHttpActionResult GetTradeHistory([FromBody]TradeHistoryParams tradeHistoryParams)
         {
             try
             {
-                List<Order> closedOrders = _tradeQueryService.GetTradesHistory(new TraderId(1), offset, type, trades, start, end);
+                List<Order> closedOrders = _tradeQueryService.GetTradesHistory(new TraderId(1), tradeHistoryParams.Offset,
+                    tradeHistoryParams.Type, tradeHistoryParams.Trades, tradeHistoryParams.Start, tradeHistoryParams.End);
 
                 if (closedOrders != null)
                 {
@@ -64,18 +55,19 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         }
 
         /// <summary>
-        /// Returns orders of the user that have been filled/executed
-        /// <param name="txId">Comma separated list of txIds</param>
-        /// <param name="includeTrades">Whether or not to include the trades</param>
+        /// Private call that returns orders of the user that have been filled/executed
+        /// QueryTradeParams.TxId: Comma separated list of txIds(Optional)
+        /// QueryTradeParams.IncludeTrades: Whether or not to include the trades(Optional)
         /// </summary>
         /// <returns></returns>
         [Route("trades/querytrades")]
         [HttpPost]
-        public IHttpActionResult QueryTrades(string txId = "", bool includeTrades = false)
+        public IHttpActionResult QueryTrades([FromBody]QueryTradeParams queryTradeParams)
         {
             try
             {
-                List<Order> trades = _tradeQueryService.QueryTrades(new TraderId(1), txId, includeTrades);
+                List<Order> trades = _tradeQueryService.QueryTrades(new TraderId(1), queryTradeParams.TxId, 
+                    queryTradeParams.IncludeTrades);
 
                 if (trades != null)
                 {
@@ -92,16 +84,17 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         /// <summary>
         /// Public call to get recent trades
         /// </summary>
-        /// <param name="pair"></param>
-        /// <param name="since"></param>
+        /// <param name="currencyPair"> </param>
+        /// <param name="since"> </param>
         /// <returns></returns>
         [Route("trades/recenttrades")]
         [HttpGet]
-        public IHttpActionResult RecentTrades(string pair, string since = "")
+        public IHttpActionResult RecentTrades(string currencyPair, string since = "")
         {
             try
             {
-                TradeListRepresentation trades = _tradeQueryService.GetRecentTrades(new TraderId(1), pair, since);
+                TradeListRepresentation trades = _tradeQueryService.GetRecentTrades(new TraderId(1),
+                                                                                    currencyPair, since);
 
                 if (trades != null)
                 {
@@ -139,10 +132,12 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
 
         }
 
+        /// <summary>
+        /// TradeQueryService
+        /// </summary>
         public TradeQueryServiceStub TradeQueryService
         {
             get { return _tradeQueryService; }
-            set { _tradeQueryService = value; }
         }
     }
 }
