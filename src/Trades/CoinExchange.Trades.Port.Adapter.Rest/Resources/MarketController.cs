@@ -8,14 +8,14 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
     /// <summary>
     /// Market Data Service class rest expose
     /// </summary>
-    public class MarketResource : ApiController
+    public class MarketController : ApiController
     {
         private MarketDataApplicationService _marketDataService = null;
 
         /// <summary>
         /// Default constructor
         /// </summary>
-        public MarketResource()
+        public MarketController()
         {
             _marketDataService = new MarketDataApplicationService();
         }
