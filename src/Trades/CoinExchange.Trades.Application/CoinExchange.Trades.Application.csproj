@@ -43,10 +43,12 @@
     <Compile Include="MarketData\MarketDataApplicationService.cs" />
     <Compile Include="MarketData\Representation\OhlcRepresentation.cs" />
     <Compile Include="MarketData\Representation\TickerRepresentation.cs" />
+    <Compile Include="Order\Commands\CreateOrderCommand.cs" />
     <Compile Include="Order\IOrderApplicationService.cs" />
     <Compile Include="Order\IOrderQueryService.cs" />
     <Compile Include="Order\OrderApplicationService.cs" />
     <Compile Include="Order\OrderQueryService.cs" />
+    <Compile Include="Order\Representation\NewOrderRepresentation.cs" />
     <Compile Include="Trades\ITradeService.cs" />
     <Compile Include="Trades\Representation\TradeFeeRepresentation.cs" />
     <Compile Include="Trades\Representation\TradeListRepresentation.cs" />
@@ -56,8 +58,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="MarketData\Commands\" />
-    <Folder Include="Order\Commands\" />
-    <Folder Include="Order\Representation\" />
     <Folder Include="Trades\Commands\" />
   </ItemGroup>
   <ItemGroup>

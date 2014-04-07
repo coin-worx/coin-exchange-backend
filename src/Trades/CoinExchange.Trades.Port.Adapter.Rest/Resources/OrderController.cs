@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Web.Http;
 using CoinExchange.Common.Domain.Model;
 using CoinExchange.Trades.Application.Order;
+using CoinExchange.Trades.Application.Order.Commands;
 using CoinExchange.Trades.Domain.Model.Order;
 using CoinExchange.Trades.Port.Adapter.Rest.DTOs.Order;
 
@@ -40,6 +41,33 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                 if (txid != string.Empty)
                 {
                     return Ok(_orderApplicationService.CancelOrder(txid));
+                }
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        /// <summary>
+        /// Private call for user to create order
+        /// </summary>
+        /// <param name="order"></param>
+        /// <returns></returns>
+        [Route("trades/CreateOrder")]
+        [Authorize]
+        [HttpPost]
+        public IHttpActionResult CreateOrder([FromBody]CreateOrderParam order)
+        {
+            try
+            {
+                if (order != null)
+                {
+                    return
+                        Ok(
+                            _orderApplicationService.CreateOrder(new CreateOrderCommand(order.Price, order.Type,
+                                order.Side, order.Pair)));
                 }
                 return BadRequest();
             }
