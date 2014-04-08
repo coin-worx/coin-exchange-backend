@@ -5,9 +5,11 @@ namespace CoinExchange.Client.Console
     {
         static void Main(string[] args)
         {
-            ApiClient client=new ApiClient();
+            string baseUrl = "http://rockblanc.cloudapp.net/dev";
+            ApiClient client=new ApiClient(baseUrl);
             System.Console.WriteLine("Requesting....");
-            System.Console.WriteLine(client.TestPrivate("http://localhost:51780/test","BitcoinExchange"));
+            //call methods available in api
+            System.Console.WriteLine(client.GetTradeVolume("XBTUSD"));
             System.Console.ReadKey();
         }
     }
