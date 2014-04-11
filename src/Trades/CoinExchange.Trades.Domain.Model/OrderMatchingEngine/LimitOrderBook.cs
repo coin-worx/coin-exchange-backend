@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CoinExchange.Trades.Domain.Model.Order;
+using CoinExchange.Trades.Domain.Model.Trades;
 
 namespace CoinExchange.Trades.Domain.Model.MatchingEngine
 {
@@ -28,7 +29,7 @@ namespace CoinExchange.Trades.Domain.Model.MatchingEngine
         /// </summary>
         private SortedList<decimal, Order.Order> _asks = new SortedList<decimal, Order.Order>();
 
-        private List<Trade.Trade> _trades = new List<Trade.Trade>(); 
+        private List<Trade> _trades = new List<Trade>(); 
 
         /// <summary>
         /// Default Constructor
@@ -82,7 +83,7 @@ namespace CoinExchange.Trades.Domain.Model.MatchingEngine
                         if (sellOrder.Volume > 0)
                         {
                             // Send the Buy Order's volume as the quantity of the trade executed
-                            Trade.Trade trade = GenerateTrade(matchingBid.Value.LimitPrice, matchingBid.Value.Volume,
+                            Trade trade = GenerateTrade(matchingBid.Value.LimitPrice, matchingBid.Value.Volume,
                                                 matchingBid.Value, sellOrder);
 
                             // ToDo: Create method that will generate a new TradeExecutedEvent and the Trade will raise it
@@ -95,7 +96,7 @@ namespace CoinExchange.Trades.Domain.Model.MatchingEngine
                         else if (sellOrder.Volume < 0)
                         {
                             // Send the Buy Order's volume as the quantity of the trade executed
-                            Trade.Trade trade = GenerateTrade(matchingBid.Value.LimitPrice, -sellOrder.Volume,
+                            Trade trade = GenerateTrade(matchingBid.Value.LimitPrice, -sellOrder.Volume,
                                                 matchingBid.Value, sellOrder);
 
                             // ToDo: Create method that will generate a new TradeExecutedEvent and the Trade will raise it
@@ -110,7 +111,7 @@ namespace CoinExchange.Trades.Domain.Model.MatchingEngine
                         else if (sellOrder.Volume == 0)
                         {
                             // Send the Buy Order's volume as the quantity of the trade executed
-                            Trade.Trade trade = GenerateTrade(matchingBid.Value.LimitPrice, matchingBid.Value.Volume,
+                            Trade trade = GenerateTrade(matchingBid.Value.LimitPrice, matchingBid.Value.Volume,
                                                 matchingBid.Value, sellOrder);
 
                             // ToDo: Create method that will generate a new TradeExecutedEvent and the Trade will raise it
@@ -146,10 +147,10 @@ namespace CoinExchange.Trades.Domain.Model.MatchingEngine
         /// Generates the Trade after a cross between two orders
         /// </summary>
         /// <returns></returns>
-        private Trade.Trade GenerateTrade(decimal executionPrice, 
+        private Trade GenerateTrade(decimal executionPrice, 
             decimal executedQuantity, Order.Order buyOrder, Order.Order sellOrder)
         {
-            Trade.Trade trade = new Trade.Trade(buyOrder.Pair, executionPrice, executedQuantity, DateTime.Now, buyOrder,
+            Trade trade = new Trade(buyOrder.Pair, executionPrice, executedQuantity, DateTime.Now, buyOrder,
                 sellOrder);
             _trades.Add(trade);
 
@@ -191,7 +192,7 @@ namespace CoinExchange.Trades.Domain.Model.MatchingEngine
         /// <summary>
         /// Contains the list of all trades
         /// </summary>
-        public List<Trade.Trade> Trades
+        public List<Trade> Trades
         {
             get { return _trades; }
         }

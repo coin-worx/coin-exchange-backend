@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using CoinExchange.Common.Domain.Model;
 using CoinExchange.Trades.Application.Trades.Representation;
 using CoinExchange.Trades.Domain.Model.Order;
+using CoinExchange.Trades.Domain.Model.Trades;
 
 namespace CoinExchange.Trades.Application.Trades
 {
@@ -38,7 +39,7 @@ namespace CoinExchange.Trades.Application.Trades
                 Volume = 3000,
                 Cost = 0,
                 Fee = (decimal?)0.25,
-                Price = (decimal?)491.23,
+                Price = (decimal)491.23,
                 StopPrice = 0,
                 LimitPrice = 0,
                 OFlags = "DUMMY",
@@ -58,7 +59,7 @@ namespace CoinExchange.Trades.Application.Trades
                 Volume = 3000,
                 Cost = 0,
                 Fee = (decimal?)0.25,
-                Price = (decimal?)491.23,
+                Price = (decimal)491.23,
                 StopPrice = 0,
                 LimitPrice = 0,
                 OFlags = "DUMMY",
@@ -78,7 +79,7 @@ namespace CoinExchange.Trades.Application.Trades
                 Volume = 3000,
                 Cost = 0,
                 Fee = (decimal?)0.25,
-                Price = (decimal?)491.23,
+                Price = (decimal)491.23,
                 StopPrice = 0,
                 LimitPrice = 0,
                 OFlags = "DUMMY",
@@ -112,7 +113,7 @@ namespace CoinExchange.Trades.Application.Trades
                 Volume = 3000,
                 Cost = 0,
                 Fee = (decimal?)0.25,
-                Price = (decimal?)491.23,
+                Price = (decimal)491.23,
                 StopPrice = 0,
                 LimitPrice = 0,
                 OFlags = "DUMMY",
@@ -132,7 +133,7 @@ namespace CoinExchange.Trades.Application.Trades
                 Volume = 3000,
                 Cost = 0,
                 Fee = (decimal?)0.25,
-                Price = (decimal?)491.23,
+                Price = (decimal)491.23,
                 StopPrice = 0,
                 LimitPrice = 0,
                 OFlags = "DUMMY",
@@ -152,7 +153,7 @@ namespace CoinExchange.Trades.Application.Trades
                 Volume = 3000,
                 Cost = 0,
                 Fee = (decimal?)0.25,
-                Price = (decimal?)491.23,
+                Price = (decimal)491.23,
                 StopPrice = 0,
                 LimitPrice = 0,
                 OFlags = "DUMMY",

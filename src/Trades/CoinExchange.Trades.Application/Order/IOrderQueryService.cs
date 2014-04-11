@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CoinExchange.Common.Domain.Model;
+using CoinExchange.Trades.Domain.Model.Trades;
 
 namespace CoinExchange.Trades.Application.Order
 {

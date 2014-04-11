@@ -40,7 +40,7 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Controllers
         /// <returns></returns>
         [Route("api/funds/balance")]
         [HttpPost]
-        public IHttpActionResult AccountBalance([FromBody]TraderId traderId, string assetClass = null, string asset = null)
+        public IHttpActionResult AccountBalance(string assetClass = null, string asset = null)
         {
             try
             {
@@ -68,7 +68,7 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Controllers
         /// <returns></returns>
         [Route("api/funds/tradebalance")]
         [HttpPost]
-        public IHttpActionResult PostTradeBalance([FromBody]TraderId traderId, string assetClass = null, string asset = null)
+        public IHttpActionResult PostTradeBalance(string assetClass = null, string asset = null)
         {
             try
             {
@@ -95,7 +95,7 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Controllers
         /// <returns></returns>
         [Route("api/funds/ledgersinfo")]
         [HttpPost]
-        public IHttpActionResult LedgerInfo([FromBody]TraderId traderId, [FromUri]LedgerInfoRequest ledger)
+        public IHttpActionResult LedgerInfo([FromUri]LedgerInfoRequest ledger)
         {
             try
             {
@@ -123,7 +123,7 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Controllers
         /// <returns></returns>
         [Route("api/funds/fetchledgers")]
         [HttpPost]
-        public IHttpActionResult FetchLedgers([FromBody]TraderId traderId, string ledgerIds = "")
+        public IHttpActionResult FetchLedgers(string ledgerIds = "")
         {
             try
             {

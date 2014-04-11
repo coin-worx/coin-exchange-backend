@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using CoinExchange.Trades.Domain.Model.Trades;
+
 /*
  * Author: Waqas
  * Comany: Aurora Solutions
  */
-using CoinExchange.Common.Domain.Model;
 
 namespace CoinExchange.Trades.Domain.Model.Order
 {
@@ -22,6 +23,7 @@ namespace CoinExchange.Trades.Domain.Model.Order
         {
             
         }
+
         /// <summary>
         /// Factory Constructor
         /// </summary>
@@ -31,7 +33,7 @@ namespace CoinExchange.Trades.Domain.Model.Order
         /// <param name="orderType"></param>
         /// <param name="volume"></param>
         /// <param name="traderId"></param>
-        public Order(string pair, decimal price, OrderSide orderSide, OrderType orderType, decimal volume,string traderId)
+        public Order(string pair, decimal price, OrderSide orderSide, OrderType orderType, decimal volume, TraderId traderId)
         {
             Pair = pair;
             Price = price;
@@ -170,12 +172,12 @@ namespace CoinExchange.Trades.Domain.Model.Order
         /// <summary>
         /// Stop price (for trailing stops)
         /// </summary>
-        public decimal? StopPrice { get; set; }
+        public decimal StopPrice { get; set; }
 
         /// <summary>
         /// Triggered limit price (when limit based ordertype triggered)
         /// </summary>
-        public decimal? LimitPrice { get; set; }
+        public decimal LimitPrice { get; set; }
 
         /// <summary>
         /// Comma delimited list of miscellaneous info
@@ -205,6 +207,6 @@ namespace CoinExchange.Trades.Domain.Model.Order
         /// <summary>
         /// Trader id
         /// </summary>
-        public string TraderId { get; set; }
+        public TraderId TraderId { get; set; }
     }
 }

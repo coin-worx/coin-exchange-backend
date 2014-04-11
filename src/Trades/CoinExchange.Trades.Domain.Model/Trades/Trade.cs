@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace CoinExchange.Trades.Domain.Model.Trade
+namespace CoinExchange.Trades.Domain.Model.Trades
 {
     /// <summary>
     /// Result of a bid and ask crossing

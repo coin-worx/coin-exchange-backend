@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CoinExchange.Common.Domain.Model;
 using CoinExchange.Trades.Application.Trades.Representation;
+using CoinExchange.Trades.Domain.Model.Trades;
 
 namespace CoinExchange.Trades.Application.Trades
 {
