@@ -66,6 +66,7 @@
     <Compile Include="Order\OrderId.cs" />
     <Compile Include="Order\TradeRecord.cs" />
     <Compile Include="Trades\Trade.cs" />
+    <Compile Include="Trades\TradeExecutedEvent.cs" />
     <Compile Include="Trades\TraderId.cs" />
   </ItemGroup>
   <ItemGroup>
