@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CoinExchange.Common.Domain.Model;
+﻿using System.Collections.Generic;
 using CoinExchange.Trades.Domain.Model.Trades;
 
-namespace CoinExchange.Trades.Application.Order
+namespace CoinExchange.Trades.Application.OrderServices
 {
     public interface IOrderQueryService
     {

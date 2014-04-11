@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using CoinExchange.Common.Domain.Model;
-using CoinExchange.Trades.Application.Trades.Representation;
+using CoinExchange.Trades.Application.TradeServices.Representation;
 using CoinExchange.Trades.Domain.Model.Order;
 using CoinExchange.Trades.Domain.Model.Trades;
 
-namespace CoinExchange.Trades.Application.Trades
+namespace CoinExchange.Trades.Application.TradeServices
 {
     /// <summary>
     /// Service to serve operations related to Trades

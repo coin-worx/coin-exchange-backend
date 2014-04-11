@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Web.Http;
 using CoinExchange.Common.Domain.Model;
-using CoinExchange.Trades.Application.Order;
-using CoinExchange.Trades.Application.Order.Commands;
+using CoinExchange.Trades.Application.OrderServices;
+using CoinExchange.Trades.Application.OrderServices.Commands;
 using CoinExchange.Trades.Domain.Model.Order;
 using CoinExchange.Trades.Domain.Model.Trades;
 using CoinExchange.Trades.Port.Adapter.Rest.DTOs.Order;

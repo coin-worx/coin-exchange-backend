@@ -7,6 +7,6 @@
     <constructor-arg name="marketDataApplicationService" ref="MarketDataApplicationService"/>
   </object>
 
-  <object id="MarketDataApplicationService" type="CoinExchange.Trades.Application.MarketData.StubbedMarketDataApplicationService, CoinExchange.Trades.Application"/>
+  <object id="MarketDataApplicationService" type="CoinExchange.Trades.Application.MarketDataServices.StubbedMarketDataApplicationService, CoinExchange.Trades.Application"/>
 
 </objects>

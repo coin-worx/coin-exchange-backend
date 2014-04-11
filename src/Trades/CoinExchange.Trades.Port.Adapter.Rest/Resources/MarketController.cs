@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Web.Http;
-using CoinExchange.Trades.Application.MarketData;
+using CoinExchange.Trades.Application.MarketDataServices;
 
 namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
 {
@@ -21,12 +21,12 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         }
 
         [HttpGet]
-        [Route("marketData/tickerinfo")]
-        public IHttpActionResult TickerInfo(string pair)
+        [Route("marketdata/tickerinfo")]
+        public IHttpActionResult TickerInfo(string currencyPair)
         {
             try
             {
-                return Ok(_marketDataService.GetTickerInfo(pair));
+                return Ok(_marketDataService.GetTickerInfo(currencyPair));
             }
             catch (Exception ex)
             {
@@ -35,12 +35,12 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         }
 
         [HttpGet]
-        [Route("marketData/ohlcinfo")]
-        public IHttpActionResult OhlcInfo(string pair, int interval = 1, string since = "")
+        [Route("marketdata/ohlcinfo")]
+        public IHttpActionResult OhlcInfo(string currencyPair, int interval = 1, string since = "")
         {
             try
             {
-                return Ok(_marketDataService.GetOhlcInfo(pair,interval, since));
+                return Ok(_marketDataService.GetOhlcInfo(currencyPair,interval, since));
             }
             catch (Exception ex)
             {

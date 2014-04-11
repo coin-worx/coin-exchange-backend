@@ -1,9 +1,9 @@
 ﻿using System;
-using CoinExchange.Trades.Application.Order.Commands;
-using CoinExchange.Trades.Application.Order.Representation;
+using CoinExchange.Trades.Application.OrderServices.Commands;
+using CoinExchange.Trades.Application.OrderServices.Representation;
 using CoinExchange.Trades.Domain.Model.Order;
 
-namespace CoinExchange.Trades.Application.Order
+namespace CoinExchange.Trades.Application.OrderServices
 {
     public class OrderApplicationService:IOrderApplicationService
     {

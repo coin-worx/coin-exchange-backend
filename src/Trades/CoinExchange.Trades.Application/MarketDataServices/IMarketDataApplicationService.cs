@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CoinExchange.Trades.Application.MarketData.Representation;
+﻿using System.Collections.Generic;
+using CoinExchange.Trades.Application.MarketDataServices.Representation;
 
-namespace CoinExchange.Trades.Application.MarketData
+namespace CoinExchange.Trades.Application.MarketDataServices
 {
     public interface IMarketDataApplicationService
     {

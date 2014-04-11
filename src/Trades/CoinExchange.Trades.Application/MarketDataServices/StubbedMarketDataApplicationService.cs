@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.NetworkInformation;
-using CoinExchange.Trades.Application.MarketData.Representation;
+using CoinExchange.Trades.Application.MarketDataServices.Representation;
 using CoinExchange.Trades.Domain.Model.MarketData;
 
-namespace CoinExchange.Trades.Application.MarketData
+namespace CoinExchange.Trades.Application.MarketDataServices
 {
     /// <summary>
     /// Service serving the iperations relatedto Market Data

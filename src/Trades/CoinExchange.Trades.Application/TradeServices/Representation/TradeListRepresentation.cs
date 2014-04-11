@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using CoinExchange.Trades.Domain.Model.Order;
 
-namespace CoinExchange.Trades.Application.Trades.Representation
+namespace CoinExchange.Trades.Application.TradeServices.Representation
 {
     /// <summary>
     /// representation for retunring list of trades

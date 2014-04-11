@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CoinExchange.Trades.Application.MarketData.Representation
+﻿namespace CoinExchange.Trades.Application.MarketDataServices.Representation
 {
     /// <summary>
     /// Represenstation for ticker for query ticker info

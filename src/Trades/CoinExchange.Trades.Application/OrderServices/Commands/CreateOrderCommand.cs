@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CoinExchange.Trades.Application.Order.Commands
+﻿namespace CoinExchange.Trades.Application.OrderServices.Commands
 {
     public class CreateOrderCommand
     {

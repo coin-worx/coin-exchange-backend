@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CoinExchange.Trades.Application.Order.Commands;
-using CoinExchange.Trades.Application.Order.Representation;
+using CoinExchange.Trades.Application.OrderServices.Commands;
+using CoinExchange.Trades.Application.OrderServices.Representation;
 using CoinExchange.Trades.Domain.Model.Order;
 
-namespace CoinExchange.Trades.Application.Order
+namespace CoinExchange.Trades.Application.OrderServices
 {
     /// <summary>
     /// Serves the operations for resources related to Order

@@ -39,27 +39,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MarketData\IMarketDataApplicationService.cs" />
-    <Compile Include="MarketData\StubbedMarketDataApplicationService.cs" />
-    <Compile Include="MarketData\Representation\OhlcRepresentation.cs" />
-    <Compile Include="MarketData\Representation\TickerRepresentation.cs" />
-    <Compile Include="Order\Commands\CreateOrderCommand.cs" />
-    <Compile Include="Order\IOrderApplicationService.cs" />
-    <Compile Include="Order\IOrderQueryService.cs" />
-    <Compile Include="Order\OrderApplicationService.cs" />
-    <Compile Include="Order\StubbedOrderApplicationService.cs" />
-    <Compile Include="Order\StubbedOrderQueryService.cs" />
-    <Compile Include="Order\Representation\NewOrderRepresentation.cs" />
-    <Compile Include="Trades\ITradeApplicationService.cs" />
-    <Compile Include="Trades\Representation\TradeFeeRepresentation.cs" />
-    <Compile Include="Trades\Representation\TradeListRepresentation.cs" />
-    <Compile Include="Trades\Representation\TradeVolumeRepresentation.cs" />
+    <Compile Include="MarketDataServices\IMarketDataApplicationService.cs" />
+    <Compile Include="MarketDataServices\StubbedMarketDataApplicationService.cs" />
+    <Compile Include="MarketDataServices\Representation\OhlcRepresentation.cs" />
+    <Compile Include="MarketDataServices\Representation\TickerRepresentation.cs" />
+    <Compile Include="OrderServices\Commands\CreateOrderCommand.cs" />
+    <Compile Include="OrderServices\IOrderApplicationService.cs" />
+    <Compile Include="OrderServices\IOrderQueryService.cs" />
+    <Compile Include="OrderServices\OrderApplicationService.cs" />
+    <Compile Include="OrderServices\StubbedOrderApplicationService.cs" />
+    <Compile Include="OrderServices\StubbedOrderQueryService.cs" />
+    <Compile Include="OrderServices\Representation\NewOrderRepresentation.cs" />
+    <Compile Include="TradeServices\ITradeApplicationService.cs" />
+    <Compile Include="TradeServices\Representation\TradeFeeRepresentation.cs" />
+    <Compile Include="TradeServices\Representation\TradeListRepresentation.cs" />
+    <Compile Include="TradeServices\Representation\TradeVolumeRepresentation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Trades\StubbedTradeApplicationService.cs" />
+    <Compile Include="TradeServices\StubbedTradeApplicationService.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="MarketData\Commands\" />
-    <Folder Include="Trades\Commands\" />
+    <Folder Include="MarketDataServices\Commands\" />
+    <Folder Include="TradeServices\Commands\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Common\CoinExchange.Common\CoinExchange.Common.csproj">
