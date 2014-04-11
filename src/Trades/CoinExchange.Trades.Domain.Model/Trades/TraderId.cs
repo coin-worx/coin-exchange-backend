@@ -3,7 +3,7 @@
  * Comany: Aurora Solutions
  */
 
-namespace CoinExchange.Common.Domain.Model
+namespace CoinExchange.Trades.Domain.Model.Trades
 {
     /// <summary>
     /// Value Object that represents the internal TraderId associated with a trader

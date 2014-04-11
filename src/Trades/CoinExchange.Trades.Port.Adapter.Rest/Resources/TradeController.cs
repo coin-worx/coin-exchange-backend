@@ -5,6 +5,7 @@ using CoinExchange.Common.Domain.Model;
 using CoinExchange.Trades.Application.Trades;
 using CoinExchange.Trades.Application.Trades.Representation;
 using CoinExchange.Trades.Domain.Model.Order;
+using CoinExchange.Trades.Domain.Model.Trades;
 using CoinExchange.Trades.Port.Adapter.Rest.DTOs;
 using CoinExchange.Trades.Port.Adapter.Rest.DTOs.Trade;
 using Spring.Context;

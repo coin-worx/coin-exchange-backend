@@ -30,5 +30,13 @@ namespace CoinExchange.Trades.Domain.Model.Order
         /// Order expired
         /// </summary>
         Expired,
+        /// <summary>
+        /// order Filled Partially
+        /// </summary>
+        PartiallyFilled,
+        /// <summary>
+        /// Order Filled Completely
+        /// </summary>
+        FullyFilled
     }
 }
