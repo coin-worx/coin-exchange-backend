@@ -7,6 +7,7 @@ namespace CoinExchange.Trades.Domain.Model.Trades
     /// </summary>
     public class Trade
     {
+        private readonly string _aggregateId;
         private string _currencyPair = string.Empty;
         private decimal _executionPrice = 0;
         private decimal _executedQuantity = 0;
@@ -26,6 +27,18 @@ namespace CoinExchange.Trades.Domain.Model.Trades
             _executionTime = executionTime;
             _buyOrder = buyOrder;
             _sellOrder = sellOrder;
+
+            // ToDo: Need to implement auto incremental aggregate Id generator 
+        }
+
+        /// <summary>
+        /// Raise the TradeExecutedEvent
+        /// </summary>
+        public void RaiseEvent()
+        {
+            TradeExecutedEvent tradeExecutedEvent = new TradeExecutedEvent(_aggregateId, this);
+
+            // ToDo: Need to figure out how to raise this event and publish on the output disruptor
         }
 
         /// <summary>

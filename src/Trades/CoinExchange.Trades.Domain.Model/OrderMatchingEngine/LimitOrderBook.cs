@@ -16,18 +16,14 @@ namespace CoinExchange.Trades.Domain.Model.MatchingEngine
         private string _currencyPair = string.Empty;
 
         /// <summary>
-        /// Bid list that contains bids at the requested prices for every Depth Level
-        /// Key = Price
-        /// Value = Order
+        /// Bid list
         /// </summary>
-        private SortedList<decimal, Order.Order> _bids = new SortedList<decimal, Order.Order>();
+        private List<Order.Order> _bids = new List<Order.Order>();
 
         /// <summary>
-        /// Ask list that contains asks at the requested prices for every Depth Level
-        /// Key = Price
-        /// Value = Order
+        /// Ask list
         /// </summary>
-        private SortedList<decimal, Order.Order> _asks = new SortedList<decimal, Order.Order>();
+        private List<Order.Order> _asks = new List<Order.Order>();
 
         private List<Trade> _trades = new List<Trade>(); 
 
@@ -49,12 +45,12 @@ namespace CoinExchange.Trades.Domain.Model.MatchingEngine
         /// <returns></returns>
         public bool PlaceOrder(CoinExchange.Trades.Domain.Model.Order.Order order)
         {
-            switch (order.IsSell)
+            switch (order.OrderSide)
             {
-                case true:
+                case OrderSide.Sell:
                     return MatchSellOrder(order);
 
-                case false:
+                case OrderSide.Buy:
                     return MatchBuyOrder(order);
             }
             return false;
@@ -66,69 +62,78 @@ namespace CoinExchange.Trades.Domain.Model.MatchingEngine
         /// <returns></returns>
         private bool MatchSellOrder(Order.Order sellOrder)
         {
-            IEnumerable<KeyValuePair<decimal, Order.Order>> matchingBids = from bid in _bids
-                                                                           where bid.Value.LimitPrice >= sellOrder.LimitPrice
-                                                                           select bid;
-
-            List<KeyValuePair<decimal, Order.Order>> matchingBidsList = matchingBids as List<KeyValuePair<decimal, Order.Order>> ?? matchingBids.ToList();
-            if (matchingBidsList.Any())
+            if (_bids.Any())
             {
-                foreach (var matchingBid in matchingBidsList)
-                {
-                    if (sellOrder.Volume > 0)
-                    {
-                        sellOrder.Volume = sellOrder.Volume - matchingBid.Value.Volume;
+                IEnumerable<Order.Order> matchingBids = from bid in _bids
+                                                        where bid.Price >= sellOrder.Price
+                                                        select bid;
 
-                        // If the Sell Order's volume exceeds the Buy order's volume
+                List<Order.Order> matchingBidsList = matchingBids as List<Order.Order> ?? matchingBids.ToList();
+                if (matchingBidsList.Any())
+                {
+                    foreach (var matchingBid in matchingBidsList)
+                    {
                         if (sellOrder.Volume > 0)
                         {
-                            // Send the Buy Order's volume as the quantity of the trade executed
-                            Trade trade = GenerateTrade(matchingBid.Value.LimitPrice, matchingBid.Value.Volume,
-                                                matchingBid.Value, sellOrder);
+                            sellOrder.Volume = sellOrder.Volume - matchingBid.Volume;
 
-                            // ToDo: Create method that will generate a new TradeExecutedEvent and the Trade will raise it
+                            // If the Sell Order's volume exceeds the Buy order's volume
+                            if (sellOrder.Volume > 0)
+                            {
+                                // Send the Buy Order's volume as the quantity of the trade executed
+                                Trade trade = GenerateTrade(matchingBid.LimitPrice, matchingBid.Volume,
+                                                            matchingBid, sellOrder);
 
-                            sellOrder.Status = OrderStatus.PartiallyFilled;
-                            matchingBid.Value.Status = OrderStatus.FullyFilled;
-                            _bids.Remove(matchingBid.Key);
-                        }
-                        // If the Sell Order's volume is less than the Buy Order's volume
-                        else if (sellOrder.Volume < 0)
-                        {
-                            // Send the Buy Order's volume as the quantity of the trade executed
-                            Trade trade = GenerateTrade(matchingBid.Value.LimitPrice, -sellOrder.Volume,
-                                                matchingBid.Value, sellOrder);
+                                // ToDo: Need to figure out how to raise this event in the following method 
+                                // and publish on the output disruptor
+                                trade.RaiseEvent();
+                                sellOrder.Status = OrderStatus.PartiallyFilled;
+                                matchingBid.Status = OrderStatus.FullyFilled;
+                                _bids.Remove(matchingBid);
+                            }
+                                // If the Sell Order's volume is less than the Buy Order's volume
+                            else if (sellOrder.Volume < 0)
+                            {
+                                // Send the Buy Order's volume as the quantity of the trade executed
+                                Trade trade = GenerateTrade(matchingBid.LimitPrice, -sellOrder.Volume,
+                                                            matchingBid, sellOrder);
 
-                            // ToDo: Create method that will generate a new TradeExecutedEvent and the Trade will raise it
+                                // ToDo: Need to figure out how to raise this event in the following method 
+                                // and publish on the output disruptor
+                                trade.RaiseEvent();
+                                matchingBid.Volume = -sellOrder.Volume;
 
-                            matchingBid.Value.Volume = -sellOrder.Volume;
+                                // ToDo: Raise an OrderUpdatedEvent over here
 
-                            // ToDo: Raise an OrderUpdatedEvent over here
+                                sellOrder.Status = OrderStatus.FullyFilled;
+                                sellOrder.Volume = 0;
+                            }
+                            else if (sellOrder.Volume == 0)
+                            {
+                                // Send the Buy Order's volume as the quantity of the trade executed
+                                Trade trade = GenerateTrade(matchingBid.LimitPrice, matchingBid.Volume,
+                                                            matchingBid, sellOrder);
 
-                            sellOrder.Status = OrderStatus.FullyFilled;
-                            sellOrder.Volume = 0;
-                        }
-                        else if (sellOrder.Volume == 0)
-                        {
-                            // Send the Buy Order's volume as the quantity of the trade executed
-                            Trade trade = GenerateTrade(matchingBid.Value.LimitPrice, matchingBid.Value.Volume,
-                                                matchingBid.Value, sellOrder);
-
-                            // ToDo: Create method that will generate a new TradeExecutedEvent and the Trade will raise it
-                            return true;
+                                // ToDo: Need to figure out how to raise this event in the following method 
+                                // and publish on the output disruptor
+                                trade.RaiseEvent();
+                                _bids.Remove(matchingBid);
+                                return true;
+                            }
                         }
                     }
-                }
-                if (sellOrder.Volume > 0)
-                {
-                    _asks.Add(sellOrder.LimitPrice, sellOrder);
+                    if (sellOrder.Volume > 0)
+                    {
+                        _asks.Add(sellOrder);
+                        _asks = _asks.OrderBy(x => x.Price).ToList();
+                        return true;
+                    }
                 }
             }
-            else
-            {
-                _asks.Add(sellOrder.LimitPrice, sellOrder);
-            }
-            return false;
+            
+            _asks.Add(sellOrder);
+            _asks = _asks.OrderBy(x => x.Price).ToList();
+            return true;
         }
 
         /// <summary>
@@ -137,10 +142,78 @@ namespace CoinExchange.Trades.Domain.Model.MatchingEngine
         /// <returns></returns>
         private bool MatchBuyOrder(Order.Order buyOrder)
         {
-            // ToDo: Algorithm to match an incoming bids to the available offers
-            // Need to divide the order between the opposite side orders available in the same price level
-            // Add the offer to the offer list. Or bid in the bid list, if the bid quantity is left over
-            return false;
+            if (_asks.Any())
+            {
+                IEnumerable<Order.Order> matchingAsks = from ask in _asks
+                                                        where ask.Price <= buyOrder.Price
+                                                        select ask;
+
+                List<Order.Order> matchingAskList = matchingAsks as List<Order.Order> ?? matchingAsks.ToList();
+                if (matchingAskList.Any())
+                {
+                    foreach (var matchingAsk in matchingAskList)
+                    {
+                        if (buyOrder.Volume > 0)
+                        {
+                            buyOrder.Volume = buyOrder.Volume - matchingAsk.Volume;
+
+                            // If the Sell Order's volume exceeds the Buy order's volume
+                            if (buyOrder.Volume > 0)
+                            {
+                                // Send the Buy Order's volume as the quantity of the trade executed
+                                Trade trade = GenerateTrade(matchingAsk.LimitPrice, matchingAsk.Volume,
+                                                            matchingAsk, buyOrder);
+
+                                // ToDo: Need to figure out how to raise this event in the following method 
+                                // and publish on the output disruptor
+                                trade.RaiseEvent();
+                                buyOrder.Status = OrderStatus.PartiallyFilled;
+                                matchingAsk.Status = OrderStatus.FullyFilled;
+                                _asks.Remove(matchingAsk);
+                            }
+                            // If the Sell Order's volume is less than the Buy Order's volume
+                            else if (buyOrder.Volume < 0)
+                            {
+                                // Send the Buy Order's volume as the quantity of the trade executed
+                                Trade trade = GenerateTrade(matchingAsk.LimitPrice, -buyOrder.Volume,
+                                                            matchingAsk, buyOrder);
+
+                                // ToDo: Need to figure out how to raise this event in the following method 
+                                // and publish on the output disruptor
+                                trade.RaiseEvent();
+                                matchingAsk.Volume = -buyOrder.Volume;
+
+                                // ToDo: Raise an OrderUpdatedEvent over here
+
+                                buyOrder.Status = OrderStatus.FullyFilled;
+                                buyOrder.Volume = 0;
+                            }
+                            else if (buyOrder.Volume == 0)
+                            {
+                                // Send the Buy Order's volume as the quantity of the trade executed
+                                Trade trade = GenerateTrade(matchingAsk.LimitPrice, matchingAsk.Volume,
+                                                            matchingAsk, buyOrder);
+
+                                // ToDo: Need to figure out how to raise this event in the following method 
+                                // and publish on the output disruptor
+                                trade.RaiseEvent();
+                                _asks.Remove(matchingAsk);
+                                return true;
+                            }
+                        }
+                    }
+                    if (buyOrder.Volume > 0)
+                    {
+                        _bids.Add(buyOrder);
+                        _bids = _bids.OrderByDescending(x => x.Price).ToList();
+                        return true;
+                    }
+                }
+            }
+
+            _bids.Add(buyOrder);
+            _bids = _bids.OrderByDescending(x => x.Price).ToList();
+            return true;
         }
 
         /// <summary>
@@ -170,21 +243,17 @@ namespace CoinExchange.Trades.Domain.Model.MatchingEngine
         }
 
         /// <summary>
-        /// Bid list that contains bids at the requested prices for every Depth Level
-        /// Key = Price
-        /// Value = Order
+        /// Bid list
         /// </summary>
-        public SortedList<decimal, Order.Order> Bids
+        public List<Order.Order> Bids
         {
             get { return _bids; }
         }
 
         /// <summary>
-        /// Ask list that contains asks at the requested prices for every Depth Level
-        /// Key = Price
-        /// Value = Order
+        /// Ask list
         /// </summary>
-        public SortedList<decimal, Order.Order> Asks
+        public List<Order.Order> Asks
         {
             get { return _asks; }
         }
