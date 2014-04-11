@@ -65,7 +65,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                     return
                         Ok(
                             _orderApplicationService.CreateOrder(new CreateOrderCommand(order.Price, order.Type,
-                                order.Side, order.Pair)));
+                                order.Side, order.Pair,order.Volume,"")));
                 }
                 return BadRequest();
             }

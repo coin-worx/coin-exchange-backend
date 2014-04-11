@@ -15,5 +15,6 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.DTOs.Order
         public string Side;
         public string Type;
         public decimal Price;
+        public decimal Volume;
     }
 }

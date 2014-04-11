@@ -11,16 +11,16 @@ namespace CoinExchange.Trades.Application.Order.Representation
     /// </summary>
     public class NewOrderRepresentation
     {
-        public NewOrderRepresentation(decimal price, string type, string side, string pair, string txid)
+        public NewOrderRepresentation(decimal price, string type, string side, string pair, string orderId)
         {
             Price = price;
             Type = type;
             Side = side;
             Pair = pair;
-            Txid = txid;
+            OrderId = orderId;
         }
 
-        public string Txid { get; private set; }
+        public string OrderId { get; private set; }
         public string Pair { get; private set; }
         public string Side { get; private set; }
         public string Type { get; private set; }

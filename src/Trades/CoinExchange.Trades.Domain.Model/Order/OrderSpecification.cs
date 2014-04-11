@@ -12,11 +12,11 @@ namespace CoinExchange.Trades.Domain.Model.Order
     /// </summary>
     public class OrderSpecification:ISpecification<Order>
     {
-        private decimal _minVolume = 0;
-        private decimal _maxVolume = 0;
+        private decimal _minVolume = 1;
+        private decimal _maxVolume = 10;
         public bool IsSatisfiedBy(Order entity)
         {
-            if(entity.Volume<=_minVolume||entity.Volume>=_minVolume)
+            if(entity.Volume<=_minVolume||entity.Volume>=_maxVolume)
                 throw new Exception("Volume is too high or too low.");
             if (entity.OrderType == OrderType.Limit&&entity.Price==0)
                 throw new Exception("Price is not specified with Limit Order");

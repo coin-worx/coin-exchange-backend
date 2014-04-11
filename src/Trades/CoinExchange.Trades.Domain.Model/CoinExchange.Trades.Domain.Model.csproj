@@ -54,7 +54,9 @@
   <ItemGroup>
     <Compile Include="OrderMatchingEngine\LimitOrderBook.cs" />
     <Compile Include="Order\Order.cs" />
+    <Compile Include="Order\OrderFactory.cs" />
     <Compile Include="Order\OrderSide.cs" />
+    <Compile Include="Order\OrderSpecification.cs" />
     <Compile Include="Order\OrderStatus.cs" />
     <Compile Include="Order\OrderType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -69,7 +71,12 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\CoinExchange.Common\CoinExchange.Common.csproj">
+      <Project>{d61dbd04-95dc-4eb1-ad54-1ff929ac2814}</Project>
+      <Name>CoinExchange.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -46,6 +46,7 @@
     <Compile Include="Order\Commands\CreateOrderCommand.cs" />
     <Compile Include="Order\IOrderApplicationService.cs" />
     <Compile Include="Order\IOrderQueryService.cs" />
+    <Compile Include="Order\OrderApplicationService.cs" />
     <Compile Include="Order\StubbedOrderApplicationService.cs" />
     <Compile Include="Order\StubbedOrderQueryService.cs" />
     <Compile Include="Order\Representation\NewOrderRepresentation.cs" />
