@@ -27,13 +27,11 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
             try
             {
                 return Ok(_marketDataService.GetTickerInfo(pair));
-
             }
             catch (Exception ex)
             {
                 return InternalServerError(ex);
             }
-
         }
 
         [HttpGet]

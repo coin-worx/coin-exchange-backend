@@ -17,6 +17,7 @@ namespace CoinExchange.Rest.WebHost
     {
         protected void Application_Start()
         {
+            log4net.Config.XmlConfigurator.Configure();
             //ControllerBuilder.Current.SetControllerFactory(new SpringControllerFactory());
            // RegisterRoutes(RouteTable.Routes);
 

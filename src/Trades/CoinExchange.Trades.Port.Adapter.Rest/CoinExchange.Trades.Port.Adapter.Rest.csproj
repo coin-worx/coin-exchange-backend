@@ -94,16 +94,16 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Config\TradeControllerConfig.xml">
+    <None Include="Config\TradeControllerConfig-Test.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Config\MarketControllerConfig.xml">
+    <None Include="Config\MarketControllerConfig-Test.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Config\OrderControllerConfig.xml">
+    <None Include="Config\OrderControllerConfig-Test.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

@@ -8,8 +8,8 @@ namespace CoinExchange.Rest.WebHost.App_Start
     public static class WebApiConfig
     {
         //get current logger
-       // private static ILog log = LogManager.GetCurrentClassLogger();
-         
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger
+     (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public static void Register(HttpConfiguration config)
         {
             // Web API routes
@@ -28,7 +28,7 @@ namespace CoinExchange.Rest.WebHost.App_Start
             //add authentication handler
             config.MessageHandlers.Add(new AuthenticationHandler(new UserAuthentication()));
          
-           // log.Info("Application Initialized.");
+            log.Info("Application Initialized.");
         }
     }
 }

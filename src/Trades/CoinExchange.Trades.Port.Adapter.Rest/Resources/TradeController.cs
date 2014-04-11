@@ -17,9 +17,9 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
     /// </summary>
     public class TradeController : ApiController
     {
-        private ITradeService _tradeQueryService;
+        private ITradeApplicationService _tradeQueryService;
 
-        public TradeController(ITradeService tradeQueryService)
+        public TradeController(ITradeApplicationService tradeQueryService)
         {
             _tradeQueryService = tradeQueryService;
         }
@@ -115,7 +115,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         /// </summary>
         /// <param name="pair"> </param>
         /// <returns></returns>
-        [Route("trades/TradeVolume")]
+        [Route("trades/tradevolume")]
         [Authorize]
         [HttpPost]
         public IHttpActionResult TradeVolume([FromBody]string pair)
@@ -132,9 +132,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
             {
                 return InternalServerError(ex);
             }
-
         }
-
-        
+  
     }
 }

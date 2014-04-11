@@ -11,7 +11,7 @@ namespace CoinExchange.Trades.Application.Trades
     /// <summary>
     /// Interface for Trade Services
     /// </summary>
-    public interface ITradeService
+    public interface ITradeApplicationService
     {
         List<Domain.Model.Order.Order> GetTradesHistory(TraderId traderId, string offset = "", string type = "all",
             bool trades = false, string start = "", string end = "");

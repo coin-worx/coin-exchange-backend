@@ -9,7 +9,7 @@ namespace CoinExchange.Trades.Application.MarketData
     /// <summary>
     /// Service serving the iperations relatedto Market Data
     /// </summary>
-    public class MarketDataApplicationService:IMarketDataApplicationService
+    public class StubbedMarketDataApplicationService:IMarketDataApplicationService
     {
         /// <summary>
         /// Get ticker info

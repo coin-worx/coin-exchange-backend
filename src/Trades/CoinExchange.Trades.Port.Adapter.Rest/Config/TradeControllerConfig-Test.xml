@@ -7,6 +7,6 @@
     <constructor-arg name="tradeQueryService" ref="TradeQueryServiceStub"/>
   </object>
 
-  <object id="TradeQueryServiceStub" type="CoinExchange.Trades.Application.Trades.TradeQueryServiceStub, CoinExchange.Trades.Application"/>
+  <object id="TradeQueryServiceStub" type="CoinExchange.Trades.Application.Trades.StubbedTradeApplicationService, CoinExchange.Trades.Application"/>
 
 </objects>

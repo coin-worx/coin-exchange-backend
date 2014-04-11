@@ -1,5 +1,4 @@
-﻿using System;
-namespace CoinExchange.Client.Console
+﻿namespace CoinExchange.Client.Console
 {
     class Program
     {
@@ -9,7 +8,7 @@ namespace CoinExchange.Client.Console
             ApiClient client=new ApiClient(baseUrl);
             System.Console.WriteLine("Requesting....");
             //call methods available in api
-            System.Console.WriteLine(client.GetTradeVolume("XBTUSD"));
+            System.Console.WriteLine(client.CreateOrder("xbtusd","market","buy"));
             System.Console.ReadKey();
         }
     }

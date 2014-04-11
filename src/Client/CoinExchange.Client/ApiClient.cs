@@ -2,7 +2,6 @@
 using System.IO;
 using System.Net;
 using System.Text;
-using System.Security.Cryptography;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -70,13 +69,12 @@ namespace CoinExchange.Client
                     nonce = exe.Response.Headers["Nounce"];
                     message = exe.Response.ToString();
                 }
-                
+             
             }
             return message;
 
         }
         #region Private Calls Methods
-
         /// <summary>
         /// Return Trade History
         /// </summary>
@@ -96,9 +94,7 @@ namespace CoinExchange.Client
             jsonObject.Add("End", end);
             string url = _baseUrl + "/trades/tradehistory";
             return RequestServer(jsonObject,url);
-
         }
-
         /// <summary>
         /// Query trades of specific txid
         /// </summary>
@@ -112,9 +108,7 @@ namespace CoinExchange.Client
             jsonObject.Add("includeTrades", includeTrades);
             string url = _baseUrl + "/trades/querytrades";
             return RequestServer(jsonObject, url);
-
         }
-
         /// <summary>
         /// Return trade volume of pair
         /// </summary>
@@ -122,10 +116,9 @@ namespace CoinExchange.Client
         /// <returns></returns>
         public string GetTradeVolume(string pair)
         {
-            string url = _baseUrl + "/trades/TradeVolume";
+            string url = _baseUrl + "/trades/tradevolume";
             return TestPrivate(url,pair);
         }
-
         /// <summary>
         /// Cancel the order
         /// </summary>
@@ -133,11 +126,9 @@ namespace CoinExchange.Client
         /// <returns></returns>
         public string CancelOrder(string txid)
         {
-            string url = _baseUrl + "/trades/CancelOrder";
+            string url = _baseUrl + "/orders/cancelorder";
             return TestPrivate(url, txid);
         }
-
-
         /// <summary>
         /// Create user order
         /// </summary>
@@ -153,11 +144,9 @@ namespace CoinExchange.Client
             jsonObject.Add("Type", type);
             jsonObject.Add("Side", side);
             jsonObject.Add("Price", price);
-            string url = _baseUrl + "/trades/CreateOrder";
+            string url = _baseUrl + "/orders/createorder";
             return RequestServer(jsonObject, url);
         }
-
-
         /// <summary>
         /// Query user open orders
         /// </summary>
@@ -172,8 +161,6 @@ namespace CoinExchange.Client
             string url = _baseUrl + "/orders/openorders";
             return RequestServer(jsonObject, url);
         }
-
-
         /// <summary>
         /// Query user's closed orders
         /// </summary>
@@ -198,11 +185,7 @@ namespace CoinExchange.Client
             string url = _baseUrl + "/orders/closedorders";
             return RequestServer(jsonObject, url);
         }
-
         #endregion
-
-
-
         /// <summary>
         /// Private call requests
         /// </summary>
@@ -244,12 +227,8 @@ namespace CoinExchange.Client
                     nonce = exe.Response.Headers["Nounce"];
                     message = exe.Response.ToString();
                 }
-
             }
             return message;
-
         }
-        
-        
-    }
+     }
 }

@@ -8,7 +8,7 @@
     <constructor-arg name="orderQueryService" ref="OrderQueryService"/>
   </object>
 
-  <object id="OrderApplicationService" type="CoinExchange.Trades.Application.Order.OrderApplicationService, CoinExchange.Trades.Application"/>
-  <object id="OrderQueryService" type="CoinExchange.Trades.Application.Order.OrderQueryService, CoinExchange.Trades.Application"/>
+  <object id="OrderApplicationService" type="CoinExchange.Trades.Application.Order.StubbedOrderApplicationService, CoinExchange.Trades.Application"/>
+  <object id="OrderQueryService" type="CoinExchange.Trades.Application.Order.StubbedOrderQueryService, CoinExchange.Trades.Application"/>
 
 </objects>
