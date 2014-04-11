@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-
 /*
  * Author: Waqas
  * Comany: Aurora Solutions
  */
+using CoinExchange.Common.Domain.Model;
 
 namespace CoinExchange.Trades.Domain.Model.Order
 {
@@ -22,16 +22,23 @@ namespace CoinExchange.Trades.Domain.Model.Order
         {
             
         }
-
         /// <summary>
-        /// Parameterized Constructor
+        /// Factory Constructor
         /// </summary>
-        public Order(int orderId, string pair, decimal volume, decimal price)
+        /// <param name="pair"></param>
+        /// <param name="price"></param>
+        /// <param name="orderSide"></param>
+        /// <param name="orderType"></param>
+        /// <param name="volume"></param>
+        /// <param name="traderId"></param>
+        public Order(string pair, decimal price, OrderSide orderSide, OrderType orderType, decimal volume,string traderId)
         {
-            _orderId = new OrderId(orderId);
             Pair = pair;
-            Volume = volume;
             Price = price;
+            OrderSide = orderSide;
+            OrderType = orderType;
+            Volume = volume;
+            TraderId = traderId;
         }
 
         /// <summary>
@@ -61,6 +68,11 @@ namespace CoinExchange.Trades.Domain.Model.Order
         public bool IsSell { get; set; }
 
         /// <summary>
+        /// Order side, buy or sell
+        /// </summary>
+        public OrderSide OrderSide { get; set; }
+
+        /// <summary>
         /// Type of Order
         /// </summary>
         public OrderType OrderType { get; set; }
@@ -68,7 +80,7 @@ namespace CoinExchange.Trades.Domain.Model.Order
         /// <summary>
         /// Price
         /// </summary>
-        public decimal? Price { get; set; }
+        public decimal Price { get; set; }
 
         /// <summary>
         /// Secondary price. Optional. Dependent upon order type
@@ -189,5 +201,10 @@ namespace CoinExchange.Trades.Domain.Model.Order
         /// The time when order executed
         /// </summary>
         public string Executed { get; set; }
+
+        /// <summary>
+        /// Trader id
+        /// </summary>
+        public string TraderId { get; set; }
     }
 }
