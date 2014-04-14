@@ -34,6 +34,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Domain.Model\AssertionConcern.cs" />
     <Compile Include="Domain.Model\HashCodeHelper.cs" />
     <Compile Include="Domain.Model\Identity.cs" />
     <Compile Include="Domain.Model\IIdentity.cs" />

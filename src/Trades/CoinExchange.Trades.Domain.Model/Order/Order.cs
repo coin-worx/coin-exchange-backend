@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using CoinExchange.Common.Domain.Model;
 using CoinExchange.Trades.Domain.Model.Trades;
 
 /*
@@ -14,7 +15,17 @@ namespace CoinExchange.Trades.Domain.Model.Order
     /// </summary>
     public class Order
     {
+        #region Private fields
         private OrderId _orderId = null;
+        private decimal _volume;
+        private decimal _price;
+        private decimal _volumeExecuted;
+        private TraderId _traderId;
+        private string _currencyPair;
+        private OrderSide _orderSide;
+        private OrderType _orderType;
+        private OrderStatus _orderStatus;
+        #endregion
 
         /// <summary>
         /// Default Constructor
@@ -22,6 +33,17 @@ namespace CoinExchange.Trades.Domain.Model.Order
         public Order()
         {
             
+        }
+
+        //TODO: waqas bhai please delete this constructor and use another for creating the order
+        public Order(string pair, decimal price, OrderSide orderSide, OrderType orderType, decimal volume, TraderId traderId)
+        {
+            CurrencyPair = pair;
+            Price = price;
+            OrderSide = orderSide;
+            OrderType = orderType;
+            Volume = volume;
+            TraderId = traderId;
         }
 
         /// <summary>
@@ -33,9 +55,10 @@ namespace CoinExchange.Trades.Domain.Model.Order
         /// <param name="orderType"></param>
         /// <param name="volume"></param>
         /// <param name="traderId"></param>
-        public Order(string pair, decimal price, OrderSide orderSide, OrderType orderType, decimal volume, TraderId traderId)
+        public Order(OrderId orderId,string pair, decimal price, OrderSide orderSide, OrderType orderType, decimal volume, TraderId traderId)
         {
-            Pair = pair;
+            OrderId = orderId;
+            CurrencyPair = pair;
             Price = price;
             OrderSide = orderSide;
             OrderType = orderType;
@@ -44,169 +67,115 @@ namespace CoinExchange.Trades.Domain.Model.Order
         }
 
         /// <summary>
-        /// Comma delimited list of transaction ids for order
-        /// </summary>
-        public string TxId { get; set; }
-
-        /// <summary>
         /// Immutable ID for this order
         /// </summary>
-        public OrderId OrderId { get { return _orderId; } }
-
+        public OrderId OrderId
+        {
+            get { return _orderId; }
+            private set
+            {
+                AssertionConcern.AssertArgumentNotNull(value, "OrderId cannot be null");
+                _orderId = value;
+            }
+        }
+        
         /// <summary>
-        /// Expiration time. Optional
+        /// Asset currency pair
         /// </summary>
-        public string UserRefId { get; set; }
-
-        /// <summary>
-        /// Asset pair
-        /// </summary>
-        public string Pair { get; set; }
-
-        /// <summary>
-        /// Type of order (buy or sell)
-        /// True = Sell, False = Buy
-        /// </summary>
-        public bool IsSell { get; set; }
-
+        public string CurrencyPair
+        {
+            get { return _currencyPair; }
+            set
+            {
+                AssertionConcern.AssertEmptyString(value,"Currency pair not specifed");
+                _currencyPair = value;
+            }
+        }
+        
         /// <summary>
         /// Order side, buy or sell
         /// </summary>
-        public OrderSide OrderSide { get; set; }
+        public OrderSide OrderSide
+        {
+            get { return _orderSide; }
+            set
+            {
+                _orderSide = value;
+            }
+        }
 
         /// <summary>
         /// Type of Order
         /// </summary>
-        public OrderType OrderType { get; set; }
+        public OrderType OrderType
+        {
+            get { return _orderType; }
+            set
+            {
+                _orderType = value;
+            }
+        }
 
         /// <summary>
-        /// Price
+        /// Limit Price
         /// </summary>
-        public decimal Price { get; set; }
-
-        /// <summary>
-        /// Secondary price. Optional. Dependent upon order type
-        /// </summary>
-        public decimal? Price2 { get; set; }
+        public decimal Price
+        {
+            get { return _price; }
+            set
+            {
+                _price = value;
+            }
+        }
 
         /// <summary>
         /// Order volume in lots
         /// </summary>
-        public decimal Volume { get; set; }
-
-        /// <summary>
-        /// Amount of leverage required. Optional. default none
-        /// </summary>
-        public string Leverage { get; set; }
-
-        /// <summary>
-        /// Position tx id to close (optional.  used to close positions)
-        /// </summary>
-        public string Position { get; set; }
-
-        /// <summary>
-        /// List of order flags (optional):
-        /// </summary>
-        public string OFlags { get; set; }
-
-        /// <summary>
-        /// Scheduled start time. Optional
-        /// </summary>
-        public DateTime StartTime { get; set; }
-
-        /// <summary>
-        /// Expiration time. Optional
-        /// </summary>
-        public DateTime ExpireTime { get; set; }
-
-        /// <summary>
-        /// Validate inputs only. do not submit order. Optional
-        /// </summary>
-        public bool Validate { get; set; }
-
-        /// <summary>
-        /// Closing order details
-        /// </summary>
-        public Dictionary<string, string> Close { get; set; }
-
+        public decimal Volume
+        {
+            get { return _volume; }
+            set
+            {
+                AssertionConcern.AssertArgumentRange(value,1,10,"Volume is too high or too low");
+                _volume = value;
+            }
+        }
+        
         /// <summary>
         /// Order Status
         /// </summary>
-        public OrderStatus Status { get; set; }
-
-        /// <summary>
-        /// Reason
-        /// </summary>
-        public string Reason { get; set; }
-
-        /// <summary>
-        /// Timestamp of when order was placed
-        /// </summary>
-        public DateTime OpenTime { get; set; }
-
-        /// <summary>
-        /// Timestamp of when order was closed
-        /// </summary>
-        public string CloseTime { get; set; }
-
+        public OrderStatus Status
+        {
+            get { return _orderStatus; }
+            set
+            {
+                _orderStatus = value;
+            }
+        }
+        
         /// <summary>
         /// Volume executed
         /// </summary>
-        public double? VolumeExecuted { get; set; }
-
-        /// <summary>
-        /// Total cost
-        /// </summary>
-        public decimal? Cost { get; set; }
-
-        /// <summary>
-        /// Total fee
-        /// </summary>
-        public decimal? Fee { get; set; }
-
-        /// <summary>
-        /// AveragePrice executed
-        /// </summary>
-        public decimal? AveragePrice { get; set; }
-
-        /// <summary>
-        /// Stop price (for trailing stops)
-        /// </summary>
-        public decimal StopPrice { get; set; }
-
-        /// <summary>
-        /// Triggered limit price (when limit based ordertype triggered)
-        /// </summary>
-        public decimal LimitPrice { get; set; }
-
-        /// <summary>
-        /// Comma delimited list of miscellaneous info
-        /// </summary>
-        public string Info { get; set; }
-
-        /// <summary>
-        /// Comma delimited list of trade ids related to order 
-        /// </summary>
-        public string Trades { get; set; }
-
-        /// <summary>
-        /// In case of Open order, the opening time
-        /// </summary>
-        public string Opened { get; set; }
-
-        /// <summary>
-        /// The time when the order closed
-        /// </summary>
-        public string Closed { get; set; }
-
-        /// <summary>
-        /// The time when order executed
-        /// </summary>
-        public string Executed { get; set; }
+        public decimal VolumeExecuted
+        {
+            get { return _volumeExecuted; }
+            set
+            {
+                _volumeExecuted = value;
+            }
+        }
 
         /// <summary>
         /// Trader id
         /// </summary>
-        public TraderId TraderId { get; set; }
+        public TraderId TraderId
+        {
+            get { return _traderId; }
+            private set
+            {
+                AssertionConcern.AssertArgumentNotNull(value, "TraderId cannot be null");
+                _traderId = value;
+            }
+        }
     }
 }

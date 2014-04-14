@@ -52,6 +52,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constants\OrderSide.cs" />
+    <Compile Include="Constants\OrderType.cs" />
     <Compile Include="OrderMatchingEngine\LimitOrderBook.cs" />
     <Compile Include="Order\Order.cs" />
     <Compile Include="Order\OrderFactory.cs" />

@@ -1,4 +1,5 @@
 ﻿using CoinExchange.Trades.Domain.Model.Order;
+using CoinExchange.Trades.Infrastructure.Services;
 using NUnit.Framework;
 
 namespace CoinExchange.Trades.Domain.Model.Tests
@@ -24,8 +25,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         [Category("Unit")]
         public void CreateOrderTest()
         {
-            Order.Order order = OrderFactory.CreateOrder("1234", "XBTUSD", "market", "buy", 5, 0,
-                new OrderSpecification());
+            Order.Order order = OrderFactory.CreateOrder("1234", "XBTUSD", "market", "buy", 5,0,new StubbedOrderIdGenerator());
             Assert.NotNull(order);
         }
         /// <summary>
@@ -36,9 +36,10 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         public void ValidateFieldsTestCase()
         {
             Order.Order order = OrderFactory.CreateOrder("1234", "XBTUSD", "market", "buy", 5, 0,
-                new OrderSpecification());
+                new StubbedOrderIdGenerator());
+            Assert.NotNull(order.OrderId);
             Assert.AreEqual(order.TraderId.Id.ToString(),"1234");
-            Assert.AreEqual(order.Pair, "XBTUSD");
+            Assert.AreEqual(order.CurrencyPair, "XBTUSD");
             Assert.AreEqual(order.OrderType,OrderType.Market);
             Assert.AreEqual(order.OrderSide,OrderSide.Buy);
             Assert.AreEqual(order.Volume,5);

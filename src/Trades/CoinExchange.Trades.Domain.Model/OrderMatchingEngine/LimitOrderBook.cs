@@ -81,7 +81,7 @@ namespace CoinExchange.Trades.Domain.Model.MatchingEngine
                             if (sellOrder.Volume > 0)
                             {
                                 // Send the Buy Order's volume as the quantity of the trade executed
-                                Trade trade = GenerateTrade(matchingBid.LimitPrice, matchingBid.Volume,
+                                Trade trade = GenerateTrade(matchingBid.Price, matchingBid.Volume,
                                                             matchingBid, sellOrder);
 
                                 // ToDo: Need to figure out how to raise this event in the following method 
@@ -95,7 +95,7 @@ namespace CoinExchange.Trades.Domain.Model.MatchingEngine
                             else if (sellOrder.Volume < 0)
                             {
                                 // Send the Buy Order's volume as the quantity of the trade executed
-                                Trade trade = GenerateTrade(matchingBid.LimitPrice, -sellOrder.Volume,
+                                Trade trade = GenerateTrade(matchingBid.Price, -sellOrder.Volume,
                                                             matchingBid, sellOrder);
 
                                 // ToDo: Need to figure out how to raise this event in the following method 
@@ -111,7 +111,7 @@ namespace CoinExchange.Trades.Domain.Model.MatchingEngine
                             else if (sellOrder.Volume == 0)
                             {
                                 // Send the Buy Order's volume as the quantity of the trade executed
-                                Trade trade = GenerateTrade(matchingBid.LimitPrice, matchingBid.Volume,
+                                Trade trade = GenerateTrade(matchingBid.Price, matchingBid.Volume,
                                                             matchingBid, sellOrder);
 
                                 // ToDo: Need to figure out how to raise this event in the following method 
@@ -161,7 +161,7 @@ namespace CoinExchange.Trades.Domain.Model.MatchingEngine
                             if (buyOrder.Volume > 0)
                             {
                                 // Send the Buy Order's volume as the quantity of the trade executed
-                                Trade trade = GenerateTrade(matchingAsk.LimitPrice, matchingAsk.Volume,
+                                Trade trade = GenerateTrade(matchingAsk.Price, matchingAsk.Volume,
                                                             matchingAsk, buyOrder);
 
                                 // ToDo: Need to figure out how to raise this event in the following method 
@@ -175,7 +175,7 @@ namespace CoinExchange.Trades.Domain.Model.MatchingEngine
                             else if (buyOrder.Volume < 0)
                             {
                                 // Send the Buy Order's volume as the quantity of the trade executed
-                                Trade trade = GenerateTrade(matchingAsk.LimitPrice, -buyOrder.Volume,
+                                Trade trade = GenerateTrade(matchingAsk.Price, -buyOrder.Volume,
                                                             matchingAsk, buyOrder);
 
                                 // ToDo: Need to figure out how to raise this event in the following method 
@@ -191,7 +191,7 @@ namespace CoinExchange.Trades.Domain.Model.MatchingEngine
                             else if (buyOrder.Volume == 0)
                             {
                                 // Send the Buy Order's volume as the quantity of the trade executed
-                                Trade trade = GenerateTrade(matchingAsk.LimitPrice, matchingAsk.Volume,
+                                Trade trade = GenerateTrade(matchingAsk.Price, matchingAsk.Volume,
                                                             matchingAsk, buyOrder);
 
                                 // ToDo: Need to figure out how to raise this event in the following method 
@@ -223,7 +223,7 @@ namespace CoinExchange.Trades.Domain.Model.MatchingEngine
         private Trade GenerateTrade(decimal executionPrice, 
             decimal executedQuantity, Order.Order buyOrder, Order.Order sellOrder)
         {
-            Trade trade = new Trade(buyOrder.Pair, executionPrice, executedQuantity, DateTime.Now, buyOrder,
+            Trade trade = new Trade(buyOrder.CurrencyPair, executionPrice, executedQuantity, DateTime.Now, buyOrder,
                 sellOrder);
             _trades.Add(trade);
 

@@ -2,6 +2,9 @@
 using CoinExchange.Trades.Application.OrderServices.Commands;
 using CoinExchange.Trades.Application.OrderServices.Representation;
 using CoinExchange.Trades.Domain.Model.Order;
+using CoinExchange.Trades.Domain.Model.Services;
+using Spring.Context;
+using Spring.Context.Support;
 
 namespace CoinExchange.Trades.Application.OrderServices
 {
@@ -15,10 +18,11 @@ namespace CoinExchange.Trades.Application.OrderServices
 
         public NewOrderRepresentation CreateOrder(CreateOrderCommand orderCommand)
         {
-            Domain.Model.Order.Order order = OrderFactory.CreateOrder(orderCommand.TraderId, orderCommand.Pair,
-                orderCommand.Type, orderCommand.Side, orderCommand.Volume, orderCommand.Price, new OrderSpecification());
+            IOrderIdGenerator orderIdGenerator = ContextRegistry.GetContext("OrderIdGenerator")as IOrderIdGenerator;
+            Order order = OrderFactory.CreateOrder(orderCommand.TraderId, orderCommand.Pair,
+                orderCommand.Type, orderCommand.Side, orderCommand.Volume, orderCommand.Price, orderIdGenerator);
             //TODO:Publish the order to disruptor
-            return new NewOrderRepresentation(order.Price, order.OrderType.ToString(), order.OrderSide.ToString(), order.Pair,
+            return new NewOrderRepresentation(order.Price, order.OrderType.ToString(), order.OrderSide.ToString(), order.CurrencyPair,
                 order.OrderId.Id.ToString());
         }
     }
