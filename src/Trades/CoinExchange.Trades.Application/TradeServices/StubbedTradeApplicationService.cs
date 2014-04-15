@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using CoinExchange.Trades.Application.OrderServices.Representation;
 using CoinExchange.Trades.Application.TradeServices.Representation;
 using CoinExchange.Trades.Domain.Model.Order;
 using CoinExchange.Trades.Domain.Model.Trades;
@@ -23,11 +24,11 @@ namespace CoinExchange.Trades.Application.TradeServices
         /// Returns orders of the user that have been filled/executed
         /// </summary>
         /// <returns></returns>
-        public List<Domain.Model.Order.Order> GetTradesHistory(TraderId traderId, string offset = "", string type = "all",
+        public List<OrderRepresentation> GetTradesHistory(TraderId traderId, string offset = "", string type = "all",
             bool trades = false, string start = "", string end = "")
         {
-            List<Domain.Model.Order.Order> orderList = new List<Domain.Model.Order.Order>();
-            orderList.Add(new Domain.Model.Order.Order()
+            List<OrderRepresentation> orderList = new List<OrderRepresentation> ();
+            orderList.Add(new OrderRepresentation()
             {
                 TxId = "EEER342",
                 UserRefId = "WREDF342",
@@ -40,14 +41,13 @@ namespace CoinExchange.Trades.Application.TradeServices
                 Fee = (decimal?)0.25,
                 Price = (decimal)491.23,
                 StopPrice = 0,
-                Price = 0,
                 OFlags = "DUMMY",
                 Trades = "23453,1764,1554,2134",
                 Reason = "Insufficient Volume",
                 Executed = "045643.23",
                 VolumeExecuted = 2000
             });
-            orderList.Add(new Domain.Model.Order.Order()
+            orderList.Add(new OrderRepresentation()
             {
                 TxId = "EEER342",
                 UserRefId = "YIO468S",
@@ -60,14 +60,13 @@ namespace CoinExchange.Trades.Application.TradeServices
                 Fee = (decimal?)0.25,
                 Price = (decimal)491.23,
                 StopPrice = 0,
-                Price = 0,
                 OFlags = "DUMMY",
                 Trades = "23453,1764,1554,2134",
                 Reason = "Insufficient Volume",
                 Executed = "045643.23",
                 VolumeExecuted = 2000
             });
-            orderList.Add(new Domain.Model.Order.Order()
+            orderList.Add(new OrderRepresentation()
             {
                 TxId = "EEER342",
                 UserRefId = "GTII5769",
@@ -80,7 +79,6 @@ namespace CoinExchange.Trades.Application.TradeServices
                 Fee = (decimal?)0.25,
                 Price = (decimal)491.23,
                 StopPrice = 0,
-                Price = 0,
                 OFlags = "DUMMY",
                 Trades = "23453,1764,1554,2134",
                 Reason = "Insufficient Volume",
@@ -98,10 +96,10 @@ namespace CoinExchange.Trades.Application.TradeServices
         /// <param name="txId"></param>
         /// <param name="includeTrades"></param>
         /// <returns></returns>
-        public List<Domain.Model.Order.Order> QueryTrades(TraderId traderId, string txId = "", bool includeTrades = false)
+        public List<OrderRepresentation> QueryTrades(TraderId traderId, string txId = "", bool includeTrades = false)
         {
-            List<Domain.Model.Order.Order> orderList = new List<Domain.Model.Order.Order>();
-            orderList.Add(new Domain.Model.Order.Order()
+            List<OrderRepresentation> orderList = new List<OrderRepresentation>();
+            orderList.Add(new OrderRepresentation()
             {
                 TxId = "EEER342",
                 UserRefId = "WREDF342",
@@ -114,14 +112,13 @@ namespace CoinExchange.Trades.Application.TradeServices
                 Fee = (decimal?)0.25,
                 Price = (decimal)491.23,
                 StopPrice = 0,
-                Price = 0,
                 OFlags = "DUMMY",
                 Trades = "23453,1764,1554,2134",
                 Reason = "Insufficient Volume",
                 Executed = "045643.23",
                 VolumeExecuted = 2000
             });
-            orderList.Add(new Domain.Model.Order.Order()
+            orderList.Add(new OrderRepresentation()
             {
                 TxId = "EEER342",
                 UserRefId = "YIO468S",
@@ -134,14 +131,13 @@ namespace CoinExchange.Trades.Application.TradeServices
                 Fee = (decimal?)0.25,
                 Price = (decimal)491.23,
                 StopPrice = 0,
-                Price = 0,
                 OFlags = "DUMMY",
                 Trades = "23453,1764,1554,2134",
                 Reason = "Insufficient Volume",
                 Executed = "045643.23",
                 VolumeExecuted = 2000
             });
-            orderList.Add(new Domain.Model.Order.Order()
+            orderList.Add(new OrderRepresentation()
             {
                 TxId = "EEER342",
                 UserRefId = "GTII5769",
@@ -154,7 +150,6 @@ namespace CoinExchange.Trades.Application.TradeServices
                 Fee = (decimal?)0.25,
                 Price = (decimal)491.23,
                 StopPrice = 0,
-                Price = 0,
                 OFlags = "DUMMY",
                 Trades = "23453,1764,1554,2134",
                 Reason = "Insufficient Volume",

@@ -4,6 +4,7 @@ using System.Web.Http;
 using CoinExchange.Common.Domain.Model;
 using CoinExchange.Trades.Application.OrderServices;
 using CoinExchange.Trades.Application.OrderServices.Commands;
+using CoinExchange.Trades.Application.OrderServices.Representation;
 using CoinExchange.Trades.Domain.Model.Order;
 using CoinExchange.Trades.Domain.Model.Trades;
 using CoinExchange.Trades.Port.Adapter.Rest.DTOs.Order;
@@ -91,12 +92,12 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
             {
                 // ToDo: In the next sprint related to business logic behind RESTful calls, need to split the ledgersIds comma
                 // separated list
-                List<Order> openOrderList = _orderQueryService.GetOpenOrders(new TraderId(1),
+                List<OrderRepresentation> openOrderList = _orderQueryService.GetOpenOrders(new TraderId(1),
                     queryOpenOrdersParams.IncludeTrades, queryOpenOrdersParams.UserRefId);
 
                 if (openOrderList != null)
                 {
-                    return Ok<List<Order>>(openOrderList);
+                    return Ok<List<OrderRepresentation>>(openOrderList);
                 }
                 return NotFound();
             }
@@ -119,13 +120,13 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         {
             try
             {
-                List<Order> closedOrders = _orderQueryService.GetClosedOrders(new TraderId(1),
+                List<OrderRepresentation> closedOrders = _orderQueryService.GetClosedOrders(new TraderId(1),
                     closedOrdersParams.IncludeTrades, closedOrdersParams.UserRefId, closedOrdersParams.StartTime,
                     closedOrdersParams.EndTime, closedOrdersParams.Offset, closedOrdersParams.CloseTime);
 
                 if (closedOrders != null)
                 {
-                    return Ok<List<Order>>(closedOrders);
+                    return Ok<List<OrderRepresentation>>(closedOrders);
                 }
                 return NotFound();
             }

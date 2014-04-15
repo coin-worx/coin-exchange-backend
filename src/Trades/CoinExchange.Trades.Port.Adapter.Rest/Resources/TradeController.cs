@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Web.Http;
 using CoinExchange.Common.Domain.Model;
+using CoinExchange.Trades.Application.OrderServices.Representation;
 using CoinExchange.Trades.Application.TradeServices;
 using CoinExchange.Trades.Application.TradeServices.Representation;
 using CoinExchange.Trades.Domain.Model.Order;
@@ -41,12 +42,12 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         {
             try
             {
-                List<Order> closedOrders = _tradeQueryService.GetTradesHistory(new TraderId(1), tradeHistoryParams.Offset,
+                List<OrderRepresentation> closedOrders = _tradeQueryService.GetTradesHistory(new TraderId(1), tradeHistoryParams.Offset,
                     tradeHistoryParams.Type, tradeHistoryParams.Trades, tradeHistoryParams.Start, tradeHistoryParams.End);
 
                 if (closedOrders != null)
                 {
-                    return Ok<List<Order>>(closedOrders);
+                    return Ok<List<OrderRepresentation>>(closedOrders);
                 }
                 return NotFound();
             }
@@ -69,12 +70,12 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         {
             try
             {
-                List<Order> trades = _tradeQueryService.QueryTrades(new TraderId(1), queryTradeParams.TxId, 
+                List<OrderRepresentation> trades = _tradeQueryService.QueryTrades(new TraderId(1), queryTradeParams.TxId, 
                     queryTradeParams.IncludeTrades);
 
                 if (trades != null)
                 {
-                    return Ok<List<Order>>(trades);
+                    return Ok<List<OrderRepresentation>>(trades);
                 }
                 return NotFound();
             }

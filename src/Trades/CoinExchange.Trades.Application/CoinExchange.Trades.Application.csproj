@@ -53,6 +53,7 @@
     <Compile Include="OrderServices\IOrderApplicationService.cs" />
     <Compile Include="OrderServices\IOrderQueryService.cs" />
     <Compile Include="OrderServices\OrderApplicationService.cs" />
+    <Compile Include="OrderServices\Representation\OrderRepresentation.cs" />
     <Compile Include="OrderServices\StubbedOrderApplicationService.cs" />
     <Compile Include="OrderServices\StubbedOrderQueryService.cs" />
     <Compile Include="OrderServices\Representation\NewOrderRepresentation.cs" />
