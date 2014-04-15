@@ -25,7 +25,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         /// </summary>
         [Test]
         [Category("Unit")]
-        public void CreateBuySideMarketOrderTest()
+        public void CreateOrder_IfSideisBuyAndTypeisMarket_BuySideMarketOrder()
         {
             Order.Order order = OrderFactory.CreateOrder("1234", "XBTUSD", "market", "buy", 5, 0,
                 new StubbedOrderIdGenerator());
@@ -41,7 +41,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         /// </summary>
         [Test]
         [Category("Unit")]
-        public void CreateSellSideMarketOrderTest()
+        public void CreateOrder_IfSideisSellAndTypeisMarket_SellSideMarketOrder()
         {
             Order.Order order = OrderFactory.CreateOrder("1234", "XBTUSD", "market", "sell", 5, 0,
                 new StubbedOrderIdGenerator());
@@ -57,7 +57,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         /// </summary>
         [Test]
         [Category("Unit")]
-        public void CreateBuySideLimitOrderTest()
+        public void CreateOrder_IfSideisBuyAndTypeisLimit_BuySideLimitOrder()
         {
             Order.Order order = OrderFactory.CreateOrder("1234", "XBTUSD", "limit", "buy", 5, 10,
                 new StubbedOrderIdGenerator());
@@ -74,7 +74,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         /// </summary>
         [Test]
         [Category("Unit")]
-        public void CreateSellSideLimitOrderTest()
+        public void CreateOrder_IfSideisSellAndTypeisLimit_SellSideLimitOrder()
         {
             Order.Order order = OrderFactory.CreateOrder("1234", "XBTUSD", "limit", "sell", 5, 10,
                 new StubbedOrderIdGenerator());
@@ -91,7 +91,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         /// </summary>
         [Test]
         [Category("Unit")]
-        public void InvalidOrderVolumeTest()
+        public void OrderVolumeException_IfVolumeisLessThanEqualToZero_InvalidOrderVolumeException()
         {
             bool orderVolumeException = false;
             decimal volume = 0;
