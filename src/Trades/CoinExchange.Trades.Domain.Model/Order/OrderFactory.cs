@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CoinExchange.Common.Domain.Model;
 using CoinExchange.Common.Specifications;
 using CoinExchange.Trades.Domain.Model.Services;
 using CoinExchange.Trades.Domain.Model.Trades;
@@ -20,26 +21,26 @@ namespace CoinExchange.Trades.Domain.Model.Order
             Order order=null;
             TraderId id=new TraderId(int.Parse(traderId));
             OrderId orderId = orderIdGenerator.GenerateOrderId();
-            if (side.Equals(Constants.OrderSide.Buy, StringComparison.CurrentCultureIgnoreCase) &&
-                type.Equals(Constants.OrderType.MarketOrder, StringComparison.CurrentCultureIgnoreCase))
+            if (side.Equals(Constants.ORDER_SIDE_BUY, StringComparison.CurrentCultureIgnoreCase) &&
+                type.Equals(Constants.ORDER_TYPE_MARKET, StringComparison.CurrentCultureIgnoreCase))
             {
                 order=BuyOrder(orderId,currencyPair,limitPrice,OrderType.Market, volume,id);
                 
             }
-            else if (side.Equals(Constants.OrderSide.Sell, StringComparison.CurrentCultureIgnoreCase) &&
-                     type.Equals(Constants.OrderType.MarketOrder, StringComparison.CurrentCultureIgnoreCase))
+            else if (side.Equals(Constants.ORDER_SIDE_SELL, StringComparison.CurrentCultureIgnoreCase) &&
+                     type.Equals(Constants.ORDER_TYPE_MARKET, StringComparison.CurrentCultureIgnoreCase))
             {
                 order = SellOrder(orderId, currencyPair, limitPrice, OrderType.Market, volume, id);
                 
             }
-            else if (side.Equals(Constants.OrderSide.Buy, StringComparison.CurrentCultureIgnoreCase) &&
-                     type.Equals(Constants.OrderType.LimitOrder, StringComparison.CurrentCultureIgnoreCase))
+            else if (side.Equals(Constants.ORDER_SIDE_BUY, StringComparison.CurrentCultureIgnoreCase) &&
+                     type.Equals(Constants.ORDER_TYPE_LIMIT, StringComparison.CurrentCultureIgnoreCase))
             {
                 order = BuyOrder(orderId, currencyPair, limitPrice, OrderType.Limit, volume, id);
                 
             }
-            else if (side.Equals(Constants.OrderSide.Sell, StringComparison.CurrentCultureIgnoreCase) &&
-                     type.Equals(Constants.OrderType.LimitOrder, StringComparison.CurrentCultureIgnoreCase))
+            else if (side.Equals(Constants.ORDER_SIDE_SELL, StringComparison.CurrentCultureIgnoreCase) &&
+                     type.Equals(Constants.ORDER_TYPE_LIMIT, StringComparison.CurrentCultureIgnoreCase))
             {
                 order = SellOrder(orderId, currencyPair, limitPrice, OrderType.Limit, volume, id);
                 

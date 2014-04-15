@@ -8,6 +8,9 @@ using Spring.Context.Support;
 
 namespace CoinExchange.Trades.Application.OrderServices
 {
+    /// <summary>
+    /// Real implementation of order application service
+    /// </summary>
     public class OrderApplicationService:IOrderApplicationService
     {
         public CancelOrderResponse CancelOrder(string txid)
