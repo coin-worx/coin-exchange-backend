@@ -17,8 +17,8 @@ namespace CoinExchange.Trades.Domain.Model.Order
     {
         #region Private fields
         private OrderId _orderId = null;
-        private decimal _volume;
-        private decimal _price;
+        private Volume _volume=null;
+        private Price _price=null;
         private decimal _volumeExecuted;
         private TraderId _traderId;
         private string _currencyPair;
@@ -39,15 +39,15 @@ namespace CoinExchange.Trades.Domain.Model.Order
         public Order(string pair, decimal price, OrderSide orderSide, OrderType orderType, decimal volume, TraderId traderId)
         {
             CurrencyPair = pair;
-            Price = price;
+            //Price = price;
             OrderSide = orderSide;
             OrderType = orderType;
-            Volume = volume;
+            //Volume = volume;
             TraderId = traderId;
         }
 
         /// <summary>
-        /// Factory Constructor
+        /// Factory Constructor for market order
         /// </summary>
         /// <param name="pair"></param>
         /// <param name="price"></param>
@@ -55,7 +55,26 @@ namespace CoinExchange.Trades.Domain.Model.Order
         /// <param name="orderType"></param>
         /// <param name="volume"></param>
         /// <param name="traderId"></param>
-        public Order(OrderId orderId,string pair, decimal price, OrderSide orderSide, OrderType orderType, decimal volume, TraderId traderId)
+        public Order(OrderId orderId,string pair, OrderSide orderSide, OrderType orderType, Volume volume, TraderId traderId)
+        {
+            OrderId = orderId;
+            CurrencyPair = pair;
+            OrderSide = orderSide;
+            OrderType = orderType;
+            Volume = volume;
+            TraderId = traderId;
+        }
+
+        /// <summary>
+        /// Factory Constructor for limit order
+        /// </summary>
+        /// <param name="pair"></param>
+        /// <param name="price"></param>
+        /// <param name="orderSide"></param>
+        /// <param name="orderType"></param>
+        /// <param name="volume"></param>
+        /// <param name="traderId"></param>
+        public Order(OrderId orderId, string pair, Price price, OrderSide orderSide, OrderType orderType, Volume volume, TraderId traderId)
         {
             OrderId = orderId;
             CurrencyPair = pair;
@@ -119,11 +138,12 @@ namespace CoinExchange.Trades.Domain.Model.Order
         /// <summary>
         /// Limit Price
         /// </summary>
-        public decimal Price
+        public Price Price
         {
             get { return _price; }
             set
             {
+                AssertionConcern.AssertArgumentNotNull(value,"Limit Price not specified");
                 _price = value;
             }
         }
@@ -131,12 +151,12 @@ namespace CoinExchange.Trades.Domain.Model.Order
         /// <summary>
         /// Order volume in lots
         /// </summary>
-        public decimal Volume
+        public Volume Volume
         {
             get { return _volume; }
             set
             {
-                AssertionConcern.AssertArgumentRange(value,1,10,"Volume is too high or too low");
+                AssertionConcern.AssertArgumentNotNull(value,"Volume not specified");
                 _volume = value;
             }
         }

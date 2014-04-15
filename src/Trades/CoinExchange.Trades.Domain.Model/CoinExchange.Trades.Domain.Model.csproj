@@ -56,9 +56,10 @@
     <Compile Include="Order\Order.cs" />
     <Compile Include="Order\OrderFactory.cs" />
     <Compile Include="Order\OrderSide.cs" />
-    <Compile Include="Order\OrderSpecification.cs" />
     <Compile Include="Order\OrderStatus.cs" />
     <Compile Include="Order\OrderType.cs" />
+    <Compile Include="Order\Price.cs" />
+    <Compile Include="Order\Volume.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Order\CancelOrderResponse.cs" />
     <Compile Include="MarketData\MarketData.cs" />

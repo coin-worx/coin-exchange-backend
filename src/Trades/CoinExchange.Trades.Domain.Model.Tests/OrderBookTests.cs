@@ -1,4 +1,4 @@
-﻿using System;
+﻿/*using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -229,3 +229,4 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         #endregion Buy Order Tests
     }
 }
+*/

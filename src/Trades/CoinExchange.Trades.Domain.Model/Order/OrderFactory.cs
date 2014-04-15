@@ -21,29 +21,28 @@ namespace CoinExchange.Trades.Domain.Model.Order
             Order order=null;
             TraderId id=new TraderId(int.Parse(traderId));
             OrderId orderId = orderIdGenerator.GenerateOrderId();
+            Volume orderVolume=new Volume(volume);
             if (side.Equals(Constants.ORDER_SIDE_BUY, StringComparison.CurrentCultureIgnoreCase) &&
                 type.Equals(Constants.ORDER_TYPE_MARKET, StringComparison.CurrentCultureIgnoreCase))
             {
-                order=BuyOrder(orderId,currencyPair,limitPrice,OrderType.Market, volume,id);
-                
+                order = BuyMarketOrder(orderId, currencyPair, OrderType.Market, orderVolume, id);                
             }
             else if (side.Equals(Constants.ORDER_SIDE_SELL, StringComparison.CurrentCultureIgnoreCase) &&
                      type.Equals(Constants.ORDER_TYPE_MARKET, StringComparison.CurrentCultureIgnoreCase))
             {
-                order = SellOrder(orderId, currencyPair, limitPrice, OrderType.Market, volume, id);
-                
+                order = SellMarketOrder(orderId, currencyPair, OrderType.Market, orderVolume, id);               
             }
             else if (side.Equals(Constants.ORDER_SIDE_BUY, StringComparison.CurrentCultureIgnoreCase) &&
                      type.Equals(Constants.ORDER_TYPE_LIMIT, StringComparison.CurrentCultureIgnoreCase))
             {
-                order = BuyOrder(orderId, currencyPair, limitPrice, OrderType.Limit, volume, id);
-                
+                Price price = new Price(limitPrice);
+                order = BuyLimitOrder(orderId, currencyPair, price, OrderType.Limit, orderVolume, id);                
             }
             else if (side.Equals(Constants.ORDER_SIDE_SELL, StringComparison.CurrentCultureIgnoreCase) &&
                      type.Equals(Constants.ORDER_TYPE_LIMIT, StringComparison.CurrentCultureIgnoreCase))
             {
-                order = SellOrder(orderId, currencyPair, limitPrice, OrderType.Limit, volume, id);
-                
+                Price price = new Price(limitPrice);
+                order = SellLimitOrder(orderId, currencyPair, price, OrderType.Limit, orderVolume, id);             
             }
 
             //TODO:Validation of funds and other things
@@ -51,15 +50,23 @@ namespace CoinExchange.Trades.Domain.Model.Order
             return order;
         }
 
-        private static Order BuyOrder(OrderId orderId, string pair, decimal limitPrice, OrderType orderType, decimal volume, TraderId traderId)
+        private static Order BuyMarketOrder(OrderId orderId, string pair, OrderType orderType, Volume volume, TraderId traderId)
         {
-            return new Order(orderId,pair,limitPrice,OrderSide.Buy,orderType,volume,traderId);
+            return new Order(orderId, pair, OrderSide.Buy, orderType, volume, traderId);
         }
 
-        private static Order SellOrder(OrderId orderId, string pair, decimal limitPrice,OrderType orderType, decimal volume, TraderId traderId)
+        private static Order SellMarketOrder(OrderId orderId, string pair, OrderType orderType, Volume volume, TraderId traderId)
+        {
+            return new Order(orderId, pair, OrderSide.Sell, orderType, volume, traderId);
+        }
+        private static Order BuyLimitOrder(OrderId orderId, string pair, Price limitPrice, OrderType orderType, Volume volume, TraderId traderId)
+        {
+            return new Order(orderId, pair, limitPrice, OrderSide.Buy, orderType, volume, traderId);
+        }
+
+        private static Order SellLimitOrder(OrderId orderId, string pair, Price limitPrice, OrderType orderType, Volume volume, TraderId traderId)
         {
             return new Order(orderId, pair, limitPrice, OrderSide.Sell, orderType, volume, traderId);
         }
-        
     }
 }

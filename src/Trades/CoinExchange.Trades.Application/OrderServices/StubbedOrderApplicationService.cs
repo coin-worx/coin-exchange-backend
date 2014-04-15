@@ -28,7 +28,7 @@ namespace CoinExchange.Trades.Application.OrderServices
         public NewOrderRepresentation CreateOrder(CreateOrderCommand orderCommand)
         {
             return new NewOrderRepresentation(orderCommand.Price, orderCommand.Type, orderCommand.Side, orderCommand.Pair,
-                DateTime.Now.ToString());
+                DateTime.Now.ToString(),orderCommand.Volume);
         }
     }
 }

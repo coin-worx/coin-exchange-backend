@@ -25,7 +25,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         [Category("Unit")]
         public void CreateOrderTest()
         {
-            Order.Order order = OrderFactory.CreateOrder("1234", "XBTUSD", "market", "buy", 5,0,new StubbedOrderIdGenerator());
+            Order.Order order = OrderFactory.CreateOrder("1234", "XBTUSD", "limit", "buy", 5,10,new StubbedOrderIdGenerator());
             Assert.NotNull(order);
         }
         /// <summary>
@@ -42,7 +42,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
             Assert.AreEqual(order.CurrencyPair, "XBTUSD");
             Assert.AreEqual(order.OrderType,OrderType.Market);
             Assert.AreEqual(order.OrderSide,OrderSide.Buy);
-            Assert.AreEqual(order.Volume,5);
+            Assert.AreEqual(order.Volume.Value,5);
         }
     }
 }
