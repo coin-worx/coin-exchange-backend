@@ -14,7 +14,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
     /// </summary>
     public class OrderList : IEnumerable<Order.Order>
     {
-        // Get teh Current Logger
+        // Get the Current Logger
         private static readonly log4net.ILog Log = log4net.LogManager.GetLogger
         (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -68,7 +68,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         {
             if(_currencyPair == currencyPair)
             {
-                Order.Order selectedOrder = SelectOrder(orderId);
+                Order.Order selectedOrder = FindOrder(orderId);
 
                 if (selectedOrder != null)
                 {
@@ -86,18 +86,16 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// Cancels the specified Order in the list
         /// </summary>
         /// <returns></returns>
-        internal bool Remove(OrderId orderId)
+        internal bool Remove(Order.Order order)
         {
-            Order.Order selectedOrder = SelectOrder(orderId);
-
-            if (selectedOrder != null)
+            if (order != null)
             {
-                _orderList.Remove(selectedOrder);
+                _orderList.Remove(order);
                 SortList();
-                Log.Debug("Order Removed. Details: " + selectedOrder);
+                Log.Debug("Order Removed. Details: " + order);
                 return true;
             }
-            Log.Error("Order could not be Removed. OrderId: " + orderId.Id);
+            Log.Error("Order value null provided for Cancel.");
             return false;
         }
 
@@ -126,7 +124,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// Selects an Order from the ORderList given the OrderID
         /// </summary>
         /// <returns></returns>
-        private Order.Order SelectOrder(OrderId orderId)
+        public Order.Order FindOrder(OrderId orderId)
         {
             if (orderId != null)
             {

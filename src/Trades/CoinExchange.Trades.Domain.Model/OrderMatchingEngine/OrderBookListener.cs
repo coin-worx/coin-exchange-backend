@@ -12,12 +12,16 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
     /// </summary>
     public class OrderBookListener
     {
+        // Get the Current Logger
+        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger
+        (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         /// <summary>
         /// Handles the event that signifies that the OrderBook has changed
         /// </summary>
         public void OnOrderBookChanged(LimitOrderBook orderBook)
         {
-            
+            Log.Debug("OrderBook changed for Currency pair: " + orderBook.CurrencyPair);
         }
     }
 }

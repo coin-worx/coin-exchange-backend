@@ -12,6 +12,10 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
     /// </summary>
     public class LimitOrderBook
     {
+        // Get the Current Logger
+        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger
+        (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private string _currencyPair = string.Empty;
         private int _trasactionId = 0;
 
@@ -34,11 +38,31 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         private TradeListener _tradeListener = null;
         private OrderListener _orderListener = null;
         private OrderBookListener _orderBookListener = null;
+        private OrderAccepted _orderAccepted = null;
+        private OrderRejected _orderRejected = null;
 
         // Events
         public event Action<Trade> TradeExecuted;
         public event Action<Order.Order> OrderChanged;
         public event Action<LimitOrderBook> OrderBookChanged;
+
+        /// <summary>
+        /// A delegate that sends notification to the client that the Order has been accepted
+        /// </summary>
+        public OrderAccepted OrderAccepted
+        {
+            get { return _orderAccepted; }
+            set { _orderAccepted = value; }
+        }
+
+        /// <summary>
+        /// A delegate that sends notification to the client that the Order has been rejected
+        /// </summary>
+        public OrderRejected OrderRejected
+        {
+            get { return _orderRejected; }
+            set { _orderRejected = value; }
+        }
 
         /// <summary>
         /// Default Constructor
@@ -50,25 +74,6 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
 
             _bids = new OrderList(currencyPair, OrderSide.Buy);
             _asks = new OrderList(currencyPair, OrderSide.Sell);
-
-            // ToDo: Need to verify that whetehr this is the right approach to hook it create the Listeners here and 
-            // to hook the events, or should the Listeners be provided here from somewhere outside the class
-            _tradeListener = new TradeListener();
-            _orderListener = new OrderListener();
-            _orderBookListener = new OrderBookListener();
-
-            if (TradeExecuted == null)
-            {
-                TradeExecuted += _tradeListener.OnTradeExecuted;
-            }
-            if (OrderChanged == null)
-            {
-                OrderChanged += _orderListener.OnOrderChanged;
-            }
-            if (OrderBookChanged == null)
-            {
-                OrderBookChanged += _orderBookListener.OnOrderBookChanged;
-            }
         }
 
         #region Methods
@@ -99,6 +104,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         {
             if (_bids.Any())
             {
+                _trasactionId++;
                 IEnumerable<Order.Order> matchingBids = from bid in _bids
                                                         where bid.Price.Value >= sellOrder.Price.Value
                                                         select bid;
@@ -124,7 +130,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
                                 trade.RaiseEvent();
                                 sellOrder.Status = OrderStatus.PartiallyFilled;
                                 matchingBid.Status = OrderStatus.FullyFilled;
-                                _bids.Remove(matchingBid.OrderId);
+                                _bids.Remove(matchingBid);
                             }
                                 // If the Sell Order's volume is less than the Buy Order's volume
                             else if (sellOrder.Volume.Value < 0)
@@ -152,7 +158,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
                                 // ToDo: Need to figure out how to raise this event in the following method 
                                 // and publish on the output disruptor
                                 trade.RaiseEvent();
-                                _bids.Remove(matchingBid.OrderId);
+                                _bids.Remove(matchingBid);
                                 return true;
                             }
                         }
@@ -177,6 +183,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         {
             if (_asks.Any())
             {
+                _trasactionId++;
                 IEnumerable<Order.Order> matchingAsks = from ask in _asks
                                                         where ask.Price.Value <= buyOrder.Price.Value
                                                         select ask;
@@ -202,7 +209,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
                                 trade.RaiseEvent();
                                 buyOrder.Status = OrderStatus.PartiallyFilled;
                                 matchingAsk.Status = OrderStatus.FullyFilled;
-                                _asks.Remove(matchingAsk.OrderId);
+                                _asks.Remove(matchingAsk);
                             }
                             // If the Sell Order's volume is less than the Buy Order's volume
                             else if (buyOrder.Volume.Value < 0)
@@ -230,7 +237,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
                                 // ToDo: Need to figure out how to raise this event in the following method 
                                 // and publish on the output disruptor
                                 trade.RaiseEvent();
-                                _asks.Remove(matchingAsk.OrderId);
+                                _asks.Remove(matchingAsk);
                                 return true;
                             }
                         }
@@ -245,6 +252,26 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
 
             _bids.Add(buyOrder);
             return true;
+        }
+
+        /// <summary>
+        /// Cancel the order
+        /// </summary>
+        public bool CancelOrder(OrderId orderId)
+        {
+            Order.Order foundAsk = _asks.FindOrder(orderId);
+            if (foundAsk != null)
+            {
+                _asks.Remove(foundAsk);
+                return true;
+            }
+            Order.Order foundBid = _bids.FindOrder(orderId);
+            if (foundBid != null)
+            {
+                _bids.Remove(foundBid);
+                return true;
+            }
+            return false;
         }
 
         /// <summary>
@@ -289,6 +316,55 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             get
             {
                 return _tradeListener;
+            }
+            set
+            {
+                AssertionConcern.AssertArgumentNotNull(value, "TradeListener provided is equal to null.");
+                _tradeListener = value;
+                if (TradeExecuted == null)
+                {
+                    TradeExecuted += _tradeListener.OnTradeExecuted;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Listens to the changes in the states of Orders
+        /// </summary>
+        public OrderListener OrderListener
+        {
+            get
+            {
+                return _orderListener;
+            } 
+            set
+            {
+                AssertionConcern.AssertArgumentNotNull(value, "OrderListener provided is equal to null.");
+                _orderListener = value;
+                if (OrderChanged == null)
+                {
+                    OrderChanged += _orderListener.OnOrderChanged;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Listens to the changes in the states of this OrderBook
+        /// </summary>
+        public OrderBookListener OrderBookListener
+        {
+            get
+            {
+                return _orderBookListener;
+            }
+            set
+            {
+                AssertionConcern.AssertArgumentNotNull(value, "OrderBookListener provided is equal to null.");
+                _orderBookListener = value;
+                if (OrderBookChanged == null)
+                {
+                    OrderBookChanged += _orderBookListener.OnOrderBookChanged;
+                }
             }
         }
 

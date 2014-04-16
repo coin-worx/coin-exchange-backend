@@ -60,6 +60,7 @@
     <Compile Include="OrderMatchingEngine\DepthOrderBook.cs" />
     <Compile Include="OrderMatchingEngine\LimitOrderBook.cs" />
     <Compile Include="OrderMatchingEngine\OrderBookListener.cs" />
+    <Compile Include="OrderMatchingEngine\OrderCallBacks.cs" />
     <Compile Include="OrderMatchingEngine\OrderList.cs" />
     <Compile Include="OrderMatchingEngine\OrderListener.cs" />
     <Compile Include="OrderMatchingEngine\TradeListener.cs" />

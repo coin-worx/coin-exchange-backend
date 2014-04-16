@@ -1,5 +1,4 @@
-﻿/*
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -35,7 +34,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
             limitOrderBook.PlaceOrder(new Order.Order("XBTUSD", 492.34M, OrderSide.Sell, OrderType.Limit, 250,
                                                       new TraderId(1)));
 
-            Assert.AreEqual(3, limitOrderBook.Asks.Count, "Count of Sell Orders");
+            Assert.AreEqual(3, limitOrderBook.AskCount, "Count of Sell Orders");
             Assert.AreEqual(491.34M, limitOrderBook.Asks.First().Price, "First element of Sell Orders list");
             Assert.AreEqual(493.34M, limitOrderBook.Asks.Last().Price, "Last element of Sell Orders list");
         }
@@ -52,12 +51,12 @@ namespace CoinExchange.Trades.Domain.Model.Tests
             limitOrderBook.PlaceOrder(new Order.Order("XBTUSD", 491.34M, OrderSide.Buy, OrderType.Limit, 50, new TraderId(1)));
             limitOrderBook.PlaceOrder(new Order.Order("XBTUSD", 491.34M, OrderSide.Buy, OrderType.Limit, 50, new TraderId(1)));
 
-            Assert.AreEqual(3, limitOrderBook.Bids.Count, "Count of Buy Orders after trade execution");
+            Assert.AreEqual(3, limitOrderBook.BidCount, "Count of Buy Orders after trade execution");
 
             bool placeOrder = limitOrderBook.PlaceOrder(new Order.Order("XBTUSD", 491.34M, OrderSide.Sell, OrderType.Limit, 250, new TraderId(1)));
             
-            Assert.AreEqual(0, limitOrderBook.Bids.Count, "Count of Buy Orders after trade execution");
-            Assert.AreEqual(0, limitOrderBook.Asks.Count, "Count of Sell Orders after trade execution");
+            Assert.AreEqual(0, limitOrderBook.BidCount, "Count of Buy Orders after trade execution");
+            Assert.AreEqual(0, limitOrderBook.AskCount, "Count of Sell Orders after trade execution");
             Assert.IsTrue(placeOrder);
         }
 
@@ -71,12 +70,12 @@ namespace CoinExchange.Trades.Domain.Model.Tests
 
             limitOrderBook.PlaceOrder(new Order.Order("XBTUSD", 491.34M, OrderSide.Buy, OrderType.Limit, 150, new TraderId(1)));
             
-            Assert.AreEqual(1, limitOrderBook.Bids.Count, "Count of Buy Orders after trade execution");
+            Assert.AreEqual(1, limitOrderBook.BidCount, "Count of Buy Orders after trade execution");
 
             bool placeOrder = limitOrderBook.PlaceOrder(new Order.Order("XBTUSD", 491.34M, OrderSide.Sell, OrderType.Limit, 200, new TraderId(1)));
 
-            Assert.AreEqual(0, limitOrderBook.Bids.Count, "Count of Buy Orders after trade execution");
-            Assert.AreEqual(1, limitOrderBook.Asks.Count, "Count of Sell Orders after trade execution");
+            Assert.AreEqual(0, limitOrderBook.BidCount, "Count of Buy Orders after trade execution");
+            Assert.AreEqual(1, limitOrderBook.AskCount, "Count of Sell Orders after trade execution");
             Assert.AreEqual(50, limitOrderBook.Asks.First().Volume, "Volume of the Buy Order after updating");
             Assert.IsTrue(placeOrder);
         }
@@ -91,12 +90,12 @@ namespace CoinExchange.Trades.Domain.Model.Tests
 
             limitOrderBook.PlaceOrder(new Order.Order("XBTUSD", 491.34M, OrderSide.Buy, OrderType.Limit, 150, new TraderId(1)));
 
-            Assert.AreEqual(1, limitOrderBook.Bids.Count, "Count of Buy Orders after trade execution");
+            Assert.AreEqual(1, limitOrderBook.BidCount, "Count of Buy Orders after trade execution");
 
             bool placeOrder = limitOrderBook.PlaceOrder(new Order.Order("XBTUSD", 489.34M, OrderSide.Sell, OrderType.Limit, 150, new TraderId(1)));
 
-            Assert.AreEqual(0, limitOrderBook.Bids.Count, "Count of Buy Orders after trade execution");
-            Assert.AreEqual(0, limitOrderBook.Asks.Count, "Count of Sell Orders after trade execution");
+            Assert.AreEqual(0, limitOrderBook.BidCount, "Count of Buy Orders after trade execution");
+            Assert.AreEqual(0, limitOrderBook.AskCount, "Count of Sell Orders after trade execution");
             Assert.IsTrue(placeOrder);
         }
 
@@ -112,12 +111,12 @@ namespace CoinExchange.Trades.Domain.Model.Tests
             limitOrderBook.PlaceOrder(new Order.Order("XBTUSD", 491.34M, OrderSide.Buy, OrderType.Limit, 50, new TraderId(1)));
             limitOrderBook.PlaceOrder(new Order.Order("XBTUSD", 491.34M, OrderSide.Buy, OrderType.Limit, 50, new TraderId(1)));
 
-            Assert.AreEqual(3, limitOrderBook.Bids.Count, "Count of Buy Orders after trade execution");
+            Assert.AreEqual(3, limitOrderBook.BidCount, "Count of Buy Orders after trade execution");
 
             bool placeOrder = limitOrderBook.PlaceOrder(new Order.Order("XBTUSD", 491.34M, OrderSide.Sell, OrderType.Limit, 200, new TraderId(1)));
 
-            Assert.AreEqual(1, limitOrderBook.Bids.Count, "Count of Buy Orders after trade execution");
-            Assert.AreEqual(0, limitOrderBook.Asks.Count, "Count of Sell Orders after trade execution");
+            Assert.AreEqual(1, limitOrderBook.BidCount, "Count of Buy Orders after trade execution");
+            Assert.AreEqual(0, limitOrderBook.AskCount, "Count of Sell Orders after trade execution");
             Assert.IsTrue(placeOrder);
         }
 
@@ -141,7 +140,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
             limitOrderBook.PlaceOrder(new Order.Order("XBTUSD", 492.34M, OrderSide.Buy, OrderType.Limit, 250,
                                                       new TraderId(1)));
 
-            Assert.AreEqual(3, limitOrderBook.Bids.Count, "Count of Buy Orders");
+            Assert.AreEqual(3, limitOrderBook.BidCount, "Count of Buy Orders");
             Assert.AreEqual(493.34M, limitOrderBook.Bids.First().Price, "First element of Buy Orders list");
             Assert.AreEqual(491.34M, limitOrderBook.Bids.Last().Price, "Last element of Buy Orders list");
         }
@@ -158,12 +157,12 @@ namespace CoinExchange.Trades.Domain.Model.Tests
             limitOrderBook.PlaceOrder(new Order.Order("XBTUSD", 491.34M, OrderSide.Sell, OrderType.Limit, 50, new TraderId(1)));
             limitOrderBook.PlaceOrder(new Order.Order("XBTUSD", 491.34M, OrderSide.Sell, OrderType.Limit, 50, new TraderId(1)));
 
-            Assert.AreEqual(3, limitOrderBook.Asks.Count, "Count of Sell Orders after trade execution");
+            Assert.AreEqual(3, limitOrderBook.AskCount, "Count of Sell Orders after trade execution");
 
             bool placeOrder = limitOrderBook.PlaceOrder(new Order.Order("XBTUSD", 491.34M, OrderSide.Buy, OrderType.Limit, 250, new TraderId(1)));
 
-            Assert.AreEqual(0, limitOrderBook.Asks.Count, "Count of Sell Orders after trade execution");
-            Assert.AreEqual(0, limitOrderBook.Bids.Count, "Count of Buy Orders after trade execution");
+            Assert.AreEqual(0, limitOrderBook.AskCount, "Count of Sell Orders after trade execution");
+            Assert.AreEqual(0, limitOrderBook.BidCount, "Count of Buy Orders after trade execution");
             Assert.IsTrue(placeOrder);
         }
 
@@ -177,12 +176,12 @@ namespace CoinExchange.Trades.Domain.Model.Tests
 
             limitOrderBook.PlaceOrder(new Order.Order("XBTUSD", 491.34M, OrderSide.Sell, OrderType.Limit, 150, new TraderId(1)));
 
-            Assert.AreEqual(1, limitOrderBook.Asks.Count, "Count of Buy Orders after trade execution");
+            Assert.AreEqual(1, limitOrderBook.AskCount, "Count of Buy Orders after trade execution");
 
             bool placeOrder = limitOrderBook.PlaceOrder(new Order.Order("XBTUSD", 491.34M, OrderSide.Buy, OrderType.Limit, 200, new TraderId(1)));
 
-            Assert.AreEqual(0, limitOrderBook.Asks.Count, "Count of Buy Orders after trade execution");
-            Assert.AreEqual(1, limitOrderBook.Bids.Count, "Count of Sell Orders after trade execution");
+            Assert.AreEqual(0, limitOrderBook.AskCount, "Count of Buy Orders after trade execution");
+            Assert.AreEqual(1, limitOrderBook.BidCount, "Count of Sell Orders after trade execution");
             Assert.AreEqual(50, limitOrderBook.Bids.First().Volume, "Volume of the Buy Order after updating");
             Assert.IsTrue(placeOrder);
         }
@@ -197,12 +196,12 @@ namespace CoinExchange.Trades.Domain.Model.Tests
 
             limitOrderBook.PlaceOrder(new Order.Order("XBTUSD", 480.34M, OrderSide.Sell, OrderType.Limit, 150, new TraderId(1)));
 
-            Assert.AreEqual(1, limitOrderBook.Asks.Count, "Count of Buy Orders after trade execution");
+            Assert.AreEqual(1, limitOrderBook.AskCount, "Count of Buy Orders after trade execution");
 
             bool placeOrder = limitOrderBook.PlaceOrder(new Order.Order("XBTUSD", 490.34M, OrderSide.Buy, OrderType.Limit, 150, new TraderId(1)));
 
-            Assert.AreEqual(0, limitOrderBook.Asks.Count, "Count of Buy Orders after trade execution");
-            Assert.AreEqual(0, limitOrderBook.Bids.Count, "Count of Sell Orders after trade execution");
+            Assert.AreEqual(0, limitOrderBook.AskCount, "Count of Buy Orders after trade execution");
+            Assert.AreEqual(0, limitOrderBook.BidCount, "Count of Sell Orders after trade execution");
             Assert.IsTrue(placeOrder);
         }
 
@@ -218,16 +217,15 @@ namespace CoinExchange.Trades.Domain.Model.Tests
             limitOrderBook.PlaceOrder(new Order.Order("XBTUSD", 491.34M, OrderSide.Sell, OrderType.Limit, 50, new TraderId(1)));
             limitOrderBook.PlaceOrder(new Order.Order("XBTUSD", 491.34M, OrderSide.Sell, OrderType.Limit, 50, new TraderId(1)));
 
-            Assert.AreEqual(3, limitOrderBook.Asks.Count, "Count of Buy Orders after trade execution");
+            Assert.AreEqual(3, limitOrderBook.AskCount, "Count of Buy Orders after trade execution");
 
             bool placeOrder = limitOrderBook.PlaceOrder(new Order.Order("XBTUSD", 491.34M, OrderSide.Buy, OrderType.Limit, 200, new TraderId(1)));
 
-            Assert.AreEqual(1, limitOrderBook.Asks.Count, "Count of Buy Orders after trade execution");
-            Assert.AreEqual(0, limitOrderBook.Bids.Count, "Count of Sell Orders after trade execution");
+            Assert.AreEqual(1, limitOrderBook.AskCount, "Count of Buy Orders after trade execution");
+            Assert.AreEqual(0, limitOrderBook.BidCount, "Count of Sell Orders after trade execution");
             Assert.IsTrue(placeOrder);
         }
 
         #endregion Buy Order Tests
     }
 }
-*/

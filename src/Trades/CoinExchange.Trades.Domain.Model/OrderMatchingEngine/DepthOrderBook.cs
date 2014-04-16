@@ -11,5 +11,8 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
     /// </summary>
     public class DepthOrderBook
     {
+        // ToDo: Need to implement the depth feature of the DethOrderBook
+        // ToDo: Need to figure whether to inherit the DepthOrderBook from OrderBook, link it with OrderBook only, or put this
+        // functionality into the OrderBook and no DepthBook be created separately.
     }
 }
