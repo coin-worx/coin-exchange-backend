@@ -65,10 +65,29 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="JournalerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CoinExchange.Trades.Domain.Model\CoinExchange.Trades.Domain.Model.csproj">
+      <Project>{32ac3710-adf8-4522-8f06-1f9c7a45e6e7}</Project>
+      <Name>CoinExchange.Trades.Domain.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CoinExchange.Trades.Infrastructure.Common\CoinExchange.Trades.Infrastructure.Common.csproj">
+      <Project>{549e911d-9534-49e3-af19-19d06b697083}</Project>
+      <Name>CoinExchange.Trades.Infrastructure.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CoinExchange.Trades.Infrastructure.Persistence.NHibernate\CoinExchange.Trades.Infrastructure.Persistence.csproj">
+      <Project>{1fe04e5f-951e-408f-9172-87b259cbbf94}</Project>
+      <Name>CoinExchange.Trades.Infrastructure.Persistence</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CoinExchange.Trades.Infrastructure.Services\CoinExchange.Trades.Infrastructure.Services.csproj">
+      <Project>{2247dd67-1747-430f-b93f-c5538a6dda1e}</Project>
+      <Name>CoinExchange.Trades.Infrastructure.Services</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

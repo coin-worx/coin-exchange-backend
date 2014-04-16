@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinExchange.Trades.Applica
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinExchange.Trades.Infrastructure.Common", "Trades\CoinExchange.Trades.Infrastructure.Common\CoinExchange.Trades.Infrastructure.Common.csproj", "{549E911D-9534-49E3-AF19-19D06B697083}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinExchange.Trades.Infrastructure.Persistence.NHibernate", "Trades\CoinExchange.Trades.Infrastructure.Persistence.NHibernate\CoinExchange.Trades.Infrastructure.Persistence.NHibernate.csproj", "{1FE04E5F-951E-408F-9172-87B259CBBF94}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinExchange.Trades.Infrastructure.Persistence", "Trades\CoinExchange.Trades.Infrastructure.Persistence.NHibernate\CoinExchange.Trades.Infrastructure.Persistence.csproj", "{1FE04E5F-951E-408F-9172-87B259CBBF94}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinExchange.Trades.Infrastructure.Services", "Trades\CoinExchange.Trades.Infrastructure.Services\CoinExchange.Trades.Infrastructure.Services.csproj", "{2247DD67-1747-430F-B93F-C5538A6DDA1E}"
 EndProject
