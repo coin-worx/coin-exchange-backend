@@ -15,5 +15,6 @@ namespace CoinExchange.Common.Domain.Model
         public const string ORDER_TYPE_MARKET = "market";
         public const string ORDER_SIDE_BUY = "buy";
         public const string ORDER_SIDE_SELL = "sell";
+        public const int DISRUPTOR_RING_SIZE = 8;//should always be multiple of 2
     }
 }

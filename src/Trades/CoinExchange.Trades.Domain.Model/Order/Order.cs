@@ -197,5 +197,35 @@ namespace CoinExchange.Trades.Domain.Model.Order
                 _traderId = value;
             }
         }
+
+        public override bool Equals(object obj)
+        {
+            Order order = obj as Order;
+            if (order == null)
+                return false;
+            return order.OrderId.Id == this.OrderId.Id;
+        }
+
+        /// <summary>
+        /// Perform deep copy
+        /// </summary>
+        /// <param name="order"></param>
+        /// <returns></returns>
+        public Order MemberWiseClone(Order order)
+        {
+            order.OrderId=new OrderId(this.OrderId.Id);
+            order.OrderSide=this.OrderSide;
+            order.OrderType = this.OrderType;
+            order.Status = this.Status;
+            if (OrderType == OrderType.Limit)
+            {
+                order.Price = new Price(_price.Value);
+            }
+            order.TraderId=new TraderId(this.TraderId.Id);
+            order.CurrencyPair = this.CurrencyPair;
+            order.Volume=new Volume(this.Volume.Value);
+            order.VolumeExecuted = this.VolumeExecuted;
+            return order;
+        }
     }
 }
