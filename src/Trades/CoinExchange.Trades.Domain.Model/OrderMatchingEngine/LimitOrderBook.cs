@@ -17,6 +17,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private string _currencyPair = string.Empty;
+        private DepthOrderBook _depthOrderBook = null;
         private int _trasactionId = 0;
 
         /// <summary>
@@ -71,6 +72,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         public LimitOrderBook(string currencyPair)
         {
             _currencyPair = currencyPair;
+            _depthOrderBook = new DepthOrderBook(currencyPair);
 
             _bids = new OrderList(currencyPair, OrderSide.Buy);
             _asks = new OrderList(currencyPair, OrderSide.Sell);
@@ -112,62 +114,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
                 List<Order.Order> matchingBidsList = matchingBids as List<Order.Order> ?? matchingBids.ToList();
                 if (matchingBidsList.Any())
                 {
-                    foreach (var matchingBid in matchingBidsList)
-                    {
-                        if (sellOrder.Volume.Value > 0)
-                        {
-                            sellOrder.Volume = new Volume(sellOrder.Volume.Value - matchingBid.Volume.Value);
-
-                            // If the Sell Order's volume exceeds the Buy order's volume
-                            if (sellOrder.Volume.Value > 0)
-                            {
-                                // Send the Buy Order's volume as the quantity of the trade executed
-                                Trade trade = GenerateTrade(matchingBid.Price.Value, matchingBid.Volume.Value,
-                                                            matchingBid, sellOrder);
-
-                                // ToDo: Need to figure out how to raise this event in the following method 
-                                // and publish on the output disruptor
-                                trade.RaiseEvent();
-                                sellOrder.Status = OrderStatus.PartiallyFilled;
-                                matchingBid.Status = OrderStatus.FullyFilled;
-                                _bids.Remove(matchingBid);
-                            }
-                                // If the Sell Order's volume is less than the Buy Order's volume
-                            else if (sellOrder.Volume.Value < 0)
-                            {
-                                // Send the Buy Order's volume as the quantity of the trade executed
-                                Trade trade = GenerateTrade(matchingBid.Price.Value, -sellOrder.Volume.Value,
-                                                            matchingBid, sellOrder);
-
-                                // ToDo: Need to figure out how to raise this event in the following method 
-                                // and publish on the output disruptor
-                                trade.RaiseEvent();
-                                matchingBid.Volume = new Volume(-sellOrder.Volume.Value);
-
-                                // ToDo: Raise an OrderUpdatedEvent over here
-
-                                sellOrder.Status = OrderStatus.FullyFilled;
-                                sellOrder.Volume = new Volume(0);
-                            }
-                            else if (sellOrder.Volume.Value == 0)
-                            {
-                                // Send the Buy Order's volume as the quantity of the trade executed
-                                Trade trade = GenerateTrade(matchingBid.Price.Value, matchingBid.Volume.Value,
-                                                            matchingBid, sellOrder);
-
-                                // ToDo: Need to figure out how to raise this event in the following method 
-                                // and publish on the output disruptor
-                                trade.RaiseEvent();
-                                _bids.Remove(matchingBid);
-                                return true;
-                            }
-                        }
-                    }
-                    if (sellOrder.Volume.Value > 0)
-                    {
-                        _asks.Add(sellOrder);
-                        return true;
-                    }
+                    return MatchOrder(sellOrder, _asks, matchingBidsList, _bids);
                 }
             }
             
@@ -191,7 +138,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
                 List<Order.Order> matchingAskList = matchingAsks as List<Order.Order> ?? matchingAsks.ToList();
                 if (matchingAskList.Any())
                 {
-                    foreach (var matchingAsk in matchingAskList)
+                    /*foreach (var matchingAsk in matchingAskList)
                     {
                         if (buyOrder.Volume.Value > 0)
                         {
@@ -246,12 +193,77 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
                     {
                         _bids.Add(buyOrder);
                         return true;
-                    }
+                    }*/
+
+                    return MatchOrder(buyOrder, _bids, matchingAskList, _asks);
                 }
             }
 
             _bids.Add(buyOrder);
             return true;
+        }
+
+        public bool MatchOrder(Order.Order sellOrder, OrderList inboundOrderSideList, 
+            List<Order.Order> oppositeMatchingOrdersList, OrderList oppositeOrderSideList)
+        {
+            decimal currentVolume = sellOrder.Volume.Value;
+            foreach (var matchingOrder in oppositeMatchingOrdersList)
+            {
+                if (currentVolume > 0)
+                {
+                    currentVolume = currentVolume - matchingOrder.Volume.Value;
+
+                    // If the inbound Order's volume exceeds the opposite side order's volume present in the list
+                    if (currentVolume > 0)
+                    {
+                        // Send the opposite side Order's volume as the quantity of the trade executed
+                        Trade trade = GenerateTrade(matchingOrder.Price.Value, matchingOrder.Volume.Value,
+                                                    matchingOrder, sellOrder);
+
+                        // ToDo: Need to figure out how to raise this event in the following method 
+                        // and publish on the output disruptor
+                        trade.RaiseEvent();
+                        sellOrder.Status = OrderStatus.PartiallyFilled;
+                        sellOrder.Volume = new Volume(currentVolume);
+                        matchingOrder.Status = OrderStatus.FullyFilled;
+                        oppositeOrderSideList.Remove(matchingOrder);
+                    }
+                    // If the inbound Order's volume is less than the opposite side Order's volume in the list
+                    else if (currentVolume < 0)
+                    {
+                        // Send the inbound order's quantity as the quantity executed
+                        Trade trade = GenerateTrade(matchingOrder.Price.Value, sellOrder.Volume.Value,
+                                                    matchingOrder, sellOrder);
+
+                        // ToDo: Need to figure out how to raise this event in the following method 
+                        // and publish on the output disruptor
+                        trade.RaiseEvent();
+                        matchingOrder.Volume = new Volume(-currentVolume);
+
+                        // ToDo: Raise an OrderUpdatedEvent over here
+
+                        sellOrder.Status = OrderStatus.FullyFilled;
+                    }
+                    else if (currentVolume == 0)
+                    {
+                        // Send the opposite side Order's volume as the quantity of the trade executed
+                        Trade trade = GenerateTrade(matchingOrder.Price.Value, matchingOrder.Volume.Value,
+                                                    matchingOrder, sellOrder);
+
+                        // ToDo: Need to figure out how to raise this event in the following method 
+                        // and publish on the output disruptor
+                        trade.RaiseEvent();
+                        oppositeOrderSideList.Remove(matchingOrder);
+                        return true;
+                    }
+                }
+            }
+            if (sellOrder.Volume.Value > 0)
+            {
+                inboundOrderSideList.Add(sellOrder);
+                return true;
+            }
+            return false;
         }
 
         /// <summary>
@@ -323,7 +335,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
                 _tradeListener = value;
                 if (TradeExecuted == null)
                 {
-                    TradeExecuted += _tradeListener.OnTradeExecuted;
+                    TradeExecuted += _tradeListener.OnTrade;
                 }
             }
         }

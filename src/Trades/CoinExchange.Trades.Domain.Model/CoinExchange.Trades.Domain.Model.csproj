@@ -56,8 +56,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="OrderMatchingEngine\BBOListener.cs" />
+    <Compile Include="OrderMatchingEngine\Depth.cs" />
+    <Compile Include="OrderMatchingEngine\DepthLevel.cs" />
     <Compile Include="OrderMatchingEngine\DepthListener.cs" />
     <Compile Include="OrderMatchingEngine\DepthOrderBook.cs" />
+    <Compile Include="OrderMatchingEngine\IBBOListener.cs" />
+    <Compile Include="OrderMatchingEngine\IDepthListener.cs" />
+    <Compile Include="OrderMatchingEngine\IOrderBookListener.cs" />
+    <Compile Include="OrderMatchingEngine\IOrderListener.cs" />
+    <Compile Include="OrderMatchingEngine\ITradeListener.cs" />
     <Compile Include="OrderMatchingEngine\LimitOrderBook.cs" />
     <Compile Include="OrderMatchingEngine\OrderBookListener.cs" />
     <Compile Include="OrderMatchingEngine\OrderCallBacks.cs" />

@@ -13,7 +13,7 @@ namespace CoinExchange.Trades.Domain.Model.Order
     /// <summary>
     /// CoinExchange Order
     /// </summary>
-    public class Order
+    public class Order : IComparable<Order>
     {
         #region Private fields
         private OrderId _orderId = null;
@@ -33,17 +33,6 @@ namespace CoinExchange.Trades.Domain.Model.Order
         public Order()
         {
             
-        }
-
-        //TODO: waqas bhai please delete this constructor and use another for creating the order
-        public Order(string pair, decimal price, OrderSide orderSide, OrderType orderType, decimal volume, TraderId traderId)
-        {
-            CurrencyPair = pair;
-            //Price = price;
-            OrderSide = orderSide;
-            OrderType = orderType;
-            //Volume = volume;
-            TraderId = traderId;
         }
 
         /// <summary>
@@ -197,5 +186,22 @@ namespace CoinExchange.Trades.Domain.Model.Order
                 _traderId = value;
             }
         }
+
+        #region Implementation of IComparable<in Order>
+
+        public int CompareTo(Order other)
+        {
+            if (this.Price.IsGreaterThan(other.Price))
+            {
+                return -1;
+            }
+            if (this.Price.Equals(other.Price))
+            {
+                return 0;
+            }
+            return 1;
+        }
+
+        #endregion
     }
 }

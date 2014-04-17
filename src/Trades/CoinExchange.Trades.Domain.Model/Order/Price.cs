@@ -1,11 +1,12 @@
-﻿using CoinExchange.Common.Domain.Model;
+﻿using System;
+using CoinExchange.Common.Domain.Model;
 
 namespace CoinExchange.Trades.Domain.Model.Order
 {
     /// <summary>
     /// order limit price value object
     /// </summary>
-    public class Price
+    public class Price : IComparable<Price>
     {
         private decimal _value;
         public decimal Value
@@ -30,6 +31,19 @@ namespace CoinExchange.Trades.Domain.Model.Order
                 return false;
             }
             return _value > price._value;
+        }
+
+        public int CompareTo(Price price)
+        {
+            if (this.Value > price.Value)
+            {
+                return -1;
+            }
+            if (this.Value == price.Value)
+            {
+                return 0;
+            }
+            return 1;
         }
 
         public override string ToString()

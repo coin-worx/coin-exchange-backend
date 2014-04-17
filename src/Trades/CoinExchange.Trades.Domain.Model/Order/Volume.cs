@@ -1,11 +1,12 @@
-﻿using CoinExchange.Common.Domain.Model;
+﻿using System;
+using CoinExchange.Common.Domain.Model;
 
 namespace CoinExchange.Trades.Domain.Model.Order
 {
     /// <summary>
     /// order volume value object
     /// </summary>
-    public class Volume
+    public class Volume : IComparable<Volume>
     {
         private decimal _value;
         public decimal Value
@@ -32,6 +33,13 @@ namespace CoinExchange.Trades.Domain.Model.Order
             return _value > volume._value;
         }
 
+        public int CompareTo(Volume volume)
+        {
+            if (this.Value > volume.Value) return -1;
+            if (this.Value == volume.Value) return 0;
+            return 1;
+        }
+
         public override string ToString()
         {
             return "Order Volume=" + _value;
@@ -44,6 +52,36 @@ namespace CoinExchange.Trades.Domain.Model.Order
                 return false;
             }
             return this._value == (obj as Volume)._value;
+        }
+
+        /// <summary>
+        /// += operator
+        /// </summary>
+        /// <param name="volume1"></param>
+        /// <param name="volume2"></param>
+        /// <returns></returns>
+        public static Volume operator +(Volume volume1, Volume volume2)
+        {
+            if (volume1 == null || volume2 == null)
+            {
+                return null;
+            }
+            return new Volume(volume1.Value + volume2.Value);
+        }
+
+        /// <summary>
+        /// += operator
+        /// </summary>
+        /// <param name="volume1"></param>
+        /// <param name="volume2"></param>
+        /// <returns></returns>
+        public static Volume operator -(Volume volume1, Volume volume2)
+        {
+            if (volume1 == null || volume2 == null)
+            {
+                return null;
+            }
+            return new Volume(volume1.Value - volume2.Value);
         }
     }
 }

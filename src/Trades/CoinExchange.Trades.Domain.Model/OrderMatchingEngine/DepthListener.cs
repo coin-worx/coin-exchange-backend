@@ -9,16 +9,19 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
     /// <summary>
     /// Listens to the changes in the depth of the Order Book
     /// </summary>
-    public class DepthListener
+    public class DepthListener : IDepthListener
     {
         // Get the Current Logger
         private static readonly log4net.ILog Log = log4net.LogManager.GetLogger
         (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        public void OnDepthChanged(LimitOrderBook orderBook)
+        #region Implementation of IDepthListener
+
+        public void OnDepthChanged(Depth depth)
         {
-            // ToDo: Need to process the Depths inside the OrderBook and create a snapshot either here of in the OrderBook
-            Log.Debug("Depth changed for currency pair: " + orderBook.CurrencyPair);
+            Log.Debug("Depth changed for currency pair: " + depth.CurrencyPair);
         }
+
+        #endregion
     }
 }

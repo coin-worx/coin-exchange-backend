@@ -56,6 +56,8 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="DepthLevelTests.cs" />
+    <Compile Include="DepthTests.cs" />
     <Compile Include="OrderBookTests.cs" />
     <Compile Include="OrderFactoryTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

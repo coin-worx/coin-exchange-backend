@@ -109,11 +109,11 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             {
                 // In case of sell, we need to sort the list in ascending order
                 case OrderSide.Sell:
-                    _orderList = _orderList.OrderBy(x => x.Price).ToList();
+                    _orderList = _orderList.OrderBy(x => x.Price.Value).ToList();
                     return true;
                 // In case of buy, we need to sort the list in Descending order
                 case OrderSide.Buy:
-                    _orderList = _orderList.OrderByDescending(x => x.Price).ToList();
+                    _orderList = _orderList.OrderByDescending(x => x.Price.Value).ToList();
                     return true;
                 default:
                     return false;
@@ -158,7 +158,18 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
 
         IEnumerator<Order.Order> IEnumerable<Order.Order>.GetEnumerator()
         {
-            throw new NotImplementedException();
+            foreach (Order.Order order in _orderList)
+            {
+                // Lets check for end of list (its bad code since we used arrays)
+                if (order == null)
+                {
+                    break;
+                }
+
+                // Return the current element and then on next function call 
+                // resume from next element rather than starting all over again;
+                yield return order;
+            }
         }
 
         #endregion
