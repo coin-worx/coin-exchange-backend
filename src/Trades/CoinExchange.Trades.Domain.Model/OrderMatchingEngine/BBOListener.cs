@@ -20,9 +20,8 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="askDepthLevel"></param>
-        /// <param name="bidDepthLevel"></param>
-        public void OnBBOChange(DepthLevel askDepthLevel, DepthLevel bidDepthLevel)
+        /// <param name="depthLevel"></param>
+        public void OnBBOChange(DepthLevel depthLevel)
         {
             Log.Debug("Best bid and offer received.");
         }

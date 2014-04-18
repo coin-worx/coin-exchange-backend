@@ -148,7 +148,6 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// <summary>
         /// The CurrencyPair for which this list specifies the OrderList
         /// </summary>
-        // ToDo: Need to use the object for the 'CurrencyPair' class instead of string after Bilal has finished editing
         public OrderSide OrderSide
         {
             get { return _orderSide; }

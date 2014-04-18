@@ -16,6 +16,7 @@ namespace CoinExchange.Trades.Domain.Model.Order
     public class Order : IComparable<Order>
     {
         #region Private fields
+
         private OrderId _orderId = null;
         private Volume _volume=null;
         private Price _price=null;
@@ -24,7 +25,11 @@ namespace CoinExchange.Trades.Domain.Model.Order
         private string _currencyPair;
         private OrderSide _orderSide;
         private OrderType _orderType;
-        private OrderStatus _orderStatus;
+        private OrderState _orderStatus;
+        private Volume _filledQuantity;
+        private Price _filledCost;
+        private Volume _openQty;
+
         #endregion
 
         /// <summary>
@@ -73,6 +78,96 @@ namespace CoinExchange.Trades.Domain.Model.Order
             Volume = volume;
             TraderId = traderId;
         }
+
+        #region Methods
+
+        /// <summary>
+        /// If order gets accepted by the Exchange
+        /// </summary>
+        public void Accepted()
+        {
+            if (_orderStatus == OrderState.New)
+            {
+                _orderStatus = OrderState.Accepted;
+            }
+        }
+
+        /// <summary>
+        /// If order gets cancelled
+        /// </summary>
+        public void Cancelled()
+        {
+            if (_orderStatus != OrderState.Complete)
+            {
+                _orderStatus = OrderState.Cancelled;
+            }
+        }
+
+        /// <summary>
+        /// If order gets Rejected
+        /// </summary>
+        public void Rejected()
+        {
+            if (_orderStatus != OrderState.Accepted)
+            {
+                _orderStatus = OrderState.Rejected;
+            }
+        }
+
+        /// <summary>
+        /// If trader modifies the order
+        /// </summary>
+        public void UpdateOrder(Price price, Volume volume)
+        {
+            if (_orderStatus == OrderState.Accepted)
+            {
+                _price = price;
+                _volume = volume;
+            }
+        }
+
+        /// <summary>
+        /// If trader modifies the Volume of the order
+        /// </summary>
+        /// <param name="volume"></param>
+        public void UpdateVolume(Volume volume)
+        {
+            if (_orderStatus == OrderState.Accepted)
+            {
+                _volume = volume;
+            }
+        }
+
+        /// <summary>
+        /// If trader modifies the Price of the order
+        /// </summary>
+        public void UpdatePrice(Price price)
+        {
+            if (_orderStatus == OrderState.Accepted)
+            {
+                _price = price;
+            }
+        }
+        
+        /// <summary>
+        /// When an order gets filled
+        /// </summary>
+        public void Fill(Volume filledQuantity, Price filledCost)
+        {
+            _filledQuantity += filledQuantity;
+            // ToDo: Update filled cost here
+            _filledCost += filledCost;
+            if (_openQty.Value == 0)
+            {
+                _orderStatus = OrderState.Complete;
+            }
+            else
+            {
+                _orderStatus = OrderState.PartiallyFilled;
+            }
+        }
+
+        #endregion Methods
 
         /// <summary>
         /// Immutable ID for this order
@@ -153,7 +248,7 @@ namespace CoinExchange.Trades.Domain.Model.Order
         /// <summary>
         /// Order Status
         /// </summary>
-        public OrderStatus Status
+        public OrderState Status
         {
             get { return _orderStatus; }
             set
@@ -184,6 +279,46 @@ namespace CoinExchange.Trades.Domain.Model.Order
             {
                 AssertionConcern.AssertArgumentNotNull(value, "TraderId cannot be null");
                 _traderId = value;
+            }
+        }
+
+        /// <summary>
+        /// The amount filled
+        /// </summary>
+        public Volume FilledQuantity
+        {
+            get
+            {
+                return _filledQuantity;
+            }
+        }
+
+        /// <summary>
+        /// The cost of the order after filling
+        /// </summary>
+        public Price FilledCost
+        {
+            get
+            {
+                return _filledCost;
+            }
+        }
+
+        /// <summary>
+        /// The cost of the order after filling
+        /// </summary>
+        public Volume OpenQuantity
+        {
+            get
+            {
+                if (_filledQuantity.Value < _volume.Value)
+                {
+                    return new Volume(_volume.Value - _filledQuantity.Value);
+                }
+                else
+                {
+                    return null;
+                }
             }
         }
 

@@ -130,6 +130,10 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             {
                 return _price;
             }
+            set
+            {
+                _price = value;
+            }
         }
 
         /// <summary>
@@ -140,6 +144,10 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             get
             {
                 return _aggregatedVolume;
+            }
+            set
+            {
+                _aggregatedVolume = value;
             }
         }
 

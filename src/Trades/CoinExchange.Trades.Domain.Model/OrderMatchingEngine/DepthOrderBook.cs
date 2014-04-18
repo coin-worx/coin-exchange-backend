@@ -3,27 +3,32 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CoinExchange.Trades.Domain.Model.Trades;
 
 namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
 {
     /// <summary>
     /// Handles the depths for the price levels in the Order Book
     /// </summary>
-    public class DepthOrderBook
+    public class DepthOrderBook : IOrderListener, IOrderBookListener, ITradeListener
     {
-        // ToDo: Need to implement the depth feature of the DethOrderBook
-        // ToDo: Need to figure whether to inherit the DepthOrderBook from OrderBook, link it with OrderBook only, or put this
-        // functionality into the OrderBook and no DepthBook be created separately.
-
         private string _currencyPair = string.Empty;
+        private int _size = 0;
+        private Depth _depth = null;
+
+        public event Action<DepthLevel> BboChanged;
+        public event Action<Depth> DepthChanged;
 
         /// <summary>
         /// Default Constructor
         /// </summary>
         /// <param name="currencyPair"></param>
-        public DepthOrderBook(string currencyPair)
+        /// <param name="size"> </param>
+        public DepthOrderBook(string currencyPair, int size)
         {
             _currencyPair = currencyPair;
+            _size = size;
+            _depth = new Depth(currencyPair, size);
         }
 
         #region Methods
@@ -90,5 +95,36 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         }
 
         #endregion Properties
+
+        #region Implementation of Listeners
+
+        /// <summary>
+        /// OnOrderChanged
+        /// </summary>
+        /// <param name="order"></param>
+        public void OnOrderChanged(Order.Order order)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// OnOrderBookChanged
+        /// </summary>
+        /// <param name="orderBook"></param>
+        public void OnOrderBookChanged(LimitOrderBook orderBook)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// On Trade execution
+        /// </summary>
+        /// <param name="trade"></param>
+        public void OnTrade(Trade trade)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
     }
 }

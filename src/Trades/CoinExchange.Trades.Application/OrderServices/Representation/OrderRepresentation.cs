@@ -83,7 +83,7 @@ namespace CoinExchange.Trades.Application.OrderServices.Representation
         /// <summary>
         /// Order Status
         /// </summary>
-        public OrderStatus Status { get; set; }
+        public OrderState Status { get; set; }
 
         /// <summary>
         /// Reason

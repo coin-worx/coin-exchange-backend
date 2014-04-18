@@ -59,5 +59,35 @@ namespace CoinExchange.Trades.Domain.Model.Order
             }
             return this._value == (obj as Price)._value;
         }
+
+        /// <summary>
+        /// += operator
+        /// </summary>
+        /// <param name="price1"></param>
+        /// <param name="price2"></param>
+        /// <returns></returns>
+        public static Price operator +(Price price1, Price price2)
+        {
+            if (price1 == null || price2 == null)
+            {
+                return null;
+            }
+            return new Price(price1.Value + price2.Value);
+        }
+
+        /// <summary>
+        /// += operator
+        /// </summary>
+        /// <param name="price"></param>
+        /// <param name="price2"></param>
+        /// <returns></returns>
+        public static Price operator -(Price price, Price price2)
+        {
+            if (price == null || price2 == null)
+            {
+                return null;
+            }
+            return new Price(price.Value - price2.Value);
+        }
     }
 }

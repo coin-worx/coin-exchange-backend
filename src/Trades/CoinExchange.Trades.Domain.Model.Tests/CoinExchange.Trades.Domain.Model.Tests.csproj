@@ -60,6 +60,7 @@
     <Compile Include="DepthTests.cs" />
     <Compile Include="OrderBookTests.cs" />
     <Compile Include="OrderFactoryTests.cs" />
+    <Compile Include="ListAndMapsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

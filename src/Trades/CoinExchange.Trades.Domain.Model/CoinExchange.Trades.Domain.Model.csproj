@@ -58,8 +58,10 @@
     <Compile Include="OrderMatchingEngine\BBOListener.cs" />
     <Compile Include="OrderMatchingEngine\Depth.cs" />
     <Compile Include="OrderMatchingEngine\DepthLevel.cs" />
+    <Compile Include="OrderMatchingEngine\DepthLevelMap.cs" />
     <Compile Include="OrderMatchingEngine\DepthListener.cs" />
     <Compile Include="OrderMatchingEngine\DepthOrderBook.cs" />
+    <Compile Include="OrderMatchingEngine\Exchange.cs" />
     <Compile Include="OrderMatchingEngine\IBBOListener.cs" />
     <Compile Include="OrderMatchingEngine\IDepthListener.cs" />
     <Compile Include="OrderMatchingEngine\IOrderBookListener.cs" />
