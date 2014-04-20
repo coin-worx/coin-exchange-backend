@@ -56,6 +56,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="OrderMatchingEngine\BBOListener.cs" />
+    <Compile Include="OrderMatchingEngine\ChangeId.cs" />
     <Compile Include="OrderMatchingEngine\Depth.cs" />
     <Compile Include="OrderMatchingEngine\DepthLevel.cs" />
     <Compile Include="OrderMatchingEngine\DepthLevelMap.cs" />

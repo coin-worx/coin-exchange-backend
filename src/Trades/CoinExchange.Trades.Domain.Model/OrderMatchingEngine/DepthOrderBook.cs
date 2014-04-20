@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CoinExchange.Trades.Domain.Model.Order;
 using CoinExchange.Trades.Domain.Model.Trades;
 
 namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
@@ -39,6 +40,11 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// <returns></returns>
         public bool OrderAccepted(Order.Order order)
         {
+            if (order.OrderType == OrderType.Limit)
+            {
+                _depth.AddOrder(order.Price, order.Volume, order.OrderSide);
+                return true;
+            }
             return false;
         }
 
@@ -46,9 +52,16 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// After an Order is filled in the LimitOrderBook, adds the new order's attributes to the corresponding depth level
         /// </summary>
         /// <param name="order"></param>
+        /// <param name="volume"></param>
+        /// <param name="price"></param>
         /// <returns></returns>
-        public bool OrderFilled(Order.Order order)
+        public bool OrderFilled(Order.Order order, Volume volume, Price price)
         {
+            if (order.OrderType == OrderType.Limit)
+            {
+                _depth.FillOrder(price, volume, order.OrderState == OrderState.PartiallyFilled ? false : true, order.OrderSide);
+                return true;
+            }
             return false;
         }
 
@@ -99,12 +112,21 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         #region Implementation of Listeners
 
         /// <summary>
-        /// OnOrderChanged
+        /// Handlesthe event in case an order changes
         /// </summary>
         /// <param name="order"></param>
         public void OnOrderChanged(Order.Order order)
         {
-            throw new NotImplementedException();
+            switch (order.OrderState)
+            {
+                case OrderState.Accepted:
+                    OrderAccepted(order);
+                    break;
+
+                case OrderState.Cancelled:
+                    OrderCancel(order);
+                    break;
+            }
         }
 
         /// <summary>

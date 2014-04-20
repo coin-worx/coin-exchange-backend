@@ -78,5 +78,18 @@ namespace CoinExchange.Trades.Domain.Model.Tests
             Assert.AreEqual(3500, depthLevel.AggregatedVolume.Value, "Aggregated Volume after decrease");
             Assert.AreEqual(2, depthLevel.OrderCount, "Order Count after decrease");
         }
+
+        [Test]
+        public void DepthLevelComparisonTest_IfDepthLevelIsLess_ReturnsFalse()
+        {
+            DepthLevel depthLevel1 = new DepthLevel(new Price(1));
+            DepthLevel depthLevel2 = new DepthLevel(new Price(2));
+
+            bool falseResult = depthLevel1 > depthLevel2;
+            bool trueResult = depthLevel1 < depthLevel2;
+
+            Assert.IsFalse(falseResult);
+            Assert.IsTrue(trueResult);
+        }
     }
 }

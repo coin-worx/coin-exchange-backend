@@ -25,10 +25,10 @@ namespace CoinExchange.Trades.Domain.Model.Order
         private string _currencyPair;
         private OrderSide _orderSide;
         private OrderType _orderType;
-        private OrderState _orderStatus;
+        private OrderState _orderState;
         private Volume _filledQuantity;
         private Price _filledCost;
-        private Volume _openQty;
+        private Volume _openQuantity;
 
         #endregion
 
@@ -86,9 +86,9 @@ namespace CoinExchange.Trades.Domain.Model.Order
         /// </summary>
         public void Accepted()
         {
-            if (_orderStatus == OrderState.New)
+            if (_orderState == OrderState.New)
             {
-                _orderStatus = OrderState.Accepted;
+                _orderState = OrderState.Accepted;
             }
         }
 
@@ -97,9 +97,9 @@ namespace CoinExchange.Trades.Domain.Model.Order
         /// </summary>
         public void Cancelled()
         {
-            if (_orderStatus != OrderState.Complete)
+            if (_orderState != OrderState.Complete)
             {
-                _orderStatus = OrderState.Cancelled;
+                _orderState = OrderState.Cancelled;
             }
         }
 
@@ -108,9 +108,9 @@ namespace CoinExchange.Trades.Domain.Model.Order
         /// </summary>
         public void Rejected()
         {
-            if (_orderStatus != OrderState.Accepted)
+            if (_orderState != OrderState.Accepted)
             {
-                _orderStatus = OrderState.Rejected;
+                _orderState = OrderState.Rejected;
             }
         }
 
@@ -119,7 +119,7 @@ namespace CoinExchange.Trades.Domain.Model.Order
         /// </summary>
         public void UpdateOrder(Price price, Volume volume)
         {
-            if (_orderStatus == OrderState.Accepted)
+            if (_orderState == OrderState.Accepted)
             {
                 _price = price;
                 _volume = volume;
@@ -132,7 +132,7 @@ namespace CoinExchange.Trades.Domain.Model.Order
         /// <param name="volume"></param>
         public void UpdateVolume(Volume volume)
         {
-            if (_orderStatus == OrderState.Accepted)
+            if (_orderState == OrderState.Accepted)
             {
                 _volume = volume;
             }
@@ -143,7 +143,7 @@ namespace CoinExchange.Trades.Domain.Model.Order
         /// </summary>
         public void UpdatePrice(Price price)
         {
-            if (_orderStatus == OrderState.Accepted)
+            if (_orderState == OrderState.Accepted)
             {
                 _price = price;
             }
@@ -157,13 +157,13 @@ namespace CoinExchange.Trades.Domain.Model.Order
             _filledQuantity += filledQuantity;
             // ToDo: Update filled cost here
             _filledCost += filledCost;
-            if (_openQty.Value == 0)
+            if (_openQuantity.Value == 0)
             {
-                _orderStatus = OrderState.Complete;
+                _orderState = OrderState.Complete;
             }
             else
             {
-                _orderStatus = OrderState.PartiallyFilled;
+                _orderState = OrderState.PartiallyFilled;
             }
         }
 
@@ -248,12 +248,12 @@ namespace CoinExchange.Trades.Domain.Model.Order
         /// <summary>
         /// Order Status
         /// </summary>
-        public OrderState Status
+        public OrderState OrderState
         {
-            get { return _orderStatus; }
+            get { return _orderState; }
             set
             {
-                _orderStatus = value;
+                _orderState = value;
             }
         }
         
@@ -313,7 +313,8 @@ namespace CoinExchange.Trades.Domain.Model.Order
             {
                 if (_filledQuantity.Value < _volume.Value)
                 {
-                    return new Volume(_volume.Value - _filledQuantity.Value);
+                    _openQuantity = new Volume(_volume.Value - _filledQuantity.Value);
+                    return _openQuantity;
                 }
                 else
                 {

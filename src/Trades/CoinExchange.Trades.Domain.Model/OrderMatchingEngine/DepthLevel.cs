@@ -16,6 +16,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         private static readonly log4net.ILog Log = log4net.LogManager.GetLogger
         (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
+        private ChangeId _changeId;
         private Price _price;
         private Volume _aggregatedVolume;
         private int _orderCount = 0;
@@ -54,7 +55,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         }
 
         /// <summary>
-        /// Remove one order from Order Count, eliminate the given quantity, remove order count if no orders remain
+        /// Remove one order from Order Count, eliminate the given quantity, return true if no orders remain
         /// </summary>
         /// <returns></returns>
         public bool CloseOrder(Volume volume)
@@ -76,7 +77,6 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
                 if (_aggregatedVolume.Value >= volume.Value)
                 {
                     _aggregatedVolume -= volume;
-                    return true;
                 }
                 else
                 {
@@ -117,6 +117,11 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             return false;
         }
 
+        public void LastChange(ChangeId changeId)
+        {
+            _changeId = changeId;
+        }
+
         #endregion Methods
 
         #region Properties
@@ -133,6 +138,17 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             set
             {
                 _price = value;
+            }
+        }
+
+        /// <summary>
+        /// The price at which this depth level is located
+        /// </summary>
+        public ChangeId ChangeId
+        {
+            get
+            {
+                return _changeId;
             }
         }
 
@@ -178,5 +194,29 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         }
 
         #endregion Properties
+
+        #region Operator overrides
+
+        public static bool operator >(DepthLevel x, DepthLevel y)
+        {
+            return x.Price > y.Price;
+        }
+
+        public static bool operator <(DepthLevel x, DepthLevel y)
+        {
+            return x.Price < y.Price;
+        }
+
+        public static bool operator >=(DepthLevel x, DepthLevel y)
+        {
+            return x.Price >= y.Price;
+        }
+
+        public static bool operator <=(DepthLevel x, DepthLevel y)
+        {
+            return x.Price <= y.Price;
+        }
+
+        #endregion Operators overrides
     }
 }

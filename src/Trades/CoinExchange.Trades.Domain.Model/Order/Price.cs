@@ -33,6 +33,15 @@ namespace CoinExchange.Trades.Domain.Model.Order
             return _value > price._value;
         }
 
+        public bool IsLessThan(Price price)
+        {
+            if (price == null)
+            {
+                return false;
+            }
+            return _value < price._value;
+        }
+
         public int CompareTo(Price price)
         {
             if (this.Value > price.Value)
@@ -88,6 +97,26 @@ namespace CoinExchange.Trades.Domain.Model.Order
                 return null;
             }
             return new Price(price.Value - price2.Value);
+        }
+
+        public static bool operator >(Price x, Price y)
+        {
+            return x.Value > y.Value;
+        }
+
+        public static bool operator <(Price x, Price y)
+        {
+            return x.Value < y.Value;
+        }
+
+        public static bool operator >=(Price x, Price y)
+        {
+            return x.Value >= y.Value;
+        }
+
+        public static bool operator <=(Price x, Price y)
+        {
+            return x.Value <= y.Value;
         }
     }
 }

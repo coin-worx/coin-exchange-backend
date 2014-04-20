@@ -47,6 +47,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         public event Action<Order.Order> OrderChanged;
         public event Action<LimitOrderBook> OrderBookChanged;
         public event Action<Order.Order> OrderAccepted;
+        public event Action<Order.Order, Volume, Price> OrderFilled;
 
         /// <summary>
         /// Default Constructor
@@ -174,9 +175,9 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
                         // and publish on the output disruptor
                         trade.RaiseEvent();
                         // Fill price is price the matching order in the list
-                        Fill(order, new Volume(matchingOrder.Volume.Value), matchingOrder.Price);
-                        order.Volume = new Volume(currentVolume);
-                        Fill(matchingOrder, new Volume(matchingOrder.Volume.Value), matchingOrder.Price);
+                        order.UpdateVolume(new Volume(currentVolume));
+                        Fill(order, new Volume(matchingOrder.Volume.Value), matchingOrder.Price, matchingOrder, 
+                            new Volume(matchingOrder.Volume.Value), matchingOrder.Price);
                         oppositeOrderSideList.Remove(matchingOrder);
                     }
                     // If the inbound Order's volume is less than the opposite side Order's volume in the list
@@ -189,13 +190,12 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
                         // ToDo: Need to figure out how to raise this event in the following method 
                         // and publish on the output disruptor
                         trade.RaiseEvent();
-                        matchingOrder.Volume = new Volume(-currentVolume);
-                        matchingOrder.UpdateVolume(new Volume(-currentVolume));
+                        UpdateOrderInDepth(matchingOrder, new Volume(-currentVolume));
 
                         // ToDo: Raise an OrderUpdatedEvent over here
 
                         // Fill price is price the matching order in the list
-                        Fill(order, order.Volume, matchingOrder.Price);
+                        Fill(order, order.Volume, matchingOrder.Price, order, order.Volume, matchingOrder.Price);
                     }
                     else if (currentVolume == 0)
                     {
@@ -206,6 +206,8 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
                         // ToDo: Need to figure out how to raise this event in the following method 
                         // and publish on the output disruptor
                         trade.RaiseEvent();
+                        // Fill price is price the matching order in the list
+                        Fill(order, order.Volume, matchingOrder.Price, order, order.Volume, matchingOrder.Price);
                         oppositeOrderSideList.Remove(matchingOrder);
                         return true;
                     }
@@ -301,22 +303,51 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         }
 
         /// <summary>
-        /// Update the order according to the fill
+        /// Add a new order to its corresponding depth level
         /// </summary>
         /// <param name="order"></param>
-        /// <param name="filledVolume"></param>
-        /// <param name="filledPrice"> </param>
-        public void Fill(Order.Order order, Volume filledVolume, Price filledPrice)
+        public void AddOrderToDepth(Order.Order order)
         {
-            if (order.Volume.Value > order.OpenQuantity.Value)
-            {
-                throw new InvalidOperationException("Fill size larger than open quantity");
-            }
-            Price filledCost = new Price(filledVolume.Value * filledPrice.Value);
-            order.Fill(filledVolume, filledCost);
             if (OrderChanged != null)
             {
                 OrderChanged(order);
+            }
+        }
+
+        public void UpdateOrderInDepth(Order.Order order, Volume newVolume)
+        {
+            ChangeQuantity(order, newVolume);
+            if (OrderChanged != null)
+            {
+                // The depthOrderBook does not need to get this new volume, the order already contains the new volume
+                OrderChanged(order);
+            }
+        }
+
+        /// <summary>
+        /// Update the order according to the fill
+        /// </summary>
+        /// <param name="inboundFillPrice"> </param>
+        /// <param name="matchedOrder"></param>
+        /// <param name="matchedFilledVolume"></param>
+        /// <param name="matchedFilledPrice"> </param>
+        /// <param name="inboundOrder"> </param>
+        /// <param name="inboundFillVolume"> </param>
+        public void Fill(Order.Order inboundOrder, Volume inboundFillVolume, Price inboundFillPrice, Order.Order matchedOrder,
+            Volume matchedFilledVolume, Price matchedFilledPrice)
+        {
+            Price inboundFilledCost = new Price(inboundFillVolume.Value * inboundFillVolume.Value);
+            inboundOrder.Fill(inboundFillVolume, inboundFilledCost);
+
+            if (matchedOrder.Volume.Value > matchedOrder.OpenQuantity.Value)
+            {
+                throw new InvalidOperationException("Fill size larger than open quantity");
+            }
+            Price matchedFilledCost = new Price(matchedFilledVolume.Value * matchedFilledPrice.Value);
+            matchedOrder.Fill(matchedFilledVolume, matchedFilledCost);
+            if (OrderFilled != null)
+            {
+                OrderFilled(matchedOrder, matchedFilledVolume, matchedFilledPrice);
             }
         }
 
