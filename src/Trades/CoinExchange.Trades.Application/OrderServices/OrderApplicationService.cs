@@ -25,6 +25,7 @@ namespace CoinExchange.Trades.Application.OrderServices
             Order order = OrderFactory.CreateOrder(orderCommand.TraderId, orderCommand.Pair,
                 orderCommand.Type, orderCommand.Side, orderCommand.Volume, orderCommand.Price, orderIdGenerator);
             //TODO:Publish the order to disruptor
+            InputDisruptorPublisher.Publish(InputPayload.CreatePayload(order));
             return new NewOrderRepresentation(order.Price.Value, order.OrderType.ToString(), order.OrderSide.ToString(), order.CurrencyPair,
                 order.OrderId.Id.ToString(),order.Volume.Value);
         }
