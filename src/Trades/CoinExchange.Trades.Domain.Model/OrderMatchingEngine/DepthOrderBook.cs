@@ -52,15 +52,15 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// After an Order is filled in the LimitOrderBook, adds the new order's attributes to the corresponding depth level
         /// </summary>
         /// <param name="order"></param>
-        /// <param name="volume"></param>
-        /// <param name="price"></param>
+        /// <param name="filledVolume"></param>
+        /// <param name="filledPrice"></param>
         /// <returns></returns>
         // ToDo: Hook this event from the exchange
-        public bool OrderFilled(Order.Order order, Volume volume, Price price)
+        public bool OrderFilled(Order.Order order, Volume filledVolume, Price filledPrice)
         {
             if (order.OrderType == OrderType.Limit)
             {
-                _depth.FillOrder(price, volume, order.OrderState == OrderState.Complete, order.OrderSide);
+                _depth.FillOrder(order.Price, filledPrice, filledVolume, order.OrderState == OrderState.Complete, order.OrderSide);
                 return true;
             }
             return false;

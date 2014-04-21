@@ -21,6 +21,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         private Volume _aggregatedVolume;
         private int _orderCount = 0;
         private bool _isEmpty = false;
+        private bool _isExcess = false;
 
         /// <summary>
         /// Default Constructor
@@ -66,11 +67,6 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             }
             else if (_orderCount == 1)
             {
-                if (volume.Value < _aggregatedVolume.Value)
-                {
-                    throw new InvalidOperationException("The specified volume is less than the last order's volume in depth " +
-                                                        "level of " + _price.Value);
-                }
                 _orderCount = 0;
                 _isEmpty = true;
                 return true;
@@ -119,17 +115,24 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         }
 
         /// <summary>
+        /// Update the price, this will be used when replacing orders and levels movement between depth level slots
+        /// </summary>
+        /// <param name="price"></param>
+        /// <returns></returns>
+        public bool UpdatePrice(Price price)
+        {
+            _price = price;
+            return true;
+        }
+
+        /// <summary>
         /// Adds volume to this Depth level, this will be used while moving price levels between slots in depths
         /// </summary>
         /// <returns></returns>
-        public bool AddVolume(Volume volume)
+        public bool UpdateVolume(Volume volume)
         {
-            if (volume != null)
-            {
-                _aggregatedVolume = new Volume(volume.Value);
-                return true;
-            }
-            return false;
+            _aggregatedVolume = volume;
+            return true;
         }
 
         /// <summary>
@@ -137,13 +140,10 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// </summary>
         /// <param name="orderCount"></param>
         /// <returns></returns>
-        public bool AddOrderCount(int orderCount)
+        public bool UpdateOrderCount(int orderCount)
         {
-            if(orderCount != 0)
-            {
-                _orderCount = orderCount;
-            }
-            return false;
+            _orderCount = orderCount;
+            return true;
         }
 
         /// <summary>
@@ -171,9 +171,22 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             return true;
         }
 
+        /// <summary>
+        /// Last change that occured to this level
+        /// </summary>
+        /// <param name="changeId"></param>
         public void LastChange(ChangeId changeId)
         {
             _changeId = changeId;
+        }
+
+        /// <summary>
+        /// Changes the status that describes whether the level is an excess level or not
+        /// </summary>
+        /// <param name="isExcess"></param>
+        public void ChangeExcessStatus(bool isExcess)
+        {
+            _isExcess = isExcess;
         }
 
         #endregion Methods
@@ -188,10 +201,6 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             get
             {
                 return _price;
-            }
-            set
-            {
-                _price = value;
             }
         }
 
@@ -215,10 +224,6 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             {
                 return _aggregatedVolume;
             }
-            set
-            {
-                _aggregatedVolume = value;
-            }
         }
 
         /// <summary>
@@ -229,10 +234,6 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             get
             {
                 return _orderCount;
-            }
-            set
-            {
-                _orderCount = value;
             }
         }
 
@@ -248,6 +249,17 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             set
             {
                 _isEmpty = value;
+            }
+        }
+
+        /// <summary>
+        /// Is this an Excess level? Outside of the levels that we show to the clients?
+        /// </summary>
+        public bool IsExcess
+        {
+            get
+            {
+                return _isExcess;
             }
         }
 

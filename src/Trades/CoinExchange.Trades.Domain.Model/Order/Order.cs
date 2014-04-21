@@ -43,16 +43,16 @@ namespace CoinExchange.Trades.Domain.Model.Order
         /// <summary>
         /// Factory Constructor for market order
         /// </summary>
-        /// <param name="pair"></param>
-        /// <param name="price"></param>
+        /// <param name="orderId"> </param>
+        /// <param name="currencyPair"></param>
         /// <param name="orderSide"></param>
         /// <param name="orderType"></param>
         /// <param name="volume"></param>
         /// <param name="traderId"></param>
-        public Order(OrderId orderId,string pair, OrderSide orderSide, OrderType orderType, Volume volume, TraderId traderId)
+        public Order(OrderId orderId, string currencyPair, OrderSide orderSide, OrderType orderType, Volume volume, TraderId traderId)
         {
             OrderId = orderId;
-            CurrencyPair = pair;
+            CurrencyPair = currencyPair;
             OrderSide = orderSide;
             OrderType = orderType;
             Volume = volume;
@@ -305,7 +305,7 @@ namespace CoinExchange.Trades.Domain.Model.Order
         }
 
         /// <summary>
-        /// The cost of the order after filling
+        /// The remaining quantity of the order which has not yet been filled
         /// </summary>
         public Volume OpenQuantity
         {
@@ -325,6 +325,11 @@ namespace CoinExchange.Trades.Domain.Model.Order
 
         #region Implementation of IComparable<in Order>
 
+        /// <summary>
+        ///  Comapres the order based on the price
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public int CompareTo(Order other)
         {
             if (this.Price.IsGreaterThan(other.Price))

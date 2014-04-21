@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,7 +8,7 @@ using CoinExchange.Trades.Domain.Model.Order;
 
 namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
 {
-    public class PriceValueComparer : IComparer<decimal>
+    public class DescendingOrderComparer : IComparer<decimal>
     {
         #region Implementation of IComparer<in decimal>
 
@@ -26,7 +27,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
     /// <summary>
     /// Contains the depth levels for each price in the book
     /// </summary>
-    public class DepthLevelMap
+    public class DepthLevelMap : IEnumerable<KeyValuePair<decimal, DepthLevel>>
     {
         // Get the Current Logger
         private static readonly log4net.ILog Log = log4net.LogManager.GetLogger
@@ -48,7 +49,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
 
             if (orderSide == OrderSide.Buy)
             {
-                _depthLevels = new SortedList<decimal, DepthLevel>(new PriceValueComparer());
+                _depthLevels = new SortedList<decimal, DepthLevel>(new DescendingOrderComparer());
             }
             else
             {
@@ -123,5 +124,30 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         }
 
         #endregion Properties
+
+        #region Implementation of IEnumerable
+
+        public IEnumerator<KeyValuePair<decimal, DepthLevel>> GetEnumerator()
+        {
+            foreach (KeyValuePair<decimal, DepthLevel> keyValPair in _depthLevels)
+            {
+                // Lets check for end of list (its bad code since we used arrays)
+                if (keyValPair.Value == null)
+                {
+                    break;
+                }
+
+                // Return the current element and then on next function call 
+                // resume from next element rather than starting all over again;
+                yield return keyValPair;
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        #endregion
     }
 }

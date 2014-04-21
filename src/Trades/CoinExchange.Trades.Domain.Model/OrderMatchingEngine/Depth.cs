@@ -33,6 +33,9 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         private Volume _ignoreBidFillVolume = null;
         private Volume _ignoreAskFillVolume = null;
 
+        private DepthLevelMap _bidExcessLevels = null;
+        private DepthLevelMap _askExcessLevels = null;
+
         #endregion Private Fields
 
         /// <summary>
@@ -56,6 +59,9 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             _bestAsk = _askLevels[0];
             _lastBid = _bidLevels.Last();
             _lastAsk = _askLevels.Last();
+
+            _bidExcessLevels = new DepthLevelMap(currencyPair, OrderSide.Buy);
+            _askExcessLevels = new DepthLevelMap(currencyPair, OrderSide.Sell);
         }
 
         #region Methods
@@ -112,27 +118,28 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// <summary>
         /// Handle an order fill
         /// </summary>
-        /// <param name="price"></param>
-        /// <param name="qty"></param>
+        /// <param name="originalOrderPrice">The original price of the order on which a level is created in the depth</param>
+        /// <param name="filledPrice"></param>
+        /// <param name="filledVolume"></param>
         /// <param name="filled"></param>
         /// <param name="orderSide"></param>
-        public void FillOrder(Price price, Volume qty,bool filled, OrderSide orderSide)
+        public void FillOrder(Price originalOrderPrice, Price filledPrice, Volume filledVolume, bool filled, OrderSide orderSide)
         {
-            if (orderSide == OrderSide.Buy && _ignoreBidFillVolume.Value != 0)
+            if (orderSide == OrderSide.Buy && _ignoreBidFillVolume != null)
             {
-
+                _ignoreBidFillVolume = filledVolume;
             }
-            else if (orderSide == OrderSide.Sell && _ignoreAskFillVolume.Value != 0)
+            else if (orderSide == OrderSide.Sell && _ignoreAskFillVolume != null)
             {
-
+                _ignoreAskFillVolume = filledVolume;
             }
             else if (filled)
             {
-                CloseOrder(price, qty, orderSide);
+                CloseOrder(originalOrderPrice, filledVolume, orderSide);
             }
             else
             {
-                ChangeOrderQuantity(price, -qty.Value, orderSide);
+                ChangeOrderQuantity(originalOrderPrice, -filledVolume.Value, orderSide);
             }
         }
 
@@ -256,6 +263,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// </summary>
         public DepthLevel FindLevel(Price price, OrderSide orderSide, DepthLevel[] depthLevels)
         {
+            DepthLevel foundDepthLevel = null;
             // No excess levels being supported, because the default allocation for depths is a large one. Can provide excess
             // levels based on requirements
             foreach (var depthLevel in depthLevels)
@@ -263,66 +271,90 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
                 // If the price is null in this depth level, initialize this depth level with the current price
                 if (depthLevel.Price == null)
                 {
-                    depthLevel.Price = price;
-                    return depthLevel;
+                    depthLevel.UpdatePrice(price);
+                    foundDepthLevel = depthLevel;
+                    break;
                 }
                 else if(depthLevel.Price.Equals(price))
                 {
-                    return depthLevel;
+                    foundDepthLevel = depthLevel;
+                    break;
                 }
                 // If the order side is buy and the inbound price is greater than the price present at the current depth level
                 // being analyzed, insert the new price in this slot and move the current level one level down
                 else if (orderSide == OrderSide.Buy && price.IsGreaterThan(depthLevel.Price))
                 {
-                    return InsertLevelBefore(depthLevel, price, _lastBid, depthLevels);
+                    foundDepthLevel = InsertLevelBefore(depthLevel, price, _bidLevels.Last(), depthLevels, orderSide);
+                    break;
                 }
                 // If the order side is sell and the inbound price is less than the price present at the current depth level 
                 // being analyzed, insert the new price in this slot and move the current level one level down
                 else if (orderSide == OrderSide.Sell && price.IsLessThan(depthLevel.Price))
                 {
-                    return InsertLevelBefore(depthLevel, price, _lastAsk, depthLevels);
+                    foundDepthLevel = InsertLevelBefore(depthLevel, price, _askLevels.Last(), depthLevels, orderSide);
+                    break;
                 }
             }
-            return null;
+
+            if (foundDepthLevel == null)
+            {
+                foundDepthLevel = FindInExcessLevels(price, orderSide);
+                if (foundDepthLevel == null)
+                {
+                    foundDepthLevel = new DepthLevel(price);
+                    if (orderSide == OrderSide.Buy)
+                    {
+                        _bidExcessLevels.AddLevel(price, foundDepthLevel);
+                    }
+                    else
+                    {
+                        _askExcessLevels.AddLevel(price, foundDepthLevel);
+                    }
+                }
+            }
+            return foundDepthLevel;
         }
 
         /// <summary>
         /// Insert the Order before a certain level
         /// </summary>
-        /// <param name="lcurrentLevel"></param>
+        /// <param name="currentLevel"></param>
         /// <param name="price"></param>
         /// <param name="lastSideLevel"> </param>
         /// <param name="sideLevels"> </param>
-        private DepthLevel InsertLevelBefore(DepthLevel lcurrentLevel, Price price, DepthLevel lastSideLevel,
-            DepthLevel[] sideLevels)
+        /// <param name="orderSide"> </param>
+        private DepthLevel InsertLevelBefore(DepthLevel currentLevel, Price price, DepthLevel lastSideLevel,
+            DepthLevel[] sideLevels, OrderSide orderSide)
         {
-            // Note: Can provide a a separate place for excess level bids and asks, and figure a price level from that
-            // if the price goes above or below than that price, then we need to store the order in the excess levels
-            // Currently, we will only support a high allocation of the bid and ask levels and no excess levels
+            if (sideLevels.Last().Price != null)
+            {
+                DepthLevel depthLevel = InitiateExcessValues(sideLevels.Last().Price, sideLevels.Last().AggregatedVolume, 
+                    sideLevels.Last().OrderCount);
 
-            int currentLevelIndex = Array.FindIndex(sideLevels, depthLevel => depthLevel == lcurrentLevel);
+                switch (orderSide)
+                {
+                        case OrderSide.Buy:
+                        _bidExcessLevels.AddLevel(depthLevel.Price, depthLevel);
+                        break;
+
+                        case OrderSide.Sell:
+                        _askExcessLevels.AddLevel(depthLevel.Price, depthLevel);
+                        break;
+                }
+            }
+
+            int currentLevelIndex = Array.FindIndex(sideLevels, depthLevel => depthLevel == currentLevel);
             int backEndLevelIndex = Array.FindIndex(sideLevels, depthLevel => depthLevel == lastSideLevel) - 1;
 
             ++_lastChangeId;
 
+            // Move from the lowest levels, move every slot one place ahead so that the new depth level can be inserted
             while (backEndLevelIndex >= currentLevelIndex)
             {
                 if (sideLevels[backEndLevelIndex].Price != null)
                 {
-                    sideLevels[backEndLevelIndex + 1] =
-                        new DepthLevel(new Price(sideLevels[backEndLevelIndex].Price.Value))
-                            {
-                                IsEmpty = sideLevels[backEndLevelIndex].IsEmpty
-                            };
-                    UpdateIndex(sideLevels, backEndLevelIndex + 1, backEndLevelIndex);
-                    /*if (sideLevels[backEndLevelIndex].AggregatedVolume != null)
-                    {
-                        sideLevels[backEndLevelIndex + 1].AggregatedVolume = sideLevels[backEndLevelIndex].AggregatedVolume;
-                    }
-                    for (int i = 0; i < sideLevels[backEndLevelIndex].OrderCount; i++)
-                    {
-                        sideLevels[backEndLevelIndex + 1].AddOrderCount();
-                    }*/
+                    sideLevels[backEndLevelIndex + 1] = sideLevels[backEndLevelIndex];
+                    UpdateLevelIndex(sideLevels, backEndLevelIndex + 1, backEndLevelIndex);
                 }
                 if (sideLevels[backEndLevelIndex].Price != null)
                 {
@@ -335,6 +367,39 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         }
 
         /// <summary>
+        /// Find the required level in the Excess Level mantainers for Bid ans Ask
+        /// </summary>
+        /// <returns></returns>
+        private DepthLevel FindInExcessLevels(Price price, OrderSide orderSide)
+        {
+            switch (orderSide)
+            {
+                    case OrderSide.Buy:
+                    foreach (var bidExcessLevel in _bidExcessLevels)
+                    {
+                        if (bidExcessLevel.Key == price.Value)
+                        {
+                            return bidExcessLevel.Value;
+                        }
+                    }
+
+                    // If the level is not found and the above loop terminated without returning control from this function
+                    return new DepthLevel(price);
+
+                    case OrderSide.Sell:
+                    foreach (var askExcessLevel in _askExcessLevels)
+                    {
+                        if (askExcessLevel.Key == price.Value)
+                        {
+                            return askExcessLevel.Value;
+                        }
+                    }
+                    break;
+            }
+            return null;
+        }
+
+        /// <summary>
         /// Erase the specified level from the Depth Levels
         /// </summary>
         /// <param name="inboundLevel"> </param>
@@ -342,44 +407,132 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// <returns></returns>
         public void EraseLevel(DepthLevel inboundLevel, OrderSide orderSide)
         {
-            DepthLevel lastSideLevel = orderSide == OrderSide.Buy ? _lastBid : _lastAsk;
-            DepthLevel[] sideLevels = orderSide == OrderSide.Buy ? _bidLevels : _askLevels;
-
-            int backEndLevelIndex = Array.FindIndex(sideLevels, depthLevel => depthLevel == lastSideLevel);
-            int inboundLevelIndex = Array.FindIndex(sideLevels, depthLevel => depthLevel == inboundLevel);
-            int currentLevelIndex = inboundLevelIndex;
-
-            ++_lastChangeId;
-            
-            while (currentLevelIndex < backEndLevelIndex)
+            // Specifies the last element with a non-null price in the current side Depthlevel array
+            bool isLastLevel = orderSide == OrderSide.Buy ? (
+                                                             // If the privided level is the last non-null price level
+                                                             inboundLevel == FindLastLevel(_bidLevels) &&
+                                                             // If the last non-null price level is the last slot in the array
+                                                             FindLastLevel(_bidLevels) == _bidLevels.Last()) 
+                                                             :
+                                                             // If the provided level is the last non-null price level
+                                                             (inboundLevel == FindLastLevel(_askLevels) &&
+                                                             // If the last non-null price level is the last slot in the array
+                                                             FindLastLevel(_askLevels) == _askLevels.Last());
+            // If the level lies in the excess levels
+            if (inboundLevel.IsExcess)
             {
-                if (currentLevelIndex == inboundLevelIndex)
+                switch (orderSide)
                 {
-                    sideLevels[currentLevelIndex] = new DepthLevel(null);
-                }
-                sideLevels[currentLevelIndex] = new DepthLevel(sideLevels[currentLevelIndex + 1].Price);
-                UpdateIndex(sideLevels, currentLevelIndex, currentLevelIndex + 1);
+                    case OrderSide.Buy:
+                        _bidExcessLevels.RemoveLevel(inboundLevel.Price);
+                        break;
 
-                currentLevelIndex++;
+                    case OrderSide.Sell:
+                        _askExcessLevels.RemoveLevel(inboundLevel.Price);
+                        break;
+                }
+            }
+            // Otherwise, remove the level from the current slot and move all other levels to one slot back
+            else
+            {
+                DepthLevel lastSideLevel = orderSide == OrderSide.Buy ? _lastBid : _lastAsk;
+                DepthLevel[] sideLevels = orderSide == OrderSide.Buy ? _bidLevels : _askLevels;
+
+                int backEndLevelIndex = Array.FindIndex(sideLevels, depthLevel => depthLevel == lastSideLevel);
+                int inboundLevelIndex = Array.FindIndex(sideLevels, depthLevel => depthLevel == inboundLevel);
+                int currentLevelIndex = inboundLevelIndex;
+
+                ++_lastChangeId;
+
+                // Move from the current level to the last
+                while (currentLevelIndex < backEndLevelIndex)
+                {
+                    // In the first loop, currentLevelIndex starts from the level which is being removed, inboundLevelIndex
+                    // so we make every value null
+                    if (currentLevelIndex == inboundLevelIndex)
+                    {
+                        sideLevels[currentLevelIndex].UpdatePrice(null);
+                        sideLevels[currentLevelIndex].UpdateVolume(null);
+                        sideLevels[currentLevelIndex].UpdateOrderCount(0);
+                        sideLevels[currentLevelIndex].ChangeExcessStatus(false);
+                    }
+                    sideLevels[currentLevelIndex] = sideLevels[currentLevelIndex + 1];
+                    UpdateLevelIndex(sideLevels, currentLevelIndex, currentLevelIndex + 1);
+
+                    currentLevelIndex++;
+                }
+                if (isLastLevel)
+                {
+                    if (orderSide == OrderSide.Buy)
+                    {
+                        RemoveLevelFromExcess(_bidExcessLevels, _bidLevels);
+                    }
+                    else
+                    {
+                        RemoveLevelFromExcess(_askExcessLevels, _askLevels);
+                    }
+                }
             }
         }
 
         /// <summary>
-        /// Updates the volume and order count for a specific index copied from another index
+        /// Returns the last element with a non-null price in the current side Depthlevel array
         /// </summary>
         /// <returns></returns>
-        public bool UpdateIndex(DepthLevel[] sideLevels, int sourceIndex, int targetIndex)
+        public DepthLevel FindLastLevel(DepthLevel[] sideDepthLevel)
+        {
+            DepthLevel depthLevel = null;
+            foreach (var currentDepthLevel in sideDepthLevel)
+            {
+                if (currentDepthLevel.Price != null)
+                {
+                    depthLevel = currentDepthLevel;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            return depthLevel;
+        }
+
+        /// <summary>
+        /// removes the level from the specified side's excess level
+        /// </summary>
+        /// <returns></returns>
+        private bool RemoveLevelFromExcess(DepthLevelMap depthLevelMap, DepthLevel[] sideLevels)
+        {
+            if (depthLevelMap.Any())
+            {
+                sideLevels.Last().UpdatePrice(depthLevelMap.First().Value.Price);
+                sideLevels.Last().UpdateVolume(depthLevelMap.First().Value.AggregatedVolume);
+                sideLevels.Last().UpdateOrderCount(depthLevelMap.First().Value.OrderCount);
+                sideLevels.Last().ChangeExcessStatus(false);
+
+                depthLevelMap.RemoveLevel(depthLevelMap.First().Value.Price);
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Updates the volume and order count for a specific index copied from another index in the visible depth levels
+        /// </summary>
+        /// <returns></returns>
+        private bool UpdateLevelIndex(DepthLevel[] sideLevels, int sourceIndex, int targetIndex)
         {
             try
             {
                 if (sideLevels != null)
                 {
-                    if (sideLevels[targetIndex].AggregatedVolume != null)
+                    if (sideLevels[targetIndex].AggregatedVolume != null && sideLevels[targetIndex].Price != null)
                     {
-                        sideLevels[sourceIndex].AddVolume(sideLevels[targetIndex].AggregatedVolume);
+                        sideLevels[sourceIndex].UpdatePrice(sideLevels[targetIndex].Price);
+                        sideLevels[sourceIndex].UpdateVolume(sideLevels[targetIndex].AggregatedVolume);
+                        sideLevels[sourceIndex].UpdateOrderCount(sideLevels[targetIndex].OrderCount);
+                        sideLevels[sourceIndex].ChangeExcessStatus(sideLevels[targetIndex].IsExcess);
+                        return true;
                     }
-                    sideLevels[sourceIndex].AddOrderCount(sideLevels[targetIndex].OrderCount);
-                    return true;
                 }
             }
             catch (Exception)
@@ -387,6 +540,35 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
                 throw new InvalidOperationException();
             }
             return false;
+        }
+
+        /// <summary>
+        /// Updates the Depth Level for excess levels
+        /// </summary>
+        /// <param name="price"> </param>
+        /// <param name="volume"></param>
+        /// <param name="orderCount"></param>
+        /// <returns></returns>
+        private DepthLevel InitiateExcessValues(Price price, Volume volume, int orderCount)
+        {
+            try
+            {
+                DepthLevel depthLevel = null;
+
+                if (price != null && volume != null)
+                {
+                    depthLevel = new DepthLevel(price);
+                    depthLevel.UpdateVolume(volume);
+                    depthLevel.UpdateOrderCount(orderCount);
+                    depthLevel.ChangeExcessStatus(true);
+                    return depthLevel;
+                }
+            }
+            catch (Exception)
+            {
+                throw new InvalidOperationException();
+            }
+            return null;
         }
 
         private bool IsValidPrice(Price price)
@@ -431,6 +613,28 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             get
             {
                 return _askLevels;
+            }
+        }
+
+        /// <summary>
+        /// Bid Excess Levels
+        /// </summary>
+        public DepthLevelMap BidExcessLevels
+        {
+            get
+            {
+                return _bidExcessLevels;
+            }
+        }
+
+        /// <summary>
+        /// Ask Excess Levels
+        /// </summary>
+        public DepthLevelMap AskExcessLevels
+        {
+            get
+            {
+                return _askExcessLevels;
             }
         }
 

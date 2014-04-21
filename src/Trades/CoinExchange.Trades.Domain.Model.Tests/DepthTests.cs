@@ -12,6 +12,8 @@ namespace CoinExchange.Trades.Domain.Model.Tests
     [TestFixture]
     class DepthTests
     {
+        #region Add Method Tests
+
         [Test]
         public void AddSellOrderTest_ChecksWhetherTheDepthLevelGetsInsertedCorrectly_SortsWithAscendingOrder()
         {
@@ -136,6 +138,10 @@ namespace CoinExchange.Trades.Domain.Model.Tests
             Assert.AreEqual(1, depthOrderBook.AskLevels.Last().OrderCount, "orderCount at last index in ascending order");
         }
 
+        #endregion Add Method Tests
+
+        #region Level Finding Tests
+
         [Test]
         public void FindBuyLevelTest_InsertsTheNewLevelIntoTheDesiredPosition_ChecksLevelsAfterInsertion()
         {
@@ -173,6 +179,8 @@ namespace CoinExchange.Trades.Domain.Model.Tests
             Assert.AreEqual(493, depthOrderBook.AskLevels[3].Price.Value, "Price at last index in ascending order");
             Assert.AreEqual(494, depthOrderBook.AskLevels[4].Price.Value, "Price at last index in ascending order");
         }
+
+        #endregion Level Finding Tests
 
         #region Change Order Quantity
 
@@ -221,6 +229,8 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         }
 
         #endregion Change Order Quantity
+
+        #region Close Order and Erase Level Tests
 
         [Test]
         public void CloseBuyOrderTest_RemovesQuantityFromThatLevel_RemovesDepthAsWellIfNoOrdersRemain()
@@ -340,6 +350,98 @@ namespace CoinExchange.Trades.Domain.Model.Tests
             Assert.AreEqual(100, depth.BidLevels[5].AggregatedVolume.Value, "Volume at sixth index");
         }
 
+        #endregion Close Order and Erase Level Tests
+
+        #region Order Fill Tests
+
+        [Test]
+        public void BuyFillOrderTest_DecreasesVolumeFromThePriceLevelWhenItsOrderFills_ChecksTheVolumeOnThePriceLevelToConfirm()
+        {
+            Depth depth = new Depth("XBT/USD", 10);
+            depth.AddOrder(new Price(490), new Volume(100), OrderSide.Buy);
+            depth.AddOrder(new Price(491), new Volume(100), OrderSide.Buy);
+            depth.AddOrder(new Price(492), new Volume(200), OrderSide.Buy);
+
+            Assert.IsNotNull(depth.BidLevels[0].Price, "Depth level's price after expected removal of level");
+            depth.FillOrder(new Price(492), new Price(490), new Volume(100), true, OrderSide.Buy);
+            Assert.IsNotNull(depth.BidLevels[0].Price, "Depth level's price after expected removal of level");
+            Assert.AreEqual(100, depth.BidLevels[0].AggregatedVolume.Value, "Depth level's volume after expected removal of level");
+
+            Assert.IsNotNull(depth.BidLevels[1].Price, "Depth level's price after expected removal of level");
+            depth.FillOrder(new Price(490), new Price(490), new Volume(100), true, OrderSide.Buy);
+            Assert.IsNull(depth.BidLevels[1].Price, "Depth level's price after expected removal of level");
+        }
+
+        [Test]
+        public void SellFillOrderTest_DecreasesVolumeFromThePriceLevelWhenItsOrderFills_ChecksTheVolumeOnThePriceLevelToConfirm()
+        {
+            Depth depth = new Depth("XBT/USD", 10);
+            depth.AddOrder(new Price(490), new Volume(100), OrderSide.Sell);
+            depth.AddOrder(new Price(491), new Volume(100), OrderSide.Sell);
+            depth.AddOrder(new Price(492), new Volume(200), OrderSide.Sell);
+
+            Assert.IsNotNull(depth.AskLevels[0].Price, "Depth level's price after expected removal of level");
+            depth.FillOrder(new Price(492), new Price(490), new Volume(100), true, OrderSide.Sell);
+            Assert.IsNotNull(depth.AskLevels[0].Price, "Depth level's price after expected removal of level");
+            Assert.AreEqual(100, depth.AskLevels[0].AggregatedVolume.Value, "Depth level's volume after expected removal of level");
+
+            Assert.IsNotNull(depth.AskLevels[1].Price, "Depth level's price after expected removal of level");
+            depth.FillOrder(new Price(490), new Price(490), new Volume(100), true, OrderSide.Sell);
+            Assert.IsNull(depth.AskLevels[1].Price, "Depth level's price after expected removal of level");
+        }
+
+        #endregion Order Fill Tests
+
+        #region Bid Excess Levels Tests
+
+        [Test]
+        public void AddBuyOrdersInExcessLevels_IfBidIsFoundOrMovedBetweenExcessAndVisibleLevels_AssertsChecksTrueAndVerifiesUsingExcessLevel()
+        {
+            Depth depth = new Depth("XBT/USD", 3);
+
+            depth.AddOrder(new Price(490), new Volume(100), OrderSide.Buy);
+            depth.AddOrder(new Price(491), new Volume(100), OrderSide.Buy);
+            depth.AddOrder(new Price(491), new Volume(100), OrderSide.Buy);
+            depth.AddOrder(new Price(491), new Volume(100), OrderSide.Buy);
+            depth.AddOrder(new Price(492), new Volume(200), OrderSide.Buy);
+
+            depth.AddOrder(new Price(494), new Volume(200), OrderSide.Buy);
+            depth.AddOrder(new Price(493), new Volume(200), OrderSide.Buy);
+
+            Assert.AreEqual(494, depth.BidLevels.First().Price.Value, "Price of first level in Bid Depth Level Book");
+            Assert.AreEqual(492, depth.BidLevels.Last().Price.Value, "Price of last level in Bid Depth Level Book");
+
+            Assert.AreEqual(2, depth.BidExcessLevels.Count(), "2 levels must be present in the BidExcess levels");
+            Assert.AreEqual(491, depth.BidExcessLevels.First().Value.Price.Value, "First index price in excess level");
+            Assert.AreEqual(490, depth.BidExcessLevels.Last().Value.Price.Value, "Second index price in excess level");
+        }
+
+        [Test]
+        public void AddSellOrdersInExcessLevels_IfAskIsIsFoundMovedBetweenExcessAndVisibleLevels_AssertsChecksTrueAndVerifiesUsingExcessLevel()
+        {
+            Depth depth = new Depth("XBT/USD", 3);
+
+            depth.AddOrder(new Price(490), new Volume(100), OrderSide.Sell);
+            depth.AddOrder(new Price(491), new Volume(100), OrderSide.Sell);
+            depth.AddOrder(new Price(491), new Volume(100), OrderSide.Sell);
+            depth.AddOrder(new Price(491), new Volume(100), OrderSide.Sell);
+            depth.AddOrder(new Price(492), new Volume(200), OrderSide.Sell);
+
+            depth.AddOrder(new Price(494), new Volume(200), OrderSide.Sell);
+            depth.AddOrder(new Price(493), new Volume(200), OrderSide.Sell);
+
+            Assert.AreEqual(490, depth.AskLevels.First().Price.Value, "Price of first level in Ask Depth Level Book");
+            Assert.AreEqual(492, depth.AskLevels.Last().Price.Value, "Price of last level in Ask Depth Level Book");
+
+            Assert.AreEqual(2, depth.AskExcessLevels.Count(), "2 levels must be present in the AskExcess levels");
+            Assert.AreEqual(493, depth.AskExcessLevels.First().Value.Price.Value, "First index price in excess level");
+            Assert.AreEqual(494, depth.AskExcessLevels.Last().Value.Price.Value, "Second index price in excess level");
+        }
+
+        #endregion Bid Excess Levels Tests
+
+        #region Helper Methods
+
         private Depth AddSellOrdersToDepth()
         {
             Depth depth = new Depth("XBTUSD", 10);
@@ -373,5 +475,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
             depth.AddOrder(new Price(496M), new Volume(200), OrderSide.Buy);
             return depth;
         }
+
+        #endregion Helper Methods
     }
 }
