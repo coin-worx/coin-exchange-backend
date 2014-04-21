@@ -66,22 +66,38 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             }
             else if (_orderCount == 1)
             {
+                if (volume.Value < _aggregatedVolume.Value)
+                {
+                    throw new InvalidOperationException("The specified volume is less than the last order's volume in depth " +
+                                                        "level of " + _price.Value);
+                }
                 _orderCount = 0;
-                _aggregatedVolume = new Volume(0);
                 _isEmpty = true;
                 return true;
             }
             else
             {
-                _orderCount--;
-                if (_aggregatedVolume.Value >= volume.Value)
+                decimal remainingVolume = _aggregatedVolume.Value - volume.Value;
+                // If there is no volume remaining but still one or more orders are remaining, than this operation should not
+                // be allowed
+                if (remainingVolume != 0)
                 {
-                    _aggregatedVolume -= volume;
+                    _orderCount--;
+                    if (_aggregatedVolume.Value >= volume.Value)
+                    {
+                        _aggregatedVolume -= volume;
+                    }
+                    else
+                    {
+                        Log.Error("Requested volume to remove: " + volume.Value +
+                                  " is greater than the current volume: " +
+                                  _aggregatedVolume.Value);
+                    }
                 }
                 else
                 {
-                    Log.Error("Requested volume to remove: " + volume.Value + " is greater than the current volume: " + 
-                        _aggregatedVolume.Value);
+                    throw new InvalidOperationException("One or more orders are remaining but the volume specified eliminates " +
+                                                        "all the volume, so operation cannot be commenced.");
                 }
             }
             return false;
@@ -103,6 +119,34 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         }
 
         /// <summary>
+        /// Adds volume to this Depth level, this will be used while moving price levels between slots in depths
+        /// </summary>
+        /// <returns></returns>
+        public bool AddVolume(Volume volume)
+        {
+            if (volume != null)
+            {
+                _aggregatedVolume = new Volume(volume.Value);
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Adds the Order count to this level, this will be done when moving levels between slots in the depth
+        /// </summary>
+        /// <param name="orderCount"></param>
+        /// <returns></returns>
+        public bool AddOrderCount(int orderCount)
+        {
+            if(orderCount != 0)
+            {
+                _orderCount = orderCount;
+            }
+            return false;
+        }
+
+        /// <summary>
         /// Increase Volume
         /// </summary>
         /// <param name="volume"></param>
@@ -115,6 +159,16 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
                 return true;
             }
             return false;
+        }
+
+        /// <summary>
+        /// Adds Order Count. This will be used when we will move depth levels
+        /// </summary>
+        /// <returns></returns>
+        public bool AddOrderCount()
+        {
+            _orderCount++;
+            return true;
         }
 
         public void LastChange(ChangeId changeId)
@@ -175,6 +229,10 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             get
             {
                 return _orderCount;
+            }
+            set
+            {
+                _orderCount = value;
             }
         }
 

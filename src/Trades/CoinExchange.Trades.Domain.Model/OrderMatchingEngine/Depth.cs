@@ -170,6 +170,11 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
                 {
                     EraseLevel(level, orderSide);
                 }
+                // Else, mark the level as changed
+                else
+                {
+                    level.LastChange(new ChangeId(++_lastChangeId));
+                }
             }
             return false;
         }
@@ -231,9 +236,9 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// <summary>
         /// note the ID of last published change
         /// </summary>
-        public void Published()
+        public bool Published()
         {
-      
+            return _lastChangeId > _lastPublishedChangeId;
         }
 
         #region Level Finders
@@ -277,7 +282,6 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// Insert the Order before a certain level
         /// </summary>
         /// <param name="lcurrentLevel"></param>
-        /// <param name="orderSide"></param>
         /// <param name="price"></param>
         /// <param name="lastSideLevel"> </param>
         /// <param name="sideLevels"> </param>
@@ -298,8 +302,19 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
                 if (sideLevels[backEndLevelIndex].Price != null)
                 {
                     sideLevels[backEndLevelIndex + 1] =
-                        new DepthLevel(new Price(sideLevels[backEndLevelIndex].Price.Value));
-                    //sideLevels[backEndLevelIndex + 1] = sideLevels[backEndLevelIndex];
+                        new DepthLevel(new Price(sideLevels[backEndLevelIndex].Price.Value))
+                            {
+                                IsEmpty = sideLevels[backEndLevelIndex].IsEmpty
+                            };
+                    UpdateIndex(sideLevels, backEndLevelIndex + 1, backEndLevelIndex);
+                    /*if (sideLevels[backEndLevelIndex].AggregatedVolume != null)
+                    {
+                        sideLevels[backEndLevelIndex + 1].AggregatedVolume = sideLevels[backEndLevelIndex].AggregatedVolume;
+                    }
+                    for (int i = 0; i < sideLevels[backEndLevelIndex].OrderCount; i++)
+                    {
+                        sideLevels[backEndLevelIndex + 1].AddOrderCount();
+                    }*/
                 }
                 if (sideLevels[backEndLevelIndex].Price != null)
                 {
@@ -334,9 +349,36 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
                 {
                     sideLevels[currentLevelIndex] = new DepthLevel(null);
                 }
-                    sideLevels[currentLevelIndex] = new DepthLevel(sideLevels[currentLevelIndex + 1].Price);
+                sideLevels[currentLevelIndex] = new DepthLevel(sideLevels[currentLevelIndex + 1].Price);
+                UpdateIndex(sideLevels, currentLevelIndex, currentLevelIndex + 1);
+
                 currentLevelIndex++;
             }
+        }
+
+        /// <summary>
+        /// Updates the volume and order count for a specific index copied from another index
+        /// </summary>
+        /// <returns></returns>
+        public bool UpdateIndex(DepthLevel[] sideLevels, int sourceIndex, int targetIndex)
+        {
+            try
+            {
+                if (sideLevels != null)
+                {
+                    if (sideLevels[targetIndex].AggregatedVolume != null)
+                    {
+                        sideLevels[sourceIndex].AddVolume(sideLevels[targetIndex].AggregatedVolume);
+                    }
+                    sideLevels[sourceIndex].AddOrderCount(sideLevels[targetIndex].OrderCount);
+                    return true;
+                }
+            }
+            catch (Exception)
+            {
+                throw new InvalidOperationException();
+            }
+            return false;
         }
 
         private bool IsValidPrice(Price price)
