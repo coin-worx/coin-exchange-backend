@@ -55,11 +55,12 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// <param name="volume"></param>
         /// <param name="price"></param>
         /// <returns></returns>
+        // ToDo: Hook this event from the exchange
         public bool OrderFilled(Order.Order order, Volume volume, Price price)
         {
             if (order.OrderType == OrderType.Limit)
             {
-                _depth.FillOrder(price, volume, order.OrderState == OrderState.PartiallyFilled ? false : true, order.OrderSide);
+                _depth.FillOrder(price, volume, order.OrderState == OrderState.Complete, order.OrderSide);
                 return true;
             }
             return false;

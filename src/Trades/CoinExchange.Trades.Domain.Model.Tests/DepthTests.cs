@@ -174,6 +174,54 @@ namespace CoinExchange.Trades.Domain.Model.Tests
             Assert.AreEqual(494, depthOrderBook.AskLevels[4].Price.Value, "Price at last index in ascending order");
         }
 
+        #region Change Order Quantity
+
+        [Test]
+        public void ChangeBuyOrderQuantityTest_ChecksIfMethodRemovesQuantityAsSpecified_AssertsVolumeForTheExpectedChangedLevel()
+        {
+            Depth depth = new Depth("XBT/USD", 10);
+            depth.AddOrder(new Price(490), new Volume(100), OrderSide.Buy);
+            depth.AddOrder(new Price(491), new Volume(100), OrderSide.Buy);
+            depth.AddOrder(new Price(492), new Volume(200), OrderSide.Buy);
+
+            DepthLevel resultingDepthLevel = (from depthLevel in depth.BidLevels
+                                              where depthLevel.Price != null && depthLevel.Price.Value == 492
+                                              select depthLevel).ToList().Single();
+            // By only removing 100 volume from 200, we still have the depth level with a volume of 100
+            depth.ChangeOrderQuantity(new Price(492), -100, OrderSide.Buy);
+            Assert.IsTrue(depth.BidLevels.Contains(resultingDepthLevel));
+            Assert.AreEqual(100, resultingDepthLevel.AggregatedVolume.Value, "Remaining volume after first decrease");
+            Assert.AreEqual(1, resultingDepthLevel.OrderCount, "Remaining volume after first decrease");
+
+            // By removing the remaining 100 volume, we wont have any volume left so the level needs to be removed
+            depth.ChangeOrderQuantity(new Price(492), -100, OrderSide.Buy);
+            Assert.IsFalse(depth.BidLevels.Contains(resultingDepthLevel));
+        }
+
+        [Test]
+        public void ChangeSellOrderQuantityTest_ChecksIfMethodRemovesQuantityAsSpecified_AssertsVolumeForTheExpectedChangedLevel()
+        {
+            Depth depth = new Depth("XBT/USD", 10);
+            depth.AddOrder(new Price(490), new Volume(100), OrderSide.Sell);
+            depth.AddOrder(new Price(491), new Volume(100), OrderSide.Sell);
+            depth.AddOrder(new Price(492), new Volume(200), OrderSide.Sell);
+
+            DepthLevel resultingDepthLevel = (from depthLevel in depth.AskLevels
+                                              where depthLevel.Price != null && depthLevel.Price.Value == 492
+                                              select depthLevel).ToList().Single();
+            // By only removing 100 volume from 200, we still have the depth level with a volume of 100
+            depth.ChangeOrderQuantity(new Price(492), -100, OrderSide.Sell);
+            Assert.IsTrue(depth.AskLevels.Contains(resultingDepthLevel));
+            Assert.AreEqual(100, resultingDepthLevel.AggregatedVolume.Value, "Remaining volume after first decrease");
+            Assert.AreEqual(1, resultingDepthLevel.OrderCount, "Remaining volume after first decrease");
+
+            // By removing the remaining 100 volume, we wont have any volume left so the level needs to be removed
+            depth.ChangeOrderQuantity(new Price(492), -100, OrderSide.Sell);
+            Assert.IsFalse(depth.AskLevels.Contains(resultingDepthLevel));
+        }
+
+        #endregion Change Order Quantity
+
         [Test]
         public void CloseBuyOrderTest_RemovesQuantityFromThatLevel_RemovesDepthAsWellIfNoOrdersRemain()
         {

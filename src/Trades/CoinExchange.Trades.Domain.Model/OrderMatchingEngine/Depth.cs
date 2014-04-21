@@ -116,25 +116,8 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// <param name="qty"></param>
         /// <param name="filled"></param>
         /// <param name="orderSide"></param>
-        public void FillOrder(Price price, Volume qty,bool filled,  OrderSide orderSide)
+        public void FillOrder(Price price, Volume qty,bool filled, OrderSide orderSide)
         {
-            /*if (is_bid && ignore_bid_fill_qty_)
-            {
-                ignore_bid_fill_qty_ -= fill_qty;
-            }
-            else if ((!is_bid) && ignore_ask_fill_qty_)
-            {
-                ignore_ask_fill_qty_ -= fill_qty;
-            }
-            else if (filled)
-            {
-                close_order(price, fill_qty, is_bid);
-            }
-            else
-            {
-                change_qty_order(price, -(int32_t)fill_qty, is_bid);
-            }*/
-
             if (orderSide == OrderSide.Buy && _ignoreBidFillVolume.Value != 0)
             {
 
@@ -149,7 +132,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             }
             else
             {
-                ChangeOrderQuantity(price, qty, orderSide);
+                ChangeOrderQuantity(price, -qty.Value, orderSide);
             }
         }
 
@@ -183,22 +166,47 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// Change quantity of an order
         /// </summary>
         /// <param name="price"></param>
-        /// <param name="volume"></param>
+        /// <param name="quantity"></param>
         /// <param name="orderSide"></param>
-        public void ChangeOrderQuantity(Price price, Volume volume, OrderSide orderSide)
+        public void ChangeOrderQuantity(Price price, decimal quantity, OrderSide orderSide)
         {
-            
+            DepthLevel depthLevel = FindLevel(price, orderSide, orderSide == OrderSide.Buy ? _bidLevels : _askLevels);
+            if (depthLevel != null && quantity != 0)
+            {
+                // If volume is positive, increase quantity(used when order is replaced)
+                if (quantity > 0)
+                {
+                    depthLevel.IncreaseVolume(new Volume(quantity));
+                }
+                // If volume is negative, decrease the quantity(used when orders fill or get replaced)
+                else
+                {
+                    // If after decreasing the volume, the volume becomes 0, then we will need to remove this level from depth
+                    if (depthLevel.AggregatedVolume.Value - (-quantity) == 0)
+                    {
+                        EraseLevel(depthLevel, orderSide);
+                    }
+                    else
+                    {
+                        // We will convert the negative quantity into positive as Volume does not instantiate with a negative
+                        // quantity, and also we are already decreasing the volume from the depth level so negative value is 
+                        // not required
+                        depthLevel.DecreaseVolume(new Volume(-quantity));
+                    }
+                }
+                depthLevel.LastChange(new ChangeId(_lastChangeId++));
+            }
         }
 
         /// <summary>
         /// Replace an Order
         /// </summary>
-        /// <param name="current_price"></param>
-        /// <param name="new_price"></param>
+        /// <param name="currentPrice"></param>
+        /// <param name="newPrice"></param>
         /// <param name="currentQuantity"></param>
         /// <param name="newQuantity"></param>
         /// <param name="orderSide"></param>
-        public void ReplaceOrder(Price current_price, Price new_price, Volume currentQuantity, Volume newQuantity,
+        public void ReplaceOrder(Price currentPrice, Price newPrice, Volume currentQuantity, Volume newQuantity,
                                   OrderSide orderSide)
         {
 
