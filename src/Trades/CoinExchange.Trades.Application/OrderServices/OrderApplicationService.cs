@@ -21,13 +21,12 @@ namespace CoinExchange.Trades.Application.OrderServices
 
         public NewOrderRepresentation CreateOrder(CreateOrderCommand orderCommand)
         {
-            IOrderIdGenerator orderIdGenerator = ContextRegistry.GetContext("OrderIdGenerator")as IOrderIdGenerator;
+            IOrderIdGenerator orderIdGenerator = ContextRegistry.GetContext()["OrderIdGenerator"] as IOrderIdGenerator;
             Order order = OrderFactory.CreateOrder(orderCommand.TraderId, orderCommand.Pair,
                 orderCommand.Type, orderCommand.Side, orderCommand.Volume, orderCommand.Price, orderIdGenerator);
             //TODO:Publish the order to disruptor
             InputDisruptorPublisher.Publish(InputPayload.CreatePayload(order));
-            return new NewOrderRepresentation(order.Price.Value, order.OrderType.ToString(), order.OrderSide.ToString(), order.CurrencyPair,
-                order.OrderId.Id.ToString(),order.Volume.Value);
+            return new NewOrderRepresentation(order);
         }
     }
 }

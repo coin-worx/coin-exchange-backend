@@ -50,7 +50,6 @@ namespace CoinExchange.Trades.Domain.Model.Order
                 }
                 return entry;
             });
-
         }
 
     }
