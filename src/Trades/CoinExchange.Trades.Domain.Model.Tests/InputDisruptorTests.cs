@@ -61,9 +61,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
             _counter = 1;//as sending only one message
             Order.Order order = OrderFactory.CreateOrder("1234", "XBTUSD", "limit", "buy", 5, 10,
                 new StubbedOrderIdGenerator());
-            InputPayload payload=new InputPayload();
-            payload.IsOrder = true;
-            payload.Order = order;
+            InputPayload payload = InputPayload.CreatePayload(order);
             InputDisruptorPublisher.Publish(payload);
             _manualResetEvent.WaitOne(2000);
             Assert.AreEqual(payload.Order, order);
@@ -73,11 +71,9 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         public void PublishCancelOrder_IfCancelOrderIsAddedInPayload_ReceiveCancelOrderInPayloadInConsumer()
         {
             _counter = 1;//as sending only one message
-           CancelOrder cancelOrder=new CancelOrder(new OrderId(123),new TraderId(123) );
-           InputPayload payload = new InputPayload();
-           payload.IsOrder = false;
-           payload.CancelOrder = cancelOrder;
-           InputDisruptorPublisher.Publish(payload);
+            CancelOrder cancelOrder=new CancelOrder(new OrderId(123),new TraderId(123) );
+            InputPayload payload = InputPayload.CreatePayload(cancelOrder);
+            InputDisruptorPublisher.Publish(payload);
             _manualResetEvent.WaitOne(2000);
             Assert.AreEqual(payload.CancelOrder, cancelOrder);
         }
@@ -91,9 +87,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
             {
                 Order.Order order = OrderFactory.CreateOrder(i.ToString(), "XBTUSD", "limit", "buy", 5, 10,
                   new StubbedOrderIdGenerator());
-                InputPayload payload = new InputPayload();
-                payload.IsOrder = true;
-                payload.Order = order;
+                InputPayload payload = InputPayload.CreatePayload(order);
                 InputDisruptorPublisher.Publish(payload);  
                 list.Add(i);
             }

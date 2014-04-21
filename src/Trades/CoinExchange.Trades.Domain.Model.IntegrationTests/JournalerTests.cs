@@ -40,9 +40,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
         {
             Order.Order order = OrderFactory.CreateOrder("1234", "XBTUSD", "market", "buy", 5, 0,
                 new StubbedOrderIdGenerator());
-            InputPayload payload = new InputPayload();
-            payload.IsOrder = true;
-            payload.Order = order;
+            InputPayload payload = InputPayload.CreatePayload(order);
             InputDisruptorPublisher.Publish(payload);
             _manualResetEvent.WaitOne(5000);
             //TODO:Need to verify that event has been stored

@@ -38,5 +38,28 @@ namespace CoinExchange.Trades.Domain.Model.Order
             get { return _isOrder; }
             set { _isOrder = value; }
         }
+
+        /// <summary>
+        /// payload is either Order or CancelOrder
+        /// </summary>
+        /// <param name="payload"></param>
+        /// <returns></returns>
+        public static InputPayload CreatePayload(object payload)
+        {
+            InputPayload inputPayload = null;
+            if (payload is Order)
+            {
+                inputPayload=new InputPayload();
+                inputPayload.Order = payload as Order;
+                inputPayload.IsOrder = true;
+            }
+            else if(payload is CancelOrder)
+            {
+                inputPayload=new InputPayload();
+                inputPayload.CancelOrder = payload as CancelOrder;
+                inputPayload.IsOrder = false;
+            }
+            return inputPayload;
+        }
     }
 }
