@@ -17,12 +17,14 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
     public class JournalerTests
     {
         private ManualResetEvent _manualResetEvent;
+        private IEventStore _eventStore;
 
         [SetUp]
         public void SetUp()
         {
             //initialize journaler
-            Journaler journaler = new Journaler(new RavenEventStore());
+            _eventStore=new RavenNEventStore();
+            Journaler journaler = new Journaler(_eventStore);
             //assign journaler to disruptor as its consumer
             InputDisruptorPublisher.InitializeDisruptor(new IEventHandler<InputPayload>[] { journaler });
             _manualResetEvent=new ManualResetEvent(false);
@@ -38,12 +40,16 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
         [Category("Integration")]
         public void CreateOrder_PublishToInputDisruptor_JournalerShouldSaveTheEvent()
         {
-            Order.Order order = OrderFactory.CreateOrder("1234", "XBTUSD", "market", "buy", 5, 0,
+            Order.Order order = OrderFactory.CreateOrder("1234", "XBTUSD", "limit", "buy", 5, 10,
                 new StubbedOrderIdGenerator());
             InputPayload payload = InputPayload.CreatePayload(order);
             InputDisruptorPublisher.Publish(payload);
             _manualResetEvent.WaitOne(5000);
-            //TODO:Need to verify that event has been stored
+            //retrieve order
+            Order.Order savedOrder = _eventStore.GetEvent(order.OrderId.Id.ToString()) as Order.Order;
+            Assert.NotNull(savedOrder);
+            Assert.AreEqual(savedOrder,order);
+
         }
         
     }

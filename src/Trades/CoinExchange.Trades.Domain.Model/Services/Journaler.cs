@@ -28,13 +28,13 @@ namespace CoinExchange.Trades.Domain.Model.Services
             {
                 data.Order.MemberWiseClone(_receivedPayload.Order);
                 _receivedPayload.IsOrder = true;
-                _eventStore.StoreEvent(_receivedPayload.Order.OrderId.Id,"NewOrder",_receivedPayload.Order);
+                _eventStore.StoreEvent(_receivedPayload.Order);
             }
             else
             {
                 data.CancelOrder.MemberWiseClone(_receivedPayload.CancelOrder);
                 _receivedPayload.IsOrder = false;
-                _eventStore.StoreEvent(_receivedPayload.CancelOrder.OrderId.Id,"CancelOrder", _receivedPayload.CancelOrder);
+                _eventStore.StoreEvent(_receivedPayload.CancelOrder);
             }
         }
     }

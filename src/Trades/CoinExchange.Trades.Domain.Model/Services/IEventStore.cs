@@ -8,6 +8,7 @@ namespace CoinExchange.Trades.Domain.Model.Services
 {
     public interface IEventStore
     {
-        bool StoreEvent(object id,string eventName, object blob);
+        bool StoreEvent(object blob);
+        object GetEvent(string id);
     }
 }
