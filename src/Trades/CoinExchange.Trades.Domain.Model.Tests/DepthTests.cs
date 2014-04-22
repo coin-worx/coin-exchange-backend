@@ -350,6 +350,100 @@ namespace CoinExchange.Trades.Domain.Model.Tests
             Assert.AreEqual(100, depth.BidLevels[5].AggregatedVolume.Value, "Volume at sixth index");
         }
 
+        [Test]
+        public void EarseBidOrdersTwiceTest_RemovesOrderThenAddsThenRemovesAgain_ValidatesDepthLevelToConfirm()
+        {
+            Depth depth = new Depth("XBTUSD", 7);
+
+            depth.AddOrder(new Price(490), new Volume(100), OrderSide.Buy);
+            depth.AddOrder(new Price(491), new Volume(100), OrderSide.Buy);
+            depth.AddOrder(new Price(492), new Volume(200), OrderSide.Buy);
+            depth.AddOrder(new Price(491.5M), new Volume(200), OrderSide.Buy);
+            depth.AddOrder(new Price(494M), new Volume(200), OrderSide.Buy);
+            depth.AddOrder(new Price(495M), new Volume(200), OrderSide.Buy);
+            depth.AddOrder(new Price(496M), new Volume(200), OrderSide.Buy);
+
+            DepthLevel depthLevel = depth.BidLevels[1]; // Price = 495;
+            depth.EraseLevel(depthLevel, OrderSide.Buy);
+
+            Assert.IsFalse(depth.AskLevels.Contains(depthLevel));
+
+            Assert.AreEqual(496, depth.BidLevels.First().Price.Value, "Price at first index");
+            Assert.AreEqual(494, depth.BidLevels[1].Price.Value, "Price at second index");
+            Assert.AreEqual(492, depth.BidLevels[2].Price.Value, "Price at third index");
+            Assert.AreEqual(491.5, depth.BidLevels[3].Price.Value, "Price at fourth index");
+            Assert.AreEqual(491, depth.BidLevels[4].Price.Value, "Price at fifth index");
+            Assert.AreEqual(490, depth.BidLevels[5].Price.Value, "Price at sixth index");
+            Assert.IsNull(depth.BidLevels[6].Price);
+
+            depth.AddOrder(new Price(480), new Volume(200), OrderSide.Buy);
+            Assert.AreEqual(496, depth.BidLevels.First().Price.Value, "Price at first index");
+            Assert.AreEqual(494, depth.BidLevels[1].Price.Value, "Price at second index");
+            Assert.AreEqual(492, depth.BidLevels[2].Price.Value, "Price at third index");
+            Assert.AreEqual(491.5, depth.BidLevels[3].Price.Value, "Price at fourth index");
+            Assert.AreEqual(491, depth.BidLevels[4].Price.Value, "Price at fifth index");
+            Assert.AreEqual(490, depth.BidLevels[5].Price.Value, "Price at sixth index");
+            Assert.AreEqual(480, depth.BidLevels[6].Price.Value, "Price at seventh index");
+
+            DepthLevel depthLevel2 = depth.BidLevels[2];
+            depth.EraseLevel(depthLevel2, OrderSide.Buy);
+
+            Assert.AreEqual(496, depth.BidLevels.First().Price.Value, "Price at first index");
+            Assert.AreEqual(494, depth.BidLevels[1].Price.Value, "Price at second index");
+            Assert.AreEqual(491.5, depth.BidLevels[2].Price.Value, "Price at third index");
+            Assert.AreEqual(491, depth.BidLevels[3].Price.Value, "Price at fourth index");
+            Assert.AreEqual(490, depth.BidLevels[4].Price.Value, "Price at fifth index");
+            Assert.AreEqual(480, depth.BidLevels[5].Price.Value, "Price at sixth index");
+            Assert.IsNull(depth.BidLevels[6].Price);
+        }
+
+        [Test]
+        public void EarseAskOrdersTwiceTest_RemovesOrderThenAddsThenRemovesAgain_ValidatesDepthLevelToConfirm()
+        {
+            Depth depth = new Depth("XBTUSD", 7);
+
+            depth.AddOrder(new Price(490), new Volume(100), OrderSide.Sell);
+            depth.AddOrder(new Price(491), new Volume(100), OrderSide.Sell);
+            depth.AddOrder(new Price(492), new Volume(200), OrderSide.Sell);
+            depth.AddOrder(new Price(491.5M), new Volume(200), OrderSide.Sell);
+            depth.AddOrder(new Price(494M), new Volume(200), OrderSide.Sell);
+            depth.AddOrder(new Price(495M), new Volume(200), OrderSide.Sell);
+            depth.AddOrder(new Price(496M), new Volume(200), OrderSide.Sell);
+
+            DepthLevel depthLevel = depth.AskLevels[1]; // Price = 491;
+            depth.EraseLevel(depthLevel, OrderSide.Sell);
+
+            Assert.IsFalse(depth.AskLevels.Contains(depthLevel));
+
+            Assert.AreEqual(490, depth.AskLevels.First().Price.Value, "Price at first index");
+            Assert.AreEqual(491.5, depth.AskLevels[1].Price.Value, "Price at second index");
+            Assert.AreEqual(492, depth.AskLevels[2].Price.Value, "Price at third index");
+            Assert.AreEqual(494, depth.AskLevels[3].Price.Value, "Price at fourth index");
+            Assert.AreEqual(495, depth.AskLevels[4].Price.Value, "Price at fifth index");
+            Assert.AreEqual(496, depth.AskLevels[5].Price.Value, "Price at sixth index");
+            Assert.IsNull(depth.AskLevels[6].Price);
+
+            depth.AddOrder(new Price(499), new Volume(200), OrderSide.Sell);
+            Assert.AreEqual(490, depth.AskLevels.First().Price.Value, "Price at first index");
+            Assert.AreEqual(491.5, depth.AskLevels[1].Price.Value, "Price at second index");
+            Assert.AreEqual(492, depth.AskLevels[2].Price.Value, "Price at third index");
+            Assert.AreEqual(494, depth.AskLevels[3].Price.Value, "Price at fourth index");
+            Assert.AreEqual(495, depth.AskLevels[4].Price.Value, "Price at fifth index");
+            Assert.AreEqual(496, depth.AskLevels[5].Price.Value, "Price at sixth index");
+            Assert.AreEqual(499, depth.AskLevels[6].Price.Value, "Price at seventh index");
+
+            DepthLevel depthLevel2 = depth.AskLevels[2];
+            depth.EraseLevel(depthLevel2, OrderSide.Sell);
+
+            Assert.AreEqual(490, depth.AskLevels.First().Price.Value, "Price at first index");
+            Assert.AreEqual(491.5, depth.AskLevels[1].Price.Value, "Price at second index");
+            Assert.AreEqual(494, depth.AskLevels[2].Price.Value, "Price at third index");
+            Assert.AreEqual(495, depth.AskLevels[3].Price.Value, "Price at fourth index");
+            Assert.AreEqual(496, depth.AskLevels[4].Price.Value, "Price at fifth index");
+            Assert.AreEqual(499, depth.AskLevels[5].Price.Value, "Price at sixth index");
+            Assert.IsNull(depth.AskLevels[6].Price);
+        }
+
         #endregion Close Order and Erase Level Tests
 
         #region Order Fill Tests
@@ -438,7 +532,105 @@ namespace CoinExchange.Trades.Domain.Model.Tests
             Assert.AreEqual(494, depth.AskExcessLevels.Last().Value.Price.Value, "Second index price in excess level");
         }
 
+        [Test]
+        public void EraseBuyLevelOrder_RemovesTheOrderAndShiftsTheLevelsOneLevelBack_ChecksTheLastElementInTheBiddepthLevels()
+        {
+            Depth depth = new Depth("XBT/USD", 3);
+
+            depth.AddOrder(new Price(490), new Volume(100), OrderSide.Buy);
+            depth.AddOrder(new Price(491), new Volume(100), OrderSide.Buy);
+            depth.AddOrder(new Price(492), new Volume(200), OrderSide.Buy);
+
+            depth.AddOrder(new Price(493), new Volume(200), OrderSide.Buy);
+
+            Assert.AreEqual(493, depth.BidLevels.First().Price.Value, "The price at the first level");
+            Assert.AreEqual(491, depth.BidLevels.Last().Price.Value, "The price at the last level");
+            Assert.AreEqual(1, depth.BidExcessLevels.Count(), "Count in the bid excess levels.");
+
+            depth.CloseOrder(new Price(493), new Volume(100), OrderSide.Buy);
+
+            Assert.AreEqual(492, depth.BidLevels.First().Price.Value, "The price at the first level");
+            Assert.AreEqual(490, depth.BidLevels.Last().Price.Value, "The price at the last level");
+            Assert.AreEqual(0, depth.BidExcessLevels.Count(), "Count in the bid excess levels.");
+        }
+
+        [Test]
+        public void EraseSellLevelOrder_RemovesTheOrderAndShiftsTheLevelsOneLevelBack_ChecksTheLastElementInTheAskDpthLevels()
+        {
+            Depth depth = new Depth("XBT/USD", 3);
+
+            depth.AddOrder(new Price(490), new Volume(100), OrderSide.Sell);
+            depth.AddOrder(new Price(491), new Volume(100), OrderSide.Sell);
+            depth.AddOrder(new Price(492), new Volume(200), OrderSide.Sell);
+
+            depth.AddOrder(new Price(493), new Volume(200), OrderSide.Sell);
+
+            Assert.AreEqual(490, depth.AskLevels.First().Price.Value, "The price at the first level");
+            Assert.AreEqual(492, depth.AskLevels.Last().Price.Value, "The price at the last level");
+            Assert.AreEqual(1, depth.AskExcessLevels.Count(), "Count in the bid excess levels.");
+
+            depth.CloseOrder(new Price(492), new Volume(100), OrderSide.Sell);
+
+            Assert.AreEqual(490, depth.AskLevels.First().Price.Value, "The price at the first level");
+            Assert.AreEqual(493, depth.AskLevels.Last().Price.Value, "The price at the last level");
+            Assert.AreEqual(0, depth.AskExcessLevels.Count(), "Count in the bid excess levels.");
+        }
+
         #endregion Bid Excess Levels Tests
+
+        [Test]
+        public void BidRestorationTest_IfBidRestorationIsRequiredReturnsSecondLastDepthLevelPrice_ChecksTheBidLevelsToAssure()
+        {
+            Depth depth = new Depth("XBTUSD", 3);
+
+            depth.AddOrder(new Price(490), new Volume(100), OrderSide.Buy);
+            depth.AddOrder(new Price(491), new Volume(100), OrderSide.Buy);
+            depth.AddOrder(new Price(492), new Volume(200), OrderSide.Buy);
+
+            Assert.AreEqual(490, depth.BidLevels.Last().Price.Value);
+            depth.CloseOrder(new Price(491), new Volume(100), OrderSide.Buy);
+
+            Price price1 = null;
+            bool response1 = depth.NeedsBidRestoration(out price1);
+
+            Assert.IsTrue(response1);
+            Assert.AreEqual(490, price1.Value);
+
+            depth.CloseOrder(new Price(490), new Volume(100), OrderSide.Buy);
+
+            Price price2 = null;
+            bool response2 = depth.NeedsBidRestoration(out price2);
+
+            Assert.False(response2);
+            Assert.IsNull(price2);
+        }
+
+        [Test]
+        public void AskRestorationTest_IfAskRestorationIsRequiredReturnsSecondLastDepthLevelPrice_ChecksTheAskLevelsToAssure()
+        {
+            Depth depth = new Depth("XBTUSD", 3);
+
+            depth.AddOrder(new Price(490), new Volume(100), OrderSide.Sell);
+            depth.AddOrder(new Price(491), new Volume(100), OrderSide.Sell);
+            depth.AddOrder(new Price(492), new Volume(200), OrderSide.Sell);
+
+            Assert.AreEqual(492, depth.AskLevels.Last().Price.Value);
+            depth.CloseOrder(new Price(491), new Volume(100), OrderSide.Sell);
+
+            Price price1 = null;
+            bool response1 = depth.NeedsAskRestoration(out price1);
+
+            Assert.IsTrue(response1);
+            Assert.AreEqual(492, price1.Value);
+
+            depth.CloseOrder(new Price(492), new Volume(200), OrderSide.Sell);
+
+            Price price2 = null;
+            bool response2 = depth.NeedsAskRestoration(out price2);
+
+            Assert.False(response2);
+            Assert.IsNull(price2);
+        }
 
         #region Helper Methods
 

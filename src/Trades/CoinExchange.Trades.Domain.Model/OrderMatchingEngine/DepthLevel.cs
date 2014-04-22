@@ -121,7 +121,17 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// <returns></returns>
         public bool UpdatePrice(Price price)
         {
-            _price = price;
+            if (price != null)
+            {
+                // Done this way so the reference of one level's object does not get copied to another level, otherwise both
+                // levels will get affected due to a change in one
+                _price = new Price(price.Value);
+            }
+            else
+            {
+                // For levels that are removed, only values will become null, but levels will stay on that slot physically
+                _price = null;
+            }
             return true;
         }
 
@@ -131,7 +141,16 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// <returns></returns>
         public bool UpdateVolume(Volume volume)
         {
-            _aggregatedVolume = volume;
+            if (volume != null)
+            {
+                // Done this way so the reference of one level's object does not get copied to another level, otherwise both
+                // levels will get affected due to a change in one
+                _aggregatedVolume = new Volume(volume.Value);
+            }
+            else
+            {
+                _aggregatedVolume = null;
+            }
             return true;
         }
 

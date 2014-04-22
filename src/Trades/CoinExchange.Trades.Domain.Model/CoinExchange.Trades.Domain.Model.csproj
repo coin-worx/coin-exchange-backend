@@ -74,6 +74,7 @@
     <Compile Include="OrderMatchingEngine\OrderList.cs" />
     <Compile Include="OrderMatchingEngine\OrderListener.cs" />
     <Compile Include="OrderMatchingEngine\TradeListener.cs" />
+    <Compile Include="OrderMatchingEngine\Types.cs" />
     <Compile Include="Order\CurrencyPair.cs" />
     <Compile Include="Order\Order.cs" />
     <Compile Include="Order\OrderFactory.cs" />

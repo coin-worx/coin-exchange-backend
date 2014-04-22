@@ -224,8 +224,24 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// </summary>
         /// <param name="restorationPrice">The price to restore after (out)</param>
         /// <returns>True if restoration is needed (previously was full)</returns>
-        public bool NeedsBidRestoration(Price restorationPrice)
+        public bool NeedsBidRestoration(out Price restorationPrice)
         {
+            if (_size > 1)
+            {
+                // Check if the second last level of the bids is not null, restore using that level
+                if (_bidLevels[Array.FindIndex(_bidLevels, depthLevel => depthLevel == _bidLevels.Last()) - 1].Price != null)
+                {
+                    restorationPrice = _bidLevels[Array.FindIndex(_bidLevels, depthLevel => depthLevel == _bidLevels.Last()) - 1].Price;
+                    return true;
+                }
+            }
+            // Otherwise this depth is BBO only
+            else if(_size == 1)
+            {
+                restorationPrice = new Price(ConstantTypes.MARKET_ORDER_BID_SORT_PRICE);
+                return true;
+            }
+            restorationPrice = null;
             return false;
         }
 
@@ -234,8 +250,24 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// </summary>
         /// <param name="restorationPrice">The price to restore after (out)</param>
         /// <returns> true if restoration is needed (previously was full)</returns>
-        public bool NeedsAskRestoration(Price restorationPrice)
+        public bool NeedsAskRestoration(out Price restorationPrice)
         {
+            if (_size > 1)
+            {
+                // Check if the second last level of the asks is not null, restore using that level
+                if (_askLevels[Array.FindIndex(_askLevels, depthLevel => depthLevel == _askLevels.Last()) - 1].Price != null)
+                {
+                    restorationPrice = _askLevels[Array.FindIndex(_askLevels, depthLevel => depthLevel == _askLevels.Last()) - 1].Price;
+                    return true;
+                }
+            }
+            // Otherwise this depth is BBO only
+            else if (_size == 0)
+            {
+                restorationPrice = new Price(ConstantTypes.MARKET_ORDER_ASK_SORT_PRICE);
+                return true;
+            }
+            restorationPrice = null;
             return false;
         }
 
@@ -409,7 +441,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         {
             // Specifies the last element with a non-null price in the current side Depthlevel array
             bool isLastLevel = orderSide == OrderSide.Buy ? (
-                                                             // If the privided level is the last non-null price level
+                                                             // If the provided level is the last non-null price level
                                                              inboundLevel == FindLastLevel(_bidLevels) &&
                                                              // If the last non-null price level is the last slot in the array
                                                              FindLastLevel(_bidLevels) == _bidLevels.Last()) 
@@ -435,7 +467,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             // Otherwise, remove the level from the current slot and move all other levels to one slot back
             else
             {
-                DepthLevel lastSideLevel = orderSide == OrderSide.Buy ? _lastBid : _lastAsk;
+                DepthLevel lastSideLevel = orderSide == OrderSide.Buy ? _bidLevels.Last() : _askLevels.Last();
                 DepthLevel[] sideLevels = orderSide == OrderSide.Buy ? _bidLevels : _askLevels;
 
                 int backEndLevelIndex = Array.FindIndex(sideLevels, depthLevel => depthLevel == lastSideLevel);
@@ -461,7 +493,17 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
 
                     currentLevelIndex++;
                 }
-                if (isLastLevel)
+                // The last element after the loop is done will be the same as the second last one as the slots have been 
+                // shifted back. So we remove this level as this is the duplicate of the level before it
+                // ToDo: Need to figure whether we can initialize 
+                sideLevels[currentLevelIndex] = new DepthLevel(null);
+                sideLevels[currentLevelIndex].LastChange(new ChangeId(_lastChangeId));
+                /*sideLevels[currentLevelIndex].UpdatePrice(null);
+                sideLevels[currentLevelIndex].UpdateVolume(null);
+                sideLevels[currentLevelIndex].UpdateOrderCount(0);
+                sideLevels[currentLevelIndex].ChangeExcessStatus(false);*/
+
+                if (isLastLevel || sideLevels.Last().Price == null)
                 {
                     if (orderSide == OrderSide.Buy)
                     {
@@ -519,18 +561,18 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// Updates the volume and order count for a specific index copied from another index in the visible depth levels
         /// </summary>
         /// <returns></returns>
-        private bool UpdateLevelIndex(DepthLevel[] sideLevels, int sourceIndex, int targetIndex)
+        private bool UpdateLevelIndex(DepthLevel[] sideLevels, int targetIndex, int sourceIndex)
         {
             try
             {
                 if (sideLevels != null)
                 {
-                    if (sideLevels[targetIndex].AggregatedVolume != null && sideLevels[targetIndex].Price != null)
+                    if (sideLevels[sourceIndex].AggregatedVolume != null && sideLevels[sourceIndex].Price != null)
                     {
-                        sideLevels[sourceIndex].UpdatePrice(sideLevels[targetIndex].Price);
-                        sideLevels[sourceIndex].UpdateVolume(sideLevels[targetIndex].AggregatedVolume);
-                        sideLevels[sourceIndex].UpdateOrderCount(sideLevels[targetIndex].OrderCount);
-                        sideLevels[sourceIndex].ChangeExcessStatus(sideLevels[targetIndex].IsExcess);
+                        sideLevels[targetIndex].UpdatePrice(new Price(sideLevels[sourceIndex].Price.Value));
+                        sideLevels[targetIndex].UpdateVolume(new Volume(sideLevels[sourceIndex].AggregatedVolume.Value));
+                        sideLevels[targetIndex].UpdateOrderCount(sideLevels[sourceIndex].OrderCount);
+                        sideLevels[targetIndex].ChangeExcessStatus(sideLevels[sourceIndex].IsExcess);
                         return true;
                     }
                 }
