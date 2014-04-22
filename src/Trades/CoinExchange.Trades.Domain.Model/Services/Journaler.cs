@@ -23,7 +23,7 @@ namespace CoinExchange.Trades.Domain.Model.Services
 
         public void OnNext(InputPayload data, long sequence, bool endOfBatch)
         {
-            _receivedPayload = new InputPayload() { CancelOrder = new CancelOrder(), Order = new Order.Order() };
+            _receivedPayload = new InputPayload() { OrderCancellation = new OrderCancellation(), Order = new Order.Order() };
             if (data.IsOrder)
             {
                 data.Order.MemberWiseClone(_receivedPayload.Order);
@@ -32,9 +32,9 @@ namespace CoinExchange.Trades.Domain.Model.Services
             }
             else
             {
-                data.CancelOrder.MemberWiseClone(_receivedPayload.CancelOrder);
+                data.OrderCancellation.MemberWiseClone(_receivedPayload.OrderCancellation);
                 _receivedPayload.IsOrder = false;
-                _eventStore.StoreEvent(_receivedPayload.CancelOrder);
+                _eventStore.StoreEvent(_receivedPayload.OrderCancellation);
             }
         }
     }

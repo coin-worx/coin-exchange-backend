@@ -62,7 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="OrderMatchingEngine\LimitOrderBook.cs" />
-    <Compile Include="Order\CancelOrder.cs" />
+    <Compile Include="Order\OrderCancellation.cs" />
     <Compile Include="Order\CurrencyPair.cs" />
     <Compile Include="Order\InputDisruptorPublisher.cs" />
     <Compile Include="Order\InputPayload.cs" />

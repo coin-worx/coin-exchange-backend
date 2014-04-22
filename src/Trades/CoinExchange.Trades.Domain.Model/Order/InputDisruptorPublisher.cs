@@ -17,7 +17,7 @@ namespace CoinExchange.Trades.Domain.Model.Order
             if (_disruptor == null)
             {
                 // Initialize Disruptor
-                _disruptor = new Disruptor<InputPayload>(() => new InputPayload(){CancelOrder = new CancelOrder(),Order = new Order()}, _ringSize, TaskScheduler.Default);
+                _disruptor = new Disruptor<InputPayload>(() => new InputPayload(){OrderCancellation = new OrderCancellation(),Order = new Order()}, _ringSize, TaskScheduler.Default);
             }
             else
             {
@@ -45,7 +45,7 @@ namespace CoinExchange.Trades.Domain.Model.Order
                 }
                 else
                 {
-                    payload.CancelOrder.MemberWiseClone(entry.CancelOrder);
+                    payload.OrderCancellation.MemberWiseClone(entry.OrderCancellation);
                     entry.IsOrder = false;
                 }
                 return entry;

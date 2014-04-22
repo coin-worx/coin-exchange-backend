@@ -12,7 +12,7 @@ namespace CoinExchange.Trades.Domain.Model.Order
     public class InputPayload
     {
         private Order _order;
-        private CancelOrder _cancelOrder;
+        private OrderCancellation _orderCancellation;
         private bool _isOrder;//if true means it is a new order, false=>cancel order
 
         public Order Order
@@ -24,12 +24,12 @@ namespace CoinExchange.Trades.Domain.Model.Order
             }
         }
 
-        public CancelOrder CancelOrder
+        public OrderCancellation OrderCancellation
         {
-            get { return _cancelOrder; }
+            get { return _orderCancellation; }
             set
             {
-               _cancelOrder = value;
+               _orderCancellation = value;
             }
         }
         
@@ -53,10 +53,10 @@ namespace CoinExchange.Trades.Domain.Model.Order
                 inputPayload.Order = payload as Order;
                 inputPayload.IsOrder = true;
             }
-            else if(payload is CancelOrder)
+            else if(payload is OrderCancellation)
             {
                 inputPayload=new InputPayload();
-                inputPayload.CancelOrder = payload as CancelOrder;
+                inputPayload.OrderCancellation = payload as OrderCancellation;
                 inputPayload.IsOrder = false;
             }
             return inputPayload;

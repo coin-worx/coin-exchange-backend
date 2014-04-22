@@ -23,7 +23,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         public void OnNext(InputPayload data, long sequence, bool endOfBatch)
         {
             _counter--;
-            _receivedPayload=new InputPayload(){CancelOrder = new CancelOrder(),Order = new Order.Order()};
+            _receivedPayload=new InputPayload(){OrderCancellation = new OrderCancellation(),Order = new Order.Order()};
             if (data.IsOrder)
             {
                 data.Order.MemberWiseClone(_receivedPayload.Order);
@@ -32,7 +32,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
             }
             else
             {
-                data.CancelOrder.MemberWiseClone(_receivedPayload.CancelOrder);
+                data.OrderCancellation.MemberWiseClone(_receivedPayload.OrderCancellation);
                 _receivedPayload.IsOrder = false;
             }
             if (_counter == 0)
@@ -71,11 +71,11 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         public void PublishCancelOrder_IfCancelOrderIsAddedInPayload_ReceiveCancelOrderInPayloadInConsumer()
         {
             _counter = 1;//as sending only one message
-            CancelOrder cancelOrder=new CancelOrder(new OrderId(123),new TraderId(123) );
+            OrderCancellation cancelOrder=new OrderCancellation(new OrderId(123),new TraderId(123) );
             InputPayload payload = InputPayload.CreatePayload(cancelOrder);
             InputDisruptorPublisher.Publish(payload);
             _manualResetEvent.WaitOne(2000);
-            Assert.AreEqual(payload.CancelOrder, cancelOrder);
+            Assert.AreEqual(payload.OrderCancellation, cancelOrder);
         }
 
         [Test]

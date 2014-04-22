@@ -10,7 +10,7 @@ namespace CoinExchange.Trades.Domain.Model.Order
     /// <summary>
     /// VO that will represent cancelation request
     /// </summary>
-    public class CancelOrder
+    public class OrderCancellation
     {
         private TraderId _traderId;
         private OrderId _orderId;
@@ -35,12 +35,12 @@ namespace CoinExchange.Trades.Domain.Model.Order
             }
         }
 
-        public CancelOrder()
+        public OrderCancellation()
         {
             
         }
 
-        public CancelOrder(OrderId orderId, TraderId traderId)
+        public OrderCancellation(OrderId orderId, TraderId traderId)
         {
             OrderId = orderId;
             TraderId = traderId;
@@ -48,7 +48,7 @@ namespace CoinExchange.Trades.Domain.Model.Order
 
        public override bool Equals(object obj)
         {
-            CancelOrder cancelOrder = obj as CancelOrder;
+            OrderCancellation cancelOrder = obj as OrderCancellation;
             if (cancelOrder == null)
             {
                 return false;
@@ -61,7 +61,7 @@ namespace CoinExchange.Trades.Domain.Model.Order
         /// </summary>
         /// <param name="cancelOrder"></param>
         /// <returns></returns>
-        public CancelOrder MemberWiseClone(CancelOrder cancelOrder)
+        public OrderCancellation MemberWiseClone(OrderCancellation cancelOrder)
         {
             cancelOrder.OrderId = new OrderId(OrderId.Id);
             cancelOrder.TraderId=new TraderId(TraderId.Id);
