@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using CoinExchange.Common.Domain.Model;
-using CoinExchange.Trades.Domain.Model.Order;
-using CoinExchange.Trades.Domain.Model.Trades;
+using CoinExchange.Trades.Domain.Model.OrderAggregate;
+using CoinExchange.Trades.Domain.Model.TradeAggregate;
 
 namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
 {
@@ -44,10 +44,10 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
 
         // Events
         public event Action<Trade> TradeExecuted;
-        public event Action<Order.Order> OrderChanged;
+        public event Action<Order> OrderChanged;
         public event Action<LimitOrderBook> OrderBookChanged;
-        public event Action<Order.Order> OrderAccepted;
-        public event Action<Order.Order, Volume, Price> OrderFilled;
+        public event Action<Order> OrderAccepted;
+        public event Action<Order, Volume, Price> OrderFilled;
 
         /// <summary>
         /// Default Constructor
@@ -68,7 +68,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// </summary>
         /// <param name="order"></param>
         /// <returns></returns>
-        public bool AddOrder(Order.Order order)
+        public bool AddOrder(Order order)
         {
             // If order is valid, otherwise, IsValid method updates order state as rejected and sends back notification to the client
             if (IsValid(order))
@@ -84,7 +84,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// </summary>
         /// <param name="order"></param>
         /// <returns></returns>
-        public bool PlaceOrder(Order.Order order)
+        public bool PlaceOrder(Order order)
         {
             switch (order.OrderSide)
             {
@@ -98,19 +98,47 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         }
 
         /// <summary>
+        /// Validates if the prices match for the criteria specified for each level
+        /// </summary>
+        /// <param name="inboundPrice"></param>
+        /// <param name="currentPrice"></param>
+        /// <param name="orderSide"></param>
+        /// <returns></returns>
+        public bool Matched(Price inboundPrice, Price currentPrice, OrderSide orderSide)
+        {
+            switch (orderSide)
+            {
+                case OrderSide.Buy:
+                    if (inboundPrice >= currentPrice)
+                    {
+                        return true;
+                    }
+                    return false;
+                case OrderSide.Sell:
+                    if (inboundPrice <= currentPrice)
+                    {
+                        return true;
+                    }
+                    return false;
+            }
+            return false;
+        }
+
+        //------------------------------------------------------------------------------------------------
+        /// <summary>
         /// Matches an offer to the avaiable bids. Produces trade and/or adds the new/partially left order to the list of bids/asks
         /// </summary>
         /// <returns></returns>
-        private bool MatchSellOrder(Order.Order sellOrder)
+        private bool MatchSellOrder(Order sellOrder)
         {
             if (_bids.Any())
             {
                 _trasactionId++;
-                IEnumerable<Order.Order> matchingBids = from bid in _bids
+                IEnumerable<Order> matchingBids = from bid in _bids
                                                         where bid.Price.Value >= sellOrder.Price.Value
                                                         select bid;
 
-                List<Order.Order> matchingBidsList = matchingBids as List<Order.Order> ?? matchingBids.ToList();
+                List<Order> matchingBidsList = matchingBids as List<Order> ?? matchingBids.ToList();
                 if (matchingBidsList.Any())
                 {
                     return MatchOrder(sellOrder, _asks, matchingBidsList, _bids);
@@ -125,16 +153,16 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// Matches a bid to the available offers. Produces trade and/or adds the new/partially left order to the list of bids/asks
         /// </summary>
         /// <returns></returns>
-        private bool MatchBuyOrder(Order.Order buyOrder)
+        private bool MatchBuyOrder(Order buyOrder)
         {
             if (_asks.Any())
             {
                 _trasactionId++;
-                IEnumerable<Order.Order> matchingAsks = from ask in _asks
+                IEnumerable<Order> matchingAsks = from ask in _asks
                                                         where ask.Price.Value <= buyOrder.Price.Value
                                                         select ask;
 
-                List<Order.Order> matchingAskList = matchingAsks as List<Order.Order> ?? matchingAsks.ToList();
+                List<Order> matchingAskList = matchingAsks as List<Order> ?? matchingAsks.ToList();
                 if (matchingAskList.Any())
                 {
                     return MatchOrder(buyOrder, _bids, matchingAskList, _asks);
@@ -154,8 +182,8 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// <param name="oppositeMatchingOrdersList"></param>
         /// <param name="oppositeOrderSideList"></param>
         /// <returns></returns>
-        public bool MatchOrder(Order.Order order, OrderList inboundOrderSideList, 
-            List<Order.Order> oppositeMatchingOrdersList, OrderList oppositeOrderSideList)
+        public bool MatchOrder(Order order, OrderList inboundOrderSideList, 
+            List<Order> oppositeMatchingOrdersList, OrderList oppositeOrderSideList)
         {
             decimal currentVolume = order.Volume.Value;
             foreach (var matchingOrder in oppositeMatchingOrdersList)
@@ -176,8 +204,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
                         trade.RaiseEvent();
                         // Fill price is price the matching order in the list
                         order.UpdateVolume(new Volume(currentVolume));
-                        Fill(order, new Volume(matchingOrder.Volume.Value), matchingOrder.Price, matchingOrder, 
-                            new Volume(matchingOrder.Volume.Value), matchingOrder.Price);
+                        Fill(order, matchingOrder);
                         oppositeOrderSideList.Remove(matchingOrder);
                     }
                     // If the inbound Order's volume is less than the opposite side Order's volume in the list
@@ -187,7 +214,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
                         Trade trade = GenerateTrade(matchingOrder.Price.Value, order.Volume.Value,
                                                     matchingOrder, order);
 
-                        // ToDo: Need to figure out how to raise this event in the following method 
+                        // ToDo: Need to figure out how to raise this event in the following method
                         // and publish on the output disruptor
                         trade.RaiseEvent();
                         UpdateOrderInDepth(matchingOrder, new Volume(-currentVolume));
@@ -195,7 +222,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
                         // ToDo: Raise an OrderUpdatedEvent over here
 
                         // Fill price is price the matching order in the list
-                        Fill(order, order.Volume, matchingOrder.Price, order, order.Volume, matchingOrder.Price);
+                        Fill(order, matchingOrder);
                     }
                     else if (currentVolume == 0)
                     {
@@ -207,7 +234,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
                         // and publish on the output disruptor
                         trade.RaiseEvent();
                         // Fill price is price the matching order in the list
-                        Fill(order, order.Volume, matchingOrder.Price, order, order.Volume, matchingOrder.Price);
+                        Fill(order, matchingOrder);
                         oppositeOrderSideList.Remove(matchingOrder);
                         return true;
                     }
@@ -216,6 +243,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             if (order.Volume.Value > 0)
             {
                 inboundOrderSideList.Add(order);
+                // ToDo: Add to Depth
                 return true;
             }
             return false;
@@ -226,13 +254,13 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// </summary>
         public bool CancelOrder(OrderId orderId)
         {
-            Order.Order foundAsk = _asks.FindOrder(orderId);
+            Order foundAsk = _asks.FindOrder(orderId);
             if (foundAsk != null)
             {
                 _asks.Remove(foundAsk);
                 return true;
             }
-            Order.Order foundBid = _bids.FindOrder(orderId);
+            Order foundBid = _bids.FindOrder(orderId);
             if (foundBid != null)
             {
                 _bids.Remove(foundBid);
@@ -246,10 +274,10 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// </summary>
         /// <returns></returns>
         private Trade GenerateTrade(decimal executionPrice, 
-            decimal executedQuantity, Order.Order buyOrder, Order.Order sellOrder)
+            decimal executedQuantity, Order buyOrder, Order sellOrder)
         {
-            Trade trade = new Trade(buyOrder.CurrencyPair, executionPrice, executedQuantity, DateTime.Now, buyOrder,
-                sellOrder);
+            Trade trade = new Trade(buyOrder.CurrencyPair, new Price(executionPrice), new Volume(executedQuantity),
+                DateTime.Now, buyOrder, sellOrder);
             _trades.Add(trade);
 
             return trade;
@@ -260,7 +288,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// </summary>
         /// <param name="order"></param>
         /// <returns></returns>
-        public bool IsValid(Order.Order order)
+        public bool IsValid(Order order)
         {
             if (order.Volume.Value == 0)
             {
@@ -286,7 +314,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// Gets the price for the inbound order, can depend on various circumstances that can be added later
         /// </summary>
         /// <returns></returns>
-        public Price SortPrice(Order.Order order)
+        public Price SortPrice(Order order)
         {
             return order.Price;
         }
@@ -296,7 +324,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// <summary>
         /// Change quantity for an order
         /// </summary>
-        public void ChangeQuantity(Order.Order order, Volume newVolume)
+        public void ChangeQuantity(Order order, Volume newVolume)
         {
             AssertionConcern.AssertGreaterThanZero(newVolume.Value, "New volume for the order is less than zero");
             order.UpdateVolume(newVolume);
@@ -306,7 +334,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// Add a new order to its corresponding depth level
         /// </summary>
         /// <param name="order"></param>
-        public void AddOrderToDepth(Order.Order order)
+        public void AddOrderToDepth(Order order)
         {
             if (OrderChanged != null)
             {
@@ -314,7 +342,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             }
         }
 
-        public void UpdateOrderInDepth(Order.Order order, Volume newVolume)
+        public void UpdateOrderInDepth(Order order, Volume newVolume)
         {
             ChangeQuantity(order, newVolume);
             if (OrderChanged != null)
@@ -327,28 +355,32 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// <summary>
         /// Update the order according to the fill
         /// </summary>
-        /// <param name="inboundFillPrice"> </param>
         /// <param name="matchedOrder"></param>
-        /// <param name="matchedFilledVolume"></param>
-        /// <param name="matchedFilledPrice"> </param>
         /// <param name="inboundOrder"> </param>
-        /// <param name="inboundFillVolume"> </param>
-        public void Fill(Order.Order inboundOrder, Volume inboundFillVolume, Price inboundFillPrice, Order.Order matchedOrder,
-            Volume matchedFilledVolume, Price matchedFilledPrice)
+        public void Fill(Order inboundOrder, Order matchedOrder)
         {
-            Price inboundFilledCost = new Price(inboundFillVolume.Value * inboundFillVolume.Value);
-            inboundOrder.Fill(inboundFillVolume, inboundFilledCost);
-
-            if (matchedOrder.Volume.Value > matchedOrder.OpenQuantity.Value)
+            decimal filledQuantity = Math.Min(inboundOrder.OpenQuantity.Value, matchedOrder.OpenQuantity.Value);
+            decimal filledPrice = matchedOrder.Price.Value;
+            Price inboundFilledCost = new Price(filledQuantity * filledPrice);
+            inboundOrder.Fill(new Volume(filledQuantity), inboundFilledCost);
+            if (OrderChanged != null)
             {
-                throw new InvalidOperationException("Fill size larger than open quantity");
+                OrderChanged(inboundOrder);
             }
-            Price matchedFilledCost = new Price(matchedFilledVolume.Value * matchedFilledPrice.Value);
-            matchedOrder.Fill(matchedFilledVolume, matchedFilledCost);
+
+            Price matchedFilledCost = new Price(filledQuantity * filledPrice);
+            matchedOrder.Fill(new Volume(filledQuantity), matchedFilledCost);
             if (OrderFilled != null)
             {
-                OrderFilled(matchedOrder, matchedFilledVolume, matchedFilledPrice);
+                OrderFilled(matchedOrder, new Volume(filledQuantity), new Price(filledPrice));
             }
+
+            // Create trade. The least amount of the two orders will be the trade's executed volume
+            Trade trade = GenerateTrade(filledPrice, filledQuantity, matchedOrder, inboundOrder);
+
+            // ToDo: Need to figure out how to raise this event in the following method 
+            // and publish on the output disruptor
+            trade.RaiseEvent();
         }
 
         #endregion Order Updating methods

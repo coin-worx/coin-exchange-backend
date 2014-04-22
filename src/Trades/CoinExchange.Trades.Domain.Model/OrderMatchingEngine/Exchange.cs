@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CoinExchange.Trades.Domain.Model.OrderAggregate;
 
 namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
 {
@@ -43,6 +44,8 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
                 orderBook.OrderChanged += depthOrderBook.OnOrderChanged;
                 orderBook.OrderChanged += orderListener.OnOrderChanged;
 
+                orderBook.OrderFilled += depthOrderBook.OrderFilled;
+
                 orderBook.TradeExecuted += depthOrderBook.OnTrade;
                 orderBook.TradeExecuted += tradeListener.OnTrade;
 
@@ -56,7 +59,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// <summary>
         /// Signifies that the Order has been accepted successfully
         /// </summary>
-        public void OnAccept(Order.Order order)
+        public void OnAccept(Order order)
         {
             Log.Debug("Order Accepted by Exchange. " + order.ToString());
             // ToDo: Send the notification back to the client

@@ -1,7 +1,7 @@
 ﻿using System;
 using CoinExchange.Trades.Application.OrderServices.Commands;
 using CoinExchange.Trades.Application.OrderServices.Representation;
-using CoinExchange.Trades.Domain.Model.Order;
+using CoinExchange.Trades.Domain.Model.OrderAggregate;
 using CoinExchange.Trades.Domain.Model.Services;
 using Spring.Context;
 using Spring.Context.Support;

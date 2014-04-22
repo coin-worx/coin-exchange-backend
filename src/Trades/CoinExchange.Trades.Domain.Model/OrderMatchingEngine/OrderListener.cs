@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CoinExchange.Trades.Domain.Model.OrderAggregate;
 
 namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
 {
@@ -19,7 +20,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// Handles the OrderBook's event in case the state of an Order changes
         /// </summary>
         /// <param name="order"> </param>
-        public void OnOrderChanged(Order.Order order)
+        public void OnOrderChanged(Order order)
         {
             Log.Debug("Order change received: " + order.ToString());
         }

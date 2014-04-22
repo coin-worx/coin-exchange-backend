@@ -5,20 +5,20 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CoinExchange.Trades.Domain.Model.Order;
+using CoinExchange.Trades.Domain.Model.OrderAggregate;
 
 namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
 {
     /// <summary>
     /// Contains the Orders for a specific side (Bids or Asks)
     /// </summary>
-    public class OrderList : IEnumerable<Order.Order>
+    public class OrderList : IEnumerable<Order>
     {
         // Get the Current Logger
         private static readonly log4net.ILog Log = log4net.LogManager.GetLogger
         (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private List<Order.Order> _orderList = new List<Order.Order>();
+        private List<Order> _orderList = new List<Order>();
 
         // ToDo: Need to use the object for the 'CurrencyPair' class instead of string after Bilal has finished editing
         private string _currencyPair = null;
@@ -40,7 +40,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// Add an Order to the List
         /// </summary>
         /// <returns></returns>
-        internal bool Add(Order.Order order)
+        internal bool Add(Order order)
         {
             // Check whether the incoming order is of the same CurrencyPair and Side for which this list was created
             if (order != null && order.CurrencyPair == _currencyPair && order.OrderSide == _orderSide)
@@ -68,7 +68,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         {
             if(_currencyPair == currencyPair)
             {
-                Order.Order selectedOrder = FindOrder(orderId);
+                Order selectedOrder = FindOrder(orderId);
 
                 if (selectedOrder != null)
                 {
@@ -86,7 +86,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// Cancels the specified Order in the list
         /// </summary>
         /// <returns></returns>
-        internal bool Remove(Order.Order order)
+        internal bool Remove(Order order)
         {
             if (order != null)
             {
@@ -124,11 +124,11 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// Selects an Order from the ORderList given the OrderID
         /// </summary>
         /// <returns></returns>
-        public Order.Order FindOrder(OrderId orderId)
+        public Order FindOrder(OrderId orderId)
         {
             if (orderId != null)
             {
-                Order.Order selectedOrder = (from order in _orderList
+                Order selectedOrder = (from order in _orderList
                                              where order.OrderId == orderId
                                              select order).ToList().Single();
                 return selectedOrder;
@@ -155,9 +155,9 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
 
         #region Implementation of IEnumerable
 
-        IEnumerator<Order.Order> IEnumerable<Order.Order>.GetEnumerator()
+        IEnumerator<Order> IEnumerable<Order>.GetEnumerator()
         {
-            foreach (Order.Order order in _orderList)
+            foreach (Order order in _orderList)
             {
                 // Lets check for end of list (its bad code since we used arrays)
                 if (order == null)
@@ -170,10 +170,6 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
                 yield return order;
             }
         }
-
-        #endregion
-
-        #region Implementation of IEnumerable
 
         public IEnumerator GetEnumerator()
         {

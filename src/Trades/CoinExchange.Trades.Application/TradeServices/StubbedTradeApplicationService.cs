@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using CoinExchange.Trades.Application.OrderServices.Representation;
 using CoinExchange.Trades.Application.TradeServices.Representation;
-using CoinExchange.Trades.Domain.Model.Order;
-using CoinExchange.Trades.Domain.Model.Trades;
+using CoinExchange.Trades.Domain.Model.OrderAggregate;
+using CoinExchange.Trades.Domain.Model.TradeAggregate;
 
 namespace CoinExchange.Trades.Application.TradeServices
 {

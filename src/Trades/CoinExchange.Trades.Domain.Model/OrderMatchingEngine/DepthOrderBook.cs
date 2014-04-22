@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CoinExchange.Trades.Domain.Model.Order;
-using CoinExchange.Trades.Domain.Model.Trades;
+using CoinExchange.Trades.Domain.Model.OrderAggregate;
+using CoinExchange.Trades.Domain.Model.TradeAggregate;
 
 namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
 {
@@ -38,7 +38,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// After an Order is accepted in the LimitOrderBook, adds the new order's attributes to the corresponding depth level
         /// </summary>
         /// <returns></returns>
-        public bool OrderAccepted(Order.Order order)
+        public bool OrderAccepted(Order order)
         {
             if (order.OrderType == OrderType.Limit)
             {
@@ -56,14 +56,12 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// <param name="filledPrice"></param>
         /// <returns></returns>
         // ToDo: Hook this event from the exchange
-        public bool OrderFilled(Order.Order order, Volume filledVolume, Price filledPrice)
+        public void OrderFilled(Order order, Volume filledVolume, Price filledPrice)
         {
             if (order.OrderType == OrderType.Limit)
             {
                 _depth.FillOrder(order.Price, filledPrice, filledVolume, order.OrderState == OrderState.Complete, order.OrderSide);
-                return true;
             }
-            return false;
         }
 
         /// <summary>
@@ -71,7 +69,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// </summary>
         /// <param name="order"></param>
         /// <returns></returns>
-        public bool OrderCancel(Order.Order order)
+        public bool OrderCancel(Order order)
         {
             return false;
         }
@@ -81,7 +79,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// </summary>
         /// <param name="order"></param>
         /// <returns></returns>
-        public bool OrderReplace(Order.Order order)
+        public bool OrderReplace(Order order)
         {
             return false;
         }
@@ -91,7 +89,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// </summary>
         /// <param name="order"></param>
         /// <returns></returns>
-        public bool OrderBookUpdated(Order.Order order)
+        public bool OrderBookUpdated(Order order)
         {
             return false;
         }
@@ -116,7 +114,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// Handlesthe event in case an order changes
         /// </summary>
         /// <param name="order"></param>
-        public void OnOrderChanged(Order.Order order)
+        public void OnOrderChanged(Order order)
         {
             switch (order.OrderState)
             {

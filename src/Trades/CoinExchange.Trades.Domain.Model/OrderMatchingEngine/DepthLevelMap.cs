@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CoinExchange.Trades.Domain.Model.Order;
+using CoinExchange.Trades.Domain.Model.OrderAggregate;
 
 namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
 {
@@ -99,7 +99,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             return false;
         }
 
-        #region Proeprties
+        #region Properties
 
         /// <summary>
         /// The CurrencyPair for which this list specifies the OrderList
@@ -116,11 +116,6 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         public OrderSide OrderSide
         {
             get { return _orderSide; }
-        }
-
-        public SortedList<decimal, DepthLevel> DepthLevels
-        {
-            get { return _depthLevels; }
         }
 
         #endregion Properties

@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CoinExchange.Trades.Domain.Model.Order;
+using CoinExchange.Trades.Domain.Model.OrderAggregate;
 using CoinExchange.Trades.Domain.Model.OrderMatchingEngine;
-using CoinExchange.Trades.Domain.Model.Trades;
+using CoinExchange.Trades.Domain.Model.TradeAggregate;
 using NUnit.Framework;
 
 namespace CoinExchange.Trades.Domain.Model.Tests
@@ -17,13 +14,13 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         [Test]
         public void TestSortedListVsList_WhichOneISFaster()
         {
-            List<Order.Order> orders = new List<Order.Order>();
+            List<Order> orders = new List<Order>();
 
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
             for (int i = 0; i < 10000; i++)
             {
-                Order.Order order = new Order.Order(new OrderId(1), "XBTUSD", new Price(491 + i), OrderSide.Sell, OrderType.Limit, new Volume(2000), 
+                Order order = new Order(new OrderId(1), "XBTUSD", new Price(491 + i), OrderSide.Sell, OrderType.Limit, new Volume(2000), 
                     new TraderId(1));
                 orders.Add(order);
                 /*orders = orders.OrderBy(x => x.Price.Value).ToList();*/
@@ -42,11 +39,11 @@ namespace CoinExchange.Trades.Domain.Model.Tests
 
             Console.WriteLine("Watch reset:" + timeSpan);
 
-            SortedList<decimal,Order.Order> _sortedList = new SortedList<decimal, Order.Order>();
+            SortedList<decimal,Order> _sortedList = new SortedList<decimal, Order>();
             stopwatch.Start();
             for (int i = 0; i < 10000; i++)
             {
-                Order.Order order = new Order.Order(new OrderId(1), "XBTUSD", new Price(491 + i), OrderSide.Sell, OrderType.Limit, new Volume(2000),
+                Order order = new Order(new OrderId(1), "XBTUSD", new Price(491 + i), OrderSide.Sell, OrderType.Limit, new Volume(2000),
                     new TraderId(1));
                 _sortedList.Add(i, order);
             }

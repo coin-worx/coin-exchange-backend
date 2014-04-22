@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace CoinExchange.Trades.Domain.Model.Order
+namespace CoinExchange.Trades.Domain.Model.OrderAggregate
 {
     /// <summary>
     /// currency pair value object

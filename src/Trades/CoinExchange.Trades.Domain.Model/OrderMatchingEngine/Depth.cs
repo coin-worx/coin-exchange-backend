@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CoinExchange.Trades.Domain.Model.Order;
+using CoinExchange.Trades.Domain.Model.OrderAggregate;
 
 namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
 {
@@ -490,30 +490,30 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
                     }
                     sideLevels[currentLevelIndex] = sideLevels[currentLevelIndex + 1];
                     UpdateLevelIndex(sideLevels, currentLevelIndex, currentLevelIndex + 1);
+                    sideLevels[currentLevelIndex].LastChange(new ChangeId(_lastChangeId));
 
                     currentLevelIndex++;
                 }
                 // The last element after the loop is done will be the same as the second last one as the slots have been 
                 // shifted back. So we remove this level as this is the duplicate of the level before it
-                // ToDo: Need to figure whether we can initialize 
                 sideLevels[currentLevelIndex] = new DepthLevel(null);
-                sideLevels[currentLevelIndex].LastChange(new ChangeId(_lastChangeId));
-                /*sideLevels[currentLevelIndex].UpdatePrice(null);
-                sideLevels[currentLevelIndex].UpdateVolume(null);
-                sideLevels[currentLevelIndex].UpdateOrderCount(0);
-                sideLevels[currentLevelIndex].ChangeExcessStatus(false);*/
-
+                
                 if (isLastLevel || sideLevels.Last().Price == null)
                 {
-                    if (orderSide == OrderSide.Buy)
+                    if (orderSide == OrderSide.Buy && (isLastLevel || sideLevels.Last().Price == null))
                     {
                         RemoveLevelFromExcess(_bidExcessLevels, _bidLevels);
                     }
-                    else
+                    else if (orderSide == OrderSide.Sell && (isLastLevel || sideLevels.Last().Price == null))
                     {
                         RemoveLevelFromExcess(_askExcessLevels, _askLevels);
                     }
+                    else
+                    {
+                        sideLevels[currentLevelIndex].LastChange(new ChangeId(_lastChangeId));
+                    }
                 }
+                sideLevels[currentLevelIndex].LastChange(new ChangeId(_lastChangeId));
             }
         }
 

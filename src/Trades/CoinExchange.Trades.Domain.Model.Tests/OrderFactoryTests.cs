@@ -1,5 +1,5 @@
 ﻿using System;
-using CoinExchange.Trades.Domain.Model.Order;
+using CoinExchange.Trades.Domain.Model.OrderAggregate;
 using CoinExchange.Trades.Infrastructure.Services;
 using NUnit.Framework;
 
@@ -27,7 +27,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         [Category("Unit")]
         public void CreateBuySideMarketOrderTest()
         {
-            Order.Order order = OrderFactory.CreateOrder("1234", "XBTUSD", "market", "buy", 5, 0,
+            Order order = OrderFactory.CreateOrder("1234", "XBTUSD", "market", "buy", 5, 0,
                 new StubbedOrderIdGenerator());
             Assert.NotNull(order.OrderId);
             Assert.AreEqual(order.CurrencyPair, "XBTUSD");
@@ -43,7 +43,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         [Category("Unit")]
         public void CreateSellSideMarketOrderTest()
         {
-            Order.Order order = OrderFactory.CreateOrder("1234", "XBTUSD", "market", "sell", 5, 0,
+            Order order = OrderFactory.CreateOrder("1234", "XBTUSD", "market", "sell", 5, 0,
                 new StubbedOrderIdGenerator());
             Assert.NotNull(order.OrderId);
             Assert.AreEqual(order.CurrencyPair, "XBTUSD");
@@ -59,7 +59,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         [Category("Unit")]
         public void CreateBuySideLimitOrderTest()
         {
-            Order.Order order = OrderFactory.CreateOrder("1234", "XBTUSD", "limit", "buy", 5, 10,
+            Order order = OrderFactory.CreateOrder("1234", "XBTUSD", "limit", "buy", 5, 10,
                 new StubbedOrderIdGenerator());
             Assert.NotNull(order.OrderId);
             Assert.AreEqual(order.CurrencyPair, "XBTUSD");
@@ -76,7 +76,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         [Category("Unit")]
         public void CreateSellSideLimitOrderTest()
         {
-            Order.Order order = OrderFactory.CreateOrder("1234", "XBTUSD", "limit", "sell", 5, 10,
+            Order order = OrderFactory.CreateOrder("1234", "XBTUSD", "limit", "sell", 5, 10,
                 new StubbedOrderIdGenerator());
             Assert.NotNull(order.OrderId);
             Assert.AreEqual(order.CurrencyPair, "XBTUSD");
@@ -97,7 +97,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
             decimal volume = 0;
             try
             {
-                Order.Order order = OrderFactory.CreateOrder("1234", "XBTUSD", "limit", "sell", volume, 10,
+                Order order = OrderFactory.CreateOrder("1234", "XBTUSD", "limit", "sell", volume, 10,
                     new StubbedOrderIdGenerator());
             }
             catch (InvalidOperationException exception)

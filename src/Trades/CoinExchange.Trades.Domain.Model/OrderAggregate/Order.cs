@@ -1,14 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using CoinExchange.Common.Domain.Model;
-using CoinExchange.Trades.Domain.Model.Trades;
+using CoinExchange.Trades.Domain.Model.TradeAggregate;
 
 /*
  * Author: Waqas
  * Comany: Aurora Solutions
  */
 
-namespace CoinExchange.Trades.Domain.Model.Order
+namespace CoinExchange.Trades.Domain.Model.OrderAggregate
 {
     /// <summary>
     /// CoinExchange Order
@@ -62,13 +61,15 @@ namespace CoinExchange.Trades.Domain.Model.Order
         /// <summary>
         /// Factory Constructor for limit order
         /// </summary>
+        /// <param name="orderId"> </param>
         /// <param name="pair"></param>
         /// <param name="price"></param>
         /// <param name="orderSide"></param>
         /// <param name="orderType"></param>
         /// <param name="volume"></param>
         /// <param name="traderId"></param>
-        public Order(OrderId orderId, string pair, Price price, OrderSide orderSide, OrderType orderType, Volume volume, TraderId traderId)
+        public Order(OrderId orderId, string pair, Price price, OrderSide orderSide, OrderType orderType, Volume volume,
+            TraderId traderId)
         {
             OrderId = orderId;
             CurrencyPair = pair;
@@ -155,8 +156,9 @@ namespace CoinExchange.Trades.Domain.Model.Order
         public void Fill(Volume filledQuantity, Price filledCost)
         {
             _filledQuantity += filledQuantity;
-            // ToDo: Update filled cost here
             _filledCost += filledCost;
+            // ToDo: Test if OpenQuantity gets updated correctly
+            //_openQuantity = _volume - _filledQuantity;
             if (_openQuantity.Value == 0)
             {
                 _orderState = OrderState.Complete;

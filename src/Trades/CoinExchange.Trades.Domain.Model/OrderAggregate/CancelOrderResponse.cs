@@ -1,4 +1,4 @@
-﻿namespace CoinExchange.Trades.Domain.Model.Order
+﻿namespace CoinExchange.Trades.Domain.Model.OrderAggregate
 {
     // ToDo: May need remove this class
     /// <summary>

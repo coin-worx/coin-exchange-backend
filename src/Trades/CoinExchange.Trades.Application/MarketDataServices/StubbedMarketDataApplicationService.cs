@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using CoinExchange.Trades.Application.MarketDataServices.Representation;
-using CoinExchange.Trades.Domain.Model.MarketData;
+using CoinExchange.Trades.Domain.Model.MarketDataAggregate;
 
 namespace CoinExchange.Trades.Application.MarketDataServices
 {
@@ -17,7 +17,7 @@ namespace CoinExchange.Trades.Application.MarketDataServices
         /// <returns></returns>
         public TickerRepresentation[] GetTickerInfo(string pairs)
         {
-            Domain.Model.MarketData.MarketData marketData = new Domain.Model.MarketData.MarketData(200, 200.33m, "Bid");
+            MarketData marketData = new MarketData(200, 200.33m, "Bid");
             TickerRepresentation representation = new TickerRepresentation(pairs, marketData, marketData, marketData, new decimal[] { 200, 300 },
                 new decimal[] { 200, 300 }, new[] { 200, 200 }, new decimal[] { 200, 300 }, new decimal[] { 200, 300 },
                 200m);

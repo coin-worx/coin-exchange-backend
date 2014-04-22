@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.Linq;
-using System.Text;
-
-namespace CoinExchange.Trades.Domain.Model.MarketData
+﻿namespace CoinExchange.Trades.Domain.Model.MarketDataAggregate
 {
     /// <summary>
     /// VO to represent market data

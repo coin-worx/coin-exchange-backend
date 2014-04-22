@@ -3,12 +3,12 @@
  * Comany: Aurora Solutions
  */
 
-namespace CoinExchange.Trades.Domain.Model.Trades
+namespace CoinExchange.Trades.Domain.Model.OrderAggregate
 {
     /// <summary>
-    /// Value Object that represents the internal TraderId associated with a trader
+    /// Represents the ID for an order. ValueObject
     /// </summary>
-    public class TraderId
+    public class OrderId
     {
         private readonly int _id;
 
@@ -16,13 +16,13 @@ namespace CoinExchange.Trades.Domain.Model.Trades
         /// Default Constructor
         /// </summary>
         /// <param name="id"></param>
-        public TraderId(int id)
+        public OrderId(int id)
         {
             _id = id;
         }
 
         /// <summary>
-        /// The ID of the Trader
+        /// The ID of the Order
         /// </summary>
         public int Id { get { return _id; } }
     }

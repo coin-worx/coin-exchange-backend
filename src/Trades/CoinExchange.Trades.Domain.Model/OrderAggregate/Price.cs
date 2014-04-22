@@ -1,7 +1,7 @@
 ﻿using System;
 using CoinExchange.Common.Domain.Model;
 
-namespace CoinExchange.Trades.Domain.Model.Order
+namespace CoinExchange.Trades.Domain.Model.OrderAggregate
 {
     /// <summary>
     /// order limit price value object
