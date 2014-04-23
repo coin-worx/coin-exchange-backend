@@ -91,20 +91,24 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         /// </summary>
         [Test]
         [Category("Unit")]
+        [ExpectedException(typeof(InvalidOperationException))]
         public void OrderVolumeException_IfVolumeisLessThanEqualToZero_InvalidOrderVolumeException()
         {
-            bool orderVolumeException = false;
             decimal volume = 0;
-            try
-            {
-                Order.Order order = OrderFactory.CreateOrder("1234", "XBTUSD", "limit", "sell", volume, 10,
+            Order.Order order = OrderFactory.CreateOrder("1234", "XBTUSD", "limit", "sell", volume, 10,
                     new StubbedOrderIdGenerator());
-            }
-            catch (InvalidOperationException exception)
-            {
-                orderVolumeException = true;
-            }
-            Assert.AreEqual(orderVolumeException,true);
+        }
+
+        /// <summary>
+        /// To verify exception is thrown if limit price is not specified with limit order
+        /// </summary>
+        [Test]
+        [Category("Unit")]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void CreateLimitOrder_IfLimitPriceIsNotSpecified_InvalidOperationException()
+        {
+            Order.Order order = OrderFactory.CreateOrder("1234", "XBTUSD", "limit", "sell", 10, 0,
+                    new StubbedOrderIdGenerator());
         }
 
     }

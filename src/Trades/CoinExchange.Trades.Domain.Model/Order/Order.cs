@@ -49,8 +49,8 @@ namespace CoinExchange.Trades.Domain.Model.Order
         /// <summary>
         /// Factory Constructor for market order
         /// </summary>
+        /// <param name="orderId"></param>
         /// <param name="pair"></param>
-        /// <param name="price"></param>
         /// <param name="orderSide"></param>
         /// <param name="orderType"></param>
         /// <param name="volume"></param>
@@ -68,6 +68,7 @@ namespace CoinExchange.Trades.Domain.Model.Order
         /// <summary>
         /// Factory Constructor for limit order
         /// </summary>
+        /// <param name="orderId"></param>
         /// <param name="pair"></param>
         /// <param name="price"></param>
         /// <param name="orderSide"></param>
@@ -76,6 +77,8 @@ namespace CoinExchange.Trades.Domain.Model.Order
         /// <param name="traderId"></param>
         public Order(OrderId orderId, string pair, Price price, OrderSide orderSide, OrderType orderType, Volume volume, TraderId traderId)
         {
+            AssertionConcern.AssertArgumentNotNull(price, "Limit Price not specified");
+            AssertionConcern.AssertGreaterThanZero(price.Value, "Limit price must be greater than 0");
             OrderId = orderId;
             CurrencyPair = pair;
             Price = price;
@@ -143,7 +146,6 @@ namespace CoinExchange.Trades.Domain.Model.Order
             get { return _price; }
             set
             {
-                AssertionConcern.AssertArgumentNotNull(value,"Limit Price not specified");
                 _price = value;
             }
         }
