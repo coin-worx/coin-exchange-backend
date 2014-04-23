@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinExchange.Trades.Applica
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinExchange.Trades.Infrastructure.Common", "Trades\CoinExchange.Trades.Infrastructure.Common\CoinExchange.Trades.Infrastructure.Common.csproj", "{549E911D-9534-49E3-AF19-19D06B697083}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinExchange.Trades.Infrastructure.Persistence", "Trades\CoinExchange.Trades.Infrastructure.Persistence.NHibernate\CoinExchange.Trades.Infrastructure.Persistence.csproj", "{1FE04E5F-951E-408F-9172-87B259CBBF94}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinExchange.Trades.Infrastructure.Services", "Trades\CoinExchange.Trades.Infrastructure.Services\CoinExchange.Trades.Infrastructure.Services.csproj", "{2247DD67-1747-430F-B93F-C5538A6DDA1E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinExchange.Trades.Port.Adapter.Messaging", "Trades\CoinExchange.Trades.Port.Adapter.Messaging\CoinExchange.Trades.Port.Adapter.Messaging.csproj", "{69F83B70-0759-4C16-A4C4-6D17D50F4256}"
@@ -92,6 +90,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinExchange.Client", "Clie
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinExchange.Client.Console", "Client\CoinExchange.Client.Console\CoinExchange.Client.Console.csproj", "{27F0351B-4650-4217-8BF1-0CA41745D15E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinExchange.Trades.Infrastructure.Persistence", "Trades\CoinExchange.Trades.Infrastructure.Persistence\CoinExchange.Trades.Infrastructure.Persistence.csproj", "{1FE04E5F-951E-408F-9172-87B259CBBF94}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -110,10 +110,6 @@ Global
 		{549E911D-9534-49E3-AF19-19D06B697083}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{549E911D-9534-49E3-AF19-19D06B697083}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{549E911D-9534-49E3-AF19-19D06B697083}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1FE04E5F-951E-408F-9172-87B259CBBF94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1FE04E5F-951E-408F-9172-87B259CBBF94}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1FE04E5F-951E-408F-9172-87B259CBBF94}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1FE04E5F-951E-408F-9172-87B259CBBF94}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2247DD67-1747-430F-B93F-C5538A6DDA1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2247DD67-1747-430F-B93F-C5538A6DDA1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2247DD67-1747-430F-B93F-C5538A6DDA1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -218,6 +214,10 @@ Global
 		{27F0351B-4650-4217-8BF1-0CA41745D15E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{27F0351B-4650-4217-8BF1-0CA41745D15E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{27F0351B-4650-4217-8BF1-0CA41745D15E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1FE04E5F-951E-408F-9172-87B259CBBF94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1FE04E5F-951E-408F-9172-87B259CBBF94}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1FE04E5F-951E-408F-9172-87B259CBBF94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1FE04E5F-951E-408F-9172-87B259CBBF94}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -233,9 +233,9 @@ Global
 		{4A084ED0-9F5D-4CE9-BB1E-D39B21AD9BCB} = {08450C91-0BCE-4289-8B1D-88C4FA51DF16}
 		{E0C35C03-F71F-44DA-89ED-17092E10D97D} = {08450C91-0BCE-4289-8B1D-88C4FA51DF16}
 		{C88D301B-9326-4F74-916B-0BAF299969BD} = {08450C91-0BCE-4289-8B1D-88C4FA51DF16}
-		{1FE04E5F-951E-408F-9172-87B259CBBF94} = {C9D03C79-C7C6-4EAD-AD9B-5A9BBC3312D6}
 		{2247DD67-1747-430F-B93F-C5538A6DDA1E} = {C9D03C79-C7C6-4EAD-AD9B-5A9BBC3312D6}
 		{549E911D-9534-49E3-AF19-19D06B697083} = {C9D03C79-C7C6-4EAD-AD9B-5A9BBC3312D6}
+		{1FE04E5F-951E-408F-9172-87B259CBBF94} = {C9D03C79-C7C6-4EAD-AD9B-5A9BBC3312D6}
 		{69F83B70-0759-4C16-A4C4-6D17D50F4256} = {CD14932B-B0A0-40D8-A683-4598B5415FE2}
 		{288BCB69-1B33-41B5-B1FD-46C03761B514} = {CD14932B-B0A0-40D8-A683-4598B5415FE2}
 		{F8C44C6A-135B-4753-982B-9507E7899327} = {CD14932B-B0A0-40D8-A683-4598B5415FE2}

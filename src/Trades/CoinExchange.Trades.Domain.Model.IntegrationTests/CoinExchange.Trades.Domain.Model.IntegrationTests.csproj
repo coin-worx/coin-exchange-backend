@@ -84,7 +84,7 @@
       <Project>{549e911d-9534-49e3-af19-19d06b697083}</Project>
       <Name>CoinExchange.Trades.Infrastructure.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CoinExchange.Trades.Infrastructure.Persistence.NHibernate\CoinExchange.Trades.Infrastructure.Persistence.csproj">
+    <ProjectReference Include="..\CoinExchange.Trades.Infrastructure.Persistence\CoinExchange.Trades.Infrastructure.Persistence.csproj">
       <Project>{1fe04e5f-951e-408f-9172-87b259cbbf94}</Project>
       <Name>CoinExchange.Trades.Infrastructure.Persistence</Name>
     </ProjectReference>
