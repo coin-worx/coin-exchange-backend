@@ -14,7 +14,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderAggregate
             get { return _value; }
             private set
             {
-                AssertionConcern.AssertGreaterThanZero(value,"Limit price must be greater than 0");
+                //AssertionConcern.AssertGreaterThanZero(value,"Limit price must be greater than 0");
                 _value = value;
             }
         }

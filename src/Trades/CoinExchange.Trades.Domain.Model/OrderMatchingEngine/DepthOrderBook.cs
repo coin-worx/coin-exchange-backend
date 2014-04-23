@@ -11,7 +11,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
     /// <summary>
     /// Handles the depths for the price levels in the Order Book
     /// </summary>
-    public class DepthOrderBook : IOrderListener, IOrderBookListener, ITradeListener
+    public class DepthOrderBook : IOrderListener, IOrderBookListener
     {
         private string _currencyPair = string.Empty;
         private int _size = 0;
@@ -46,22 +46,6 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
                 return true;
             }
             return false;
-        }
-
-        /// <summary>
-        /// After an Order is filled in the LimitOrderBook, adds the new order's attributes to the corresponding depth level
-        /// </summary>
-        /// <param name="order"></param>
-        /// <param name="filledVolume"></param>
-        /// <param name="filledPrice"></param>
-        /// <returns></returns>
-        // ToDo: Hook this event from the exchange
-        public void OrderFilled(Order order, Volume filledVolume, Price filledPrice)
-        {
-            if (order.OrderType == OrderType.Limit)
-            {
-                _depth.FillOrder(order.Price, filledPrice, filledVolume, order.OrderState == OrderState.Complete, order.OrderSide);
-            }
         }
 
         /// <summary>
@@ -111,21 +95,68 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         #region Implementation of Listeners
 
         /// <summary>
+        /// When Order gets accepted
+        /// </summary>
+        /// <param name="order"></param>
+        /// <param name="matchedPrice"></param>
+        /// <param name="matchedVolume"></param>
+        public void OnOrderAccepted(Order order, Price matchedPrice, Volume matchedVolume)
+        {
+            if (order.OrderType == OrderType.Limit)
+            {
+                if (matchedVolume != null && matchedVolume.Equals(order.Volume))
+                {
+                    _depth.IgnoreFillQuantity(matchedVolume, order.OrderSide);
+                }
+                else
+                {
+                    _depth.AddOrder(order.Price, order.Volume, order.OrderSide);
+                }
+            }
+        }
+
+        /// <summary>
+        /// When order gets filled
+        /// </summary>
+        /// <param name="inboundOrder"></param>
+        /// <param name="matchedOrder"> </param>
+        /// <param name="fillFlags"> </param>
+        /// <param name="filledPrice"></param>
+        /// <param name="filledVolume"></param>
+        public void OnOrderFilled(Order inboundOrder, Order matchedOrder, FillFlags fillFlags, Price filledPrice, Volume filledVolume)
+        {
+            bool isFilled = false;
+            if (inboundOrder.OrderType == OrderType.Limit)
+            {
+                isFilled = fillFlags == FillFlags.InboundFilled || fillFlags == FillFlags.BothFilled;
+                _depth.FillOrder(inboundOrder.Price, filledPrice, filledVolume, isFilled, inboundOrder.OrderSide);
+            }
+            if (matchedOrder.OrderType == OrderType.Limit)
+            {
+                isFilled = fillFlags == FillFlags.MatchedFilled || fillFlags == FillFlags.BothFilled;
+                _depth.FillOrder(matchedOrder.Price, filledPrice, filledVolume, isFilled, matchedOrder.OrderSide);
+            }
+        }
+
+        /// <summary>
+        /// When Order gets cancelled
+        /// </summary>
+        /// <param name="order"></param>
+        public void OnOrderCancelled(Order order)
+        {
+            if (order.OrderType == OrderType.Limit)
+            {
+                _depth.CloseOrder(order.Price, order.OpenQuantity, order.OrderSide);
+            }
+        }
+
+        /// <summary>
         /// Handlesthe event in case an order changes
         /// </summary>
         /// <param name="order"></param>
         public void OnOrderChanged(Order order)
         {
-            switch (order.OrderState)
-            {
-                case OrderState.Accepted:
-                    OrderAccepted(order);
-                    break;
-
-                case OrderState.Cancelled:
-                    OrderCancel(order);
-                    break;
-            }
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -134,17 +165,30 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// <param name="orderBook"></param>
         public void OnOrderBookChanged(LimitOrderBook orderBook)
         {
-            throw new NotImplementedException();
+            if (_depth.Changed())
+            {
+                if (DepthChanged != null)
+                {
+                    DepthChanged(_depth);
+                }
+                if (BboChanged != null)
+                {
+                    int lastChange = _depth.LastPublishedChangeId;
+
+                    if (_depth.BidLevels.First().ChangedSince(lastChange) || _depth.AskLevels.First().ChangedSince(lastChange))
+                    {
+                        BboChanged(_depth.BidLevels.First());
+                        BboChanged(_depth.AskLevels.First());
+                    }
+                }
+                _depth.Published();
+            }
         }
 
         /// <summary>
-        /// On Trade execution
+        /// The Depth contained by this DepthOrderBook
         /// </summary>
-        /// <param name="trade"></param>
-        public void OnTrade(Trade trade)
-        {
-            throw new NotImplementedException();
-        }
+        public Depth Depth { get { return _depth; } }
 
         #endregion
     }

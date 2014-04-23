@@ -374,7 +374,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
             Assert.AreEqual(491.5, depth.BidLevels[3].Price.Value, "Price at fourth index");
             Assert.AreEqual(491, depth.BidLevels[4].Price.Value, "Price at fifth index");
             Assert.AreEqual(490, depth.BidLevels[5].Price.Value, "Price at sixth index");
-            Assert.IsNull(depth.BidLevels[6].Price);
+            Assert.AreEqual(0, depth.BidLevels[6].Price.Value);
 
             depth.AddOrder(new Price(480), new Volume(200), OrderSide.Buy);
             Assert.AreEqual(496, depth.BidLevels.First().Price.Value, "Price at first index");
@@ -394,7 +394,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
             Assert.AreEqual(491, depth.BidLevels[3].Price.Value, "Price at fourth index");
             Assert.AreEqual(490, depth.BidLevels[4].Price.Value, "Price at fifth index");
             Assert.AreEqual(480, depth.BidLevels[5].Price.Value, "Price at sixth index");
-            Assert.IsNull(depth.BidLevels[6].Price);
+            Assert.AreEqual(0, depth.BidLevels[6].Price.Value);
         }
 
         [Test]
@@ -421,7 +421,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
             Assert.AreEqual(494, depth.AskLevels[3].Price.Value, "Price at fourth index");
             Assert.AreEqual(495, depth.AskLevels[4].Price.Value, "Price at fifth index");
             Assert.AreEqual(496, depth.AskLevels[5].Price.Value, "Price at sixth index");
-            Assert.IsNull(depth.AskLevels[6].Price);
+            Assert.AreEqual(0, depth.AskLevels[6].Price.Value);
 
             depth.AddOrder(new Price(499), new Volume(200), OrderSide.Sell);
             Assert.AreEqual(490, depth.AskLevels.First().Price.Value, "Price at first index");
@@ -441,7 +441,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
             Assert.AreEqual(495, depth.AskLevels[3].Price.Value, "Price at fourth index");
             Assert.AreEqual(496, depth.AskLevels[4].Price.Value, "Price at fifth index");
             Assert.AreEqual(499, depth.AskLevels[5].Price.Value, "Price at sixth index");
-            Assert.IsNull(depth.AskLevels[6].Price);
+            Assert.AreEqual(0, depth.AskLevels[6].Price.Value);
         }
 
         #endregion Close Order and Erase Level Tests

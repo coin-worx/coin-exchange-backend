@@ -63,6 +63,7 @@
     <Compile Include="OrderMatchingEngine\DepthListener.cs" />
     <Compile Include="OrderMatchingEngine\DepthOrderBook.cs" />
     <Compile Include="OrderMatchingEngine\Exchange.cs" />
+    <Compile Include="OrderMatchingEngine\FillFlags.cs" />
     <Compile Include="OrderMatchingEngine\IBBOListener.cs" />
     <Compile Include="OrderMatchingEngine\IDepthListener.cs" />
     <Compile Include="OrderMatchingEngine\IOrderBookListener.cs" />

@@ -98,10 +98,9 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// <summary>
         /// Ignore future fill quantity on a side, due to a match at accept time for an order
         /// </summary>
-        /// <param name="price"></param>
         /// <param name="volume"> </param>
         /// <param name="orderSide"></param>
-        public void IgnoreFillQuantity(Price price, Volume volume, OrderSide orderSide)
+        public void IgnoreFillQuantity(Volume volume, OrderSide orderSide)
         {
             switch (orderSide)
             {
@@ -127,11 +126,11 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         {
             if (orderSide == OrderSide.Buy && _ignoreBidFillVolume != null)
             {
-                _ignoreBidFillVolume = filledVolume;
+                _ignoreBidFillVolume -= filledVolume;
             }
             else if (orderSide == OrderSide.Sell && _ignoreAskFillVolume != null)
             {
-                _ignoreAskFillVolume = filledVolume;
+                _ignoreAskFillVolume -= filledVolume;
             }
             else if (filled)
             {
@@ -229,7 +228,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             if (_size > 1)
             {
                 // Check if the second last level of the bids is not null, restore using that level
-                if (_bidLevels[Array.FindIndex(_bidLevels, depthLevel => depthLevel == _bidLevels.Last()) - 1].Price != null)
+                if (_bidLevels[Array.FindIndex(_bidLevels, depthLevel => depthLevel == _bidLevels.Last()) - 1].Price.Value != 0)
                 {
                     restorationPrice = _bidLevels[Array.FindIndex(_bidLevels, depthLevel => depthLevel == _bidLevels.Last()) - 1].Price;
                     return true;
@@ -255,7 +254,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             if (_size > 1)
             {
                 // Check if the second last level of the asks is not null, restore using that level
-                if (_askLevels[Array.FindIndex(_askLevels, depthLevel => depthLevel == _askLevels.Last()) - 1].Price != null)
+                if (_askLevels[Array.FindIndex(_askLevels, depthLevel => depthLevel == _askLevels.Last()) - 1].Price.Value != 0)
                 {
                     restorationPrice = _askLevels[Array.FindIndex(_askLevels, depthLevel => depthLevel == _askLevels.Last()) - 1].Price;
                     return true;
@@ -277,15 +276,15 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// <returns></returns>
         public bool Changed()
         {
-            return false;
+            return _lastChangeId > _lastPublishedChangeId;
         }
 
         /// <summary>
         /// note the ID of last published change
         /// </summary>
-        public bool Published()
+        public void Published()
         {
-            return _lastChangeId > _lastPublishedChangeId;
+            _lastPublishedChangeId = _lastChangeId;
         }
 
         #region Level Finders
@@ -301,7 +300,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             foreach (var depthLevel in depthLevels)
             {
                 // If the price is null in this depth level, initialize this depth level with the current price
-                if (depthLevel.Price == null)
+                if (depthLevel.Price == null || depthLevel.Price.Value == 0)
                 {
                     depthLevel.UpdatePrice(price);
                     foundDepthLevel = depthLevel;
@@ -358,7 +357,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         private DepthLevel InsertLevelBefore(DepthLevel currentLevel, Price price, DepthLevel lastSideLevel,
             DepthLevel[] sideLevels, OrderSide orderSide)
         {
-            if (sideLevels.Last().Price != null)
+            if (sideLevels.Last().Price != null && sideLevels.Last().Price.Value != 0)
             {
                 DepthLevel depthLevel = InitiateExcessValues(sideLevels.Last().Price, sideLevels.Last().AggregatedVolume, 
                     sideLevels.Last().OrderCount);
@@ -483,8 +482,8 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
                     // so we make every value null
                     if (currentLevelIndex == inboundLevelIndex)
                     {
-                        sideLevels[currentLevelIndex].UpdatePrice(null);
-                        sideLevels[currentLevelIndex].UpdateVolume(null);
+                        sideLevels[currentLevelIndex].UpdatePrice(new Price(0));
+                        sideLevels[currentLevelIndex].UpdateVolume(new Volume(0));
                         sideLevels[currentLevelIndex].UpdateOrderCount(0);
                         sideLevels[currentLevelIndex].ChangeExcessStatus(false);
                     }
@@ -496,15 +495,15 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
                 }
                 // The last element after the loop is done will be the same as the second last one as the slots have been 
                 // shifted back. So we remove this level as this is the duplicate of the level before it
-                sideLevels[currentLevelIndex] = new DepthLevel(null);
+                sideLevels[currentLevelIndex] = new DepthLevel(new Price(0));
                 
-                if (isLastLevel || sideLevels.Last().Price == null)
+                if (isLastLevel || sideLevels.Last().Price == null || sideLevels.Last().Price.Value == 0)
                 {
-                    if (orderSide == OrderSide.Buy && (isLastLevel || sideLevels.Last().Price == null))
+                    if (orderSide == OrderSide.Buy && (isLastLevel || sideLevels.Last().Price == null || sideLevels.Last().Price.Value == 0))
                     {
                         RemoveLevelFromExcess(_bidExcessLevels, _bidLevels);
                     }
-                    else if (orderSide == OrderSide.Sell && (isLastLevel || sideLevels.Last().Price == null))
+                    else if (orderSide == OrderSide.Sell && (isLastLevel || sideLevels.Last().Price == null || sideLevels.Last().Price.Value == 0))
                     {
                         RemoveLevelFromExcess(_askExcessLevels, _askLevels);
                     }

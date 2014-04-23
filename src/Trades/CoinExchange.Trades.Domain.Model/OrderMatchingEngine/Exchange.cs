@@ -17,7 +17,9 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private string BitCoinUsd = "BTCUSD";
-        List<string> _currencyPairs = new List<string>(); 
+        List<string> _currencyPairs = new List<string>();
+        private LimitOrderBook _orderBook = null;
+        private DepthOrderBook _depthOrderBook = null;
 
         /// <summary>
         /// Default Constructor
@@ -27,8 +29,8 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             _currencyPairs.Add(BitCoinUsd);
             foreach (var currencyPair in _currencyPairs)
             {
-                LimitOrderBook orderBook = new LimitOrderBook(currencyPair);
-                DepthOrderBook depthOrderBook = new DepthOrderBook(currencyPair, 5);
+                _orderBook = new LimitOrderBook(currencyPair);
+                _depthOrderBook = new DepthOrderBook(currencyPair, 5);
 
                 ITradeListener tradeListener = new TradeListener();
                 IOrderListener orderListener = new OrderListener();
@@ -36,21 +38,35 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
                 IBBOListener bboListener = new BBOListener();
                 IDepthListener depthListener = new DepthListener();
 
-                orderBook.OrderAccepted += OnAccept;
+                _orderBook.OrderAccepted -= OnAccept;
+                _orderBook.OrderAccepted -= _depthOrderBook.OnOrderAccepted;
 
-                orderBook.OrderBookChanged += depthOrderBook.OnOrderBookChanged;
-                orderBook.OrderBookChanged += orderBookListener.OnOrderBookChanged;
+                _orderBook.OrderAccepted += OnAccept;
+                _orderBook.OrderAccepted += _depthOrderBook.OnOrderAccepted;
 
-                orderBook.OrderChanged += depthOrderBook.OnOrderChanged;
-                orderBook.OrderChanged += orderListener.OnOrderChanged;
+                _orderBook.OrderBookChanged -= _depthOrderBook.OnOrderBookChanged;
+                _orderBook.OrderBookChanged -= orderBookListener.OnOrderBookChanged;
 
-                orderBook.OrderFilled += depthOrderBook.OrderFilled;
+                _orderBook.OrderBookChanged += _depthOrderBook.OnOrderBookChanged;
+                _orderBook.OrderBookChanged += orderBookListener.OnOrderBookChanged;
 
-                orderBook.TradeExecuted += depthOrderBook.OnTrade;
-                orderBook.TradeExecuted += tradeListener.OnTrade;
+                _orderBook.OrderChanged -= _depthOrderBook.OnOrderChanged;
+                _orderBook.OrderChanged -= orderListener.OnOrderChanged;
 
-                depthOrderBook.BboChanged += bboListener.OnBBOChange;
-                depthOrderBook.DepthChanged += depthListener.OnDepthChanged;
+                _orderBook.OrderChanged += _depthOrderBook.OnOrderChanged;
+                _orderBook.OrderChanged += orderListener.OnOrderChanged;
+
+                _orderBook.OrderFilled -= _depthOrderBook.OnOrderFilled;
+                _orderBook.OrderFilled += _depthOrderBook.OnOrderFilled;
+
+                _orderBook.TradeExecuted -= tradeListener.OnTrade;
+                _orderBook.TradeExecuted += tradeListener.OnTrade;
+
+                _depthOrderBook.BboChanged -= bboListener.OnBBOChange;
+                _depthOrderBook.DepthChanged -= depthListener.OnDepthChanged;
+
+                _depthOrderBook.BboChanged += bboListener.OnBBOChange;
+                _depthOrderBook.DepthChanged += depthListener.OnDepthChanged;
             }
         }
 
@@ -59,12 +75,20 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// <summary>
         /// Signifies that the Order has been accepted successfully
         /// </summary>
-        public void OnAccept(Order order)
+        public void OnAccept(Order order, Price matchedPrice, Volume matchedVolume)
         {
             Log.Debug("Order Accepted by Exchange. " + order.ToString());
             // ToDo: Send the notification back to the client
         }
 
         #endregion Methods
+
+        #region Properties
+
+        public LimitOrderBook OrderBook { get { return _orderBook; } }
+
+        public DepthOrderBook DepthOrderBook { get { return _depthOrderBook; } }
+
+        #endregion Properties
     }
 }

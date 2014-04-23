@@ -173,7 +173,18 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
 
         public IEnumerator GetEnumerator()
         {
-            throw new NotImplementedException();
+            foreach (Order order in _orderList)
+            {
+                // Lets check for end of list (its bad code since we used arrays)
+                if (order == null)
+                {
+                    break;
+                }
+
+                // Return the current element and then on next function call 
+                // resume from next element rather than starting all over again;
+                yield return order;
+            }
         }
 
         #endregion

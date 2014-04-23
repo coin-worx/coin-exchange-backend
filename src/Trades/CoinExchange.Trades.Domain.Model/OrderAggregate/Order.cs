@@ -56,6 +56,10 @@ namespace CoinExchange.Trades.Domain.Model.OrderAggregate
             OrderType = orderType;
             Volume = volume;
             TraderId = traderId;
+
+            _filledQuantity = new Volume(0);
+            _filledCost = new Price(0);
+            _openQuantity = new Volume(0);
         }
 
         /// <summary>
@@ -78,6 +82,10 @@ namespace CoinExchange.Trades.Domain.Model.OrderAggregate
             OrderType = orderType;
             Volume = volume;
             TraderId = traderId;
+
+            _filledQuantity = new Volume(0);
+            _filledCost = new Price(0);
+            _openQuantity = new Volume(0);
         }
 
         #region Methods
@@ -158,7 +166,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderAggregate
             _filledQuantity += filledQuantity;
             _filledCost += filledCost;
             // ToDo: Test if OpenQuantity gets updated correctly
-            //_openQuantity = _volume - _filledQuantity;
+            _openQuantity = _volume - _filledQuantity;
             if (_openQuantity.Value == 0)
             {
                 _orderState = OrderState.Complete;
@@ -313,15 +321,23 @@ namespace CoinExchange.Trades.Domain.Model.OrderAggregate
         {
             get
             {
-                if (_filledQuantity.Value < _volume.Value)
+                if (_openQuantity == null)
                 {
-                    _openQuantity = new Volume(_volume.Value - _filledQuantity.Value);
-                    return _openQuantity;
+                    _openQuantity = new Volume(0);
                 }
-                else
+
+                if (_filledQuantity != null && _volume != null)
                 {
-                    return null;
+                    if (_filledQuantity.Value <= _volume.Value)
+                    {
+                        _openQuantity = new Volume(_volume.Value - _filledQuantity.Value);
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException("Filled quantity exceeding Original quantity. Order: " + this.ToString());
+                    }
                 }
+                return _openQuantity;
             }
         }
 

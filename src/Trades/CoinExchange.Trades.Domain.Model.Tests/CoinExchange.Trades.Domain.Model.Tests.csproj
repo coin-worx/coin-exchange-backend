@@ -56,12 +56,15 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="DepthCheck.cs" />
     <Compile Include="DepthLevelTests.cs" />
     <Compile Include="DepthTests.cs" />
+    <Compile Include="LimitOrderBookTests.cs" />
     <Compile Include="OrderBookTests.cs" />
     <Compile Include="OrderFactoryTests.cs" />
     <Compile Include="ListAndMapsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestingUtilities.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

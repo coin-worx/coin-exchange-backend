@@ -68,6 +68,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             else if (_orderCount == 1)
             {
                 _orderCount = 0;
+                _aggregatedVolume -= volume;
                 _isEmpty = true;
                 return true;
             }
@@ -206,6 +207,15 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         public void ChangeExcessStatus(bool isExcess)
         {
             _isExcess = isExcess;
+        }
+
+        /// <summary>
+        /// Specifies whether this level has changed since the last published change provided by the caller
+        /// </summary>
+        /// <returns></returns>
+        public bool ChangedSince(decimal lastPublishedChange)
+        {
+            return _changeId.Id > lastPublishedChange;
         }
 
         #endregion Methods
