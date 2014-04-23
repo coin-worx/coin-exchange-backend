@@ -29,18 +29,19 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         /// <summary>
         /// Private call to cancel user orders
         /// </summary>
-        /// <param name="txid"></param>
+        /// <param name="orderId"></param>
         /// <returns></returns>
         [Route("orders/cancelorder")]
         [Authorize]
         [HttpPost]
-        public IHttpActionResult CancelOrder([FromBody]string txid)
+        public IHttpActionResult CancelOrder([FromBody]string orderId)
         {
             try
             {
-                if (txid != string.Empty)
+                if (orderId != string.Empty)
                 {
-                    return Ok(_orderApplicationService.CancelOrder(txid));
+                    //TODO: Fetch traderid from api signature provided in header
+                    return Ok(_orderApplicationService.CancelOrder(new CancelOrderCommand(new OrderId(int.Parse(orderId)),new TraderId(123))));
                 }
                 return BadRequest();
             }

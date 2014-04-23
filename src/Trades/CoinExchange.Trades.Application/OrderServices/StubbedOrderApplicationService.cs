@@ -13,9 +13,9 @@ namespace CoinExchange.Trades.Application.OrderServices
         /// <summary>
         /// Cancel the order of user
         /// </summary>
-        /// <param name="request"></param>
+        /// <param name="cancelOrderCommand"></param>
         /// <returns></returns>
-        public CancelOrderResponse CancelOrder(string txid)
+        public CancelOrderResponse CancelOrder(CancelOrderCommand cancelOrderCommand)
         {
             return new CancelOrderResponse(true, 2);
         }

@@ -6,6 +6,7 @@ using CoinExchange.Trades.Application.OrderServices.Representation;
 using CoinExchange.Trades.Domain.Model.Order;
 using Disruptor;
 using NUnit.Framework;
+using Spring.Context.Support;
 
 namespace CoinExchange.Trades.Application.Tests
 {
@@ -19,7 +20,7 @@ namespace CoinExchange.Trades.Application.Tests
         [SetUp]
         public void SetUp()
         {
-            _orderseService = new OrderApplicationService();
+            _orderseService = ContextRegistry.GetContext()["OrderApplicationService"] as IOrderApplicationService;
             InputDisruptorPublisher.InitializeDisruptor(new IEventHandler<InputPayload>[]{this});
             _manualResetEvent=new ManualResetEvent(false);
         }

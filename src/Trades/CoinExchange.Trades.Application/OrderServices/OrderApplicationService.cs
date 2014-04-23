@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using CoinExchange.Common.Domain.Model;
 using CoinExchange.Trades.Application.OrderServices.Commands;
 using CoinExchange.Trades.Application.OrderServices.Representation;
 using CoinExchange.Trades.Domain.Model.Order;
@@ -13,10 +15,23 @@ namespace CoinExchange.Trades.Application.OrderServices
     /// </summary>
     public class OrderApplicationService:IOrderApplicationService
     {
-        public CancelOrderResponse CancelOrder(string txid)
+        private ICancelOrderCommandValidation _commandValidationService;
+        
+        public OrderApplicationService(ICancelOrderCommandValidation cancelOrderCommandValidation)
         {
-            //TODO: to be implemented
-            throw new NotImplementedException();
+            _commandValidationService = cancelOrderCommandValidation;
+        }
+        public CancelOrderResponse CancelOrder(CancelOrderCommand cancelOrderCommand)
+        {
+            // verify cancel order command
+            if (_commandValidationService.ValidateCancelOrderCommand(cancelOrderCommand))
+            {
+                OrderCancellation cancellation = new OrderCancellation(cancelOrderCommand.OrderId,
+                    cancelOrderCommand.TraderId);
+                InputDisruptorPublisher.Publish(InputPayload.CreatePayload(cancellation));
+                return new CancelOrderResponse(true,1);
+            }
+            throw new InvalidDataException("Invalid orderid");
         }
 
         public NewOrderRepresentation CreateOrder(CreateOrderCommand orderCommand)

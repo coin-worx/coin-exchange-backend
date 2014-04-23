@@ -49,11 +49,14 @@
     <Compile Include="MarketDataServices\StubbedMarketDataApplicationService.cs" />
     <Compile Include="MarketDataServices\Representation\OhlcRepresentation.cs" />
     <Compile Include="MarketDataServices\Representation\TickerRepresentation.cs" />
+    <Compile Include="OrderServices\Commands\CancelOrderCommand.cs" />
     <Compile Include="OrderServices\Commands\CreateOrderCommand.cs" />
+    <Compile Include="OrderServices\ICancelOrderCommandValidation.cs" />
     <Compile Include="OrderServices\IOrderApplicationService.cs" />
     <Compile Include="OrderServices\IOrderQueryService.cs" />
     <Compile Include="OrderServices\OrderApplicationService.cs" />
     <Compile Include="OrderServices\Representation\OrderRepresentation.cs" />
+    <Compile Include="OrderServices\StubbedCancelOrderCommandValidation.cs" />
     <Compile Include="OrderServices\StubbedOrderApplicationService.cs" />
     <Compile Include="OrderServices\StubbedOrderQueryService.cs" />
     <Compile Include="OrderServices\Representation\NewOrderRepresentation.cs" />
@@ -80,6 +83,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Config\StubCancelOrderValidation.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

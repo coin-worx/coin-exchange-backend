@@ -6,7 +6,7 @@ namespace CoinExchange.Trades.Application.OrderServices
 {
     public interface IOrderApplicationService
     {
-        CancelOrderResponse CancelOrder(string txid);
+        CancelOrderResponse CancelOrder(CancelOrderCommand cancelOrderCommand);
         NewOrderRepresentation CreateOrder(CreateOrderCommand orderCommand);
     }
 }
