@@ -1,15 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CoinExchange.Common.Domain.Model;
-using CoinExchange.Common.Specifications;
 using CoinExchange.Trades.Domain.Model.Services;
-using CoinExchange.Trades.Domain.Model.Trades;
-using Spring.Context;
+using CoinExchange.Trades.Domain.Model.TradeAggregate;
 
-namespace CoinExchange.Trades.Domain.Model.Order
+namespace CoinExchange.Trades.Domain.Model.OrderAggregate
 {
     /// <summary>
     /// serves the purpose for creating a valid order

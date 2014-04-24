@@ -3,7 +3,7 @@ using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Results;
 using CoinExchange.Common.Domain.Model;
-using CoinExchange.Trades.Domain.Model.Order;
+
 using CoinExchange.Trades.Port.Adapter.Rest.Resources;
 using NUnit.Framework;
 

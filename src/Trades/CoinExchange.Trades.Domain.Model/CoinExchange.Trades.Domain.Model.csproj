@@ -30,18 +30,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Atomic">
-      <HintPath>..\..\packages\Disruptor.1.1.0\lib\net40\Atomic.dll</HintPath>
-    </Reference>
     <Reference Include="Common.Logging, Version=2.1.2.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Common.Logging.2.1.2\lib\net40\Common.Logging.dll</HintPath>
     </Reference>
-    <Reference Include="Disruptor">
-      <HintPath>..\..\packages\Disruptor.1.1.0\lib\net40\Disruptor.dll</HintPath>
-    </Reference>
-    <Reference Include="Disruptor.Scheduler">
-      <HintPath>..\..\packages\Disruptor.1.1.0\lib\net40\Disruptor.Scheduler.dll</HintPath>
+    <Reference Include="log4net">
+      <HintPath>..\..\packages\log4net.1.2.10\lib\2.0\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Spring.Core">
       <HintPath>..\..\packages\Spring.Core.2.0.0-RC1\lib\net45\Spring.Core.dll</HintPath>
@@ -61,30 +55,45 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="OrderMatchingEngine\BBOListener.cs" />
+    <Compile Include="OrderMatchingEngine\ChangeId.cs" />
+    <Compile Include="OrderMatchingEngine\Depth.cs" />
+    <Compile Include="OrderMatchingEngine\DepthLevel.cs" />
+    <Compile Include="OrderMatchingEngine\DepthLevelMap.cs" />
+    <Compile Include="OrderMatchingEngine\DepthListener.cs" />
+    <Compile Include="OrderMatchingEngine\DepthOrderBook.cs" />
+    <Compile Include="OrderMatchingEngine\Exchange.cs" />
+    <Compile Include="OrderMatchingEngine\FillFlags.cs" />
+    <Compile Include="OrderMatchingEngine\IBBOListener.cs" />
+    <Compile Include="OrderMatchingEngine\IDepthListener.cs" />
+    <Compile Include="OrderMatchingEngine\IOrderBookListener.cs" />
+    <Compile Include="OrderMatchingEngine\IOrderListener.cs" />
+    <Compile Include="OrderMatchingEngine\ITradeListener.cs" />
     <Compile Include="OrderMatchingEngine\LimitOrderBook.cs" />
-    <Compile Include="Order\OrderCancellation.cs" />
-    <Compile Include="Order\CurrencyPair.cs" />
-    <Compile Include="Order\InputDisruptorPublisher.cs" />
-    <Compile Include="Order\InputPayload.cs" />
-    <Compile Include="Order\Order.cs" />
-    <Compile Include="Order\OrderFactory.cs" />
-    <Compile Include="Order\OrderSide.cs" />
-    <Compile Include="Order\OrderStatus.cs" />
-    <Compile Include="Order\OrderType.cs" />
-    <Compile Include="Order\Price.cs" />
-    <Compile Include="Order\Volume.cs" />
+    <Compile Include="OrderMatchingEngine\OrderBookListener.cs" />
+    <Compile Include="OrderMatchingEngine\OrderCallBacks.cs" />
+    <Compile Include="OrderMatchingEngine\OrderList.cs" />
+    <Compile Include="OrderMatchingEngine\OrderListener.cs" />
+    <Compile Include="OrderMatchingEngine\TradeListener.cs" />
+    <Compile Include="OrderMatchingEngine\Types.cs" />
+    <Compile Include="OrderAggregate\CurrencyPair.cs" />
+    <Compile Include="OrderAggregate\Order.cs" />
+    <Compile Include="OrderAggregate\OrderFactory.cs" />
+    <Compile Include="OrderAggregate\OrderSide.cs" />
+    <Compile Include="OrderAggregate\OrderStatus.cs" />
+    <Compile Include="OrderAggregate\OrderType.cs" />
+    <Compile Include="OrderAggregate\Price.cs" />
+    <Compile Include="OrderAggregate\Volume.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Order\CancelOrderResponse.cs" />
-    <Compile Include="MarketData\MarketData.cs" />
-    <Compile Include="MarketData\Ohlc.cs" />
-    <Compile Include="Order\OrderId.cs" />
-    <Compile Include="Order\TradeRecord.cs" />
-    <Compile Include="Services\IEventStore.cs" />
+    <Compile Include="OrderAggregate\CancelOrderResponse.cs" />
+    <Compile Include="MarketDataAggregate\MarketData.cs" />
+    <Compile Include="MarketDataAggregate\Ohlc.cs" />
+    <Compile Include="OrderAggregate\OrderId.cs" />
+    <Compile Include="OrderAggregate\TradeRecord.cs" />
     <Compile Include="Services\IOrderIdGenerator.cs" />
-    <Compile Include="Services\Journaler.cs" />
-    <Compile Include="Trades\Trade.cs" />
-    <Compile Include="Trades\TradeExecutedEvent.cs" />
-    <Compile Include="Trades\TraderId.cs" />
+    <Compile Include="TradeAggregate\Trade.cs" />
+    <Compile Include="TradeAggregate\TradeExecutedEvent.cs" />
+    <Compile Include="TradeAggregate\TraderId.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

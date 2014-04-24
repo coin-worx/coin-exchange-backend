@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CoinExchange.Trades.Domain.Model.Order;
+using CoinExchange.Trades.Domain.Model.OrderAggregate;
 
 namespace CoinExchange.Trades.Application.OrderServices.Representation
 {
@@ -83,7 +79,7 @@ namespace CoinExchange.Trades.Application.OrderServices.Representation
         /// <summary>
         /// Order Status
         /// </summary>
-        public OrderStatus Status { get; set; }
+        public OrderState Status { get; set; }
 
         /// <summary>
         /// Reason

@@ -1,5 +1,5 @@
 ﻿using System;
-using CoinExchange.Trades.Domain.Model.Order;
+using CoinExchange.Trades.Domain.Model.OrderAggregate;
 using CoinExchange.Trades.Infrastructure.Services;
 using NUnit.Framework;
 
@@ -25,9 +25,9 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         /// </summary>
         [Test]
         [Category("Unit")]
-        public void CreateOrder_IfSideisBuyAndTypeisMarket_BuySideMarketOrder()
+        public void CreateBuySideMarketOrderTest()
         {
-            Order.Order order = OrderFactory.CreateOrder("1234", "XBTUSD", "market", "buy", 5, 0,
+            Order order = OrderFactory.CreateOrder("1234", "XBTUSD", "market", "buy", 5, 0,
                 new StubbedOrderIdGenerator());
             Assert.NotNull(order.OrderId);
             Assert.AreEqual(order.CurrencyPair, "XBTUSD");
@@ -41,9 +41,9 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         /// </summary>
         [Test]
         [Category("Unit")]
-        public void CreateOrder_IfSideisSellAndTypeisMarket_SellSideMarketOrder()
+        public void CreateSellSideMarketOrderTest()
         {
-            Order.Order order = OrderFactory.CreateOrder("1234", "XBTUSD", "market", "sell", 5, 0,
+            Order order = OrderFactory.CreateOrder("1234", "XBTUSD", "market", "sell", 5, 0,
                 new StubbedOrderIdGenerator());
             Assert.NotNull(order.OrderId);
             Assert.AreEqual(order.CurrencyPair, "XBTUSD");
@@ -57,9 +57,9 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         /// </summary>
         [Test]
         [Category("Unit")]
-        public void CreateOrder_IfSideisBuyAndTypeisLimit_BuySideLimitOrder()
+        public void CreateBuySideLimitOrderTest()
         {
-            Order.Order order = OrderFactory.CreateOrder("1234", "XBTUSD", "limit", "buy", 5, 10,
+            Order order = OrderFactory.CreateOrder("1234", "XBTUSD", "limit", "buy", 5, 10,
                 new StubbedOrderIdGenerator());
             Assert.NotNull(order.OrderId);
             Assert.AreEqual(order.CurrencyPair, "XBTUSD");
@@ -74,9 +74,9 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         /// </summary>
         [Test]
         [Category("Unit")]
-        public void CreateOrder_IfSideisSellAndTypeisLimit_SellSideLimitOrder()
+        public void CreateSellSideLimitOrderTest()
         {
-            Order.Order order = OrderFactory.CreateOrder("1234", "XBTUSD", "limit", "sell", 5, 10,
+            Order order = OrderFactory.CreateOrder("1234", "XBTUSD", "limit", "sell", 5, 10,
                 new StubbedOrderIdGenerator());
             Assert.NotNull(order.OrderId);
             Assert.AreEqual(order.CurrencyPair, "XBTUSD");
@@ -91,24 +91,20 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         /// </summary>
         [Test]
         [Category("Unit")]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public void OrderVolumeException_IfVolumeisLessThanEqualToZero_InvalidOrderVolumeException()
+        public void InvalidOrderVolumeTest()
         {
+            bool orderVolumeException = false;
             decimal volume = 0;
-            Order.Order order = OrderFactory.CreateOrder("1234", "XBTUSD", "limit", "sell", volume, 10,
+            try
+            {
+                Order order = OrderFactory.CreateOrder("1234", "XBTUSD", "limit", "sell", volume, 10,
                     new StubbedOrderIdGenerator());
-        }
-
-        /// <summary>
-        /// To verify exception is thrown if limit price is not specified with limit order
-        /// </summary>
-        [Test]
-        [Category("Unit")]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public void CreateLimitOrder_IfLimitPriceIsNotSpecified_InvalidOperationException()
-        {
-            Order.Order order = OrderFactory.CreateOrder("1234", "XBTUSD", "limit", "sell", 10, 0,
-                    new StubbedOrderIdGenerator());
+            }
+            catch (InvalidOperationException exception)
+            {
+                orderVolumeException = true;
+            }
+            Assert.AreEqual(orderVolumeException,true);
         }
 
     }

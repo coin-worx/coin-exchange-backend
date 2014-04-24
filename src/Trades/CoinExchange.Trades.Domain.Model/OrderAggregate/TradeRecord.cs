@@ -1,4 +1,4 @@
-﻿namespace CoinExchange.Trades.Domain.Model.Order
+﻿namespace CoinExchange.Trades.Domain.Model.OrderAggregate
 {
     //TODO: Can be removed in the future but for now it is a VO to hold a trade record.
     /// <summary>

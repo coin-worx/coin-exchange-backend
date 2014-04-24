@@ -1,6 +1,7 @@
 ﻿using System;
+using CoinExchange.Trades.Domain.Model.OrderAggregate;
 
-namespace CoinExchange.Trades.Domain.Model.Trades
+namespace CoinExchange.Trades.Domain.Model.TradeAggregate
 {
     /// <summary>
     /// Result of a bid and ask crossing
@@ -9,17 +10,17 @@ namespace CoinExchange.Trades.Domain.Model.Trades
     {
         private readonly string _aggregateId;
         private string _currencyPair = string.Empty;
-        private decimal _executionPrice = 0;
-        private decimal _executedQuantity = 0;
+        private Price _executionPrice = null;
+        private Volume _executedQuantity = null;
         private DateTime _executionTime = DateTime.MinValue;
-        private Order.Order _buyOrder = null;
-        private Order.Order _sellOrder = null;
+        private Order _buyOrder = null;
+        private Order _sellOrder = null;
 
         /// <summary>
         /// Default Constructor
         /// </summary>
-        public Trade(string currencyPair, decimal executionPrice, decimal executedQuantity, DateTime executionTime,
-            Order.Order buyOrder, Order.Order sellOrder)
+        public Trade(string currencyPair, Price executionPrice, Volume executedQuantity, DateTime executionTime,
+            Order buyOrder, Order sellOrder)
         {
             _currencyPair = currencyPair;
             _executionPrice = executionPrice;
@@ -52,7 +53,7 @@ namespace CoinExchange.Trades.Domain.Model.Trades
         /// <summary>
         /// Execution Price
         /// </summary>
-        public decimal ExecutionPrice
+        public Price ExecutionPrice
         {
             get { return _executionPrice; }
         }
@@ -60,7 +61,7 @@ namespace CoinExchange.Trades.Domain.Model.Trades
         /// <summary>
         /// Executed Quantity
         /// </summary>
-        public decimal ExecutedQuantity
+        public Volume ExecutedVolume
         {
             get { return _executedQuantity; }
         }
@@ -76,7 +77,7 @@ namespace CoinExchange.Trades.Domain.Model.Trades
         /// <summary>
         /// Buy Order Reference
         /// </summary>
-        public Order.Order BuyOrder
+        public Order BuyOrder
         {
             get { return _buyOrder; }
         }
@@ -84,7 +85,7 @@ namespace CoinExchange.Trades.Domain.Model.Trades
         /// <summary>
         /// Sell Order Reference
         /// </summary>
-        public Order.Order SellOrder
+        public Order SellOrder
         {
             get { return _sellOrder; }
         }

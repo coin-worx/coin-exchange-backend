@@ -3,29 +3,29 @@
  * Comany: Aurora Solutions
  */
 
-namespace CoinExchange.Trades.Domain.Model.Order
+namespace CoinExchange.Trades.Domain.Model.OrderAggregate
 {
     /// <summary>
     /// Status of the CoinExchangeOrder
     /// </summary>
-    public enum OrderStatus
+    public enum OrderState
     {
         /// <summary>
         /// Order pending book entry
         /// </summary>
-        Pending,
+        New,
         /// <summary>
         /// Open order
         /// </summary>
-        Open,
+        Accepted,
         /// <summary>
         /// Closed order
         /// </summary>
-        Closed,
+        Rejected,
         /// <summary>
         /// Order canceled
         /// </summary>
-        Canceled,
+        Cancelled,
         /// <summary>
         /// Order expired
         /// </summary>
@@ -37,6 +37,10 @@ namespace CoinExchange.Trades.Domain.Model.Order
         /// <summary>
         /// Order Filled Completely
         /// </summary>
-        FullyFilled
+        FullyFilled,
+        /// <summary>
+        /// Order Complete
+        /// </summary>
+        Complete
     }
 }
