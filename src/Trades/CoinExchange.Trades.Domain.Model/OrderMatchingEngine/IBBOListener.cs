@@ -14,6 +14,6 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// <summary>
         /// Handles the depth for bids and asks at the top of the book
         /// </summary>
-        void OnBBOChange(DepthLevel askDepthLevel);
+        void OnBBOChange(DepthLevel bestBid, DepthLevel askDepthLevel);
     }
 }

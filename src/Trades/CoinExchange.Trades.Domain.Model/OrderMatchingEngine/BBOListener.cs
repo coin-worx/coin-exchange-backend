@@ -18,10 +18,11 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         #region Implementation of IBBOListener
 
         /// <summary>
-        /// 
+        /// Onn BBO changed event
         /// </summary>
-        /// <param name="depthLevel"></param>
-        public void OnBBOChange(DepthLevel depthLevel)
+        /// <param name="bestBid"> </param>
+        /// <param name="bestAsk"> </param>
+        public void OnBBOChange(DepthLevel bestBid, DepthLevel bestAsk)
         {
             Log.Debug("Best bid and offer received.");
         }

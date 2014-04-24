@@ -17,7 +17,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         private int _size = 0;
         private Depth _depth = null;
 
-        public event Action<DepthLevel> BboChanged;
+        public event Action<DepthLevel, DepthLevel> BboChanged;
         public event Action<Depth> DepthChanged;
 
         /// <summary>
@@ -141,7 +141,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// <summary>
         /// When Order gets cancelled
         /// </summary>
-        /// <param name="order"></param>
+        /// <param name="order"> </param>
         public void OnOrderCancelled(Order order)
         {
             if (order.OrderType == OrderType.Limit)
@@ -156,7 +156,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// <param name="order"></param>
         public void OnOrderChanged(Order order)
         {
-            throw new NotImplementedException();
+            
         }
 
         /// <summary>
@@ -177,8 +177,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
 
                     if (_depth.BidLevels.First().ChangedSince(lastChange) || _depth.AskLevels.First().ChangedSince(lastChange))
                     {
-                        BboChanged(_depth.BidLevels.First());
-                        BboChanged(_depth.AskLevels.First());
+                        BboChanged(_depth.BidLevels.First(), _depth.AskLevels.First());
                     }
                 }
                 _depth.Published();

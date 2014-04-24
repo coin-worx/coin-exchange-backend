@@ -39,7 +39,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// <summary>
         /// Handles the event in case the order gets cancelled
         /// </summary>
-        /// <param name="order"></param>
+        /// <param name="order"> </param>
         void OnOrderCancelled(Order order);
     }
 }

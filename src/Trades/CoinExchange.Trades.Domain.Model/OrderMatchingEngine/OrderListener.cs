@@ -52,7 +52,10 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             throw new NotImplementedException();
         }
 
-
+        /// <summary>
+        /// handles the event in case an order gets cancelled
+        /// </summary>
+        /// <param name="order"> </param>
         public void OnOrderCancelled(Order order)
         {
             //ToDo: Create event for the order and publish the event on the output Disruptor

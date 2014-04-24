@@ -47,6 +47,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         public event Action<Order> OrderChanged;
         public event Action<LimitOrderBook> OrderBookChanged;
         public event Action<Order, Price, Volume> OrderAccepted;
+        public event Action<Order> OrderCancelled;
         public event Action<Order, Order, FillFlags, Price, Volume> OrderFilled;
 
         /// <summary>
@@ -129,7 +130,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             // If there are no Asks on the book, then raise the event that this order has been accepted and added to the Bids
             RaiseOrderAcceptedEvent(buyOrder, 0, 0);
             _bids.Add(buyOrder);
-            // Didnt match
+            // Didn't match
             return false;
         }
 
@@ -149,7 +150,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             List<Order> ordersToRemove = null;
             foreach (Order matchingOrder in oppositeSideList)
             {
-                if (Matched(order.Price, matchingOrder.Price, order.OrderSide))
+                if (Matched(order.Price, matchingOrder.Price, order.OrderSide, order.OrderType))
                 {
                     matched = true;
                     CrossOrders(order, matchingOrder, sendOrderAcceptedEvent);
@@ -223,22 +224,29 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// <param name="currentPrice"></param>
         /// <param name="orderSide"></param>
         /// <returns></returns>
-        public bool Matched(Price inboundPrice, Price currentPrice, OrderSide orderSide)
+        public bool Matched(Price inboundPrice, Price currentPrice, OrderSide orderSide, OrderType orderType)
         {
-            switch (orderSide)
+            if (orderType == OrderType.Limit)
             {
-                case OrderSide.Buy:
-                    if (inboundPrice >= currentPrice)
-                    {
-                        return true;
-                    }
-                    return false;
-                case OrderSide.Sell:
-                    if (inboundPrice <= currentPrice)
-                    {
-                        return true;
-                    }
-                    return false;
+                switch (orderSide)
+                {
+                    case OrderSide.Buy:
+                        if (inboundPrice >= currentPrice)
+                        {
+                            return true;
+                        }
+                        return false;
+                    case OrderSide.Sell:
+                        if (inboundPrice <= currentPrice)
+                        {
+                            return true;
+                        }
+                        return false;
+                }
+            }
+            else if(orderType == OrderType.Market && inboundPrice.Value == 0)
+            {
+                return true;
             }
             return false;
         }
@@ -256,14 +264,22 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
                 _asks.Remove(order);
                 found = true;
             }
-            order = _bids.FindOrder(orderId);
+
+            if (!found)
+            {
+                order = _bids.FindOrder(orderId);
+                if (order != null)
+                {
+                    _bids.Remove(order);
+                }
+            }
             if (order != null)
             {
-                _bids.Remove(order);
-                found = true;
-            }
-            if (found)
-            {
+                order.Cancelled();
+                if (OrderCancelled != null)
+                {
+                    OrderCancelled(order);
+                }
                 if (OrderChanged != null)
                 {
                     OrderChanged(order);
@@ -376,6 +392,11 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         {
             decimal filledQuantity = Math.Min(inboundOrder.OpenQuantity.Value, matchedOrder.OpenQuantity.Value);
             decimal filledPrice = matchedOrder.Price.Value;
+
+            if (inboundOrder.OrderType == OrderType.Market && inboundOrder.Price.Value == 0)
+            {
+                filledPrice = inboundOrder.Price.Value;
+            }
 
             // Send Order accepted notification to subscribers
             if (sendOrderAcceptedEvent)

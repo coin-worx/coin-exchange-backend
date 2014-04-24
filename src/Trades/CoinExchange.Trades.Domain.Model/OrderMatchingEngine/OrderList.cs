@@ -128,10 +128,13 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         {
             if (orderId != null)
             {
-                Order selectedOrder = (from order in _orderList
-                                             where order.OrderId == orderId
-                                             select order).ToList().Single();
-                return selectedOrder;
+                foreach (var order in _orderList)
+                {
+                    if (order.OrderId.Id == orderId.Id)
+                    {
+                        return order;
+                    }
+                }
             }
             return null;
         }

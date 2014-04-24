@@ -846,7 +846,323 @@ namespace CoinExchange.Trades.Domain.Model.Tests
             Assert.AreEqual(1, exchange.DepthOrderBook.Depth.AskLevels[1].OrderCount);
         }
 
+        [Test]
+        public void BidMarketOrderFill_TestsWhetherTheMarketOrderGetFilledCorrectly_ChecksOrderStateAfterFill()
+        {
+            Exchange exchange = new Exchange();
+
+            Order buyOrder1 = new Order(new OrderId(1), "BTCUSD", new Price(941), OrderSide.Buy,
+                      OrderType.Limit, new Volume(100), new TraderId(1));
+            Order buyOrder2 = new Order(new OrderId(1), "BTCUSD", new Price(0), OrderSide.Buy,
+                      OrderType.Limit, new Volume(100), new TraderId(1));
+            buyOrder2.OrderType = OrderType.Market;
+            Order sellOrder1 = new Order(new OrderId(1), "BTCUSD", new Price(951), OrderSide.Sell,
+                      OrderType.Limit, new Volume(100), new TraderId(1));
+            Order sellOrder2 = new Order(new OrderId(1), "BTCUSD", new Price(942), OrderSide.Sell,
+                      OrderType.Limit, new Volume(100), new TraderId(1));
+
+            Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder1, true));
+            Assert.IsFalse(AddAndVerify(exchange.OrderBook, sellOrder2, true));
+            Assert.IsFalse(AddAndVerify(exchange.OrderBook, sellOrder1, true));
+
+            Assert.AreEqual(1, exchange.OrderBook.Bids.Count());
+            Assert.AreEqual(2, exchange.OrderBook.Asks.Count());
+
+            Assert.AreEqual(new Price(941), exchange.DepthOrderBook.Depth.BidLevels[0].Price);
+            Assert.AreEqual(new Volume(100), exchange.DepthOrderBook.Depth.BidLevels[0].AggregatedVolume);
+            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.BidLevels[0].OrderCount);
+
+            Assert.AreEqual(null, exchange.DepthOrderBook.Depth.BidLevels[1].Price);
+            Assert.AreEqual(null, exchange.DepthOrderBook.Depth.BidLevels[1].AggregatedVolume);
+            Assert.AreEqual(0, exchange.DepthOrderBook.Depth.BidLevels[1].OrderCount);
+
+            Assert.AreEqual(new Price(942), exchange.DepthOrderBook.Depth.AskLevels[0].Price);
+            Assert.AreEqual(new Volume(100), exchange.DepthOrderBook.Depth.AskLevels[0].AggregatedVolume);
+            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.AskLevels[0].OrderCount);
+
+            Assert.AreEqual(new Price(951), exchange.DepthOrderBook.Depth.AskLevels[1].Price);
+            Assert.AreEqual(new Volume(100), exchange.DepthOrderBook.Depth.AskLevels[1].AggregatedVolume);
+            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.AskLevels[1].OrderCount);
+
+            Assert.IsTrue(FilledPartiallyOrComplete(exchange.OrderBook, buyOrder2, false));
+
+            FillCheck fillCheck = new FillCheck();
+            Assert.IsTrue(fillCheck.VerifyFilled(buyOrder2, new Volume(100), new Price(0), new Price(0)));
+            Assert.AreEqual(1, exchange.OrderBook.Bids.Count());
+            Assert.AreEqual(1, exchange.OrderBook.Asks.Count());
+
+            Assert.AreEqual(OrderState.Complete, buyOrder2.OrderState);
+            Assert.AreEqual(0, buyOrder2.OpenQuantity.Value);
+            Assert.AreEqual(100, buyOrder2.FilledQuantity.Value);
+            Assert.AreEqual(0, buyOrder2.Price.Value);
+        }
+
+        [Test]
+        public void AskMarketOrderFill_TestsWhetherTheMarketOrderGetFilledCorrectly_ChecksOrderStateAfterFill()
+        {
+            Exchange exchange = new Exchange();
+
+            Order buyOrder1 = new Order(new OrderId(1), "BTCUSD", new Price(941), OrderSide.Buy,
+                      OrderType.Limit, new Volume(100), new TraderId(1));
+            Order buyOrder2 = new Order(new OrderId(1), "BTCUSD", new Price(945), OrderSide.Buy,
+                      OrderType.Limit, new Volume(100), new TraderId(1));
+            Order sellOrder1 = new Order(new OrderId(1), "BTCUSD", new Price(0), OrderSide.Sell,
+                      OrderType.Limit, new Volume(100), new TraderId(1));
+            sellOrder1.OrderType = OrderType.Market;
+            Order sellOrder2 = new Order(new OrderId(1), "BTCUSD", new Price(948), OrderSide.Sell,
+                      OrderType.Limit, new Volume(100), new TraderId(1));
+
+            Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder1, true));
+            Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder2, true));
+            Assert.IsFalse(AddAndVerify(exchange.OrderBook, sellOrder2, true));
+
+            Assert.AreEqual(2, exchange.OrderBook.Bids.Count());
+            Assert.AreEqual(1, exchange.OrderBook.Asks.Count());
+
+            Assert.AreEqual(new Price(945), exchange.DepthOrderBook.Depth.BidLevels[0].Price);
+            Assert.AreEqual(new Volume(100), exchange.DepthOrderBook.Depth.BidLevels[0].AggregatedVolume);
+            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.BidLevels[0].OrderCount);
+
+            Assert.AreEqual(new Price(941), exchange.DepthOrderBook.Depth.BidLevels[1].Price);
+            Assert.AreEqual(new Volume(100), exchange.DepthOrderBook.Depth.BidLevels[1].AggregatedVolume);
+            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.BidLevels[1].OrderCount);
+
+            Assert.AreEqual(new Price(948), exchange.DepthOrderBook.Depth.AskLevels[0].Price);
+            Assert.AreEqual(new Volume(100), exchange.DepthOrderBook.Depth.AskLevels[0].AggregatedVolume);
+            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.AskLevels[0].OrderCount);
+
+            Assert.IsTrue(FilledPartiallyOrComplete(exchange.OrderBook, sellOrder1, false));
+
+            FillCheck fillCheck = new FillCheck();
+            Assert.IsTrue(fillCheck.VerifyFilled(sellOrder1, new Volume(100), new Price(0), new Price(0)));
+            Assert.AreEqual(1, exchange.OrderBook.Bids.Count());
+            Assert.AreEqual(1, exchange.OrderBook.Asks.Count());
+
+            Assert.AreEqual(OrderState.Complete, sellOrder1.OrderState);
+            Assert.AreEqual(0, sellOrder1.OpenQuantity.Value);
+            Assert.AreEqual(100, sellOrder1.FilledQuantity.Value);
+            Assert.AreEqual(0, sellOrder1.Price.Value);
+        }
+
         #endregion Addition Tests
+
+        #region Order Cancel Tests
+
+        [Test]
+        public void OrderCancelAskTest_CancelsTheAskAndWaitsForEventToBeRaised_HandlesEventsAndValidatesOrderState()
+        {
+            Order sellOrder1 = new Order(new OrderId(1), "XBT/USD", new Price(1251), OrderSide.Sell,
+                      OrderType.Limit, new Volume(100), new TraderId(1));
+
+            LimitOrderBook orderBook = new LimitOrderBook("XBT/USD");
+
+            ManualResetEvent manualResetEvent = new ManualResetEvent(false);
+            Order returnedOrder = null;
+            orderBook.OrderAccepted += delegate(Order order, Price matchedPrice, Volume matchedVolume)
+            {
+                returnedOrder = order;
+                Assert.AreEqual(0, matchedPrice.Value);
+                Assert.AreEqual(0, matchedVolume.Value);
+                manualResetEvent.Set();
+            };
+
+            orderBook.AddOrder(sellOrder1);
+            manualResetEvent.WaitOne(5000);
+            Assert.AreEqual(sellOrder1, returnedOrder);
+            Assert.AreEqual(OrderState.Accepted, sellOrder1.OrderState);
+            Assert.AreEqual(1, orderBook.Asks.Count());
+
+            manualResetEvent.Reset();
+            returnedOrder = null;
+            orderBook.OrderCancelled += delegate(Order order)
+            {
+                returnedOrder = order;
+                manualResetEvent.Set();
+            };
+
+            orderBook.CancelOrder(new OrderId(1));
+            manualResetEvent.WaitOne(5000);
+            Assert.AreEqual(sellOrder1, returnedOrder);
+            Assert.AreEqual(OrderState.Cancelled, sellOrder1.OrderState);
+            Assert.AreEqual(0, orderBook.Asks.Count());
+        }
+
+        [Test]
+        public void OrderCancelBidTest_CancelsTheBidAndWaitsForEventToBeRaised_HandlesEventsAndValidatesOrderState()
+        {
+            Order buyOrder = new Order(new OrderId(1), "XBT/USD", new Price(1251), OrderSide.Buy,
+                      OrderType.Limit, new Volume(100), new TraderId(1));
+
+            LimitOrderBook orderBook = new LimitOrderBook("XBT/USD");
+
+            ManualResetEvent manualResetEvent = new ManualResetEvent(false);
+            Order returnedOrder = null;
+            orderBook.OrderAccepted += delegate(Order order, Price matchedPrice, Volume matchedVolume)
+            {
+                returnedOrder = order;
+                Assert.AreEqual(0, matchedPrice.Value);
+                Assert.AreEqual(0, matchedVolume.Value);
+                manualResetEvent.Set();
+            };
+
+            orderBook.AddOrder(buyOrder);
+            manualResetEvent.WaitOne(5000);
+            Assert.AreEqual(buyOrder, returnedOrder);
+            Assert.AreEqual(OrderState.Accepted, buyOrder.OrderState);
+            Assert.AreEqual(1, orderBook.Bids.Count());
+
+            manualResetEvent.Reset();
+            returnedOrder = null;
+            orderBook.OrderCancelled += delegate(Order order)
+            {
+                returnedOrder = order;
+                manualResetEvent.Set();
+            };
+
+            orderBook.CancelOrder(new OrderId(1));
+            manualResetEvent.WaitOne(5000);
+            Assert.AreEqual(buyOrder, returnedOrder);
+            Assert.AreEqual(OrderState.Cancelled, buyOrder.OrderState);
+            Assert.AreEqual(0, orderBook.Bids.Count());
+        }
+
+        [Test]
+        public void BidCancelOrderTest_CancelsOrderAndUpdatesOrderBookAndDepth_ValidatesEntriesAndOrderStateToConfirm()
+        {
+            Exchange exchange = new Exchange();
+
+            Order buyOrder1 = new Order(new OrderId(1), "BTCUSD", new Price(941), OrderSide.Buy,
+                      OrderType.Limit, new Volume(100), new TraderId(1));
+            Order buyOrder2 = new Order(new OrderId(2), "BTCUSD", new Price(945), OrderSide.Buy,
+                      OrderType.Limit, new Volume(100), new TraderId(1));
+            Order sellOrder1 = new Order(new OrderId(3), "BTCUSD", new Price(949), OrderSide.Sell,
+                      OrderType.Limit, new Volume(100), new TraderId(1));
+            Order sellOrder2 = new Order(new OrderId(4), "BTCUSD", new Price(948), OrderSide.Sell,
+                      OrderType.Limit, new Volume(100), new TraderId(1));
+
+            Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder1, true));
+            Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder2, true));
+            Assert.IsFalse(AddAndVerify(exchange.OrderBook, sellOrder2, true));
+            Assert.IsFalse(AddAndVerify(exchange.OrderBook, sellOrder1, true));
+
+            Assert.AreEqual(2, exchange.OrderBook.Bids.Count());
+            Assert.AreEqual(2, exchange.OrderBook.Asks.Count());
+
+            Assert.AreEqual(new Price(945), exchange.DepthOrderBook.Depth.BidLevels[0].Price);
+            Assert.AreEqual(new Volume(100), exchange.DepthOrderBook.Depth.BidLevels[0].AggregatedVolume);
+            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.BidLevels[0].OrderCount);
+
+            Assert.AreEqual(new Price(941), exchange.DepthOrderBook.Depth.BidLevels[1].Price);
+            Assert.AreEqual(new Volume(100), exchange.DepthOrderBook.Depth.BidLevels[1].AggregatedVolume);
+            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.BidLevels[1].OrderCount);
+
+            Assert.AreEqual(new Price(948), exchange.DepthOrderBook.Depth.AskLevels[0].Price);
+            Assert.AreEqual(new Volume(100), exchange.DepthOrderBook.Depth.AskLevels[0].AggregatedVolume);
+            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.AskLevels[0].OrderCount);
+
+            ManualResetEvent manualResetEvent = new ManualResetEvent(false);
+            Order returnedOrder = null;
+            exchange.OrderBook.OrderCancelled += delegate(Order order)
+            {
+                returnedOrder = order;
+                manualResetEvent.Set();
+            };
+
+            exchange.OrderBook.CancelOrder(new OrderId(2));
+            manualResetEvent.WaitOne(5000);
+            Assert.AreEqual(buyOrder2, returnedOrder);
+            Assert.AreEqual(OrderState.Cancelled, returnedOrder.OrderState);
+            Assert.AreEqual(1, exchange.OrderBook.Bids.Count());
+            Assert.AreEqual(2, exchange.OrderBook.Asks.Count());
+
+            Assert.AreEqual(new Price(941), exchange.DepthOrderBook.Depth.BidLevels[0].Price);
+            Assert.AreEqual(new Volume(100), exchange.DepthOrderBook.Depth.BidLevels[0].AggregatedVolume);
+            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.BidLevels[0].OrderCount);
+
+            Assert.AreEqual(null, exchange.DepthOrderBook.Depth.BidLevels[1].Price);
+            Assert.AreEqual(null, exchange.DepthOrderBook.Depth.BidLevels[1].AggregatedVolume);
+            Assert.AreEqual(0, exchange.DepthOrderBook.Depth.BidLevels[1].OrderCount);
+
+            Assert.AreEqual(new Price(948), exchange.DepthOrderBook.Depth.AskLevels[0].Price);
+            Assert.AreEqual(new Volume(100), exchange.DepthOrderBook.Depth.AskLevels[0].AggregatedVolume);
+            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.AskLevels[0].OrderCount);
+
+            Assert.AreEqual(new Price(949), exchange.DepthOrderBook.Depth.AskLevels[1].Price);
+            Assert.AreEqual(new Volume(100), exchange.DepthOrderBook.Depth.AskLevels[1].AggregatedVolume);
+            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.AskLevels[1].OrderCount);
+        }
+
+        [Test]
+        public void AskCancelOrderTest_CancelsOrderAndUpdatesOrderBookAndDepth_ValidatesEntriesAndOrderStateToConfirm()
+        {
+            Exchange exchange = new Exchange();
+
+            Order buyOrder1 = new Order(new OrderId(1), "BTCUSD", new Price(941), OrderSide.Buy,
+                      OrderType.Limit, new Volume(100), new TraderId(1));
+            Order buyOrder2 = new Order(new OrderId(2), "BTCUSD", new Price(945), OrderSide.Buy,
+                      OrderType.Limit, new Volume(100), new TraderId(1));
+            Order sellOrder1 = new Order(new OrderId(3), "BTCUSD", new Price(949), OrderSide.Sell,
+                      OrderType.Limit, new Volume(100), new TraderId(1));
+            Order sellOrder2 = new Order(new OrderId(4), "BTCUSD", new Price(948), OrderSide.Sell,
+                      OrderType.Limit, new Volume(100), new TraderId(1));
+
+            Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder1, true));
+            Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder2, true));
+            Assert.IsFalse(AddAndVerify(exchange.OrderBook, sellOrder2, true));
+            Assert.IsFalse(AddAndVerify(exchange.OrderBook, sellOrder1, true));
+
+            Assert.AreEqual(2, exchange.OrderBook.Bids.Count());
+            Assert.AreEqual(2, exchange.OrderBook.Asks.Count());
+
+            Assert.AreEqual(new Price(945), exchange.DepthOrderBook.Depth.BidLevels[0].Price);
+            Assert.AreEqual(new Volume(100), exchange.DepthOrderBook.Depth.BidLevels[0].AggregatedVolume);
+            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.BidLevels[0].OrderCount);
+
+            Assert.AreEqual(new Price(941), exchange.DepthOrderBook.Depth.BidLevels[1].Price);
+            Assert.AreEqual(new Volume(100), exchange.DepthOrderBook.Depth.BidLevels[1].AggregatedVolume);
+            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.BidLevels[1].OrderCount);
+
+            Assert.AreEqual(new Price(948), exchange.DepthOrderBook.Depth.AskLevels[0].Price);
+            Assert.AreEqual(new Volume(100), exchange.DepthOrderBook.Depth.AskLevels[0].AggregatedVolume);
+            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.AskLevels[0].OrderCount);
+
+            Assert.AreEqual(new Price(949), exchange.DepthOrderBook.Depth.AskLevels[1].Price);
+            Assert.AreEqual(new Volume(100), exchange.DepthOrderBook.Depth.AskLevels[1].AggregatedVolume);
+            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.AskLevels[1].OrderCount);
+
+            ManualResetEvent manualResetEvent = new ManualResetEvent(false);
+            Order returnedOrder = null;
+            exchange.OrderBook.OrderCancelled += delegate(Order order)
+            {
+                returnedOrder = order;
+                manualResetEvent.Set();
+            };
+
+            exchange.OrderBook.CancelOrder(new OrderId(4));
+            manualResetEvent.WaitOne(5000);
+            Assert.AreEqual(sellOrder2, returnedOrder);
+            Assert.AreEqual(OrderState.Cancelled, returnedOrder.OrderState);
+            Assert.AreEqual(2, exchange.OrderBook.Bids.Count());
+            Assert.AreEqual(1, exchange.OrderBook.Asks.Count());
+
+            Assert.AreEqual(new Price(945), exchange.DepthOrderBook.Depth.BidLevels[0].Price);
+            Assert.AreEqual(new Volume(100), exchange.DepthOrderBook.Depth.BidLevels[0].AggregatedVolume);
+            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.BidLevels[0].OrderCount);
+
+            Assert.AreEqual(new Price(941), exchange.DepthOrderBook.Depth.BidLevels[1].Price);
+            Assert.AreEqual(new Volume(100), exchange.DepthOrderBook.Depth.BidLevels[1].AggregatedVolume);
+            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.BidLevels[1].OrderCount);
+
+            Assert.AreEqual(new Price(949), exchange.DepthOrderBook.Depth.AskLevels[0].Price);
+            Assert.AreEqual(new Volume(100), exchange.DepthOrderBook.Depth.AskLevels[0].AggregatedVolume);
+            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.AskLevels[0].OrderCount);
+
+            Assert.AreEqual(null, exchange.DepthOrderBook.Depth.AskLevels[1].Price);
+            Assert.AreEqual(null, exchange.DepthOrderBook.Depth.AskLevels[1].AggregatedVolume);
+            Assert.AreEqual(0, exchange.DepthOrderBook.Depth.AskLevels[1].OrderCount);
+        }
+
+        #endregion Order Cancel Tests
 
         #region Order Book Changed Tests
 
@@ -854,8 +1170,110 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         public void OrderBookChangedDepthEventTest_DepthOrderBookRaisesEventForDepthWhenOrderBookChanges_EventIsHandled()
         {
             Exchange exchange = new Exchange();
-            
 
+            Order buyOrder1 = new Order(new OrderId(1), "BTCUSD", new Price(941), OrderSide.Buy,
+                      OrderType.Limit, new Volume(100), new TraderId(1));
+            Order buyOrder2 = new Order(new OrderId(2), "BTCUSD", new Price(945), OrderSide.Buy,
+                      OrderType.Limit, new Volume(100), new TraderId(1));
+            Order sellOrder1 = new Order(new OrderId(3), "BTCUSD", new Price(949), OrderSide.Sell,
+                      OrderType.Limit, new Volume(100), new TraderId(1));
+            Order sellOrder2 = new Order(new OrderId(4), "BTCUSD", new Price(948), OrderSide.Sell,
+                      OrderType.Limit, new Volume(100), new TraderId(1));
+
+            Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder1, true));
+            Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder2, true));
+            Assert.IsFalse(AddAndVerify(exchange.OrderBook, sellOrder2, true));
+            Assert.IsFalse(AddAndVerify(exchange.OrderBook, sellOrder1, true));
+
+            Depth depth = null;
+            exchange.DepthOrderBook.DepthChanged += delegate(Depth receivedDepth)
+            {
+                depth = receivedDepth;
+            };
+            ManualResetEvent manualResetEvent = new ManualResetEvent(false);
+            Order returnedOrder = null;
+            exchange.OrderBook.OrderCancelled += delegate(Order order)
+            {
+                returnedOrder = order;
+                manualResetEvent.Set();
+            };
+
+            manualResetEvent.WaitOne(5000);
+            
+            exchange.OrderBook.CancelOrder(new OrderId(2));
+
+            Assert.AreEqual(buyOrder2, returnedOrder);
+            Assert.AreEqual(OrderState.Cancelled, returnedOrder.OrderState);
+            Assert.AreEqual(1, exchange.OrderBook.Bids.Count());
+            Assert.AreEqual(2, exchange.OrderBook.Asks.Count());
+
+            Assert.AreEqual(new Price(941), depth.BidLevels[0].Price);
+            Assert.AreEqual(new Volume(100), depth.BidLevels[0].AggregatedVolume);
+            Assert.AreEqual(1, depth.BidLevels[0].OrderCount);
+
+            Assert.AreEqual(null, depth.BidLevels[1].Price);
+            Assert.AreEqual(null, depth.BidLevels[1].AggregatedVolume);
+            Assert.AreEqual(0, depth.BidLevels[1].OrderCount);
+
+            Assert.AreEqual(new Price(948), depth.AskLevels[0].Price);
+            Assert.AreEqual(new Volume(100), depth.AskLevels[0].AggregatedVolume);
+            Assert.AreEqual(1, depth.AskLevels[0].OrderCount);
+
+            Assert.AreEqual(new Price(949), depth.AskLevels[1].Price);
+            Assert.AreEqual(new Volume(100), depth.AskLevels[1].AggregatedVolume);
+            Assert.AreEqual(1, depth.AskLevels[1].OrderCount);
+        }
+
+        [Test]
+        public void OrderBookChangedBBoEventTest_DepthOrderBookRaisesEventForDepthWhenOrderBookChanges_EventIsHandled()
+        {
+            Exchange exchange = new Exchange();
+
+            Order buyOrder1 = new Order(new OrderId(1), "BTCUSD", new Price(941), OrderSide.Buy,
+                      OrderType.Limit, new Volume(100), new TraderId(1));
+            Order buyOrder2 = new Order(new OrderId(2), "BTCUSD", new Price(945), OrderSide.Buy,
+                      OrderType.Limit, new Volume(100), new TraderId(1));
+            Order sellOrder1 = new Order(new OrderId(3), "BTCUSD", new Price(949), OrderSide.Sell,
+                      OrderType.Limit, new Volume(100), new TraderId(1));
+            Order sellOrder2 = new Order(new OrderId(4), "BTCUSD", new Price(948), OrderSide.Sell,
+                      OrderType.Limit, new Volume(100), new TraderId(1));
+
+            Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder1, true));
+            Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder2, true));
+            Assert.IsFalse(AddAndVerify(exchange.OrderBook, sellOrder2, true));
+            Assert.IsFalse(AddAndVerify(exchange.OrderBook, sellOrder1, true));
+
+            DepthLevel bestbid = null;
+            DepthLevel bestAsk = null;
+            exchange.DepthOrderBook.BboChanged += delegate(DepthLevel bestBid1, DepthLevel bestAsk1)
+            {
+                bestbid = bestBid1;
+                bestAsk = bestAsk1;
+            };
+            ManualResetEvent manualResetEvent = new ManualResetEvent(false);
+            Order returnedOrder = null;
+            exchange.OrderBook.OrderCancelled += delegate(Order order)
+            {
+                returnedOrder = order;
+                manualResetEvent.Set();
+            };
+
+            manualResetEvent.WaitOne(5000);
+
+            exchange.OrderBook.CancelOrder(new OrderId(2));
+
+            Assert.AreEqual(buyOrder2, returnedOrder);
+            Assert.AreEqual(OrderState.Cancelled, returnedOrder.OrderState);
+            Assert.AreEqual(1, exchange.OrderBook.Bids.Count());
+            Assert.AreEqual(2, exchange.OrderBook.Asks.Count());
+
+            Assert.AreEqual(new Price(941), bestbid.Price);
+            Assert.AreEqual(new Volume(100), bestbid.AggregatedVolume);
+            Assert.AreEqual(1, bestbid.OrderCount);
+
+            Assert.AreEqual(new Price(948), bestAsk.Price);
+            Assert.AreEqual(new Volume(100), bestAsk.AggregatedVolume);
+            Assert.AreEqual(1, bestAsk.OrderCount);
         }
 
         #endregion Order Book Changed Tests
