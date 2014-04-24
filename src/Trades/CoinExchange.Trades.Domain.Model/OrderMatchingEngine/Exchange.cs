@@ -20,6 +20,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         List<string> _currencyPairs = new List<string>();
         private LimitOrderBook _orderBook = null;
         private DepthOrderBook _depthOrderBook = null;
+        private ITradeListener _tradeListener = null;
 
         /// <summary>
         /// Default Constructor
@@ -32,7 +33,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
                 _orderBook = new LimitOrderBook(currencyPair);
                 _depthOrderBook = new DepthOrderBook(currencyPair, 5);
 
-                ITradeListener tradeListener = new TradeListener();
+                _tradeListener = new TradeListener();
                 IOrderListener orderListener = new OrderListener();
                 IOrderBookListener orderBookListener = new OrderBookListener();
                 IBBOListener bboListener = new BBOListener();
@@ -62,8 +63,8 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
                 _orderBook.OrderFilled -= _depthOrderBook.OnOrderFilled;
                 _orderBook.OrderFilled += _depthOrderBook.OnOrderFilled;
 
-                _orderBook.TradeExecuted -= tradeListener.OnTrade;
-                _orderBook.TradeExecuted += tradeListener.OnTrade;
+                _orderBook.TradeExecuted -= _tradeListener.OnTrade;
+                _orderBook.TradeExecuted += _tradeListener.OnTrade;
 
                 _depthOrderBook.BboChanged -= bboListener.OnBBOChange;
                 _depthOrderBook.DepthChanged -= depthListener.OnDepthChanged;
@@ -91,6 +92,8 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         public LimitOrderBook OrderBook { get { return _orderBook; } }
 
         public DepthOrderBook DepthOrderBook { get { return _depthOrderBook; } }
+
+        public ITradeListener TradeListener { get { return _tradeListener; } }
 
         #endregion Properties
     }

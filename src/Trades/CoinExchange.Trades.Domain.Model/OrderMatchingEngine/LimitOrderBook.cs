@@ -17,7 +17,6 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private string _currencyPair = string.Empty;
-        private DepthOrderBook _depthOrderBook = null;
         private int _trasactionId = 0;
 
         /// <summary>
@@ -288,6 +287,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
                 {
                     OrderBookChanged(this);
                 }
+                return true;
             }
             return false;
         }
@@ -428,6 +428,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
                 OrderFilled(inboundOrder, matchedOrder, fillFlags,new Price(filledPrice), new Volume(filledQuantity));
             }
 
+            // ToDo: Fix which should be buy order and which should be sell order
             // Create trade. The least amount of the two orders will be the trade's executed volume
             Trade trade = GenerateTrade(filledPrice, filledQuantity, matchedOrder, inboundOrder);
 
@@ -550,8 +551,6 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         {
             get { return _asks.Count(); }
         }
-
-        public DepthOrderBook DepthOrderBook { get { return _depthOrderBook; } }
 
         #endregion Properties
     }

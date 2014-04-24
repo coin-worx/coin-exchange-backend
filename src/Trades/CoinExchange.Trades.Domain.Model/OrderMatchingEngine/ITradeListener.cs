@@ -13,5 +13,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
     public interface ITradeListener
     {
         void OnTrade(Trade trade);
+
+        List<Trade> Trades { get; }
     }
 }
