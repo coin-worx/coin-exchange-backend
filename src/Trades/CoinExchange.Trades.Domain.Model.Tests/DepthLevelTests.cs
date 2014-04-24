@@ -33,7 +33,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
             Assert.AreEqual(2, depthLevel.OrderCount, "Order Count after addition");
 
             bool removeOrder1 = depthLevel.CloseOrder(new Volume(500));
-            Assert.IsTrue(removeOrder1);
+            Assert.IsFalse(removeOrder1);
             Assert.AreEqual(2500, depthLevel.AggregatedVolume.Value, "Aggregated Volume after removal");
             Assert.AreEqual(1, depthLevel.OrderCount, "Order Count after removal");
         }
