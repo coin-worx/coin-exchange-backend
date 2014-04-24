@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using CoinExchange.Trades.Domain.Model.MarketData;
+using CoinExchange.Trades.Domain.Model.MarketDataAggregate;
 
 namespace CoinExchange.Trades.Application.MarketDataServices.Representation
 {

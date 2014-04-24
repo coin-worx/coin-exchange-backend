@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using CoinExchange.Common.Domain.Model;
-using CoinExchange.Trades.Domain.Model.Order;
+using CoinExchange.Trades.Domain.Model.OrderAggregate;
 using CoinExchange.Trades.Domain.Model.Services;
 using NEventStore;
 

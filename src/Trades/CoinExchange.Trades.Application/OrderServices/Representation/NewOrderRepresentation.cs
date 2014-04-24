@@ -1,4 +1,4 @@
-﻿using CoinExchange.Trades.Domain.Model.Order;
+﻿using CoinExchange.Trades.Domain.Model.OrderAggregate;
 
 namespace CoinExchange.Trades.Application.OrderServices.Representation
 {

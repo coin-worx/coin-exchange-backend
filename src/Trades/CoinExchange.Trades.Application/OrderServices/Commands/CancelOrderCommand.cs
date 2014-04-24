@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CoinExchange.Common.Domain.Model;
-using CoinExchange.Trades.Domain.Model.Order;
-using CoinExchange.Trades.Domain.Model.Trades;
+using CoinExchange.Trades.Domain.Model.OrderAggregate;
+using CoinExchange.Trades.Domain.Model.TradeAggregate;
 
 namespace CoinExchange.Trades.Application.OrderServices.Commands
 {

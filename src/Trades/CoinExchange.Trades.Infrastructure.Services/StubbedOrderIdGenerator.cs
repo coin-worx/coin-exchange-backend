@@ -1,5 +1,5 @@
 ﻿using System;
-using CoinExchange.Trades.Domain.Model.Order;
+using CoinExchange.Trades.Domain.Model.OrderAggregate;
 using CoinExchange.Trades.Domain.Model.Services;
 
 namespace CoinExchange.Trades.Infrastructure.Services

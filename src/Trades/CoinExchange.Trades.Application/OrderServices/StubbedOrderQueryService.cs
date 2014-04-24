@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using CoinExchange.Trades.Application.OrderServices.Representation;
-using CoinExchange.Trades.Domain.Model.Order;
-using CoinExchange.Trades.Domain.Model.Trades;
+using CoinExchange.Trades.Domain.Model.OrderAggregate;
+using CoinExchange.Trades.Domain.Model.TradeAggregate;
 
 namespace CoinExchange.Trades.Application.OrderServices
 {
@@ -23,7 +23,7 @@ namespace CoinExchange.Trades.Application.OrderServices
                 TxId = "EEER342",
                 UserRefId = "WREDF342",
                 Pair = "XBTUSD",
-                Status = OrderStatus.Open,
+                Status = OrderState.Accepted,
                 OpenTime = DateTime.Now.AddHours(-2),
                 ExpireTime = DateTime.Now.AddHours(3),
                 Volume = 3000,
@@ -40,7 +40,7 @@ namespace CoinExchange.Trades.Application.OrderServices
                 TxId = "EEER342",
                 UserRefId = "YIO468S",
                 Pair = "XBTEURS",
-                Status = OrderStatus.Open,
+                Status = OrderState.Accepted,
                 OpenTime = DateTime.Now.AddHours(-2),
                 ExpireTime = DateTime.Now.AddHours(3),
                 Volume = 3000,
@@ -57,7 +57,7 @@ namespace CoinExchange.Trades.Application.OrderServices
                 TxId = "EEER342",
                 UserRefId = "GTII5769",
                 Pair = "LTCUSD",
-                Status = OrderStatus.Open,
+                Status = OrderState.Accepted,
                 OpenTime = DateTime.Now.AddHours(-2),
                 ExpireTime = DateTime.Now.AddHours(3),
                 Volume = 3000,
@@ -86,7 +86,7 @@ namespace CoinExchange.Trades.Application.OrderServices
                 TxId = "EEER342",
                 UserRefId = "WREDF342",
                 Pair = "XBTUSD",
-                Status = OrderStatus.Canceled,
+                Status = OrderState.Cancelled,
                 OpenTime = DateTime.Now.AddHours(-2),
                 ExpireTime = DateTime.Now.AddHours(3),
                 Volume = 3000,
@@ -104,7 +104,7 @@ namespace CoinExchange.Trades.Application.OrderServices
                 TxId = "EEER342",
                 UserRefId = "YIO468S",
                 Pair = "XBTEURS",
-                Status = OrderStatus.Expired,
+                Status = OrderState.Expired,
                 OpenTime = DateTime.Now.AddHours(-2),
                 ExpireTime = DateTime.Now.AddHours(3),
                 Volume = 3000,
@@ -122,7 +122,7 @@ namespace CoinExchange.Trades.Application.OrderServices
                 TxId = "EEER342",
                 UserRefId = "GTII5769",
                 Pair = "LTCUSD",
-                Status = OrderStatus.Closed,
+                Status = OrderState.Accepted,
                 OpenTime = DateTime.Now.AddHours(-2),
                 ExpireTime = DateTime.Now.AddHours(3),
                 Volume = 3000,

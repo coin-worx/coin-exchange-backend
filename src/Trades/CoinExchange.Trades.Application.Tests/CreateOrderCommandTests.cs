@@ -3,7 +3,7 @@ using System.Threading;
 using CoinExchange.Trades.Application.OrderServices;
 using CoinExchange.Trades.Application.OrderServices.Commands;
 using CoinExchange.Trades.Application.OrderServices.Representation;
-using CoinExchange.Trades.Domain.Model.Order;
+using CoinExchange.Trades.Domain.Model.OrderAggregate;
 using Disruptor;
 using NUnit.Framework;
 using Spring.Context.Support;
