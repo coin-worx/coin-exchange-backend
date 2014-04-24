@@ -1,0 +1,15 @@
+﻿<?xml version="1.0"?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+assembly="CoinExchange.Trades.ReadModel" namespace="CoinExchange.Trades.ReadModel.DTO">
+  <class name="OhlcReadModel" table="ohlc" lazy="false">
+    <id name="Id" column="Id">
+      <generator class="native" />
+    </id>
+    <property name="Open"  column="Open"/>
+    <property name="High"  column="High"/>
+    <property name="DateTime"  column="DateTime"/>
+    <property name="Low"  column="Low"/>
+    <property name="Close"  column="Close"/>
+    <property name="Volume"  column="Volume"/>
+  </class>
+</hibernate-mapping>

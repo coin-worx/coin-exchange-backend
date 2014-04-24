@@ -1,0 +1,14 @@
+﻿<?xml version="1.0"?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+assembly="CoinExchange.Trades.ReadModel" namespace="CoinExchange.Trades.ReadModel.DTO">
+  <class name="TradeReadModel" table="trade" lazy="false">
+    <id name="TradeId" column="TradeId">
+      <generator class="assigned" />
+    </id>
+    <property name="Price"  column="Price"/>
+    <property name="Volume"  column="Volume"/>
+    <property name="ExecutionDateTime"  column="ExecutionDateTime"/>
+    <property name="OrderId"  column="OrderId"/>
+    <property name="CurrencyPair"  column="CurrencyPair"/>
+  </class>
+</hibernate-mapping>
