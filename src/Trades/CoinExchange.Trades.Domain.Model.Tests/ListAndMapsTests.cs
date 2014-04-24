@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using CoinExchange.Trades.Domain.Model.OrderAggregate;
 using CoinExchange.Trades.Domain.Model.OrderMatchingEngine;
 using CoinExchange.Trades.Domain.Model.TradeAggregate;
@@ -9,7 +10,7 @@ using NUnit.Framework;
 namespace CoinExchange.Trades.Domain.Model.Tests
 {
     [TestFixture]
-    class ListAndMapsTests
+    internal class ListAndMapsTests
     {
         [Test]
         public void TestSortedListVsList_WhichOneISFaster()
@@ -20,8 +21,9 @@ namespace CoinExchange.Trades.Domain.Model.Tests
             stopwatch.Start();
             for (int i = 0; i < 10000; i++)
             {
-                Order order = new Order(new OrderId(1), "XBTUSD", new Price(491 + i), OrderSide.Sell, OrderType.Limit, new Volume(2000), 
-                    new TraderId(1));
+                Order order = new Order(new OrderId(1), "XBTUSD", new Price(491 + i), OrderSide.Sell, OrderType.Limit,
+                                        new Volume(2000),
+                                        new TraderId(1));
                 orders.Add(order);
                 /*orders = orders.OrderBy(x => x.Price.Value).ToList();*/
                 orders.Sort((x, y) => x.Price.Value.CompareTo(y.Price.Value));
@@ -39,12 +41,13 @@ namespace CoinExchange.Trades.Domain.Model.Tests
 
             Console.WriteLine("Watch reset:" + timeSpan);
 
-            SortedList<decimal,Order> _sortedList = new SortedList<decimal, Order>();
+            SortedList<decimal, Order> _sortedList = new SortedList<decimal, Order>();
             stopwatch.Start();
             for (int i = 0; i < 10000; i++)
             {
-                Order order = new Order(new OrderId(1), "XBTUSD", new Price(491 + i), OrderSide.Sell, OrderType.Limit, new Volume(2000),
-                    new TraderId(1));
+                Order order = new Order(new OrderId(1), "XBTUSD", new Price(491 + i), OrderSide.Sell, OrderType.Limit,
+                                        new Volume(2000),
+                                        new TraderId(1));
                 _sortedList.Add(i, order);
             }
             stopwatch.Stop();
@@ -53,7 +56,54 @@ namespace CoinExchange.Trades.Domain.Model.Tests
             Console.WriteLine("Time taken for SortedList:" + timeSpan);
         }
 
-       /* [Test]
+        /// <summary>
+        /// tests whether LINQ or For is fast
+        /// </summary>
+        [Test]
+        public void LinqVsFor()
+        {
+            List<OrderId> orderIds = new List<OrderId>();
+            Order[] orders = new Order[10000];
+            Random random = new Random();
+            for (int i = 0; i < orders.Length; i++)
+            {
+                bool isBuy = ((i % 2) == 0);
+                decimal delta = isBuy ? 1880 : 1884;
+
+                Price price = new Price(random.Next(1, 10) + delta);
+
+                Volume volume = new Volume(random.Next() % 10 + 1 * 100);
+
+                OrderId orderId = new OrderId(i);
+                orderIds.Add(orderId);
+                orders[i] = new Order(orderId, "BTCUSD", price, isBuy ? OrderSide.Buy :
+                OrderSide.Sell, OrderType.Limit, volume, new TraderId(random.Next(1, 100)));
+            }
+
+            var linqStart = DateTime.Now;
+            Order linqOrder = (from order1 in orders
+                           where order1.OrderId.Id == 3007
+                           select order1).ToList().First();
+            var linqEnd = DateTime.Now;
+
+            Console.WriteLine("Order found in " + (linqEnd - linqStart).TotalSeconds);
+
+            var forStart = DateTime.Now;
+            Order forOrder = null;
+            for (int i = 0; i < orders.Length; i++)
+            {
+                if (orders[i].OrderId.Id == 3007)
+                {
+                    forOrder = orders[i];
+                    break;
+                }
+            }
+
+            var forEnd = DateTime.Now;
+            Console.WriteLine("Order found in " + (forEnd - forStart).TotalSeconds);
+        }
+
+    /* [Test]
         public void DepthLevelMapTest_IfSideIsBuy_WillSortInDescendingOrder()
         {
             DepthLevelMap depthLevelMap = new DepthLevelMap("XBTUSD", OrderSide.Sell);
