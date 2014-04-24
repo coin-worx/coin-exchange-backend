@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using CoinExchange.Trades.ReadModel.DTO;
 
-namespace CoinExchange.Trades.ReadModel.Services
+namespace CoinExchange.Trades.ReadModel.Repositories
 {
-    public interface IOrderQueryService
+    public interface IOrderRepository
     {
         List<OrderReadModel> GetOpenOrders(string traderId);
         List<OrderReadModel> GetClosedOrders(string traderId);

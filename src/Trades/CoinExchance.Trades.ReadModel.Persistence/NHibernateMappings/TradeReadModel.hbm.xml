@@ -9,6 +9,7 @@ assembly="CoinExchange.Trades.ReadModel" namespace="CoinExchange.Trades.ReadMode
     <property name="Volume"  column="Volume"/>
     <property name="ExecutionDateTime"  column="ExecutionDateTime"/>
     <property name="OrderId"  column="OrderId"/>
+    <property name="TraderId"  column="TraderId"/>
     <property name="CurrencyPair"  column="CurrencyPair"/>
   </class>
 </hibernate-mapping>

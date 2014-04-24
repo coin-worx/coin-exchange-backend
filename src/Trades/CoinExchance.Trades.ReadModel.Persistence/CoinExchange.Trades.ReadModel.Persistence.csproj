@@ -72,11 +72,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="NHibernate\MarketDataQueryService.cs" />
-    <Compile Include="NHibernate\OrderQueryService.cs" />
-    <Compile Include="NHibernate\Persist.cs" />
+    <Compile Include="NHibernate\MarketDataRepository.cs" />
+    <Compile Include="NHibernate\OrderRepository.cs" />
+    <Compile Include="NHibernate\PersistenceRepository.cs" />
     <Compile Include="NHibernateSessionFactory.cs" />
-    <Compile Include="NHibernate\TradeQueryService.cs" />
+    <Compile Include="NHibernate\TradeRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -110,11 +110,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="NHibernateMappings\AssetPairReadModel.hbm.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="NHibernateMappings\TickerInfoReadModel.hbm.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
