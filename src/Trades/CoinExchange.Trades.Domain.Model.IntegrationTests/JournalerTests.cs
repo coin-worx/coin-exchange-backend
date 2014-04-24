@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using CoinExchange.Trades.Domain.Model.Order;
+using CoinExchange.Trades.Domain.Model.OrderAggregate;
 using CoinExchange.Trades.Domain.Model.Services;
 using CoinExchange.Trades.Infrastructure.Persistence.RavenDb;
 using CoinExchange.Trades.Infrastructure.Services;
@@ -40,13 +40,13 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
         [Category("Integration")]
         public void CreateOrder_PublishToInputDisruptor_JournalerShouldSaveTheEvent()
         {
-            Order.Order order = OrderFactory.CreateOrder("1234", "XBTUSD", "limit", "buy", 5, 10,
+            Order order = OrderFactory.CreateOrder("1234", "XBTUSD", "limit", "buy", 5, 10,
                 new StubbedOrderIdGenerator());
             InputPayload payload = InputPayload.CreatePayload(order);
             InputDisruptorPublisher.Publish(payload);
             _manualResetEvent.WaitOne(5000);
             //retrieve order
-            Order.Order savedOrder = _eventStore.GetEvent(order.OrderId.Id.ToString()) as Order.Order;
+            Order savedOrder = _eventStore.GetEvent(order.OrderId.Id.ToString()) as Order;
             Assert.NotNull(savedOrder);
             Assert.AreEqual(savedOrder,order);
 

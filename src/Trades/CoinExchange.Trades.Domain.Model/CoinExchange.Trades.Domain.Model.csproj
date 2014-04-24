@@ -30,9 +30,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Atomic">
+      <HintPath>..\..\packages\Disruptor.1.1.0\lib\net40\Atomic.dll</HintPath>
+    </Reference>
     <Reference Include="Common.Logging, Version=2.1.2.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Common.Logging.2.1.2\lib\net40\Common.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Disruptor">
+      <HintPath>..\..\packages\Disruptor.1.1.0\lib\net40\Disruptor.dll</HintPath>
+    </Reference>
+    <Reference Include="Disruptor.Scheduler">
+      <HintPath>..\..\packages\Disruptor.1.1.0\lib\net40\Disruptor.Scheduler.dll</HintPath>
     </Reference>
     <Reference Include="log4net">
       <HintPath>..\..\packages\log4net.1.2.10\lib\2.0\log4net.dll</HintPath>
@@ -55,6 +64,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="OrderAggregate\InputDisruptorPublisher.cs" />
+    <Compile Include="OrderAggregate\InputPayload.cs" />
+    <Compile Include="OrderAggregate\OrderCancellation.cs" />
     <Compile Include="OrderMatchingEngine\BBOListener.cs" />
     <Compile Include="OrderMatchingEngine\ChangeId.cs" />
     <Compile Include="OrderMatchingEngine\Depth.cs" />
@@ -90,7 +102,9 @@
     <Compile Include="MarketDataAggregate\Ohlc.cs" />
     <Compile Include="OrderAggregate\OrderId.cs" />
     <Compile Include="OrderAggregate\TradeRecord.cs" />
+    <Compile Include="Services\IEventStore.cs" />
     <Compile Include="Services\IOrderIdGenerator.cs" />
+    <Compile Include="Services\Journaler.cs" />
     <Compile Include="TradeAggregate\Trade.cs" />
     <Compile Include="TradeAggregate\TradeExecutedEvent.cs" />
     <Compile Include="TradeAggregate\TraderId.cs" />

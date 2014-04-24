@@ -3,7 +3,7 @@ using CoinExchange.Common.Domain.Model;
 using Disruptor;
 using Disruptor.Dsl;
 
-namespace CoinExchange.Trades.Domain.Model.Order
+namespace CoinExchange.Trades.Domain.Model.OrderAggregate
 {
     public class InputDisruptorPublisher
     {

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CoinExchange.Trades.Domain.Model.Order
+﻿namespace CoinExchange.Trades.Domain.Model.OrderAggregate
 {
     /// <summary>
     /// Input for disruptor for new order and cancel order requests

@@ -5,6 +5,7 @@ using CoinExchange.Common.Domain.Model;
 using CoinExchange.Trades.Application.OrderServices;
 using CoinExchange.Trades.Application.OrderServices.Commands;
 using CoinExchange.Trades.Application.OrderServices.Representation;
+using CoinExchange.Trades.Domain.Model.OrderAggregate;
 using CoinExchange.Trades.Domain.Model.TradeAggregate;
 using CoinExchange.Trades.Port.Adapter.Rest.DTOs.Order;
 

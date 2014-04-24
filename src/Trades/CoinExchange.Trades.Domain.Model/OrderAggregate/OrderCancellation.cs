@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CoinExchange.Common.Domain.Model;
-using CoinExchange.Trades.Domain.Model.Trades;
+﻿using CoinExchange.Common.Domain.Model;
+using CoinExchange.Trades.Domain.Model.TradeAggregate;
 
-namespace CoinExchange.Trades.Domain.Model.Order
+namespace CoinExchange.Trades.Domain.Model.OrderAggregate
 {
     /// <summary>
     /// VO that will represent cancelation request

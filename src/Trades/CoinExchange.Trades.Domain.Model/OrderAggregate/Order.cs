@@ -341,6 +341,28 @@ namespace CoinExchange.Trades.Domain.Model.OrderAggregate
             }
         }
 
+        /// <summary>
+        /// Perform deep copy
+        /// </summary>
+        /// <param name="order"></param>
+        /// <returns></returns>
+        public Order MemberWiseClone(Order order)
+        {
+            order.OrderId = new OrderId(this.OrderId.Id);
+            order.OrderSide = this.OrderSide;
+            order.OrderType = this.OrderType;
+            order.OrderState = this.OrderState;
+            if (OrderType == OrderType.Limit)
+            {
+                order.Price = new Price(_price.Value);
+            }
+            order.TraderId = new TraderId(this.TraderId.Id);
+            order.CurrencyPair = this.CurrencyPair;
+            order.Volume = new Volume(this.Volume.Value);
+            order.VolumeExecuted = this.VolumeExecuted;
+            return order;
+        }
+
         #region Implementation of IComparable<in Order>
 
         /// <summary>
