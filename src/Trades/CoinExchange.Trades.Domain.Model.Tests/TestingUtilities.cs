@@ -90,11 +90,6 @@ namespace CoinExchange.Trades.Domain.Model.Tests
             {
                 asExpected = false;
             }
-            // ToDo: Need to figure how to calculate the FilledCost for an order
-            /*if (!filledCost.Equals(order.FilledCost))
-            {
-                asExpected = false;
-            }*/
             if (order.OpenQuantity.Value == 0 && order.OrderState != OrderState.Complete)
             {
                 asExpected = false;

@@ -56,13 +56,12 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="DepthCheck.cs" />
     <Compile Include="DepthLevelTests.cs" />
     <Compile Include="DepthTests.cs" />
     <Compile Include="LimitOrderBookTests.cs" />
     <Compile Include="OrderBookTests.cs" />
     <Compile Include="OrderFactoryTests.cs" />
-    <Compile Include="ListAndMapsTests.cs" />
+    <Compile Include="Performance\ListAndMapsTests.cs" />
     <Compile Include="Performance\OrderBookPerformanceTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestingUtilities.cs" />
@@ -84,6 +83,7 @@
       <Name>CoinExchange.Trades.Infrastructure.Services</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

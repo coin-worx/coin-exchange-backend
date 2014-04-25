@@ -3,17 +3,19 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using CoinExchange.Trades.Domain.Model.OrderAggregate;
-using CoinExchange.Trades.Domain.Model.OrderMatchingEngine;
 using CoinExchange.Trades.Domain.Model.TradeAggregate;
 using NUnit.Framework;
 
-namespace CoinExchange.Trades.Domain.Model.Tests
+namespace CoinExchange.Trades.Domain.Model.Tests.Performance
 {
     [TestFixture]
     internal class ListAndMapsTests
     {
+        private const string PerformanceTest = "Performance";
+
         [Test]
-        public void TestSortedListVsList_WhichOneISFaster()
+        [Category(PerformanceTest)]
+        public void TestSortedListVsList_WhichOneIsFaster()
         {
             List<Order> orders = new List<Order>();
 
@@ -60,6 +62,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         /// tests whether LINQ or For is fast
         /// </summary>
         [Test]
+        [Category(PerformanceTest)]
         public void LinqVsFor()
         {
             List<OrderId> orderIds = new List<OrderId>();
@@ -80,13 +83,14 @@ namespace CoinExchange.Trades.Domain.Model.Tests
                 OrderSide.Sell, OrderType.Limit, volume, new TraderId(random.Next(1, 100)));
             }
 
+            // Start time for checking LINQ's performance to search for an item
             var linqStart = DateTime.Now;
             Order linqOrder = (from order1 in orders
                            where order1.OrderId.Id == 3007
                            select order1).ToList().First();
             var linqEnd = DateTime.Now;
 
-            Console.WriteLine("Order found in " + (linqEnd - linqStart).TotalSeconds);
+            Console.WriteLine("Linq's Time: " + (linqEnd - linqStart).TotalSeconds);
 
             var forStart = DateTime.Now;
             Order forOrder = null;
@@ -100,7 +104,22 @@ namespace CoinExchange.Trades.Domain.Model.Tests
             }
 
             var forEnd = DateTime.Now;
-            Console.WriteLine("Order found in " + (forEnd - forStart).TotalSeconds);
+            Console.WriteLine("For's Time: " + (forEnd - forStart).TotalSeconds);
+
+            var foreachStart = DateTime.Now;
+
+            Order foreachOrder = null;
+            foreach (var order in orders)
+            {
+                if (order.OrderId.Id == 3007)
+                {
+                    foreachOrder = order;
+                    break;
+                }
+            }
+
+            var foreachEnd = DateTime.Now;
+            Console.WriteLine("Foreach's Time: " + (foreachStart - foreachEnd).TotalSeconds);
         }
 
     /* [Test]

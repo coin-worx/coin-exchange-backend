@@ -109,8 +109,16 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         {
             if (volume != null)
             {
-                _aggregatedVolume += volume;
-                return true;
+                if (_aggregatedVolume == null)
+                {
+                    _aggregatedVolume = new Volume(volume.Value);
+                    return true;
+                }
+                else
+                {
+                    _aggregatedVolume += volume;
+                    return true;
+                }
             }
             return false;
         }
