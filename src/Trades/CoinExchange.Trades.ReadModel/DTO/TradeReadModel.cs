@@ -14,5 +14,6 @@ namespace CoinExchange.Trades.ReadModel.DTO
         public DateTime ExecutionDateTime { get; set; }
         public string CurrencyPair { get; set; }
         public string OrderId { get; set; }
+        public string TraderId { get; set; }
     }
 }

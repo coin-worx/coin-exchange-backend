@@ -4,9 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoinExchange.Trades.ReadModel.Services
+namespace CoinExchange.Trades.ReadModel.Repositories
 {
-    public interface IPersistance
+    /// <summary>
+    /// Interface for adding or updating readmodels
+    /// </summary>
+    public interface IPersistanceRepository
     {
         void SaveOrUpdate(object readModelObject);
     }

@@ -39,8 +39,16 @@
   <!-- Exception translation object post processor -->
   <!--<object type="Spring.Dao.Attributes.PersistenceExceptionTranslationPostProcessor, Spring.Data"/>-->
 
-  <!-- Data Access Objects -->
-  <object id="Persist" type="CoinExchange.Trades.ReadModel.Persistence.NHibernate.Persist, CoinExchange.Trades.ReadModel.Persistence">
+  <!-- Repositories -->
+  <object id="PersistenceRepository" type="CoinExchange.Trades.ReadModel.Persistence.NHibernate.PersistenceRepository, CoinExchange.Trades.ReadModel.Persistence">
+    <property name="SessionFactory" ref="NHibernateSessionFactory"/>
+  </object>
+
+  <object id="OrderRepository" type="CoinExchange.Trades.ReadModel.Persistence.NHibernate.OrderRepository, CoinExchange.Trades.ReadModel.Persistence">
+    <property name="SessionFactory" ref="NHibernateSessionFactory"/>
+  </object>
+
+  <object id="TradeRepository" type="CoinExchange.Trades.ReadModel.Persistence.NHibernate.TradeRepository, CoinExchange.Trades.ReadModel.Persistence">
     <property name="SessionFactory" ref="NHibernateSessionFactory"/>
   </object>
   <tx:attribute-driven/>

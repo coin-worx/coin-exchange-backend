@@ -45,10 +45,10 @@
     <Compile Include="DTO\TickerInfoReadModel.cs" />
     <Compile Include="DTO\TradeReadModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\IMarketDataQueryService.cs" />
-    <Compile Include="Services\IPersistance.cs" />
-    <Compile Include="Services\IOrderQueryService.cs" />
-    <Compile Include="Services\ITradeQueryService.cs" />
+    <Compile Include="Repositories\IMarketDataRepository.cs" />
+    <Compile Include="Repositories\IPersistanceRepository.cs" />
+    <Compile Include="Repositories\IOrderRepository.cs" />
+    <Compile Include="Repositories\ITradeRepository.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
