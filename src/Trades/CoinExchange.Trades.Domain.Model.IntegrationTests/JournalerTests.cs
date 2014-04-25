@@ -49,7 +49,15 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Order savedOrder = _eventStore.GetEvent(order.OrderId.Id.ToString()) as Order;
             Assert.NotNull(savedOrder);
             Assert.AreEqual(savedOrder,order);
+        }
 
+        [Test]
+        [Category("Integration")]
+        public void AddOrder()
+        {
+            Order order = OrderFactory.CreateOrder("1234", "XBTUSD", "limit", "buy", 5, 10,
+               new StubbedOrderIdGenerator());
+            
         }
         
     }

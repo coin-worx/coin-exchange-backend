@@ -111,7 +111,6 @@
     <Compile Include="Services\IOrderIdGenerator.cs" />
     <Compile Include="Services\Journaler.cs" />
     <Compile Include="Services\OutputDisruptor.cs" />
-    <Compile Include="Services\OutputPayLoad.cs" />
     <Compile Include="TradeAggregate\Trade.cs" />
     <Compile Include="TradeAggregate\TradeExecutedEvent.cs" />
     <Compile Include="TradeAggregate\TradeList.cs" />

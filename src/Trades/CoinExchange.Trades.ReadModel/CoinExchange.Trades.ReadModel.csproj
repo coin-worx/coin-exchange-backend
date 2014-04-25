@@ -47,6 +47,8 @@
     <Compile Include="DTO\OrderReadModel.cs" />
     <Compile Include="DTO\TickerInfoReadModel.cs" />
     <Compile Include="DTO\TradeReadModel.cs" />
+    <Compile Include="EventHandlers\OrderEventListener.cs" />
+    <Compile Include="EventHandlers\TradeEventListener.cs" />
     <Compile Include="MemoryImages\BBOMemoryImage.cs" />
     <Compile Include="MemoryImages\BBORepresentation.cs" />
     <Compile Include="MemoryImages\BBORepresentationList.cs" />

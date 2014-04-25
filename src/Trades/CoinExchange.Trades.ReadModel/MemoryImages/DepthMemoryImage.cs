@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CoinExchange.Trades.Domain.Model.DomainEvents;
 using CoinExchange.Trades.Domain.Model.OrderAggregate;
 using CoinExchange.Trades.Domain.Model.OrderMatchingEngine;
 
@@ -32,6 +33,7 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
         {
             _currencyPairs = new List<string>();
             InitializeCurrencyPairs();
+            DepthEvent.DepthChanged += OnDepthArrived;
         }
 
         /// <summary>

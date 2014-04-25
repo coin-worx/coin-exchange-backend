@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CoinExchange.Trades.Domain.Model.DomainEvents;
 using CoinExchange.Trades.Domain.Model.OrderMatchingEngine;
 
 namespace CoinExchange.Trades.ReadModel.MemoryImages
@@ -24,6 +25,17 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
             _currencyPairs = new List<string>();
             InitializeCurrencyPairs();
             _bboRepresentationList = new BBORepresentationList();
+            BBOEvent.BBOChanged += OnBBOArrived;
+        }
+
+        /// <summary>
+        /// Event listener for listening BBO
+        /// </summary>
+        /// <param name="bbo"></param>
+        private void OnBBOArrived(BBO bbo)
+        {
+            OnBBOArrived("", bbo.BestBid, bbo.BestAsk);
+
         }
 
         /// <summary>

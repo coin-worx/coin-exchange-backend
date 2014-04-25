@@ -13,7 +13,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderAggregate
     /// CoinExchange Order
     /// </summary>
     [Serializable]
-    public class Order : IComparable<Order>
+    public class Order //: IComparable<Order>
     {
         #region Private fields
 
@@ -345,7 +345,14 @@ namespace CoinExchange.Trades.Domain.Model.OrderAggregate
         {
             if (obj != null)
             {
-                return OrderId.Id == (obj as Order).OrderId.Id;
+                if (obj is Order)
+                {
+                    return OrderId.Id == (obj as Order).OrderId.Id;
+                }
+                else if (obj is OrderId)
+                {
+                    return OrderId.Id == (obj as OrderId).Id;
+                }
             }
             return false;
         }

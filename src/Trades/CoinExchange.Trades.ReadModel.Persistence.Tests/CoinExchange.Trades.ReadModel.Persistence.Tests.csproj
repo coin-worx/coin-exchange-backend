@@ -34,6 +34,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Antlr.3.1.3.42154\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="Atomic, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Disruptor.1.1.0\lib\net40\Atomic.dll</HintPath>
+    </Reference>
     <Reference Include="Castle.Core">
       <HintPath>..\..\packages\Castle.Core.2.5.2\lib\NET35\Castle.Core.dll</HintPath>
     </Reference>
@@ -41,9 +45,23 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Common.Logging.1.2.0\lib\1.0\Common.Logging.dll</HintPath>
     </Reference>
+    <Reference Include="Disruptor, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Disruptor.1.1.0\lib\net40\Disruptor.dll</HintPath>
+    </Reference>
+    <Reference Include="Disruptor.Scheduler">
+      <HintPath>..\..\packages\Disruptor.1.1.0\lib\net40\Disruptor.Scheduler.dll</HintPath>
+    </Reference>
     <Reference Include="Iesi.Collections, Version=1.0.1.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Iesi.Collections.1.0.1\lib\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="NEventStore">
+      <HintPath>..\..\packages\NEventStore.4.0.0.15\lib\net40\NEventStore.dll</HintPath>
+    </Reference>
+    <Reference Include="NEventStore.Persistence.RavenPersistence, Version=4.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\NEventStore.Persistence.RavenPersistence.4.1.0.10\lib\net40\NEventStore.Persistence.RavenPersistence.dll</HintPath>
     </Reference>
     <Reference Include="NHibernate, Version=3.0.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -55,6 +73,14 @@
     <Reference Include="nunit.framework, Version=2.6.3.13283, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Raven.Abstractions, Version=2.5.0.0, Culture=neutral, PublicKeyToken=37f41c7f99471593, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\RavenDB.Client.2.5.2874\lib\net45\Raven.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Raven.Client.Lightweight, Version=2.5.0.0, Culture=neutral, PublicKeyToken=37f41c7f99471593, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\RavenDB.Client.2.5.2874\lib\net45\Raven.Client.Lightweight.dll</HintPath>
     </Reference>
     <Reference Include="Remotion.Data.Linq, Version=1.13.41.2, Culture=neutral, PublicKeyToken=cab60358ab4081ea, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -76,6 +102,7 @@
       <HintPath>..\..\packages\Spring.Data.NHibernate30.1.3.2\lib\net40\Spring.Data.NHibernate30.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -84,6 +111,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="OrderListenerTests.cs" />
     <Compile Include="OrderPersistenceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TradePersistenceTests.cs" />
@@ -92,6 +120,18 @@
     <ProjectReference Include="..\CoinExchance.Trades.ReadModel.Persistence\CoinExchange.Trades.ReadModel.Persistence.csproj">
       <Project>{9fca647f-ed19-4bef-a2ff-093ae27974e9}</Project>
       <Name>CoinExchange.Trades.ReadModel.Persistence</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CoinExchange.Trades.Domain.Model\CoinExchange.Trades.Domain.Model.csproj">
+      <Project>{32ac3710-adf8-4522-8f06-1f9c7a45e6e7}</Project>
+      <Name>CoinExchange.Trades.Domain.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CoinExchange.Trades.Infrastructure.Persistence\CoinExchange.Trades.Infrastructure.Persistence.csproj">
+      <Project>{1fe04e5f-951e-408f-9172-87b259cbbf94}</Project>
+      <Name>CoinExchange.Trades.Infrastructure.Persistence</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CoinExchange.Trades.Infrastructure.Services\CoinExchange.Trades.Infrastructure.Services.csproj">
+      <Project>{2247dd67-1747-430f-b93f-c5538a6dda1e}</Project>
+      <Name>CoinExchange.Trades.Infrastructure.Services</Name>
     </ProjectReference>
     <ProjectReference Include="..\CoinExchange.Trades.ReadModel\CoinExchange.Trades.ReadModel.csproj">
       <Project>{e31a7aa3-da8b-4e3d-8e3b-684555a8dafc}</Project>

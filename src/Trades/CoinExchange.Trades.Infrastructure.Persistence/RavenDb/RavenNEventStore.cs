@@ -5,6 +5,7 @@ using CoinExchange.Common.Domain.Model;
 using CoinExchange.Trades.Domain.Model.OrderAggregate;
 using CoinExchange.Trades.Domain.Model.Services;
 using NEventStore;
+using NEventStore.Dispatcher;
 
 namespace CoinExchange.Trades.Infrastructure.Persistence.RavenDb
 {
@@ -17,7 +18,7 @@ namespace CoinExchange.Trades.Infrastructure.Persistence.RavenDb
 
         public RavenNEventStore()
         {
-            _store = GetInitializedEventStore();
+            _store = GetInitializedEventStore(new ReceiveCommit());
         }
 
         /// <summary>
@@ -44,12 +45,12 @@ namespace CoinExchange.Trades.Infrastructure.Persistence.RavenDb
         /// Initialize RavenDB NEventStore
         /// </summary>
         /// <returns></returns>
-        private static IStoreEvents GetInitializedEventStore()
+        private static IStoreEvents GetInitializedEventStore(IDispatchCommits commits)
         {
             return Wireup.Init()
                 .UsingRavenPersistence(Constants.RAVEN_DB_CONNECTIONSTRING_NAME)
                 .DefaultDatabase(Constants.RAVEN_DB_DATABASE_NAME)
-                .UsingAsynchronousDispatchScheduler()
+                .UsingAsynchronousDispatchScheduler(commits)
                 .Build();
         }
 

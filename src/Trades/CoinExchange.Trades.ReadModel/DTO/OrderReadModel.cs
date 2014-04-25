@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CoinExchange.Trades.Domain.Model.OrderAggregate;
 
 namespace CoinExchange.Trades.ReadModel.DTO
 {
@@ -17,5 +18,19 @@ namespace CoinExchange.Trades.ReadModel.DTO
         public string TraderId { get; set; }
         public string CurrencyPair { get; set; }
         //public List<TradeReadModel> Trades;
+
+        public static OrderReadModel CreateOrderReadModel(Order order)
+        {
+            OrderReadModel readModel=new OrderReadModel();
+            readModel.OrderId = order.OrderId.Id.ToString();
+            readModel.OrderSide = order.OrderSide.ToString();
+            readModel.OrderType = order.OrderType.ToString();
+            readModel.Price = order.Price.Value;
+            readModel.Status = order.OrderState.ToString();
+            readModel.TraderId = order.TraderId.Id.ToString();
+            readModel.VolumeExecuted = order.VolumeExecuted;
+            readModel.CurrencyPair = order.CurrencyPair;
+            return readModel;
+        }
     }
 }
