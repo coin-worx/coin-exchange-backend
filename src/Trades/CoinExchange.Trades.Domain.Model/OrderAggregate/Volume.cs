@@ -6,6 +6,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderAggregate
     /// <summary>
     /// order volume value object
     /// </summary>
+    [Serializable]
     public class Volume : IComparable<Volume>
     {
         private decimal _value;

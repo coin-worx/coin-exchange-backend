@@ -12,6 +12,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
     /// <summary>
     /// Contains the Orders for a specific side (Bids or Asks)
     /// </summary>
+    [Serializable]
     public class OrderList : IEnumerable<Order>
     {
         // Get the Current Logger

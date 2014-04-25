@@ -12,6 +12,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderAggregate
     /// <summary>
     /// CoinExchange Order
     /// </summary>
+    [Serializable]
     public class Order : IComparable<Order>
     {
         #region Private fields
@@ -339,6 +340,15 @@ namespace CoinExchange.Trades.Domain.Model.OrderAggregate
                 }
                 return _openQuantity;
             }
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj != null)
+            {
+                return OrderId.Id == (obj as Order).OrderId.Id;
+            }
+            return false;
         }
 
         /// <summary>

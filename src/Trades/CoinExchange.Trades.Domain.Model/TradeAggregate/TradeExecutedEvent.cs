@@ -1,8 +1,11 @@
-﻿namespace CoinExchange.Trades.Domain.Model.TradeAggregate
+﻿using System;
+
+namespace CoinExchange.Trades.Domain.Model.TradeAggregate
 {
     /// <summary>
     /// Event resulting after a trade execution
     /// </summary>
+    [Serializable]
     public class TradeExecutedEvent
     {
         private readonly string _aggregateId = string.Empty;

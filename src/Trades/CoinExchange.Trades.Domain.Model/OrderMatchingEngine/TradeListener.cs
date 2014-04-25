@@ -10,6 +10,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
     /// <summary>
     /// Listens to the Trades that are executed by the Order Book
     /// </summary>
+    [Serializable]
     public class TradeListener : ITradeListener
     {
         // Get the Current Logger

@@ -6,6 +6,7 @@ namespace CoinExchange.Trades.Domain.Model.TradeAggregate
     /// <summary>
     /// Result of a bid and ask crossing
     /// </summary>
+    [Serializable]
     public class Trade
     {
         private readonly string _aggregateId;

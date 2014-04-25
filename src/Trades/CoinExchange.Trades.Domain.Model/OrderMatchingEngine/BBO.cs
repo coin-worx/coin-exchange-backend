@@ -6,19 +6,13 @@ using System.Threading.Tasks;
 
 namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
 {
+    /// <summary>
+    /// VO for transmitting two depth levels(bids and asks)
+    /// </summary>
     [Serializable]
-    public class ChangeId
+    public class BBO
     {
-        private int _id;
-
-        public ChangeId(int id)
-        {
-            _id = id;
-        }
-
-        public int Id
-        {
-            get { return _id; }
-        }
+        public DepthLevel BestBid;
+        public DepthLevel BestAsk;
     }
 }

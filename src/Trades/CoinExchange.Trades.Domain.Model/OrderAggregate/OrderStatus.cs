@@ -3,11 +3,14 @@
  * Comany: Aurora Solutions
  */
 
+using System;
+
 namespace CoinExchange.Trades.Domain.Model.OrderAggregate
 {
     /// <summary>
     /// Status of the CoinExchangeOrder
     /// </summary>
+    [Serializable]
     public enum OrderState
     {
         /// <summary>

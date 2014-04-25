@@ -10,6 +10,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
     /// Listens to the changes in the OrderBook. Will publish the OrderBook as a snapshot to the Messaging Queue when a 
     /// change occurs in the OrderBook
     /// </summary>
+    [Serializable]
     public class OrderBookListener : IOrderBookListener
     {
         // Get the Current Logger

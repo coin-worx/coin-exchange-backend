@@ -35,6 +35,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Atomic, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Disruptor.1.1.0\lib\net40\Atomic.dll</HintPath>
+    </Reference>
+    <Reference Include="Disruptor, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Disruptor.1.1.0\lib\net40\Disruptor.dll</HintPath>
+    </Reference>
+    <Reference Include="Disruptor.Scheduler">
+      <HintPath>..\..\packages\Disruptor.1.1.0\lib\net40\Disruptor.Scheduler.dll</HintPath>
+    </Reference>
     <Reference Include="log4net">
       <HintPath>..\..\packages\log4net.1.2.10\lib\2.0\log4net.dll</HintPath>
     </Reference>
@@ -59,10 +70,12 @@
     <Compile Include="DepthCheck.cs" />
     <Compile Include="DepthLevelTests.cs" />
     <Compile Include="DepthTests.cs" />
+    <Compile Include="InputDisruptorTests.cs" />
     <Compile Include="LimitOrderBookTests.cs" />
     <Compile Include="OrderBookTests.cs" />
     <Compile Include="OrderFactoryTests.cs" />
     <Compile Include="ListAndMapsTests.cs" />
+    <Compile Include="OutputDisruptorTests.cs" />
     <Compile Include="Performance\OrderBookPerformanceTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestingUtilities.cs" />

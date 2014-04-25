@@ -11,6 +11,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
     /// <summary>
     /// Handles the depths for the price levels in the Order Book
     /// </summary>
+    [Serializable]
     public class DepthOrderBook : IOrderListener, IOrderBookListener
     {
         private string _currencyPair = string.Empty;

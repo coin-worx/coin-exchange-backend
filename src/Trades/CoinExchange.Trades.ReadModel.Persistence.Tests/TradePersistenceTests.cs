@@ -35,7 +35,8 @@ namespace CoinExchange.Trades.ReadModel.Persistence.Tests
             string id = DateTime.Now.ToString();
             TradeReadModel model = new TradeReadModel();
             model.CurrencyPair = "XBTUSD";
-            model.ExecutionDateTime = DateTime.Now;
+            DateTime now = DateTime.Now;
+            model.ExecutionDateTime = now.AddMilliseconds(-1*now.Millisecond);
             model.OrderId = "123";
             model.TradeId = id;
             model.TraderId = "123";

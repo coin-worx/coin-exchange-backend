@@ -3,11 +3,14 @@
  * Comany: Aurora Solutions
  */
 
+using System;
+
 namespace CoinExchange.Trades.Domain.Model.OrderAggregate
 {
     /// <summary>
     /// Represents the ID for an order. ValueObject
     /// </summary>
+    [Serializable]
     public class OrderId
     {
         private readonly int _id;

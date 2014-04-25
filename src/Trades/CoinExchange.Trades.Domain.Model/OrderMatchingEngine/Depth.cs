@@ -10,6 +10,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
     /// <summary>
     /// Contains the Depth levels for each price in the market
     /// </summary>
+    [Serializable]
     public class Depth
     {
         #region Private fields

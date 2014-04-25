@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using CoinExchange.Trades.Domain.Model.Order;
-using CoinExchange.Trades.Domain.Model.Trades;
+using CoinExchange.Trades.Domain.Model.OrderAggregate;
+using CoinExchange.Trades.Domain.Model.TradeAggregate;
 using CoinExchange.Trades.Infrastructure.Services;
 using Disruptor;
 using NUnit.Framework;
@@ -23,7 +23,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         public void OnNext(InputPayload data, long sequence, bool endOfBatch)
         {
             _counter--;
-            _receivedPayload=new InputPayload(){OrderCancellation = new OrderCancellation(),Order = new Order.Order()};
+            _receivedPayload=new InputPayload(){OrderCancellation = new OrderCancellation(),Order = new Order()};
             if (data.IsOrder)
             {
                 data.Order.MemberWiseClone(_receivedPayload.Order);
@@ -59,7 +59,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         public void PublishOrder_IfOrderIsAddedInPayload_ReceiveOrderInPayloadInConsumer()
         {
             _counter = 1;//as sending only one message
-            Order.Order order = OrderFactory.CreateOrder("1234", "XBTUSD", "limit", "buy", 5, 10,
+            Order order = OrderFactory.CreateOrder("1234", "XBTUSD", "limit", "buy", 5, 10,
                 new StubbedOrderIdGenerator());
             InputPayload payload = InputPayload.CreatePayload(order);
             InputDisruptorPublisher.Publish(payload);
@@ -85,7 +85,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
             List<int> list=new List<int>();
             for (int i = 1; i < 15; i++)
             {
-                Order.Order order = OrderFactory.CreateOrder(i.ToString(), "XBTUSD", "limit", "buy", 5, 10,
+                Order order = OrderFactory.CreateOrder(i.ToString(), "XBTUSD", "limit", "buy", 5, 10,
                   new StubbedOrderIdGenerator());
                 InputPayload payload = InputPayload.CreatePayload(order);
                 InputDisruptorPublisher.Publish(payload);  

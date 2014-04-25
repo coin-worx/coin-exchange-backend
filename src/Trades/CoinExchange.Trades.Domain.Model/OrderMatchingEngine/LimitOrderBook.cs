@@ -10,6 +10,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
     /// <summary>
     /// Book containing the limit orders for a particular currency pair
     /// </summary>
+    [Serializable]
     public class LimitOrderBook
     {
         // Get the Current Logger

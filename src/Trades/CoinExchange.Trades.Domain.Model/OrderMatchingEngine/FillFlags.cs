@@ -9,6 +9,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
     /// <summary>
     /// Signifies which of the two orders got matched and filled
     /// </summary>
+    [Serializable]
     public enum FillFlags
     {
         /// <summary>

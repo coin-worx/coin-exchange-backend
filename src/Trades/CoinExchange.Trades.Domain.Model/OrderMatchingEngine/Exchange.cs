@@ -10,6 +10,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
     /// <summary>
     /// Initializes all Order Books
     /// </summary>
+    [Serializable]
     public class Exchange
     {
         // Get the Current Logger

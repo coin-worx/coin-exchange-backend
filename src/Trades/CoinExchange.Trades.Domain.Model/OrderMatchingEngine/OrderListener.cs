@@ -10,6 +10,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
     /// <summary>
     /// Listens to the change in the state of any order
     /// </summary>
+    [Serializable]
     public class OrderListener : IOrderListener
     {
         // Get the Current Logger

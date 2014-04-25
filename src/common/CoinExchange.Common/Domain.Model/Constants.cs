@@ -19,5 +19,6 @@ namespace CoinExchange.Common.Domain.Model
         public const int DISRUPTOR_RING_SIZE = 8;//should always be multiple of 2
         public const string RAVEN_DB_DATABASE_NAME = "EventStore";
         public const string RAVEN_DB_CONNECTIONSTRING_NAME = "EventStore";
+        public const int OUTPUT_DISRUPTOR_BYTE_ARRAY_SIZE = 200000;
     }
 }

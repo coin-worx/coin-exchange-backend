@@ -3,11 +3,14 @@
  * Comany: Aurora Solutions
  */
 
+using System;
+
 namespace CoinExchange.Trades.Domain.Model.TradeAggregate
 {
     /// <summary>
     /// Value Object that represents the internal TraderId associated with a trader
     /// </summary>
+    [Serializable]
     public class TraderId
     {
         private readonly int _id;

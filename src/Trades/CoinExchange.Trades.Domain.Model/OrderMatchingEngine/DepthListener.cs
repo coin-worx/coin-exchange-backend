@@ -9,6 +9,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
     /// <summary>
     /// Listens to the changes in the depth of the Order Book
     /// </summary>
+    [Serializable]
     public class DepthListener : IDepthListener
     {
         // Get the Current Logger

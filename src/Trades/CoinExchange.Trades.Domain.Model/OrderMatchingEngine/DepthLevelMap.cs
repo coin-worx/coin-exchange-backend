@@ -8,6 +8,7 @@ using CoinExchange.Trades.Domain.Model.OrderAggregate;
 
 namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
 {
+    [Serializable]
     public class DescendingOrderComparer : IComparer<decimal>
     {
         #region Implementation of IComparer<in decimal>
@@ -27,6 +28,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
     /// <summary>
     /// Contains the depth levels for each price in the book
     /// </summary>
+    [Serializable]
     public class DepthLevelMap : IEnumerable<KeyValuePair<decimal, DepthLevel>>
     {
         // Get the Current Logger

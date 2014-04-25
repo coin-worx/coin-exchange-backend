@@ -1,10 +1,10 @@
 ﻿using System;
-using System.CodeDom;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+using CoinExchange.Trades.Domain.Model.DomainEvents;
 using CoinExchange.Trades.Domain.Model.OrderAggregate;
+using CoinExchange.Trades.Domain.Model.OrderMatchingEngine;
+using CoinExchange.Trades.Domain.Model.TradeAggregate;
 using Disruptor;
 
 namespace CoinExchange.Trades.Domain.Model.Services
@@ -12,7 +12,7 @@ namespace CoinExchange.Trades.Domain.Model.Services
     /// <summary>
     /// Journaler for saving events
     /// </summary>
-    public class Journaler:IEventHandler<InputPayload>
+    public class Journaler:IEventHandler<InputPayload>,IEventHandler<byte[]>
     {
         private IEventStore _eventStore;
         private InputPayload _receivedPayload;
@@ -36,6 +36,41 @@ namespace CoinExchange.Trades.Domain.Model.Services
                 _receivedPayload.IsOrder = false;
                 _eventStore.StoreEvent(_receivedPayload.OrderCancellation);
             }
+        }
+
+        public void OnNext(byte[] data, long sequence, bool endOfBatch)
+        {
+            object getObject = ByteArrayToObject(data);
+            if (getObject is Order)
+            {
+                _eventStore.StoreEvent(getObject as Order);
+            }
+            if (getObject is Trade)
+            {
+                _eventStore.StoreEvent(getObject as Trade);
+            }
+            if (getObject is LimitOrderBook)
+            {
+                LimitOrderBookEvent.Raise(getObject as LimitOrderBook);
+            }
+            if (getObject is Depth)
+            {
+               DepthEvent.Raise(getObject as Depth);
+            }
+            if (getObject is BBO)
+            {
+                BBOEvent.Raise(getObject as BBO);
+            }
+        }
+
+        private static Object ByteArrayToObject(byte[] arrBytes)
+        {
+            MemoryStream memStream = new MemoryStream();
+            BinaryFormatter binForm = new BinaryFormatter();
+            memStream.Write(arrBytes, 0, arrBytes.Length);
+            memStream.Seek(0, SeekOrigin.Begin);
+            Object obj = (Object)binForm.Deserialize(memStream);
+            return obj;
         }
     }
 }

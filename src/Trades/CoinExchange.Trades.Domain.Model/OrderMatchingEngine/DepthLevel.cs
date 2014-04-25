@@ -10,6 +10,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
     /// <summary>
     /// Contains aggregated volume and the number of Orders present at a depth level(price in market)
     /// </summary>
+    [Serializable]
     public class DepthLevel
     {
         // Get the Current Logger

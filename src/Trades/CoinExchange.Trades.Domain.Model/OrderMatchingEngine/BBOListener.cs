@@ -9,6 +9,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
     /// <summary>
     /// Listens to the best bid and best ask on the Order Book
     /// </summary>
+    [Serializable]
     public class BBOListener : IBBOListener
     {
         // Get the Current Logger

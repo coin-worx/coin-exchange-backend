@@ -64,9 +64,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DomainEvents\BBOEvent.cs" />
+    <Compile Include="DomainEvents\DepthEvent.cs" />
+    <Compile Include="DomainEvents\LimitOrderBookEvent.cs" />
+    <Compile Include="DomainEvents\OrderEvent.cs" />
+    <Compile Include="DomainEvents\TradeEvent.cs" />
     <Compile Include="OrderAggregate\InputDisruptorPublisher.cs" />
     <Compile Include="OrderAggregate\InputPayload.cs" />
     <Compile Include="OrderAggregate\OrderCancellation.cs" />
+    <Compile Include="OrderMatchingEngine\BBO.cs" />
     <Compile Include="OrderMatchingEngine\BBOListener.cs" />
     <Compile Include="OrderMatchingEngine\ChangeId.cs" />
     <Compile Include="OrderMatchingEngine\Depth.cs" />
@@ -105,6 +111,8 @@
     <Compile Include="Services\IEventStore.cs" />
     <Compile Include="Services\IOrderIdGenerator.cs" />
     <Compile Include="Services\Journaler.cs" />
+    <Compile Include="Services\OutputDisruptor.cs" />
+    <Compile Include="Services\OutputPayLoad.cs" />
     <Compile Include="TradeAggregate\Trade.cs" />
     <Compile Include="TradeAggregate\TradeExecutedEvent.cs" />
     <Compile Include="TradeAggregate\TraderId.cs" />

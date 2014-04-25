@@ -6,6 +6,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderAggregate
     /// <summary>
     /// order limit price value object
     /// </summary>
+    [Serializable]
     public class Price : IComparable<Price>
     {
         private decimal _value;

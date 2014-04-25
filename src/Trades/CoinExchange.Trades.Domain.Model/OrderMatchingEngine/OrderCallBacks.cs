@@ -14,6 +14,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
     /// <summary>
     /// Defines all the Callbacks that will serve as the notifications to the client
     /// </summary>
+    [Serializable]
     public class OrderCallBacks
     {
         // Get the Current Logger
