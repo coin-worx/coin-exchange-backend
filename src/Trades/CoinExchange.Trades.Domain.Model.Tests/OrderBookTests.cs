@@ -17,7 +17,6 @@ namespace CoinExchange.Trades.Domain.Model.Tests
     [TestFixture]
     class OrderBookTests
     {
-        // ToDo: Test cases for the Trade execution and value check
         #region Sell Orders Tests
 
         /// <summary>
@@ -83,7 +82,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
 
             Assert.AreEqual(0, limitOrderBook.BidCount, "Count of Buy Orders after trade execution");
             Assert.AreEqual(1, limitOrderBook.AskCount, "Count of Sell Orders after trade execution");
-            Assert.AreEqual(50, limitOrderBook.Asks.First().Volume.Value, "Volume of the Buy Order after updating");
+            Assert.AreEqual(50, limitOrderBook.Asks.First().OpenQuantity.Value, "Volume of the Buy Order after updating");
             Assert.IsTrue(placeOrder);
         }
 
@@ -201,7 +200,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
 
             Assert.AreEqual(0, limitOrderBook.AskCount, "Count of Buy Orders after trade execution");
             Assert.AreEqual(1, limitOrderBook.BidCount, "Count of Sell Orders after trade execution");
-            Assert.AreEqual(50, limitOrderBook.Bids.First().Volume.Value, "Volume of the Buy Order after updating");
+            Assert.AreEqual(50, limitOrderBook.Bids.First().OpenQuantity.Value, "Volume of the Buy Order after updating");
             Assert.IsTrue(placeOrder);
         }
 

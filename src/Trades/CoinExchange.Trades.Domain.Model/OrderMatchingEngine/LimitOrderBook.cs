@@ -38,8 +38,6 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         private TradeListener _tradeListener = null;
         private OrderListener _orderListener = null;
         private OrderBookListener _orderBookListener = null;
-        private OrderAccepted _orderAccepted = null;
-        private OrderRejected _orderRejected = null;
 
         // Events
         public event Action<Trade> TradeExecuted;
@@ -297,10 +295,10 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// </summary>
         /// <returns></returns>
         private Trade GenerateTrade(decimal executionPrice, 
-            decimal executedQuantity, Order buyOrder, Order sellOrder)
+            decimal executedQuantity, Order matchedOrder, Order inboundOrder)
         {
-            Trade trade = new Trade(buyOrder.CurrencyPair, new Price(executionPrice), new Volume(executedQuantity),
-                DateTime.Now, buyOrder, sellOrder);
+            Trade trade = new Trade(matchedOrder.CurrencyPair, new Price(executionPrice), new Volume(executedQuantity),
+                DateTime.Now, matchedOrder, inboundOrder);
             _trades.Add(trade);
 
             return trade;
@@ -428,7 +426,6 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
                 OrderFilled(inboundOrder, matchedOrder, fillFlags,new Price(filledPrice), new Volume(filledQuantity));
             }
 
-            // ToDo: Fix which should be buy order and which should be sell order
             // Create trade. The least amount of the two orders will be the trade's executed volume
             Trade trade = GenerateTrade(filledPrice, filledQuantity, matchedOrder, inboundOrder);
 

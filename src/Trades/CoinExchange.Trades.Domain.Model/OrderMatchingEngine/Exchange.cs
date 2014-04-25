@@ -82,7 +82,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         public void OnAccept(Order order, Price matchedPrice, Volume matchedVolume)
         {
             Log.Debug("Order Accepted by Exchange. " + order.ToString());
-            // ToDo: Send the notification back to the client
+            // Note: the notification to the client can be sent back from here
         }
 
         #endregion Methods

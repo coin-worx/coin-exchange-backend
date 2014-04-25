@@ -14,7 +14,7 @@
             _aggregateId = aggregateId;
             _trade = trade;
 
-            // ToDo: Need to implement aa way to create a new Version id for every Event
+            // ToDo: Need to implement a way to create a new Version id for every Event
         }
 
         /// <summary>

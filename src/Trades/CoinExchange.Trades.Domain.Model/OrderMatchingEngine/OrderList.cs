@@ -20,7 +20,6 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
 
         private List<Order> _orderList = new List<Order>();
 
-        // ToDo: Need to use the object for the 'CurrencyPair' class instead of string after Bilal has finished editing
         private string _currencyPair = null;
         private OrderSide _orderSide;
 
@@ -31,7 +30,6 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// <param name="orderSide"> </param>
         public OrderList(string currencyPair, OrderSide orderSide)
         {
-            // ToDo: Need to use the object for the 'CurrencyPair' class instead of string after Bilal has finished editing
             _currencyPair = currencyPair;
             _orderSide = orderSide;
         }
@@ -142,7 +140,6 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// <summary>
         /// The CurrencyPair for which this list specifies the OrderList
         /// </summary>
-        // ToDo: Need to use the object for the 'CurrencyPair' class instead of string after Bilal has finished editing
         public string CurrencyPair
         {
             get { return _currencyPair; }
