@@ -1281,7 +1281,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         #region Helper Methods
 
         /// <summary>
-        /// Adds an Order and verifies if 
+        /// Adds an Order and verifies if the order has been added and wheterh or not a match has occurred
         /// </summary>
         /// <param name="orderBook"></param>
         /// <param name="order"></param>

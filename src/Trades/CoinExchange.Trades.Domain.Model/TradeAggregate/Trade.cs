@@ -21,14 +21,22 @@ namespace CoinExchange.Trades.Domain.Model.TradeAggregate
         /// Default Constructor
         /// </summary>
         public Trade(string currencyPair, Price executionPrice, Volume executedQuantity, DateTime executionTime,
-            Order buyOrder, Order sellOrder)
+            Order matchedOrder, Order inboundOrder)
         {
             _currencyPair = currencyPair;
             _executionPrice = executionPrice;
             _executedQuantity = executedQuantity;
             _executionTime = executionTime;
-            _buyOrder = buyOrder;
-            _sellOrder = sellOrder;
+            if (matchedOrder.OrderSide == OrderSide.Buy)
+            {
+                _buyOrder = matchedOrder;
+                _sellOrder = inboundOrder;
+            }
+            else
+            {
+                _buyOrder = inboundOrder;
+                _sellOrder = matchedOrder;
+            }
 
             // ToDo: Need to implement auto incremental aggregate Id generator 
         }
@@ -36,11 +44,10 @@ namespace CoinExchange.Trades.Domain.Model.TradeAggregate
         /// <summary>
         /// Raise the TradeExecutedEvent
         /// </summary>
-        public void RaiseEvent()
+        public TradeExecutedEvent RaiseEvent()
         {
             TradeExecutedEvent tradeExecutedEvent = new TradeExecutedEvent(_aggregateId, this);
-
-            // ToDo: Need to figure out how to raise this event and publish on the output disruptor
+            return tradeExecutedEvent;
         }
 
         /// <summary>

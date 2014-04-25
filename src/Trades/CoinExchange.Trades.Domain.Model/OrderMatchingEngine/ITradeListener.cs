@@ -14,6 +14,6 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
     {
         void OnTrade(Trade trade);
 
-        List<Trade> Trades { get; }
+        TradeList Trades { get; }
     }
 }

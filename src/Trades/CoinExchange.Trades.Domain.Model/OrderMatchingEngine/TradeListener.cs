@@ -17,18 +17,22 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         private static readonly log4net.ILog Log = log4net.LogManager.GetLogger
         (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private List<Trade> _trades = new List<Trade>();
+        private TradeList _trades = null;
 
         #region Implementation of ITradeListener
 
         public void OnTrade(Trade trade)
         {
+            if (_trades == null)
+            {
+                _trades = new TradeList(trade.CurrencyPair);
+            }
             _trades.Add(trade);
             Log.Debug("Trade received: " + trade.ToString());
         }
 
         #endregion
 
-        public List<Trade> Trades { get { return _trades; } }
+        public TradeList Trades { get { return _trades; } }
     }
 }

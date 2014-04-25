@@ -615,8 +615,11 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
 
         private bool IsValidPrice(Price price)
         {
-            // ToDo: Can provide a constraint for the price to be a valid price
-            return true;
+            if (price.Value != 0)
+            {
+                return true;
+            }
+            return false;
         }
 
         #endregion Level Finders

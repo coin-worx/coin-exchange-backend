@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CoinExchange.Trades.Domain.Model.OrderAggregate;
 using CoinExchange.Trades.Domain.Model.OrderMatchingEngine;
 using CoinExchange.Trades.Domain.Model.TradeAggregate;
@@ -39,7 +37,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests.Performance
             AddOrdersAndCancel(_exchange.OrderBook, orders, orderIds);
         }
 
-        public int AddOrders(LimitOrderBook orderBook, Order[] orders)
+        private int AddOrders(LimitOrderBook orderBook, Order[] orders)
         {
             int count = 0;
             var start = DateTime.Now;
@@ -58,7 +56,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests.Performance
 
             var end = DateTime.Now;
             Console.WriteLine("Count: {0} Time elapsed: {1} seconds", count, (end - start).TotalSeconds);
-            Console.WriteLine("Bids: " + orderBook.Bids.Count() + ", Ask: " + orderBook.Asks.Count() + ", Trades: " + _exchange.TradeListener.Trades.Count);
+            Console.WriteLine("Bids: " + orderBook.Bids.Count() + ", Ask: " + orderBook.Asks.Count() + ", Trades: " + _exchange.TradeListener.Trades.Count());
 
             return count;
         }
@@ -70,7 +68,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests.Performance
         /// <param name="orders"></param>
         /// <param name="orderIds"></param>
         /// <returns></returns>
-        public void AddOrdersAndCancel(LimitOrderBook orderBook, Order[] orders, List<OrderId> orderIds)
+        private void AddOrdersAndCancel(LimitOrderBook orderBook, Order[] orders, List<OrderId> orderIds)
         {
             Console.WriteLine(orders.Length + " orders received.");
             var overallStart = DateTime.Now;
@@ -93,7 +91,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests.Performance
 
             var endAdd = DateTime.Now;
             Console.WriteLine(count + " orders added. : {0} | Time elapsed: {1} seconds", count, (endAdd - startAdd).TotalSeconds);
-            Console.WriteLine("Bids: " + orderBook.Bids.Count() + ", Ask: " + orderBook.Asks.Count() + ", Trades: " + _exchange.TradeListener.Trades.Count);
+            Console.WriteLine("Bids: " + orderBook.Bids.Count() + ", Ask: " + orderBook.Asks.Count() + ", Trades: " + _exchange.TradeListener.Trades.Count());
 
             var startCancel = DateTime.Now;
             count = 0;

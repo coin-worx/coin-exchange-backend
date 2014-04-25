@@ -166,7 +166,6 @@ namespace CoinExchange.Trades.Domain.Model.OrderAggregate
         {
             _filledQuantity += filledQuantity;
             _filledCost += filledCost;
-            // ToDo: Test if OpenQuantity gets updated correctly
             _openQuantity = _volume - _filledQuantity;
             if (_openQuantity.Value == 0)
             {
