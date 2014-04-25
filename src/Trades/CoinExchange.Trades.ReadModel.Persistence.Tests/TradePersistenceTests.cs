@@ -12,10 +12,11 @@ using Spring.Context.Support;
 namespace CoinExchange.Trades.ReadModel.Persistence.Tests
 {
     [TestFixture]
-    public class TradePersistenceTestCases
+    public class TradePersistenceTests
     {
         private IPersistanceRepository _persistance;
         private ITradeRepository _tradeRepository;
+        
         [SetUp]
         public void Setup()
         {
@@ -43,7 +44,7 @@ namespace CoinExchange.Trades.ReadModel.Persistence.Tests
             _persistance.SaveOrUpdate(model);
             TradeReadModel getSavedModel = _tradeRepository.GetById(id);
             Assert.NotNull(getSavedModel);
-            Assert.AreEqual(getSavedModel.TradeId,id);
+            AssertAreEqual(getSavedModel,model);
         }
 
         [Test]
@@ -72,23 +73,34 @@ namespace CoinExchange.Trades.ReadModel.Persistence.Tests
             model.ExecutionDateTime = DateTime.Now;
             model.OrderId = "123";
             model.TradeId = id;
-            model.TraderId = "TestTrader";
+            model.TraderId = "999";
             model.Volume = 120;
             model.Price = 100;
             _persistance.SaveOrUpdate(model);
             model.TradeId = DateTime.Now.Millisecond.ToString();
-            IList<TradeReadModel> getTrades = _tradeRepository.GetTraderTradeHistory("TestTrader");
+            IList<TradeReadModel> getTrades = _tradeRepository.GetTraderTradeHistory("999");
             Assert.NotNull(getTrades);
             bool check = true;
             for (int i = 0; i < getTrades.Count; i++)
             {
-                if (!getTrades[i].TraderId.Equals("TestTrader"))
+                if (!getTrades[i].TraderId.Equals("999"))
                 {
                     check = false;
                 }
             }
             Assert.AreEqual(check,true);
         }
-        
+
+        private void AssertAreEqual(TradeReadModel expected, TradeReadModel actual)
+        {
+            Assert.AreEqual(expected.TradeId,actual.TradeId);
+            Assert.AreEqual(expected.TraderId, actual.TraderId);
+            Assert.AreEqual(expected.Volume, actual.Volume);
+            Assert.AreEqual(expected.OrderId, actual.OrderId);
+            Assert.AreEqual(expected.Price, actual.Price);
+            Assert.AreEqual(expected.ExecutionDateTime, actual.ExecutionDateTime);
+            Assert.AreEqual(expected.CurrencyPair, actual.CurrencyPair);
+
+        }
     }
 }

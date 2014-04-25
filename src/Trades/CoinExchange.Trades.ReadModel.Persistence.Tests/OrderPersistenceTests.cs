@@ -5,13 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using CoinExchange.Trades.ReadModel.DTO;
 using CoinExchange.Trades.ReadModel.Repositories;
+using NHibernate.Criterion;
 using NUnit.Framework;
 using Spring.Context.Support;
 
 namespace CoinExchange.Trades.ReadModel.Persistence.Tests
 {
     [TestFixture]
-    public class OrderPersistenceTestCases
+    public class OrderPersistenceTests
     {
         private IPersistanceRepository _persistance;
         private IOrderRepository _orderRepository;
@@ -43,7 +44,8 @@ namespace CoinExchange.Trades.ReadModel.Persistence.Tests
             _persistance.SaveOrUpdate(model);
             OrderReadModel getReadModel = _orderRepository.GetOrderById(id);
             Assert.NotNull(getReadModel);
-            Assert.AreEqual(getReadModel.OrderId,id);
+            AssertAreEqual(getReadModel,model);
+            
         }
         [Test]
         public void GetOpenOrders_IfTraderIdIsProvided_ItShouldRetireveAllOpenOrdersOfTrader()
@@ -56,17 +58,17 @@ namespace CoinExchange.Trades.ReadModel.Persistence.Tests
             model.CurrencyPair = "XBTUSD";
             model.Price = 0;
             model.Status = "Open";
-            model.TraderId = "TestTrader";
+            model.TraderId = "999";
             model.VolumeExecuted = 123;
             _persistance.SaveOrUpdate(model);
             model.OrderId = DateTime.Now.Millisecond.ToString();
             _persistance.SaveOrUpdate(model);
-            IList<OrderReadModel> getReadModel = _orderRepository.GetOpenOrders("TestTrader");
+            IList<OrderReadModel> getReadModel = _orderRepository.GetOpenOrders("999");
             bool check = true;
             Assert.NotNull(getReadModel);
             for (int i = 0; i < getReadModel.Count; i++)
             {
-                if (!getReadModel[i].TraderId.Equals("TestTrader") || !getReadModel[i].Status.Equals("Open"))
+                if (!getReadModel[i].TraderId.Equals("999") || !getReadModel[i].Status.Equals("Open"))
                 {
                     check = false;
                 }
@@ -85,22 +87,34 @@ namespace CoinExchange.Trades.ReadModel.Persistence.Tests
             model.CurrencyPair = "XBTUSD";
             model.Price = 0;
             model.Status = "Closed";
-            model.TraderId = "TestTrader";
+            model.TraderId = "999";
             model.VolumeExecuted = 123;
             _persistance.SaveOrUpdate(model);
             model.OrderId = DateTime.Now.Millisecond.ToString();
             _persistance.SaveOrUpdate(model);
-            IList<OrderReadModel> getReadModel = _orderRepository.GetClosedOrders("TestTrader");
+            IList<OrderReadModel> getReadModel = _orderRepository.GetClosedOrders("999");
             bool check = true;
             Assert.NotNull(getReadModel);
             for (int i = 0; i < getReadModel.Count; i++)
             {
-                if (!getReadModel[i].TraderId.Equals("TestTrader") || !getReadModel[i].Status.Equals("Closed"))
+                if (!getReadModel[i].TraderId.Equals("999") || !getReadModel[i].Status.Equals("Closed"))
                 {
                     check = false;
                 }
             }
             Assert.AreEqual(check, true);
+        }
+
+        private void AssertAreEqual(OrderReadModel expected, OrderReadModel actual)
+        {
+            Assert.AreEqual(expected.OrderId,actual.OrderId);
+            Assert.AreEqual(expected.OrderSide, actual.OrderSide);
+            Assert.AreEqual(expected.OrderType, actual.OrderType);
+            Assert.AreEqual(expected.Price, actual.Price);
+            Assert.AreEqual(expected.Status, actual.Status);
+            Assert.AreEqual(expected.TraderId, actual.TraderId);
+            Assert.AreEqual(expected.VolumeExecuted, actual.VolumeExecuted);
+            Assert.AreEqual(expected.CurrencyPair, actual.CurrencyPair);
         }
     }
 }
