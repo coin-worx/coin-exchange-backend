@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using CoinExchange.Common.Domain.Model;
 using CoinExchange.Trades.Domain.Model.OrderAggregate;
 using CoinExchange.Trades.Domain.Model.OrderMatchingEngine;
 using CoinExchange.Trades.Domain.Model.TradeAggregate;
+using CoinExchange.Trades.Infrastructure.Services;
 using NUnit.Framework;
 
 namespace CoinExchange.Trades.Domain.Model.Tests
@@ -21,15 +23,15 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         {
             LimitOrderBook limitOrderBook = new LimitOrderBook("XBTUSD");
 
-            Order order1 = new Order(new OrderId(1), "XBTUSD", new Price(493.34M), OrderSide.Buy,
-                      OrderType.Limit, new Volume(250), 
-                      new TraderId(1));
-            Order order2 = new Order(new OrderId(1), "XBTUSD", new Price(491.34M), OrderSide.Buy,
-                      OrderType.Limit, new Volume(250), new TraderId(1));
-            Order order3 = new Order(new OrderId(1), "XBTUSD", new Price(494.34M), OrderSide.Buy,
-                      OrderType.Limit, new Volume(250), new TraderId(1));
-            Order order4 = new Order(new OrderId(1), "XBTUSD", new Price(492.34M), OrderSide.Buy,
-                      OrderType.Limit, new Volume(250), new TraderId(1));
+            Order order1 = OrderFactory.CreateOrder("1233", "XBTUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 250, 493.34M, new StubbedOrderIdGenerator());
+            Order order2 = OrderFactory.CreateOrder("1234", "XBTUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 250, 491.34M, new StubbedOrderIdGenerator());
+
+            Order order3 = OrderFactory.CreateOrder("1244", "XBTUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 250, 494.34M, new StubbedOrderIdGenerator());
+            Order order4 = OrderFactory.CreateOrder("1222", "XBTUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 250, 492.34M, new StubbedOrderIdGenerator());
 
             limitOrderBook.PlaceOrder(order1);
             limitOrderBook.PlaceOrder(order2);
@@ -54,14 +56,15 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         {
             LimitOrderBook limitOrderBook = new LimitOrderBook("XBTUSD");
 
-            Order order1 = new Order(new OrderId(1), "XBTUSD", new Price(493.34M), OrderSide.Sell,
-                      OrderType.Limit, new Volume(250), new TraderId(1));
-            Order order2 = new Order(new OrderId(1), "XBTUSD", new Price(491.34M), OrderSide.Sell,
-                      OrderType.Limit, new Volume(250), new TraderId(1));
-            Order order3 = new Order(new OrderId(1), "XBTUSD", new Price(494.34M), OrderSide.Sell,
-                      OrderType.Limit, new Volume(250), new TraderId(1));
-            Order order4 = new Order(new OrderId(1), "XBTUSD", new Price(492.34M), OrderSide.Sell,
-                      OrderType.Limit, new Volume(250), new TraderId(1));
+            Order order1 = OrderFactory.CreateOrder("1233", "XBTUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 250, 493.34M, new StubbedOrderIdGenerator());
+            Order order2 = OrderFactory.CreateOrder("1234", "XBTUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 250, 491.34M, new StubbedOrderIdGenerator());
+
+            Order order3 = OrderFactory.CreateOrder("1244", "XBTUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 250, 494.34M, new StubbedOrderIdGenerator());
+            Order order4 = OrderFactory.CreateOrder("1222", "XBTUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 250, 492.34M, new StubbedOrderIdGenerator());
 
             limitOrderBook.PlaceOrder(order1);
             limitOrderBook.PlaceOrder(order2);
@@ -87,14 +90,20 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         {
             LimitOrderBook limitOrderBook = new LimitOrderBook("XBTUSD");
 
-            limitOrderBook.PlaceOrder(new Order(new OrderId(1), "XBTUSD", new Price(493.34M), OrderSide.Buy,
-                OrderType.Limit, new Volume(250), new TraderId(1)));
-            limitOrderBook.PlaceOrder(new Order(new OrderId(1), "XBTUSD", new Price(491.34M), OrderSide.Buy,
-                OrderType.Limit, new Volume(250), new TraderId(1)));
-            limitOrderBook.PlaceOrder(new Order(new OrderId(1), "XBTUSD", new Price(494.34M), OrderSide.Buy,
-                OrderType.Limit, new Volume(250), new TraderId(1)));
-            limitOrderBook.PlaceOrder(new Order(new OrderId(1), "XBTUSD", new Price(492.34M), OrderSide.Buy,
-                OrderType.Limit, new Volume(250), new TraderId(1)));
+            Order order1 = OrderFactory.CreateOrder("1233", "XBTUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 250, 493.34M, new StubbedOrderIdGenerator());
+            Order order2 = OrderFactory.CreateOrder("1234", "XBTUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 250, 491.34M, new StubbedOrderIdGenerator());
+
+            Order order3 = OrderFactory.CreateOrder("1244", "XBTUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 250, 494.34M, new StubbedOrderIdGenerator());
+            Order order4 = OrderFactory.CreateOrder("1222", "XBTUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 250, 492.34M, new StubbedOrderIdGenerator());
+
+            limitOrderBook.PlaceOrder(order1);
+            limitOrderBook.PlaceOrder(order2);
+            limitOrderBook.PlaceOrder(order3);
+            limitOrderBook.PlaceOrder(order4);
 
             Assert.AreEqual(4, limitOrderBook.BidCount, "Count of Buy Orders");
             Assert.AreEqual(494.34M, limitOrderBook.Bids.First().Price.Value, "First element of Buy Orders list");
@@ -108,14 +117,20 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         {
             LimitOrderBook limitOrderBook = new LimitOrderBook("XBTUSD");
 
-            limitOrderBook.PlaceOrder(new Order(new OrderId(1), "XBTUSD", new Price(493.34M), OrderSide.Sell,
-                OrderType.Limit, new Volume(250), new TraderId(1)));
-            limitOrderBook.PlaceOrder(new Order(new OrderId(1), "XBTUSD", new Price(491.34M), OrderSide.Sell,
-                OrderType.Limit, new Volume(250), new TraderId(1)));
-            limitOrderBook.PlaceOrder(new Order(new OrderId(1), "XBTUSD", new Price(494.34M), OrderSide.Sell,
-                OrderType.Limit, new Volume(250), new TraderId(1)));
-            limitOrderBook.PlaceOrder(new Order(new OrderId(1), "XBTUSD", new Price(492.34M), OrderSide.Sell,
-                OrderType.Limit, new Volume(250), new TraderId(1)));
+            Order order1 = OrderFactory.CreateOrder("1233", "XBTUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 250, 493.34M, new StubbedOrderIdGenerator());
+            Order order2 = OrderFactory.CreateOrder("1234", "XBTUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 250, 491.34M, new StubbedOrderIdGenerator());
+
+            Order order3 = OrderFactory.CreateOrder("1244", "XBTUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 250, 494.34M, new StubbedOrderIdGenerator());
+            Order order4 = OrderFactory.CreateOrder("1222", "XBTUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 250, 492.34M, new StubbedOrderIdGenerator());
+
+            limitOrderBook.PlaceOrder(order1);
+            limitOrderBook.PlaceOrder(order2);
+            limitOrderBook.PlaceOrder(order3);
+            limitOrderBook.PlaceOrder(order4);
 
             Assert.AreEqual(4, limitOrderBook.AskCount, "Count of Sell Orders");
             Assert.AreEqual(491.34M, limitOrderBook.Asks.First().Price.Value, "First element of Sell Orders list");
@@ -131,8 +146,8 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         [Test]
         public void BidsAcceptedTest_VerifiesIftheBidsAreBeingAcceptedAndEventsRaisedProperly_ValidatesTheStateOfTheReceivedOrderToVerify()
         {
-            Order buyOrder1 = new Order(new OrderId(1), "XBTUSD", new Price(1251), OrderSide.Buy,
-                      OrderType.Limit, new Volume(100), new TraderId(1));
+            Order buyOrder1 = OrderFactory.CreateOrder("1234", "XBTUSD", Constants.ORDER_TYPE_LIMIT, 
+                Constants.ORDER_SIDE_BUY, 100, 1251, new StubbedOrderIdGenerator());
 
             LimitOrderBook orderBook = new LimitOrderBook("XBT/USD");
 
@@ -156,8 +171,8 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         [Test]
         public void AsksAcceptedTest_VerifiesIftheAsksAreBeingAcceptedAndEventsRaisedProperly_ValidatesTheStateOfTheReceivedOrderToVerify()
         {
-            Order sellOrder1 = new Order(new OrderId(1), "XBT/USD", new Price(1251), OrderSide.Sell,
-                      OrderType.Limit, new Volume(100), new TraderId(1));
+            Order sellOrder1 = OrderFactory.CreateOrder("1234", "XBTUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 100, 1251, new StubbedOrderIdGenerator());
 
             LimitOrderBook orderBook = new LimitOrderBook("XBT/USD");
 
@@ -180,10 +195,10 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         [Test]
         public void AddBidAndFillTest_TestsIfTheBidMatchesSuccessfully_ChecksOrderStateAfterEventRaiseToConfirm()
         {
-            Order sellOrder1 = new Order(new OrderId(1), "XBT/USD", new Price(491), OrderSide.Sell,
-                      OrderType.Limit, new Volume(100), new TraderId(1));
-            Order buyOrder1 = new Order(new OrderId(1), "XBT/USD", new Price(491.5M), OrderSide.Buy,
-                      OrderType.Limit, new Volume(100), new TraderId(1));
+            Order sellOrder1 = OrderFactory.CreateOrder("1234", "XBT/USD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 100, 491, new StubbedOrderIdGenerator());
+            Order buyOrder1 = OrderFactory.CreateOrder("12345", "XBT/USD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 100, 491.5M, new StubbedOrderIdGenerator());
 
             LimitOrderBook orderBook = new LimitOrderBook("XBT/USD");
             orderBook.AddOrder(sellOrder1);
@@ -221,10 +236,10 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         [Test]
         public void AddAskAndFillTest_TestsIfTheAskMatchesSuccessfully_ChecksOrderStateAfterEventRaiseToConfirm()
         {
-            Order buyOrder1 = new Order(new OrderId(1), "XBT/USD", new Price(491.5M), OrderSide.Buy,
-                      OrderType.Limit, new Volume(100), new TraderId(1));
-            Order sellOrder1 = new Order(new OrderId(1), "XBT/USD", new Price(491M), OrderSide.Sell,
-                      OrderType.Limit, new Volume(100), new TraderId(1));
+            Order sellOrder1 = OrderFactory.CreateOrder("1234", "XBT/USD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 100, 491M, new StubbedOrderIdGenerator());
+            Order buyOrder1 = OrderFactory.CreateOrder("12345", "XBT/USD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 100, 491.5M, new StubbedOrderIdGenerator());
 
             LimitOrderBook orderBook = new LimitOrderBook("XBT/USD");
             orderBook.AddOrder(buyOrder1);
@@ -269,14 +284,14 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         {
             Exchange exchange = new Exchange();
 
-            Order buyOrder1 = new Order(new OrderId(1), "BTCUSD", new Price(1251), OrderSide.Buy,
-                      OrderType.Limit, new Volume(250), new TraderId(1));
-            Order buyOrder2 = new Order(new OrderId(1), "BTCUSD", new Price(1250), OrderSide.Buy,
-                      OrderType.Limit, new Volume(250), new TraderId(1));
-            Order sellOrder1 = new Order(new OrderId(1), "BTCUSD", new Price(1252), OrderSide.Sell,
-                      OrderType.Limit, new Volume(250), new TraderId(1));
-            Order sellOrder2 = new Order(new OrderId(1), "BTCUSD", new Price(1251), OrderSide.Sell,
-                      OrderType.Limit, new Volume(250), new TraderId(1));
+            Order sellOrder1 = OrderFactory.CreateOrder("1234", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 250, 1252, new StubbedOrderIdGenerator());
+            Order sellOrder2 = OrderFactory.CreateOrder("12345", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 250, 1251, new StubbedOrderIdGenerator());
+            Order buyOrder1 = OrderFactory.CreateOrder("123456", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 250, 1251M, new StubbedOrderIdGenerator());
+            Order buyOrder2 = OrderFactory.CreateOrder("123457", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 250, 1250, new StubbedOrderIdGenerator());
 
             Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder2, true));
             Assert.IsFalse(AddAndVerify(exchange.OrderBook, sellOrder2, true));
@@ -308,12 +323,12 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         {
             Exchange exchange = new Exchange();
 
-            Order buyOrder2 = new Order(new OrderId(1), "BTCUSD", new Price(1250), OrderSide.Buy,
-                      OrderType.Limit, new Volume(250), new TraderId(1));
-            Order sellOrder1 = new Order(new OrderId(1), "BTCUSD", new Price(1251), OrderSide.Sell,
-                      OrderType.Limit, new Volume(250), new TraderId(1));
-            Order sellOrder2 = new Order(new OrderId(1), "BTCUSD", new Price(1250), OrderSide.Sell,
-                      OrderType.Limit, new Volume(250), new TraderId(1));
+            Order buyOrder2 = OrderFactory.CreateOrder("1234", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 250, 1250, new StubbedOrderIdGenerator());
+            Order sellOrder1 = OrderFactory.CreateOrder("123", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 250, 1251, new StubbedOrderIdGenerator());
+            Order sellOrder2 = OrderFactory.CreateOrder("12", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 250, 1250, new StubbedOrderIdGenerator());
 
             Assert.IsFalse(AddAndVerify(exchange.OrderBook, sellOrder1, true));
             Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder2, true));
@@ -344,16 +359,17 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         {
             Exchange exchange = new Exchange();
 
-            Order buyOrder1 = new Order(new OrderId(1), "BTCUSD", new Price(1251), OrderSide.Buy,
-                      OrderType.Limit, new Volume(500), new TraderId(1));
-            Order buyOrder2 = new Order(new OrderId(1), "BTCUSD", new Price(1250), OrderSide.Buy,
-                      OrderType.Limit, new Volume(250), new TraderId(1));
-            Order sellOrder1 = new Order(new OrderId(1), "BTCUSD", new Price(1252), OrderSide.Sell,
-                      OrderType.Limit, new Volume(250), new TraderId(1));
-            Order sellOrder2 = new Order(new OrderId(1), "BTCUSD", new Price(1251), OrderSide.Sell,
-                      OrderType.Limit, new Volume(300), new TraderId(1));
-            Order sellOrder3 = new Order(new OrderId(1), "BTCUSD", new Price(1251), OrderSide.Sell,
-                      OrderType.Limit, new Volume(200), new TraderId(1));
+            Order sellOrder1 = OrderFactory.CreateOrder("1234", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 250, 1252, new StubbedOrderIdGenerator());
+            Order sellOrder2 = OrderFactory.CreateOrder("12345", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 300, 1251, new StubbedOrderIdGenerator());
+            Order sellOrder3 = OrderFactory.CreateOrder("12344", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 200, 1251, new StubbedOrderIdGenerator());
+            Order buyOrder1 = OrderFactory.CreateOrder("123456", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 500, 1251, new StubbedOrderIdGenerator());
+            Order buyOrder2 = OrderFactory.CreateOrder("123457", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 250, 1250, new StubbedOrderIdGenerator());
+
 
             Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder2, true));
             Assert.IsFalse(AddAndVerify(exchange.OrderBook, sellOrder2, true));
@@ -386,23 +402,22 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         {
             Exchange exchange = new Exchange();
 
-            Order buyOrder1 = new Order(new OrderId(1), "BTCUSD", new Price(1251), OrderSide.Buy,
-                      OrderType.Limit, new Volume(500), new TraderId(1));
-            Order buyOrder2 = new Order(new OrderId(1), "BTCUSD", new Price(1252), OrderSide.Buy,
-                      OrderType.Limit, new Volume(100), new TraderId(1));
-            Order buyOrder3 = new Order(new OrderId(1), "BTCUSD", new Price(1251), OrderSide.Buy,
-                      OrderType.Limit, new Volume(100), new TraderId(1));
-            Order buyOrder4 = new Order(new OrderId(1), "BTCUSD", new Price(1249), OrderSide.Buy,
-                      OrderType.Limit, new Volume(100), new TraderId(1));
-
-            Order sellOrder1 = new Order(new OrderId(1), "BTCUSD", new Price(1254), OrderSide.Sell,
-                      OrderType.Limit, new Volume(200), new TraderId(1));
-            Order sellOrder2 = new Order(new OrderId(1), "BTCUSD", new Price(1253), OrderSide.Sell,
-                      OrderType.Limit, new Volume(300), new TraderId(1));
-            Order sellOrder3 = new Order(new OrderId(1), "BTCUSD", new Price(1253), OrderSide.Sell,
-                      OrderType.Limit, new Volume(200), new TraderId(1));
-            Order sellOrder4 = new Order(new OrderId(1), "BTCUSD", new Price(1251), OrderSide.Sell,
-                      OrderType.Limit, new Volume(700), new TraderId(1));
+            Order sellOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 200, 1254, new StubbedOrderIdGenerator());
+            Order sellOrder2 = OrderFactory.CreateOrder("1234", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 300, 1253, new StubbedOrderIdGenerator());
+            Order sellOrder3 = OrderFactory.CreateOrder("12344", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 200, 1253, new StubbedOrderIdGenerator());
+            Order sellOrder4 = OrderFactory.CreateOrder("12355", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 700, 1251, new StubbedOrderIdGenerator());
+            Order buyOrder1 = OrderFactory.CreateOrder("123456", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 500, 1251, new StubbedOrderIdGenerator());
+            Order buyOrder2 = OrderFactory.CreateOrder("723457", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 100, 1252, new StubbedOrderIdGenerator());
+            Order buyOrder3 = OrderFactory.CreateOrder("623456", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 100, 1251, new StubbedOrderIdGenerator());
+            Order buyOrder4 = OrderFactory.CreateOrder("523457", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 100, 1249, new StubbedOrderIdGenerator());
 
             Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder1, true));
             Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder2, true));
@@ -444,18 +459,18 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         {
             Exchange exchange = new Exchange();
 
-            Order buyOrder1 = new Order(new OrderId(1), "BTCUSD", new Price(945), OrderSide.Buy,
-                      OrderType.Limit, new Volume(400), new TraderId(1));
-            Order buyOrder2 = new Order(new OrderId(1), "BTCUSD", new Price(940), OrderSide.Buy,
-                      OrderType.Limit, new Volume(200), new TraderId(1));
-            Order buyOrder3 = new Order(new OrderId(1), "BTCUSD", new Price(941), OrderSide.Buy,
-                      OrderType.Limit, new Volume(400), new TraderId(1));
-            Order sellOrder1 = new Order(new OrderId(1), "BTCUSD", new Price(947), OrderSide.Sell,
-                      OrderType.Limit, new Volume(200), new TraderId(1));
-            Order sellOrder2 = new Order(new OrderId(1), "BTCUSD", new Price(942), OrderSide.Sell,
-                      OrderType.Limit, new Volume(100), new TraderId(1));
-            Order sellOrder3 = new Order(new OrderId(1), "BTCUSD", new Price(942), OrderSide.Sell,
-                      OrderType.Limit, new Volume(200), new TraderId(1));
+            Order sellOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 200, 947, new StubbedOrderIdGenerator());
+            Order sellOrder2 = OrderFactory.CreateOrder("1234", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 100, 942, new StubbedOrderIdGenerator());
+            Order sellOrder3 = OrderFactory.CreateOrder("12344", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 200, 942, new StubbedOrderIdGenerator());
+            Order buyOrder1 = OrderFactory.CreateOrder("123456", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 400, 945, new StubbedOrderIdGenerator());
+            Order buyOrder2 = OrderFactory.CreateOrder("723457", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 200, 940, new StubbedOrderIdGenerator());
+            Order buyOrder3 = OrderFactory.CreateOrder("623456", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 400, 941, new StubbedOrderIdGenerator());
 
             Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder2, true));
             Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder3, true));
@@ -506,20 +521,20 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         public void AskPartialFillTest_TestsThatAAskMatchesAndBecomesPartiallyFilled_ValidatesDepthAndOrderStateAfterPartialFill()
         {
             Exchange exchange = new Exchange();
-
-            Order buyOrder1 = new Order(new OrderId(1), "BTCUSD", new Price(945), OrderSide.Buy,
-                      OrderType.Limit, new Volume(400), new TraderId(1));
-            Order buyOrder2 = new Order(new OrderId(1), "BTCUSD", new Price(940), OrderSide.Buy,
-                      OrderType.Limit, new Volume(200), new TraderId(1));
-            Order buyOrder3 = new Order(new OrderId(1), "BTCUSD", new Price(941), OrderSide.Buy,
-                      OrderType.Limit, new Volume(400), new TraderId(1));
-            Order sellOrder1 = new Order(new OrderId(1), "BTCUSD", new Price(947), OrderSide.Sell,
-                      OrderType.Limit, new Volume(200), new TraderId(1));
-            Order sellOrder2 = new Order(new OrderId(1), "BTCUSD", new Price(947), OrderSide.Sell,
-                      OrderType.Limit, new Volume(100), new TraderId(1));
-            Order sellOrder3 = new Order(new OrderId(1), "BTCUSD", new Price(942), OrderSide.Sell,
-                      OrderType.Limit, new Volume(600), new TraderId(1));
-
+            
+            Order buyOrder1 = OrderFactory.CreateOrder("123456", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 400, 945, new StubbedOrderIdGenerator());
+            Order buyOrder2 = OrderFactory.CreateOrder("723457", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 200, 940, new StubbedOrderIdGenerator());
+            Order buyOrder3 = OrderFactory.CreateOrder("623456", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 400, 941, new StubbedOrderIdGenerator());
+            Order sellOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 200, 947, new StubbedOrderIdGenerator());
+            Order sellOrder2 = OrderFactory.CreateOrder("1234", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 100, 947, new StubbedOrderIdGenerator());
+            Order sellOrder3 = OrderFactory.CreateOrder("12344", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 600, 942, new StubbedOrderIdGenerator());
+            
             Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder1, true));
             Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder2, true));
             Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder3, true));
@@ -570,18 +585,18 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         {
             Exchange exchange = new Exchange();
 
-            Order buyOrder1 = new Order(new OrderId(1), "BTCUSD", new Price(945), OrderSide.Buy,
-                      OrderType.Limit, new Volume(700), new TraderId(1));
-            Order buyOrder2 = new Order(new OrderId(1), "BTCUSD", new Price(940), OrderSide.Buy,
-                      OrderType.Limit, new Volume(200), new TraderId(1));
-            Order buyOrder3 = new Order(new OrderId(1), "BTCUSD", new Price(941), OrderSide.Buy,
-                      OrderType.Limit, new Volume(400), new TraderId(1));
-            Order sellOrder1 = new Order(new OrderId(1), "BTCUSD", new Price(947), OrderSide.Sell,
-                      OrderType.Limit, new Volume(200), new TraderId(1));
-            Order sellOrder2 = new Order(new OrderId(1), "BTCUSD", new Price(942), OrderSide.Sell,
-                      OrderType.Limit, new Volume(300), new TraderId(1));
-            Order sellOrder3 = new Order(new OrderId(1), "BTCUSD", new Price(943), OrderSide.Sell,
-                      OrderType.Limit, new Volume(200), new TraderId(1));
+            Order buyOrder1 = OrderFactory.CreateOrder("123456", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 700, 945, new StubbedOrderIdGenerator());
+            Order buyOrder2 = OrderFactory.CreateOrder("723457", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 200, 940, new StubbedOrderIdGenerator());
+            Order buyOrder3 = OrderFactory.CreateOrder("623456", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 400, 941, new StubbedOrderIdGenerator());
+            Order sellOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 200, 947, new StubbedOrderIdGenerator());
+            Order sellOrder2 = OrderFactory.CreateOrder("1234", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 300, 942, new StubbedOrderIdGenerator());
+            Order sellOrder3 = OrderFactory.CreateOrder("12344", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 200, 943, new StubbedOrderIdGenerator());
 
             Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder2, true));
             Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder3, true));
@@ -626,18 +641,19 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         {
             Exchange exchange = new Exchange();
 
-            Order buyOrder1 = new Order(new OrderId(1), "BTCUSD", new Price(945), OrderSide.Buy,
-                      OrderType.Limit, new Volume(400), new TraderId(1));
-            Order buyOrder2 = new Order(new OrderId(1), "BTCUSD", new Price(942), OrderSide.Buy,
-                      OrderType.Limit, new Volume(200), new TraderId(1));
-            Order buyOrder3 = new Order(new OrderId(1), "BTCUSD", new Price(941), OrderSide.Buy,
-                      OrderType.Limit, new Volume(400), new TraderId(1));
-            Order sellOrder1 = new Order(new OrderId(1), "BTCUSD", new Price(947), OrderSide.Sell,
-                      OrderType.Limit, new Volume(200), new TraderId(1));
-            Order sellOrder2 = new Order(new OrderId(1), "BTCUSD", new Price(947), OrderSide.Sell,
-                      OrderType.Limit, new Volume(100), new TraderId(1));
-            Order sellOrder3 = new Order(new OrderId(1), "BTCUSD", new Price(942), OrderSide.Sell,
-                      OrderType.Limit, new Volume(700), new TraderId(1));
+            Order buyOrder1 = OrderFactory.CreateOrder("123456", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 400, 945, new StubbedOrderIdGenerator());
+            Order buyOrder2 = OrderFactory.CreateOrder("723457", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 200, 942, new StubbedOrderIdGenerator());
+            Order buyOrder3 = OrderFactory.CreateOrder("623456", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 400, 941, new StubbedOrderIdGenerator());
+            Order sellOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 200, 947, new StubbedOrderIdGenerator());
+            Order sellOrder2 = OrderFactory.CreateOrder("1234", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 100, 947, new StubbedOrderIdGenerator());
+            Order sellOrder3 = OrderFactory.CreateOrder("12344", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 700, 942, new StubbedOrderIdGenerator());
+
 
             Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder1, true));
             Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder2, true));
@@ -697,18 +713,18 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         {
             Exchange exchange = new Exchange();
 
-            Order buyOrder1 = new Order(new OrderId(1), "BTCUSD", new Price(930), OrderSide.Buy,
-                      OrderType.Limit, new Volume(200), new TraderId(1));
-            Order buyOrder2 = new Order(new OrderId(1), "BTCUSD", new Price(942), OrderSide.Buy,
-                      OrderType.Limit, new Volume(900), new TraderId(1));
-            Order sellOrder1 = new Order(new OrderId(1), "BTCUSD", new Price(942), OrderSide.Sell,
-                      OrderType.Limit, new Volume(100), new TraderId(1));
-            Order sellOrder2 = new Order(new OrderId(1), "BTCUSD", new Price(942), OrderSide.Sell,
-                      OrderType.Limit, new Volume(100), new TraderId(1));
-            Order sellOrder3 = new Order(new OrderId(1), "BTCUSD", new Price(942), OrderSide.Sell,
-                      OrderType.Limit, new Volume(100), new TraderId(1));
-            Order sellOrder4 = new Order(new OrderId(1), "BTCUSD", new Price(942), OrderSide.Sell,
-                      OrderType.Limit, new Volume(100), new TraderId(1));
+            Order buyOrder1 = OrderFactory.CreateOrder("123456", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 200, 930, new StubbedOrderIdGenerator());
+            Order buyOrder2 = OrderFactory.CreateOrder("723457", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 900, 942, new StubbedOrderIdGenerator());
+            Order sellOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 100, 942, new StubbedOrderIdGenerator());
+            Order sellOrder2 = OrderFactory.CreateOrder("1234", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 100, 942, new StubbedOrderIdGenerator());
+            Order sellOrder3 = OrderFactory.CreateOrder("12344", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 100, 942, new StubbedOrderIdGenerator());
+            Order sellOrder4 = OrderFactory.CreateOrder("12224", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 100, 942, new StubbedOrderIdGenerator());
 
             Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder1, true));
             Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder2, true));
@@ -774,18 +790,18 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         {
             Exchange exchange = new Exchange();
 
-            Order buyOrder1 = new Order(new OrderId(1), "BTCUSD", new Price(942), OrderSide.Buy,
-                      OrderType.Limit, new Volume(100), new TraderId(1));
-            Order buyOrder2 = new Order(new OrderId(1), "BTCUSD", new Price(942), OrderSide.Buy,
-                      OrderType.Limit, new Volume(100), new TraderId(1));
-            Order buyOrder3 = new Order(new OrderId(1), "BTCUSD", new Price(942), OrderSide.Buy,
-                      OrderType.Limit, new Volume(100), new TraderId(1));
-            Order buyOrder4 = new Order(new OrderId(1), "BTCUSD", new Price(942), OrderSide.Buy,
-                      OrderType.Limit, new Volume(100), new TraderId(1));
-            Order sellOrder1 = new Order(new OrderId(1), "BTCUSD", new Price(951), OrderSide.Sell,
-                      OrderType.Limit, new Volume(100), new TraderId(1));
-            Order sellOrder2 = new Order(new OrderId(1), "BTCUSD", new Price(942), OrderSide.Sell,
-                      OrderType.Limit, new Volume(1000), new TraderId(1));
+            Order buyOrder1 = OrderFactory.CreateOrder("123456", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 100, 942, new StubbedOrderIdGenerator());
+            Order buyOrder2 = OrderFactory.CreateOrder("723457", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 100, 942, new StubbedOrderIdGenerator());
+            Order buyOrder3 = OrderFactory.CreateOrder("123456", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 100, 942, new StubbedOrderIdGenerator());
+            Order buyOrder4 = OrderFactory.CreateOrder("723457", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 100, 942, new StubbedOrderIdGenerator());
+            Order sellOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 100, 951, new StubbedOrderIdGenerator());
+            Order sellOrder2 = OrderFactory.CreateOrder("1234", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 1000, 942, new StubbedOrderIdGenerator());
 
             Assert.IsFalse(AddAndVerify(exchange.OrderBook, sellOrder1, true));
             Assert.IsFalse(AddAndVerify(exchange.OrderBook, sellOrder2, true));
@@ -851,15 +867,14 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         {
             Exchange exchange = new Exchange();
 
-            Order buyOrder1 = new Order(new OrderId(1), "BTCUSD", new Price(941), OrderSide.Buy,
-                      OrderType.Limit, new Volume(100), new TraderId(1));
-            Order buyOrder2 = new Order(new OrderId(1), "BTCUSD", new Price(0), OrderSide.Buy,
-                      OrderType.Limit, new Volume(100), new TraderId(1));
-            buyOrder2.OrderType = OrderType.Market;
-            Order sellOrder1 = new Order(new OrderId(1), "BTCUSD", new Price(951), OrderSide.Sell,
-                      OrderType.Limit, new Volume(100), new TraderId(1));
-            Order sellOrder2 = new Order(new OrderId(1), "BTCUSD", new Price(942), OrderSide.Sell,
-                      OrderType.Limit, new Volume(100), new TraderId(1));
+            Order buyOrder1 = OrderFactory.CreateOrder("123456", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 100, 941, new StubbedOrderIdGenerator());
+            Order buyOrder2 = OrderFactory.CreateOrder("723457", "BTCUSD", Constants.ORDER_TYPE_MARKET,
+                Constants.ORDER_SIDE_BUY, 100, 0, new StubbedOrderIdGenerator());
+            Order sellOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 100, 951, new StubbedOrderIdGenerator());
+            Order sellOrder2 = OrderFactory.CreateOrder("1234", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 100, 942, new StubbedOrderIdGenerator());
 
             Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder1, true));
             Assert.IsFalse(AddAndVerify(exchange.OrderBook, sellOrder2, true));
@@ -902,15 +917,14 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         {
             Exchange exchange = new Exchange();
 
-            Order buyOrder1 = new Order(new OrderId(1), "BTCUSD", new Price(941), OrderSide.Buy,
-                      OrderType.Limit, new Volume(100), new TraderId(1));
-            Order buyOrder2 = new Order(new OrderId(1), "BTCUSD", new Price(945), OrderSide.Buy,
-                      OrderType.Limit, new Volume(100), new TraderId(1));
-            Order sellOrder1 = new Order(new OrderId(1), "BTCUSD", new Price(0), OrderSide.Sell,
-                      OrderType.Limit, new Volume(100), new TraderId(1));
-            sellOrder1.OrderType = OrderType.Market;
-            Order sellOrder2 = new Order(new OrderId(1), "BTCUSD", new Price(948), OrderSide.Sell,
-                      OrderType.Limit, new Volume(100), new TraderId(1));
+            Order buyOrder1 = OrderFactory.CreateOrder("123456", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 100, 941, new StubbedOrderIdGenerator());
+            Order buyOrder2 = OrderFactory.CreateOrder("723457", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 100, 945, new StubbedOrderIdGenerator());
+            Order sellOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_MARKET,
+                Constants.ORDER_SIDE_SELL, 100, 0, new StubbedOrderIdGenerator());
+            Order sellOrder2 = OrderFactory.CreateOrder("1234", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 100, 948, new StubbedOrderIdGenerator());
 
             Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder1, true));
             Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder2, true));
@@ -951,9 +965,9 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         [Test]
         public void OrderCancelAskTest_CancelsTheAskAndWaitsForEventToBeRaised_HandlesEventsAndValidatesOrderState()
         {
-            Order sellOrder1 = new Order(new OrderId(1), "XBT/USD", new Price(1251), OrderSide.Sell,
-                      OrderType.Limit, new Volume(100), new TraderId(1));
-
+            Order sellOrder1 = OrderFactory.CreateOrder("1233", "XBT/USD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 100, 1251, new StubbedOrderIdGenerator());
+            OrderId orderId = sellOrder1.OrderId;
             LimitOrderBook orderBook = new LimitOrderBook("XBT/USD");
 
             ManualResetEvent manualResetEvent = new ManualResetEvent(false);
@@ -980,7 +994,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
                 manualResetEvent.Set();
             };
 
-            orderBook.CancelOrder(new OrderId(1));
+            orderBook.CancelOrder(orderId);
             manualResetEvent.WaitOne(5000);
             Assert.AreEqual(sellOrder1, returnedOrder);
             Assert.AreEqual(OrderState.Cancelled, sellOrder1.OrderState);
@@ -990,8 +1004,9 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         [Test]
         public void OrderCancelBidTest_CancelsTheBidAndWaitsForEventToBeRaised_HandlesEventsAndValidatesOrderState()
         {
-            Order buyOrder = new Order(new OrderId(1), "XBT/USD", new Price(1251), OrderSide.Buy,
-                      OrderType.Limit, new Volume(100), new TraderId(1));
+            Order buyOrder = OrderFactory.CreateOrder("1233", "XBT/USD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 100, 1251, new StubbedOrderIdGenerator());
+            OrderId orderId = buyOrder.OrderId;
 
             LimitOrderBook orderBook = new LimitOrderBook("XBT/USD");
 
@@ -1019,7 +1034,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
                 manualResetEvent.Set();
             };
 
-            orderBook.CancelOrder(new OrderId(1));
+            orderBook.CancelOrder(orderId);
             manualResetEvent.WaitOne(5000);
             Assert.AreEqual(buyOrder, returnedOrder);
             Assert.AreEqual(OrderState.Cancelled, buyOrder.OrderState);
@@ -1031,15 +1046,16 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         {
             Exchange exchange = new Exchange();
 
-            Order buyOrder1 = new Order(new OrderId(1), "BTCUSD", new Price(941), OrderSide.Buy,
-                      OrderType.Limit, new Volume(100), new TraderId(1));
-            Order buyOrder2 = new Order(new OrderId(2), "BTCUSD", new Price(945), OrderSide.Buy,
-                      OrderType.Limit, new Volume(100), new TraderId(1));
-            Order sellOrder1 = new Order(new OrderId(3), "BTCUSD", new Price(949), OrderSide.Sell,
-                      OrderType.Limit, new Volume(100), new TraderId(1));
-            Order sellOrder2 = new Order(new OrderId(4), "BTCUSD", new Price(948), OrderSide.Sell,
-                      OrderType.Limit, new Volume(100), new TraderId(1));
-
+            Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 100, 941, new StubbedOrderIdGenerator());
+            Order buyOrder2 = OrderFactory.CreateOrder("1234", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 100, 945, new StubbedOrderIdGenerator());
+            OrderId orderId = buyOrder2.OrderId;
+            Order sellOrder1 = OrderFactory.CreateOrder("1244", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 100, 949, new StubbedOrderIdGenerator());
+            Order sellOrder2 = OrderFactory.CreateOrder("1222", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 100, 948, new StubbedOrderIdGenerator());
+            
             Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder1, true));
             Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder2, true));
             Assert.IsFalse(AddAndVerify(exchange.OrderBook, sellOrder2, true));
@@ -1068,7 +1084,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
                 manualResetEvent.Set();
             };
 
-            exchange.OrderBook.CancelOrder(new OrderId(2));
+            exchange.OrderBook.CancelOrder(orderId);
             manualResetEvent.WaitOne(5000);
             Assert.AreEqual(buyOrder2, returnedOrder);
             Assert.AreEqual(OrderState.Cancelled, returnedOrder.OrderState);
@@ -1097,14 +1113,16 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         {
             Exchange exchange = new Exchange();
 
-            Order buyOrder1 = new Order(new OrderId(1), "BTCUSD", new Price(941), OrderSide.Buy,
-                      OrderType.Limit, new Volume(100), new TraderId(1));
-            Order buyOrder2 = new Order(new OrderId(2), "BTCUSD", new Price(945), OrderSide.Buy,
-                      OrderType.Limit, new Volume(100), new TraderId(1));
-            Order sellOrder1 = new Order(new OrderId(3), "BTCUSD", new Price(949), OrderSide.Sell,
-                      OrderType.Limit, new Volume(100), new TraderId(1));
-            Order sellOrder2 = new Order(new OrderId(4), "BTCUSD", new Price(948), OrderSide.Sell,
-                      OrderType.Limit, new Volume(100), new TraderId(1));
+            Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 100, 941, new StubbedOrderIdGenerator());
+            Order buyOrder2 = OrderFactory.CreateOrder("1234", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 100, 945, new StubbedOrderIdGenerator());
+            
+            Order sellOrder1 = OrderFactory.CreateOrder("1244", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 100, 949, new StubbedOrderIdGenerator());
+            Order sellOrder2 = OrderFactory.CreateOrder("1222", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 100, 948, new StubbedOrderIdGenerator());
+            OrderId orderId = sellOrder2.OrderId;
 
             Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder1, true));
             Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder2, true));
@@ -1138,7 +1156,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
                 manualResetEvent.Set();
             };
 
-            exchange.OrderBook.CancelOrder(new OrderId(4));
+            exchange.OrderBook.CancelOrder(orderId);
             manualResetEvent.WaitOne(5000);
             Assert.AreEqual(sellOrder2, returnedOrder);
             Assert.AreEqual(OrderState.Cancelled, returnedOrder.OrderState);
@@ -1171,14 +1189,15 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         {
             Exchange exchange = new Exchange();
 
-            Order buyOrder1 = new Order(new OrderId(1), "BTCUSD", new Price(941), OrderSide.Buy,
-                      OrderType.Limit, new Volume(100), new TraderId(1));
-            Order buyOrder2 = new Order(new OrderId(2), "BTCUSD", new Price(945), OrderSide.Buy,
-                      OrderType.Limit, new Volume(100), new TraderId(1));
-            Order sellOrder1 = new Order(new OrderId(3), "BTCUSD", new Price(949), OrderSide.Sell,
-                      OrderType.Limit, new Volume(100), new TraderId(1));
-            Order sellOrder2 = new Order(new OrderId(4), "BTCUSD", new Price(948), OrderSide.Sell,
-                      OrderType.Limit, new Volume(100), new TraderId(1));
+            Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 100, 941, new StubbedOrderIdGenerator());
+            Order buyOrder2 = OrderFactory.CreateOrder("1234", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 100, 945, new StubbedOrderIdGenerator());
+            OrderId orderId = buyOrder2.OrderId;
+            Order sellOrder1 = OrderFactory.CreateOrder("1244", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 100, 949, new StubbedOrderIdGenerator());
+            Order sellOrder2 = OrderFactory.CreateOrder("1222", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 100, 948, new StubbedOrderIdGenerator());
 
             Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder1, true));
             Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder2, true));
@@ -1200,7 +1219,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
 
             manualResetEvent.WaitOne(5000);
             
-            exchange.OrderBook.CancelOrder(new OrderId(2));
+            exchange.OrderBook.CancelOrder(orderId);
 
             Assert.AreEqual(buyOrder2, returnedOrder);
             Assert.AreEqual(OrderState.Cancelled, returnedOrder.OrderState);
@@ -1229,14 +1248,16 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         {
             Exchange exchange = new Exchange();
 
-            Order buyOrder1 = new Order(new OrderId(1), "BTCUSD", new Price(941), OrderSide.Buy,
-                      OrderType.Limit, new Volume(100), new TraderId(1));
-            Order buyOrder2 = new Order(new OrderId(2), "BTCUSD", new Price(945), OrderSide.Buy,
-                      OrderType.Limit, new Volume(100), new TraderId(1));
-            Order sellOrder1 = new Order(new OrderId(3), "BTCUSD", new Price(949), OrderSide.Sell,
-                      OrderType.Limit, new Volume(100), new TraderId(1));
-            Order sellOrder2 = new Order(new OrderId(4), "BTCUSD", new Price(948), OrderSide.Sell,
-                      OrderType.Limit, new Volume(100), new TraderId(1));
+            Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 100, 941, new StubbedOrderIdGenerator());
+            Order buyOrder2 = OrderFactory.CreateOrder("1234", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 100, 945, new StubbedOrderIdGenerator());
+            OrderId orderId = buyOrder2.OrderId;
+
+            Order sellOrder1 = OrderFactory.CreateOrder("1244", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 100, 949, new StubbedOrderIdGenerator());
+            Order sellOrder2 = OrderFactory.CreateOrder("1222", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 100, 948, new StubbedOrderIdGenerator());
 
             Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder1, true));
             Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder2, true));
@@ -1260,7 +1281,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
 
             manualResetEvent.WaitOne(5000);
 
-            exchange.OrderBook.CancelOrder(new OrderId(2));
+            exchange.OrderBook.CancelOrder(orderId);
 
             Assert.AreEqual(buyOrder2, returnedOrder);
             Assert.AreEqual(OrderState.Cancelled, returnedOrder.OrderState);

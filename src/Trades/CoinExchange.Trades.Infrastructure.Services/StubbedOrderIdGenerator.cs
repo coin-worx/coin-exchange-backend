@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using CoinExchange.Trades.Domain.Model.OrderAggregate;
 using CoinExchange.Trades.Domain.Model.Services;
 
@@ -9,9 +10,14 @@ namespace CoinExchange.Trades.Infrastructure.Services
     /// </summary>
     public class StubbedOrderIdGenerator:IOrderIdGenerator
     {
+        private static int _safeInstanceCount = 0;
+
         public OrderId GenerateOrderId()
         {
-            return new OrderId((int)DateTime.Now.Ticks);
+            var increment = Interlocked.Increment(ref _safeInstanceCount);
+            return new OrderId(increment);
         }
+
+
     }
 }
