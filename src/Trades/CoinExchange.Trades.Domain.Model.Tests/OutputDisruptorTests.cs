@@ -83,11 +83,13 @@ namespace CoinExchange.Trades.Domain.Model.Tests
                new StubbedOrderIdGenerator());
             Order sellOrder = OrderFactory.CreateOrder("1234", "XBTUSD", "market", "sell", 5, 0,
                new StubbedOrderIdGenerator());
-            Trade trade=new Trade("XBTUSD",new Price(100),new Volume(10),DateTime.Now,buyOrder,sellOrder);
+            //Trade trade=new Trade("XBTUSD",new Price(100),new Volume(10),DateTime.Now,buyOrder,sellOrder);
+            Trade trade = TradeFactory.GenerateTrade("XBTUSD", new Price(100), new Volume(10), buyOrder, sellOrder);
             //byte[] array = ObjectToByteArray(trade);
             OutputDisruptor.Publish(trade);
             _manualResetEvent.WaitOne(3000);
             Assert.NotNull(_receivedTrade);
+            Assert.AreEqual(_receivedTrade.TradeId.Id,trade.TradeId.Id);
             Assert.AreEqual(_receivedTrade.BuyOrder, buyOrder);
             Assert.AreEqual(_receivedTrade.SellOrder, sellOrder);
         }

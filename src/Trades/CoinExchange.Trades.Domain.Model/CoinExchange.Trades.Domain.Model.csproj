@@ -68,6 +68,7 @@
     <Compile Include="OrderMatchingEngine\DepthEvent.cs" />
     <Compile Include="OrderMatchingEngine\LimitOrderBookEvent.cs" />
     <Compile Include="OrderAggregate\OrderEvent.cs" />
+    <Compile Include="TradeAggregate\ITradeIdGenerator.cs" />
     <Compile Include="TradeAggregate\TradeEvent.cs" />
     <Compile Include="OrderAggregate\InputDisruptorPublisher.cs" />
     <Compile Include="OrderAggregate\InputPayload.cs" />
@@ -113,6 +114,8 @@
     <Compile Include="Services\OutputDisruptor.cs" />
     <Compile Include="TradeAggregate\Trade.cs" />
     <Compile Include="TradeAggregate\TradeExecutedEvent.cs" />
+    <Compile Include="TradeAggregate\TradeFactory.cs" />
+    <Compile Include="TradeAggregate\TradeId.cs" />
     <Compile Include="TradeAggregate\TradeList.cs" />
     <Compile Include="TradeAggregate\TraderId.cs" />
   </ItemGroup>
