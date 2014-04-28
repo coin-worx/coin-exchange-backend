@@ -242,7 +242,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
                         return false;
                 }
             }
-            else if(orderType == OrderType.Market && inboundPrice.Value == 0)
+            else if(orderType == OrderType.Market && inboundPrice != null && inboundPrice.Value == 0)
             {
                 return true;
             }

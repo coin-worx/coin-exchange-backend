@@ -19,12 +19,14 @@ namespace CoinExchange.Trades.Domain.Model.OrderAggregate
             if (side.Equals(Constants.ORDER_SIDE_BUY, StringComparison.CurrentCultureIgnoreCase) &&
                 type.Equals(Constants.ORDER_TYPE_MARKET, StringComparison.CurrentCultureIgnoreCase))
             {
-                order = BuyMarketOrder(orderId, currencyPair, OrderType.Market, orderVolume, id);                
+                Price price = new Price(limitPrice);
+                order = BuyMarketOrder(orderId, currencyPair, OrderType.Market, orderVolume, price, id);                
             }
             else if (side.Equals(Constants.ORDER_SIDE_SELL, StringComparison.CurrentCultureIgnoreCase) &&
                      type.Equals(Constants.ORDER_TYPE_MARKET, StringComparison.CurrentCultureIgnoreCase))
             {
-                order = SellMarketOrder(orderId, currencyPair, OrderType.Market, orderVolume, id);               
+                Price price = new Price(limitPrice);
+                order = SellMarketOrder(orderId, currencyPair, OrderType.Market, orderVolume, price, id);               
             }
             else if (side.Equals(Constants.ORDER_SIDE_BUY, StringComparison.CurrentCultureIgnoreCase) &&
                      type.Equals(Constants.ORDER_TYPE_LIMIT, StringComparison.CurrentCultureIgnoreCase))
@@ -44,14 +46,14 @@ namespace CoinExchange.Trades.Domain.Model.OrderAggregate
             return order;
         }
 
-        private static Order BuyMarketOrder(OrderId orderId, string pair, OrderType orderType, Volume volume, TraderId traderId)
+        private static Order BuyMarketOrder(OrderId orderId, string pair, OrderType orderType, Volume volume, Price price, TraderId traderId)
         {
-            return new Order(orderId, pair, OrderSide.Buy, orderType, volume, traderId);
+            return new Order(orderId, pair, price, OrderSide.Buy, orderType, volume, traderId);
         }
 
-        private static Order SellMarketOrder(OrderId orderId, string pair, OrderType orderType, Volume volume, TraderId traderId)
+        private static Order SellMarketOrder(OrderId orderId, string pair, OrderType orderType, Volume volume, Price price, TraderId traderId)
         {
-            return new Order(orderId, pair, OrderSide.Sell, orderType, volume, traderId);
+            return new Order(orderId, pair, price,  OrderSide.Sell, orderType, volume, traderId);
         }
         private static Order BuyLimitOrder(OrderId orderId, string pair, Price limitPrice, OrderType orderType, Volume volume, TraderId traderId)
         {

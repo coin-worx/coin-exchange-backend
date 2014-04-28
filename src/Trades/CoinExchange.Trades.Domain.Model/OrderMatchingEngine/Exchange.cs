@@ -78,6 +78,21 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         #region Methods
 
         /// <summary>
+        /// Places new order on the limit order book
+        /// </summary>
+        /// <param name="order"></param>
+        /// <returns></returns>
+        public bool PlaceNewOrder(Order order)
+        {
+            return _orderBook.PlaceOrder(order);
+        }
+
+        public bool CancelOrder(OrderId orderId)
+        {
+            return _orderBook.CancelOrder(orderId);
+        }
+
+        /// <summary>
         /// Signifies that the Order has been accepted successfully
         /// </summary>
         public void OnAccept(Order order, Price matchedPrice, Volume matchedVolume)
