@@ -2,11 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using CoinExchange.Common.Domain.Model;
 using CoinExchange.Trades.Domain.Model.OrderAggregate;
 using CoinExchange.Trades.Domain.Model.OrderMatchingEngine;
+using CoinExchange.Trades.Domain.Model.Services;
 using CoinExchange.Trades.Domain.Model.TradeAggregate;
+using CoinExchange.Trades.Infrastructure.Persistence.RavenDb;
+using CoinExchange.Trades.Infrastructure.Services;
 using CoinExchange.Trades.ReadModel.MemoryImages;
+using Disruptor;
 using NUnit.Framework;
 
 namespace CoinExchange.Trades.ReadModel.Tests
@@ -15,6 +21,8 @@ namespace CoinExchange.Trades.ReadModel.Tests
     public class OrderBookMemoryImageTests
     {
         private const string Unit= "Unit";
+
+        #region Object to simplified representation Conversion Tests
 
         [Test]
         [Category(Unit)]
@@ -240,5 +248,92 @@ namespace CoinExchange.Trades.ReadModel.Tests
             Assert.AreEqual(1, orderBookMemory.BidBooks.Count());
             Assert.AreEqual(1, orderBookMemory.BidBooks.Count());
         }
+
+        #endregion Object to simplified representation Conversion Tests
+
+        #region Disruptor Tests
+
+        [Test]
+        [Category(Unit)]
+        public void ManualOrderBookSendTest_ManuallySendsTheOrderBook_VerifiesIfTheOrderBookIsReceivedByTheDisruptorsEventHandlerMemoryImage()
+        {
+            OrderBookMemoryImage orderBookMemoryImage = new OrderBookMemoryImage();
+            
+            IEventStore eventStore = new RavenNEventStore();
+            Journaler journaler = new Journaler(eventStore);
+            LimitOrderBook limitOrderBook = new LimitOrderBook(CurrencyConstants.BitCoinUsd);
+            Order buyOrder1 = OrderFactory.CreateOrder("1234", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 250, 491.34M, new StubbedOrderIdGenerator());
+
+            Order sellOrder1 = OrderFactory.CreateOrder("1244", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 200, 494.34M, new StubbedOrderIdGenerator());
+            limitOrderBook.PlaceOrder(buyOrder1);
+            limitOrderBook.PlaceOrder(sellOrder1);
+            
+            Assert.AreEqual(1, orderBookMemoryImage.BidBooks.Count());
+            Assert.AreEqual(1, orderBookMemoryImage.AskBooks.Count());
+
+            Assert.AreEqual(CurrencyConstants.BitCoinUsd, orderBookMemoryImage.BidBooks.First().CurrencyPair);
+            Assert.AreEqual(CurrencyConstants.BitCoinUsd, orderBookMemoryImage.AskBooks.First().CurrencyPair);
+
+            Assert.AreEqual(0, orderBookMemoryImage.BidBooks.First().Count(), "Count of the bids in the first bid book in the list of bid books");
+            Assert.AreEqual(0, orderBookMemoryImage.AskBooks.First().Count(), "Count of the asks in the first ask book in the list of ask books");
+
+            //byte[] array2 = ObjectToByteArray(limitOrderBook);
+            ManualResetEvent manualResetEvent = new ManualResetEvent(false);
+            OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
+            OutputDisruptor.Publish(limitOrderBook);
+            manualResetEvent.WaitOne(4000);
+
+            Assert.AreEqual(1, orderBookMemoryImage.BidBooks.Count());
+            Assert.AreEqual(1, orderBookMemoryImage.AskBooks.Count());
+
+            Assert.AreEqual(CurrencyConstants.BitCoinUsd, orderBookMemoryImage.BidBooks.First().CurrencyPair);
+            Assert.AreEqual(CurrencyConstants.BitCoinUsd, orderBookMemoryImage.AskBooks.First().CurrencyPair);
+
+            Assert.AreEqual(1, orderBookMemoryImage.BidBooks.First().Count(), "Count of the bids in the first bid book in the list of bid books");
+            Assert.AreEqual(1, orderBookMemoryImage.AskBooks.First().Count(), "Count of the asks in the first ask book in the list of ask books");
+
+            // BidsOrderBooks -> First BidOrderBook -> First Bid's volume in first OrderBook
+            Assert.AreEqual(250, orderBookMemoryImage.BidBooks.First().First().Item1, "Volume of first bids in the first bid book in the bids book list in  memory image");
+            // AsksOrderBooks -> First AskOrderBook -> First Ask's volume in first OrderBook
+            Assert.AreEqual(200, orderBookMemoryImage.AskBooks.First().First().Item1, "Volume of first ask in the first ask book in the ask books list in memory image");
+            // BidsOrderBooks -> First BidOrderBook -> First Bid's price in first OrderBook
+            Assert.AreEqual(491.34, orderBookMemoryImage.BidBooks.First().First().Item2, "Volume of first bids in the first bid book in the bids book list in  memory image");
+            // AsksOrderBooks -> First AskOrderBook -> First Ask's price in first OrderBook
+            Assert.AreEqual(494.34, orderBookMemoryImage.AskBooks.First().First().Item2, "Volume of first ask in the first ask book in the ask books list in memory image");
+        }
+
+        [Test]
+        public void NewOrderOnExchangeTest_ChecksWhetherLimitOrderBookGetsReceviedAtTheMemoryImage_VerifiesThroughTheListsInOrderBookMemoryImage()
+        {
+            // Initialize memory image
+            OrderBookMemoryImage orderBookMemoryImage = new OrderBookMemoryImage();
+
+            // Start excahgne to accept orders
+            Exchange exchange = new Exchange();
+            Order buyOrder1 = OrderFactory.CreateOrder("1233", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 250, 493.34M, new StubbedOrderIdGenerator());
+            Order buyOrder2 = OrderFactory.CreateOrder("1234", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 250, 491.34M, new StubbedOrderIdGenerator());
+
+            Order sellOrder1 = OrderFactory.CreateOrder("1244", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 250, 494.34M, new StubbedOrderIdGenerator());
+            Order sellOrder2 = OrderFactory.CreateOrder("1222", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 250, 492.34M, new StubbedOrderIdGenerator());
+            exchange.PlaceNewOrder(buyOrder1);
+            exchange.PlaceNewOrder(buyOrder2);
+            exchange.PlaceNewOrder(sellOrder1);
+            exchange.PlaceNewOrder(sellOrder2);
+
+            FillCheck fillCheck = new FillCheck();
+            Assert.IsTrue(fillCheck.FilledPartiallyOrComplete(exchange.OrderBook, sellOrder1, false));
+            Assert.IsTrue(fillCheck.VerifyFilled(sellOrder1, new Volume(100), new Price(0), new Price(0)));
+            ManualResetEvent manualResetEvent = new ManualResetEvent(false);
+            OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { orderBookMemoryImage });
+            manualResetEvent.WaitOne(4000);
+        }
+
+        #endregion Disruptor Tests
     }
 }

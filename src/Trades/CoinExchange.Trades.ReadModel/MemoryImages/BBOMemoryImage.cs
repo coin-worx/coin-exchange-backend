@@ -34,7 +34,6 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
         private void OnBBOArrived(BBO bbo)
         {
             OnBBOArrived("", bbo.BestBid, bbo.BestAsk);
-
         }
 
         /// <summary>

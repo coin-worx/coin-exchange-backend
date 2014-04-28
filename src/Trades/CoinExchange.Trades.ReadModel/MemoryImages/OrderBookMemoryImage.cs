@@ -3,15 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CoinExchange.Common.Utility;
 using CoinExchange.Trades.Domain.Model.OrderAggregate;
 using CoinExchange.Trades.Domain.Model.OrderMatchingEngine;
+using Disruptor;
 
 namespace CoinExchange.Trades.ReadModel.MemoryImages
 {
     /// <summary>
     /// The memory image containing the OrderBook in memory
     /// </summary>
-    public class OrderBookMemoryImage
+    public class OrderBookMemoryImage : IOrderBookMemoryImage
     {
         // Get the Current Logger
         private static readonly log4net.ILog Log = log4net.LogManager.GetLogger
@@ -100,15 +102,22 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
         /// <returns></returns>
         private void UpdateOrderRepresentationList(OrderRepresentationBookList orderRepresentationBook, OrderRepresentationList orderRepresentationList, OrderList orderList)
         {
-            orderRepresentationBook.Remove(orderRepresentationList.CurrencyPair);
+            // If the orderRepresentationLst for this currencyPair is already present, remove it
+            if (orderRepresentationList != null)
+            {
+                orderRepresentationBook.Remove(orderRepresentationList.CurrencyPair);
+            }
+            // Initialize the Orderlist for this currencyPair
             orderRepresentationList = new OrderRepresentationList(orderList.CurrencyPair, orderList.OrderSide);
 
+            // Add each order(Bid or Ask) in the correponding order list (Bids list or Asks list)
             foreach (Order order in orderList)
             {
                 orderRepresentationList.AddRecord(order.Volume.Value, order.Price.Value);
                 Log.Debug("Order Representation added to Currency Pair : " + order.CurrencyPair + 
                           ". Volume: " + order.Volume.Value + " | Price: " + order.Price.Value);   
             }
+            // Add the new orderList (order book for bids or asks) to the OrderBooksList of this memory image
             orderRepresentationBook.AddRecord(orderRepresentationList);
         }
 
@@ -124,5 +133,28 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
         {
             get { return _askBookRepresentations; }
         }
+
+        #region Implementation of IEventHandler<in byte[]>
+
+        /// <summary>
+        /// Event handler for the LimitOrderBook changed event published by the output disruptor
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="sequence"></param>
+        /// <param name="endOfBatch"></param>
+        public void OnNext(byte[] data, long sequence, bool endOfBatch)
+        {
+            object getObject = StreamConversion.ByteArrayToObject(data);
+            if (getObject is LimitOrderBook)
+            {
+                this.OnOrderBookChanged(getObject as LimitOrderBook);
+            }
+            else
+            {
+                throw new FormatException("Expected a type of CoinExchange.TradesDomain.Model.OrderMatchingEngine.LimitOrderBook but was " + getObject.GetType());
+            }
+        }
+
+        #endregion
     }
 }

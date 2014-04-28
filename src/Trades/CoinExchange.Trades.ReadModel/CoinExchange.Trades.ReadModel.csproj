@@ -30,6 +30,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Atomic, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Disruptor.1.1.0\lib\net40\Atomic.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Disruptor">
+      <HintPath>..\..\packages\Disruptor.1.1.0\lib\net40\Disruptor.dll</HintPath>
+    </Reference>
+    <Reference Include="Disruptor.Scheduler">
+      <HintPath>..\..\packages\Disruptor.1.1.0\lib\net40\Disruptor.Scheduler.dll</HintPath>
+    </Reference>
     <Reference Include="log4net">
       <HintPath>..\..\packages\log4net.1.2.10\lib\2.0\log4net.dll</HintPath>
     </Reference>
@@ -56,6 +67,10 @@
     <Compile Include="MemoryImages\DepthLevelRepresentation.cs" />
     <Compile Include="MemoryImages\DepthLevelRepresentationList.cs" />
     <Compile Include="MemoryImages\DepthMemoryImage.cs" />
+    <Compile Include="MemoryImages\IBBOMemoryImage.cs" />
+    <Compile Include="MemoryImages\IDepthMemoryImage.cs" />
+    <Compile Include="MemoryImages\IMemoryImage.cs" />
+    <Compile Include="MemoryImages\IOrderBookMemoryImage.cs" />
     <Compile Include="MemoryImages\OrderBookMemoryImage.cs" />
     <Compile Include="MemoryImages\OrderRepresentationBookList.cs" />
     <Compile Include="MemoryImages\OrderRepresentationList.cs" />
@@ -66,6 +81,10 @@
     <Compile Include="Repositories\ITradeRepository.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Common\CoinExchange.Common\CoinExchange.Common.csproj">
+      <Project>{d61dbd04-95dc-4eb1-ad54-1ff929ac2814}</Project>
+      <Name>CoinExchange.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CoinExchange.Trades.Domain.Model\CoinExchange.Trades.Domain.Model.csproj">
       <Project>{32ac3710-adf8-4522-8f06-1f9c7a45e6e7}</Project>
       <Name>CoinExchange.Trades.Domain.Model</Name>
