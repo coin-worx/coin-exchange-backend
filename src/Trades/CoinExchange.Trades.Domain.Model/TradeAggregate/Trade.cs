@@ -1,4 +1,5 @@
 ﻿using System;
+using CoinExchange.Common.Domain.Model;
 using CoinExchange.Trades.Domain.Model.OrderAggregate;
 
 namespace CoinExchange.Trades.Domain.Model.TradeAggregate
@@ -16,6 +17,7 @@ namespace CoinExchange.Trades.Domain.Model.TradeAggregate
         private DateTime _executionTime = DateTime.MinValue;
         private Order _buyOrder = null;
         private Order _sellOrder = null;
+        private TradeId _tradeId;
 
         /// <summary>
         /// Default Constructor
@@ -42,12 +44,48 @@ namespace CoinExchange.Trades.Domain.Model.TradeAggregate
         }
 
         /// <summary>
+        /// Factory Constructor
+        /// </summary>
+        public Trade(TradeId tradeId,string currencyPair, Price executionPrice, Volume executedQuantity, DateTime executionTime,
+            Order matchedOrder, Order inboundOrder)
+        {
+            TradeId = tradeId;
+            _currencyPair = currencyPair;
+            _executionPrice = executionPrice;
+            _executedQuantity = executedQuantity;
+            _executionTime = executionTime;
+            if (matchedOrder.OrderSide == OrderSide.Buy)
+            {
+                _buyOrder = matchedOrder;
+                _sellOrder = inboundOrder;
+            }
+            else
+            {
+                _buyOrder = inboundOrder;
+                _sellOrder = matchedOrder;
+            }
+        }
+
+        /// <summary>
         /// Raise the TradeExecutedEvent
         /// </summary>
         public TradeExecutedEvent RaiseEvent()
         {
             TradeExecutedEvent tradeExecutedEvent = new TradeExecutedEvent(_aggregateId, this);
             return tradeExecutedEvent;
+        }
+
+        /// <summary>
+        /// TradeId
+        /// </summary>
+        public TradeId TradeId
+        {
+            get { return _tradeId; }
+            private set
+            {
+                AssertionConcern.AssertArgumentNotNull(value,"TradeId cannot be null");
+                _tradeId = value;
+            }
         }
 
         /// <summary>

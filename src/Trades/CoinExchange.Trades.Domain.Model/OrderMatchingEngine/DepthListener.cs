@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CoinExchange.Trades.Domain.Model.Services;
 
 namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
 {
@@ -20,6 +21,8 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
 
         public void OnDepthChanged(Depth depth)
         {
+            //publish to output disruptor
+            OutputDisruptor.Publish(depth);
             Log.Debug("Depth changed for currency pair: " + depth.CurrencyPair);
         }
 

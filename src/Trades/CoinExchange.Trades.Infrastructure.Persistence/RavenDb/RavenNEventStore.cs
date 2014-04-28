@@ -4,6 +4,7 @@ using System.Linq;
 using CoinExchange.Common.Domain.Model;
 using CoinExchange.Trades.Domain.Model.OrderAggregate;
 using CoinExchange.Trades.Domain.Model.Services;
+using CoinExchange.Trades.Domain.Model.TradeAggregate;
 using NEventStore;
 using NEventStore.Dispatcher;
 
@@ -92,6 +93,33 @@ namespace CoinExchange.Trades.Infrastructure.Persistence.RavenDb
                 
             }
             return null;
+        }
+
+        /// <summary>
+        /// Get trade Event from collection by order id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public IList<Trade> GetTradeEventsFromOrderId(string id)
+        {
+            List<EventMessage> collection;
+            List<Trade> trades=new List<Trade>();
+            using (var stream = _store.OpenStream(StreamId, 0, int.MaxValue))
+            {
+                collection = stream.CommittedEvents.ToList();
+                for (int i = 0; i < collection.Count; i++)
+                {
+                    if (collection[i].Body is Trade)
+                    {
+                        Trade trade = collection[i].Body as Trade;
+                        if (trade.BuyOrder.OrderId.Id.ToString().Equals(id)||trade.SellOrder.OrderId.Id.ToString().Equals(id))
+                        {
+                            trades.Add(trade);
+                        }
+                    }
+                }
+            }
+            return trades;
         }
     }
 }

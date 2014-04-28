@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StubbedOrderIdGenerator.cs" />
+    <Compile Include="StubbedTradeIdGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CoinExchange.Trades.Domain.Model\CoinExchange.Trades.Domain.Model.csproj">
@@ -48,7 +49,11 @@
       <Name>CoinExchange.Trades.Domain.Model</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Config\StubTradeIdGenerator.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
   <ItemGroup>
     <None Include="Config\StubOrderIdGenerator.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

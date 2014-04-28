@@ -298,10 +298,13 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         private Trade GenerateTrade(decimal executionPrice, 
             decimal executedQuantity, Order matchedOrder, Order inboundOrder)
         {
-            Trade trade = new Trade(matchedOrder.CurrencyPair, new Price(executionPrice), new Volume(executedQuantity),
-                DateTime.Now, matchedOrder, inboundOrder);
+           // Trade trade = new Trade(matchedOrder.CurrencyPair, new Price(executionPrice), new Volume(executedQuantity),
+             //   DateTime.Now, matchedOrder, inboundOrder);
+            Trade trade = TradeFactory.GenerateTrade(matchedOrder.CurrencyPair, new Price(executionPrice),
+                new Volume(executedQuantity),
+                matchedOrder, inboundOrder);
             _trades.Add(trade);
-
+            
             return trade;
         }
 
@@ -429,7 +432,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
 
             // Create trade. The least amount of the two orders will be the trade's executed volume
             Trade trade = GenerateTrade(filledPrice, filledQuantity, matchedOrder, inboundOrder);
-
+            
             if (TradeExecuted != null)
             {
                 TradeExecuted(trade);

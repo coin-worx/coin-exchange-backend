@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CoinExchange.Trades.Domain.Model.OrderAggregate;
+using CoinExchange.Trades.Domain.Model.Services;
 
 namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
 {
@@ -23,6 +24,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// <param name="order"> </param>
         public void OnOrderChanged(Order order)
         {
+            OutputDisruptor.Publish(order);
             Log.Debug("Order change received: " + order.ToString());
         }
 
