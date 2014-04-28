@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CoinExchange.Trades.Domain.Model.Services;
 
 namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
 {
@@ -25,6 +26,10 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// <param name="bestAsk"> </param>
         public void OnBBOChange(DepthLevel bestBid, DepthLevel bestAsk)
         {
+            BBO bbo=new BBO();
+            bbo.BestBid = bestBid;
+            bbo.BestAsk = bestAsk;
+            OutputDisruptor.Publish(bbo);
             Log.Debug("Best bid and offer received.");
         }
 

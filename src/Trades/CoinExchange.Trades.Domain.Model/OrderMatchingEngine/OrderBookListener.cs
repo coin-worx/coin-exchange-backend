@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CoinExchange.Trades.Domain.Model.Services;
 
 namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
 {
@@ -22,8 +23,8 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// </summary>
         public void OnOrderBookChanged(LimitOrderBook orderBook)
         {
+            OutputDisruptor.Publish(orderBook);
             Log.Debug("OrderBook changed for Currency pair: " + orderBook.CurrencyPair);
-            // ToDo: Publish the snapshot on a Messaging Queue to transport the snapshot to the MemoryImage on the Read Side
         }
     }
 }

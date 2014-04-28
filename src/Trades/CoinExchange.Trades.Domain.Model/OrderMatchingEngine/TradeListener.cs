@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CoinExchange.Trades.Domain.Model.Services;
 using CoinExchange.Trades.Domain.Model.TradeAggregate;
 
 namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
@@ -28,6 +29,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
                 _trades = new TradeList(trade.CurrencyPair);
             }
             _trades.Add(trade);
+            OutputDisruptor.Publish(trade);
             Log.Debug("Trade received: " + trade.ToString());
         }
 
