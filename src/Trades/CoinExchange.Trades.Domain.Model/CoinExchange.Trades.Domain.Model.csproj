@@ -64,11 +64,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DomainEvents\BBOEvent.cs" />
-    <Compile Include="DomainEvents\DepthEvent.cs" />
-    <Compile Include="DomainEvents\LimitOrderBookEvent.cs" />
-    <Compile Include="DomainEvents\OrderEvent.cs" />
-    <Compile Include="DomainEvents\TradeEvent.cs" />
+    <Compile Include="OrderMatchingEngine\BBOEvent.cs" />
+    <Compile Include="OrderMatchingEngine\DepthEvent.cs" />
+    <Compile Include="OrderMatchingEngine\LimitOrderBookEvent.cs" />
+    <Compile Include="OrderAggregate\OrderEvent.cs" />
+    <Compile Include="TradeAggregate\TradeEvent.cs" />
     <Compile Include="OrderAggregate\InputDisruptorPublisher.cs" />
     <Compile Include="OrderAggregate\InputPayload.cs" />
     <Compile Include="OrderAggregate\OrderCancellation.cs" />

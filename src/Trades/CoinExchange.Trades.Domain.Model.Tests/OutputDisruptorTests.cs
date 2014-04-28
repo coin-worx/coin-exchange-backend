@@ -6,6 +6,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using CoinExchange.Common.Utility;
 using CoinExchange.Trades.Domain.Model.OrderAggregate;
 using CoinExchange.Trades.Domain.Model.OrderMatchingEngine;
 using CoinExchange.Trades.Domain.Model.Services;
@@ -26,7 +27,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         private BBO _receivedBbo;
         public void OnNext(byte[] data, long sequence, bool endOfBatch)
         {
-            object getObject = ByteArrayToObject(data);
+            object getObject = StreamConversion.ByteArrayToObject(data);
             if (getObject is Order)
             {
                 _receviedOrder = getObject as Order;
@@ -68,8 +69,8 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         {
             Order order = OrderFactory.CreateOrder("1234", "XBTUSD", "market", "buy", 5, 0,
                new StubbedOrderIdGenerator());
-            byte[] array = ObjectToByteArray(order);
-            OutputDisruptor.Publish(array);
+            //byte[] array = ObjectToByteArray(order);
+            OutputDisruptor.Publish(order);
             _manualResetEvent.WaitOne(3000);
             Assert.NotNull(_receviedOrder);
             Assert.AreEqual(_receviedOrder, order);
@@ -83,8 +84,8 @@ namespace CoinExchange.Trades.Domain.Model.Tests
             Order sellOrder = OrderFactory.CreateOrder("1234", "XBTUSD", "market", "sell", 5, 0,
                new StubbedOrderIdGenerator());
             Trade trade=new Trade("XBTUSD",new Price(100),new Volume(10),DateTime.Now,buyOrder,sellOrder);
-            byte[] array = ObjectToByteArray(trade);
-            OutputDisruptor.Publish(array);
+            //byte[] array = ObjectToByteArray(trade);
+            OutputDisruptor.Publish(trade);
             _manualResetEvent.WaitOne(3000);
             Assert.NotNull(_receivedTrade);
             Assert.AreEqual(_receivedTrade.BuyOrder, buyOrder);
@@ -101,8 +102,8 @@ namespace CoinExchange.Trades.Domain.Model.Tests
                new StubbedOrderIdGenerator());
             limitOrderBook.PlaceOrder(buyOrder);
             limitOrderBook.PlaceOrder(sellOrder);
-            byte[] array = ObjectToByteArray(limitOrderBook);
-            OutputDisruptor.Publish(array);
+            //byte[] array = ObjectToByteArray(limitOrderBook);
+            OutputDisruptor.Publish(limitOrderBook);
             _manualResetEvent.WaitOne(3000);
             Assert.NotNull(_receivedLimitOrderBook);
             Assert.AreEqual(_receivedLimitOrderBook.AskCount,1);
@@ -116,8 +117,8 @@ namespace CoinExchange.Trades.Domain.Model.Tests
             depth.AddOrder(new Price(490), new Volume(100), OrderSide.Buy);
             depth.AddOrder(new Price(491), new Volume(100), OrderSide.Buy);
             depth.AddOrder(new Price(492), new Volume(200), OrderSide.Buy);
-            byte[] array = ObjectToByteArray(depth);
-            OutputDisruptor.Publish(array);
+            //byte[] array = ObjectToByteArray(depth);
+            OutputDisruptor.Publish(depth);
             _manualResetEvent.WaitOne(3000);
             Assert.NotNull(_receivedDepth);
             Assert.AreEqual(_receivedDepth.BidLevels[0].Price.Value,492);
@@ -138,8 +139,8 @@ namespace CoinExchange.Trades.Domain.Model.Tests
             BBO bbo=new BBO();
             bbo.BestAsk = askDepthLevel;
             bbo.BestBid = bidDepthLevel;
-            byte[] array = ObjectToByteArray(bbo);
-            OutputDisruptor.Publish(array);
+            //byte[] array = ObjectToByteArray(bbo);
+            OutputDisruptor.Publish(bbo);
             _manualResetEvent.WaitOne(3000);
             Assert.NotNull(_receivedBbo);
             Assert.AreEqual(_receivedBbo.BestAsk.OrderCount,2);
@@ -159,21 +160,21 @@ namespace CoinExchange.Trades.Domain.Model.Tests
             Order sellOrder = OrderFactory.CreateOrder("1234", "XBTUSD", "limit", "sell", 5, 11,
                new StubbedOrderIdGenerator());
             Trade trade = new Trade("XBTUSD", new Price(100), new Volume(10), DateTime.Now, buyOrder, sellOrder);
-            byte[] array1 = ObjectToByteArray(trade);
-            OutputDisruptor.Publish(array1);
+            //byte[] array1 = ObjectToByteArray(trade);
+            OutputDisruptor.Publish(trade);
 
             LimitOrderBook limitOrderBook = new LimitOrderBook("XBTUSD");
             limitOrderBook.PlaceOrder(buyOrder);
             limitOrderBook.PlaceOrder(sellOrder);
-            byte[] array2 = ObjectToByteArray(limitOrderBook);
-            OutputDisruptor.Publish(array2);
+            //byte[] array2 = ObjectToByteArray(limitOrderBook);
+            OutputDisruptor.Publish(limitOrderBook);
 
             Depth depth = new Depth("XBTUSD", 3);
             depth.AddOrder(new Price(490), new Volume(100), OrderSide.Buy);
             depth.AddOrder(new Price(491), new Volume(100), OrderSide.Buy);
             depth.AddOrder(new Price(492), new Volume(200), OrderSide.Buy);
-            byte[] array3 = ObjectToByteArray(depth);
-            OutputDisruptor.Publish(array3);
+            //byte[] array3 = ObjectToByteArray(depth);
+            OutputDisruptor.Publish(depth);
 
             DepthLevel askDepthLevel = new DepthLevel(new Price(491.32M));
             bool addOrder1 = askDepthLevel.AddOrder(new Volume(2000));
@@ -185,8 +186,8 @@ namespace CoinExchange.Trades.Domain.Model.Tests
             BBO bbo = new BBO();
             bbo.BestAsk = askDepthLevel;
             bbo.BestBid = bidDepthLevel;
-            byte[] array4 = ObjectToByteArray(bbo);
-            OutputDisruptor.Publish(array4);
+            //byte[] array4 = ObjectToByteArray(bbo);
+            OutputDisruptor.Publish(bbo);
             _manualResetEvent.WaitOne(3000);
             
             Assert.NotNull(_receviedOrder);

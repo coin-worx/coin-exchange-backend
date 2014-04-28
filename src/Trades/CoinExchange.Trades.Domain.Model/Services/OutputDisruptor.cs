@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CoinExchange.Common.Domain.Model;
+using CoinExchange.Common.Utility;
 using CoinExchange.Trades.Domain.Model.OrderAggregate;
 using Disruptor;
 using Disruptor.Dsl;
@@ -38,8 +39,9 @@ namespace CoinExchange.Trades.Domain.Model.Services
             _publisher = new EventPublisher<byte[]>(_ringBuffer);
         }
 
-        public static void Publish(byte[] received)
+        public static void Publish(object obj)
         {
+            byte[] received = StreamConversion.ObjectToByteArray(obj);
             _publisher.PublishEvent((entry, sequenceNo) =>
             {
                 //copy byte to diruptor ring byte
