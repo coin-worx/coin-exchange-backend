@@ -40,9 +40,12 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
 
         [Test]
         [Category("Integration")]
-        public void AddOrdersToExchange_IfOrdersAreMatching_TradeWillbeFormedAndStoredInDbAndEventShouldBeDispatched()
+        public void AddOrdersToExchange_IfOrdersAreMatching_TradeWillbeFormedAndStoredInDbAndAllEventShouldBeDispatched()
         {
             bool tradeEventArrived = false;
+            bool depthArrived = false;
+            bool bboChangeArrived = false;
+            bool orderBookArrived = false;
             Trade receivedTrade = null;
             Exchange exchange=new Exchange();
             string currencyPair = "BTCUSD";
@@ -57,12 +60,28 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             {
                 tradeEventArrived = true;
                 receivedTrade = trade;
-                _manualResetEvent.Set();
+                //_manualResetEvent.Set();
+            };
+            DepthEvent.DepthChanged += delegate(Depth depth)
+            {
+                depthArrived = true;
+            };
+            BBOEvent.BBOChanged += delegate(BBO bbo)
+            {
+                bboChangeArrived = true;
+            };
+            LimitOrderBookEvent.LimitOrderBookChanged += delegate(LimitOrderBook orderBook)
+            {
+                orderBookArrived = true;
             };
             _manualResetEvent.WaitOne(5000);
             IList<Trade> trades = _eventStore.GetTradeEventsFromOrderId(buyOrder.OrderId.Id.ToString());
-            //assert trade event fired
+
+            //assert events fired
             Assert.True(tradeEventArrived);
+            Assert.True(depthArrived);
+            Assert.True(bboChangeArrived);
+            Assert.True(orderBookArrived);
 
             //assert that trade event is stored in DB
             Assert.AreEqual(trades.Count,1);
