@@ -48,7 +48,6 @@ namespace CoinExchange.Trades.Domain.Model.Tests
             {
                 _receivedBbo = getObject as BBO;
             }
-
         }
 
         [SetUp]
@@ -211,7 +210,6 @@ namespace CoinExchange.Trades.Domain.Model.Tests
             Assert.NotNull(_receivedBbo);
             Assert.AreEqual(_receivedBbo.BestAsk.OrderCount, 2);
             Assert.AreEqual(_receivedBbo.BestBid.OrderCount, 3);
-            
         }
 
         private static byte[] ObjectToByteArray(Object obj)
