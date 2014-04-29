@@ -53,7 +53,7 @@ namespace CoinExchange.Trades.ReadModel.Persistence.Tests
             Order order = OrderFactory.CreateOrder("1234", "XBTUSD", "limit", "buy", 5, 10,
                new StubbedOrderIdGenerator());
             byte[] array = ObjectToByteArray(order);
-            OutputDisruptor.Publish(array);
+            OutputDisruptor.Publish(order);
             _manualResetEvent.WaitOne(10000);
             //TODO: need to verify all things happened safely.
         }
