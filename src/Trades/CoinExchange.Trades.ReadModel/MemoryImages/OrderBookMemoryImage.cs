@@ -20,7 +20,6 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
         (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private List<string> _currencyPairs = new List<string>(); 
-        private LimitOrderBook _limitOrderBook = null;
         private OrderRepresentationBookList _bidBookRepresentations = null;
         private OrderRepresentationBookList _askBookRepresentations = null;
 

@@ -15,6 +15,8 @@ namespace CoinExchange.Trades.ReadModel.Tests
     {
         private const string Unit = "Unit";
 
+        #region Depth Memory Image Direct data sending Test
+
         [Test]
         [Category(Unit)]
         public void BuyDepthMemoryImageInitialization_ChecksWhetherTheDictionariesInitializesAsExpected_ChecksTheCountForDepthDictionaries()
@@ -32,8 +34,10 @@ namespace CoinExchange.Trades.ReadModel.Tests
 
             depthMemoryImage.OnDepthArrived(depth);
 
-            Assert.AreEqual(4, depthMemoryImage.BidDepth.Count());
-            Assert.AreEqual(0, depthMemoryImage.AskDepth.Count());
+            Assert.AreEqual(1, depthMemoryImage.BidDepths.Count());
+            Assert.AreEqual(0, depthMemoryImage.AskDepths.Count());
+
+            Assert.AreEqual(4, depthMemoryImage.BidDepths.First().Value.Count());
         }
 
         [Test]
@@ -53,8 +57,10 @@ namespace CoinExchange.Trades.ReadModel.Tests
 
             depthMemoryImage.OnDepthArrived(depth);
 
-            Assert.AreEqual(0, depthMemoryImage.BidDepth.Count());
-            Assert.AreEqual(4, depthMemoryImage.AskDepth.Count());
+            Assert.AreEqual(0, depthMemoryImage.BidDepths.Count());
+            Assert.AreEqual(1, depthMemoryImage.AskDepths.Count());
+
+            Assert.AreEqual(4, depthMemoryImage.AskDepths.First().Value.Count());
         }
 
         [Test]
@@ -74,13 +80,15 @@ namespace CoinExchange.Trades.ReadModel.Tests
 
             depthMemoryImage.OnDepthArrived(depth);
 
-            Assert.AreEqual(4, depthMemoryImage.BidDepth.Count());
-            Assert.AreEqual(0, depthMemoryImage.AskDepth.Count());
+            Assert.AreEqual(1, depthMemoryImage.BidDepths.Count());
+            Assert.AreEqual(0, depthMemoryImage.AskDepths.Count());
 
-            Assert.AreEqual(498, depthMemoryImage.BidDepth.ToList()[0].Item2);
-            Assert.AreEqual(496, depthMemoryImage.BidDepth.ToList()[1].Item2);
-            Assert.AreEqual(493, depthMemoryImage.BidDepth.ToList()[2].Item2);
-            Assert.AreEqual(491, depthMemoryImage.BidDepth.ToList()[3].Item2);
+            Assert.AreEqual(4, depthMemoryImage.BidDepths.First().Value.Count());
+
+            Assert.AreEqual(498, depthMemoryImage.BidDepths.First().Value.First().Item2);
+            Assert.AreEqual(496, depthMemoryImage.BidDepths.First().Value.ToList()[1].Item2);
+            Assert.AreEqual(493, depthMemoryImage.BidDepths.First().Value.ToList()[2].Item2);
+            Assert.AreEqual(491, depthMemoryImage.BidDepths.First().Value.ToList()[3].Item2);
         }
 
         [Test]
@@ -100,13 +108,15 @@ namespace CoinExchange.Trades.ReadModel.Tests
 
             depthMemoryImage.OnDepthArrived(depth);
 
-            Assert.AreEqual(0, depthMemoryImage.BidDepth.Count());
-            Assert.AreEqual(4, depthMemoryImage.AskDepth.Count());
+            Assert.AreEqual(0, depthMemoryImage.BidDepths.Count());
+            Assert.AreEqual(1, depthMemoryImage.AskDepths.Count());
 
-            Assert.AreEqual(491, depthMemoryImage.AskDepth.ToList()[0].Item2);
-            Assert.AreEqual(493, depthMemoryImage.AskDepth.ToList()[1].Item2);
-            Assert.AreEqual(496, depthMemoryImage.AskDepth.ToList()[2].Item2);
-            Assert.AreEqual(498, depthMemoryImage.AskDepth.ToList()[3].Item2);
+            Assert.AreEqual(4, depthMemoryImage.AskDepths.First().Value.Count());
+
+            Assert.AreEqual(491, depthMemoryImage.AskDepths.First().Value.First().Item2);
+            Assert.AreEqual(493, depthMemoryImage.AskDepths.First().Value.ToList()[1].Item2);
+            Assert.AreEqual(496, depthMemoryImage.AskDepths.First().Value.ToList()[2].Item2);
+            Assert.AreEqual(498, depthMemoryImage.AskDepths.First().Value.ToList()[3].Item2);
         }
 
         [Test]
@@ -126,13 +136,15 @@ namespace CoinExchange.Trades.ReadModel.Tests
 
             depthMemoryImage.OnDepthArrived(depth);
 
-            Assert.AreEqual(4, depthMemoryImage.BidDepth.Count());
-            Assert.AreEqual(0, depthMemoryImage.AskDepth.Count());
+            Assert.AreEqual(1, depthMemoryImage.BidDepths.Count());
+            Assert.AreEqual(0, depthMemoryImage.AskDepths.Count());
 
-            Assert.AreEqual(800, depthMemoryImage.BidDepth.ToList()[0].Item1);
-            Assert.AreEqual(600, depthMemoryImage.BidDepth.ToList()[1].Item1);
-            Assert.AreEqual(300, depthMemoryImage.BidDepth.ToList()[2].Item1);
-            Assert.AreEqual(100, depthMemoryImage.BidDepth.ToList()[3].Item1);
+            Assert.AreEqual(4, depthMemoryImage.BidDepths.First().Value.Count());
+
+            Assert.AreEqual(800, depthMemoryImage.BidDepths.First().Value.First().Item1);
+            Assert.AreEqual(600, depthMemoryImage.BidDepths.First().Value.ToList()[1].Item1);
+            Assert.AreEqual(300, depthMemoryImage.BidDepths.First().Value.ToList()[2].Item1);
+            Assert.AreEqual(100, depthMemoryImage.BidDepths.First().Value.ToList()[3].Item1);
         }
 
         [Test]
@@ -152,13 +164,17 @@ namespace CoinExchange.Trades.ReadModel.Tests
 
             depthMemoryImage.OnDepthArrived(depth);
 
-            Assert.AreEqual(0, depthMemoryImage.BidDepth.Count());
-            Assert.AreEqual(4, depthMemoryImage.AskDepth.Count());
+            Assert.AreEqual(0, depthMemoryImage.BidDepths.Count());
+            Assert.AreEqual(1, depthMemoryImage.AskDepths.Count());
 
-            Assert.AreEqual(100, depthMemoryImage.AskDepth.ToList()[0].Item1);
-            Assert.AreEqual(300, depthMemoryImage.AskDepth.ToList()[1].Item1);
-            Assert.AreEqual(600, depthMemoryImage.AskDepth.ToList()[2].Item1);
-            Assert.AreEqual(800, depthMemoryImage.AskDepth.ToList()[3].Item1);
+            Assert.AreEqual(4, depthMemoryImage.AskDepths.First().Value.Count());
+
+            Assert.AreEqual(100, depthMemoryImage.AskDepths.First().Value.First().Item1);
+            Assert.AreEqual(300, depthMemoryImage.AskDepths.First().Value.ToList()[1].Item1);
+            Assert.AreEqual(600, depthMemoryImage.AskDepths.First().Value.ToList()[2].Item1);
+            Assert.AreEqual(800, depthMemoryImage.AskDepths.First().Value.ToList()[3].Item1);
         }
+
+        #endregion Depth Memory Image Direct data sending Test        
     }
 }

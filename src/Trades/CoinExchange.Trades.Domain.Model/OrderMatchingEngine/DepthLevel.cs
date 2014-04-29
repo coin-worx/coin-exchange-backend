@@ -224,7 +224,11 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// <returns></returns>
         public bool ChangedSince(decimal lastPublishedChange)
         {
-            return _changeId.Id > lastPublishedChange;
+            if (_changeId != null)
+            {
+                return _changeId.Id > lastPublishedChange;
+            }
+            return false;
         }
 
         #endregion Methods

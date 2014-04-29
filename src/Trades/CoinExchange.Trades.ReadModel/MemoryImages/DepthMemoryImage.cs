@@ -15,15 +15,8 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
     {
         private List<string> _currencyPairs = new List<string>(); 
 
-        /// <summary>
-        /// Contains tuple to contain Volume, Price and Order Count for bid depth levels
-        /// </summary>
-        private DepthLevelRepresentationList _bidDepth = null;
-
-        /// <summary>
-        /// Contains tuple to contain Volume, Price and Order Count for ask depth levels
-        /// </summary>
-        private DepthLevelRepresentationList _askDepth = null;
+        private DepthRepresentation _bidDepth = new DepthRepresentation();
+        private DepthRepresentation _askDepth = new DepthRepresentation();
 
         /// <summary>
         /// Default Constructor
@@ -59,8 +52,15 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
         /// <param name="bidLevels"></param>
         private void UpdateBids(string currencyPair, DepthLevel[] bidLevels)
         {
-            var depthlevelrepresentations = GetDepthDictionary(OrderSide.Buy);
-            UpdateDepthlevels(currencyPair,OrderSide.Buy, bidLevels, depthlevelrepresentations);
+            var depthLevelsRepresentations = CreateDepthLevels(bidLevels);
+            if (depthLevelsRepresentations != null)
+            {
+                if (_bidDepth.ContainsKey(currencyPair))
+                {
+                    _bidDepth.SetValue(currencyPair, CreateDepthLevels(bidLevels));
+                }
+                _bidDepth.AddDepth(currencyPair, CreateDepthLevels(bidLevels));
+            }
         }
 
         /// <summary>
@@ -70,76 +70,52 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
         /// <param name="askLevels"></param>
         private void UpdateAsks(string currencyPair, DepthLevel[] askLevels)
         {
-            var depthLevelRepresentations = GetDepthDictionary(OrderSide.Sell);
-            UpdateDepthlevels(currencyPair, OrderSide.Sell, askLevels, depthLevelRepresentations);
-        }
-
-        /// <summary>
-        /// Update the depth levels in the dictionaries
-        /// </summary>
-        /// <param name="currencyPair"> </param>
-        /// <param name="orderSide"> </param>
-        /// <param name="depthLevels"></param>
-        /// <param name="depthLevelRepresentations"></param>
-        private void UpdateDepthlevels(string currencyPair, OrderSide orderSide, DepthLevel[] depthLevels,
-                                      DepthLevelRepresentationList depthLevelRepresentations)
-        {
-            for (int i = 0; i < depthLevels.Length; i++)
+            var depthLevelsRepresentations = CreateDepthLevels(askLevels);
+            if (depthLevelsRepresentations != null)
             {
-                if (depthLevelRepresentations == null)
+                if (_askDepth.ContainsKey(currencyPair))
                 {
-                    if (_currencyPairs.Contains(currencyPair))
-                    {
-                        depthLevelRepresentations = new DepthLevelRepresentationList(currencyPair, orderSide,
-                                                                                     depthLevels.Length);
-                        if (orderSide == OrderSide.Buy)
-                        {
-                            _bidDepth = depthLevelRepresentations;
-                        }
-                        else
-                        {
-                            _askDepth = depthLevelRepresentations;
-                        }
-                    }
-                    else
-                    {
-                        throw new InvalidOperationException("Currency pair not allowed to be traded in CoinExchange application.");
-                    }
+                    _askDepth.SetValue(currencyPair, CreateDepthLevels(askLevels));
                 }
-                depthLevelRepresentations.AddDepthLevel(i, depthLevels[i]);
+                _askDepth.AddDepth(currencyPair, CreateDepthLevels(askLevels));
             }
         }
 
-        /// <summary>
-        /// Returns the corresponding depth dictionary as per the OrderSide
-        /// </summary>
-        /// <param name="orderSide"></param>
-        /// <returns></returns>
-        private DepthLevelRepresentationList GetDepthDictionary(OrderSide orderSide)
+        private DepthLevelRepresentationList CreateDepthLevels(DepthLevel[] depthLevels)
         {
-            switch (orderSide)
+            DepthLevelRepresentationList depthLevelsRepresentations = new DepthLevelRepresentationList(depthLevels.Length);
+            for (int i = 0; i < depthLevels.Length; i++)
             {
-                    case OrderSide.Buy:
-                    return _bidDepth;
-
-                    case OrderSide.Sell:
-                    return _askDepth;
+                if (depthLevels[i].Price != null)
+                {
+                    depthLevelsRepresentations.AddDepthLevel(i, depthLevels[i]);
+                }
+            }
+            if (depthLevelsRepresentations.Any())
+            {
+                return depthLevelsRepresentations;
             }
             return null;
         }
 
         /// <summary>
-        /// Bid Depth containing all bid depth levels
+        /// Contains Depth levels for bids for each currency in the order book, and each depth level contains
+        /// Item1 = Aggregated Volume
+        /// Item2 = Price
+        /// Item3 = Number of orders present
         /// </summary>
-        public DepthLevelRepresentationList BidDepth
+        public DepthRepresentation BidDepths
         {
             get { return _bidDepth; }
         }
 
         /// <summary>
-        /// Ask Depth containing all ask depth levels
+        /// Contains Depth levels for asks for each currency in the order book, and each depth level contains:
+        /// Item1 = Aggregated Volume
+        /// Item2 = Price
+        /// Item3 = Number of orders present
         /// </summary>
-        public DepthLevelRepresentationList AskDepth
+        public DepthRepresentation AskDepths
         {
             get { return _askDepth; }
         }

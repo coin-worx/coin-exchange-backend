@@ -105,7 +105,11 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             // If there is no Bids on the book, then raise the event that this order has been accepted and been added to the Asks
             RaiseOrderAcceptedEvent(sellOrder, 0, 0);
             _asks.Add(sellOrder);
-            // Didnt match
+            // New order added, the order book has changed
+            if (OrderBookChanged != null)
+            {
+                OrderBookChanged(this);
+            }
             return false;
         }
 
@@ -123,7 +127,11 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             // If there are no Asks on the book, then raise the event that this order has been accepted and added to the Bids
             RaiseOrderAcceptedEvent(buyOrder, 0, 0);
             _bids.Add(buyOrder);
-            // Didn't match
+            // New order added, the order book has changed
+            if (OrderBookChanged != null)
+            {
+                OrderBookChanged(this);
+            }
             return false;
         }
 
@@ -140,11 +148,13 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         {
             bool sendOrderAcceptedEvent = true;
             bool matched = false;
+            bool orderBookChanged = false;
             List<Order> ordersToRemove = null;
             foreach (Order matchingOrder in oppositeSideList)
             {
                 if (Matched(order.Price, matchingOrder.Price, order.OrderSide, order.OrderType))
                 {
+                    orderBookChanged = true;
                     matched = true;
                     CrossOrders(order, matchingOrder, sendOrderAcceptedEvent);
                     sendOrderAcceptedEvent = false;
@@ -202,6 +212,11 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
                     RaiseOrderAcceptedEvent(order, 0, 0);
                 }
                 inboundSideList.Add(order);
+                orderBookChanged = true;
+            }
+            if (orderBookChanged)
+            {
+                // New order added or match occurred, order book changed
                 if (OrderBookChanged != null)
                 {
                     OrderBookChanged(this);

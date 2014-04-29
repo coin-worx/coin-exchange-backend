@@ -25,21 +25,14 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
         /// 3. OrderCount
         /// </summary>
         private Tuple<decimal, decimal, int>[] _depthLevelList = null;
-
-        private string _currencyPair = null;
-        private OrderSide _orderSide;
         private int _size = 0;
 
         /// <summary>
         /// Default Constructor
         /// </summary>
-        /// <param name="currencyPair"></param>
-        /// <param name="orderSide"></param>
         /// <param name="size"></param>
-        public DepthLevelRepresentationList(string currencyPair, OrderSide orderSide, int size)
+        public DepthLevelRepresentationList(int size)
         {
-            _currencyPair = currencyPair;
-            _orderSide = orderSide;
             _depthLevelList = new Tuple<decimal, decimal, int>[size];
         }
 
@@ -68,22 +61,6 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
         {
             _depthLevelList[index] = null;
             return true;
-        }
-
-        /// <summary>
-        /// CurrencyPair
-        /// </summary>
-        public string CurrencyPair
-        {
-            get { return _currencyPair; }
-        }
-
-        /// <summary>
-        /// Orderside
-        /// </summary>
-        public OrderSide OrderSide
-        {
-            get { return _orderSide; }
         }
 
         /// <summary>
