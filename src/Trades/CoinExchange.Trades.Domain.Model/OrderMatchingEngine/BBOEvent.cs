@@ -2,6 +2,7 @@
 
 namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
 {
+    [Serializable]
     public static class BBOEvent
     {
         public static event Action<BBO> BBOChanged;

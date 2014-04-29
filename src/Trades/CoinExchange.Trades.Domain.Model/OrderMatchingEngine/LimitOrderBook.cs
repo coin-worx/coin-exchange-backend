@@ -30,11 +30,6 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// </summary>
         private OrderList _asks = null;
 
-        /// <summary>
-        /// List  Of Trades
-        /// </summary>
-        private List<Trade> _trades = new List<Trade>();
-
         // Listeners
         private TradeListener _tradeListener = null;
         private OrderListener _orderListener = null;
@@ -278,10 +273,10 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
                 {
                     OrderCancelled(order);
                 }
-                if (OrderChanged != null)
+                /*if (OrderChanged != null)
                 {
                     OrderChanged(order);
-                }
+                }*/
                 if (OrderBookChanged != null)
                 {
                     OrderBookChanged(this);
@@ -303,7 +298,6 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             Trade trade = TradeFactory.GenerateTrade(matchedOrder.CurrencyPair, new Price(executionPrice),
                 new Volume(executedQuantity),
                 matchedOrder, inboundOrder);
-            _trades.Add(trade);
             
             return trade;
         }
@@ -378,9 +372,16 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         private void RaiseOrderAcceptedEvent(Order order, decimal matchedPrice, decimal matchedVolume)
         {
             order.Accepted();
+            // This event will be handled by the Depth Order book
             if (OrderAccepted != null)
             {
                 OrderAccepted(order, new Price(matchedPrice), new Volume(matchedVolume));
+            }
+            // This event will be handled by the OrderListener, which will then dispatch the event on the ouput disruptor
+            // to be journaled and then sent to the read side
+            if (OrderChanged != null)
+            {
+                OrderChanged(order);
             }
         }
 
@@ -425,10 +426,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             {
                 fillFlags = FillFlags.InboundFilled;
             }
-            if (OrderFilled != null)
-            {
-                OrderFilled(inboundOrder, matchedOrder, fillFlags,new Price(filledPrice), new Volume(filledQuantity));
-            }
+            OrderFillEventsRaise(inboundOrder, matchedOrder, fillFlags, filledPrice, filledQuantity);
 
             // Create trade. The least amount of the two orders will be the trade's executed volume
             Trade trade = GenerateTrade(filledPrice, filledQuantity, matchedOrder, inboundOrder);
@@ -436,6 +434,36 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             if (TradeExecuted != null)
             {
                 TradeExecuted(trade);
+            }
+        }
+
+        /// <summary>
+        /// Called when the orders will cross and get filled, and will raise the events for order fill and order changed
+        /// </summary>
+        /// <param name="inboundOrder"></param>
+        /// <param name="matchedOrder"></param>
+        /// <param name="fillFlags"></param>
+        /// <param name="filledPrice"></param>
+        /// <param name="filledQuantity"></param>
+        private void OrderFillEventsRaise(Order inboundOrder, Order matchedOrder, FillFlags fillFlags, decimal filledPrice,
+            decimal filledQuantity)
+        {
+            // Event will be handled in the Depth Order book
+            if (OrderFilled != null)
+            {
+                OrderFilled(inboundOrder, matchedOrder, fillFlags, new Price(filledPrice), new Volume(filledQuantity));
+            }
+            // Event for the incoming order from the user that got filled
+            // This event will be handled by the OrderListener, which will then dispatch the event on the ouput disruptor
+            // to be journaled and then sent to the read side
+            if (OrderChanged != null)
+            {
+                OrderChanged(inboundOrder);
+            }
+            // Event for the order on order book that got matched with the incoming order
+            if (OrderChanged != null)
+            {
+                OrderChanged(inboundOrder);
             }
         }
 
@@ -451,14 +479,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         public string CurrencyPair
         {
             get { return _currencyPair; }
-        }
-
-        /// <summary>
-        /// Contains the list of all trades
-        /// </summary>
-        public List<Trade> Trades
-        {
-            get { return _trades; }
+            private set { _currencyPair = value; }
         }
 
         /// <summary>
@@ -527,6 +548,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         public OrderList Bids
         {
             get { return _bids; }
+            private set { _bids = value; }
         }
 
         /// <summary>
@@ -535,6 +557,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         public OrderList Asks
         {
             get { return _asks; }
+            private set { _asks = value; }
         }
 
         /// <summary>

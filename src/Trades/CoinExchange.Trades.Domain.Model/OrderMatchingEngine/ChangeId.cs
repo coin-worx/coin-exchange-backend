@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
 {
+    /// <summary>
+    /// ChangeID
+    /// </summary>
     [Serializable]
     public class ChangeId
     {

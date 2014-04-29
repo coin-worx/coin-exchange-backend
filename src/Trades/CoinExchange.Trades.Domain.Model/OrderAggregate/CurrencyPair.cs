@@ -5,6 +5,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderAggregate
     /// <summary>
     /// currency pair value object
     /// </summary>
+    [Serializable]
     public class CurrencyPair
     {
         private string _baseCurrency;

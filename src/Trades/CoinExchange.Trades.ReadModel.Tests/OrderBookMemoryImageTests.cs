@@ -310,28 +310,75 @@ namespace CoinExchange.Trades.ReadModel.Tests
             // Initialize memory image
             OrderBookMemoryImage orderBookMemoryImage = new OrderBookMemoryImage();
 
-            // Start excahgne to accept orders
+            // Initialize the output Disruptor and assign the journaler as the event handler
+            IEventStore eventStore = new RavenNEventStore();
+            Journaler journaler = new Journaler(eventStore);
+            OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
+
+            // Start exchagne to accept orders
             Exchange exchange = new Exchange();
             Order buyOrder1 = OrderFactory.CreateOrder("1233", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 250, 493.34M, new StubbedOrderIdGenerator());
             Order buyOrder2 = OrderFactory.CreateOrder("1234", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
-                Constants.ORDER_SIDE_BUY, 250, 491.34M, new StubbedOrderIdGenerator());
+                Constants.ORDER_SIDE_BUY, 100, 491.34M, new StubbedOrderIdGenerator());
 
             Order sellOrder1 = OrderFactory.CreateOrder("1244", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 250, 494.34M, new StubbedOrderIdGenerator());
             Order sellOrder2 = OrderFactory.CreateOrder("1222", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 250, 492.34M, new StubbedOrderIdGenerator());
+            
+            // No matching orders till now
             exchange.PlaceNewOrder(buyOrder1);
             exchange.PlaceNewOrder(buyOrder2);
-            exchange.PlaceNewOrder(sellOrder1);
             exchange.PlaceNewOrder(sellOrder2);
 
+            Assert.AreEqual(2, exchange.OrderBook.Bids.Count());
+            Assert.AreEqual(1, exchange.OrderBook.Asks.Count());
+
+            Assert.AreEqual(1, orderBookMemoryImage.BidBooks.Count());
+            Assert.AreEqual(1, orderBookMemoryImage.AskBooks.Count());
+
+            Assert.AreEqual(CurrencyConstants.BitCoinUsd, orderBookMemoryImage.BidBooks.First().CurrencyPair);
+            Assert.AreEqual(CurrencyConstants.BitCoinUsd, orderBookMemoryImage.AskBooks.First().CurrencyPair);
+
+            Assert.AreEqual(2, orderBookMemoryImage.BidBooks.First().Count(), "Count of the bids in the first bid book in the list of bid books");
+            Assert.AreEqual(1, orderBookMemoryImage.AskBooks.First().Count(), "Count of the asks in the first ask book in the list of ask books");
+
+            // BidsOrderBooks -> First BidOrderBook -> First Bid's volume in first OrderBook
+            Assert.AreEqual(250, orderBookMemoryImage.BidBooks.First().First().Item1, "Volume of first bids in the first bid book in the bids book list in  memory image");
+            // AsksOrderBooks -> First AskOrderBook -> First Ask's volume in first OrderBook
+            Assert.AreEqual(250, orderBookMemoryImage.AskBooks.First().First().Item1, "Volume of first ask in the first ask book in the ask books list in memory image");
+            // BidsOrderBooks -> First BidOrderBook -> First Bid's price in first OrderBook
+            Assert.AreEqual(493.34, orderBookMemoryImage.BidBooks.First().First().Item2, "Volume of first bids in the first bid book in the bids book list in  memory image");
+            // AsksOrderBooks -> First AskOrderBook -> First Ask's price in first OrderBook
+            Assert.AreEqual(492.34, orderBookMemoryImage.AskBooks.First().First().Item2, "Volume of first ask in the first ask book in the ask books list in memory image");
+
+            // Send matching sell order to buy the top of the book buy order
             FillCheck fillCheck = new FillCheck();
+            // Check if this order gets full filled
             Assert.IsTrue(fillCheck.FilledPartiallyOrComplete(exchange.OrderBook, sellOrder1, false));
-            Assert.IsTrue(fillCheck.VerifyFilled(sellOrder1, new Volume(100), new Price(0), new Price(0)));
+            // Verify the filled order's stats
+            Assert.IsTrue(fillCheck.VerifyFilled(sellOrder1, new Volume(250), new Price(0), new Price(0)));
             ManualResetEvent manualResetEvent = new ManualResetEvent(false);
-            OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { orderBookMemoryImage });
             manualResetEvent.WaitOne(4000);
+
+            Assert.AreEqual(1, orderBookMemoryImage.BidBooks.Count());
+            Assert.AreEqual(1, orderBookMemoryImage.AskBooks.Count());
+
+            Assert.AreEqual(CurrencyConstants.BitCoinUsd, orderBookMemoryImage.BidBooks.First().CurrencyPair);
+            Assert.AreEqual(CurrencyConstants.BitCoinUsd, orderBookMemoryImage.AskBooks.First().CurrencyPair);
+
+            Assert.AreEqual(1, orderBookMemoryImage.BidBooks.First().Count(), "Count of the bids in the first bid book in the list of bid books");
+            Assert.AreEqual(1, orderBookMemoryImage.AskBooks.First().Count(), "Count of the asks in the first ask book in the list of ask books");
+
+            // BidsOrderBooks -> First BidOrderBook -> First Bid's volume in first OrderBook
+            Assert.AreEqual(100, orderBookMemoryImage.BidBooks.First().First().Item1, "Volume of first bids in the first bid book in the bids book list in  memory image");
+            // AsksOrderBooks -> First AskOrderBook -> First Ask's volume in first OrderBook
+            Assert.AreEqual(250, orderBookMemoryImage.AskBooks.First().First().Item1, "Volume of first ask in the first ask book in the ask books list in memory image");
+            // BidsOrderBooks -> First BidOrderBook -> First Bid's price in first OrderBook
+            Assert.AreEqual(491.34, orderBookMemoryImage.BidBooks.First().First().Item2, "Volume of first bids in the first bid book in the bids book list in  memory image");
+            // AsksOrderBooks -> First AskOrderBook -> First Ask's price in first OrderBook
+            Assert.AreEqual(492.34, orderBookMemoryImage.AskBooks.First().First().Item2, "Volume of first ask in the first ask book in the ask books list in memory image");
         }
 
         #endregion Disruptor Tests

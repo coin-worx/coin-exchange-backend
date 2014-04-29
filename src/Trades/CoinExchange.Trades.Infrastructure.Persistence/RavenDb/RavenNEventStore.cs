@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using CoinExchange.Common.Domain.Model;
 using CoinExchange.Trades.Domain.Model.OrderAggregate;
@@ -84,7 +85,7 @@ namespace CoinExchange.Trades.Infrastructure.Persistence.RavenDb
                     if (collection[i].Body is Order)
                     {
                         Order order = collection[i].Body as Order;
-                        if (order.OrderId.Id.ToString().Equals(id))
+                        if (order.OrderId.Id.ToString(CultureInfo.InvariantCulture).Equals(id))
                         {
                             return order;
                         }

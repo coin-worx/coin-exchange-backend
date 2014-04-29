@@ -22,7 +22,6 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         private LimitOrderBook _orderBook = null;
         private DepthOrderBook _depthOrderBook = null;
         private ITradeListener _tradeListener = null;
-        private IOrderListener _orderListener = null;
 
         /// <summary>
         /// Default Constructor
@@ -47,8 +46,11 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
                 _orderBook.OrderAccepted += OnAccept;
                 _orderBook.OrderAccepted += _depthOrderBook.OnOrderAccepted;
 
-                _orderBook.OrderAccepted -= orderListener.OnOrderAccepted;
+                /*_orderBook.OrderAccepted -= orderListener.OnOrderAccepted;
                 _orderBook.OrderAccepted += orderListener.OnOrderAccepted;
+
+                _orderBook.OrderFilled -= orderListener.OnOrderFilled;
+                _orderBook.OrderFilled += orderListener.OnOrderFilled;*/
 
                 _orderBook.OrderCancelled -= _depthOrderBook.OnOrderCancelled;
                 _orderBook.OrderCancelled += _depthOrderBook.OnOrderCancelled;
@@ -67,9 +69,6 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
 
                 _orderBook.OrderFilled -= _depthOrderBook.OnOrderFilled;
                 _orderBook.OrderFilled += _depthOrderBook.OnOrderFilled;
-
-                _orderBook.OrderFilled -= orderListener.OnOrderFilled;
-                _orderBook.OrderFilled += orderListener.OnOrderFilled;
 
                 _orderBook.TradeExecuted -= _tradeListener.OnTrade;
                 _orderBook.TradeExecuted += _tradeListener.OnTrade;
@@ -94,6 +93,11 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             return _orderBook.PlaceOrder(order);
         }
 
+        /// <summary>
+        /// Cancel the order with the given orderId
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
         public bool CancelOrder(OrderId orderId)
         {
             return _orderBook.CancelOrder(orderId);
@@ -112,11 +116,11 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
 
         #region Properties
 
-        public LimitOrderBook OrderBook { get { return _orderBook; } }
+        public LimitOrderBook OrderBook { get { return _orderBook; } private set { _orderBook = value; } }
 
-        public DepthOrderBook DepthOrderBook { get { return _depthOrderBook; } }
+        public DepthOrderBook DepthOrderBook { get { return _depthOrderBook; } private set { _depthOrderBook = value; } }
 
-        public ITradeListener TradeListener { get { return _tradeListener; } }
+        public ITradeListener TradeListener { get { return _tradeListener; } private set { _tradeListener = value; } }
 
         #endregion Properties
     }

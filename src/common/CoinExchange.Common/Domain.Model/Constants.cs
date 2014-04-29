@@ -9,6 +9,7 @@ namespace CoinExchange.Common.Domain.Model
     /// <summary>
     /// serves for the purpose of constants throug out the domain
     /// </summary>
+    [Serializable]
     public static class Constants
     {
         // ReSharper disable InconsistentNaming

@@ -6,6 +6,7 @@ namespace CoinExchange.Common.Domain.Model
     /// <summary>
     /// serves for the purpose of validating objects and inputs
     /// </summary>
+    [Serializable]
     public static class AssertionConcern
     {
         public static void AssertArgumentNotNull(object object1, string message)
