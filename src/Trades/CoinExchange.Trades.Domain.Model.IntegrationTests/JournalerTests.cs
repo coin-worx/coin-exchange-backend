@@ -6,9 +6,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using CoinExchange.Trades.Domain.Model.OrderAggregate;
 using CoinExchange.Trades.Domain.Model.Services;
+using CoinExchange.Trades.Domain.Model.TradeAggregate;
 using CoinExchange.Trades.Infrastructure.Persistence.RavenDb;
 using CoinExchange.Trades.Infrastructure.Services;
 using Disruptor;
+using Newtonsoft.Json;
 using NUnit.Framework;
 
 namespace CoinExchange.Trades.Domain.Model.IntegrationTests
@@ -27,6 +29,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Journaler journaler = new Journaler(_eventStore);
             //assign journaler to disruptor as its consumer
             InputDisruptorPublisher.InitializeDisruptor(new IEventHandler<InputPayload>[] { journaler });
+            OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[]{journaler});
             _manualResetEvent=new ManualResetEvent(false);
         }
 
@@ -48,17 +51,8 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             //retrieve order
             Order savedOrder = _eventStore.GetEvent(order.OrderId.Id.ToString()) as Order;
             Assert.NotNull(savedOrder);
-            Assert.AreEqual(savedOrder,order);
+            Assert.AreEqual(savedOrder, order);
         }
 
-        [Test]
-        [Category("Integration")]
-        public void AddOrder()
-        {
-            Order order = OrderFactory.CreateOrder("1234", "XBTUSD", "limit", "buy", 5, 10,
-               new StubbedOrderIdGenerator());
-            
-        }
-        
     }
 }

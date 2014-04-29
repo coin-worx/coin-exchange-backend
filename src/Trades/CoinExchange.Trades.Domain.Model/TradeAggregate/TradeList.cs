@@ -11,6 +11,7 @@ namespace CoinExchange.Trades.Domain.Model.TradeAggregate
     /// <summary>
     /// Represents a list of Trades
     /// </summary>
+    [Serializable]
     public class TradeList : IEnumerable<Trade>
     {
         // Get the Current Logger

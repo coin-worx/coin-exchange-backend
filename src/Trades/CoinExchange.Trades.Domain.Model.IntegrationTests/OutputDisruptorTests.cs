@@ -41,15 +41,16 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
         [Category("Integration")]
         public void AddOrder()
         {
-            string currencyPair = "XBTUSD";
+            Exchange exchange=new Exchange();
+            string currencyPair = "BTCUSD";
             Order buyOrder = OrderFactory.CreateOrder("1234", currencyPair, "limit", "buy", 5, 10,
                new StubbedOrderIdGenerator());
-            Order sellOrder = OrderFactory.CreateOrder("1234", currencyPair, "limit", "sell", 5, 10,
+            Order sellOrder = OrderFactory.CreateOrder("1234", currencyPair, "market", "sell", 5, 10,
                new StubbedOrderIdGenerator());
-            LimitOrderBook orderBook=new LimitOrderBook(currencyPair);
-            orderBook.PlaceOrder(buyOrder);
-            orderBook.PlaceOrder(sellOrder);
+            exchange.PlaceNewOrder(buyOrder);
+            exchange.PlaceNewOrder(sellOrder);
             _manualResetEvent.WaitOne(5000);
+            //TODO:Testcase in progress
         }
 
     }

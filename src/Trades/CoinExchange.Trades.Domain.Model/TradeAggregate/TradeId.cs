@@ -24,7 +24,7 @@ namespace CoinExchange.Trades.Domain.Model.TradeAggregate
         }
 
         /// <summary>
-        /// The ID of the Order
+        /// The ID of the Trade
         /// </summary>
         public int Id { get { return _id; } }
     }

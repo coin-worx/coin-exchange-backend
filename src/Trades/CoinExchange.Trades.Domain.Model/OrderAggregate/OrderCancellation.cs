@@ -1,4 +1,5 @@
-﻿using CoinExchange.Common.Domain.Model;
+﻿using System;
+using CoinExchange.Common.Domain.Model;
 using CoinExchange.Trades.Domain.Model.TradeAggregate;
 
 namespace CoinExchange.Trades.Domain.Model.OrderAggregate
@@ -6,6 +7,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderAggregate
     /// <summary>
     /// VO that will represent cancelation request
     /// </summary>
+    [Serializable]
     public class OrderCancellation
     {
         private TraderId _traderId;

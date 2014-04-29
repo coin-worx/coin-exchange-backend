@@ -1,19 +1,17 @@
 ﻿using System;
 using CoinExchange.Common.Domain.Model;
 using CoinExchange.Trades.Domain.Model.TradeAggregate;
-
 /*
  * Author: Waqas
  * Comany: Aurora Solutions
  */
-
 namespace CoinExchange.Trades.Domain.Model.OrderAggregate
 {
     /// <summary>
     /// CoinExchange Order
     /// </summary>
     [Serializable]
-    public class Order //: IComparable<Order>
+    public class Order: IComparable<Order>
     {
         #region Private fields
 
@@ -347,12 +345,12 @@ namespace CoinExchange.Trades.Domain.Model.OrderAggregate
             {
                 if (obj is Order)
                 {
-                    return OrderId.Id == (obj as Order).OrderId.Id;
+                    return OrderId.Equals((obj as Order).OrderId);
                 }
-                else if (obj is OrderId)
-                {
-                    return OrderId.Id == (obj as OrderId).Id;
-                }
+                //if (obj is OrderId)
+                //{
+                //    return OrderId.Equals(obj);
+                //}
             }
             return false;
         }
