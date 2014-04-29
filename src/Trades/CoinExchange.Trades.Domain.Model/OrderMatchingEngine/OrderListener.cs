@@ -37,7 +37,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         public void OnOrderAccepted(Order order, Price matchedPrice, Volume matchedVolume)
         {
             //ToDo: Create event for the order and publish the event on the output Disruptor
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         {
             // Dispatch both of the orders by creating events for them by using order instances themselves and then publish
             // both the events on the output disruptor
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         public void OnOrderCancelled(Order order)
         {
             //ToDo: Create event for the order and publish the event on the output Disruptor
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
     }
 }

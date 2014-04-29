@@ -1,6 +1,7 @@
 ﻿using System;
 using CoinExchange.Common.Domain.Model;
 using CoinExchange.Trades.Domain.Model.OrderAggregate;
+using Spring.Validation;
 
 namespace CoinExchange.Trades.Domain.Model.TradeAggregate
 {
@@ -22,25 +23,30 @@ namespace CoinExchange.Trades.Domain.Model.TradeAggregate
         /// <summary>
         /// Default Constructor
         /// </summary>
-        public Trade(string currencyPair, Price executionPrice, Volume executedQuantity, DateTime executionTime,
-            Order matchedOrder, Order inboundOrder)
-        {
-            _currencyPair = currencyPair;
-            _executionPrice = executionPrice;
-            _executedQuantity = executedQuantity;
-            _executionTime = executionTime;
-            if (matchedOrder.OrderSide == OrderSide.Buy)
-            {
-                _buyOrder = matchedOrder;
-                _sellOrder = inboundOrder;
-            }
-            else
-            {
-                _buyOrder = inboundOrder;
-                _sellOrder = matchedOrder;
-            }
+        //public Trade(string currencyPair, Price executionPrice, Volume executedQuantity, DateTime executionTime,
+        //    Order matchedOrder, Order inboundOrder)
+        //{
+        //    _currencyPair = currencyPair;
+        //    _executionPrice = executionPrice;
+        //    _executedQuantity = executedQuantity;
+        //    _executionTime = executionTime;
+        //    if (matchedOrder.OrderSide == OrderSide.Buy)
+        //    {
+        //        _buyOrder = matchedOrder;
+        //        _sellOrder = inboundOrder;
+        //    }
+        //    else
+        //    {
+        //        _buyOrder = inboundOrder;
+        //        _sellOrder = matchedOrder;
+        //    }
 
-            // ToDo: Need to implement auto incremental aggregate Id generator 
+        //    // ToDo: Need to implement auto incremental aggregate Id generator 
+        //}
+
+        public Trade()
+        {
+            
         }
 
         /// <summary>
@@ -50,10 +56,10 @@ namespace CoinExchange.Trades.Domain.Model.TradeAggregate
             Order matchedOrder, Order inboundOrder)
         {
             TradeId = tradeId;
-            _currencyPair = currencyPair;
-            _executionPrice = executionPrice;
+            CurrencyPair = currencyPair;
+            ExecutionPrice = executionPrice;
             _executedQuantity = executedQuantity;
-            _executionTime = executionTime;
+            ExecutionTime = executionTime;
             if (matchedOrder.OrderSide == OrderSide.Buy)
             {
                 _buyOrder = matchedOrder;
@@ -94,6 +100,10 @@ namespace CoinExchange.Trades.Domain.Model.TradeAggregate
         public string CurrencyPair
         {
             get { return _currencyPair; }
+            private set
+            {
+                _currencyPair = value;
+            }
         }
 
         /// <summary>
@@ -102,6 +112,11 @@ namespace CoinExchange.Trades.Domain.Model.TradeAggregate
         public Price ExecutionPrice
         {
             get { return _executionPrice; }
+            private set
+            {
+                _executionPrice = value;
+            }
+
         }
 
         /// <summary>
@@ -110,6 +125,10 @@ namespace CoinExchange.Trades.Domain.Model.TradeAggregate
         public Volume ExecutedVolume
         {
             get { return _executedQuantity; }
+            private set
+            {
+                _executedQuantity = value;
+            }
         }
 
         /// <summary>
@@ -118,6 +137,10 @@ namespace CoinExchange.Trades.Domain.Model.TradeAggregate
         public DateTime ExecutionTime
         {
             get { return _executionTime; }
+            private set
+            {
+                _executionTime = value;
+            }
         }
 
         /// <summary>
@@ -126,6 +149,7 @@ namespace CoinExchange.Trades.Domain.Model.TradeAggregate
         public Order BuyOrder
         {
             get { return _buyOrder; }
+            private set { _buyOrder = value; }
         }
 
         /// <summary>
@@ -134,6 +158,10 @@ namespace CoinExchange.Trades.Domain.Model.TradeAggregate
         public Order SellOrder
         {
             get { return _sellOrder; }
+            private set
+            {
+                _sellOrder = value;
+            }
         }
     }
 }
