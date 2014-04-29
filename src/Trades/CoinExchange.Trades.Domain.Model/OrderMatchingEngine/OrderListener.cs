@@ -36,8 +36,8 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// <param name="matchedVolume"></param>
         public void OnOrderAccepted(Order order, Price matchedPrice, Volume matchedVolume)
         {
-            //ToDo: Create event for the order and publish the event on the output Disruptor
-            throw new NotImplementedException();
+            /*OutputDisruptor.Publish(order);
+            Log.Debug("Order Accepted: " + order.ToString() + " | Published to output Disruptor");*/
         }
 
         /// <summary>
@@ -50,9 +50,13 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// <param name="filledVolume"></param>
         public void OnOrderFilled(Order inboundOrder, Order matchedOrder, FillFlags fillFlags, Price filledPrice, Volume filledVolume)
         {
-            // Dispatch both of the orders by creating events for them by using order instances themselves and then publish
-            // both the events on the output disruptor
-            throw new NotImplementedException();
+            /*// Publish the order that was just received from the user and got filled
+            OutputDisruptor.Publish(inboundOrder);
+            Log.Debug("Order Filled: " + inboundOrder.ToString() + " | Published to output Disruptor.");
+
+            // Publish the order that was on the order book and got matched with the incoming order
+            OutputDisruptor.Publish(matchedOrder);
+            Log.Debug("Order Filled: " + matchedOrder.ToString() + " | Published to output Disruptor.");*/
         }
 
         /// <summary>
@@ -61,8 +65,8 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// <param name="order"> </param>
         public void OnOrderCancelled(Order order)
         {
-            //ToDo: Create event for the order and publish the event on the output Disruptor
-            throw new NotImplementedException();
+            /*OutputDisruptor.Publish(order);
+            Log.Debug("Order Cancelled: " + order.ToString() + " | Published to output Disruptor.");*/
         }
     }
 }

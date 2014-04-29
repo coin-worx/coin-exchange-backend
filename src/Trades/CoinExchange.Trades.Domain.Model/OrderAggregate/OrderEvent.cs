@@ -2,6 +2,10 @@
 
 namespace CoinExchange.Trades.Domain.Model.OrderAggregate
 {
+    /// <summary>
+    /// OrderEvent
+    /// </summary>
+    [Serializable]
     public static class OrderEvent
     {
         public static event Action<Order> OrderChanged;

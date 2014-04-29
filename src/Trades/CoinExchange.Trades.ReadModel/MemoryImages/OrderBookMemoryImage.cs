@@ -69,12 +69,20 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
             UpdateAsks(orderBook.Asks);
         }
 
+        /// <summary>
+        /// Update the bids in the bid book that just got received
+        /// </summary>
+        /// <param name="orderList"></param>
         private void UpdateBids(OrderList orderList)
         {
             var orderRepresentationList = GetOrderRepresentationList(_bidBookRepresentations, orderList);
             UpdateOrderRepresentationList(_bidBookRepresentations, orderRepresentationList, orderList);
         }
 
+        /// <summary>
+        /// Update the asks in the ask book that just got received
+        /// </summary>
+        /// <param name="orderList"></param>
         private void UpdateAsks(OrderList orderList)
         {
             var orderRepresentationList = GetOrderRepresentationList(_askBookRepresentations, orderList);

@@ -9,6 +9,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
     /// <summary>
     /// Contains the values to be used as constants
     /// </summary>
+    [Serializable]
     public class ConstantTypes
     {
         public const decimal MARKET_ORDER_PRICE = 0;

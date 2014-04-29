@@ -39,6 +39,19 @@ namespace CoinExchange.Trades.Domain.Model.Services
             _publisher = new EventPublisher<byte[]>(_ringBuffer);
         }
 
+        /// <summary>
+        /// ShutDown
+        /// </summary>
+        public static void ShutDown()
+        {
+            if (_disruptor != null)
+            {
+                // Shutdown disruptor if it was already running
+                _disruptor.Shutdown();
+                _disruptor = null;
+            }
+        }
+
         public static void Publish(object obj)
         {
             byte[] received = StreamConversion.ObjectToByteArray(obj);

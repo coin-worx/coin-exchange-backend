@@ -1,9 +1,12 @@
-﻿namespace CoinExchange.Trades.Domain.Model.OrderAggregate
+﻿using System;
+
+namespace CoinExchange.Trades.Domain.Model.OrderAggregate
 {
     // ToDo: May need remove this class
     /// <summary>
     /// VO to response in result of order request
     /// </summary>
+    [Serializable]
     public class CancelOrderResponse
     {
        

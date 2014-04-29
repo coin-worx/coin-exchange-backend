@@ -5,6 +5,9 @@ using Disruptor.Dsl;
 
 namespace CoinExchange.Trades.Domain.Model.OrderAggregate
 {
+    /// <summary>
+    /// Input Disruptor Publisher
+    /// </summary>
     public class InputDisruptorPublisher
     {
         private static readonly int _ringSize = Constants.DISRUPTOR_RING_SIZE;

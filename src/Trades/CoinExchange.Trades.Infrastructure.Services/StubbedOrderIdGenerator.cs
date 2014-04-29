@@ -8,6 +8,7 @@ namespace CoinExchange.Trades.Infrastructure.Services
     /// <summary>
     /// Stub implementation of order id generator service
     /// </summary>
+    [Serializable]
     public class StubbedOrderIdGenerator:IOrderIdGenerator
     {
         private static int _safeInstanceCount = 0;
