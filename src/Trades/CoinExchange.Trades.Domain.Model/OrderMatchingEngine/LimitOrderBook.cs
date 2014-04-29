@@ -463,7 +463,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             // Event for the order on order book that got matched with the incoming order
             if (OrderChanged != null)
             {
-                OrderChanged(inboundOrder);
+                OrderChanged(matchedOrder);
             }
         }
 
