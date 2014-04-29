@@ -273,10 +273,10 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
                 {
                     OrderCancelled(order);
                 }
-                /*if (OrderChanged != null)
+                if (OrderChanged != null)
                 {
                     OrderChanged(order);
-                }*/
+                }
                 if (OrderBookChanged != null)
                 {
                     OrderBookChanged(this);
