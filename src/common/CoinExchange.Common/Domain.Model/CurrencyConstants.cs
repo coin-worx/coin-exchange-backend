@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CoinExchange.Trades.ReadModel.MemoryImages
+﻿namespace CoinExchange.Common.Domain.Model
 {
     /// <summary>
     /// Contains the currencies string representations

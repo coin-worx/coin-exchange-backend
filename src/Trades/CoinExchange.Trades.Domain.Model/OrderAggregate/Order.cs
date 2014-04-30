@@ -57,9 +57,9 @@ namespace CoinExchange.Trades.Domain.Model.OrderAggregate
             Volume = volume;
             TraderId = traderId;
             this.DateTime = DateTime.Now;
-            _filledQuantity = new Volume(0);
-            _filledCost = new Price(0);
-            _openQuantity = new Volume(0);
+            FilledQuantity = new Volume(0);
+            FilledCost = new Price(0);
+            OpenQuantity = new Volume(0);
         }
 
         /// <summary>
@@ -83,9 +83,9 @@ namespace CoinExchange.Trades.Domain.Model.OrderAggregate
             Volume = volume;
             TraderId = traderId;
             this.DateTime = DateTime.Now;
-            _filledQuantity = new Volume(0);
+            FilledQuantity = new Volume(0);
             _filledCost = new Price(0);
-            _openQuantity = new Volume(0);
+            OpenQuantity = new Volume(0);
         }
 
         #region Methods
@@ -310,6 +310,10 @@ namespace CoinExchange.Trades.Domain.Model.OrderAggregate
             {
                 return _filledQuantity;
             }
+            private set
+            {
+                _filledQuantity = value;
+            }
         }
 
         /// <summary>
@@ -320,6 +324,10 @@ namespace CoinExchange.Trades.Domain.Model.OrderAggregate
             get
             {
                 return _filledCost;
+            }
+            private  set
+            {
+                _filledCost = value;
             }
         }
 
@@ -348,6 +356,10 @@ namespace CoinExchange.Trades.Domain.Model.OrderAggregate
                 }
                 return _openQuantity;
             }
+            private set
+            {
+                _openQuantity = value;
+            } 
         }
 
         public override bool Equals(object obj)

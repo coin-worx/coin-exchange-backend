@@ -84,5 +84,25 @@ namespace CoinExchange.Trades.Domain.Model.OrderAggregate
             }
             return new Volume(volume1.Value - volume2.Value);
         }
+
+        public static bool operator >(Volume x, Volume y)
+        {
+            return x.Value > y.Value;
+        }
+
+        public static bool operator <(Volume x, Volume y)
+        {
+            return x.Value < y.Value;
+        }
+
+        public static bool operator >=(Volume x, Volume y)
+        {
+            return x.Value >= y.Value;
+        }
+
+        public static bool operator <=(Volume x, Volume y)
+        {
+            return x.Value <= y.Value;
+        }
     }
 }

@@ -500,10 +500,34 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         {
             if (eventStore != null)
             {
-                List<Order> orders = eventStore.GetOrders();
-                if (orders.Any())
+                // Get all orders
+                List<Order> allOrders = eventStore.GetOrders();
+                if (allOrders.Any())
                 {
-                    
+                    // Get orders that were entered today
+                    var filteredByDateOrders = FilterByDate(allOrders);
+                    if (filteredByDateOrders.Any())
+                    {
+                        // Get orders whose last state was either Accepted or Paritally filled and OpenQuantity > 0
+                        List<Order> filteredByStateOrders = FilterByState(filteredByDateOrders);
+
+                        if (filteredByStateOrders.Any())
+                        {
+                            foreach (Order order in filteredByStateOrders)
+                            {
+                                this.AddOrder(order);
+                            }
+                            return true;
+                        }
+                        else
+                        {
+                            Log.Warn("No open orders found for the limit order book before it crashed.");
+                        }
+                    }
+                    else
+                    {
+                        Log.Warn("No orders found for today in the Event Store.");
+                    }
                 }
                 else
                 {
@@ -523,12 +547,73 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// <returns></returns>
         private List<Order> FilterByDate(List<Order> allOrders)
         {
-            List<Order> filteredOrders = null;
+            List<Order> filteredOrders = new List<Order>();
             foreach (Order order in allOrders)
             {
-                
+                if (order.DateTime > DateTime.Today)
+                {
+                    filteredOrders.Add(order);
+                }
             }
-            return null;
+            if (!filteredOrders.Any())
+            {
+                filteredOrders = null;
+            }
+            return filteredOrders;
+        }
+
+        /// <summary>
+        /// Filters the order by their state and Open Quantity, i.e., if the state of an order is Accepted or PartiallyFilled
+        /// and Open Quantity is greater than zero
+        /// </summary>
+        /// <param name="filteredByDateOrders"></param>
+        /// <returns></returns>
+        private List<Order> FilterByState(List<Order> filteredByDateOrders)
+        {
+            // Stores all the orders with accepted or partially filled state
+            List<Order> openList = new List<Order>();
+            // Contains the orders that were closed
+            List<Order> closedOrdersList = new List<Order>();
+            foreach (Order order in filteredByDateOrders)
+            {
+                if (order.OrderState == OrderState.Accepted)
+                {
+                    openList.Add(order);
+                }
+                else if (order.OrderState == OrderState.Complete || order.OrderState == OrderState.Cancelled)
+                {
+                    closedOrdersList.Add(order);
+                }
+                else if (order.OrderState == OrderState.PartiallyFilled && order.OpenQuantity != null && order.OpenQuantity.Value > 0)
+                {
+                    // ToDo: yet to decide what to do in case of partial fills
+                }
+            }
+
+            List<Order> ordersToRemove = new List<Order>();
+            // Search for the orders that were accepted to check if they were later filled. If they were, save them in another
+            // list and delete them after this loop as we cannot delete them from openOrderList while it is being traversed.
+            foreach (Order openOrder in openList)
+            {
+                foreach (Order closedOrder in closedOrdersList)
+                {
+                    if (openOrder.OrderId.Id == closedOrder.OrderId.Id)
+                    {
+                        ordersToRemove.Add(openOrder);
+                    }
+                }
+            }
+            // Remove the orders that were completed from the openList as these orders are no longer open
+            foreach (Order order in ordersToRemove)
+            {
+                openList.Remove(order);
+            }
+
+            if (!openList.Any())
+            {
+                openList = null;
+            }
+            return openList;
         }
 
         #endregion LOB restore
