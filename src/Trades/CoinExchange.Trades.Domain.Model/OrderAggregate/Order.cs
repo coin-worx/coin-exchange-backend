@@ -27,6 +27,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderAggregate
         private Volume _filledQuantity;
         private Price _filledCost;
         private Volume _openQuantity;
+        private DateTime _dateTime;
 
         #endregion
 
@@ -55,7 +56,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderAggregate
             OrderType = orderType;
             Volume = volume;
             TraderId = traderId;
-
+            this.DateTime = DateTime.Now;
             _filledQuantity = new Volume(0);
             _filledCost = new Price(0);
             _openQuantity = new Volume(0);
@@ -81,7 +82,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderAggregate
             OrderType = orderType;
             Volume = volume;
             TraderId = traderId;
-
+            this.DateTime = DateTime.Now;
             _filledQuantity = new Volume(0);
             _filledCost = new Price(0);
             _openQuantity = new Volume(0);
@@ -189,7 +190,17 @@ namespace CoinExchange.Trades.Domain.Model.OrderAggregate
                 _orderId = value;
             }
         }
-        
+        /// <summary>
+        /// Order date time
+        /// </summary>
+        public DateTime DateTime
+        {
+            get { return _dateTime; }
+            private set
+            {
+                _dateTime = value;
+            }
+        }
         /// <summary>
         /// Asset currency pair
         /// </summary>
