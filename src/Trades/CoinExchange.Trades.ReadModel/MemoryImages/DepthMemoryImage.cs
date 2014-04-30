@@ -59,7 +59,10 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
                 {
                     _bidDepth.SetValue(currencyPair, CreateDepthLevels(bidLevels));
                 }
-                _bidDepth.AddDepth(currencyPair, CreateDepthLevels(bidLevels));
+                else
+                {
+                    _bidDepth.AddDepth(currencyPair, CreateDepthLevels(bidLevels));
+                }
             }
         }
 
@@ -77,7 +80,10 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
                 {
                     _askDepth.SetValue(currencyPair, CreateDepthLevels(askLevels));
                 }
-                _askDepth.AddDepth(currencyPair, CreateDepthLevels(askLevels));
+                else
+                {
+                    _askDepth.AddDepth(currencyPair, CreateDepthLevels(askLevels));
+                }
             }
         }
 
