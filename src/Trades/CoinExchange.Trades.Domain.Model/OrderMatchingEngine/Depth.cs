@@ -201,7 +201,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
                         depthLevel.DecreaseVolume(new Volume(-quantity));
                     }
                 }
-                depthLevel.LastChange(new ChangeId(_lastChangeId++));
+                depthLevel.LastChange(new ChangeId(++_lastChangeId));
             }
         }
 

@@ -11,13 +11,13 @@ using NEventStore.Dispatcher;
 
 namespace CoinExchange.Trades.Infrastructure.Persistence.RavenDb
 {
-    public class RavenNEventStore:IEventStore
+    public class RavenNEventStore : IEventStore
     {
         private static readonly Guid StreamId = Guid.NewGuid();
         private static IStoreEvents _store;
         private static IEventStream _stream;
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger
-     (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public RavenNEventStore()
         {
@@ -93,9 +93,35 @@ namespace CoinExchange.Trades.Infrastructure.Persistence.RavenDb
                         }
                     }
                 }
-                
             }
             return null;
+        }
+
+        /// <summary>
+        /// Gets all the orders placed residing inside the EventStore
+        /// </summary>
+        /// <returns></returns>
+        public List<Order> GetOrders()
+        {
+            List<Order> orders = new List<Order>();
+            List<EventMessage> collection;
+            using (var stream = _store.OpenStream(StreamId, 0, int.MaxValue))
+            {
+                collection = stream.CommittedEvents.ToList();
+                for (int i = 0; i < collection.Count; i++)
+                {
+                    if (collection[i].Body is Order)
+                    {
+                        Order order = collection[i].Body as Order;
+                        orders.Add(order);
+                    }
+                }
+            }
+            if (!orders.Any())
+            {
+                orders = null;
+            }
+            return orders;
         }
 
         /// <summary>

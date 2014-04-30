@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CoinExchange.Common.Domain.Model;
 using CoinExchange.Trades.Domain.Model.OrderAggregate;
 using CoinExchange.Trades.Domain.Model.OrderMatchingEngine;
 
@@ -59,7 +60,10 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
                 {
                     _bidDepth.SetValue(currencyPair, CreateDepthLevels(bidLevels));
                 }
-                _bidDepth.AddDepth(currencyPair, CreateDepthLevels(bidLevels));
+                else
+                {
+                    _bidDepth.AddDepth(currencyPair, CreateDepthLevels(bidLevels));
+                }
             }
         }
 
@@ -77,7 +81,10 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
                 {
                     _askDepth.SetValue(currencyPair, CreateDepthLevels(askLevels));
                 }
-                _askDepth.AddDepth(currencyPair, CreateDepthLevels(askLevels));
+                else
+                {
+                    _askDepth.AddDepth(currencyPair, CreateDepthLevels(askLevels));
+                }
             }
         }
 

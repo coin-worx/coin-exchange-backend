@@ -64,7 +64,6 @@
     <Compile Include="MemoryImages\BBOMemoryImage.cs" />
     <Compile Include="MemoryImages\BBORepresentation.cs" />
     <Compile Include="MemoryImages\BBORepresentationList.cs" />
-    <Compile Include="MemoryImages\CurrencyConstants.cs" />
     <Compile Include="MemoryImages\DepthLevelRepresentation.cs" />
     <Compile Include="MemoryImages\DepthLevelRepresentationList.cs" />
     <Compile Include="MemoryImages\DepthMemoryImage.cs" />

@@ -137,9 +137,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
             addOrder1 = bidDepthLevel.AddOrder(new Volume(2000));
             addOrder2 = bidDepthLevel.AddOrder(new Volume(1000));
             bool addOrder3 = bidDepthLevel.AddOrder(new Volume(3000));
-            BBO bbo=new BBO();
-            bbo.BestAsk = askDepthLevel;
-            bbo.BestBid = bidDepthLevel;
+            BBO bbo=new BBO("BTCUSD", bidDepthLevel, askDepthLevel);
             //byte[] array = ObjectToByteArray(bbo);
             OutputDisruptor.Publish(bbo);
             _manualResetEvent.WaitOne(3000);
@@ -153,8 +151,8 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         {
             Order order = OrderFactory.CreateOrder("1234", "XBTUSD", "market", "buy", 5, 0,
                new StubbedOrderIdGenerator());
-            byte[] array = ObjectToByteArray(order);
-            OutputDisruptor.Publish(array);
+            //byte[] array = ObjectToByteArray(order);
+            OutputDisruptor.Publish(order);
 
             Order buyOrder = OrderFactory.CreateOrder("1234", "XBTUSD", "limit", "buy", 5, 10,
               new StubbedOrderIdGenerator());
@@ -184,9 +182,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
             addOrder1 = bidDepthLevel.AddOrder(new Volume(2000));
             addOrder2 = bidDepthLevel.AddOrder(new Volume(1000));
             bool addOrder3 = bidDepthLevel.AddOrder(new Volume(3000));
-            BBO bbo = new BBO();
-            bbo.BestAsk = askDepthLevel;
-            bbo.BestBid = bidDepthLevel;
+            BBO bbo = new BBO("XBTUSD", bidDepthLevel, askDepthLevel);
             //byte[] array4 = ObjectToByteArray(bbo);
             OutputDisruptor.Publish(bbo);
             _manualResetEvent.WaitOne(3000);

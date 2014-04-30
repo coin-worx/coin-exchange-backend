@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CoinExchange.Common.Domain.Model;
 using CoinExchange.Trades.Domain.Model.OrderMatchingEngine;
 
 namespace CoinExchange.Trades.ReadModel.MemoryImages
@@ -33,7 +34,7 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
         /// <param name="bbo"></param>
         private void OnBBOArrived(BBO bbo)
         {
-            OnBBOArrived("", bbo.BestBid, bbo.BestAsk);
+            OnBBOArrived(bbo.CurrencyPair, bbo.BestBid, bbo.BestAsk);
         }
 
         /// <summary>
@@ -56,7 +57,8 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
         }
 
         /// <summary>
-        /// BBORepresentationList
+        /// Contains a BBO representation against each currency, each representation contains Volume, Price and order count 
+        /// information for the best dask and bid depth of that currency
         /// </summary>
         public BBORepresentationList BBORepresentationList
         {
