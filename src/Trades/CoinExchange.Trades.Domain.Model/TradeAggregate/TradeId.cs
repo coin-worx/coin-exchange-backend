@@ -27,5 +27,14 @@ namespace CoinExchange.Trades.Domain.Model.TradeAggregate
         /// The ID of the Trade
         /// </summary>
         public int Id { get { return _id; } }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is TradeId)
+            {
+                return Id == (obj as TradeId).Id;
+            }
+            return false;
+        }
     }
 }

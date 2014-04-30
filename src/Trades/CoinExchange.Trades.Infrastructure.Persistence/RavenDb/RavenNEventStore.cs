@@ -15,12 +15,14 @@ namespace CoinExchange.Trades.Infrastructure.Persistence.RavenDb
     {
         private static readonly Guid StreamId = Guid.NewGuid();
         private static IStoreEvents _store;
+        private static IEventStream _stream;
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger
      (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public RavenNEventStore()
         {
             _store = GetInitializedEventStore(new ReceiveCommit());
+            _stream = _store.OpenStream(StreamId, 0, int.MaxValue);
         }
 
         /// <summary>
@@ -62,11 +64,11 @@ namespace CoinExchange.Trades.Infrastructure.Persistence.RavenDb
         /// <param name="event"></param>
         private static void OpenOrCreateStream(object @event)
         {
-           using (var stream = _store.OpenStream(StreamId, 0, int.MaxValue))
-            {
-               stream.Add(new EventMessage { Body = @event });
-               stream.CommitChanges(Guid.NewGuid());
-            }
+           //using (var stream = _store.OpenStream(StreamId, 0, int.MaxValue))
+           // {
+               _stream.Add(new EventMessage { Body = @event });
+               _stream.CommitChanges(Guid.NewGuid());
+           // }
         }
 
         /// <summary>
