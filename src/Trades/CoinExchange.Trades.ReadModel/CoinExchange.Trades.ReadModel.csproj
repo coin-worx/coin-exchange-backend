@@ -67,6 +67,7 @@
     <Compile Include="MemoryImages\DepthLevelRepresentation.cs" />
     <Compile Include="MemoryImages\DepthLevelRepresentationList.cs" />
     <Compile Include="MemoryImages\DepthMemoryImage.cs" />
+    <Compile Include="MemoryImages\DepthRepresentation.cs" />
     <Compile Include="MemoryImages\IBBOMemoryImage.cs" />
     <Compile Include="MemoryImages\IDepthMemoryImage.cs" />
     <Compile Include="MemoryImages\IMemoryImage.cs" />

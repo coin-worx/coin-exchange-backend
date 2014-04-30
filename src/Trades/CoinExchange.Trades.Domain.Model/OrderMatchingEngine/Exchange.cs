@@ -46,12 +46,6 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
                 _orderBook.OrderAccepted += OnAccept;
                 _orderBook.OrderAccepted += _depthOrderBook.OnOrderAccepted;
 
-                /*_orderBook.OrderAccepted -= orderListener.OnOrderAccepted;
-                _orderBook.OrderAccepted += orderListener.OnOrderAccepted;
-
-                _orderBook.OrderFilled -= orderListener.OnOrderFilled;
-                _orderBook.OrderFilled += orderListener.OnOrderFilled;*/
-
                 _orderBook.OrderCancelled -= _depthOrderBook.OnOrderCancelled;
                 _orderBook.OrderCancelled += _depthOrderBook.OnOrderCancelled;
 

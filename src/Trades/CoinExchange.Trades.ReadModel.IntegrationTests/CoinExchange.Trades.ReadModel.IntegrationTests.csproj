@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6229EAE5-0E6B-41A4-9FE4-560A868549CC}</ProjectGuid>
+    <ProjectGuid>{20C99C5A-BF22-4BE7-9309-9994658A1E14}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CoinExchange.Trades.ReadModel.Tests</RootNamespace>
-    <AssemblyName>CoinExchange.Trades.ReadModel.Tests</AssemblyName>
+    <RootNamespace>CoinExchange.Trades.ReadModel.IntegrationTests</RootNamespace>
+    <AssemblyName>CoinExchange.Trades.ReadModel.IntegrationTests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -30,16 +30,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Atomic, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Atomic">
       <HintPath>..\..\packages\Disruptor.1.1.0\lib\net40\Atomic.dll</HintPath>
     </Reference>
     <Reference Include="Common.Logging">
       <HintPath>..\..\packages\Common.Logging.1.2.0\lib\1.0\Common.Logging.dll</HintPath>
     </Reference>
-    <Reference Include="Disruptor">
+    <Reference Include="Disruptor, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Disruptor.1.1.0\lib\net40\Disruptor.dll</HintPath>
     </Reference>
-    <Reference Include="Disruptor.Scheduler">
+    <Reference Include="Disruptor.Scheduler, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Disruptor.1.1.0\lib\net40\Disruptor.Scheduler.dll</HintPath>
     </Reference>
     <Reference Include="NEventStore">
@@ -74,11 +76,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BBOMemoryImageTests.cs" />
     <Compile Include="DepthMemoryImageTests.cs" />
-    <Compile Include="OrderBookMemoryImageTests.cs" />
+    <Compile Include="OrderBookMIIntegrationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utilities.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

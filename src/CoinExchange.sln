@@ -102,6 +102,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinExchange.Trades.ReadMod
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinExchange.Trades.ReadModel.Tests", "Trades\CoinExchange.Trades.ReadModel.Tests\CoinExchange.Trades.ReadModel.Tests.csproj", "{6229EAE5-0E6B-41A4-9FE4-560A868549CC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinExchange.Trades.ReadModel.IntegrationTests", "Trades\CoinExchange.Trades.ReadModel.IntegrationTests\CoinExchange.Trades.ReadModel.IntegrationTests.csproj", "{20C99C5A-BF22-4BE7-9309-9994658A1E14}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -244,6 +246,10 @@ Global
 		{6229EAE5-0E6B-41A4-9FE4-560A868549CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6229EAE5-0E6B-41A4-9FE4-560A868549CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6229EAE5-0E6B-41A4-9FE4-560A868549CC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20C99C5A-BF22-4BE7-9309-9994658A1E14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20C99C5A-BF22-4BE7-9309-9994658A1E14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20C99C5A-BF22-4BE7-9309-9994658A1E14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20C99C5A-BF22-4BE7-9309-9994658A1E14}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -292,5 +298,6 @@ Global
 		{9FCA647F-ED19-4BEF-A2FF-093AE27974E9} = {1EEB49D9-7B09-48D6-89B1-47BE575465D9}
 		{8C2F9E03-DA0E-48BB-BCDE-04312DBB8D6A} = {1EEB49D9-7B09-48D6-89B1-47BE575465D9}
 		{6229EAE5-0E6B-41A4-9FE4-560A868549CC} = {1EEB49D9-7B09-48D6-89B1-47BE575465D9}
+		{20C99C5A-BF22-4BE7-9309-9994658A1E14} = {1EEB49D9-7B09-48D6-89B1-47BE575465D9}
 	EndGlobalSection
 EndGlobal
