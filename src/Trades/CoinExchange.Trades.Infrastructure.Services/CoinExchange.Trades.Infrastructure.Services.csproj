@@ -50,9 +50,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Config\StubTradeIdGenerator.xml">
+    <EmbeddedResource Include="Config\StubTradeIdGenerator.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="Config\StubOrderIdGenerator.xml">

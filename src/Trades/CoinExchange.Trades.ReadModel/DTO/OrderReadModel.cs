@@ -9,28 +9,37 @@ namespace CoinExchange.Trades.ReadModel.DTO
 {
     public class OrderReadModel
     {
-        public string OrderId { get; set; }
-        public string OrderType { get; set; }
-        public string OrderSide { get; set; }
-        public decimal Price { get; set; }
-        public decimal VolumeExecuted { get; set; }
-        public string Status { get; set; }
-        public string TraderId { get; set; }
-        public string CurrencyPair { get; set; }
-        //public List<TradeReadModel> Trades;
+        #region properties
 
-        public static OrderReadModel CreateOrderReadModel(Order order)
+        public string OrderId { get; private set; }
+        public string OrderType { get; private set; }
+        public string OrderSide { get; private set; }
+        public decimal Price { get; private set; }
+        public decimal VolumeExecuted { get; private set; }
+        public string Status { get; private set; }
+        public string TraderId { get; private set; }
+        public string CurrencyPair { get; private set; }
+        public DateTime OrderDateTime { get; private set; }
+
+        #endregion
+
+        public OrderReadModel()
         {
-            OrderReadModel readModel=new OrderReadModel();
-            readModel.OrderId = order.OrderId.Id.ToString();
-            readModel.OrderSide = order.OrderSide.ToString();
-            readModel.OrderType = order.OrderType.ToString();
-            readModel.Price = order.Price.Value;
-            readModel.Status = order.OrderState.ToString();
-            readModel.TraderId = order.TraderId.Id.ToString();
-            readModel.VolumeExecuted = order.VolumeExecuted;
-            readModel.CurrencyPair = order.CurrencyPair;
-            return readModel;
+            
         }
+
+        public OrderReadModel(string orderId, string orderType, string orderSide, decimal price, decimal volumeExecuted, string traderId, string status, string currencyPair,DateTime dateTime)
+        {
+            OrderId = orderId;
+            OrderType = orderType;
+            OrderSide = orderSide;
+            Price = price;
+            VolumeExecuted = volumeExecuted;
+            TraderId = traderId;
+            Status = status;
+            CurrencyPair = currencyPair;
+            OrderDateTime = dateTime;
+        }
+        
     }
 }

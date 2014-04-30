@@ -7,6 +7,7 @@ assembly="CoinExchange.Trades.ReadModel" namespace="CoinExchange.Trades.ReadMode
     </id>
     <property name="OrderSide"  column="OrderSide"/>
     <property name="OrderType"  column="OrderType"/>
+    <property name="OrderDateTime"  column="OrderDateTime"/>
     <property name="Price"  column="Price"/>
     <property name="VolumeExecuted"  column="VolumeExecuted"/>
     <property name="Status"  column="Status"/>
