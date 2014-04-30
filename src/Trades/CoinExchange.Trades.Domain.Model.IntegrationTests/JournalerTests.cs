@@ -64,7 +64,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             InputDisruptorPublisher.Publish(payload);
             _manualResetEvent.WaitOne(5000);
             //retrieve order
-            Order savedOrder = _eventStore.get(order.OrderId.Id.ToString()) as Order;
+            Order savedOrder = _eventStore.GetEvent(order.OrderId.Id.ToString()) as Order;
             Assert.NotNull(savedOrder);
             Assert.AreEqual(savedOrder, order);
         }
