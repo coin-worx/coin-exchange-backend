@@ -54,5 +54,19 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(savedOrder, order);
         }
 
+        [Test]
+        [Category("Integration")]
+        public void CreateAndLogOrder_GetAllTheOrdersBackFromTheEventStore_CheckIfOrderIsRetreivedProperly()
+        {
+            Order order = OrderFactory.CreateOrder("1234", "XBTUSD", "limit", "buy", 5, 10,
+                new StubbedOrderIdGenerator());
+            InputPayload payload = InputPayload.CreatePayload(order);
+            InputDisruptorPublisher.Publish(payload);
+            _manualResetEvent.WaitOne(5000);
+            //retrieve order
+            Order savedOrder = _eventStore.get(order.OrderId.Id.ToString()) as Order;
+            Assert.NotNull(savedOrder);
+            Assert.AreEqual(savedOrder, order);
+        }
     }
 }

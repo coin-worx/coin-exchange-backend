@@ -22,15 +22,11 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// <summary>
         /// Onn BBO changed event
         /// </summary>
-        /// <param name="bestBid"> </param>
-        /// <param name="bestAsk"> </param>
-        public void OnBBOChange(DepthLevel bestBid, DepthLevel bestAsk)
+        /// <param name="bbo"> </param>
+        public void OnBBOChange(BBO bbo)
         {
-            BBO bbo=new BBO();
-            bbo.BestBid = bestBid;
-            bbo.BestAsk = bestAsk;
             OutputDisruptor.Publish(bbo);
-            Log.Debug("Best bid and offer received.");
+            Log.Debug("Best bid and offer received for currency pair: " + bbo.CurrencyPair);
         }
 
         #endregion

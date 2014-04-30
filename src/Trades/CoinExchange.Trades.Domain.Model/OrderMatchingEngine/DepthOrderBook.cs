@@ -18,7 +18,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         private int _size = 0;
         private Depth _depth = null;
 
-        public event Action<DepthLevel, DepthLevel> BboChanged;
+        public event Action<BBO> BboChanged;
         public event Action<Depth> DepthChanged;
 
         /// <summary>
@@ -178,7 +178,8 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
 
                     if (_depth.BidLevels.First().ChangedSince(lastChange) || _depth.AskLevels.First().ChangedSince(lastChange))
                     {
-                        BboChanged(_depth.BidLevels.First(), _depth.AskLevels.First());
+                        BBO bbo = new BBO(_currencyPair, _depth.BidLevels.First(), _depth.AskLevels.First());
+                        BboChanged(bbo);
                     }
                 }
                 _depth.Published();

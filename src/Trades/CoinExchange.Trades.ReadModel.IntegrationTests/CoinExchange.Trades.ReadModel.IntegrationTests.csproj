@@ -76,6 +76,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BBOMemoryImageIntegrationTests.cs" />
     <Compile Include="DepthMIIntegrationTests.cs" />
     <Compile Include="OrderBookMIIntegrationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

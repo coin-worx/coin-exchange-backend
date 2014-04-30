@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using CoinExchange.Common.Domain.Model;
 using CoinExchange.Trades.Domain.Model.OrderAggregate;
+using CoinExchange.Trades.Domain.Model.Services;
 using CoinExchange.Trades.Domain.Model.TradeAggregate;
+using Spring.Dao;
 
 namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
 {
@@ -484,7 +486,52 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
 
         #endregion Order Updating methods
 
-        #endregion
+        #endregion Methods
+
+        #region LOB restore
+
+        /// <summary>
+        /// Restores the state of this limit order book by importing orders from event store
+        /// Returns true if order book is restored, else return false
+        /// </summary>
+        /// <param name="eventStore"></param>
+        /// <returns></returns>
+        public bool RestoreLimitOrderBook(IEventStore eventStore)
+        {
+            if (eventStore != null)
+            {
+                List<Order> orders = eventStore.GetOrders();
+                if (orders.Any())
+                {
+                    
+                }
+                else
+                {
+                    throw new EmptyResultDataAccessException("Expecting one or more than orders to restore limit order book.");
+                }
+            }
+            else
+            {
+                throw new NullReferenceException("Event store passed to LimitOrderBook cannot be null.");
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Filters the orders that were sent on the present day
+        /// </summary>
+        /// <returns></returns>
+        private List<Order> FilterByDate(List<Order> allOrders)
+        {
+            List<Order> filteredOrders = null;
+            foreach (Order order in allOrders)
+            {
+                
+            }
+            return null;
+        }
+
+        #endregion LOB restore
 
         #region Properties
 

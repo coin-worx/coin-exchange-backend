@@ -18,8 +18,6 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
         private static readonly log4net.ILog Log = log4net.LogManager.GetLogger
         (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private List<string> _currencyPairs = new List<string>(); 
-
         /// <summary>
         /// Each slot contains the BBO representation, containg best prices, best volumes and their order counts
         /// </summary>
@@ -44,12 +42,16 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
             {
                 _bboRepresentations.Remove(bboRepresentation);
             }
-            if (bestBid.Price != null && bestAsk.Price != null && bestBid.AggregatedVolume != null && bestAsk.AggregatedVolume != null)
+            if ((bestBid.Price != null && bestBid.AggregatedVolume != null) || (bestAsk.Price != null && bestAsk.AggregatedVolume != null))
             {
-                _bboRepresentations.Add(new BBORepresentation(currencyPair, bestBid.Price.Value,
-                                                              bestBid.AggregatedVolume.Value,
-                                                              bestBid.OrderCount, bestAsk.Price.Value,
-                                                              bestAsk.AggregatedVolume.Value, bestAsk.OrderCount));
+                _bboRepresentations.Add(new BBORepresentation(currencyPair, 
+                                                        // If price or volume values are null, just assign 0 as the best price and/or volume
+                                                        bestBid.Price != null ? bestBid.Price.Value : 0,
+                                                        bestBid.AggregatedVolume != null ? bestBid.AggregatedVolume.Value : 0,
+                                                        bestBid.OrderCount, 
+                                                        bestAsk.Price != null ? bestAsk.Price.Value : 0,
+                                                        bestAsk.AggregatedVolume != null ? bestAsk.AggregatedVolume.Value : 0, 
+                                                        bestAsk.OrderCount));
                 return true;
             }
             return false;

@@ -33,7 +33,7 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
         /// <param name="bbo"></param>
         private void OnBBOArrived(BBO bbo)
         {
-            OnBBOArrived("", bbo.BestBid, bbo.BestAsk);
+            OnBBOArrived(bbo.CurrencyPair, bbo.BestBid, bbo.BestAsk);
         }
 
         /// <summary>
@@ -56,7 +56,8 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
         }
 
         /// <summary>
-        /// BBORepresentationList
+        /// Contains a BBO representation against each currency, each representation contains Volume, Price and order count 
+        /// information for the best dask and bid depth of that currency
         /// </summary>
         public BBORepresentationList BBORepresentationList
         {
