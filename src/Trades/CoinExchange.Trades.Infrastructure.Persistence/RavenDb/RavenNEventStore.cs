@@ -11,14 +11,21 @@ using NEventStore.Dispatcher;
 
 namespace CoinExchange.Trades.Infrastructure.Persistence.RavenDb
 {
+    /// <summary>
+    /// Raven NEvent Store
+    /// </summary>
     public class RavenNEventStore : IEventStore
     {
+        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger
+        (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private static readonly Guid StreamId = Guid.NewGuid();
         private static IStoreEvents _store;
         private static IEventStream _stream;
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger
-        (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
+        /// <summary>
+        /// Default Constructor
+        /// </summary>
         public RavenNEventStore()
         {
             _store = GetInitializedEventStore(new ReceiveCommit());
@@ -38,7 +45,7 @@ namespace CoinExchange.Trades.Infrastructure.Persistence.RavenDb
             }
             catch (Exception exception)
             {
-                log.Error(exception);
+                Log.Error(exception);
                 return false;
             }
 
@@ -64,11 +71,13 @@ namespace CoinExchange.Trades.Infrastructure.Persistence.RavenDb
         /// <param name="event"></param>
         private static void OpenOrCreateStream(object @event)
         {
-           //using (var stream = _store.OpenStream(StreamId, 0, int.MaxValue))
-           // {
-               _stream.Add(new EventMessage { Body = @event });
-               _stream.CommitChanges(Guid.NewGuid());
-           // }
+            _stream.Add(new EventMessage {Body = @event});
+            _stream.CommitChanges(Guid.NewGuid());
+            if (@event is Order)
+            {
+                Log.Debug("New order stored in Event Store. ID: " + (@event as Order).OrderId.Id + " | Order state: "
+                          + (@event as Order).OrderState);
+            }
         }
 
         /// <summary>
@@ -105,9 +114,9 @@ namespace CoinExchange.Trades.Infrastructure.Persistence.RavenDb
         {
             List<Order> orders = new List<Order>();
             List<EventMessage> collection;
-            using (var stream = _store.OpenStream(StreamId, 0, int.MaxValue))
-            {
-                collection = stream.CommittedEvents.ToList();
+            /*using (var stream = _store.OpenStream(StreamId, 0, int.MaxValue))
+            {*/
+                collection = _stream.CommittedEvents.ToList();
                 for (int i = 0; i < collection.Count; i++)
                 {
                     if (collection[i].Body is Order)
@@ -116,7 +125,8 @@ namespace CoinExchange.Trades.Infrastructure.Persistence.RavenDb
                         orders.Add(order);
                     }
                 }
-            }
+            //}
+            Log.Debug("Number of orders fetched from Event Store: " + orders.Count);
             if (!orders.Any())
             {
                 orders = null;

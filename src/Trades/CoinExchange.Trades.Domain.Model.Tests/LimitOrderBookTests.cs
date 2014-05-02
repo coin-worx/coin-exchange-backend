@@ -311,14 +311,14 @@ namespace CoinExchange.Trades.Domain.Model.Tests
             Order buyOrder2 = OrderFactory.CreateOrder("123457", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 250, 1250, new StubbedOrderIdGenerator());
 
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder2, true));
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, sellOrder2, true));
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, sellOrder1, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, buyOrder2, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, sellOrder2, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, sellOrder1, true));
 
-            Assert.AreEqual(1, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(2, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
-            DepthCheck depthCheck = new DepthCheck(exchange.DepthOrderBook.Depth);
+            DepthCheck depthCheck = new DepthCheck(exchange.ExchangeEssentials.First().DepthOrderBook.Depth);
 
             Assert.IsTrue(depthCheck.VerifyBid(buyOrder2.Price, 1, buyOrder2.Volume));
             Assert.IsTrue(depthCheck.VerifyAsk(sellOrder2.Price, 1, sellOrder2.Volume));
@@ -326,14 +326,14 @@ namespace CoinExchange.Trades.Domain.Model.Tests
 
             FillCheck fillCheck = new FillCheck();
 
-            Assert.IsTrue(AddAndVerify(exchange.OrderBook, buyOrder1, true, true));
+            Assert.IsTrue(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, buyOrder1, true, true));
             Assert.IsTrue(fillCheck.VerifyFilled(buyOrder1, new Volume(250), sellOrder2.Price, new Price(312750M)));
 
             depthCheck.Reset();
             Assert.IsTrue(depthCheck.VerifyBid(buyOrder2.Price, 1, buyOrder2.Volume));
             Assert.IsTrue(depthCheck.VerifyAsk(sellOrder1.Price, 1, sellOrder1.Volume));
-            Assert.AreEqual(1, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(1, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
         }
 
         [Test]
@@ -348,27 +348,27 @@ namespace CoinExchange.Trades.Domain.Model.Tests
             Order sellOrder2 = OrderFactory.CreateOrder("12", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 250, 1250, new StubbedOrderIdGenerator());
 
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, sellOrder1, true));
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder2, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, sellOrder1, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, buyOrder2, true));
 
-            Assert.AreEqual(1, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(1, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
-            DepthCheck depthCheck = new DepthCheck(exchange.DepthOrderBook.Depth);
+            DepthCheck depthCheck = new DepthCheck(exchange.ExchangeEssentials.First().DepthOrderBook.Depth);
 
             Assert.IsTrue(depthCheck.VerifyBid(buyOrder2.Price, 1, buyOrder2.Volume));
             Assert.IsTrue(depthCheck.VerifyAsk(sellOrder1.Price, 1, sellOrder1.Volume));
 
             FillCheck fillCheck = new FillCheck();
 
-            Assert.IsTrue(AddAndVerify(exchange.OrderBook, sellOrder2, true, true));
+            Assert.IsTrue(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, sellOrder2, true, true));
             Assert.IsTrue(fillCheck.VerifyFilled(sellOrder2, new Volume(250), buyOrder2.Price, new Price(312500M)));
 
             depthCheck.Reset();
             Assert.IsTrue(depthCheck.VerifyBid(null, 0, null));
             Assert.IsTrue(depthCheck.VerifyAsk(sellOrder1.Price, 1, sellOrder1.Volume));
-            Assert.AreEqual(0, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(1, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
         }
 
 
@@ -389,15 +389,15 @@ namespace CoinExchange.Trades.Domain.Model.Tests
                 Constants.ORDER_SIDE_BUY, 250, 1250, new StubbedOrderIdGenerator());
 
 
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder2, true));
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, sellOrder2, true));
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, sellOrder1, true));
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, sellOrder3, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, buyOrder2, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, sellOrder2, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, sellOrder1, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, sellOrder3, true));
 
-            Assert.AreEqual(1, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(3, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(3, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
-            DepthCheck depthCheck = new DepthCheck(exchange.DepthOrderBook.Depth);
+            DepthCheck depthCheck = new DepthCheck(exchange.ExchangeEssentials.First().DepthOrderBook.Depth);
 
             Assert.IsTrue(depthCheck.VerifyBid(buyOrder2.Price, 1, buyOrder2.Volume));
             Assert.IsTrue(depthCheck.VerifyAsk(sellOrder2.Price, 2, new Volume(500)));
@@ -405,14 +405,14 @@ namespace CoinExchange.Trades.Domain.Model.Tests
 
             FillCheck fillCheck = new FillCheck();
 
-            Assert.IsTrue(AddAndVerify(exchange.OrderBook, buyOrder1, true, true));
+            Assert.IsTrue(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, buyOrder1, true, true));
             Assert.IsTrue(fillCheck.VerifyFilled(buyOrder1, new Volume(500), sellOrder2.Price, new Price(1251 * 500)));
 
             depthCheck.Reset();
             Assert.IsTrue(depthCheck.VerifyBid(buyOrder2.Price, 1, buyOrder2.Volume));
             Assert.IsTrue(depthCheck.VerifyAsk(sellOrder1.Price, 1, sellOrder1.Volume));
-            Assert.AreEqual(1, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(1, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
         }
 
         [Test]
@@ -437,18 +437,18 @@ namespace CoinExchange.Trades.Domain.Model.Tests
             Order buyOrder4 = OrderFactory.CreateOrder("523457", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 1249, new StubbedOrderIdGenerator());
 
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder1, true));
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder2, true));
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder4, true));
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder3, true));
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, sellOrder1, true));
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, sellOrder3, true));
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, sellOrder2, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, buyOrder1, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, buyOrder2, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, buyOrder4, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, buyOrder3, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, sellOrder1, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, sellOrder3, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, sellOrder2, true));
 
-            Assert.AreEqual(4, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(3, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(4, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(3, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
-            DepthCheck depthCheck = new DepthCheck(exchange.DepthOrderBook.Depth);
+            DepthCheck depthCheck = new DepthCheck(exchange.ExchangeEssentials.First().DepthOrderBook.Depth);
 
             // Place bids in descending order and asks in ascending order
             Assert.IsTrue(depthCheck.VerifyBid(new Price(1252), 1, new Volume(100)));
@@ -459,7 +459,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
 
             FillCheck fillCheck = new FillCheck();
 
-            Assert.IsTrue(AddAndVerify(exchange.OrderBook, sellOrder4, true, true));
+            Assert.IsTrue(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, sellOrder4, true, true));
             depthCheck.Reset();
             Assert.IsTrue(fillCheck.VerifyFilled(sellOrder4, new Volume(700), buyOrder1.Price, new Price(875800M)));
 
@@ -468,8 +468,8 @@ namespace CoinExchange.Trades.Domain.Model.Tests
             Assert.IsTrue(depthCheck.VerifyAsk(new Price(1253), 2, new Volume(500)));
             Assert.IsTrue(depthCheck.VerifyAsk(new Price(1254), 1, new Volume(200)));
             Assert.IsTrue(depthCheck.VerifyAsk(sellOrder1.Price, 1, sellOrder1.Volume));
-            Assert.AreEqual(1, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(3, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(3, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
         }
 
         [Test]
@@ -490,49 +490,49 @@ namespace CoinExchange.Trades.Domain.Model.Tests
             Order buyOrder3 = OrderFactory.CreateOrder("623456", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 400, 941, new StubbedOrderIdGenerator());
 
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder2, true));
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder3, true));
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, sellOrder2, true));
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, sellOrder1, true));
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, sellOrder3, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, buyOrder2, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, buyOrder3, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, sellOrder2, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, sellOrder1, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, sellOrder3, true));
 
-            Assert.AreEqual(2, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(3, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(3, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
-            Assert.AreEqual(buyOrder3.Price, exchange.DepthOrderBook.Depth.BidLevels[0].Price);
-            Assert.AreEqual(buyOrder3.Volume, exchange.DepthOrderBook.Depth.BidLevels[0].AggregatedVolume);
-            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.BidLevels[0].OrderCount);
+            Assert.AreEqual(buyOrder3.Price, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[0].Price);
+            Assert.AreEqual(buyOrder3.Volume, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[0].AggregatedVolume);
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[0].OrderCount);
 
-            Assert.AreEqual(new Price(942), exchange.DepthOrderBook.Depth.AskLevels[0].Price);
-            Assert.AreEqual(new Volume(300), exchange.DepthOrderBook.Depth.AskLevels[0].AggregatedVolume);
-            Assert.AreEqual(2, exchange.DepthOrderBook.Depth.AskLevels[0].OrderCount);
+            Assert.AreEqual(new Price(942), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[0].Price);
+            Assert.AreEqual(new Volume(300), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[0].AggregatedVolume);
+            Assert.AreEqual(2, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[0].OrderCount);
 
-            Assert.AreEqual(new Price(947), exchange.DepthOrderBook.Depth.AskLevels[1].Price);
-            Assert.AreEqual(new Volume(200), exchange.DepthOrderBook.Depth.AskLevels[1].AggregatedVolume);
-            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.AskLevels[1].OrderCount);
+            Assert.AreEqual(new Price(947), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[1].Price);
+            Assert.AreEqual(new Volume(200), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[1].AggregatedVolume);
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[1].OrderCount);
 
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder1, true, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, buyOrder1, true, true));
 
             FillCheck fillCheck = new FillCheck();
             Assert.IsFalse(fillCheck.VerifyFilled(buyOrder1, new Volume(500), sellOrder2.Price, new Price(1251 * 500)));
-            Assert.AreEqual(3, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(1, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(3, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             Assert.AreEqual(OrderState.PartiallyFilled, buyOrder1.OrderState);
             Assert.AreEqual(100, buyOrder1.OpenQuantity.Value);
             Assert.AreEqual(300, buyOrder1.FilledQuantity.Value);
 
-            Assert.AreEqual(new Price(945), exchange.DepthOrderBook.Depth.BidLevels[0].Price);
-            Assert.AreEqual(new Volume(100), exchange.DepthOrderBook.Depth.BidLevels[0].AggregatedVolume);
-            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.BidLevels[0].OrderCount);
+            Assert.AreEqual(new Price(945), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[0].Price);
+            Assert.AreEqual(new Volume(100), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[0].AggregatedVolume);
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[0].OrderCount);
 
-            Assert.AreEqual(new Price(941), exchange.DepthOrderBook.Depth.BidLevels[1].Price);
-            Assert.AreEqual(new Volume(400), exchange.DepthOrderBook.Depth.BidLevels[1].AggregatedVolume);
-            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.BidLevels[1].OrderCount);
+            Assert.AreEqual(new Price(941), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[1].Price);
+            Assert.AreEqual(new Volume(400), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[1].AggregatedVolume);
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[1].OrderCount);
 
-            Assert.AreEqual(new Price(940), exchange.DepthOrderBook.Depth.BidLevels[2].Price);
-            Assert.AreEqual(new Volume(200), exchange.DepthOrderBook.Depth.BidLevels[2].AggregatedVolume);
-            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.BidLevels[2].OrderCount);
+            Assert.AreEqual(new Price(940), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[2].Price);
+            Assert.AreEqual(new Volume(200), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[2].AggregatedVolume);
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[2].OrderCount);
         }
 
         [Test]
@@ -553,49 +553,49 @@ namespace CoinExchange.Trades.Domain.Model.Tests
             Order sellOrder3 = OrderFactory.CreateOrder("12344", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 600, 942, new StubbedOrderIdGenerator());
             
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder1, true));
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder2, true));
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder3, true));
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, sellOrder2, true));
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, sellOrder1, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, buyOrder1, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, buyOrder2, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, buyOrder3, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, sellOrder2, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, sellOrder1, true));
 
-            Assert.AreEqual(3, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(2, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(3, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
-            Assert.AreEqual(new Price(945), exchange.DepthOrderBook.Depth.BidLevels[0].Price);
-            Assert.AreEqual(new Volume(400), exchange.DepthOrderBook.Depth.BidLevels[0].AggregatedVolume);
-            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.BidLevels[0].OrderCount);
+            Assert.AreEqual(new Price(945), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[0].Price);
+            Assert.AreEqual(new Volume(400), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[0].AggregatedVolume);
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[0].OrderCount);
 
-            Assert.AreEqual(new Price(941), exchange.DepthOrderBook.Depth.BidLevels[1].Price);
-            Assert.AreEqual(new Volume(400), exchange.DepthOrderBook.Depth.BidLevels[1].AggregatedVolume);
-            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.BidLevels[1].OrderCount);
+            Assert.AreEqual(new Price(941), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[1].Price);
+            Assert.AreEqual(new Volume(400), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[1].AggregatedVolume);
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[1].OrderCount);
 
-            Assert.AreEqual(new Price(940), exchange.DepthOrderBook.Depth.BidLevels[2].Price);
-            Assert.AreEqual(new Volume(200), exchange.DepthOrderBook.Depth.BidLevels[2].AggregatedVolume);
-            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.BidLevels[2].OrderCount);
+            Assert.AreEqual(new Price(940), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[2].Price);
+            Assert.AreEqual(new Volume(200), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[2].AggregatedVolume);
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[2].OrderCount);
 
-            Assert.AreEqual(new Price(947), exchange.DepthOrderBook.Depth.AskLevels[0].Price);
-            Assert.AreEqual(new Volume(300), exchange.DepthOrderBook.Depth.AskLevels[0].AggregatedVolume);
-            Assert.AreEqual(2, exchange.DepthOrderBook.Depth.AskLevels[0].OrderCount);
+            Assert.AreEqual(new Price(947), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[0].Price);
+            Assert.AreEqual(new Volume(300), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[0].AggregatedVolume);
+            Assert.AreEqual(2, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[0].OrderCount);
 
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, sellOrder3, true, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, sellOrder3, true, true));
 
             FillCheck fillCheck = new FillCheck();
             Assert.IsTrue(fillCheck.VerifyFilled(sellOrder3, new Volume(400), buyOrder1.Price, new Price(1251 * 500)));
-            Assert.AreEqual(2, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(3, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(3, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             Assert.AreEqual(OrderState.PartiallyFilled, sellOrder3.OrderState);
             Assert.AreEqual(200, sellOrder3.OpenQuantity.Value);
             Assert.AreEqual(400, sellOrder3.FilledQuantity.Value);
 
-            Assert.AreEqual(new Price(942), exchange.DepthOrderBook.Depth.AskLevels[0].Price);
-            Assert.AreEqual(new Volume(200), exchange.DepthOrderBook.Depth.AskLevels[0].AggregatedVolume);
-            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.AskLevels[0].OrderCount);
+            Assert.AreEqual(new Price(942), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[0].Price);
+            Assert.AreEqual(new Volume(200), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[0].AggregatedVolume);
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[0].OrderCount);
 
-            Assert.AreEqual(new Price(947), exchange.DepthOrderBook.Depth.AskLevels[1].Price);
-            Assert.AreEqual(new Volume(300), exchange.DepthOrderBook.Depth.AskLevels[1].AggregatedVolume);
-            Assert.AreEqual(2, exchange.DepthOrderBook.Depth.AskLevels[1].OrderCount);
+            Assert.AreEqual(new Price(947), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[1].Price);
+            Assert.AreEqual(new Volume(300), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[1].AggregatedVolume);
+            Assert.AreEqual(2, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[1].OrderCount);
         }
 
         [Test]
@@ -616,42 +616,42 @@ namespace CoinExchange.Trades.Domain.Model.Tests
             Order sellOrder3 = OrderFactory.CreateOrder("12344", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 200, 943, new StubbedOrderIdGenerator());
 
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder2, true));
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder3, true));
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, sellOrder2, true));
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, sellOrder1, true));
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, sellOrder3, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, buyOrder2, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, buyOrder3, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, sellOrder2, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, sellOrder1, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, sellOrder3, true));
 
-            Assert.AreEqual(2, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(3, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(3, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
-            Assert.AreEqual(buyOrder3.Price, exchange.DepthOrderBook.Depth.BidLevels[0].Price);
-            Assert.AreEqual(buyOrder3.Volume, exchange.DepthOrderBook.Depth.BidLevels[0].AggregatedVolume);
-            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.BidLevels[0].OrderCount);
+            Assert.AreEqual(buyOrder3.Price, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[0].Price);
+            Assert.AreEqual(buyOrder3.Volume, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[0].AggregatedVolume);
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[0].OrderCount);
 
-            Assert.AreEqual(new Price(940), exchange.DepthOrderBook.Depth.BidLevels[1].Price);
-            Assert.AreEqual(new Volume(200), exchange.DepthOrderBook.Depth.BidLevels[1].AggregatedVolume);
-            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.BidLevels[1].OrderCount);
+            Assert.AreEqual(new Price(940), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[1].Price);
+            Assert.AreEqual(new Volume(200), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[1].AggregatedVolume);
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[1].OrderCount);
 
-            Assert.AreEqual(new Price(942), exchange.DepthOrderBook.Depth.AskLevels[0].Price);
-            Assert.AreEqual(new Volume(300), exchange.DepthOrderBook.Depth.AskLevels[0].AggregatedVolume);
-            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.AskLevels[0].OrderCount);
+            Assert.AreEqual(new Price(942), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[0].Price);
+            Assert.AreEqual(new Volume(300), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[0].AggregatedVolume);
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[0].OrderCount);
 
-            Assert.AreEqual(new Price(943), exchange.DepthOrderBook.Depth.AskLevels[1].Price);
-            Assert.AreEqual(new Volume(200), exchange.DepthOrderBook.Depth.AskLevels[1].AggregatedVolume);
-            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.AskLevels[1].OrderCount);
+            Assert.AreEqual(new Price(943), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[1].Price);
+            Assert.AreEqual(new Volume(200), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[1].AggregatedVolume);
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[1].OrderCount);
 
-            Assert.AreEqual(new Price(947), exchange.DepthOrderBook.Depth.AskLevels[2].Price);
-            Assert.AreEqual(new Volume(200), exchange.DepthOrderBook.Depth.AskLevels[2].AggregatedVolume);
-            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.AskLevels[2].OrderCount);
+            Assert.AreEqual(new Price(947), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[2].Price);
+            Assert.AreEqual(new Volume(200), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[2].AggregatedVolume);
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[2].OrderCount);
 
-            Assert.IsTrue(FilledPartiallyOrComplete(exchange.OrderBook, buyOrder1, true));
+            Assert.IsTrue(FilledPartiallyOrComplete(exchange.ExchangeEssentials.First().LimitOrderBook, buyOrder1, true));
 
-            Assert.AreEqual(3, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(1, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(3, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
-            Assert.AreEqual(buyOrder1, exchange.OrderBook.Bids.First());
-            Assert.AreEqual(sellOrder1, exchange.OrderBook.Asks.First());
+            Assert.AreEqual(buyOrder1, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First());
+            Assert.AreEqual(sellOrder1, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.First());
         }
 
         [Test]
@@ -673,57 +673,57 @@ namespace CoinExchange.Trades.Domain.Model.Tests
                 Constants.ORDER_SIDE_SELL, 700, 942, new StubbedOrderIdGenerator());
 
 
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder1, true));
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder2, true));
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder3, true));
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, sellOrder2, true));
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, sellOrder1, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, buyOrder1, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, buyOrder2, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, buyOrder3, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, sellOrder2, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, sellOrder1, true));
 
-            Assert.AreEqual(3, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(2, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(3, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
-            Assert.AreEqual(new Price(945), exchange.DepthOrderBook.Depth.BidLevels[0].Price);
-            Assert.AreEqual(new Volume(400), exchange.DepthOrderBook.Depth.BidLevels[0].AggregatedVolume);
-            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.BidLevels[0].OrderCount);
+            Assert.AreEqual(new Price(945), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[0].Price);
+            Assert.AreEqual(new Volume(400), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[0].AggregatedVolume);
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[0].OrderCount);
 
-            Assert.AreEqual(new Price(942), exchange.DepthOrderBook.Depth.BidLevels[1].Price);
-            Assert.AreEqual(new Volume(200), exchange.DepthOrderBook.Depth.BidLevels[1].AggregatedVolume);
-            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.BidLevels[1].OrderCount);
+            Assert.AreEqual(new Price(942), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[1].Price);
+            Assert.AreEqual(new Volume(200), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[1].AggregatedVolume);
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[1].OrderCount);
 
-            Assert.AreEqual(new Price(941), exchange.DepthOrderBook.Depth.BidLevels[2].Price);
-            Assert.AreEqual(new Volume(400), exchange.DepthOrderBook.Depth.BidLevels[2].AggregatedVolume);
-            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.BidLevels[2].OrderCount);
+            Assert.AreEqual(new Price(941), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[2].Price);
+            Assert.AreEqual(new Volume(400), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[2].AggregatedVolume);
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[2].OrderCount);
 
-            Assert.AreEqual(new Price(947), exchange.DepthOrderBook.Depth.AskLevels[0].Price);
-            Assert.AreEqual(new Volume(300), exchange.DepthOrderBook.Depth.AskLevels[0].AggregatedVolume);
-            Assert.AreEqual(2, exchange.DepthOrderBook.Depth.AskLevels[0].OrderCount);
+            Assert.AreEqual(new Price(947), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[0].Price);
+            Assert.AreEqual(new Volume(300), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[0].AggregatedVolume);
+            Assert.AreEqual(2, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[0].OrderCount);
 
-            Assert.IsTrue(FilledPartiallyOrComplete(exchange.OrderBook, sellOrder3, true));
+            Assert.IsTrue(FilledPartiallyOrComplete(exchange.ExchangeEssentials.First().LimitOrderBook, sellOrder3, true));
 
             FillCheck fillCheck = new FillCheck();
             Assert.IsTrue(fillCheck.VerifyFilled(sellOrder3, new Volume(600), buyOrder1.Price, new Price(1251 * 500)));
-            Assert.AreEqual(1, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(3, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(3, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             Assert.AreEqual(OrderState.PartiallyFilled, sellOrder3.OrderState);
             Assert.AreEqual(100, sellOrder3.OpenQuantity.Value);
             Assert.AreEqual(600, sellOrder3.FilledQuantity.Value);
 
-            Assert.AreEqual(new Price(942), exchange.DepthOrderBook.Depth.AskLevels[0].Price);
-            Assert.AreEqual(new Volume(100), exchange.DepthOrderBook.Depth.AskLevels[0].AggregatedVolume);
-            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.AskLevels[0].OrderCount);
+            Assert.AreEqual(new Price(942), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[0].Price);
+            Assert.AreEqual(new Volume(100), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[0].AggregatedVolume);
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[0].OrderCount);
 
-            Assert.AreEqual(new Price(947), exchange.DepthOrderBook.Depth.AskLevels[1].Price);
-            Assert.AreEqual(new Volume(300), exchange.DepthOrderBook.Depth.AskLevels[1].AggregatedVolume);
-            Assert.AreEqual(2, exchange.DepthOrderBook.Depth.AskLevels[1].OrderCount);
+            Assert.AreEqual(new Price(947), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[1].Price);
+            Assert.AreEqual(new Volume(300), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[1].AggregatedVolume);
+            Assert.AreEqual(2, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[1].OrderCount);
 
-            Assert.AreEqual(new Price(941), exchange.DepthOrderBook.Depth.BidLevels[0].Price);
-            Assert.AreEqual(new Volume(400), exchange.DepthOrderBook.Depth.BidLevels[0].AggregatedVolume);
-            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.BidLevels[0].OrderCount);
+            Assert.AreEqual(new Price(941), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[0].Price);
+            Assert.AreEqual(new Volume(400), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[0].AggregatedVolume);
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[0].OrderCount);
 
-            Assert.AreEqual(null, exchange.DepthOrderBook.Depth.BidLevels[1].Price);
-            Assert.AreEqual(null, exchange.DepthOrderBook.Depth.BidLevels[1].AggregatedVolume);
-            Assert.AreEqual(0, exchange.DepthOrderBook.Depth.BidLevels[1].OrderCount);
+            Assert.AreEqual(null, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[1].Price);
+            Assert.AreEqual(null, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[1].AggregatedVolume);
+            Assert.AreEqual(0, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[1].OrderCount);
         }
 
         [Test]
@@ -744,63 +744,63 @@ namespace CoinExchange.Trades.Domain.Model.Tests
             Order sellOrder4 = OrderFactory.CreateOrder("12224", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 100, 942, new StubbedOrderIdGenerator());
 
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder1, true));
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder2, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, buyOrder1, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, buyOrder2, true));
 
-            Assert.AreEqual(2, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(0, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
-            Assert.AreEqual(new Price(942), exchange.DepthOrderBook.Depth.BidLevels[0].Price);
-            Assert.AreEqual(new Volume(900), exchange.DepthOrderBook.Depth.BidLevels[0].AggregatedVolume);
-            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.BidLevels[0].OrderCount);
+            Assert.AreEqual(new Price(942), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[0].Price);
+            Assert.AreEqual(new Volume(900), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[0].AggregatedVolume);
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[0].OrderCount);
 
-            Assert.AreEqual(new Price(930), exchange.DepthOrderBook.Depth.BidLevels[1].Price);
-            Assert.AreEqual(new Volume(200), exchange.DepthOrderBook.Depth.BidLevels[1].AggregatedVolume);
-            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.BidLevels[1].OrderCount);
+            Assert.AreEqual(new Price(930), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[1].Price);
+            Assert.AreEqual(new Volume(200), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[1].AggregatedVolume);
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[1].OrderCount);
 
-            Assert.AreEqual(null, exchange.DepthOrderBook.Depth.AskLevels[0].Price);
-            Assert.AreEqual(null, exchange.DepthOrderBook.Depth.AskLevels[0].AggregatedVolume);
-            Assert.AreEqual(0, exchange.DepthOrderBook.Depth.AskLevels[0].OrderCount);
+            Assert.AreEqual(null, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[0].Price);
+            Assert.AreEqual(null, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[0].AggregatedVolume);
+            Assert.AreEqual(0, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[0].OrderCount);
 
-            Assert.IsTrue(FilledPartiallyOrComplete(exchange.OrderBook, sellOrder1, false));
+            Assert.IsTrue(FilledPartiallyOrComplete(exchange.ExchangeEssentials.First().LimitOrderBook, sellOrder1, false));
 
             FillCheck fillCheck = new FillCheck();
             Assert.IsTrue(fillCheck.VerifyFilled(sellOrder1, new Volume(100), buyOrder2.Price, new Price(942 * 100)));
-            Assert.AreEqual(2, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(0, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
-            Assert.IsTrue(FilledPartiallyOrComplete(exchange.OrderBook, sellOrder2, false));
+            Assert.IsTrue(FilledPartiallyOrComplete(exchange.ExchangeEssentials.First().LimitOrderBook, sellOrder2, false));
 
             fillCheck = new FillCheck();
             Assert.IsTrue(fillCheck.VerifyFilled(sellOrder2, new Volume(100), buyOrder2.Price, new Price(942 * 100)));
-            Assert.AreEqual(2, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(0, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
-            Assert.IsTrue(FilledPartiallyOrComplete(exchange.OrderBook, sellOrder3, false));
+            Assert.IsTrue(FilledPartiallyOrComplete(exchange.ExchangeEssentials.First().LimitOrderBook, sellOrder3, false));
 
             fillCheck = new FillCheck();
             Assert.IsTrue(fillCheck.VerifyFilled(sellOrder3, new Volume(100), buyOrder2.Price, new Price(942 * 100)));
-            Assert.AreEqual(2, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(0, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
-            Assert.IsTrue(FilledPartiallyOrComplete(exchange.OrderBook, sellOrder4, false));
+            Assert.IsTrue(FilledPartiallyOrComplete(exchange.ExchangeEssentials.First().LimitOrderBook, sellOrder4, false));
 
             fillCheck = new FillCheck();
             Assert.IsTrue(fillCheck.VerifyFilled(sellOrder4, new Volume(100), buyOrder2.Price, new Price(942 * 100)));
-            Assert.AreEqual(2, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(0, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
-            Assert.AreEqual(new Price(942), exchange.DepthOrderBook.Depth.BidLevels[0].Price);
-            Assert.AreEqual(new Volume(500), exchange.DepthOrderBook.Depth.BidLevels[0].AggregatedVolume);
-            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.BidLevels[0].OrderCount);
+            Assert.AreEqual(new Price(942), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[0].Price);
+            Assert.AreEqual(new Volume(500), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[0].AggregatedVolume);
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[0].OrderCount);
 
-            Assert.AreEqual(new Price(930), exchange.DepthOrderBook.Depth.BidLevels[1].Price);
-            Assert.AreEqual(new Volume(200), exchange.DepthOrderBook.Depth.BidLevels[1].AggregatedVolume);
-            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.BidLevels[1].OrderCount);
+            Assert.AreEqual(new Price(930), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[1].Price);
+            Assert.AreEqual(new Volume(200), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[1].AggregatedVolume);
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[1].OrderCount);
 
-            Assert.AreEqual(null, exchange.DepthOrderBook.Depth.AskLevels[0].Price);
-            Assert.AreEqual(null, exchange.DepthOrderBook.Depth.AskLevels[0].AggregatedVolume);
-            Assert.AreEqual(0, exchange.DepthOrderBook.Depth.AskLevels[0].OrderCount);
+            Assert.AreEqual(null, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[0].Price);
+            Assert.AreEqual(null, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[0].AggregatedVolume);
+            Assert.AreEqual(0, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[0].OrderCount);
         }
 
         [Test]
@@ -821,63 +821,63 @@ namespace CoinExchange.Trades.Domain.Model.Tests
             Order sellOrder2 = OrderFactory.CreateOrder("1234", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 1000, 942, new StubbedOrderIdGenerator());
 
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, sellOrder1, true));
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, sellOrder2, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, sellOrder1, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, sellOrder2, true));
 
-            Assert.AreEqual(0, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(2, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
-            Assert.AreEqual(null, exchange.DepthOrderBook.Depth.BidLevels[0].Price);
-            Assert.AreEqual(null, exchange.DepthOrderBook.Depth.BidLevels[0].AggregatedVolume);
-            Assert.AreEqual(0, exchange.DepthOrderBook.Depth.BidLevels[0].OrderCount);
+            Assert.AreEqual(null, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[0].Price);
+            Assert.AreEqual(null, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[0].AggregatedVolume);
+            Assert.AreEqual(0, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[0].OrderCount);
 
-            Assert.AreEqual(new Price(942), exchange.DepthOrderBook.Depth.AskLevels[0].Price);
-            Assert.AreEqual(new Volume(1000), exchange.DepthOrderBook.Depth.AskLevels[0].AggregatedVolume);
-            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.AskLevels[0].OrderCount);
+            Assert.AreEqual(new Price(942), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[0].Price);
+            Assert.AreEqual(new Volume(1000), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[0].AggregatedVolume);
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[0].OrderCount);
 
-            Assert.AreEqual(new Price(951), exchange.DepthOrderBook.Depth.AskLevels[1].Price);
-            Assert.AreEqual(new Volume(100), exchange.DepthOrderBook.Depth.AskLevels[1].AggregatedVolume);
-            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.AskLevels[1].OrderCount);
+            Assert.AreEqual(new Price(951), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[1].Price);
+            Assert.AreEqual(new Volume(100), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[1].AggregatedVolume);
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[1].OrderCount);
 
-            Assert.IsTrue(FilledPartiallyOrComplete(exchange.OrderBook, buyOrder1, false));
+            Assert.IsTrue(FilledPartiallyOrComplete(exchange.ExchangeEssentials.First().LimitOrderBook, buyOrder1, false));
 
             FillCheck fillCheck = new FillCheck();
             Assert.IsTrue(fillCheck.VerifyFilled(buyOrder1, new Volume(100), sellOrder2.Price, new Price(942 * 100)));
-            Assert.AreEqual(0, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(2, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
-            Assert.IsTrue(FilledPartiallyOrComplete(exchange.OrderBook, buyOrder2, false));
+            Assert.IsTrue(FilledPartiallyOrComplete(exchange.ExchangeEssentials.First().LimitOrderBook, buyOrder2, false));
 
             fillCheck = new FillCheck();
             Assert.IsTrue(fillCheck.VerifyFilled(buyOrder2, new Volume(100), sellOrder2.Price, new Price(942 * 100)));
-            Assert.AreEqual(0, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(2, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
-            Assert.IsTrue(FilledPartiallyOrComplete(exchange.OrderBook, buyOrder3, false));
+            Assert.IsTrue(FilledPartiallyOrComplete(exchange.ExchangeEssentials.First().LimitOrderBook, buyOrder3, false));
 
             fillCheck = new FillCheck();
             Assert.IsTrue(fillCheck.VerifyFilled(buyOrder3, new Volume(100), sellOrder2.Price, new Price(942 * 100)));
-            Assert.AreEqual(0, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(2, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
-            Assert.IsTrue(FilledPartiallyOrComplete(exchange.OrderBook, buyOrder4, false));
+            Assert.IsTrue(FilledPartiallyOrComplete(exchange.ExchangeEssentials.First().LimitOrderBook, buyOrder4, false));
 
             fillCheck = new FillCheck();
             Assert.IsTrue(fillCheck.VerifyFilled(buyOrder4, new Volume(100), sellOrder2.Price, new Price(942 * 100)));
-            Assert.AreEqual(0, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(2, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
-            Assert.AreEqual(null, exchange.DepthOrderBook.Depth.BidLevels[0].Price);
-            Assert.AreEqual(null, exchange.DepthOrderBook.Depth.BidLevels[0].AggregatedVolume);
-            Assert.AreEqual(0, exchange.DepthOrderBook.Depth.BidLevels[0].OrderCount);
+            Assert.AreEqual(null, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[0].Price);
+            Assert.AreEqual(null, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[0].AggregatedVolume);
+            Assert.AreEqual(0, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[0].OrderCount);
 
-            Assert.AreEqual(new Price(942), exchange.DepthOrderBook.Depth.AskLevels[0].Price);
-            Assert.AreEqual(new Volume(600), exchange.DepthOrderBook.Depth.AskLevels[0].AggregatedVolume);
-            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.AskLevels[0].OrderCount);
+            Assert.AreEqual(new Price(942), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[0].Price);
+            Assert.AreEqual(new Volume(600), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[0].AggregatedVolume);
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[0].OrderCount);
 
-            Assert.AreEqual(new Price(951), exchange.DepthOrderBook.Depth.AskLevels[1].Price);
-            Assert.AreEqual(new Volume(100), exchange.DepthOrderBook.Depth.AskLevels[1].AggregatedVolume);
-            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.AskLevels[1].OrderCount);
+            Assert.AreEqual(new Price(951), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[1].Price);
+            Assert.AreEqual(new Volume(100), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[1].AggregatedVolume);
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[1].OrderCount);
         }
 
         [Test]
@@ -894,35 +894,35 @@ namespace CoinExchange.Trades.Domain.Model.Tests
             Order sellOrder2 = OrderFactory.CreateOrder("1234", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 100, 942, new StubbedOrderIdGenerator());
 
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder1, true));
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, sellOrder2, true));
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, sellOrder1, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, buyOrder1, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, sellOrder2, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, sellOrder1, true));
 
-            Assert.AreEqual(1, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(2, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
-            Assert.AreEqual(new Price(941), exchange.DepthOrderBook.Depth.BidLevels[0].Price);
-            Assert.AreEqual(new Volume(100), exchange.DepthOrderBook.Depth.BidLevels[0].AggregatedVolume);
-            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.BidLevels[0].OrderCount);
+            Assert.AreEqual(new Price(941), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[0].Price);
+            Assert.AreEqual(new Volume(100), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[0].AggregatedVolume);
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[0].OrderCount);
 
-            Assert.AreEqual(null, exchange.DepthOrderBook.Depth.BidLevels[1].Price);
-            Assert.AreEqual(null, exchange.DepthOrderBook.Depth.BidLevels[1].AggregatedVolume);
-            Assert.AreEqual(0, exchange.DepthOrderBook.Depth.BidLevels[1].OrderCount);
+            Assert.AreEqual(null, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[1].Price);
+            Assert.AreEqual(null, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[1].AggregatedVolume);
+            Assert.AreEqual(0, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[1].OrderCount);
 
-            Assert.AreEqual(new Price(942), exchange.DepthOrderBook.Depth.AskLevels[0].Price);
-            Assert.AreEqual(new Volume(100), exchange.DepthOrderBook.Depth.AskLevels[0].AggregatedVolume);
-            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.AskLevels[0].OrderCount);
+            Assert.AreEqual(new Price(942), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[0].Price);
+            Assert.AreEqual(new Volume(100), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[0].AggregatedVolume);
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[0].OrderCount);
 
-            Assert.AreEqual(new Price(951), exchange.DepthOrderBook.Depth.AskLevels[1].Price);
-            Assert.AreEqual(new Volume(100), exchange.DepthOrderBook.Depth.AskLevels[1].AggregatedVolume);
-            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.AskLevels[1].OrderCount);
+            Assert.AreEqual(new Price(951), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[1].Price);
+            Assert.AreEqual(new Volume(100), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[1].AggregatedVolume);
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[1].OrderCount);
 
-            Assert.IsTrue(FilledPartiallyOrComplete(exchange.OrderBook, buyOrder2, false));
+            Assert.IsTrue(FilledPartiallyOrComplete(exchange.ExchangeEssentials.First().LimitOrderBook, buyOrder2, false));
 
             FillCheck fillCheck = new FillCheck();
             Assert.IsTrue(fillCheck.VerifyFilled(buyOrder2, new Volume(100), new Price(0), new Price(0)));
-            Assert.AreEqual(1, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(1, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             Assert.AreEqual(OrderState.Complete, buyOrder2.OrderState);
             Assert.AreEqual(0, buyOrder2.OpenQuantity.Value);
@@ -944,31 +944,31 @@ namespace CoinExchange.Trades.Domain.Model.Tests
             Order sellOrder2 = OrderFactory.CreateOrder("1234", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 100, 948, new StubbedOrderIdGenerator());
 
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder1, true));
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder2, true));
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, sellOrder2, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, buyOrder1, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, buyOrder2, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, sellOrder2, true));
 
-            Assert.AreEqual(2, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(1, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
-            Assert.AreEqual(new Price(945), exchange.DepthOrderBook.Depth.BidLevels[0].Price);
-            Assert.AreEqual(new Volume(100), exchange.DepthOrderBook.Depth.BidLevels[0].AggregatedVolume);
-            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.BidLevels[0].OrderCount);
+            Assert.AreEqual(new Price(945), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[0].Price);
+            Assert.AreEqual(new Volume(100), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[0].AggregatedVolume);
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[0].OrderCount);
 
-            Assert.AreEqual(new Price(941), exchange.DepthOrderBook.Depth.BidLevels[1].Price);
-            Assert.AreEqual(new Volume(100), exchange.DepthOrderBook.Depth.BidLevels[1].AggregatedVolume);
-            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.BidLevels[1].OrderCount);
+            Assert.AreEqual(new Price(941), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[1].Price);
+            Assert.AreEqual(new Volume(100), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[1].AggregatedVolume);
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[1].OrderCount);
 
-            Assert.AreEqual(new Price(948), exchange.DepthOrderBook.Depth.AskLevels[0].Price);
-            Assert.AreEqual(new Volume(100), exchange.DepthOrderBook.Depth.AskLevels[0].AggregatedVolume);
-            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.AskLevels[0].OrderCount);
+            Assert.AreEqual(new Price(948), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[0].Price);
+            Assert.AreEqual(new Volume(100), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[0].AggregatedVolume);
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[0].OrderCount);
 
-            Assert.IsTrue(FilledPartiallyOrComplete(exchange.OrderBook, sellOrder1, false));
+            Assert.IsTrue(FilledPartiallyOrComplete(exchange.ExchangeEssentials.First().LimitOrderBook, sellOrder1, false));
 
             FillCheck fillCheck = new FillCheck();
             Assert.IsTrue(fillCheck.VerifyFilled(sellOrder1, new Volume(100), new Price(0), new Price(0)));
-            Assert.AreEqual(1, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(1, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             Assert.AreEqual(OrderState.Complete, sellOrder1.OrderState);
             Assert.AreEqual(0, sellOrder1.OpenQuantity.Value);
@@ -1074,49 +1074,49 @@ namespace CoinExchange.Trades.Domain.Model.Tests
             Order sellOrder2 = OrderFactory.CreateOrder("1222", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 100, 948, new StubbedOrderIdGenerator());
             
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder1, true));
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder2, true));
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, sellOrder2, true));
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, sellOrder1, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, buyOrder1, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, buyOrder2, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, sellOrder2, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, sellOrder1, true));
 
-            Assert.AreEqual(2, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(2, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
-            Assert.AreEqual(new Price(945), exchange.DepthOrderBook.Depth.BidLevels[0].Price);
-            Assert.AreEqual(new Volume(100), exchange.DepthOrderBook.Depth.BidLevels[0].AggregatedVolume);
-            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.BidLevels[0].OrderCount);
+            Assert.AreEqual(new Price(945), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[0].Price);
+            Assert.AreEqual(new Volume(100), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[0].AggregatedVolume);
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[0].OrderCount);
 
-            Assert.AreEqual(new Price(941), exchange.DepthOrderBook.Depth.BidLevels[1].Price);
-            Assert.AreEqual(new Volume(100), exchange.DepthOrderBook.Depth.BidLevels[1].AggregatedVolume);
-            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.BidLevels[1].OrderCount);
+            Assert.AreEqual(new Price(941), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[1].Price);
+            Assert.AreEqual(new Volume(100), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[1].AggregatedVolume);
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[1].OrderCount);
 
-            Assert.AreEqual(new Price(948), exchange.DepthOrderBook.Depth.AskLevels[0].Price);
-            Assert.AreEqual(new Volume(100), exchange.DepthOrderBook.Depth.AskLevels[0].AggregatedVolume);
-            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.AskLevels[0].OrderCount);
+            Assert.AreEqual(new Price(948), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[0].Price);
+            Assert.AreEqual(new Volume(100), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[0].AggregatedVolume);
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[0].OrderCount);
 
             ManualResetEvent manualResetEvent = new ManualResetEvent(false);
             
-            exchange.OrderBook.CancelOrder(orderId);
+            exchange.ExchangeEssentials.First().LimitOrderBook.CancelOrder(orderId);
             manualResetEvent.WaitOne(5000);
             Assert.AreEqual(OrderState.Cancelled, buyOrder2.OrderState);
-            Assert.AreEqual(1, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(2, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
-            Assert.AreEqual(new Price(941), exchange.DepthOrderBook.Depth.BidLevels[0].Price);
-            Assert.AreEqual(new Volume(100), exchange.DepthOrderBook.Depth.BidLevels[0].AggregatedVolume);
-            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.BidLevels[0].OrderCount);
+            Assert.AreEqual(new Price(941), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[0].Price);
+            Assert.AreEqual(new Volume(100), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[0].AggregatedVolume);
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[0].OrderCount);
 
-            Assert.AreEqual(null, exchange.DepthOrderBook.Depth.BidLevels[1].Price);
-            Assert.AreEqual(null, exchange.DepthOrderBook.Depth.BidLevels[1].AggregatedVolume);
-            Assert.AreEqual(0, exchange.DepthOrderBook.Depth.BidLevels[1].OrderCount);
+            Assert.AreEqual(null, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[1].Price);
+            Assert.AreEqual(null, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[1].AggregatedVolume);
+            Assert.AreEqual(0, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[1].OrderCount);
 
-            Assert.AreEqual(new Price(948), exchange.DepthOrderBook.Depth.AskLevels[0].Price);
-            Assert.AreEqual(new Volume(100), exchange.DepthOrderBook.Depth.AskLevels[0].AggregatedVolume);
-            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.AskLevels[0].OrderCount);
+            Assert.AreEqual(new Price(948), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[0].Price);
+            Assert.AreEqual(new Volume(100), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[0].AggregatedVolume);
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[0].OrderCount);
 
-            Assert.AreEqual(new Price(949), exchange.DepthOrderBook.Depth.AskLevels[1].Price);
-            Assert.AreEqual(new Volume(100), exchange.DepthOrderBook.Depth.AskLevels[1].AggregatedVolume);
-            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.AskLevels[1].OrderCount);
+            Assert.AreEqual(new Price(949), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[1].Price);
+            Assert.AreEqual(new Volume(100), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[1].AggregatedVolume);
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[1].OrderCount);
         }
 
         [Test]
@@ -1135,53 +1135,53 @@ namespace CoinExchange.Trades.Domain.Model.Tests
                 Constants.ORDER_SIDE_SELL, 100, 948, new StubbedOrderIdGenerator());
             OrderId orderId = sellOrder2.OrderId;
 
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder1, true));
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder2, true));
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, sellOrder2, true));
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, sellOrder1, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, buyOrder1, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, buyOrder2, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, sellOrder2, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, sellOrder1, true));
 
-            Assert.AreEqual(2, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(2, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
-            Assert.AreEqual(new Price(945), exchange.DepthOrderBook.Depth.BidLevels[0].Price);
-            Assert.AreEqual(new Volume(100), exchange.DepthOrderBook.Depth.BidLevels[0].AggregatedVolume);
-            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.BidLevels[0].OrderCount);
+            Assert.AreEqual(new Price(945), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[0].Price);
+            Assert.AreEqual(new Volume(100), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[0].AggregatedVolume);
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[0].OrderCount);
 
-            Assert.AreEqual(new Price(941), exchange.DepthOrderBook.Depth.BidLevels[1].Price);
-            Assert.AreEqual(new Volume(100), exchange.DepthOrderBook.Depth.BidLevels[1].AggregatedVolume);
-            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.BidLevels[1].OrderCount);
+            Assert.AreEqual(new Price(941), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[1].Price);
+            Assert.AreEqual(new Volume(100), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[1].AggregatedVolume);
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[1].OrderCount);
 
-            Assert.AreEqual(new Price(948), exchange.DepthOrderBook.Depth.AskLevels[0].Price);
-            Assert.AreEqual(new Volume(100), exchange.DepthOrderBook.Depth.AskLevels[0].AggregatedVolume);
-            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.AskLevels[0].OrderCount);
+            Assert.AreEqual(new Price(948), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[0].Price);
+            Assert.AreEqual(new Volume(100), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[0].AggregatedVolume);
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[0].OrderCount);
 
-            Assert.AreEqual(new Price(949), exchange.DepthOrderBook.Depth.AskLevels[1].Price);
-            Assert.AreEqual(new Volume(100), exchange.DepthOrderBook.Depth.AskLevels[1].AggregatedVolume);
-            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.AskLevels[1].OrderCount);
+            Assert.AreEqual(new Price(949), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[1].Price);
+            Assert.AreEqual(new Volume(100), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[1].AggregatedVolume);
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[1].OrderCount);
 
             ManualResetEvent manualResetEvent = new ManualResetEvent(false);
 
-            exchange.OrderBook.CancelOrder(orderId);
+            exchange.ExchangeEssentials.First().LimitOrderBook.CancelOrder(orderId);
             manualResetEvent.WaitOne(5000);
             Assert.AreEqual(OrderState.Cancelled, sellOrder2.OrderState);
-            Assert.AreEqual(2, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(1, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
-            Assert.AreEqual(new Price(945), exchange.DepthOrderBook.Depth.BidLevels[0].Price);
-            Assert.AreEqual(new Volume(100), exchange.DepthOrderBook.Depth.BidLevels[0].AggregatedVolume);
-            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.BidLevels[0].OrderCount);
+            Assert.AreEqual(new Price(945), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[0].Price);
+            Assert.AreEqual(new Volume(100), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[0].AggregatedVolume);
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[0].OrderCount);
 
-            Assert.AreEqual(new Price(941), exchange.DepthOrderBook.Depth.BidLevels[1].Price);
-            Assert.AreEqual(new Volume(100), exchange.DepthOrderBook.Depth.BidLevels[1].AggregatedVolume);
-            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.BidLevels[1].OrderCount);
+            Assert.AreEqual(new Price(941), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[1].Price);
+            Assert.AreEqual(new Volume(100), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[1].AggregatedVolume);
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[1].OrderCount);
 
-            Assert.AreEqual(new Price(949), exchange.DepthOrderBook.Depth.AskLevels[0].Price);
-            Assert.AreEqual(new Volume(100), exchange.DepthOrderBook.Depth.AskLevels[0].AggregatedVolume);
-            Assert.AreEqual(1, exchange.DepthOrderBook.Depth.AskLevels[0].OrderCount);
+            Assert.AreEqual(new Price(949), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[0].Price);
+            Assert.AreEqual(new Volume(100), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[0].AggregatedVolume);
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[0].OrderCount);
 
-            Assert.AreEqual(null, exchange.DepthOrderBook.Depth.AskLevels[1].Price);
-            Assert.AreEqual(null, exchange.DepthOrderBook.Depth.AskLevels[1].AggregatedVolume);
-            Assert.AreEqual(0, exchange.DepthOrderBook.Depth.AskLevels[1].OrderCount);
+            Assert.AreEqual(null, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[1].Price);
+            Assert.AreEqual(null, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[1].AggregatedVolume);
+            Assert.AreEqual(0, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[1].OrderCount);
         }
 
         #endregion Order Cancel Tests
@@ -1203,33 +1203,33 @@ namespace CoinExchange.Trades.Domain.Model.Tests
             Order sellOrder2 = OrderFactory.CreateOrder("1222", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 100, 948, new StubbedOrderIdGenerator());
 
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder1, true));
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder2, true));
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, sellOrder2, true));
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, sellOrder1, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, buyOrder1, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, buyOrder2, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, sellOrder2, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, sellOrder1, true));
 
             // ToDo: Cannot hook inline event handlers anymore because of Disruptor's serialization. Need to check the 
             // DepthMemoryImage's depth representation to see if valid depth is sent
             /*Depth depth = null;
-            exchange.DepthOrderBook.DepthChanged += delegate(Depth receivedDepth)
+            exchange.ExchangeEssentials.First().DepthOrderBook.DepthChanged += delegate(Depth receivedDepth)
             {
                 depth = receivedDepth;
             };*/
             ManualResetEvent manualResetEvent = new ManualResetEvent(false);
             /*Order returnedOrder = null;
-            exchange.OrderBook.OrderCancelled += delegate(Order order)
+            exchange.ExchangeEssentials.First().LimitOrderBook.OrderCancelled += delegate(Order order)
             {
                 returnedOrder = order;
                 manualResetEvent.Set();
             };
 */
-            exchange.OrderBook.CancelOrder(orderId);
+            exchange.ExchangeEssentials.First().LimitOrderBook.CancelOrder(orderId);
             manualResetEvent.WaitOne(2000);
 
             //Assert.AreEqual(buyOrder2, returnedOrder);
             Assert.AreEqual(OrderState.Cancelled, buyOrder2.OrderState);
-            Assert.AreEqual(1, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(2, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             /*Assert.AreEqual(new Price(941), depth.BidLevels[0].Price);
             Assert.AreEqual(new Volume(100), depth.BidLevels[0].AggregatedVolume);
@@ -1264,27 +1264,27 @@ namespace CoinExchange.Trades.Domain.Model.Tests
             Order sellOrder2 = OrderFactory.CreateOrder("1222", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 100, 948, new StubbedOrderIdGenerator());
 
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder1, true));
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, buyOrder2, true));
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, sellOrder2, true));
-            Assert.IsFalse(AddAndVerify(exchange.OrderBook, sellOrder1, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, buyOrder1, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, buyOrder2, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, sellOrder2, true));
+            Assert.IsFalse(AddAndVerify(exchange.ExchangeEssentials.First().LimitOrderBook, sellOrder1, true));
 
             // ToDo: Cannot hook inline event handlers. Need to test the BBOMemoryImage if the BBO representation is as
             // expected.
             /*DepthLevel bestbid = null;
             DepthLevel bestAsk = null;
-            exchange.DepthOrderBook.BboChanged += delegate(DepthLevel bestBid1, DepthLevel bestAsk1)
+            exchange.ExchangeEssentials.First().DepthOrderBook.BboChanged += delegate(DepthLevel bestBid1, DepthLevel bestAsk1)
             {
                 bestbid = bestBid1;
                 bestAsk = bestAsk1;
             };*/
             ManualResetEvent manualResetEvent = new ManualResetEvent(false);            
             
-            exchange.OrderBook.CancelOrder(orderId);
+            exchange.ExchangeEssentials.First().LimitOrderBook.CancelOrder(orderId);
             manualResetEvent.WaitOne(2000);
             Assert.AreEqual(OrderState.Cancelled, buyOrder2.OrderState);
-            Assert.AreEqual(1, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(2, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             /*Assert.AreEqual(new Price(941), bestbid.Price);
             Assert.AreEqual(new Volume(100), bestbid.AggregatedVolume);

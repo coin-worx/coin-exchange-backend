@@ -34,7 +34,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests.Performance
                 orders[i] = new Order(orderId, "BTCUSD", price, isBuy ? OrderSide.Buy :
                 OrderSide.Sell, OrderType.Limit,  volume, new TraderId(random.Next(1,100)));
             }
-            AddOrdersAndCancel(_exchange.OrderBook, orders, orderIds);
+            AddOrdersAndCancel(_exchange.ExchangeEssentials.First().LimitOrderBook, orders, orderIds);
         }
 
         private int AddOrders(LimitOrderBook orderBook, Order[] orders)
@@ -56,7 +56,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests.Performance
 
             var end = DateTime.Now;
             Console.WriteLine("Count: {0} Time elapsed: {1} seconds", count, (end - start).TotalSeconds);
-            Console.WriteLine("Bids: " + orderBook.Bids.Count() + ", Ask: " + orderBook.Asks.Count() + ", Trades: " + _exchange.TradeListener.Trades.Count());
+            Console.WriteLine("Bids: " + orderBook.Bids.Count() + ", Ask: " + orderBook.Asks.Count() + ", Trades: " + _exchange.ExchangeEssentials.First().TradeListener.Trades.Count());
 
             return count;
         }
@@ -91,7 +91,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests.Performance
 
             var endAdd = DateTime.Now;
             Console.WriteLine(count + " orders added. : {0} | Time elapsed: {1} seconds", count, (endAdd - startAdd).TotalSeconds);
-            Console.WriteLine("Bids: " + orderBook.Bids.Count() + ", Ask: " + orderBook.Asks.Count() + ", Trades: " + _exchange.TradeListener.Trades.Count());
+            Console.WriteLine("Bids: " + orderBook.Bids.Count() + ", Ask: " + orderBook.Asks.Count() + ", Trades: " + _exchange.ExchangeEssentials.First().TradeListener.Trades.Count());
 
             var startCancel = DateTime.Now;
             count = 0;

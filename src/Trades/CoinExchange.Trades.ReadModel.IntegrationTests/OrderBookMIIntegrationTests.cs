@@ -104,8 +104,8 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             exchange.PlaceNewOrder(buyOrder2);
             exchange.PlaceNewOrder(sellOrder1);
 
-            Assert.AreEqual(1, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(1, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             Assert.AreEqual(1, orderBookMemoryImage.BidBooks.Count());
             Assert.AreEqual(1, orderBookMemoryImage.AskBooks.Count());
@@ -184,8 +184,8 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             exchange.PlaceNewOrder(buyOrder2);
             exchange.PlaceNewOrder(sellOrder1);
 
-            Assert.AreEqual(2, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(1, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             Assert.AreEqual(1, orderBookMemoryImage.BidBooks.Count());
             Assert.AreEqual(1, orderBookMemoryImage.AskBooks.Count());
@@ -218,8 +218,8 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             manualResetEvent.Reset();
             manualResetEvent.WaitOne(4000);
 
-            Assert.AreEqual(1, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(1, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             Assert.AreEqual(1, orderBookMemoryImage.BidBooks.Count());
             Assert.AreEqual(1, orderBookMemoryImage.AskBooks.Count());
@@ -272,8 +272,8 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             exchange.PlaceNewOrder(sellOrder2);
             exchange.PlaceNewOrder(sellOrder1);
 
-            Assert.AreEqual(1, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(2, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             Assert.AreEqual(1, orderBookMemoryImage.BidBooks.Count());
             Assert.AreEqual(1, orderBookMemoryImage.AskBooks.Count());
@@ -306,8 +306,8 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             manualResetEvent.Reset();
             manualResetEvent.WaitOne(4000);
 
-            Assert.AreEqual(1, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(1, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             Assert.AreEqual(1, orderBookMemoryImage.BidBooks.Count());
             Assert.AreEqual(1, orderBookMemoryImage.AskBooks.Count());
@@ -372,8 +372,8 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             exchange.PlaceNewOrder(sellOrder2);
             exchange.PlaceNewOrder(sellOrder1);
 
-            Assert.AreEqual(3, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(2, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(3, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             Assert.AreEqual(1, orderBookMemoryImage.BidBooks.Count());
             Assert.AreEqual(1, orderBookMemoryImage.AskBooks.Count());
@@ -415,8 +415,8 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             manualResetEvent.Reset();
             manualResetEvent.WaitOne(4000);
 
-            Assert.AreEqual(2, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(2, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             Assert.AreEqual(1, orderBookMemoryImage.BidBooks.Count());
             Assert.AreEqual(1, orderBookMemoryImage.AskBooks.Count());
@@ -451,8 +451,8 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             manualResetEvent.Reset();
             manualResetEvent.WaitOne(4000);
 
-            Assert.AreEqual(1, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(2, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             Assert.AreEqual(1, orderBookMemoryImage.BidBooks.Count());
             Assert.AreEqual(1, orderBookMemoryImage.AskBooks.Count());
@@ -520,8 +520,8 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             exchange.PlaceNewOrder(sellOrder1);
             exchange.PlaceNewOrder(sellOrder3);
 
-            Assert.AreEqual(3, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(3, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(3, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(3, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             Assert.AreEqual(1, orderBookMemoryImage.BidBooks.Count());
             Assert.AreEqual(1, orderBookMemoryImage.AskBooks.Count());
@@ -564,8 +564,8 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
 
             exchange.CancelOrder(sellOrder3Id);
 
-            Assert.AreEqual(3, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(2, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(3, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             manualResetEvent.Reset();
             manualResetEvent.WaitOne(4000);
@@ -599,8 +599,8 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
 
             exchange.CancelOrder(sellOrder1Id);
 
-            Assert.AreEqual(3, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(1, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(3, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             manualResetEvent.Reset();
             manualResetEvent.WaitOne(4000);

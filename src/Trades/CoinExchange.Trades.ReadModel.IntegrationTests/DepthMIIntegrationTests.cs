@@ -73,8 +73,8 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             ManualResetEvent manualResetEvent = new ManualResetEvent(false);
             manualResetEvent.WaitOne(4000);
 
-            Assert.AreEqual(5, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(5, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(5, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(5, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             // Number of currencies in the depth memory image that contain depth
             Assert.AreEqual(1, depthMemoryImage.BidDepths.Count());
@@ -160,8 +160,8 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             ManualResetEvent manualResetEvent = new ManualResetEvent(false);
             manualResetEvent.WaitOne(4000);
 
-            Assert.AreEqual(5, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(4, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(5, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(4, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             // Number of currencies in the depth memory image that contain depth
             Assert.AreEqual(1, depthMemoryImage.BidDepths.Count());
@@ -202,8 +202,8 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             manualResetEvent.Reset();
             manualResetEvent.WaitOne(2000);
 
-            Assert.AreEqual(3, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(4, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(3, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(4, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             // Number of currencies in the depth memory image that contain depth
             Assert.AreEqual(1, depthMemoryImage.BidDepths.Count());
@@ -284,8 +284,8 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             ManualResetEvent manualResetEvent = new ManualResetEvent(false);
             manualResetEvent.WaitOne(4000);
 
-            Assert.AreEqual(4, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(5, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(4, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(5, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             // Number of currencies in the depth memory image that contain depth
             Assert.AreEqual(1, depthMemoryImage.BidDepths.Count());
@@ -326,8 +326,8 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             manualResetEvent.Reset();
             manualResetEvent.WaitOne(2000);
 
-            Assert.AreEqual(4, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(2, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(4, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             // Number of currencies in the depth memory image that contain depth
             Assert.AreEqual(1, depthMemoryImage.BidDepths.Count());
@@ -411,8 +411,8 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             ManualResetEvent manualResetEvent = new ManualResetEvent(false);
             manualResetEvent.WaitOne(4000);
 
-            Assert.AreEqual(5, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(4, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(5, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(4, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             // Number of currencies in the depth memory image that contain depth
             Assert.AreEqual(1, depthMemoryImage.BidDepths.Count());
@@ -452,8 +452,8 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             manualResetEvent.Reset();
             manualResetEvent.WaitOne(2000);
 
-            Assert.AreEqual(4, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(4, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(4, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(4, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             // Number of currencies in the depth memory image that contain depth
             Assert.AreEqual(1, depthMemoryImage.BidDepths.Count());
@@ -493,8 +493,8 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             manualResetEvent.Reset();
             manualResetEvent.WaitOne(2000);
 
-            Assert.AreEqual(3, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(4, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(3, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(4, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             // Number of currencies in the depth memory image that contain depth
             Assert.AreEqual(1, depthMemoryImage.BidDepths.Count());
@@ -578,8 +578,8 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             ManualResetEvent manualResetEvent = new ManualResetEvent(false);
             manualResetEvent.WaitOne(4000);
 
-            Assert.AreEqual(4, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(5, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(4, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(5, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             // Number of currencies in the depth memory image that contain depth
             Assert.AreEqual(1, depthMemoryImage.BidDepths.Count());
@@ -620,8 +620,8 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             manualResetEvent.Reset();
             manualResetEvent.WaitOne(2000);
 
-            Assert.AreEqual(4, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(2, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(4, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             // Number of currencies in the depth memory image that contain depth
             Assert.AreEqual(1, depthMemoryImage.BidDepths.Count());
@@ -657,8 +657,8 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             manualResetEvent.Reset();
             manualResetEvent.WaitOne(2000);
 
-            Assert.AreEqual(4, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(1, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(4, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             // Number of currencies in the depth memory image that contain depth
             Assert.AreEqual(1, depthMemoryImage.BidDepths.Count());
@@ -747,8 +747,8 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             ManualResetEvent manualResetEvent = new ManualResetEvent(false);
             manualResetEvent.WaitOne(4000);
 
-            Assert.AreEqual(5, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(5, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(5, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(5, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             // Number of currencies in the depth memory image that contain depth
             Assert.AreEqual(1, depthMemoryImage.BidDepths.Count());
@@ -788,8 +788,8 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             manualResetEvent.Reset();
             manualResetEvent.WaitOne(4000);
 
-            Assert.AreEqual(4, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(4, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(4, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(4, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             // Number of currencies in the depth memory image that contain depth
             Assert.AreEqual(1, depthMemoryImage.BidDepths.Count());
@@ -830,8 +830,8 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             manualResetEvent.Reset();
             manualResetEvent.WaitOne(4000);
 
-            Assert.AreEqual(3, exchange.OrderBook.Bids.Count());
-            Assert.AreEqual(2, exchange.OrderBook.Asks.Count());
+            Assert.AreEqual(3, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             // Number of currencies in the depth memory image that contain depth
             Assert.AreEqual(1, depthMemoryImage.BidDepths.Count());

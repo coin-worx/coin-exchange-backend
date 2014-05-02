@@ -19,9 +19,8 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
 
         private string BitCoinUsd = "BTCUSD";
         List<string> _currencyPairs = new List<string>();
-        private LimitOrderBook _orderBook = null;
-        private DepthOrderBook _depthOrderBook = null;
-        private ITradeListener _tradeListener = null;
+        private ExchangeEssentialsList _exchangeEssentialsList = new ExchangeEssentialsList();
+        private bool _isReplayMode = false;
 
         /// <summary>
         /// Default Constructor
@@ -31,47 +30,50 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             _currencyPairs.Add(BitCoinUsd);
             foreach (var currencyPair in _currencyPairs)
             {
-                _orderBook = new LimitOrderBook(currencyPair);
-                _depthOrderBook = new DepthOrderBook(currencyPair, 5);
+                LimitOrderBook orderBook = new LimitOrderBook(currencyPair);
+                DepthOrderBook depthOrderBook = new DepthOrderBook(currencyPair, 5);
 
-                _tradeListener = new TradeListener();
+                TradeListener tradeListener = new TradeListener();
                 IOrderListener orderListener = new OrderListener();
                 IOrderBookListener orderBookListener = new OrderBookListener();
                 IBBOListener bboListener = new BBOListener();
                 IDepthListener depthListener = new DepthListener();
 
-                _orderBook.OrderAccepted -= OnAccept;
-                _orderBook.OrderAccepted -= _depthOrderBook.OnOrderAccepted;
+                orderBook.OrderAccepted -= OnAccept;
+                orderBook.OrderAccepted -= depthOrderBook.OnOrderAccepted;
 
-                _orderBook.OrderAccepted += OnAccept;
-                _orderBook.OrderAccepted += _depthOrderBook.OnOrderAccepted;
+                orderBook.OrderAccepted += OnAccept;
+                orderBook.OrderAccepted += depthOrderBook.OnOrderAccepted;
 
-                _orderBook.OrderCancelled -= _depthOrderBook.OnOrderCancelled;
-                _orderBook.OrderCancelled += _depthOrderBook.OnOrderCancelled;
+                orderBook.OrderCancelled -= depthOrderBook.OnOrderCancelled;
+                orderBook.OrderCancelled += depthOrderBook.OnOrderCancelled;
 
-                _orderBook.OrderBookChanged -= _depthOrderBook.OnOrderBookChanged;
-                _orderBook.OrderBookChanged -= orderBookListener.OnOrderBookChanged;
+                orderBook.OrderBookChanged -= depthOrderBook.OnOrderBookChanged;
+                orderBook.OrderBookChanged -= orderBookListener.OnOrderBookChanged;
 
-                _orderBook.OrderBookChanged += _depthOrderBook.OnOrderBookChanged;
-                _orderBook.OrderBookChanged += orderBookListener.OnOrderBookChanged;
+                orderBook.OrderBookChanged += depthOrderBook.OnOrderBookChanged;
+                orderBook.OrderBookChanged += orderBookListener.OnOrderBookChanged;
 
-                _orderBook.OrderChanged -= _depthOrderBook.OnOrderChanged;
-                _orderBook.OrderChanged -= orderListener.OnOrderChanged;
+                orderBook.OrderChanged -= depthOrderBook.OnOrderChanged;
+                orderBook.OrderChanged -= orderListener.OnOrderChanged;
 
-                _orderBook.OrderChanged += _depthOrderBook.OnOrderChanged;
-                _orderBook.OrderChanged += orderListener.OnOrderChanged;
+                orderBook.OrderChanged += depthOrderBook.OnOrderChanged;
+                orderBook.OrderChanged += orderListener.OnOrderChanged;
 
-                _orderBook.OrderFilled -= _depthOrderBook.OnOrderFilled;
-                _orderBook.OrderFilled += _depthOrderBook.OnOrderFilled;
+                orderBook.OrderFilled -= depthOrderBook.OnOrderFilled;
+                orderBook.OrderFilled += depthOrderBook.OnOrderFilled;
 
-                _orderBook.TradeExecuted -= _tradeListener.OnTrade;
-                _orderBook.TradeExecuted += _tradeListener.OnTrade;
+                orderBook.TradeExecuted -= tradeListener.OnTrade;
+                orderBook.TradeExecuted += tradeListener.OnTrade;
 
-                _depthOrderBook.BboChanged -= bboListener.OnBBOChange;
-                _depthOrderBook.DepthChanged -= depthListener.OnDepthChanged;
+                depthOrderBook.BboChanged -= bboListener.OnBBOChange;
+                depthOrderBook.DepthChanged -= depthListener.OnDepthChanged;
 
-                _depthOrderBook.BboChanged += bboListener.OnBBOChange;
-                _depthOrderBook.DepthChanged += depthListener.OnDepthChanged;
+                depthOrderBook.BboChanged += bboListener.OnBBOChange;
+                depthOrderBook.DepthChanged += depthListener.OnDepthChanged;
+
+                _exchangeEssentialsList.AddEssentials(new ExchangeEssentials(orderBook, depthOrderBook, tradeListener,
+                    orderListener, depthListener, bboListener));
             }
         }
 
@@ -84,7 +86,12 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// <returns></returns>
         public bool PlaceNewOrder(Order order)
         {
-            return _orderBook.PlaceOrder(order);
+            switch (order.CurrencyPair)
+            {
+                case "BTCUSD":
+                    return _exchangeEssentialsList.First().LimitOrderBook.PlaceOrder(order);
+            }
+            return false;
         }
 
         /// <summary>
@@ -94,7 +101,9 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// <returns></returns>
         public bool CancelOrder(OrderId orderId)
         {
-            return _orderBook.CancelOrder(orderId);
+            // ToDo: Ask Bilal to provide the currency pair as well here in order for the exchange to figure out which order
+            // book to call
+            return _exchangeEssentialsList.First().LimitOrderBook.CancelOrder(orderId);
         }
 
         /// <summary>
@@ -106,16 +115,42 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             // Note: the notification to the client can be sent back from here
         }
 
+        /// <summary>
+        /// Turns on the replay mode and unsubscribes the OrderListener from listeneing to event while the replay mode is running
+        /// </summary>
+        public void TurnReplayModeOn()
+        {
+            _isReplayMode = true;
+            // Unsubscribe each order listener from each LimitOrderBook while replaying is in order
+            foreach (ExchangeEssentials exchangeEssentials in ExchangeEssentials)
+            {
+                exchangeEssentials.LimitOrderBook.OrderChanged -= exchangeEssentials.DepthOrderBook.OnOrderChanged;
+                exchangeEssentials.LimitOrderBook.OrderChanged -= exchangeEssentials.OrderListener.OnOrderChanged;
+            }
+        }
+
+        /// <summary>
+        /// Turns replay mode off 
+        /// </summary>
+        public void TurnReplayModeOff()
+        {
+            _isReplayMode = false;
+            foreach (ExchangeEssentials exchangeEssentials in ExchangeEssentials)
+            {
+                exchangeEssentials.LimitOrderBook.OrderChanged += exchangeEssentials.DepthOrderBook.OnOrderChanged;
+                exchangeEssentials.LimitOrderBook.OrderChanged += exchangeEssentials.OrderListener.OnOrderChanged;
+            }
+        }
+
         #endregion Methods
 
-        #region Properties
-
-        public LimitOrderBook OrderBook { get { return _orderBook; } private set { _orderBook = value; } }
-
-        public DepthOrderBook DepthOrderBook { get { return _depthOrderBook; } private set { _depthOrderBook = value; } }
-
-        public ITradeListener TradeListener { get { return _tradeListener; } private set { _tradeListener = value; } }
-
-        #endregion Properties
+        /// <summary>
+        /// ExchangeEssentials
+        /// </summary>
+        public ExchangeEssentialsList ExchangeEssentials
+        {
+            get { return _exchangeEssentialsList; }
+            private set { _exchangeEssentialsList = value; }
+        }
     }
 }
