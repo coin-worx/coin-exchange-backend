@@ -24,7 +24,7 @@ namespace CoinExchange.Trades.ReadModel.EventHandlers
 
         void OnOrderStatusChanged(Order order)
         {
-            _persistanceRepository.SaveOrUpdate(OrderReadModel.CreateOrderReadModel(order));
+            _persistanceRepository.SaveOrUpdate(ReadModelAdapter.GetOrderReadModel(order));
         }
     }
 }

@@ -9,23 +9,36 @@ namespace CoinExchange.Trades.ReadModel.DTO
 {
     public class TradeReadModel
     {
-        public string TradeId { get; set; }
-        public decimal Price { get; set; }
-        public decimal Volume { get; set; }
-        public DateTime ExecutionDateTime { get; set; }
-        public string CurrencyPair { get; set; }
-        public string OrderId { get; set; }
-        public string TraderId { get; set; }
+        #region Properties
 
-        public static TradeReadModel CreateTradeReadModel(Trade trade)
+        public string TradeId { get; private set; }
+        public decimal Price { get; private set; }
+        public decimal Volume { get; private set; }
+        public DateTime ExecutionDateTime { get; private set; }
+        public string CurrencyPair { get; private set; }
+        public string BuyOrderId { get; private set; }
+        public string SellOrderId { get; private set; }
+        public string BuyTraderId { get; private set; }
+        public string SellTraderId { get; private set; }
+
+        #endregion
+
+        public TradeReadModel()
         {
-            TradeReadModel readModel=new TradeReadModel();
-            readModel.CurrencyPair = trade.CurrencyPair;
-            readModel.ExecutionDateTime = trade.ExecutionTime;
-            readModel.OrderId = trade.BuyOrder.OrderId.Id.ToString();
-            readModel.Price = trade.ExecutionPrice.Value;
-            //Todo: have to put traderid
-            return readModel;
+            
+        }
+
+        public TradeReadModel(string sellTraderId, string buyTraderId, string sellOrderId, string buyOrderId, string currencyPair, DateTime executionDateTime, decimal volume, decimal price, string tradeId)
+        {
+            SellTraderId = sellTraderId;
+            BuyTraderId = buyTraderId;
+            SellOrderId = sellOrderId;
+            BuyOrderId = buyOrderId;
+            CurrencyPair = currencyPair;
+            ExecutionDateTime = executionDateTime;
+            Volume = volume;
+            Price = price;
+            TradeId = tradeId;
         }
     }
 }

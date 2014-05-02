@@ -56,6 +56,7 @@
     <Compile Include="DTO\AssetPairReadModel.cs" />
     <Compile Include="DTO\OhlcReadModel.cs" />
     <Compile Include="DTO\OrderReadModel.cs" />
+    <Compile Include="DTO\ReadModelAdapter.cs" />
     <Compile Include="DTO\TickerInfoReadModel.cs" />
     <Compile Include="DTO\TradeReadModel.cs" />
     <Compile Include="EventHandlers\OrderEventListener.cs" />

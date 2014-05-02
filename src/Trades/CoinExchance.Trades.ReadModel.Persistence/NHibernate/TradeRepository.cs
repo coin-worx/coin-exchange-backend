@@ -26,7 +26,7 @@ namespace CoinExchange.Trades.ReadModel.Persistence.NHibernate
         public IList<TradeReadModel> GetTraderTradeHistory(string traderId)
         {
             return CurrentSession.Query<TradeReadModel>()
-                .Where(trade => trade.TraderId.Equals(traderId))
+                .Where(trade => trade.BuyTraderId.Equals(traderId)||trade.SellTraderId.Equals(traderId))
                 .AsQueryable()
                 .ToList();
         }

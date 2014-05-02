@@ -28,7 +28,7 @@ namespace CoinExchange.Trades.ReadModel.EventHandlers
         /// <param name="trade"></param>
         void OnTradeArrived(Trade trade)
         {
-            _persistanceRepository.SaveOrUpdate(TradeReadModel.CreateTradeReadModel(trade));
+            _persistanceRepository.SaveOrUpdate(ReadModelAdapter.GetTradeReadModel(trade));
         }
     }
 }
