@@ -56,7 +56,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RavenDb\InputRavenEventStore.cs" />
     <Compile Include="RavenDb\RavenNEventStore.cs" />
     <Compile Include="RavenDb\ReceiveCommit.cs" />
   </ItemGroup>
