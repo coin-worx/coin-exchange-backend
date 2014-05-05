@@ -9,7 +9,7 @@ using CoinExchange.Trades.Domain.Model.Services;
 namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
 {
     /// <summary>
-    /// Listens to the change in the state of any order
+    /// Handles the change in the state of any order and publishes to the output disruptor
     /// </summary>
     [Serializable]
     public class OrderListener : IOrderListener

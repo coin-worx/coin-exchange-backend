@@ -87,7 +87,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="JournalerTests.cs" />
-    <Compile Include="OrderBookRestorationTests.cs" />
+    <Compile Include="LOBRestoreUnsubscriptionTests.cs" />
     <Compile Include="OutputDisruptorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

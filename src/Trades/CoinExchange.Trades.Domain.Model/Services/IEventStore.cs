@@ -8,11 +8,16 @@ using CoinExchange.Trades.Domain.Model.TradeAggregate;
 
 namespace CoinExchange.Trades.Domain.Model.Services
 {
+    /// <summary>
+    /// IEventStore
+    /// </summary>
     public interface IEventStore
     {
         bool StoreEvent(object blob);
         object GetEvent(string id);
-        List<Order> GetOrders();
+        List<Order> GetAllOrders();
+        void RemoveAllEvents();
+        List<Order> GetOrdersByCurrencyPair(string currencyPair);
         IList<Trade> GetTradeEventsFromOrderId(string id);
     }
 }

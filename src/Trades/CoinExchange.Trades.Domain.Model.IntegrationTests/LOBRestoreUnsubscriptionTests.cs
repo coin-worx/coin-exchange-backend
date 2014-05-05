@@ -15,8 +15,15 @@ using NUnit.Framework;
 
 namespace CoinExchange.Trades.Domain.Model.IntegrationTests
 {
+    // IMP NOTE: NEED TO RUN THIS TEST AS SEPARATE STANDALONE, AS EVENTSTORE FETCHES EVENTS FOR THE ENTIRE SESSION, AND
+    // OLDER EVENTS ARE FETCHED TOO AND SO THE TEST WILL FAIL IF RUN IN CONJUNCTION WITH OTHER TESTS
+
+    /// <summary>
+    /// Tests the prevention of raise of events after replaying them for order book and verifies the rebuilt order book's 
+    /// state after the replay
+    /// </summary>
     [TestFixture]
-    class OrderBookRestorationTests
+    class LOBRestoreUnsubscriptionTests
     {
         // Get the Current Logger
         private static readonly log4net.ILog Log = log4net.LogManager.GetLogger
@@ -30,6 +37,8 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
 
         private const string Integration = "Integration";
 
+        // IMP NOTE: NEED TO RUN THIS TEST AS SEPARATE STANDALONE, AS EVENTSTORE FETCHES EVENTS FOR THE ENTIRE SESSION, AND
+        // OLDER EVENTS ARE FETCHED TOO AND SO THE TEST WILL FAIL IF RUN IN CONJUNCTION WITH OTHER TESTS
         [Test]
         [Category(Integration)]
         public void AddNewOrdersAndRestore_AddOrdersToLimitOrderBookAndThenRestoresThemAfterOrderBookCrash_VerifiesFromTheBidAndAskBooks()
@@ -61,7 +70,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
 
             ManualResetEvent manualResetEvent = new ManualResetEvent(false);
             manualResetEvent.WaitOne(3000);
-            var preCrashOrders = eventStore.GetOrders();
+            var preCrashOrders = journaler.GetAllOrders();
 
             Assert.AreEqual(4, preCrashOrders.Count);
             Assert.AreEqual(OrderState.Accepted, preCrashOrders[0].OrderState);
@@ -75,13 +84,13 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             // Get all orders from the EventStore and send to the LimitOrderBook to restore its state
-            var orders = eventStore.GetOrders();
+            var orders = journaler.GetAllOrders();
             // Tell the exchange that replay mode is on
             exchange.TurnReplayModeOn();
             foreach (Order order in orders)
             {
                 // Send the orders to the first OrderBook in the Exchange
-                exchange.ExchangeEssentials.First().LimitOrderBook.AddOrder(order);
+                exchange.PlaceNewOrder(order);
             }
 
             Assert.AreEqual(4, orders.Count);
@@ -98,6 +107,8 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             OutputDisruptor.ShutDown();
         }
 
+        // IMP NOTE: NEED TO RUN THIS TEST AS SEPARATE STANDALONE, AS EVENTSTORE FETCHES EVENTS FOR THE ENTIRE SESSION, AND
+        // OLDER EVENTS ARE FETCHED TOO AND SO THE TEST WILL FAIL IF RUN IN CONJUNCTION WITH OTHER TESTS
         [Test]
         [Category(Integration)]
         public void MatchBuyOrdersAndRestore_MatchesBuyOrdersAndThenRestoresOpenOrdersAfterOrderBookCrash_VerifiesFromTheBidAndAskBooks()
@@ -139,7 +150,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             ManualResetEvent manualReset = new ManualResetEvent(false);
             manualReset.WaitOne(4000);
 
-            var preCrashOrders = eventStore.GetOrders();
+            var preCrashOrders = journaler.GetAllOrders();
             int completeOrdersCount = 0;
             int acceptedOrdersCount = 0;
             foreach (Order order in preCrashOrders)
@@ -172,7 +183,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             // Get all orders from the EventStore and send to the LimitOrderBook to restore its state
-            var orders = eventStore.GetOrders();
+            var orders = journaler.GetAllOrders();
             // Tell the exchange that replay mode is on
             exchange.TurnReplayModeOn();
 
@@ -211,6 +222,8 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             OutputDisruptor.ShutDown();
         }
 
+        // IMP NOTE: NEED TO RUN THIS TEST AS SEPARATE STANDALONE, AS EVENTSTORE FETCHES EVENTS FOR THE ENTIRE SESSION, AND
+        // OLDER EVENTS ARE FETCHED TOO AND SO THE TEST WILL FAIL IF RUN IN CONJUNCTION WITH OTHER TESTS
         [Test]
         [Category(Integration)]
         public void MatchSellOrdersAndRestore_MatchesSellOrdersAndThenRestoresOpenOrdersAfterOrderBookCrash_VerifiesFromTheBidAndAskBooks()
@@ -258,7 +271,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(949, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.First().Price.Value);
             Assert.AreEqual(100, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.First().Volume.Value);
 
-            var preCrashOrders = eventStore.GetOrders();
+            var preCrashOrders = journaler.GetAllOrders();
             int completeOrdersCount = 0;
             int acceptedOrdersCount = 0;
             foreach (Order order in preCrashOrders)
@@ -280,8 +293,10 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
+            //exchange.StartReplay(journaler);
             // Get all orders from the EventStore and send to the LimitOrderBook to restore its state
-            var orders = eventStore.GetOrders();
+            var orders = journaler.GetAllOrders();
+            
             // Tell the exchange that replay mode is on
             exchange.TurnReplayModeOn();
 
@@ -307,6 +322,9 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(6, completeOrdersCount);
 
             exchange.TurnReplayModeOff();
+
+            var orders2 = journaler.GetAllOrders();
+
             Assert.AreEqual(1, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(1, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
@@ -319,6 +337,8 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             OutputDisruptor.ShutDown();
         }
 
+        // IMP NOTE: NEED TO RUN THIS TEST AS SEPARATE STANDALONE, AS EVENTSTORE FETCHES EVENTS FOR THE ENTIRE SESSION, AND
+        // OLDER EVENTS ARE FETCHED TOO AND SO THE TEST WILL FAIL IF RUN IN CONJUNCTION WITH OTHER TESTS
         [Test]
         [Category(Integration)]
         public void OneMatchMultipleOpen_MatchesOnePairOfOrdersLeavesTheRestAndthenRestoresThemAfterExchangeCrash_VerifiesThroughBidsAndAsksBooks()
@@ -357,7 +377,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             exchange.PlaceNewOrder(sellOrder3);
             exchange.PlaceNewOrder(sellOrder4);
 
-            var preCrashOrders = eventStore.GetOrders();
+            var preCrashOrders = journaler.GetAllOrders();
             int completeOrdersCount = 0;
             int acceptedOrdersCount = 0;
             foreach (Order order in preCrashOrders)
@@ -398,7 +418,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             // Get all orders from the EventStore and send to the LimitOrderBook to restore its state
-            var orders = eventStore.GetOrders();
+            var orders = journaler.GetAllOrders();
             // Tell the exchange that replay mode is on
             exchange.TurnReplayModeOn();
 
@@ -443,6 +463,8 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             OutputDisruptor.ShutDown();
         }
 
+        // IMP NOTE: NEED TO RUN THIS TEST AS SEPARATE STANDALONE, AS EVENTSTORE FETCHES EVENTS FOR THE ENTIRE SESSION, AND
+        // OLDER EVENTS ARE FETCHED TOO AND SO THE TEST WILL FAIL IF RUN IN CONJUNCTION WITH OTHER TESTS
         [Test]
         [Category(Integration)]
         public void OnePartialBuyMatchMultipleOpen_MatchesBuyOrderPartiallyLeavesTheRestAndthenRestoresThemAfterExchangeCrash_VerifiesThroughBidsAndAsksBooks()
@@ -481,7 +503,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             exchange.PlaceNewOrder(sellOrder3);
             exchange.PlaceNewOrder(sellOrder4);
 
-            var preCrashOrders = eventStore.GetOrders();
+            var preCrashOrders = journaler.GetAllOrders();
             int partialFillOrdersCount = 0;
             int completeOrdersCount = 0;
             int acceptedOrdersCount = 0;
@@ -546,7 +568,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             // Get all orders from the EventStore and send to the LimitOrderBook to restore its state
-            var orders = eventStore.GetOrders();
+            var orders = journaler.GetAllOrders();
             // Tell the exchange that replay mode is on
             exchange.TurnReplayModeOn();
 
@@ -615,6 +637,8 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             OutputDisruptor.ShutDown();
         }
 
+        // IMP NOTE: NEED TO RUN THIS TEST AS SEPARATE STANDALONE, AS EVENTSTORE FETCHES EVENTS FOR THE ENTIRE SESSION, AND
+        // OLDER EVENTS ARE FETCHED TOO AND SO THE TEST WILL FAIL IF RUN IN CONJUNCTION WITH OTHER TESTS
         [Test]
         [Category(Integration)]
         public void OnePartialSellMatchMultipleOpen_MatchesSellOrderPartiallyLeavesTheRestAndthenRestoresThemAfterExchangeCrash_VerifiesThroughBidsAndAsksBooks()
@@ -653,7 +677,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             exchange.PlaceNewOrder(sellOrder3);
             exchange.PlaceNewOrder(buyOrder4);
 
-            var preCrashOrders = eventStore.GetOrders();
+            var preCrashOrders = journaler.GetAllOrders();
             int partialFillOrdersCount = 0;
             int completeOrdersCount = 0;
             int acceptedOrdersCount = 0;
@@ -718,7 +742,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             // Get all orders from the EventStore and send to the LimitOrderBook to restore its state
-            var orders = eventStore.GetOrders();
+            var orders = journaler.GetAllOrders();
             // Tell the exchange that replay mode is on
             exchange.TurnReplayModeOn();
 
@@ -787,6 +811,8 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             OutputDisruptor.ShutDown();
         }
 
+        // IMP NOTE: NEED TO RUN THIS TEST AS SEPARATE STANDALONE, AS EVENTSTORE FETCHES EVENTS FOR THE ENTIRE SESSION, AND
+        // OLDER EVENTS ARE FETCHED TOO AND SO THE TEST WILL FAIL IF RUN IN CONJUNCTION WITH OTHER TESTS
         [Test]
         [Category(Integration)]
         public void CancelOrdersTest_ChecksIfOrdersAreRemovedFromTheOrderBookAfterRestore_VerifiesThroughBidAndAskBooks()
@@ -836,7 +862,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             ManualResetEvent manualReset = new ManualResetEvent(false);
             manualReset.WaitOne(5000);
 
-            var preCrashOrders = eventStore.GetOrders();
+            var preCrashOrders = journaler.GetAllOrders();
             int cancelledOrdersCount = 0;
             int acceptedOrdersCount = 0;
             foreach (Order order in preCrashOrders)
@@ -884,7 +910,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             // Get all orders from the EventStore and send to the LimitOrderBook to restore its state
-            var orders = eventStore.GetOrders();
+            var orders = journaler.GetOrdersForReplay(exchange.ExchangeEssentials.First().LimitOrderBook);
             // Tell the exchange that replay mode is on
             exchange.TurnReplayModeOn();
 
@@ -938,6 +964,74 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
 
             OutputDisruptor.ShutDown();
         }
-        // ToDo: Combine test of New, filled, partially filled and cancel test
+      /*  
+        [Test]
+        [Category(Integration)]
+        public void AllScenarioTest_TestsTheRestorationWhenInclusingScenariosOfNewOrderMatchCancelled_VerifiesUsingTheLimitOrderBooksLists()
+        {
+            // Initialize the output Disruptor and assign the journaler as the event handler
+            IEventStore eventStore = new RavenNEventStore();
+            Journaler journaler = new Journaler(eventStore);
+            OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
+            // Intialize the exchange so that the order changes can be fired to listernes which will then log them to event store
+            Exchange exchange = new Exchange();
+
+            Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 100, 941, new StubbedOrderIdGenerator());
+            Order buyOrder2 = OrderFactory.CreateOrder("1234", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 300, 943, new StubbedOrderIdGenerator());
+            Order buyOrder3 = OrderFactory.CreateOrder("12344", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 400, 944, new StubbedOrderIdGenerator());
+            Order buyOrder4 = OrderFactory.CreateOrder("12345", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 500, 945, new StubbedOrderIdGenerator());
+
+            Order sellOrder1 = OrderFactory.CreateOrder("1244", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 600, 956, new StubbedOrderIdGenerator());
+            Order sellOrder2 = OrderFactory.CreateOrder("1222", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 400, 944, new StubbedOrderIdGenerator());
+            Order sellOrder3 = OrderFactory.CreateOrder("12225", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 800, 958, new StubbedOrderIdGenerator());
+            Order sellOrder4 = OrderFactory.CreateOrder("12226", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 500, 945, new StubbedOrderIdGenerator());
+
+            exchange.PlaceNewOrder(buyOrder1);
+            exchange.PlaceNewOrder(buyOrder2);
+            exchange.PlaceNewOrder(buyOrder3);
+            exchange.PlaceNewOrder(buyOrder4);
+            exchange.PlaceNewOrder(sellOrder1);
+            exchange.PlaceNewOrder(sellOrder4);
+            exchange.PlaceNewOrder(sellOrder2);
+            exchange.PlaceNewOrder(sellOrder3);
+            
+            ManualResetEvent manualReset = new ManualResetEvent(false);
+            manualReset.WaitOne(3000);
+
+            var preCrashOrders = eventStore.GetOrders();
+            int partialFillOrdersCount = 0;
+            int completeOrdersCount = 0;
+            int acceptedOrdersCount = 0;
+            foreach (Order order in preCrashOrders)
+            {
+                if (order.OrderState == OrderState.Accepted)
+                {
+                    ++acceptedOrdersCount;
+                }
+                else if (order.OrderState == OrderState.Complete)
+                {
+                    ++completeOrdersCount;
+                }
+                else if (order.OrderState == OrderState.PartiallyFilled)
+                {
+                    ++partialFillOrdersCount;
+                }
+            }
+            Assert.AreEqual(8, acceptedOrdersCount);
+            Assert.AreEqual(3, completeOrdersCount);
+            Assert.AreEqual(1, partialFillOrdersCount);
+            Assert.AreEqual(10, preCrashOrders.Count);
+
+            Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(3, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
+        }*/
     }
 }

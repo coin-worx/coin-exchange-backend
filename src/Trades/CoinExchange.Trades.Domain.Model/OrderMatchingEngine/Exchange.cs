@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CoinExchange.Trades.Domain.Model.OrderAggregate;
+using CoinExchange.Trades.Domain.Model.Services;
 
 namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
 {
     /// <summary>
-    /// Initializes all Order Books
+    /// Initializes andcontains all Order Books and forwards requests for submitting and cancelling orders
     /// </summary>
     [Serializable]
     public class Exchange
@@ -20,7 +21,6 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         private string BitCoinUsd = "BTCUSD";
         List<string> _currencyPairs = new List<string>();
         private ExchangeEssentialsList _exchangeEssentialsList = new ExchangeEssentialsList();
-        private bool _isReplayMode = false;
 
         /// <summary>
         /// Default Constructor
@@ -116,11 +116,36 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         }
 
         /// <summary>
+        /// Start the replay of events for each LimitOrderBook to rebuild them from scratch
+        /// </summary>
+        /// <param name="journaler"></param>
+        public void StartReplay(Journaler journaler)
+        {
+            TurnReplayModeOn();
+            foreach (var exchangeEssential in _exchangeEssentialsList)
+            {
+                var ordersForReplay = journaler.GetOrdersForReplay(exchangeEssential.LimitOrderBook);
+                foreach (var order in ordersForReplay)
+                {
+                    if (order.OrderState == OrderState.Accepted)
+                    {
+                        this.PlaceNewOrder(order);
+                    }
+                    else if (order.OrderState == OrderState.Cancelled)
+                    {
+                        this.CancelOrder(order.OrderId);
+                    }
+                }
+            }
+
+            TurnReplayModeOff();
+        }
+
+        /// <summary>
         /// Turns on the replay mode and unsubscribes the OrderListener from listeneing to event while the replay mode is running
         /// </summary>
         public void TurnReplayModeOn()
         {
-            _isReplayMode = true;
             // Unsubscribe each order listener from each LimitOrderBook while replaying is in order
             foreach (ExchangeEssentials exchangeEssentials in ExchangeEssentials)
             {
@@ -134,7 +159,6 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// </summary>
         public void TurnReplayModeOff()
         {
-            _isReplayMode = false;
             foreach (ExchangeEssentials exchangeEssentials in ExchangeEssentials)
             {
                 exchangeEssentials.LimitOrderBook.OrderChanged += exchangeEssentials.DepthOrderBook.OnOrderChanged;

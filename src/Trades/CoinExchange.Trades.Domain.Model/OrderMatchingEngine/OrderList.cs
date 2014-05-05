@@ -10,7 +10,7 @@ using CoinExchange.Trades.Domain.Model.OrderAggregate;
 namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
 {
     /// <summary>
-    /// Contains the Orders for a specific side (Bids or Asks)
+    /// Contains the Orders for a specific side (Bids or Asks) as a collection
     /// </summary>
     [Serializable]
     public class OrderList : IEnumerable<Order>

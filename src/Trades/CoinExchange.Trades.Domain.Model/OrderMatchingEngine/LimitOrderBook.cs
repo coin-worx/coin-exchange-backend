@@ -593,6 +593,11 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             get { return _asks.Count(); }
         }
 
+        /// <summary>
+        /// The DateTime when the last snapshot was taken for thi LimitOrderBook
+        /// </summary>
+        public DateTime LastSnapshotTaken { get; set; }
+
         #endregion Properties
     }
 }

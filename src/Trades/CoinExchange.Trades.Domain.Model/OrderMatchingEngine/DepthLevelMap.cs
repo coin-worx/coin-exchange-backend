@@ -27,6 +27,8 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
 
     /// <summary>
     /// Contains the depth levels for each price in the book
+    /// Key = Price
+    /// Value = DepthLevel
     /// </summary>
     [Serializable]
     public class DepthLevelMap : IEnumerable<KeyValuePair<decimal, DepthLevel>>

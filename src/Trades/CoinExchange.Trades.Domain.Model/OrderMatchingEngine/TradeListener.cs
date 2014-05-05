@@ -9,7 +9,7 @@ using CoinExchange.Trades.Domain.Model.TradeAggregate;
 namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
 {
     /// <summary>
-    /// Listens to the Trades that are executed by the Order Book
+    /// Listens to the Trades that are executed by the Order Book and publishes to the output disruptor
     /// </summary>
     [Serializable]
     public class TradeListener : ITradeListener

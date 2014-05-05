@@ -9,7 +9,7 @@ using CoinExchange.Trades.Domain.Model.TradeAggregate;
 namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
 {
     /// <summary>
-    /// Handles the depths for the price levels in the Order Book
+    /// Contains the depths for the price levels in the Order Book and updates as the LimitOrderBook updates
     /// </summary>
     [Serializable]
     public class DepthOrderBook : IOrderListener, IOrderBookListener

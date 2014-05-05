@@ -110,22 +110,56 @@ namespace CoinExchange.Trades.Infrastructure.Persistence.RavenDb
         /// Gets all the orders placed residing inside the EventStore
         /// </summary>
         /// <returns></returns>
-        public List<Order> GetOrders()
+        public List<Order> GetAllOrders()
         {
             List<Order> orders = new List<Order>();
             List<EventMessage> collection;
-            /*using (var stream = _store.OpenStream(StreamId, 0, int.MaxValue))
-            {*/
-                collection = _stream.CommittedEvents.ToList();
-                for (int i = 0; i < collection.Count; i++)
+            collection = _stream.CommittedEvents.ToList();
+            for (int i = 0; i < collection.Count; i++)
+            {
+                if (collection[i].Body is Order)
                 {
-                    if (collection[i].Body is Order)
+                    Order order = collection[i].Body as Order;
+                    orders.Add(order);
+                }
+            }
+            Log.Debug("Number of orders fetched from Event Store: " + orders.Count);
+            if (!orders.Any())
+            {
+                orders = null;
+            }
+            return orders;
+        }
+
+        /// <summary>
+        /// Removes all order from the NEventStore
+        /// </summary>
+        public void RemoveAllEvents()
+        {
+            _store.Advanced.Purge();
+            _stream.CommittedEvents.Clear();
+        }
+
+        /// <summary>
+        /// Gets the orders based on the specified CurrencyPair
+        /// </summary>
+        /// <returns></returns>
+        public List<Order> GetOrdersByCurrencyPair(string currencyPair)
+        {
+            List<Order> orders = new List<Order>();
+            List<EventMessage> collection;
+            collection = _stream.CommittedEvents.ToList();
+            for (int i = 0; i < collection.Count; i++)
+            {
+                if (collection[i].Body is Order)
+                {
+                    Order order = collection[i].Body as Order;
+                    if (order.CurrencyPair == currencyPair)
                     {
-                        Order order = collection[i].Body as Order;
                         orders.Add(order);
                     }
                 }
-            //}
+            }
             Log.Debug("Number of orders fetched from Event Store: " + orders.Count);
             if (!orders.Any())
             {

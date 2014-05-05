@@ -8,7 +8,7 @@ using CoinExchange.Trades.Domain.Model.Services;
 namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
 {
     /// <summary>
-    /// Listens to the changes in the depth of the Order Book
+    /// Listens to the changes in the depth of the Order Book and publishes to the output disruptor
     /// </summary>
     [Serializable]
     public class DepthListener : IDepthListener
@@ -21,7 +21,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
 
         public void OnDepthChanged(Depth depth)
         {
-            //publish to output disruptor
+            //Publish to output disruptor
             OutputDisruptor.Publish(depth);
             Log.Debug("Depth changed for currency pair: " + depth.CurrencyPair);
         }
