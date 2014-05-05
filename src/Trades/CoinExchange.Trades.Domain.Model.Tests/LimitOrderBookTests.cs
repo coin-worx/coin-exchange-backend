@@ -23,7 +23,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         [SetUp]
         public void Setup()
         {
-            IEventStore eventStore = new RavenNEventStore();
+            IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
             Journaler journaler = new Journaler(eventStore);
             OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
         }

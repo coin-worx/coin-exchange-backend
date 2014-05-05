@@ -35,7 +35,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
         public void AddNewOrdersAndRestore_AddOrdersToLimitOrderBookAndThenRestoresThemAfterOrderBookCrash_VerifiesFromTheBidAndAskBooks()
         {
             // Initialize the output Disruptor and assign the journaler as the event handler
-            IEventStore eventStore = new RavenNEventStore();
+            IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
             Journaler journaler = new Journaler(eventStore);
             OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
             // Intialize the exchange so that the order changes can be fired to listernes which will then log them to event store
@@ -103,7 +103,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
         public void MatchBuyOrdersAndRestore_MatchesBuyOrdersAndThenRestoresOpenOrdersAfterOrderBookCrash_VerifiesFromTheBidAndAskBooks()
         {
             // Initialize the output Disruptor and assign the journaler as the event handler
-            IEventStore eventStore = new RavenNEventStore();
+            IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
             Journaler journaler = new Journaler(eventStore);
             OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
             // Intialize the exchange so that the order changes can be fired to listernes which will then log them to event store
@@ -216,7 +216,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
         public void MatchSellOrdersAndRestore_MatchesSellOrdersAndThenRestoresOpenOrdersAfterOrderBookCrash_VerifiesFromTheBidAndAskBooks()
         {
             // Initialize the output Disruptor and assign the journaler as the event handler
-            IEventStore eventStore = new RavenNEventStore();
+            IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
             Journaler journaler = new Journaler(eventStore);
             OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
             // Intialize the exchange so that the order changes can be fired to listernes which will then log them to event store
@@ -324,7 +324,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
         public void OneMatchMultipleOpen_MatchesOnePairOfOrdersLeavesTheRestAndthenRestoresThemAfterExchangeCrash_VerifiesThroughBidsAndAsksBooks()
         {
             // Initialize the output Disruptor and assign the journaler as the event handler
-            IEventStore eventStore = new RavenNEventStore();
+            IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
             Journaler journaler = new Journaler(eventStore);
             OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
             // Intialize the exchange so that the order changes can be fired to listernes which will then log them to event store
@@ -448,7 +448,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
         public void OnePartialBuyMatchMultipleOpen_MatchesBuyOrderPartiallyLeavesTheRestAndthenRestoresThemAfterExchangeCrash_VerifiesThroughBidsAndAsksBooks()
         {
             // Initialize the output Disruptor and assign the journaler as the event handler
-            IEventStore eventStore = new RavenNEventStore();
+            IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
             Journaler journaler = new Journaler(eventStore);
             OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
             // Intialize the exchange so that the order changes can be fired to listernes which will then log them to event store
@@ -620,7 +620,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
         public void OnePartialSellMatchMultipleOpen_MatchesSellOrderPartiallyLeavesTheRestAndthenRestoresThemAfterExchangeCrash_VerifiesThroughBidsAndAsksBooks()
         {
             // Initialize the output Disruptor and assign the journaler as the event handler
-            IEventStore eventStore = new RavenNEventStore();
+            IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
             Journaler journaler = new Journaler(eventStore);
             OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
             // Intialize the exchange so that the order changes can be fired to listernes which will then log them to event store
@@ -792,7 +792,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
         public void CancelOrdersTest_ChecksIfOrdersAreRemovedFromTheOrderBookAfterRestore_VerifiesThroughBidAndAskBooks()
         {
             // Initialize the output Disruptor and assign the journaler as the event handler
-            IEventStore eventStore = new RavenNEventStore();
+            IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
             Journaler journaler = new Journaler(eventStore);
             OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
             // Intialize the exchange so that the order changes can be fired to listernes which will then log them to event store

@@ -14,5 +14,6 @@ namespace CoinExchange.Trades.Domain.Model.Services
         object GetEvent(string id);
         List<Order> GetOrders();
         IList<Trade> GetTradeEventsFromOrderId(string id);
+        IList<object> GetAllEvents();
     }
 }

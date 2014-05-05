@@ -78,6 +78,7 @@
     <Compile Include="OrderMatchingEngine\LimitOrderBookEvent.cs" />
     <Compile Include="OrderAggregate\OrderEvent.cs" />
     <Compile Include="OrderMatchingEngine\ExchangeEssentialsList.cs" />
+    <Compile Include="Services\IInputEventStore.cs" />
     <Compile Include="TradeAggregate\ITradeIdGenerator.cs" />
     <Compile Include="TradeAggregate\TradeEvent.cs" />
     <Compile Include="OrderAggregate\InputDisruptorPublisher.cs" />

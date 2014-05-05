@@ -122,6 +122,10 @@
     <Compile Include="TradePersistenceTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Common\CoinExchange.Common\CoinExchange.Common.csproj">
+      <Project>{d61dbd04-95dc-4eb1-ad54-1ff929ac2814}</Project>
+      <Name>CoinExchange.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CoinExchance.Trades.ReadModel.Persistence\CoinExchange.Trades.ReadModel.Persistence.csproj">
       <Project>{9fca647f-ed19-4bef-a2ff-093ae27974e9}</Project>
       <Name>CoinExchange.Trades.ReadModel.Persistence</Name>

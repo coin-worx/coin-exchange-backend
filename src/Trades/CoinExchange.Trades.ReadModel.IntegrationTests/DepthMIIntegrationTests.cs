@@ -29,7 +29,7 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
         {
             DepthMemoryImage depthMemoryImage = new DepthMemoryImage();
             // Initialize the output Disruptor and assign the journaler as the event handler
-            IEventStore eventStore = new RavenNEventStore();
+            IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
             Journaler journaler = new Journaler(eventStore);
             OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
 
@@ -117,7 +117,7 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
         {
             DepthMemoryImage depthMemoryImage = new DepthMemoryImage();
             // Initialize the output Disruptor and assign the journaler as the event handler
-            IEventStore eventStore = new RavenNEventStore();
+            IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
             Journaler journaler = new Journaler(eventStore);
             OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
 
@@ -241,7 +241,7 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
         {
             DepthMemoryImage depthMemoryImage = new DepthMemoryImage();
             // Initialize the output Disruptor and assign the journaler as the event handler
-            IEventStore eventStore = new RavenNEventStore();
+            IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
             Journaler journaler = new Journaler(eventStore);
             OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
 
@@ -366,7 +366,7 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
         {
             DepthMemoryImage depthMemoryImage = new DepthMemoryImage();
             // Initialize the output Disruptor and assign the journaler as the event handler
-            IEventStore eventStore = new RavenNEventStore();
+            IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
             Journaler journaler = new Journaler(eventStore);
             OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
 
@@ -533,7 +533,7 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
         {
             DepthMemoryImage depthMemoryImage = new DepthMemoryImage();
             // Initialize the output Disruptor and assign the journaler as the event handler
-            IEventStore eventStore = new RavenNEventStore();
+            IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
             Journaler journaler = new Journaler(eventStore);
             OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
 
@@ -697,7 +697,7 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
         {
             DepthMemoryImage depthMemoryImage = new DepthMemoryImage();
             // Initialize the output Disruptor and assign the journaler as the event handler
-            IEventStore eventStore = new RavenNEventStore();
+            IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
             Journaler journaler = new Journaler(eventStore);
             OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
 
