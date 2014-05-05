@@ -30,35 +30,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Atomic, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Disruptor.1.1.0\lib\net40\Atomic.dll</HintPath>
-    </Reference>
     <Reference Include="Common.Logging">
       <HintPath>..\..\packages\Common.Logging.1.2.0\lib\1.0\Common.Logging.dll</HintPath>
-    </Reference>
-    <Reference Include="Disruptor, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Disruptor.1.1.0\lib\net40\Disruptor.dll</HintPath>
-    </Reference>
-    <Reference Include="Disruptor.Scheduler">
-      <HintPath>..\..\packages\Disruptor.1.1.0\lib\net40\Disruptor.Scheduler.dll</HintPath>
-    </Reference>
-    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\log4net.1.2.10\lib\2.0\log4net.dll</HintPath>
-    </Reference>
-    <Reference Include="Raven.Abstractions">
-      <HintPath>..\..\packages\RavenDB.Client.2.5.2874\lib\net45\Raven.Abstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="Raven.Client.Lightweight">
-      <HintPath>..\..\packages\RavenDB.Client.2.5.2874\lib\net45\Raven.Client.Lightweight.dll</HintPath>
     </Reference>
     <Reference Include="Spring.Core">
       <HintPath>..\..\packages\Spring.Core.1.3.2\lib\net40\Spring.Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -71,7 +49,7 @@
     <Compile Include="MarketDataServices\StubbedMarketDataApplicationService.cs" />
     <Compile Include="MarketDataServices\Representation\OhlcRepresentation.cs" />
     <Compile Include="MarketDataServices\Representation\TickerRepresentation.cs" />
-    <Compile Include="MatchingEngineServices\LimitOrderBookReplayService.cs" />
+    <Compile Include="OrderServices\CancelOrderCommandValidation.cs" />
     <Compile Include="OrderServices\Commands\CancelOrderCommand.cs" />
     <Compile Include="OrderServices\Commands\CreateOrderCommand.cs" />
     <Compile Include="OrderServices\ICancelOrderCommandValidation.cs" />
@@ -99,13 +77,20 @@
       <Project>{d61dbd04-95dc-4eb1-ad54-1ff929ac2814}</Project>
       <Name>CoinExchange.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CoinExchance.Trades.ReadModel.Persistence\CoinExchange.Trades.ReadModel.Persistence.csproj">
+      <Project>{9fca647f-ed19-4bef-a2ff-093ae27974e9}</Project>
+      <Name>CoinExchange.Trades.ReadModel.Persistence</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CoinExchange.Trades.Domain.Model\CoinExchange.Trades.Domain.Model.csproj">
       <Project>{32ac3710-adf8-4522-8f06-1f9c7a45e6e7}</Project>
       <Name>CoinExchange.Trades.Domain.Model</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CoinExchange.Trades.ReadModel\CoinExchange.Trades.ReadModel.csproj">
+      <Project>{e31a7aa3-da8b-4e3d-8e3b-684555a8dafc}</Project>
+      <Name>CoinExchange.Trades.ReadModel</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

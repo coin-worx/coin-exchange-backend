@@ -26,9 +26,9 @@ namespace CoinExchange.Trades.Infrastructure.Persistence.RavenDb
         /// <summary>
         /// Default Constructor
         /// </summary>
-        public RavenNEventStore()
+        public RavenNEventStore(string eventStore)
         {
-            _store = GetInitializedEventStore(new ReceiveCommit());
+            _store = GetInitializedEventStore(new ReceiveCommit(),eventStore);
             _stream = _store.OpenStream(StreamId, 0, int.MaxValue);
         }
 
@@ -56,11 +56,11 @@ namespace CoinExchange.Trades.Infrastructure.Persistence.RavenDb
         /// Initialize RavenDB NEventStore
         /// </summary>
         /// <returns></returns>
-        private static IStoreEvents GetInitializedEventStore(IDispatchCommits commits)
+        private static IStoreEvents GetInitializedEventStore(IDispatchCommits commits,string eventStore)
         {
             return Wireup.Init()
                 .UsingRavenPersistence(Constants.RAVEN_DB_CONNECTIONSTRING_NAME)
-                .DefaultDatabase(Constants.RAVEN_DB_DATABASE_NAME)
+                .DefaultDatabase(eventStore)
                 .UsingAsynchronousDispatchScheduler(commits)
                 .Build();
         }
@@ -193,6 +193,18 @@ namespace CoinExchange.Trades.Infrastructure.Persistence.RavenDb
                 }
             }
             return trades;
+        }
+        
+        public IList<object> GetAllEvents()
+        {
+            List<object> events=new List<object>();
+            List<EventMessage> collection;
+            collection = _stream.CommittedEvents.ToList();
+            for (int i = 0; i < collection.Count; i++)
+            {
+                events.Add(collection[i].Body);
+            }
+            return events;
         }
     }
 }

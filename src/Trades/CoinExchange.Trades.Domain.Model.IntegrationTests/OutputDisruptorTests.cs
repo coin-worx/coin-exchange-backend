@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using CoinExchange.Common.Domain.Model;
 using CoinExchange.Trades.Domain.Model.OrderAggregate;
 using CoinExchange.Trades.Domain.Model.OrderMatchingEngine;
 using CoinExchange.Trades.Domain.Model.Services;
@@ -25,7 +26,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
         public void SetUp()
         {
             //initialize journaler
-            _eventStore = new RavenNEventStore();
+            _eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
             Journaler journaler = new Journaler(_eventStore);
             //assign journaler to disruptor as its consumer
             OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });

@@ -17,12 +17,13 @@ using CoinExchange.Trades.ReadModel.Repositories;
 using Disruptor;
 using NHibernate;
 using NUnit.Framework;
+using Raven.Abstractions.Data;
 using Spring.Context.Support;
 using Spring.Data.NHibernate;
 using Spring.Data.NHibernate.Support;
 using Spring.Testing.NUnit;
 using Spring.Transaction.Support;
-
+using Constants = CoinExchange.Common.Domain.Model.Constants;
 namespace CoinExchange.Trades.ReadModel.Persistence.Tests
 {
     [TestFixture]
@@ -57,7 +58,7 @@ namespace CoinExchange.Trades.ReadModel.Persistence.Tests
         {
             BeforeSetup();
             //initialize journaler
-            _eventStore = new RavenNEventStore();
+            _eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
             Journaler journaler = new Journaler(_eventStore);
             //assign journaler to disruptor as its consumer
             OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });

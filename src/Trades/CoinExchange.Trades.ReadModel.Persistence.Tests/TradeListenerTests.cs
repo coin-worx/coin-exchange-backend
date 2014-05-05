@@ -10,6 +10,8 @@ using CoinExchange.Trades.ReadModel.Repositories;
 using Disruptor;
 using NHibernate;
 using NUnit.Framework;
+using Raven.Abstractions.Data;
+using Constants = CoinExchange.Common.Domain.Model.Constants;
 
 namespace CoinExchange.Trades.ReadModel.Persistence.Tests
 {
@@ -48,7 +50,7 @@ namespace CoinExchange.Trades.ReadModel.Persistence.Tests
             //_persistance = ContextRegistry.GetContext()["PersistenceRepository"] as IPersistanceRepository;
             //_orderRepository = ContextRegistry.GetContext()["OrderRepository"] as IOrderRepository;
             //initialize journaler
-            _eventStore = new RavenNEventStore();
+            _eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
             Journaler journaler = new Journaler(_eventStore);
             //assign journaler to disruptor as its consumer
             OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
