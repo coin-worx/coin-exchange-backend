@@ -86,6 +86,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="DepthRestorationTests.cs" />
     <Compile Include="JournalerTests.cs" />
     <Compile Include="LimitOrderBookRestorationTests.cs" />
     <Compile Include="OutputDisruptorTests.cs" />

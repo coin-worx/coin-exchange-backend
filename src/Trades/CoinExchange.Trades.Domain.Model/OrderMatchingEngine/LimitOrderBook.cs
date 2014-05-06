@@ -104,6 +104,15 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             {
                 return MatchOrder(sellOrder, _bids, _asks);
             }
+            if (sellOrder.OrderType == OrderType.Market)
+            {
+                sellOrder.Rejected();
+                if (OrderChanged != null)
+                {
+                    OrderChanged(sellOrder);
+                }
+                return false;
+            }
             // If there is no Bids on the book, then raise the event that this order has been accepted and been added to the Asks
             RaiseOrderAcceptedEvent(sellOrder, 0, 0);
             _asks.Add(sellOrder);
@@ -125,6 +134,15 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             if (_asks.Any())
             {
                 return MatchOrder(buyOrder, _asks, _bids);
+            }
+            if (buyOrder.OrderType == OrderType.Market)
+            {
+                buyOrder.Rejected();
+                if (OrderChanged != null)
+                {
+                    OrderChanged(buyOrder);
+                }
+                return false;
             }
             // If there are no Asks on the book, then raise the event that this order has been accepted and added to the Bids
             RaiseOrderAcceptedEvent(buyOrder, 0, 0);
