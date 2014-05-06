@@ -61,6 +61,7 @@
     <Compile Include="MarketDataServices\StubbedMarketDataApplicationService.cs" />
     <Compile Include="MarketDataServices\Representation\OhlcRepresentation.cs" />
     <Compile Include="MarketDataServices\Representation\TickerRepresentation.cs" />
+    <Compile Include="MatchingEngineServices\MemoryImageQueryService.cs" />
     <Compile Include="OrderServices\CancelOrderCommandValidation.cs" />
     <Compile Include="OrderServices\Commands\CancelOrderCommand.cs" />
     <Compile Include="OrderServices\Commands\CreateOrderCommand.cs" />
