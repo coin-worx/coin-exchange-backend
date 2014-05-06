@@ -25,7 +25,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         public void OnOrderChanged(Order order)
         {
             OutputDisruptor.Publish(order);
-            Log.Debug("Order change received: " + order.ToString());
+            Log.Debug("Order change received and published. Order: " + order.ToString());
         }
 
         /// <summary>

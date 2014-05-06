@@ -25,6 +25,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         /// in ascending order
         /// </summary>
         [Test]
+        [Category("Unit")]
         public void AddSellOrdersAndSortTest()
         {
             LimitOrderBook limitOrderBook = new LimitOrderBook("XBTUSD");
@@ -50,6 +51,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         /// Tests if sell orders abundant quantity can fill multiple buy orders
         /// </summary>
         [Test]
+        [Category("Unit")]
         public void PlaceSellOrderAbundantTest()
         {
             LimitOrderBook limitOrderBook = new LimitOrderBook("XBTUSD");
@@ -79,6 +81,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         /// Tests if sell order is of greater quantity than the buy order on that price level
         /// </summary>
         [Test]
+        [Category("Unit")]
         public void PlaceSellOrderGreaterQtyTest()
         {
             LimitOrderBook limitOrderBook = new LimitOrderBook("XBTUSD");
@@ -103,6 +106,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         /// Tests if sell order that has lesser price than the buy order matches the and trade is executed
         /// </summary>
         [Test]
+        [Category("Unit")]
         public void PlaceSellOrderPriceLessThanEqualTest()
         {
             LimitOrderBook limitOrderBook = new LimitOrderBook("XBTUSD");
@@ -126,6 +130,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         /// Tests if sell order is of limited quantity than the buy orders combined
         /// </summary>
         [Test]
+        [Category("Unit")]
         public void PlaceSellOrderLimitedTest()
         {
             LimitOrderBook limitOrderBook = new LimitOrderBook("XBTUSD");
@@ -160,6 +165,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         /// in descending order
         /// </summary>
         [Test]
+        [Category("Unit")]
         public void AddBuyOrdersAndSortTest()
         {
             LimitOrderBook limitOrderBook = new LimitOrderBook("XBTUSD");
@@ -184,6 +190,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         /// Tests if buy orders abundant quantity can fill multiple sell orders
         /// </summary>
         [Test]
+        [Category("Unit")]
         public void PlaceBuyOrderAbundantTest()
         {
             LimitOrderBook limitOrderBook = new LimitOrderBook("XBTUSD");
@@ -213,6 +220,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         /// Tests if buy order is of greater quantity than the sell order on that price level
         /// </summary>
         [Test]
+        [Category("Unit")]
         public void PlaceBuyOrderGreaterQuantityTest()
         {
             LimitOrderBook limitOrderBook = new LimitOrderBook("XBTUSD");
@@ -236,6 +244,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         /// Tests if buy order that has greater price than the sell order in Ask Order book matches and trade is executed
         /// </summary>
         [Test]
+        [Category("Unit")]
         public void PlaceBuyOrderPriceGreaterThanEqualTest()
         {
             LimitOrderBook limitOrderBook = new LimitOrderBook("XBTUSD");
@@ -258,6 +267,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         /// Tests if buy order is of limited quantity than the sell orders on the order book combined
         /// </summary>
         [Test]
+        [Category("Unit")]
         public void PlaceBuyOrderLimitedTest()
         {
             LimitOrderBook limitOrderBook = new LimitOrderBook("XBTUSD");
