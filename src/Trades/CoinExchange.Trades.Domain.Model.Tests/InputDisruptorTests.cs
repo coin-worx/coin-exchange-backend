@@ -71,7 +71,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         public void PublishCancelOrder_IfCancelOrderIsAddedInPayload_ReceiveCancelOrderInPayloadInConsumer()
         {
             _counter = 1;//as sending only one message
-            OrderCancellation cancelOrder=new OrderCancellation(new OrderId(123),new TraderId(123) );
+            OrderCancellation cancelOrder=new OrderCancellation(new OrderId(123),new TraderId(123),"XBTUSD" );
             InputPayload payload = InputPayload.CreatePayload(cancelOrder);
             InputDisruptorPublisher.Publish(payload);
             _manualResetEvent.WaitOne(2000);

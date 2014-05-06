@@ -12,6 +12,17 @@ namespace CoinExchange.Trades.Domain.Model.OrderAggregate
     {
         private TraderId _traderId;
         private OrderId _orderId;
+        private string _currencyPair;
+
+        public string CurrencyPair
+        {
+            get { return _currencyPair; }
+            set
+            {
+                AssertionConcern.AssertEmptyString(value,"CurrencyPair cannot be null");
+                _currencyPair = value;
+            }
+        }
 
         public OrderId OrderId
         {
@@ -38,10 +49,11 @@ namespace CoinExchange.Trades.Domain.Model.OrderAggregate
             
         }
 
-        public OrderCancellation(OrderId orderId, TraderId traderId)
+        public OrderCancellation(OrderId orderId, TraderId traderId,string currencyPair)
         {
             OrderId = orderId;
             TraderId = traderId;
+            CurrencyPair = currencyPair;
         }
 
        public override bool Equals(object obj)
@@ -51,7 +63,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderAggregate
             {
                 return false;
             }
-            return (cancelOrder.OrderId.Id == this.OrderId.Id && cancelOrder.TraderId.Id == this.TraderId.Id);
+            return (cancelOrder.OrderId.Id == this.OrderId.Id && cancelOrder.TraderId.Id == this.TraderId.Id&&cancelOrder.CurrencyPair==CurrencyPair);
         }
 
         /// <summary>
@@ -63,6 +75,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderAggregate
         {
             cancelOrder.OrderId = new OrderId(OrderId.Id);
             cancelOrder.TraderId=new TraderId(TraderId.Id);
+            cancelOrder.CurrencyPair = this.CurrencyPair;
             return cancelOrder;
         }
     }

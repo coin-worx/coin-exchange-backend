@@ -11,6 +11,7 @@ using Disruptor;
 using NHibernate;
 using NUnit.Framework;
 using Raven.Abstractions.Data;
+using Spring.Context.Support;
 using Constants = CoinExchange.Common.Domain.Model.Constants;
 
 namespace CoinExchange.Trades.ReadModel.Persistence.Tests

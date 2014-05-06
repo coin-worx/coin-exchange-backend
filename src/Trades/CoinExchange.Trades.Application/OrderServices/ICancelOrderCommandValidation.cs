@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CoinExchange.Trades.Application.OrderServices.Commands;
+using CoinExchange.Trades.Domain.Model.OrderAggregate;
 
 namespace CoinExchange.Trades.Application.OrderServices
 {
@@ -13,6 +14,6 @@ namespace CoinExchange.Trades.Application.OrderServices
     public interface ICancelOrderCommandValidation
     {
         bool ValidateCancelOrderCommand(CancelOrderCommand orderCommand);
-
+        string GetCurrencyPair(OrderId orderId);
     }
 }
