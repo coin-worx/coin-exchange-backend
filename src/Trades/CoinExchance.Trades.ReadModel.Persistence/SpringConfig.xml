@@ -51,5 +51,8 @@
   <object id="TradeRepository" type="CoinExchange.Trades.ReadModel.Persistence.NHibernate.TradeRepository, CoinExchange.Trades.ReadModel.Persistence">
     <property name="SessionFactory" ref="NHibernateSessionFactory"/>
   </object>
+  <object id="OhlcRepository" type="CoinExchange.Trades.ReadModel.Persistence.NHibernate.OhlcRepository, CoinExchange.Trades.ReadModel.Persistence">
+    <property name="SessionFactory" ref="NHibernateSessionFactory"/>
+  </object>
   <tx:attribute-driven/>
 </objects>

@@ -73,6 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="NHibernate\MarketDataRepository.cs" />
+    <Compile Include="NHibernate\OhlcRepository.cs" />
     <Compile Include="NHibernate\OrderRepository.cs" />
     <Compile Include="NHibernate\PersistenceRepository.cs" />
     <Compile Include="NHibernateSessionFactory.cs" />

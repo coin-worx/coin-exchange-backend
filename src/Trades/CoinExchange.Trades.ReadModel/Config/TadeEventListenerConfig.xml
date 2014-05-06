@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<objects xmlns="http://www.springframework.net"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xsi:schemaLocation="http://www.springframework.net http://www.springframework.net/xsd/spring-objects.xsd">
+
+  <object id="TradeEventListener" type="CoinExchange.Trades.ReadModel.EventHandlers.TradeEventListener, CoinExchange.Trades.ReadModel">
+    <constructor-arg name="persistanceRepository" ref="PersistenceRepository"/>
+    <constructor-arg name="ohlcCalculation" ref="OhlcCalculation"/> 
+  </object>
+  <object id="OhlcCalculation" type="CoinExchange.Trades.ReadModel.Services.OhlcCalculation, CoinExchange.Trades.ReadModel">
+    <constructor-arg name="persistanceRepository" ref="PersistenceRepository"/>
+    <constructor-arg name="ohlcRepository" ref="OhlcRepository"/>
+    <constructor-arg name="tradeRepository" ref="TradeRepository"/>
+  </object>
+
+</objects>
