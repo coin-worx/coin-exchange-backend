@@ -38,7 +38,6 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
         /// Removes an OrderRepresentation given the currencyPair and OrderSide
         /// </summary>
         /// <param name="currencyPair"></param>
-        /// <param name="orderSide"></param>
         /// <returns></returns>
         internal bool Remove(string currencyPair)
         {
