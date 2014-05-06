@@ -11,6 +11,7 @@ using Disruptor;
 using NHibernate;
 using NUnit.Framework;
 using Raven.Abstractions.Data;
+using Spring.Context.Support;
 using Constants = CoinExchange.Common.Domain.Model.Constants;
 
 namespace CoinExchange.Trades.ReadModel.Persistence.Tests
@@ -43,6 +44,11 @@ namespace CoinExchange.Trades.ReadModel.Persistence.Tests
             set { sessionFactory = value; }
         }
 
+        public TradeEventListener Listener
+        {
+            set { _listener = value; }
+        }
+
         [SetUp]
         public new void SetUp()
         {
@@ -55,7 +61,7 @@ namespace CoinExchange.Trades.ReadModel.Persistence.Tests
             //assign journaler to disruptor as its consumer
             OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
             _manualResetEvent = new ManualResetEvent(false);
-            _listener = new TradeEventListener(_persistance);
+          //  _listener = new TradeEventListener(_persistance);
             AfterSetup();
         }
 
@@ -68,14 +74,14 @@ namespace CoinExchange.Trades.ReadModel.Persistence.Tests
             Order sellOrder = OrderFactory.CreateOrder("1234", "XBTUSD", "limit", "sell", 10, 100,
                new StubbedOrderIdGenerator());
             //Trade trade=new Trade("XBTUSD",new Price(100),new Volume(10),DateTime.Now,buyOrder,sellOrder);
-            Trade trade = TradeFactory.GenerateTrade("XBTUSD", new Price(100), new Volume(10), buyOrder, sellOrder);
+            Trade trade = TradeFactory.GenerateTrade("XBTUSD", new Price(1000), new Volume(10), buyOrder, sellOrder);
             OutputDisruptor.Publish(trade);
             _manualResetEvent.WaitOne(5000);
             TradeReadModel model = _tradeRepository.GetById(trade.TradeId.Id.ToString());
             Assert.NotNull(model);
             Assert.AreEqual(model.BuyOrderId,buyOrder.OrderId.Id.ToString());
             Assert.AreEqual(model.SellOrderId, sellOrder.OrderId.Id.ToString());
-            Assert.AreEqual(model.Price,100);
+            Assert.AreEqual(model.Price,1000);
             Assert.AreEqual(model.CurrencyPair,"XBTUSD");
             Assert.AreEqual(model.BuyTraderId,"123");
             Assert.AreEqual(model.SellTraderId, "1234");

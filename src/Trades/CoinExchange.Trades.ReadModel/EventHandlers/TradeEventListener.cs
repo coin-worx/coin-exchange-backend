@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using CoinExchange.Trades.Domain.Model.TradeAggregate;
 using CoinExchange.Trades.ReadModel.DTO;
 using CoinExchange.Trades.ReadModel.Repositories;
+using CoinExchange.Trades.ReadModel.Services;
 
 namespace CoinExchange.Trades.ReadModel.EventHandlers
 {
@@ -15,10 +16,12 @@ namespace CoinExchange.Trades.ReadModel.EventHandlers
     public class TradeEventListener
     {
         private IPersistanceRepository _persistanceRepository;
+        private OhlcCalculation _ohlcCalculation;
 
-        public TradeEventListener(IPersistanceRepository persistanceRepository)
+        public TradeEventListener(IPersistanceRepository persistanceRepository,OhlcCalculation ohlcCalculation)
         {
             _persistanceRepository = persistanceRepository;
+            _ohlcCalculation = ohlcCalculation;
             TradeEvent.TradeOccured += OnTradeArrived;
         }
 
@@ -29,6 +32,7 @@ namespace CoinExchange.Trades.ReadModel.EventHandlers
         void OnTradeArrived(Trade trade)
         {
             _persistanceRepository.SaveOrUpdate(ReadModelAdapter.GetTradeReadModel(trade));
+            _ohlcCalculation.CalculateAndPersistOhlc(trade);
         }
     }
 }

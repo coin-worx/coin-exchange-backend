@@ -26,8 +26,9 @@ namespace CoinExchange.Trades.Application.OrderServices
             // verify cancel order command
             if (_commandValidationService.ValidateCancelOrderCommand(cancelOrderCommand))
             {
+                string currencyPair = _commandValidationService.GetCurrencyPair(cancelOrderCommand.OrderId);
                 OrderCancellation cancellation = new OrderCancellation(cancelOrderCommand.OrderId,
-                    cancelOrderCommand.TraderId);
+                    cancelOrderCommand.TraderId,currencyPair);
                 InputDisruptorPublisher.Publish(InputPayload.CreatePayload(cancellation));
                 return new CancelOrderResponse(true,1);
             }

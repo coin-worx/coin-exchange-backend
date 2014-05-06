@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using CoinExchange.Trades.ReadModel.DTO;
 
 namespace CoinExchange.Trades.ReadModel.Repositories
@@ -26,6 +27,14 @@ namespace CoinExchange.Trades.ReadModel.Repositories
         /// <param name="tradeId"></param>
         /// <returns></returns>
         TradeReadModel GetById(string tradeId);
+
+        /// <summary>
+        /// Get trades between dates
+        /// </summary>
+        /// <param name="t1"></param>
+        /// <param name="t2"></param>
+        /// <returns></returns>
+        IList<TradeReadModel> GetTradesBetweenDates(DateTime t1, DateTime t2);
 
     }
 }

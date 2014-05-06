@@ -44,5 +44,11 @@ namespace CoinExchange.Trades.Application.OrderServices
         {
             _orderRepository = orderRepository;
         }
+
+
+        public string GetCurrencyPair(OrderId orderId)
+        {
+            return _orderRepository.GetOrderById(orderId.Id.ToString()).CurrencyPair;
+        }
     }
 }

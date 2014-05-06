@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CoinExchange.Trades.Domain.Model.OrderAggregate;
 using CoinExchange.Trades.Domain.Model.Services;
+using Disruptor;
 
 namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
 {
@@ -12,7 +13,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
     /// Initializes andcontains all Order Books and forwards requests for submitting and cancelling orders
     /// </summary>
     [Serializable]
-    public class Exchange
+    public class Exchange:IEventHandler<InputPayload>
     {
         // Get the Current Logger
         private static readonly log4net.ILog Log = log4net.LogManager.GetLogger
@@ -175,6 +176,29 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         {
             get { return _exchangeEssentialsList; }
             private set { _exchangeEssentialsList = value; }
+        }
+
+        /// <summary>
+        /// Receives new order and cancel order requests from disruptor
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="sequence"></param>
+        /// <param name="endOfBatch"></param>
+        public void OnNext(InputPayload data, long sequence, bool endOfBatch)
+        {
+            if (data.IsOrder)
+            {
+                Order order=new Order();
+                data.Order.MemberWiseClone(order);
+                PlaceNewOrder(order);
+            }
+            else
+            {
+                OrderCancellation cancellation=new OrderCancellation();
+                data.OrderCancellation.MemberWiseClone(cancellation);
+                //TODO: Modify cancel order function to order cancellation type
+                CancelOrder(cancellation.OrderId);
+            }
         }
     }
 }

@@ -9,7 +9,7 @@ namespace CoinExchange.Trades.ReadModel.Persistence.NHibernate
     [Repository]
     public class PersistenceRepository : NHibernateSessionFactory,IPersistanceRepository
     {
-        [Transaction(ReadOnly = false)]
+        [Transaction(TransactionPropagation.Required,ReadOnly = false)]
         public void SaveOrUpdate(object readModelObject)
         {
             CurrentSession.SaveOrUpdate(readModelObject);

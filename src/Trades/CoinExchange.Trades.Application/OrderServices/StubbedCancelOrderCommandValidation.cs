@@ -8,5 +8,11 @@ namespace CoinExchange.Trades.Application.OrderServices
         {
             return true;
         }
+
+
+        public string GetCurrencyPair(Domain.Model.OrderAggregate.OrderId orderId)
+        {
+            return "XBTUSD";
+        }
     }
 }

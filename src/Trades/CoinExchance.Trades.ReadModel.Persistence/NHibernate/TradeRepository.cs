@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using CoinExchange.Trades.ReadModel.DTO;
 using CoinExchange.Trades.ReadModel.Repositories;
 using NHibernate.Linq;
+using NHibernate.Type;
 using Spring.Stereotype;
 using Spring.Transaction.Interceptor;
 
@@ -35,6 +37,15 @@ namespace CoinExchange.Trades.ReadModel.Persistence.NHibernate
         public TradeReadModel GetById(string tradeId)
         {
             return CurrentSession.Get<TradeReadModel>(tradeId);
+        }
+
+        [Transaction(ReadOnly = true)]
+        public IList<TradeReadModel> GetTradesBetweenDates(DateTime t1, DateTime t2)
+        {
+            return
+                CurrentSession.QueryOver<TradeReadModel>()
+                    .Where(x => x.ExecutionDateTime <= t1 && x.ExecutionDateTime >= t2)
+                    .List();
         }
     }
 }
