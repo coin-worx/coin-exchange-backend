@@ -55,6 +55,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderAggregate
             OrderSide = orderSide;
             OrderType = orderType;
             Volume = volume;
+            Price = new Price(0);
             TraderId = traderId;
             this.DateTime = DateTime.Now;
             FilledQuantity = new Volume(0);

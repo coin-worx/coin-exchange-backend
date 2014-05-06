@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using CoinExchange.Trades.Domain.Model.OrderAggregate;
-using CoinExchange.Trades.Domain.Model.OrderMatchingEngine;
 using CoinExchange.Trades.Domain.Model.Services;
 
-namespace CoinExchange.Trades.Application.MatchingEngineServices
+namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
 {
     /// <summary>
     /// Fetches the orders to replay from the Journaler and then forwards them to the Exchange
@@ -22,9 +20,10 @@ namespace CoinExchange.Trades.Application.MatchingEngineServices
             exchange.TurnReplayModeOn();
             foreach (var exchangeEssential in exchange.ExchangeEssentials)
             {
-                var ordersForReplay = journaler.GetOrdersForReplay(exchangeEssential.LimitOrderBook);
+                List<Order> ordersForReplay = journaler.GetOrdersForReplay(exchangeEssential.LimitOrderBook);
 
-                foreach (var order in ordersForReplay)
+                Order[] deepCopy = (Order[]) GetCopy(ordersForReplay.ToArray());
+                foreach (var order in deepCopy)
                 {
                     if (order.OrderState == OrderState.Accepted)
                     {
@@ -37,6 +36,22 @@ namespace CoinExchange.Trades.Application.MatchingEngineServices
                 }
             }
             exchange.TurnReplayModeOff();
+        }
+
+        /// <summary>
+        /// Create a copy of the incoming object
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        private static object GetCopy(object input)
+        {
+            using (MemoryStream stream = new MemoryStream())
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                formatter.Serialize(stream, input);
+                stream.Position = 0;
+                return formatter.Deserialize(stream);
+            }
         }
     }
 }

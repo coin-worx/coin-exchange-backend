@@ -23,7 +23,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
     /// state after the replay
     /// </summary>
     [TestFixture]
-    class LOBRestoreUnsubscriptionTests
+    class LimitOrderBookRestorationTests
     {
         // Get the Current Logger
         private static readonly log4net.ILog Log = log4net.LogManager.GetLogger
@@ -46,6 +46,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             // Initialize the output Disruptor and assign the journaler as the event handler
             IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
             Journaler journaler = new Journaler(eventStore);
+            LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
             OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
             // Intialize the exchange so that the order changes can be fired to listernes which will then log them to event store
             Exchange exchange = new Exchange();
@@ -83,23 +84,15 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
+            replayService.ReplayOrderBooks(exchange, journaler);
             // Get all orders from the EventStore and send to the LimitOrderBook to restore its state
             var orders = journaler.GetAllOrders();
-            // Tell the exchange that replay mode is on
-            exchange.TurnReplayModeOn();
-            foreach (Order order in orders)
-            {
-                // Send the orders to the first OrderBook in the Exchange
-                exchange.PlaceNewOrder(order);
-            }
 
             Assert.AreEqual(4, orders.Count);
             Assert.AreEqual(OrderState.Accepted, orders[0].OrderState);
             Assert.AreEqual(OrderState.Accepted, orders[1].OrderState);
             Assert.AreEqual(OrderState.Accepted, orders[2].OrderState);
             Assert.AreEqual(OrderState.Accepted, orders[3].OrderState);
-
-            exchange.TurnReplayModeOff();
 
             Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
@@ -116,6 +109,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             // Initialize the output Disruptor and assign the journaler as the event handler
             IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
             Journaler journaler = new Journaler(eventStore);
+            LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
             OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
             // Intialize the exchange so that the order changes can be fired to listernes which will then log them to event store
             Exchange exchange = new Exchange();
@@ -182,11 +176,11 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
+            replayService.ReplayOrderBooks(exchange, journaler);
+            Log.Debug("Replay service started for Exchange.");
             // Get all orders from the EventStore and send to the LimitOrderBook to restore its state
             var orders = journaler.GetAllOrders();
-            // Tell the exchange that replay mode is on
-            exchange.TurnReplayModeOn();
-
+            
             completeOrdersCount = 0;
             acceptedOrdersCount = 0;
             
@@ -195,8 +189,6 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
                 if (order.OrderState == OrderState.Accepted)
                 {
                     ++acceptedOrdersCount;
-                    // Send the orders to the first OrderBook in the Exchange
-                    exchange.PlaceNewOrder(order);
                 }
                 else if (order.OrderState == OrderState.Complete)
                 {
@@ -208,8 +200,6 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(8, acceptedOrdersCount);
             Assert.AreEqual(6, completeOrdersCount);
             
-            exchange.TurnReplayModeOff();
-
             Assert.AreEqual(1, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(1, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
@@ -231,6 +221,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             // Initialize the output Disruptor and assign the journaler as the event handler
             IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
             Journaler journaler = new Journaler(eventStore);
+            LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
             OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
             // Intialize the exchange so that the order changes can be fired to listernes which will then log them to event store
             Exchange exchange = new Exchange();
@@ -293,12 +284,9 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
-            //exchange.StartReplay(journaler);
+            replayService.ReplayOrderBooks(exchange, journaler);
             // Get all orders from the EventStore and send to the LimitOrderBook to restore its state
             var orders = journaler.GetAllOrders();
-            
-            // Tell the exchange that replay mode is on
-            exchange.TurnReplayModeOn();
 
             completeOrdersCount = 0;
             acceptedOrdersCount = 0;
@@ -308,8 +296,6 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
                 if (order.OrderState == OrderState.Accepted)
                 {
                     ++acceptedOrdersCount;
-                    // Send the orders to the first OrderBook in the Exchange
-                    exchange.PlaceNewOrder(order);
                 }
                 else if (order.OrderState == OrderState.Complete)
                 {
@@ -320,10 +306,6 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(14, orders.Count);
             Assert.AreEqual(8, acceptedOrdersCount);
             Assert.AreEqual(6, completeOrdersCount);
-
-            exchange.TurnReplayModeOff();
-
-            var orders2 = journaler.GetAllOrders();
 
             Assert.AreEqual(1, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(1, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
@@ -346,6 +328,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             // Initialize the output Disruptor and assign the journaler as the event handler
             IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
             Journaler journaler = new Journaler(eventStore);
+            LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
             OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
             // Intialize the exchange so that the order changes can be fired to listernes which will then log them to event store
             Exchange exchange = new Exchange();
@@ -417,10 +400,9 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
+            replayService.ReplayOrderBooks(exchange, journaler);
             // Get all orders from the EventStore and send to the LimitOrderBook to restore its state
             var orders = journaler.GetAllOrders();
-            // Tell the exchange that replay mode is on
-            exchange.TurnReplayModeOn();
 
             completeOrdersCount = 0;
             acceptedOrdersCount = 0;
@@ -430,8 +412,6 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
                 if (order.OrderState == OrderState.Accepted)
                 {
                     ++acceptedOrdersCount;
-                    // Send the orders to the first OrderBook in the Exchange
-                    exchange.PlaceNewOrder(order);
                 }
                 else if (order.OrderState == OrderState.Complete)
                 {
@@ -472,6 +452,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             // Initialize the output Disruptor and assign the journaler as the event handler
             IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
             Journaler journaler = new Journaler(eventStore);
+            LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
             OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
             // Intialize the exchange so that the order changes can be fired to listernes which will then log them to event store
             Exchange exchange = new Exchange();
@@ -567,10 +548,9 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
+            replayService.ReplayOrderBooks(exchange, journaler);
             // Get all orders from the EventStore and send to the LimitOrderBook to restore its state
             var orders = journaler.GetAllOrders();
-            // Tell the exchange that replay mode is on
-            exchange.TurnReplayModeOn();
 
             completeOrdersCount = 0;
             acceptedOrdersCount = 0;
@@ -581,8 +561,6 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
                 if (order.OrderState == OrderState.Accepted)
                 {
                     ++acceptedOrdersCount;
-                    // Send the orders to the first OrderBook in the Exchange
-                    exchange.PlaceNewOrder(order);
                 }
                 else if (order.OrderState == OrderState.Complete)
                 {
@@ -646,6 +624,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             // Initialize the output Disruptor and assign the journaler as the event handler
             IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
             Journaler journaler = new Journaler(eventStore);
+            LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
             OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
             // Intialize the exchange so that the order changes can be fired to listernes which will then log them to event store
             Exchange exchange = new Exchange();
@@ -741,10 +720,9 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
+            replayService.ReplayOrderBooks(exchange, journaler);
             // Get all orders from the EventStore and send to the LimitOrderBook to restore its state
             var orders = journaler.GetAllOrders();
-            // Tell the exchange that replay mode is on
-            exchange.TurnReplayModeOn();
 
             completeOrdersCount = 0;
             acceptedOrdersCount = 0;
@@ -755,8 +733,6 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
                 if (order.OrderState == OrderState.Accepted)
                 {
                     ++acceptedOrdersCount;
-                    // Send the orders to the first OrderBook in the Exchange
-                    exchange.PlaceNewOrder(order);
                 }
                 else if (order.OrderState == OrderState.Complete)
                 {
@@ -820,6 +796,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             // Initialize the output Disruptor and assign the journaler as the event handler
             IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
             Journaler journaler = new Journaler(eventStore);
+            LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
             OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
             // Intialize the exchange so that the order changes can be fired to listernes which will then log them to event store
             Exchange exchange = new Exchange();
@@ -909,11 +886,10 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
+            replayService.ReplayOrderBooks(exchange, journaler);
             // Get all orders from the EventStore and send to the LimitOrderBook to restore its state
             var orders = journaler.GetOrdersForReplay(exchange.ExchangeEssentials.First().LimitOrderBook);
-            // Tell the exchange that replay mode is on
-            exchange.TurnReplayModeOn();
-
+            
             acceptedOrdersCount = 0;
             cancelledOrdersCount = 0;
 
@@ -922,13 +898,10 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
                 if (order.OrderState == OrderState.Accepted)
                 {
                     ++acceptedOrdersCount;
-                    // Send the orders to the first OrderBook in the Exchange
-                    exchange.PlaceNewOrder(order);
                 }
                 else if (order.OrderState == OrderState.Cancelled)
                 {
                     ++cancelledOrdersCount;
-                    exchange.CancelOrder(order.OrderId);
                 }
             }
 
