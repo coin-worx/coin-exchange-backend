@@ -44,11 +44,11 @@ namespace CoinExchange.Trades.ReadModel.Services
             }
             else
             {
-                IList<TradeReadModel> trades = _tradeRepository.GetTradesBetweenDates(latestTrade.ExecutionTime,
-                    ohlcdDateTime);
-                decimal volume = CalculateVolume(trades);
+               // IList<TradeReadModel> trades = _tradeRepository.GetTradesBetweenDates(latestTrade.ExecutionTime,
+                 //   ohlcdDateTime);
+                //decimal volume = CalculateVolume(trades);
                 //update the ohlc
-                model.UpdateOhlc(latestTrade,volume);
+                model.UpdateOhlc(latestTrade);
                 _persistanceRepository.SaveOrUpdate(model);
             }
 

@@ -1,0 +1,27 @@
+﻿<?xml version="1.0"?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+assembly="CoinExchange.Trades.ReadModel" namespace="CoinExchange.Trades.ReadModel.DTO">
+  <class name="TickerInfoReadModel" table="tickerinfo" lazy="false">
+    <id name="Id" column="Id">
+      <generator class="native" />
+    </id>
+    <property name="AskPrice"  column="AskPrice"/>
+    <property name="AskVolume"  column="AskVolume"/>
+    <property name="BidPrice"  column="BidPrice"/>
+    <property name="BidVolume"  column="BidVolume"/>
+    <property name="TradePrice"  column="TradePrice"/>
+    <property name="TradeVolume"  column="TradeVolume"/>
+    <property name="TodaysVolume"  column="TodaysVolume"/>
+    <property name="Last24HourVolume"  column="Last24HourVolume"/>
+    <property name="TodaysVolumeWeight"  column="TodaysVolumeWeight"/>
+    <property name="Last24HourVolumeWeight"  column="Last24HourVolumeWeight"/>
+    <property name="TodaysTrades"  column="TodaysTrades"/>
+    <property name="Last24HourTrades"  column="Last24HourTrades"/>
+    <property name="TodaysLow"  column="TodaysLow"/>
+    <property name="Last24HoursLow"  column="Last24HoursLow"/>
+    <property name="TodaysHigh"  column="TodaysHigh"/>
+    <property name="Last24HoursHigh"  column="Last24HoursHigh"/>
+    <property name="OpeningPrice"  column="OpeningPrice"/>
+    <property name="CurrencyPair"  column="CurrencyPair"/>
+  </class>
+</hibernate-mapping>

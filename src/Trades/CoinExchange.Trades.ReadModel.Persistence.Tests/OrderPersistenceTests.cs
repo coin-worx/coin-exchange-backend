@@ -16,7 +16,7 @@ using Order = CoinExchange.Trades.Domain.Model.OrderAggregate.Order;
 namespace CoinExchange.Trades.ReadModel.Persistence.Tests
 {
     [TestFixture]
-    public class OrderPersistenceTests:AbstractDaoIntegrationTests
+    public class OrderPersistenceTests:AbstractConfiguration
     {
         private IPersistanceRepository _persistanceRepository;
         private IOrderRepository _orderRepository;

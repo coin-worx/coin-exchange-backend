@@ -31,10 +31,20 @@ namespace CoinExchange.Trades.ReadModel.Repositories
         /// <summary>
         /// Get trades between dates
         /// </summary>
-        /// <param name="t1"></param>
-        /// <param name="t2"></param>
+        /// <param name="end"></param>
+        /// <param name="start"></param>
+        /// <param name="currencyPair"></param>
         /// <returns></returns>
-        IList<TradeReadModel> GetTradesBetweenDates(DateTime t1, DateTime t2);
+        IList<TradeReadModel> GetTradesBetweenDates(DateTime end, DateTime start,string currencyPair);
+
+        /// <summary>
+        /// Get custom calculated data for ticker info calculation
+        /// </summary>
+        /// <param name="end"></param>
+        /// <param name="start"></param>
+        /// <param name="currencyPair"></param>
+        /// <returns></returns>
+        object GetCustomDataBetweenDates(DateTime end, DateTime start,string currencyPair);
 
     }
 }

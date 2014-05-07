@@ -15,7 +15,7 @@ using Spring.Context.Support;
 namespace CoinExchange.Trades.ReadModel.Persistence.Tests
 {
     [TestFixture]
-    public class TradePersistenceTests:AbstractDaoIntegrationTests
+    public class TradePersistenceTests:AbstractConfiguration
     {
         private IPersistanceRepository _persistanceRepository;
         private ITradeRepository _tradeRepository;

@@ -17,7 +17,7 @@ using Constants = CoinExchange.Common.Domain.Model.Constants;
 namespace CoinExchange.Trades.ReadModel.Persistence.Tests
 {
     [TestFixture]
-    public class TradeListenerTests : AbstractDaoIntegrationTests
+    public class TradeListenerTests : AbstractConfiguration
     {
 
         private ManualResetEvent _manualResetEvent;

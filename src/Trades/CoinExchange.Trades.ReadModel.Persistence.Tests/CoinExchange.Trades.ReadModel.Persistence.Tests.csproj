@@ -118,11 +118,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AbstractDaoIntegrationTests.cs" />
+    <Compile Include="AbstractConfiguration.cs" />
     <Compile Include="OhlcCalculationTests.cs" />
     <Compile Include="OrderListenerTests.cs" />
     <Compile Include="OrderPersistenceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TickerInfoCalculationTests.cs" />
     <Compile Include="TradeListenerTests.cs" />
     <Compile Include="TradePersistenceTests.cs" />
   </ItemGroup>
