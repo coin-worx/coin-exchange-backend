@@ -8,6 +8,7 @@ using CoinExchange.Common.Domain.Model;
 using CoinExchange.Trades.Domain.Model.OrderAggregate;
 using CoinExchange.Trades.Domain.Model.OrderMatchingEngine;
 using CoinExchange.Trades.Domain.Model.Services;
+using CoinExchange.Trades.Domain.Model.TradeAggregate;
 using CoinExchange.Trades.Infrastructure.Persistence.RavenDb;
 using CoinExchange.Trades.Infrastructure.Services;
 using Disruptor;
@@ -655,10 +656,10 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(4, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(4, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
-            exchange.CancelOrder(buyOrder3.OrderId);
-            exchange.CancelOrder(sellOrder2.OrderId);
-            exchange.CancelOrder(buyOrder1.OrderId);
-            exchange.CancelOrder(sellOrder4.OrderId);
+            exchange.CancelOrder(new OrderCancellation(buyOrder3.OrderId, buyOrder3.TraderId, buyOrder3.CurrencyPair));
+            exchange.CancelOrder(new OrderCancellation(sellOrder2.OrderId, sellOrder2.TraderId, sellOrder2.CurrencyPair));
+            exchange.CancelOrder(new OrderCancellation(buyOrder1.OrderId, buyOrder1.TraderId, buyOrder1.CurrencyPair));
+            exchange.CancelOrder(new OrderCancellation(sellOrder4.OrderId, sellOrder4.TraderId, sellOrder4.CurrencyPair));
 
             ManualResetEvent manualReset = new ManualResetEvent(false);
             manualReset.WaitOne(5000);
@@ -787,6 +788,8 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(250, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[0].AggregatedVolume.Value);
             Assert.AreEqual(1, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[0].OrderCount);
             //------------------------Depth Checks------------------------------
+
+            OutputDisruptor.ShutDown();
         }
 
         [Test]
@@ -861,6 +864,8 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(1254, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[1].Price.Value);
             Assert.AreEqual(200, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[1].AggregatedVolume.Value);
             Assert.AreEqual(1, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[1].OrderCount);
+
+            OutputDisruptor.ShutDown();
         }
 
         [Test]
@@ -931,6 +936,8 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(null, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[0].AggregatedVolume);
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[0].OrderCount);
             //------------------------Depth Checks------------------------------
+
+            OutputDisruptor.ShutDown();
         }
 
         [Test]
@@ -1019,6 +1026,8 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(100, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[1].AggregatedVolume.Value);
             Assert.AreEqual(1, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[1].OrderCount);
             //------------------------Depth Checks------------------------------
+
+            OutputDisruptor.ShutDown();
         }
 
         [Test]
@@ -1128,6 +1137,8 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(null, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[1].AggregatedVolume);
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[1].OrderCount);
             //------------------------Depth Checks------------------------------
+
+            OutputDisruptor.ShutDown();
         }
 
         [Test]
@@ -1272,6 +1283,8 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(100, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[1].AggregatedVolume.Value);
             Assert.AreEqual(1, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[1].OrderCount);
             //------------------------Depth Checks------------------------------
+
+            OutputDisruptor.ShutDown();
         }
     }
 }

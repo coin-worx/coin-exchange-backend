@@ -745,7 +745,7 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.First().BestAskOrderCount);
 
             // Best Bid Should change
-            exchange.CancelOrder(buyOrder3Id);
+            exchange.CancelOrder(new OrderCancellation(buyOrder3Id, buyOrder3.TraderId, buyOrder3.CurrencyPair));
             manualResetEvent.Reset();
             manualResetEvent.WaitOne(2000);
 
@@ -768,7 +768,7 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.First().BestAskOrderCount);
 
             // Nothing should change by cancelling this order
-            exchange.CancelOrder(buyOrder4Id);
+            exchange.CancelOrder(new OrderCancellation(buyOrder4Id, buyOrder4.TraderId, buyOrder4.CurrencyPair));
             manualResetEvent.Reset();
             manualResetEvent.WaitOne(2000);
             // Order cancelled
@@ -791,7 +791,7 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.First().BestAskOrderCount);
 
             // Best ask should not change by cancelling this order 
-            exchange.CancelOrder(sellOrder1Id);
+            exchange.CancelOrder(new OrderCancellation(sellOrder1Id, sellOrder1.TraderId, sellOrder1.CurrencyPair));
             manualResetEvent.Reset();
             manualResetEvent.WaitOne(2000);
             
@@ -814,7 +814,7 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             Assert.AreEqual(492.34M, bboMemoryImage.BBORepresentationList.First().BestAskPrice);
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.First().BestAskOrderCount);
             // Best bid must change by cancelling this order
-            exchange.CancelOrder(buyOrder2Id);
+            exchange.CancelOrder(new OrderCancellation(buyOrder2Id, buyOrder2.TraderId, buyOrder2.CurrencyPair));
             manualResetEvent.Reset();
             manualResetEvent.WaitOne(2000);
 
@@ -838,7 +838,7 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.First().BestAskOrderCount);
 
             // Best bid must change by cancelling this order
-            exchange.CancelOrder(buyOrder5Id);
+            exchange.CancelOrder(new OrderCancellation(buyOrder5Id, buyOrder5.TraderId, buyOrder5.CurrencyPair));
             manualResetEvent.Reset();
             manualResetEvent.WaitOne(2000);
 
@@ -862,7 +862,7 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.First().BestAskOrderCount);
 
             // Best Ask must change by cancelling this order
-            exchange.CancelOrder(sellOrder5Id);
+            exchange.CancelOrder(new OrderCancellation(sellOrder5Id, sellOrder5.TraderId, sellOrder5.CurrencyPair));
             manualResetEvent.Reset();
             manualResetEvent.WaitOne(2000);
 
@@ -886,7 +886,7 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             Assert.AreEqual(2, bboMemoryImage.BBORepresentationList.First().BestAskOrderCount);
 
             // Best Ask must change by cancelling this order
-            exchange.CancelOrder(sellOrder3Id);
+            exchange.CancelOrder(new OrderCancellation(sellOrder3Id, sellOrder3.TraderId, sellOrder3.CurrencyPair));
             manualResetEvent.Reset();
             manualResetEvent.WaitOne(2000);
 

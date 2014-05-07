@@ -4,9 +4,9 @@
                 xsi:schemaLocation="http://www.springframework.net http://www.springframework.net/xsd/spring-objects.xsd">
 
   <object id="MarketController" type="CoinExchange.Trades.Port.Adapter.Rest.Resources.MarketController, CoinExchange.Trades.Port.Adapter.Rest" singleton="false">
-    <constructor-arg name="marketDataApplicationService" ref="MarketDataApplicationService"/>
+    <constructor-arg name="marketDataQueryService" ref="MarketDataQueryService"/>
   </object>
 
-  <object id="MarketDataApplicationService" type="CoinExchange.Trades.Application.MarketDataServices.StubbedMarketDataApplicationService, CoinExchange.Trades.Application"/>
+  <object id="MarketDataQueryService" type="CoinExchange.Trades.Application.MarketDataServices.StubbedMarketDataApplicationService, CoinExchange.Trades.Application"/>
 
 </objects>

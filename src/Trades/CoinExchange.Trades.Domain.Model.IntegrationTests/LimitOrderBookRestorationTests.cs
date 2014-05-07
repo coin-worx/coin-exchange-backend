@@ -41,9 +41,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
         // OLDER EVENTS ARE FETCHED TOO AND SO THE TEST WILL FAIL IF RUN IN CONJUNCTION WITH OTHER TESTS
         [Test]
         [Category(Integration)]
-        public void
-            AddNewOrdersAndRestore_AddOrdersToLimitOrderBookAndThenRestoresThemAfterOrderBookCrash_VerifiesFromTheBidAndAskBooks
-            ()
+        public void AddNewOrdersAndRestore_AddOrdersToLimitOrderBookAndThenRestoresThemAfterOrderBookCrash_VerifiesFromTheBidAndAskBooks()
         {
             // Initialize the output Disruptor and assign the journaler as the event handler
             IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
@@ -868,10 +866,10 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(4, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(4, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
-            exchange.CancelOrder(buyOrder3.OrderId);
-            exchange.CancelOrder(sellOrder2.OrderId);
-            exchange.CancelOrder(buyOrder1.OrderId);
-            exchange.CancelOrder(sellOrder4.OrderId);
+            exchange.CancelOrder(new OrderCancellation(buyOrder3.OrderId,buyOrder3.TraderId, buyOrder3.CurrencyPair));
+            exchange.CancelOrder(new OrderCancellation(sellOrder2.OrderId, sellOrder2.TraderId, sellOrder2.CurrencyPair));
+            exchange.CancelOrder(new OrderCancellation(buyOrder1.OrderId, buyOrder1.TraderId, buyOrder1.CurrencyPair));
+            exchange.CancelOrder(new OrderCancellation(sellOrder4.OrderId, sellOrder4.TraderId, sellOrder4.CurrencyPair));
 
             ManualResetEvent manualReset = new ManualResetEvent(false);
             manualReset.WaitOne(5000);
@@ -1095,6 +1093,8 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
 
             Assert.AreEqual(1, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(1, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
+
+            OutputDisruptor.ShutDown();
         }
 
         [Test]
@@ -1244,6 +1244,8 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(1254, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[2].Price.Value);
             Assert.AreEqual(200, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[2].Volume.Value);
             Assert.AreEqual(200, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[2].OpenQuantity.Value);
+
+            OutputDisruptor.ShutDown();
         }
 
         [Test]
@@ -1359,6 +1361,8 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(930, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].Price.Value);
             Assert.AreEqual(200, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].Volume.Value);
             Assert.AreEqual(200, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].OpenQuantity.Value);
+
+            OutputDisruptor.ShutDown();
         }
 
         [Test]
@@ -1478,6 +1482,8 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(951, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[1].Price.Value);
             Assert.AreEqual(100, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[1].Volume.Value);
             Assert.AreEqual(100, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[1].OpenQuantity.Value);
+
+            OutputDisruptor.ShutDown();
         }
 
         [Test]
@@ -1626,6 +1632,8 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(new Price(941), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[1].Price);
             Assert.AreEqual(new Volume(100), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[1].AggregatedVolume);
             Assert.AreEqual(1, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[1].OrderCount);
+
+            OutputDisruptor.ShutDown();
         }
 
         [Test]
@@ -1775,6 +1783,8 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(new Price(949), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[1].Price);
             Assert.AreEqual(new Volume(100), exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[1].AggregatedVolume);
             Assert.AreEqual(1, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.AskLevels[1].OrderCount);
+
+            OutputDisruptor.ShutDown();
         }
     }
 }

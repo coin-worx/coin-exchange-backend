@@ -89,6 +89,10 @@
       <Project>{32ac3710-adf8-4522-8f06-1f9c7a45e6e7}</Project>
       <Name>CoinExchange.Trades.Domain.Model</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CoinExchange.Trades.ReadModel\CoinExchange.Trades.ReadModel.csproj">
+      <Project>{e31a7aa3-da8b-4e3d-8e3b-684555a8dafc}</Project>
+      <Name>CoinExchange.Trades.ReadModel</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -105,6 +109,11 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Config\OrderControllerConfig-Test.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Config\MarketDataControllerConfig-Stage.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

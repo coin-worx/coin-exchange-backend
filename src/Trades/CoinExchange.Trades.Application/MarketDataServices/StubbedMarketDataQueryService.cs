@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using CoinExchange.Trades.Application.MarketDataServices.Representation;
 using CoinExchange.Trades.Domain.Model.MarketDataAggregate;
+using CoinExchange.Trades.Domain.Model.OrderAggregate;
+using CoinExchange.Trades.ReadModel.MemoryImages;
 
 namespace CoinExchange.Trades.Application.MarketDataServices
 {
     /// <summary>
     /// Service serving the iperations relatedto Market Data
     /// </summary>
-    public class StubbedMarketDataApplicationService:IMarketDataApplicationService
+    public class StubbedMarketDataQueryService : IMarketDataQueryService
     {
         /// <summary>
         /// Get ticker info
@@ -48,9 +50,20 @@ namespace CoinExchange.Trades.Application.MarketDataServices
         /// Returns the Order Book
         /// </summary>
         /// <returns></returns>
-        public List<object> GetOrderBook(string symbol, int count)
+        public Tuple<OrderRepresentationList, OrderRepresentationList> GetOrderBook(string symbol, int count)
         {
-            List<object> list = new List<object>();
+            OrderRepresentationList bidList = new OrderRepresentationList(symbol, OrderSide.Buy);
+            bidList.UpdateAtIndex(0, 1000, 491.34M);
+            bidList.UpdateAtIndex(1, 900, 491.11M);
+            bidList.UpdateAtIndex(1, 2300, 489.11M);
+            OrderRepresentationList askList = new OrderRepresentationList(symbol, OrderSide.Sell);
+            askList.UpdateAtIndex(1, 900, 499.11M);
+            askList.UpdateAtIndex(1, 300, 493.11M);
+            askList.UpdateAtIndex(1, 2200, 492.11M);
+
+            return new Tuple<OrderRepresentationList, OrderRepresentationList>(bidList, askList);
+            // ToDo: Remove the below commented out code when this request works perfectly on UI
+            /*List<object> list = new List<object>();
             list.Add(symbol);
             list.Add("asks");
             list.Add(new object[] { "23", "1000", "204832014" });
@@ -58,11 +71,11 @@ namespace CoinExchange.Trades.Application.MarketDataServices
             list.Add(new object[] { "34", "1000", "204832014" });
 
             list.Add("bids");
+            list.Add(new object[] { "34", "1000", "204832014" });
             list.Add(new object[] { "23", "1000", "204832014" });
-            list.Add(new object[] { "23", "1000", "204832014" });
-            list.Add(new object[] { "23", "1000", "204832014" });
+            list.Add(new object[] { "33", "1000", "204832014" });
 
-            return list;
+            return list;*/
         }
     }
 }

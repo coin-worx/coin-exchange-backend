@@ -92,7 +92,7 @@
   <ItemGroup>
     <Compile Include="CancelOrderCommandTests.cs" />
     <Compile Include="CreateOrderCommandTests.cs" />
-    <Compile Include="MemoryImageQueryServiceTests.cs" />
+    <Compile Include="MarketDataQueryServiceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

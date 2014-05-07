@@ -98,13 +98,16 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// <summary>
         /// Cancel the order with the given orderId
         /// </summary>
-        /// <param name="orderId"></param>
+        /// <param name="orderCancellation"> </param>
         /// <returns></returns>
-        public bool CancelOrder(OrderId orderId)
+        public bool CancelOrder(OrderCancellation orderCancellation)
         {
-            // ToDo: Ask Bilal to provide the currency pair as well here in order for the exchange to figure out which order
-            // book to call
-            return _exchangeEssentialsList.First().LimitOrderBook.CancelOrder(orderId);
+            switch (orderCancellation.CurrencyPair)
+            {
+                case "BTCUSD":
+                    return _exchangeEssentialsList.First().LimitOrderBook.CancelOrder(orderCancellation.OrderId);
+            }
+            return false;
         }
 
         /// <summary>
@@ -114,32 +117,6 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         {
             Log.Debug("Order Accepted by Exchange. " + order.ToString());
             // Note: the notification to the client can be sent back from here
-        }
-
-        /// <summary>
-        /// Start the replay of events for each LimitOrderBook to rebuild them from scratch
-        /// </summary>
-        /// <param name="journaler"></param>
-        public void StartReplay(Journaler journaler)
-        {
-            TurnReplayModeOn();
-            foreach (var exchangeEssential in _exchangeEssentialsList)
-            {
-                var ordersForReplay = journaler.GetOrdersForReplay(exchangeEssential.LimitOrderBook);
-                foreach (var order in ordersForReplay)
-                {
-                    if (order.OrderState == OrderState.Accepted)
-                    {
-                        this.PlaceNewOrder(order);
-                    }
-                    else if (order.OrderState == OrderState.Cancelled)
-                    {
-                        this.CancelOrder(order.OrderId);
-                    }
-                }
-            }
-
-            TurnReplayModeOff();
         }
 
         /// <summary>
@@ -197,7 +174,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
                 OrderCancellation cancellation=new OrderCancellation();
                 data.OrderCancellation.MemberWiseClone(cancellation);
                 //TODO: Modify cancel order function to order cancellation type
-                CancelOrder(cancellation.OrderId);
+                CancelOrder(cancellation);
             }
         }
     }

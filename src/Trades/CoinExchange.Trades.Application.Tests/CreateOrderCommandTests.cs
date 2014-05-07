@@ -28,6 +28,7 @@ namespace CoinExchange.Trades.Application.Tests
         [TearDown]
         public void TearDown()
         {
+            InputDisruptorPublisher.Shutdown();
         }
 
         [Test]

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CoinExchange.Trades.Application.MarketDataServices;
+using CoinExchange.Trades.Application.MarketDataServices.Representation;
 using CoinExchange.Trades.Domain.Model.OrderMatchingEngine;
 using CoinExchange.Trades.ReadModel.MemoryImages;
 
@@ -11,7 +13,7 @@ namespace CoinExchange.Trades.Application.MatchingEngineServices
     /// <summary>
     /// Gets the data from te MemoryImages upon request from the user
     /// </summary>
-    public class MemoryImageQueryService
+    public class MarketDataQueryService : IMarketDataQueryService
     {
         private OrderBookMemoryImage _orderBookMemoryImage = null;
         private DepthMemoryImage _depthMemoryImage = null;
@@ -20,7 +22,7 @@ namespace CoinExchange.Trades.Application.MatchingEngineServices
         /// <summary>
         /// Default constructor
         /// </summary>
-        public MemoryImageQueryService(OrderBookMemoryImage orderBookMemoryImage, DepthMemoryImage depthMemoryImage,
+        public MarketDataQueryService(OrderBookMemoryImage orderBookMemoryImage, DepthMemoryImage depthMemoryImage,
             BBOMemoryImage bboMemoryImage)
         {
             _orderBookMemoryImage = orderBookMemoryImage;
@@ -48,7 +50,7 @@ namespace CoinExchange.Trades.Application.MatchingEngineServices
         /// Retreives the LimitOrderBook for bids specified by the Currency pair
         /// </summary>
         /// <param name="currencyPair"></param>
-        public OrderRepresentationList GetBidBook(string currencyPair)
+        private OrderRepresentationList GetBidBook(string currencyPair)
         {
             foreach (OrderRepresentationList bidBook in _orderBookMemoryImage.BidBooks)
             {
@@ -65,7 +67,7 @@ namespace CoinExchange.Trades.Application.MatchingEngineServices
         /// </summary>
         /// <param name="currencyPair"></param>
         /// <returns></returns>
-        public OrderRepresentationList GetAskBook(string currencyPair)
+        private OrderRepresentationList GetAskBook(string currencyPair)
         {
             foreach (OrderRepresentationList askBook in _orderBookMemoryImage.AskBooks)
             {
@@ -114,5 +116,33 @@ namespace CoinExchange.Trades.Application.MatchingEngineServices
             }
             return null;
         }
+
+        #region Implementation of IMarketDataApplicationService
+
+        public TickerRepresentation[] GetTickerInfo(string pairs)
+        {
+            throw new NotImplementedException();
+        }
+
+        public OhlcRepresentation GetOhlcInfo(string pair, int interval, string since)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Returns "Bid OrderBook : Ask OrderBook" where each element contains a tuple of Value:
+        /// Item1 = Volume, Item2 = Price
+        /// </summary>
+        /// <param name="currencyPair"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        public Tuple<OrderRepresentationList, OrderRepresentationList> GetOrderBook(string currencyPair, int count)
+        {
+            OrderRepresentationList bidBook = this.GetBidBook(currencyPair);
+            OrderRepresentationList askBook = this.GetAskBook(currencyPair);
+            return new Tuple<OrderRepresentationList, OrderRepresentationList>(bidBook, askBook);
+        }
+
+        #endregion
     }
 }

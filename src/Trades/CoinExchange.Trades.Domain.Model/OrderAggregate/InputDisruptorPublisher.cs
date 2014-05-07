@@ -36,6 +36,19 @@ namespace CoinExchange.Trades.Domain.Model.OrderAggregate
             _publisher = new EventPublisher<InputPayload>(_ringBuffer);
         }
 
+        /// <summary>
+        /// Shuts down the Disruptor
+        /// </summary>
+        public static void Shutdown()
+        {
+            _disruptor.Shutdown();
+            _disruptor = null;
+        }
+
+        /// <summary>
+        /// Publishes the event
+        /// </summary>
+        /// <param name="payload"></param>
         public static void Publish(InputPayload payload)
         {
             _publisher.PublishEvent((entry, sequenceNo) =>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Web.Http;
 using CoinExchange.Trades.Application.MarketDataServices;
+using CoinExchange.Trades.ReadModel.MemoryImages;
 
 namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
 {
@@ -10,16 +11,21 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
     /// </summary>
     public class MarketController : ApiController
     {
-        private IMarketDataApplicationService _marketDataService;
+        private IMarketDataQueryService _marketDataService;
 
         /// <summary>
         /// Default constructor
         /// </summary>
-        public MarketController(IMarketDataApplicationService marketDataApplicationService)
+        public MarketController(IMarketDataQueryService marketDataQueryService)
         {
-            _marketDataService = marketDataApplicationService;
+            _marketDataService = marketDataQueryService;
         }
 
+        /// <summary>
+        /// Ticker Information
+        /// </summary>
+        /// <param name="currencyPair"></param>
+        /// <returns></returns>
         [HttpGet]
         [Route("marketdata/tickerinfo")]
         public IHttpActionResult TickerInfo(string currencyPair)
@@ -34,6 +40,13 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
             }
         }
 
+        /// <summary>
+        /// OHLC information
+        /// </summary>
+        /// <param name="currencyPair"></param>
+        /// <param name="interval"></param>
+        /// <param name="since"></param>
+        /// <returns></returns>
         [HttpGet]
         [Route("marketdata/ohlcinfo")]
         public IHttpActionResult OhlcInfo(string currencyPair, int interval = 1, string since = "")
@@ -61,10 +74,10 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         {
             try
             {
-                List<object> list = _marketDataService.GetOrderBook(currencyPair, count);
+                Tuple<OrderRepresentationList, OrderRepresentationList> list = _marketDataService.GetOrderBook(currencyPair, count);
                 if (list != null)
                 {
-                    return Ok<List<object>>(list);
+                    return Ok<Tuple<OrderRepresentationList, OrderRepresentationList>>(list);
                 }
                 return NotFound();
             }

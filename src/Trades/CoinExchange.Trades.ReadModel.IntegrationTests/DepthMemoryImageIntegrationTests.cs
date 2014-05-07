@@ -782,8 +782,8 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             Assert.AreEqual(450, depthMemoryImage.AskDepths.First().Value.ToList()[1].Item1);
             Assert.AreEqual(2, depthMemoryImage.AskDepths.First().Value.ToList()[1].Item3);
 
-            exchange.CancelOrder(buyOrder1Id);
-            exchange.CancelOrder(sellOrder2Id);
+            exchange.CancelOrder(new OrderCancellation(buyOrder1Id, buyOrder1.TraderId, buyOrder1.CurrencyPair));
+            exchange.CancelOrder(new OrderCancellation(sellOrder2Id, sellOrder2.TraderId, sellOrder2.CurrencyPair));
 
             manualResetEvent.Reset();
             manualResetEvent.WaitOne(4000);
@@ -823,9 +823,9 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             Assert.AreEqual(450, depthMemoryImage.AskDepths.First().Value.ToList()[1].Item1);
             Assert.AreEqual(2, depthMemoryImage.AskDepths.First().Value.ToList()[1].Item3);
 
-            exchange.CancelOrder(buyOrder4Id);
-            exchange.CancelOrder(sellOrder3Id);
-            exchange.CancelOrder(sellOrder5Id);
+            exchange.CancelOrder(new OrderCancellation(buyOrder4Id, buyOrder4.TraderId, buyOrder4.CurrencyPair));
+            exchange.CancelOrder(new OrderCancellation(sellOrder3Id, sellOrder3.TraderId, sellOrder3.CurrencyPair));
+            exchange.CancelOrder(new OrderCancellation(sellOrder5Id, sellOrder5.TraderId, sellOrder5.CurrencyPair));
 
             manualResetEvent.Reset();
             manualResetEvent.WaitOne(4000);

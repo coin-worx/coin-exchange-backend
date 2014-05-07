@@ -31,7 +31,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
                     }
                     else if (order.OrderState == OrderState.Cancelled)
                     {
-                        exchange.CancelOrder(order.OrderId);
+                        exchange.CancelOrder(new OrderCancellation(order.OrderId, order.TraderId, order.CurrencyPair));
                     }
                 }
             }

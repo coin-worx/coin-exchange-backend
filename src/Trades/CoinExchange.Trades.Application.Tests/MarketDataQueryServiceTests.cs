@@ -14,14 +14,14 @@ using NUnit.Framework;
 namespace CoinExchange.Trades.Application.Tests
 {
     [TestFixture]
-    class MemoryImageQueryServiceTests
+    class MarketDataQueryServiceTests
     {
         [Test]
         [Category("Unit")]
         public void GetBboTest_ChecksIfTheBboIsRetreivedSuccessfully_ReturnsBboForCurrencypairIfPresent()
         {
             BBOMemoryImage bboMemoryImage = new BBOMemoryImage();
-            MemoryImageQueryService queryService = new MemoryImageQueryService(null, null, bboMemoryImage);
+            MarketDataQueryService queryService = new MarketDataQueryService(null, null, bboMemoryImage);
 
             DepthLevel bestBid = new DepthLevel(new Price(491));
             bestBid.IncreaseVolume(new Volume(100));
@@ -45,7 +45,7 @@ namespace CoinExchange.Trades.Application.Tests
         public void GetBidOrderBookTest_ChecksIfOrderBookIsretreivedSuccessfully_VerifiesOrderBookToSeeItContainsValuesAsExpected()
         {
             OrderBookMemoryImage orderBookMemoryImage = new OrderBookMemoryImage();
-            MemoryImageQueryService memoryImageQueryService = new MemoryImageQueryService(orderBookMemoryImage, null, null);
+            MarketDataQueryService memoryImageQueryService = new MarketDataQueryService(orderBookMemoryImage, null, null);
             LimitOrderBook limitOrderBook = new LimitOrderBook("BTCUSD");
 
             Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
@@ -73,16 +73,16 @@ namespace CoinExchange.Trades.Application.Tests
             Assert.AreEqual(3, limitOrderBook.Asks.Count());
             orderBookMemoryImage.OnOrderBookChanged(limitOrderBook);
 
-            OrderRepresentationList bidList = memoryImageQueryService.GetBidBook("BTCUSD");
-            Assert.AreEqual("BTCUSD", bidList.CurrencyPair);
-            Assert.AreEqual(946, bidList.ToList()[0].Item2); // Volume
-            Assert.AreEqual(100, bidList.ToList()[0].Item1); // Price
+            Tuple<OrderRepresentationList, OrderRepresentationList> bidList = memoryImageQueryService.GetOrderBook("BTCUSD", 10);
+            Assert.AreEqual("BTCUSD", bidList.Item1.CurrencyPair);
+            Assert.AreEqual(946, bidList.Item1.ToList()[0].Item2); // Volume
+            Assert.AreEqual(100, bidList.Item1.ToList()[0].Item1); // Price
 
-            Assert.AreEqual(945, bidList.ToList()[1].Item2); // Volume
-            Assert.AreEqual(100, bidList.ToList()[1].Item1); // Price
+            Assert.AreEqual(945, bidList.Item1.ToList()[1].Item2); // Volume
+            Assert.AreEqual(100, bidList.Item1.ToList()[1].Item1); // Price
 
-            Assert.AreEqual(941, bidList.ToList()[2].Item2); // Volume
-            Assert.AreEqual(100, bidList.ToList()[2].Item1); // Price
+            Assert.AreEqual(941, bidList.Item1.ToList()[2].Item2); // Volume
+            Assert.AreEqual(100, bidList.Item1.ToList()[2].Item1); // Price
         }
 
         [Test]
@@ -90,7 +90,7 @@ namespace CoinExchange.Trades.Application.Tests
         public void GetAskOrderBookTest_ChecksIfOrderBookIsretreivedSuccessfully_VerifiesOrderBookToSeeItContainsValuesAsExpected()
         {
             OrderBookMemoryImage orderBookMemoryImage = new OrderBookMemoryImage();
-            MemoryImageQueryService memoryImageQueryService = new MemoryImageQueryService(orderBookMemoryImage,null, null);
+            MarketDataQueryService memoryImageQueryService = new MarketDataQueryService(orderBookMemoryImage,null, null);
             LimitOrderBook limitOrderBook = new LimitOrderBook("BTCUSD");
 
             Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
@@ -118,16 +118,16 @@ namespace CoinExchange.Trades.Application.Tests
             Assert.AreEqual(3, limitOrderBook.Asks.Count());
             orderBookMemoryImage.OnOrderBookChanged(limitOrderBook);
 
-            OrderRepresentationList askList = memoryImageQueryService.GetAskBook("BTCUSD");
-            Assert.AreEqual("BTCUSD", askList.CurrencyPair);
-            Assert.AreEqual(947, askList.ToList()[0].Item2); // Volume
-            Assert.AreEqual(100, askList.ToList()[0].Item1); // Price
+            Tuple<OrderRepresentationList, OrderRepresentationList> askList = memoryImageQueryService.GetOrderBook("BTCUSD", 10);
+            Assert.AreEqual("BTCUSD", askList.Item2.CurrencyPair);
+            Assert.AreEqual(947, askList.Item2.ToList()[0].Item2); // Volume
+            Assert.AreEqual(100, askList.Item2.ToList()[0].Item1); // Price
 
-            Assert.AreEqual(948, askList.ToList()[1].Item2); // Volume
-            Assert.AreEqual(100, askList.ToList()[1].Item1); // Price
+            Assert.AreEqual(948, askList.Item2.ToList()[1].Item2); // Volume
+            Assert.AreEqual(100, askList.Item2.ToList()[1].Item1); // Price
 
-            Assert.AreEqual(949, askList.ToList()[2].Item2); // Volume
-            Assert.AreEqual(100, askList.ToList()[2].Item1); // Price
+            Assert.AreEqual(949, askList.Item2.ToList()[2].Item2); // Volume
+            Assert.AreEqual(100, askList.Item2.ToList()[2].Item1); // Price
         }
 
         [Test]
@@ -135,7 +135,7 @@ namespace CoinExchange.Trades.Application.Tests
         public void GetBidDepthForACurrencyTest_TestsTheBidDepthRetreivalForAParticularCurrencyPair_ReturnsDepthLevelinformationForEachLevel()
         {
             DepthMemoryImage depthMemoryImage = new DepthMemoryImage();
-            MemoryImageQueryService memoryImageQueryService = new MemoryImageQueryService(null, depthMemoryImage, null);
+            MarketDataQueryService memoryImageQueryService = new MarketDataQueryService(null, depthMemoryImage, null);
 
             Depth depth = new Depth("BTCUSD", 10);
 
@@ -168,7 +168,7 @@ namespace CoinExchange.Trades.Application.Tests
         public void GetAskDepthForACurrencyTest_TestsTheAskDepthRetreivalForAParticularCurrencyPair_ReturnsDepthLevelinformationForEachLevel()
         {
             DepthMemoryImage depthMemoryImage = new DepthMemoryImage();
-            MemoryImageQueryService memoryImageQueryService = new MemoryImageQueryService(null, depthMemoryImage, null);
+            MarketDataQueryService memoryImageQueryService = new MarketDataQueryService(null, depthMemoryImage, null);
 
             Depth depth = new Depth("BTCUSD", 10);
 

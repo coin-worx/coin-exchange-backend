@@ -410,7 +410,7 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             // BidsOrderBooks -> First BidOrderBook -> Third Bid's price in first OrderBook
             Assert.AreEqual(486.34, orderBookMemoryImage.BidBooks.First().ToList()[2].Item2, "Price of third bid in the first bid book in the bids book list in  memory image");
 
-            exchange.CancelOrder(buyOrder3Id);
+            exchange.CancelOrder(new OrderCancellation(buyOrder3Id, buyOrder3.TraderId, buyOrder3.CurrencyPair));
 
             manualResetEvent.Reset();
             manualResetEvent.WaitOne(4000);
@@ -446,7 +446,7 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             // AsksOrderBooks -> First AskOrderBook -> Second Ask's price in first OrderBook
             Assert.AreEqual(496.34, orderBookMemoryImage.AskBooks.First().ToList()[1].Item2, "Price of Second ask in the first ask book in the ask books list in memory image");
 
-            exchange.CancelOrder(buyOrder2Id);
+            exchange.CancelOrder(new OrderCancellation(buyOrder2Id, buyOrder2.TraderId, buyOrder2.CurrencyPair));
 
             manualResetEvent.Reset();
             manualResetEvent.WaitOne(4000);
@@ -562,7 +562,7 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             // AsksOrderBooks -> First AskOrderBook -> Third Ask's price in first OrderBook
             Assert.AreEqual(497.34, orderBookMemoryImage.AskBooks.First().ToList()[2].Item2, "Price of Third ask in the first ask book in the ask books list in memory image");
 
-            exchange.CancelOrder(sellOrder3Id);
+            exchange.CancelOrder(new OrderCancellation(sellOrder3Id, sellOrder3.TraderId, sellOrder3.CurrencyPair));
 
             Assert.AreEqual(3, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
@@ -597,7 +597,7 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             // AsksOrderBooks -> First AskOrderBook -> Second Ask's price in first OrderBook
             Assert.AreEqual(497.34, orderBookMemoryImage.AskBooks.First().ToList()[1].Item2, "Price of Second ask in the first ask book in the ask books list in memory image");
 
-            exchange.CancelOrder(sellOrder1Id);
+            exchange.CancelOrder(new OrderCancellation(sellOrder1Id, sellOrder1.TraderId, sellOrder1.CurrencyPair));
 
             Assert.AreEqual(3, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(1, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());

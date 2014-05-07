@@ -18,6 +18,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
     {
         private IOrderApplicationService _orderApplicationService;
         private IOrderQueryService _orderQueryService;
+
         /// <summary>
         /// Default Constructor
         /// </summary>
@@ -26,6 +27,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
             _orderApplicationService = orderApplicationService;
             _orderQueryService = orderQueryService;
         }
+
         /// <summary>
         /// Private call to cancel user orders
         /// </summary>
@@ -50,6 +52,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                 return InternalServerError(ex);
             }
         }
+
         /// <summary>
         /// Private call for user to create order
         /// </summary>
@@ -76,6 +79,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                 return InternalServerError(ex);
             }
         }
+
         /// <summary>
         /// Private call that returns orders that have not been executed but those that have been accepted on the server. Exception can be 
         /// provided in the second parameter
@@ -107,6 +111,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                 return InternalServerError(ex);
             }
         }
+
         /// <summary>
         /// Private call returns orders of the user that have been filled/executed
         /// Params:

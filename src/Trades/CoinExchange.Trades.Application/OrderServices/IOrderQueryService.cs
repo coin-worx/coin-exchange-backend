@@ -12,8 +12,5 @@ namespace CoinExchange.Trades.Application.OrderServices
         List<OrderRepresentation> GetClosedOrders(TraderId traderId, bool includeTrades = false,
             string userRefId = "",
             string startTime = "", string endTime = "", string offset = "", string closetime = "both");
-
-        List<object> GetOrderBook(string symbol, int count);
-
     }
 }

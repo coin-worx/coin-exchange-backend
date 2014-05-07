@@ -57,11 +57,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MarketDataServices\IMarketDataApplicationService.cs" />
-    <Compile Include="MarketDataServices\StubbedMarketDataApplicationService.cs" />
+    <Compile Include="MarketDataServices\IMarketDataQueryService.cs" />
+    <Compile Include="MarketDataServices\StubbedMarketDataQueryService.cs" />
     <Compile Include="MarketDataServices\Representation\OhlcRepresentation.cs" />
     <Compile Include="MarketDataServices\Representation\TickerRepresentation.cs" />
-    <Compile Include="MatchingEngineServices\MemoryImageQueryService.cs" />
+    <Compile Include="MatchingEngineServices\MarketDataQueryService.cs" />
     <Compile Include="OrderServices\CancelOrderCommandValidation.cs" />
     <Compile Include="OrderServices\Commands\CancelOrderCommand.cs" />
     <Compile Include="OrderServices\Commands\CreateOrderCommand.cs" />
