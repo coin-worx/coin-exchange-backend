@@ -58,11 +58,11 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
             {
                 if (_bidDepth.ContainsKey(currencyPair))
                 {
-                    _bidDepth.SetValue(currencyPair, CreateDepthLevels(bidLevels));
+                    _bidDepth.SetValue(currencyPair, depthLevelsRepresentations);
                 }
                 else
                 {
-                    _bidDepth.AddDepth(currencyPair, CreateDepthLevels(bidLevels));
+                    _bidDepth.AddDepth(currencyPair, depthLevelsRepresentations);
                 }
             }
         }
@@ -79,11 +79,11 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
             {
                 if (_askDepth.ContainsKey(currencyPair))
                 {
-                    _askDepth.SetValue(currencyPair, CreateDepthLevels(askLevels));
+                    _askDepth.SetValue(currencyPair, depthLevelsRepresentations);
                 }
                 else
                 {
-                    _askDepth.AddDepth(currencyPair, CreateDepthLevels(askLevels));
+                    _askDepth.AddDepth(currencyPair, depthLevelsRepresentations);
                 }
             }
         }
