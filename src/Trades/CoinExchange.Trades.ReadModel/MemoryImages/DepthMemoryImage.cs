@@ -88,6 +88,11 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
             }
         }
 
+        /// <summary>
+        /// Create Depth Levels
+        /// </summary>
+        /// <param name="depthLevels"></param>
+        /// <returns></returns>
         private DepthLevelRepresentationList CreateDepthLevels(DepthLevel[] depthLevels)
         {
             DepthLevelRepresentationList depthLevelsRepresentations = new DepthLevelRepresentationList(depthLevels.Length);
@@ -107,8 +112,10 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
 
         /// <summary>
         /// Contains Depth levels for bids for each currency in the order book, and each depth level contains
-        /// Item1 = Aggregated Volume
-        /// Item2 = Price
+        /// Key = CurrencyPair,
+        /// Value:
+        /// Item1 = Aggregated Volume,
+        /// Item2 = Price,
         /// Item3 = Number of orders present
         /// </summary>
         public DepthRepresentation BidDepths
@@ -118,8 +125,10 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
 
         /// <summary>
         /// Contains Depth levels for asks for each currency in the order book, and each depth level contains:
-        /// Item1 = Aggregated Volume
-        /// Item2 = Price
+        /// Key = CurrencyPair,
+        /// Value:
+        /// Item1 = Aggregated Volume,
+        /// Item2 = Price,
         /// Item3 = Number of orders present
         /// </summary>
         public DepthRepresentation AskDepths

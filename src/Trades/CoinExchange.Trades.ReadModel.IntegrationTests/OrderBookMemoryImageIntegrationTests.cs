@@ -17,7 +17,7 @@ using NUnit.Framework;
 namespace CoinExchange.Trades.ReadModel.IntegrationTests
 {
     [TestFixture]
-    class OrderBookMIIntegrationTests
+    class OrderBookMemoryImageIntegrationTests
     {
         private const string Integration = "Integration";
 

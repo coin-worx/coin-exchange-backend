@@ -21,7 +21,7 @@ namespace CoinExchange.Trades.Application.Tests
         public void GetBboTest_ChecksIfTheBboIsRetreivedSuccessfully_ReturnsBboForCurrencypairIfPresent()
         {
             BBOMemoryImage bboMemoryImage = new BBOMemoryImage();
-            MemoryImageQueryService queryService = new MemoryImageQueryService(null, bboMemoryImage);
+            MemoryImageQueryService queryService = new MemoryImageQueryService(null, null, bboMemoryImage);
 
             DepthLevel bestBid = new DepthLevel(new Price(491));
             bestBid.IncreaseVolume(new Volume(100));
@@ -45,7 +45,7 @@ namespace CoinExchange.Trades.Application.Tests
         public void GetBidOrderBookTest_ChecksIfOrderBookIsretreivedSuccessfully_VerifiesOrderBookToSeeItContainsValuesAsExpected()
         {
             OrderBookMemoryImage orderBookMemoryImage = new OrderBookMemoryImage();
-            MemoryImageQueryService memoryImageQueryService = new MemoryImageQueryService(orderBookMemoryImage, null);
+            MemoryImageQueryService memoryImageQueryService = new MemoryImageQueryService(orderBookMemoryImage, null, null);
             LimitOrderBook limitOrderBook = new LimitOrderBook("BTCUSD");
 
             Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
@@ -90,7 +90,7 @@ namespace CoinExchange.Trades.Application.Tests
         public void GetAskOrderBookTest_ChecksIfOrderBookIsretreivedSuccessfully_VerifiesOrderBookToSeeItContainsValuesAsExpected()
         {
             OrderBookMemoryImage orderBookMemoryImage = new OrderBookMemoryImage();
-            MemoryImageQueryService memoryImageQueryService = new MemoryImageQueryService(orderBookMemoryImage, null);
+            MemoryImageQueryService memoryImageQueryService = new MemoryImageQueryService(orderBookMemoryImage,null, null);
             LimitOrderBook limitOrderBook = new LimitOrderBook("BTCUSD");
 
             Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
@@ -128,6 +128,69 @@ namespace CoinExchange.Trades.Application.Tests
 
             Assert.AreEqual(949, askList.ToList()[2].Item2); // Volume
             Assert.AreEqual(100, askList.ToList()[2].Item1); // Price
+        }
+
+        [Test]
+        [Category("Unit")]
+        public void GetBidDepthForACurrencyTest_TestsTheBidDepthRetreivalForAParticularCurrencyPair_ReturnsDepthLevelinformationForEachLevel()
+        {
+            DepthMemoryImage depthMemoryImage = new DepthMemoryImage();
+            MemoryImageQueryService memoryImageQueryService = new MemoryImageQueryService(null, depthMemoryImage, null);
+
+            Depth depth = new Depth("BTCUSD", 10);
+
+            depth.AddOrder(new Price(941), new Volume(300), OrderSide.Buy);
+            depth.AddOrder(new Price(941), new Volume(200), OrderSide.Buy);
+            depth.AddOrder(new Price(942), new Volume(200), OrderSide.Buy);
+            depth.AddOrder(new Price(943), new Volume(500), OrderSide.Buy);
+            depth.AddOrder(new Price(948), new Volume(300), OrderSide.Sell);
+            depth.AddOrder(new Price(949), new Volume(200), OrderSide.Sell);
+            depth.AddOrder(new Price(949), new Volume(200), OrderSide.Sell);
+            depth.AddOrder(new Price(949), new Volume(500), OrderSide.Sell);
+            depthMemoryImage.OnDepthArrived(depth);
+
+            Tuple<decimal, decimal, int>[] bidDepth = memoryImageQueryService.GetBidDepth("BTCUSD");
+
+            Assert.AreEqual(500, bidDepth[0].Item1); // Aggregated Volume
+            Assert.AreEqual(943, bidDepth[0].Item2); // Price
+            Assert.AreEqual(1, bidDepth[0].Item3); // OrderCount
+            Assert.AreEqual(200, bidDepth[1].Item1); // Aggregated Volume
+            Assert.AreEqual(942, bidDepth[1].Item2); // Price
+            Assert.AreEqual(1, bidDepth[1].Item3); // OrderCount
+            Assert.AreEqual(500, bidDepth[2].Item1); // Aggregated Volume
+            Assert.AreEqual(941, bidDepth[2].Item2); // Price
+            Assert.AreEqual(2, bidDepth[2].Item3); // OrderCount
+            Assert.IsNull(bidDepth[3]); // Index three is null as there is no level present for it
+        }
+
+        [Test]
+        [Category("Unit")]
+        public void GetAskDepthForACurrencyTest_TestsTheAskDepthRetreivalForAParticularCurrencyPair_ReturnsDepthLevelinformationForEachLevel()
+        {
+            DepthMemoryImage depthMemoryImage = new DepthMemoryImage();
+            MemoryImageQueryService memoryImageQueryService = new MemoryImageQueryService(null, depthMemoryImage, null);
+
+            Depth depth = new Depth("BTCUSD", 10);
+
+            depth.AddOrder(new Price(941), new Volume(300), OrderSide.Buy);
+            depth.AddOrder(new Price(941), new Volume(200), OrderSide.Buy);
+            depth.AddOrder(new Price(942), new Volume(200), OrderSide.Buy);
+            depth.AddOrder(new Price(943), new Volume(500), OrderSide.Buy);
+            depth.AddOrder(new Price(948), new Volume(300), OrderSide.Sell);
+            depth.AddOrder(new Price(949), new Volume(200), OrderSide.Sell);
+            depth.AddOrder(new Price(949), new Volume(200), OrderSide.Sell);
+            depth.AddOrder(new Price(949), new Volume(500), OrderSide.Sell);
+            depthMemoryImage.OnDepthArrived(depth);
+
+            Tuple<decimal, decimal, int>[] askDepth = memoryImageQueryService.GetAskDepth("BTCUSD");
+
+            Assert.AreEqual(300, askDepth[0].Item1); // Aggregated Volume
+            Assert.AreEqual(948, askDepth[0].Item2); // Price
+            Assert.AreEqual(1, askDepth[0].Item3); // OrderCount
+            Assert.AreEqual(900, askDepth[1].Item1); // Aggregated Volume
+            Assert.AreEqual(949, askDepth[1].Item2); // Price
+            Assert.AreEqual(3, askDepth[1].Item3); // OrderCount
+            Assert.IsNull(askDepth[2]); // Second index is null as there is no depth level for it
         }
     }
 }

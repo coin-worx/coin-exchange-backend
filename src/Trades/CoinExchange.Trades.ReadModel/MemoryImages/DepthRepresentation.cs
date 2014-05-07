@@ -105,34 +105,71 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
         #endregion
 
         #region Implementation of IDictionary<string,DepthLevelRepresentationList>
-
+        
+        /// <summary>
+        /// Conatains Key
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public bool ContainsKey(string key)
         {
             return _depths.ContainsKey(key);
         }
 
+        /// <summary>
+        /// Add
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
         public void Add(string key, DepthLevelRepresentationList value)
         {
             throw new NotImplementedException("The Add() method just called cannot be used. Only classes internal to the " +
                                               "assembly can add items to this dictionary.");
         }
 
+        /// <summary>
+        /// Add Depth. Depth can be added to this collection using only this method from inside this assembly
+        /// </summary>
+        /// <param name="currencypair"></param>
+        /// <param name="depthLevelRepresentation"></param>
         internal void AddDepth(string currencypair, DepthLevelRepresentationList depthLevelRepresentation)
         {
             _depths.Add(currencypair, depthLevelRepresentation);
         }
 
+        /// <summary>
+        /// Remove(Method not applicable to this collection)
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public bool Remove(string key)
         {
             throw new NotImplementedException("Cannot remove the depth from outside the assembly of this dictionary. Only " +
                                               "classes within the assembly can remove from this dictionary.");
         }
 
+        /// <summary>
+        /// TrygetValue
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public bool TryGetValue(string key, out DepthLevelRepresentationList value)
+        {
+            throw new NotImplementedException("TryGetValue cannot be called on DepthRepresentation. Try 'TryGetDepth' from inside" +
+                                              " the assembly of DepthRepresentation.");
+        }
+
+        internal bool TryGetDepth(string key, out  DepthLevelRepresentationList value)
         {
             return _depths.TryGetValue(key, out value);
         }
 
+        /// <summary>
+        /// Assignment
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public DepthLevelRepresentationList this[string key]
         {
             get { return _depths[key]; }
