@@ -77,8 +77,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BBOMemoryImageIntegrationTests.cs" />
-    <Compile Include="DepthMIIntegrationTests.cs" />
-    <Compile Include="OrderBookMIIntegrationTests.cs" />
+    <Compile Include="DepthMemoryImageIntegrationTests.cs" />
+    <Compile Include="OrderBookMemoryImageIntegrationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

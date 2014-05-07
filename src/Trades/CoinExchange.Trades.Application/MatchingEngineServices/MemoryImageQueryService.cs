@@ -14,14 +14,17 @@ namespace CoinExchange.Trades.Application.MatchingEngineServices
     public class MemoryImageQueryService
     {
         private OrderBookMemoryImage _orderBookMemoryImage = null;
+        private DepthMemoryImage _depthMemoryImage = null;
         private BBOMemoryImage _bboMemoryImage = null;
 
         /// <summary>
         /// Default constructor
         /// </summary>
-        public MemoryImageQueryService(OrderBookMemoryImage orderBookMemoryImage, BBOMemoryImage bboMemoryImage)
+        public MemoryImageQueryService(OrderBookMemoryImage orderBookMemoryImage, DepthMemoryImage depthMemoryImage,
+            BBOMemoryImage bboMemoryImage)
         {
             _orderBookMemoryImage = orderBookMemoryImage;
+            _depthMemoryImage = depthMemoryImage;
             _bboMemoryImage = bboMemoryImage;
         }
 
@@ -69,6 +72,44 @@ namespace CoinExchange.Trades.Application.MatchingEngineServices
                 if (askBook.CurrencyPair == currencyPair)
                 {
                     return askBook;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Gets the bid depth for the specified Currency Pair
+        /// </summary>
+        /// <param name="currencyPair"></param>
+        /// <returns></returns>
+        public Tuple<decimal, decimal, int>[] GetBidDepth(string currencyPair)
+        {
+            // Traverse within each key value pair and find the currency pair stored
+            foreach (KeyValuePair<string, DepthLevelRepresentationList> keyValuePair in _depthMemoryImage.BidDepths)
+            {
+                if (keyValuePair.Key == currencyPair)
+                {
+                    DepthLevelRepresentationList depthLevels = keyValuePair.Value;
+                    return depthLevels.DepthLevels;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Gets the ask depth for the specified Currency Pair
+        /// </summary>
+        /// <param name="currencyPair"></param>
+        /// <returns></returns>
+        public Tuple<decimal, decimal, int>[] GetAskDepth(string currencyPair)
+        {
+            // Traverse within each key value pair and find the currency pair stored
+            foreach (KeyValuePair<string, DepthLevelRepresentationList> keyValuePair in _depthMemoryImage.AskDepths)
+            {
+                if (keyValuePair.Key == currencyPair)
+                {
+                    DepthLevelRepresentationList depthLevels = keyValuePair.Value;
+                    return depthLevels.DepthLevels;
                 }
             }
             return null;
