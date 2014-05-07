@@ -14,7 +14,7 @@ namespace CoinExchange.Trades.ReadModel.Persistence.Tests
     /// http://www.springframework.net/docs/1.3.0/reference/html/testing.html#testing-tx
     /// </summary>
     [TestFixture]
-    public abstract class AbstractDaoIntegrationTests : AbstractTransactionalDbProviderSpringContextTests
+    public abstract class AbstractConfiguration : AbstractTransactionalDbProviderSpringContextTests
     {
         protected override string[] ConfigLocations
         {
@@ -28,6 +28,5 @@ namespace CoinExchange.Trades.ReadModel.Persistence.Tests
                     };
             }
         }
-        
     }
 }

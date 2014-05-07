@@ -77,6 +77,7 @@
     <Compile Include="NHibernate\OrderRepository.cs" />
     <Compile Include="NHibernate\PersistenceRepository.cs" />
     <Compile Include="NHibernateSessionFactory.cs" />
+    <Compile Include="NHibernate\TickerInfoRepository.cs" />
     <Compile Include="NHibernate\TradeRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -112,6 +113,11 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="NHibernateMappings\AssetPairReadModel.hbm.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="NHibernateMappings\TickerInfoReadModel.hbm.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>

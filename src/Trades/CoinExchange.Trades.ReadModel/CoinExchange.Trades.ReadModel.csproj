@@ -80,8 +80,10 @@
     <Compile Include="Repositories\IOhlcRepository.cs" />
     <Compile Include="Repositories\IPersistanceRepository.cs" />
     <Compile Include="Repositories\IOrderRepository.cs" />
+    <Compile Include="Repositories\ITickerInfoRepository.cs" />
     <Compile Include="Repositories\ITradeRepository.cs" />
     <Compile Include="Services\OhlcCalculation.cs" />
+    <Compile Include="Services\TickerInfoCalculation.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Common\CoinExchange.Common\CoinExchange.Common.csproj">
@@ -99,6 +101,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Config\TadeEventListenerConfig.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

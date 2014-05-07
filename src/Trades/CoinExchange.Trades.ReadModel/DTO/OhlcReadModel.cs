@@ -30,7 +30,7 @@ namespace CoinExchange.Trades.ReadModel.DTO
         /// Update ohlc to recent trade
         /// </summary>
         /// <param name="latestTrade"></param>
-        public void UpdateOhlc(Trade latestTrade,decimal volume)
+        public void UpdateOhlc(Trade latestTrade)
         {
             //update high
             if (latestTrade.ExecutionPrice.Value > High)
@@ -39,7 +39,7 @@ namespace CoinExchange.Trades.ReadModel.DTO
             if (latestTrade.ExecutionPrice.Value < Low)
                 Low = latestTrade.ExecutionPrice.Value;
             //assign new calculated volume
-            Volume = volume;
+            Volume += latestTrade.ExecutedVolume.Value;
             //assign new close
             Close = latestTrade.ExecutionPrice.Value;
         }

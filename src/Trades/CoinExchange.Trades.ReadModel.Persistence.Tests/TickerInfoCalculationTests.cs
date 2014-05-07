@@ -20,27 +20,26 @@ using NUnit.Framework;
 namespace CoinExchange.Trades.ReadModel.Persistence.Tests
 {
     [TestFixture]
-    public class OhlcCalculationTests:AbstractConfiguration
+    internal class TickerInfoCalculationTests : AbstractConfiguration
     {
         private ManualResetEvent _manualResetEvent;
         private IEventStore _eventStore;
         private TradeEventListener _listener;
         private IPersistanceRepository _persistance;
         private IOhlcRepository _ohlcRepository;
+        private ITickerInfoRepository _tickerInfoRepository;
 
-        public ITradeRepository TradeRepository
+        public ITickerInfoRepository TickerInfoRepository
         {
-            set { _tradeRepository = value; }
+            set { _tickerInfoRepository = value; }
         }
-
+        
         public IPersistanceRepository Persistance
         {
             set { _persistance = value; }
         }
 
         private ISessionFactory sessionFactory;
-        private ITradeRepository _tradeRepository;
-        
         public ISessionFactory SessionFactory
         {
             set { sessionFactory = value; }
@@ -67,7 +66,7 @@ namespace CoinExchange.Trades.ReadModel.Persistence.Tests
             _eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
             Journaler journaler = new Journaler(_eventStore);
             //assign journaler to disruptor as its consumer
-            OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
+            OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] {journaler});
             _manualResetEvent = new ManualResetEvent(false);
             //  _listener = new TradeEventListener(_persistance);
             AfterSetup();
@@ -83,52 +82,69 @@ namespace CoinExchange.Trades.ReadModel.Persistence.Tests
 
         [Test]
         [Category("Integration")]
-        public void CheckBarFormation_WhenANewTradeIsArrived_NewUpdatedBarShouldGetSaved()
+        public void VerifyTickerInfoCalculations_WhenANewTradeIsArrived_NewUpdatedTickerInfoShouldGetSaved()
         {
             Order buyOrder = OrderFactory.CreateOrder("123", "XBTUSD", "limit", "buy", 10, 100,
-              new StubbedOrderIdGenerator());
+                new StubbedOrderIdGenerator());
             Order sellOrder = OrderFactory.CreateOrder("1234", "XBTUSD", "limit", "sell", 10, 100,
-               new StubbedOrderIdGenerator());
+                new StubbedOrderIdGenerator());
 
             DateTime dateTime = DateTime.Now.AddSeconds(-1*DateTime.Now.Second);
-            Trade trade1 = new Trade(new TradeId(1), "XBTUSD", new Price(10), new Volume(10),dateTime.AddSeconds(10), buyOrder, sellOrder);
-            Trade trade2 = new Trade(new TradeId(2), "XBTUSD", new Price(15), new Volume(15), dateTime.AddSeconds(15), buyOrder, sellOrder);
-            Trade trade3 = new Trade(new TradeId(3), "XBTUSD", new Price(20), new Volume(5), dateTime.AddSeconds(20), buyOrder, sellOrder);
-            Trade trade4 = new Trade(new TradeId(4), "XBTUSD", new Price(5), new Volume(10), dateTime.AddSeconds(40), buyOrder, sellOrder);
-            Trade trade5 = new Trade(new TradeId(5), "XBTUSD", new Price(2), new Volume(10), dateTime.AddMinutes(1), buyOrder, sellOrder);
-            Trade trade6 = new Trade(new TradeId(6), "XBTUSD", new Price(10), new Volume(5), dateTime.AddMinutes(1.1), buyOrder, sellOrder);
-            
+            Trade trade1 = new Trade(new TradeId(1), "XBTUSD", new Price(10), new Volume(10), dateTime.AddSeconds(10),
+                buyOrder, sellOrder);
+            Trade trade2 = new Trade(new TradeId(2), "XBTUSD", new Price(15), new Volume(15), dateTime.AddSeconds(15),
+                buyOrder, sellOrder);
+            Trade trade3 = new Trade(new TradeId(3), "XBTUSD", new Price(20), new Volume(5), dateTime.AddSeconds(20),
+                buyOrder, sellOrder);
+            Trade trade4 = new Trade(new TradeId(4), "XBTUSD", new Price(5), new Volume(10), dateTime.AddSeconds(40),
+                buyOrder, sellOrder);
+            Trade trade5 = new Trade(new TradeId(5), "XBTUSD", new Price(2), new Volume(10), dateTime.AddMinutes(1),
+                buyOrder, sellOrder);
+            Trade trade6 = new Trade(new TradeId(6), "XBTUSD", new Price(10), new Volume(5), dateTime.AddMinutes(1.1),
+                buyOrder, sellOrder);
+
             OutputDisruptor.Publish(trade1);
+            _manualResetEvent.WaitOne(4000);
             OutputDisruptor.Publish(trade2);
+            _manualResetEvent.WaitOne(4000);
             OutputDisruptor.Publish(trade3);
+            _manualResetEvent.WaitOne(4000);
             OutputDisruptor.Publish(trade4);
+            _manualResetEvent.WaitOne(4000);
             OutputDisruptor.Publish(trade5);
+            _manualResetEvent.WaitOne(4000);
             OutputDisruptor.Publish(trade6);
             _manualResetEvent.WaitOne(10000);
-            OhlcReadModel model = _ohlcRepository.GetOhlcByDateTime(dateTime);
-            OhlcReadModel model2 = _ohlcRepository.GetOhlcByDateTime(dateTime.AddMinutes(1));
 
-            //bar 1 verification(will form from trade 1-4)
+            TickerInfoReadModel model = _tickerInfoRepository.GetTickerInfoByCurrencyPair("XBTUSD");
             Assert.NotNull(model);
-            Assert.AreEqual(model.High,20);
-            Assert.AreEqual(model.Open, 10);
-            Assert.AreEqual(model.Low, 5);
-            Assert.AreEqual(model.Close, 5);
-            Assert.AreEqual(model.Volume, 40);
-
-            //bar 2 verification(will form from trade 5-6)
-            Assert.NotNull(model2);
-            Assert.AreEqual(model2.High, 10);
-            Assert.AreEqual(model2.Open, 2);
-            Assert.AreEqual(model2.Low, 2);
-            Assert.AreEqual(model2.Close, 10);
-            Assert.AreEqual(model2.Volume, 15);
-            
+            Assert.AreEqual(model.TradePrice, 10);
+            Assert.AreEqual(model.TradeVolume, 5);
+            Assert.AreEqual(model.OpeningPrice, 10);
+            Assert.AreEqual(model.TodaysHigh, 20);
+            Assert.AreEqual(model.Last24HoursHigh, 20);
+            Assert.AreEqual(model.TodaysLow, 2);
+            Assert.AreEqual(model.Last24HoursLow, 2);
+            Assert.AreEqual(model.TodaysVolume, 55);
+            Assert.AreEqual(model.Last24HourVolume, 55);
+            //TODO: have to verify some more parameters which i will put after calculating them and preparing the test data for it
         }
 
-        protected virtual void BeforeSetup() { }
-        protected virtual void AfterSetup() { }
-        protected virtual void BeforeTearDown() { }
-        protected virtual void AfterTearDown() { }
+        protected virtual void BeforeSetup()
+        {
+        }
+
+        protected virtual void AfterSetup()
+        {
+        }
+
+        protected virtual void BeforeTearDown()
+        {
+        }
+
+        protected virtual void AfterTearDown()
+        {
+        }
     }
 }
+

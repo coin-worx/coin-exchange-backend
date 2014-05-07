@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
@@ -40,12 +41,20 @@ namespace CoinExchange.Trades.ReadModel.Persistence.NHibernate
         }
 
         [Transaction(ReadOnly = true)]
-        public IList<TradeReadModel> GetTradesBetweenDates(DateTime t1, DateTime t2)
+        public IList<TradeReadModel> GetTradesBetweenDates(DateTime end, DateTime start,string currencyPair)
         {
             return
                 CurrentSession.QueryOver<TradeReadModel>()
-                    .Where(x => x.ExecutionDateTime <= t1 && x.ExecutionDateTime >= t2)
+                    .Where(x => x.ExecutionDateTime <= end && x.ExecutionDateTime >= start && x.CurrencyPair==currencyPair).OrderBy(x => x.ExecutionDateTime).Desc
                     .List();
+        }
+
+        [Transaction(ReadOnly = true)]
+        public object GetCustomDataBetweenDates(DateTime end, DateTime start,string currencyPair)
+        {
+            string sqlQuery = string.Format("SELECT COUNT(TradeId) as NumberOfTrades,max(Price) as high, min(Price)as low, SUM(Volume)as Volume, SUM(Volume*Price)/SUM(Volume) as vwap FROM coinexchange.trade WHERE ExecutionDateTime >='{0}' AND ExecutionDateTime <='{1}' AND CurrencyPair='{2}'", start.ToString("u"), end.ToString("u"),currencyPair);
+            var result = CurrentSession.CreateSQLQuery(sqlQuery).List();
+            return result[0];
         }
     }
 }
