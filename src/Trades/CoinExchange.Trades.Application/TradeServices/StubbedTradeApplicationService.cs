@@ -163,11 +163,10 @@ namespace CoinExchange.Trades.Application.TradeServices
         /// <summary>
         /// Recent trades info
         /// </summary>
-        /// <param name="traderId"> </param>
         /// <param name="pair"></param>
         /// <param name="since"></param>
         /// <returns></returns>
-        public TradeListRepresentation GetRecentTrades(TraderId traderId, string pair, string since)
+        public IList<object> GetRecentTrades(string pair, string since)
         {
             List<TradeRecord> list = new List<TradeRecord>();
             TradeRecord entries = new TradeRecord(123.33m, 200, "Buy", "Limit", "", DateTime.UtcNow.ToString());
@@ -176,7 +175,9 @@ namespace CoinExchange.Trades.Application.TradeServices
                 list.Add(entries);
             }
             TradeListRepresentation representation = new TradeListRepresentation("234", list, pair);
-            return representation;
+            List<object> trades=new List<object>();
+            trades.Add(representation);
+            return trades;
         }
 
         /// <summary>

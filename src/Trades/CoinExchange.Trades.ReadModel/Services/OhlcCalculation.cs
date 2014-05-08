@@ -37,7 +37,7 @@ namespace CoinExchange.Trades.ReadModel.Services
             if (model == null)
             {
                 //means it is 1st trade of that minute
-                OhlcReadModel newOhlcReadModel = new OhlcReadModel(ohlcdDateTime.AddMinutes(1), latestTrade.ExecutionPrice.Value,
+                OhlcReadModel newOhlcReadModel = new OhlcReadModel(latestTrade.CurrencyPair,ohlcdDateTime.AddMinutes(1), latestTrade.ExecutionPrice.Value,
                     latestTrade.ExecutionPrice.Value,
                     latestTrade.ExecutionPrice.Value, latestTrade.ExecutionPrice.Value, latestTrade.ExecutedVolume.Value);
                 _persistanceRepository.SaveOrUpdate(newOhlcReadModel);

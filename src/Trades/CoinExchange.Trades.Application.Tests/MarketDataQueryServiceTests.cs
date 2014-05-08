@@ -21,7 +21,7 @@ namespace CoinExchange.Trades.Application.Tests
         public void GetBboTest_ChecksIfTheBboIsRetreivedSuccessfully_ReturnsBboForCurrencypairIfPresent()
         {
             BBOMemoryImage bboMemoryImage = new BBOMemoryImage();
-            MarketDataQueryService queryService = new MarketDataQueryService(null, null, bboMemoryImage);
+            MarketDataQueryService queryService = new MarketDataQueryService(null, null, bboMemoryImage, null, null);
 
             DepthLevel bestBid = new DepthLevel(new Price(491));
             bestBid.IncreaseVolume(new Volume(100));
@@ -45,7 +45,7 @@ namespace CoinExchange.Trades.Application.Tests
         public void GetBidOrderBookTest_ChecksIfOrderBookIsretreivedSuccessfully_VerifiesOrderBookToSeeItContainsValuesAsExpected()
         {
             OrderBookMemoryImage orderBookMemoryImage = new OrderBookMemoryImage();
-            MarketDataQueryService memoryImageQueryService = new MarketDataQueryService(orderBookMemoryImage, null, null);
+            MarketDataQueryService memoryImageQueryService = new MarketDataQueryService(orderBookMemoryImage, null, null, null, null);
             LimitOrderBook limitOrderBook = new LimitOrderBook("BTCUSD");
 
             Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
@@ -90,7 +90,7 @@ namespace CoinExchange.Trades.Application.Tests
         public void GetAskOrderBookTest_ChecksIfOrderBookIsretreivedSuccessfully_VerifiesOrderBookToSeeItContainsValuesAsExpected()
         {
             OrderBookMemoryImage orderBookMemoryImage = new OrderBookMemoryImage();
-            MarketDataQueryService memoryImageQueryService = new MarketDataQueryService(orderBookMemoryImage,null, null);
+            MarketDataQueryService memoryImageQueryService = new MarketDataQueryService(orderBookMemoryImage, null, null,null, null);
             LimitOrderBook limitOrderBook = new LimitOrderBook("BTCUSD");
 
             Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
@@ -135,7 +135,7 @@ namespace CoinExchange.Trades.Application.Tests
         public void GetBidDepthForACurrencyTest_TestsTheBidDepthRetreivalForAParticularCurrencyPair_ReturnsDepthLevelinformationForEachLevel()
         {
             DepthMemoryImage depthMemoryImage = new DepthMemoryImage();
-            MarketDataQueryService memoryImageQueryService = new MarketDataQueryService(null, depthMemoryImage, null);
+            MarketDataQueryService memoryImageQueryService = new MarketDataQueryService(null, depthMemoryImage, null,null,null);
 
             Depth depth = new Depth("BTCUSD", 10);
 
@@ -168,7 +168,7 @@ namespace CoinExchange.Trades.Application.Tests
         public void GetAskDepthForACurrencyTest_TestsTheAskDepthRetreivalForAParticularCurrencyPair_ReturnsDepthLevelinformationForEachLevel()
         {
             DepthMemoryImage depthMemoryImage = new DepthMemoryImage();
-            MarketDataQueryService memoryImageQueryService = new MarketDataQueryService(null, depthMemoryImage, null);
+            MarketDataQueryService memoryImageQueryService = new MarketDataQueryService(null, depthMemoryImage, null,null,null);
 
             Depth depth = new Depth("BTCUSD", 10);
 

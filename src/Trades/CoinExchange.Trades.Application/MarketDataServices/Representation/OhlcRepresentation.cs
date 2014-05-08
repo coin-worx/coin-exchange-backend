@@ -11,6 +11,7 @@ namespace CoinExchange.Trades.Application.MarketDataServices.Representation
         public List<Ohlc> Ohlc { get; set; }
         public string PairName { get; set; }
         public long Last { get; set; }
+        public IList<object> OhlcInfo { get; set; }
 
         public OhlcRepresentation(List<Ohlc> ohlc, string pairName, long last)
         {
@@ -18,5 +19,13 @@ namespace CoinExchange.Trades.Application.MarketDataServices.Representation
             PairName = pairName;
             Last = last;
         }
+
+        public OhlcRepresentation(IList<object> ohlcInfo, long last, string pairName)
+        {
+            OhlcInfo = ohlcInfo;
+            Last = last;
+            PairName = pairName;
+        }
+
     }
 }

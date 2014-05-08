@@ -14,7 +14,7 @@ namespace CoinExchange.Trades.Application.TradeServices
             bool trades = false, string start = "", string end = "");
 
         List<OrderRepresentation> QueryTrades(TraderId traderId, string txId = "", bool includeTrades = false);
-        TradeListRepresentation GetRecentTrades(TraderId traderId, string pair, string since);
+        IList<object> GetRecentTrades(string pair, string since);
         TradeVolumeRepresentation TradeVolume(string pair);
     }
 }

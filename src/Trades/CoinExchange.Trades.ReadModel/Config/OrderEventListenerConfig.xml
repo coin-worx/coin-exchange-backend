@@ -1,0 +1,8 @@
+﻿<objects xmlns="http://www.springframework.net"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xsi:schemaLocation="http://www.springframework.net http://www.springframework.net/xsd/spring-objects.xsd">
+
+  <object id="OrderEventListener" type="CoinExchange.Trades.ReadModel.EventHandlers.OrderEventListener, CoinExchange.Trades.ReadModel">
+    <constructor-arg name="persistanceRepository" ref="PersistenceRepository"/>
+  </object>
+ </objects>

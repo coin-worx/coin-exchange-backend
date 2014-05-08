@@ -96,8 +96,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         {
             try
             {
-                TradeListRepresentation trades = _tradeQueryService.GetRecentTrades(new TraderId(1),
-                                                                                    currencyPair, since);
+                var trades = _tradeQueryService.GetRecentTrades(currencyPair, since);
 
                 if (trades != null)
                 {

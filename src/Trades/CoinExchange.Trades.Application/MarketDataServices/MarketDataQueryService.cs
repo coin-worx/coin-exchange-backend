@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using CoinExchange.Trades.Application.MarketDataServices.Representation;
 using CoinExchange.Trades.ReadModel.MemoryImages;
+using CoinExchange.Trades.ReadModel.Repositories;
+using CoinExchange.Trades.ReadModel.Services;
 
 namespace CoinExchange.Trades.Application.MarketDataServices
 {
@@ -13,16 +15,20 @@ namespace CoinExchange.Trades.Application.MarketDataServices
         private OrderBookMemoryImage _orderBookMemoryImage = null;
         private DepthMemoryImage _depthMemoryImage = null;
         private BBOMemoryImage _bboMemoryImage = null;
+        private IOhlcRepository _ohlcRepository;
+        private TickerInfoService _tickerInfoService;
 
         /// <summary>
         /// Default constructor
         /// </summary>
         public MarketDataQueryService(OrderBookMemoryImage orderBookMemoryImage, DepthMemoryImage depthMemoryImage,
-            BBOMemoryImage bboMemoryImage)
+            BBOMemoryImage bboMemoryImage,IOhlcRepository ohlcRepository,TickerInfoService tickerInfoService)
         {
             _orderBookMemoryImage = orderBookMemoryImage;
             _depthMemoryImage = depthMemoryImage;
             _bboMemoryImage = bboMemoryImage;
+            _ohlcRepository = ohlcRepository;
+            _tickerInfoService = tickerInfoService;
         }
 
         /// <summary>
@@ -114,14 +120,15 @@ namespace CoinExchange.Trades.Application.MarketDataServices
 
         #region Implementation of IMarketDataApplicationService
 
-        public TickerRepresentation[] GetTickerInfo(string pairs)
+        public object GetTickerInfo(string pairs)
         {
-            throw new NotImplementedException();
+            return _tickerInfoService.GetTickerInfo(pairs);
         }
 
-        public OhlcRepresentation GetOhlcInfo(string pair, int interval, string since)
+        public OhlcRepresentation GetOhlcInfo(string currencyPair, int interval, string since)
         {
-            throw new NotImplementedException();
+            IList<object> ohlcValues=_ohlcRepository.GetOhlcByCurrencyPair(currencyPair);
+            return new OhlcRepresentation(ohlcValues,0,currencyPair);
         }
 
         /// <summary>
