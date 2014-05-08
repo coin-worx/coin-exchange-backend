@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using CoinExchange.Trades.ReadModel.DTO;
+using CoinExchange.Trades.ReadModel.MemoryImages;
 using CoinExchange.Trades.ReadModel.Repositories;
 using NHibernate.Linq;
 using Spring.Stereotype;

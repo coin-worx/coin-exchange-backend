@@ -17,7 +17,7 @@ namespace CoinExchange.Trades.ReadModel.Services
     public class OhlcCalculation
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger
-     (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private IPersistanceRepository _persistanceRepository;
         private ITradeRepository _tradeRepository;
         private IOhlcRepository _ohlcRepository;
@@ -33,11 +33,11 @@ namespace CoinExchange.Trades.ReadModel.Services
         {
             DateTime ohlcdDateTime = latestTrade.ExecutionTime.AddSeconds(-1*latestTrade.ExecutionTime.Second);
             //IList<TradeReadModel> trades=_tradeRepository.GetTradesBetweenDates(latestTrade.ExecutionTime,ohlcdDateTime);
-            OhlcReadModel model = _ohlcRepository.GetOhlcByDateTime(ohlcdDateTime);
+            OhlcReadModel model = _ohlcRepository.GetOhlcByDateTime(ohlcdDateTime.AddMinutes(1));
             if (model == null)
             {
                 //means it is 1st trade of that minute
-                OhlcReadModel newOhlcReadModel = new OhlcReadModel(ohlcdDateTime, latestTrade.ExecutionPrice.Value,
+                OhlcReadModel newOhlcReadModel = new OhlcReadModel(ohlcdDateTime.AddMinutes(1), latestTrade.ExecutionPrice.Value,
                     latestTrade.ExecutionPrice.Value,
                     latestTrade.ExecutionPrice.Value, latestTrade.ExecutionPrice.Value, latestTrade.ExecutedVolume.Value);
                 _persistanceRepository.SaveOrUpdate(newOhlcReadModel);

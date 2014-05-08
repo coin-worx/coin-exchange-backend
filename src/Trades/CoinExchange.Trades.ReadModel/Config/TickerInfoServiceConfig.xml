@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<objects xmlns="http://www.springframework.net"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xsi:schemaLocation="http://www.springframework.net http://www.springframework.net/xsd/spring-objects.xsd">
+
+  <object id="TickerInfoService" type="CoinExchange.Trades.ReadModel.Services.TickerInfoService, CoinExchange.Trades.ReadModel">
+    <constructor-arg name="tickerInfoRepository" ref="TickerInfoRepository"/>
+    <constructor-arg name="bboMemoryImage" ref="BBOMemoryImage"/>
+  </object>
+</objects>

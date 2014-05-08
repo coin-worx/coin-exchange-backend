@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CoinExchange.Trades.ReadModel.MemoryImages;
 
 namespace CoinExchange.Trades.ReadModel.DTO
 {
@@ -63,6 +64,18 @@ namespace CoinExchange.Trades.ReadModel.DTO
             TradePrice = lastTradePrice;
             TradeVolume = lastTradeVolume;
             OpeningPrice = openingPrice;
+        }
+
+        /// <summary>
+        /// Append bbo info to ticker info
+        /// </summary>
+        /// <param name="bboRepresentation"></param>
+        public void UpdateBboInTickerInfo(BBORepresentation bboRepresentation)
+        {
+            AskPrice = bboRepresentation.BestAskPrice;
+            AskVolume = bboRepresentation.BestAskVolume;
+            BidPrice = bboRepresentation.BestBidPrice;
+            BidVolume = bboRepresentation.BestBidVolume;
         }
     }
 }

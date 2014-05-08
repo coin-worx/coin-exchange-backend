@@ -90,19 +90,23 @@ namespace CoinExchange.Trades.ReadModel.Persistence.Tests
                 new StubbedOrderIdGenerator());
 
             DateTime dateTime = DateTime.Now.AddSeconds(-1*DateTime.Now.Second);
-            Trade trade1 = new Trade(new TradeId(1), "XBTUSD", new Price(10), new Volume(10), dateTime.AddSeconds(10),
+            Trade trade5 = new Trade(new TradeId(1), "XBTUSD", new Price(2), new Volume(10), dateTime.AddDays(-1),
                 buyOrder, sellOrder);
-            Trade trade2 = new Trade(new TradeId(2), "XBTUSD", new Price(15), new Volume(15), dateTime.AddSeconds(15),
+            Trade trade6 = new Trade(new TradeId(2), "XBTUSD", new Price(3), new Volume(5), dateTime.AddDays(-1).AddMinutes(1),
                 buyOrder, sellOrder);
-            Trade trade3 = new Trade(new TradeId(3), "XBTUSD", new Price(20), new Volume(5), dateTime.AddSeconds(20),
+            Trade trade1 = new Trade(new TradeId(3), "XBTUSD", new Price(10), new Volume(10), dateTime.AddSeconds(10),
                 buyOrder, sellOrder);
-            Trade trade4 = new Trade(new TradeId(4), "XBTUSD", new Price(5), new Volume(10), dateTime.AddSeconds(40),
+            Trade trade2 = new Trade(new TradeId(4), "XBTUSD", new Price(15), new Volume(15), dateTime.AddSeconds(15),
                 buyOrder, sellOrder);
-            Trade trade5 = new Trade(new TradeId(5), "XBTUSD", new Price(2), new Volume(10), dateTime.AddMinutes(1),
+            Trade trade3 = new Trade(new TradeId(5), "XBTUSD", new Price(20), new Volume(5), dateTime.AddSeconds(20),
                 buyOrder, sellOrder);
-            Trade trade6 = new Trade(new TradeId(6), "XBTUSD", new Price(10), new Volume(5), dateTime.AddMinutes(1.1),
+            Trade trade4 = new Trade(new TradeId(6), "XBTUSD", new Price(5), new Volume(10), dateTime.AddSeconds(40),
                 buyOrder, sellOrder);
-
+            
+            OutputDisruptor.Publish(trade5);
+            _manualResetEvent.WaitOne(4000);
+            OutputDisruptor.Publish(trade6);
+            _manualResetEvent.WaitOne(4000);
             OutputDisruptor.Publish(trade1);
             _manualResetEvent.WaitOne(4000);
             OutputDisruptor.Publish(trade2);
@@ -110,24 +114,24 @@ namespace CoinExchange.Trades.ReadModel.Persistence.Tests
             OutputDisruptor.Publish(trade3);
             _manualResetEvent.WaitOne(4000);
             OutputDisruptor.Publish(trade4);
-            _manualResetEvent.WaitOne(4000);
-            OutputDisruptor.Publish(trade5);
-            _manualResetEvent.WaitOne(4000);
-            OutputDisruptor.Publish(trade6);
             _manualResetEvent.WaitOne(10000);
 
             TickerInfoReadModel model = _tickerInfoRepository.GetTickerInfoByCurrencyPair("XBTUSD");
             Assert.NotNull(model);
-            Assert.AreEqual(model.TradePrice, 10);
-            Assert.AreEqual(model.TradeVolume, 5);
+            Assert.AreEqual(model.CurrencyPair,"XBTUSD");
+            Assert.AreEqual(model.TradePrice, 5);
+            Assert.AreEqual(model.TradeVolume, 10);
             Assert.AreEqual(model.OpeningPrice, 10);
             Assert.AreEqual(model.TodaysHigh, 20);
             Assert.AreEqual(model.Last24HoursHigh, 20);
-            Assert.AreEqual(model.TodaysLow, 2);
-            Assert.AreEqual(model.Last24HoursLow, 2);
-            Assert.AreEqual(model.TodaysVolume, 55);
-            Assert.AreEqual(model.Last24HourVolume, 55);
-            //TODO: have to verify some more parameters which i will put after calculating them and preparing the test data for it
+            Assert.AreEqual(model.TodaysLow, 5);
+            Assert.AreEqual(model.Last24HoursLow, 3);
+            Assert.AreEqual(model.TodaysVolume, 40);
+            Assert.AreEqual(model.Last24HourVolume, 45);
+            Assert.AreEqual(model.TodaysTrades, 4);
+            Assert.AreEqual(model.Last24HourTrades, 5);
+            Assert.AreEqual(model.TodaysVolumeWeight, 11.875m);
+            Assert.AreEqual(model.Last24HourVolumeWeight, 10.8889m);
         }
 
         protected virtual void BeforeSetup()
