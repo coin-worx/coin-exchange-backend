@@ -13,7 +13,7 @@ namespace CoinExchange.Trades.Application.OrderServices
     /// <summary>
     /// Real implementation of order application service
     /// </summary>
-    public class OrderApplicationService:IOrderApplicationService
+    public class OrderApplicationService : IOrderApplicationService
     {
         private ICancelOrderCommandValidation _commandValidationService;
         
@@ -21,6 +21,7 @@ namespace CoinExchange.Trades.Application.OrderServices
         {
             _commandValidationService = cancelOrderCommandValidation;
         }
+
         public CancelOrderResponse CancelOrder(CancelOrderCommand cancelOrderCommand)
         {
             // verify cancel order command

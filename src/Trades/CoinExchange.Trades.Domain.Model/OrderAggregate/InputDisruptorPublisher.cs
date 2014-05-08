@@ -41,8 +41,11 @@ namespace CoinExchange.Trades.Domain.Model.OrderAggregate
         /// </summary>
         public static void Shutdown()
         {
-            _disruptor.Shutdown();
-            _disruptor = null;
+            if (_disruptor != null)
+            {
+                _disruptor.Shutdown();
+                _disruptor = null;
+            }
         }
 
         /// <summary>

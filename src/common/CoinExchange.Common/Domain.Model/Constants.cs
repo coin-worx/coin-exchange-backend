@@ -12,6 +12,9 @@ namespace CoinExchange.Common.Domain.Model
     [Serializable]
     public static class Constants
     {
+        private static readonly Dictionary<string, string> _apiKeyToTraderId = new Dictionary<string, string>();
+        private static readonly Dictionary<string, string> _apiKeyToSecretKey = new Dictionary<string, string>();
+ 
         // ReSharper disable InconsistentNaming
         public const string ORDER_TYPE_LIMIT = "limit";
         public const string ORDER_TYPE_MARKET = "market";
@@ -23,5 +26,37 @@ namespace CoinExchange.Common.Domain.Model
         public const int OUTPUT_DISRUPTOR_BYTE_ARRAY_SIZE = 200000;
         public const string INPUT_EVENT_STORE = "InputEventStore";
         public const string OUTPUT_EVENT_STORE = "OutputEventStore";
+
+        static Constants()
+        {
+            _apiKeyToTraderId.Add("123456789", "122334455");
+            _apiKeyToSecretKey.Add("123456789", "09887960");
+        }
+
+        /// <summary>
+        /// Returns the TraderId given the API key
+        /// </summary>
+        /// <param name="apiKey"></param>
+        /// <returns></returns>
+        public static string GetTraderId(string apiKey)
+        {
+            string traderid = string.Empty;
+            _apiKeyToTraderId.TryGetValue(apiKey, out traderid);
+
+            return traderid;
+        }
+
+        /// <summary>
+        /// Returns the Secret Key given the API key
+        /// </summary>
+        /// <param name="apiKey"></param>
+        /// <returns></returns>
+        public static string GetSecretKey(string apiKey)
+        {
+            string secretKey = string.Empty;
+            _apiKeyToSecretKey.TryGetValue(apiKey, out secretKey);
+
+            return secretKey;
+        }
     }
 }

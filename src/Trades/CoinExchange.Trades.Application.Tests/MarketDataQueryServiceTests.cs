@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CoinExchange.Common.Domain.Model;
-using CoinExchange.Trades.Application.MatchingEngineServices;
+using CoinExchange.Trades.Application.MarketDataServices;
 using CoinExchange.Trades.Domain.Model.OrderAggregate;
 using CoinExchange.Trades.Domain.Model.OrderMatchingEngine;
 using CoinExchange.Trades.Infrastructure.Services;
@@ -149,18 +149,18 @@ namespace CoinExchange.Trades.Application.Tests
             depth.AddOrder(new Price(949), new Volume(500), OrderSide.Sell);
             depthMemoryImage.OnDepthArrived(depth);
 
-            Tuple<decimal, decimal, int>[] bidDepth = memoryImageQueryService.GetBidDepth("BTCUSD");
+            Tuple<Tuple<decimal, decimal, int>[], Tuple<decimal, decimal, int>[]> returnedDepth = memoryImageQueryService.GetDepth("BTCUSD");
 
-            Assert.AreEqual(500, bidDepth[0].Item1); // Aggregated Volume
-            Assert.AreEqual(943, bidDepth[0].Item2); // Price
-            Assert.AreEqual(1, bidDepth[0].Item3); // OrderCount
-            Assert.AreEqual(200, bidDepth[1].Item1); // Aggregated Volume
-            Assert.AreEqual(942, bidDepth[1].Item2); // Price
-            Assert.AreEqual(1, bidDepth[1].Item3); // OrderCount
-            Assert.AreEqual(500, bidDepth[2].Item1); // Aggregated Volume
-            Assert.AreEqual(941, bidDepth[2].Item2); // Price
-            Assert.AreEqual(2, bidDepth[2].Item3); // OrderCount
-            Assert.IsNull(bidDepth[3]); // Index three is null as there is no level present for it
+            Assert.AreEqual(500, returnedDepth.Item1[0].Item1); // Aggregated Volume
+            Assert.AreEqual(943, returnedDepth.Item1[0].Item2); // Price
+            Assert.AreEqual(1, returnedDepth.Item1[0].Item3); // OrderCount
+            Assert.AreEqual(200, returnedDepth.Item1[1].Item1); // Aggregated Volume
+            Assert.AreEqual(942, returnedDepth.Item1[1].Item2); // Price
+            Assert.AreEqual(1, returnedDepth.Item1[1].Item3); // OrderCount
+            Assert.AreEqual(500, returnedDepth.Item1[2].Item1); // Aggregated Volume
+            Assert.AreEqual(941, returnedDepth.Item1[2].Item2); // Price
+            Assert.AreEqual(2, returnedDepth.Item1[2].Item3); // OrderCount
+            Assert.IsNull(returnedDepth.Item1[3]); // Index three is null as there is no level present for it
         }
 
         [Test]
@@ -182,15 +182,15 @@ namespace CoinExchange.Trades.Application.Tests
             depth.AddOrder(new Price(949), new Volume(500), OrderSide.Sell);
             depthMemoryImage.OnDepthArrived(depth);
 
-            Tuple<decimal, decimal, int>[] askDepth = memoryImageQueryService.GetAskDepth("BTCUSD");
+            Tuple<Tuple<decimal, decimal, int>[], Tuple<decimal, decimal, int>[]> returnedDepth = memoryImageQueryService.GetDepth("BTCUSD");
 
-            Assert.AreEqual(300, askDepth[0].Item1); // Aggregated Volume
-            Assert.AreEqual(948, askDepth[0].Item2); // Price
-            Assert.AreEqual(1, askDepth[0].Item3); // OrderCount
-            Assert.AreEqual(900, askDepth[1].Item1); // Aggregated Volume
-            Assert.AreEqual(949, askDepth[1].Item2); // Price
-            Assert.AreEqual(3, askDepth[1].Item3); // OrderCount
-            Assert.IsNull(askDepth[2]); // Second index is null as there is no depth level for it
+            Assert.AreEqual(300, returnedDepth.Item2[0].Item1); // Aggregated Volume
+            Assert.AreEqual(948, returnedDepth.Item2[0].Item2); // Price
+            Assert.AreEqual(1, returnedDepth.Item2[0].Item3); // OrderCount
+            Assert.AreEqual(900, returnedDepth.Item2[1].Item1); // Aggregated Volume
+            Assert.AreEqual(949, returnedDepth.Item2[1].Item2); // Price
+            Assert.AreEqual(3, returnedDepth.Item2[1].Item3); // OrderCount
+            Assert.IsNull(returnedDepth.Item2[2]); // Second index is null as there is no depth level for it
         }
     }
 }

@@ -1,14 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CoinExchange.Trades.Application.MarketDataServices;
 using CoinExchange.Trades.Application.MarketDataServices.Representation;
-using CoinExchange.Trades.Domain.Model.OrderMatchingEngine;
 using CoinExchange.Trades.ReadModel.MemoryImages;
 
-namespace CoinExchange.Trades.Application.MatchingEngineServices
+namespace CoinExchange.Trades.Application.MarketDataServices
 {
     /// <summary>
     /// Gets the data from te MemoryImages upon request from the user
@@ -84,7 +79,7 @@ namespace CoinExchange.Trades.Application.MatchingEngineServices
         /// </summary>
         /// <param name="currencyPair"></param>
         /// <returns></returns>
-        public Tuple<decimal, decimal, int>[] GetBidDepth(string currencyPair)
+        private Tuple<decimal, decimal, int>[] GetBidDepth(string currencyPair)
         {
             // Traverse within each key value pair and find the currency pair stored
             foreach (KeyValuePair<string, DepthLevelRepresentationList> keyValuePair in _depthMemoryImage.BidDepths)
@@ -103,7 +98,7 @@ namespace CoinExchange.Trades.Application.MatchingEngineServices
         /// </summary>
         /// <param name="currencyPair"></param>
         /// <returns></returns>
-        public Tuple<decimal, decimal, int>[] GetAskDepth(string currencyPair)
+        private Tuple<decimal, decimal, int>[] GetAskDepth(string currencyPair)
         {
             // Traverse within each key value pair and find the currency pair stored
             foreach (KeyValuePair<string, DepthLevelRepresentationList> keyValuePair in _depthMemoryImage.AskDepths)
@@ -141,6 +136,22 @@ namespace CoinExchange.Trades.Application.MatchingEngineServices
             OrderRepresentationList bidBook = this.GetBidBook(currencyPair);
             OrderRepresentationList askBook = this.GetAskBook(currencyPair);
             return new Tuple<OrderRepresentationList, OrderRepresentationList>(bidBook, askBook);
+        }
+
+        /// <summary>
+        /// Returns the Depth as a Tuple where 
+        /// Item1 = BidDepth,
+        /// Item2 = AskDepth
+        /// Each is an array of a Tuple of <decimal, decimal, int>, representing Volume, Price and OrderCount respectively
+        /// </summary>
+        /// <param name="currencyPair"></param>
+        /// <returns></returns>
+        public Tuple<Tuple<decimal, decimal, int>[], Tuple<decimal, decimal, int>[]> GetDepth(string currencyPair)
+        {
+            Tuple<decimal, decimal, int>[] bidDepth = GetBidDepth(currencyPair);
+            Tuple<decimal, decimal, int>[] askDepth = GetAskDepth(currencyPair);
+
+            return new Tuple<Tuple<decimal, decimal, int>[], Tuple<decimal, decimal, int>[]>(bidDepth, askDepth);
         }
 
         #endregion

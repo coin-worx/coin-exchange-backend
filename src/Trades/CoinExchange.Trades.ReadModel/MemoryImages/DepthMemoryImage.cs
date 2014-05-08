@@ -113,7 +113,7 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
         /// <summary>
         /// Contains Depth levels for bids for each currency in the order book, and each depth level contains
         /// Key = CurrencyPair,
-        /// Value:
+        /// Value = Array of:
         /// Item1 = Aggregated Volume,
         /// Item2 = Price,
         /// Item3 = Number of orders present
@@ -126,7 +126,7 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
         /// <summary>
         /// Contains Depth levels for asks for each currency in the order book, and each depth level contains:
         /// Key = CurrencyPair,
-        /// Value:
+        /// Value = Array of:
         /// Item1 = Aggregated Volume,
         /// Item2 = Price,
         /// Item3 = Number of orders present
