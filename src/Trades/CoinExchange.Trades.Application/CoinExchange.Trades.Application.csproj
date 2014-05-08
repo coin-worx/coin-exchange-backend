@@ -69,6 +69,7 @@
     <Compile Include="OrderServices\IOrderApplicationService.cs" />
     <Compile Include="OrderServices\IOrderQueryService.cs" />
     <Compile Include="OrderServices\OrderApplicationService.cs" />
+    <Compile Include="OrderServices\OrderQueryService.cs" />
     <Compile Include="OrderServices\Representation\OrderRepresentation.cs" />
     <Compile Include="OrderServices\StubbedCancelOrderCommandValidation.cs" />
     <Compile Include="OrderServices\StubbedOrderApplicationService.cs" />

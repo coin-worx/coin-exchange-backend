@@ -9,6 +9,7 @@ using CoinExchange.Trades.Application.OrderServices.Representation;
 using CoinExchange.Trades.Domain.Model.OrderAggregate;
 using CoinExchange.Trades.Domain.Model.TradeAggregate;
 using CoinExchange.Trades.Port.Adapter.Rest.DTOs.Order;
+using CoinExchange.Trades.ReadModel.DTO;
 
 namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
 {
@@ -45,8 +46,9 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                 {
                     try
                     {
-                        //TODO: Fetch traderid from api signature provided in header
-                        return Ok(_orderApplicationService.CancelOrder(new CancelOrderCommand(new OrderId(int.Parse(orderId)),new TraderId(123))));
+                        //TODO: Fetch TraderId from api signature provided in header. Remove the Constant value of the GetSecretKey
+                        return Ok(_orderApplicationService.CancelOrder(
+                                    new CancelOrderCommand(new OrderId(int.Parse(orderId)), new TraderId(Int32.Parse(Constants.GetTraderId("123456789"))))));
                     }
                     catch (Exception exception)
                     {
@@ -106,13 +108,20 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
             {
                 // ToDo: In the next sprint related to business logic behind RESTful calls, need to split the ledgersIds comma
                 // separated list
-                List<OrderRepresentation> openOrderList = _orderQueryService.GetOpenOrders(new TraderId(1),
+                object value = _orderQueryService.GetOpenOrders(new TraderId(1),
                     queryOpenOrdersParams.IncludeTrades, queryOpenOrdersParams.UserRefId);
 
-                if (openOrderList != null)
+                if (value is List<OrderRepresentation>)
                 {
-                    return Ok<List<OrderRepresentation>>(openOrderList);
+                    List<OrderRepresentation> openOrderRepresentation = (List<OrderRepresentation>) value;
+                    return Ok<List<OrderRepresentation>>(openOrderRepresentation);
                 }
+                else if (value is List<OrderReadModel>)
+                {
+                    List<OrderReadModel> openOrderList = (List<OrderReadModel>) value;
+                    return Ok<List<OrderReadModel>>(openOrderList);
+                }
+                
                 return NotFound();
             }
             catch (Exception ex)
@@ -135,13 +144,20 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         {
             try
             {
-                List<OrderRepresentation> closedOrders = _orderQueryService.GetClosedOrders(new TraderId(1),
+                // ToDo: Get the Trader ID after authentication using API key.
+                object orders = _orderQueryService.GetClosedOrders(new TraderId(Int16.Parse(Constants.GetTraderId("123456789"))),
                     closedOrdersParams.IncludeTrades, closedOrdersParams.UserRefId, closedOrdersParams.StartTime,
                     closedOrdersParams.EndTime, closedOrdersParams.Offset, closedOrdersParams.CloseTime);
 
-                if (closedOrders != null)
+                if (orders is List<OrderRepresentation>)
                 {
-                    return Ok<List<OrderRepresentation>>(closedOrders);
+                    List<OrderRepresentation> openOrderList = (List<OrderRepresentation>)orders;
+                    return Ok<List<OrderRepresentation>>(openOrderList);
+                }
+                else if (orders is List<OrderReadModel>)
+                {
+                    List<OrderReadModel> openOrderList = (List<OrderReadModel>)orders;
+                    return Ok<List<OrderReadModel>>(openOrderList);
                 }
                 return NotFound();
             }

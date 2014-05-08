@@ -24,7 +24,7 @@ namespace CoinExchange.Trades.Application.OrderServices
 
         public CancelOrderResponse CancelOrder(CancelOrderCommand cancelOrderCommand)
         {
-            // verify cancel order command
+            // Verify cancel order command
             if (_commandValidationService.ValidateCancelOrderCommand(cancelOrderCommand))
             {
                 string currencyPair = _commandValidationService.GetCurrencyPair(cancelOrderCommand.OrderId);
