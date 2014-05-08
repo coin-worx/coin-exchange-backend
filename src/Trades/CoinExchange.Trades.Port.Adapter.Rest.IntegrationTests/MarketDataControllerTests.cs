@@ -145,6 +145,8 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             Assert.AreEqual(900, orderBooks.Item2.ToList()[2].Item1); // Volume @ slot 3 in ask OrderBook
             Assert.AreEqual(499, orderBooks.Item2.ToList()[2].Item2); // Price @ slot 3 in ask OrderBook
 
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(8000);
             InputDisruptorPublisher.Shutdown();
             OutputDisruptor.ShutDown();
         }
@@ -370,7 +372,31 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
 
             IHttpActionResult httpActionResult = orderController.CancelOrder(order1RepresentationContent.Content.OrderId);
             manualResetEvent.Reset();
-            manualResetEvent.WaitOne(300000);
+            manualResetEvent.WaitOne(3000);
+
+            marketDataHttpResult = marketController.GetOrderBook("BTCUSD");
+
+            okResponseMessage =
+                (OkNegotiatedContentResult<Tuple<OrderRepresentationList, OrderRepresentationList>>)marketDataHttpResult;
+
+            orderBooks = okResponseMessage.Content;
+            Assert.AreEqual(2, orderBooks.Item1.Count()); // Count of the orders in the Bid Order book
+            Assert.AreEqual(3, orderBooks.Item2.Count());// Count of the orders in the Ask Order book
+
+            Assert.AreEqual(1000, orderBooks.Item1.ToList()[0].Item1); // Volume @ slot 1 in bid OrderBook
+            Assert.AreEqual(493, orderBooks.Item1.ToList()[0].Item2); // Price @ slot 1 in bid OrderBook
+            Assert.AreEqual(700, orderBooks.Item2.ToList()[0].Item1); // Volume @ slot 1 in ask OrderBook
+            Assert.AreEqual(497, orderBooks.Item2.ToList()[0].Item2); // Price @ slot 1 in ask OrderBook
+
+            Assert.AreEqual(300, orderBooks.Item1.ToList()[1].Item1); // Volume @ slot 2 in bid OrderBook
+            Assert.AreEqual(492, orderBooks.Item1.ToList()[1].Item2); // Price @ slot 2 in bid OrderBook
+            Assert.AreEqual(800, orderBooks.Item2.ToList()[1].Item1); // Volume @ slot 2 in ask OrderBook
+            Assert.AreEqual(498, orderBooks.Item2.ToList()[1].Item2); // Price @ slot 2 in ask OrderBook
+
+            /*Assert.AreEqual(100, orderBooks.Item1.ToList()[2].Item1); // Volume @ slot 3 in bid OrderBook
+            Assert.AreEqual(491, orderBooks.Item1.ToList()[2].Item2); // Price @ slot 3 in bid OrderBook*/
+            Assert.AreEqual(900, orderBooks.Item2.ToList()[2].Item1); // Volume @ slot 3 in ask OrderBook
+            Assert.AreEqual(499, orderBooks.Item2.ToList()[2].Item2); // Price @ slot 3 in ask OrderBook
         }
 
         #endregion End-to-End Test

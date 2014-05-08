@@ -6,10 +6,10 @@ namespace CoinExchange.Trades.Application.OrderServices
 {
     public interface IOrderQueryService
     {
-        List<OrderRepresentation> GetOpenOrders(TraderId traderId, bool includeTrades = false,
+        object GetOpenOrders(TraderId traderId, bool includeTrades = false,
             string userRefId = "");
 
-        List<OrderRepresentation> GetClosedOrders(TraderId traderId, bool includeTrades = false,
+        object GetClosedOrders(TraderId traderId, bool includeTrades = false,
             string userRefId = "",
             string startTime = "", string endTime = "", string offset = "", string closetime = "both");
     }

@@ -15,7 +15,7 @@ namespace CoinExchange.Trades.Application.OrderServices
         /// Gets the list for the Open orders
         /// </summary>
         /// <returns></returns>
-        public List<OrderRepresentation> GetOpenOrders(TraderId traderId, bool includeTrades = false, string userRefId = "")
+        public object GetOpenOrders(TraderId traderId, bool includeTrades = false, string userRefId = "")
         {
             List<OrderRepresentation> orderList = new List<OrderRepresentation>();
             orderList.Add(new OrderRepresentation()
@@ -77,7 +77,7 @@ namespace CoinExchange.Trades.Application.OrderServices
         /// Gets the list for the Closed orders
         /// </summary>
         /// <returns></returns>
-        public List<OrderRepresentation> GetClosedOrders(TraderId traderId, bool includeTrades = false, string userRefId = "",
+        public object GetClosedOrders(TraderId traderId, bool includeTrades = false, string userRefId = "",
             string startTime = "", string endTime = "", string offset = "", string closetime = "both")
         {
             List<OrderRepresentation> orderList = new List<OrderRepresentation>();

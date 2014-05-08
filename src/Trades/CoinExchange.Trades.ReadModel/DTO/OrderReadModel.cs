@@ -7,6 +7,9 @@ using CoinExchange.Trades.Domain.Model.OrderAggregate;
 
 namespace CoinExchange.Trades.ReadModel.DTO
 {
+    /// <summary>
+    /// OrderReadModel
+    /// </summary>
     public class OrderReadModel
     {
         #region properties
@@ -23,6 +26,9 @@ namespace CoinExchange.Trades.ReadModel.DTO
 
         #endregion
 
+        /// <summary>
+        /// Default Constructor
+        /// </summary>
         public OrderReadModel()
         {
             

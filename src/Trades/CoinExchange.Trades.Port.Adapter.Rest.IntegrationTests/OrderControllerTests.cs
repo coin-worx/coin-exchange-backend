@@ -101,5 +101,109 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             Assert.AreEqual("Sell", newOrderRepresentation.Side);
             Assert.AreEqual("Limit", newOrderRepresentation.Type);
         }
+
+        [Test]
+        [Category("Integration")]
+        public void GetOpenOrders_RetreivesTheListOfOpenOrdersFromTheDatabase_VerifiesThatResultingOrdersAreInExpectedRange()
+        {
+            // Get the context
+            IApplicationContext applicationContext = ContextRegistry.GetContext();
+            Exchange exchange = new Exchange();
+            IEventStore inputEventStore = new RavenNEventStore(Constants.INPUT_EVENT_STORE);
+            IEventStore outputEventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
+            Journaler inputJournaler = new Journaler(inputEventStore);
+            Journaler outputJournaler = new Journaler(outputEventStore);
+            InputDisruptorPublisher.InitializeDisruptor(new IEventHandler<InputPayload>[] { exchange, inputJournaler });
+            OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { outputJournaler });
+
+            // Get the instance through Spring configuration
+            OrderController orderController = (OrderController)applicationContext["OrderController"];
+
+            ManualResetEvent manualResetEvent = new ManualResetEvent(false);
+            IHttpActionResult orderHttpResult = orderController.CreateOrder(new CreateOrderParam()
+            {
+                Pair = "BTCUSD",
+                Price = 491,
+                Volume = 100,
+                Side = "buy",
+                Type = "limit"
+            });
+
+            OkNegotiatedContentResult<NewOrderRepresentation> order1RepresentationContent = (OkNegotiatedContentResult<NewOrderRepresentation>)orderHttpResult;
+            Assert.IsNotNull(order1RepresentationContent.Content);
+
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(1000);
+            orderController.CreateOrder(new CreateOrderParam()
+            {
+                Pair = "BTCUSD",
+                Price = 492,
+                Volume = 300,
+                Side = "buy",
+                Type = "limit"
+            });
+
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(1000);
+
+            orderController.CreateOrder(new CreateOrderParam()
+            {
+                Pair = "BTCUSD",
+                Price = 493,
+                Volume = 1000,
+                Side = "buy",
+                Type = "limit"
+            });
+
+            orderController.CreateOrder(new CreateOrderParam()
+            {
+                Pair = "BTCUSD",
+                Price = 499,
+                Volume = 900,
+                Side = "sell",
+                Type = "limit"
+            });
+
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(1000);
+
+            orderController.CreateOrder(new CreateOrderParam()
+            {
+                Pair = "BTCUSD",
+                Price = 498,
+                Volume = 800,
+                Side = "sell",
+                Type = "limit"
+            });
+
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(1000);
+
+            orderController.CreateOrder(new CreateOrderParam()
+            {
+                Pair = "BTCUSD",
+                Price = 497,
+                Volume = 700,
+                Side = "sell",
+                Type = "limit"
+            });
+
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(2000);
+            MarketController marketController = (MarketController)applicationContext["MarketController"];
+            IHttpActionResult marketDataHttpResult = marketController.GetOrderBook("BTCUSD");
+
+            OkNegotiatedContentResult<Tuple<OrderRepresentationList, OrderRepresentationList>> okResponseMessage =
+                (OkNegotiatedContentResult<Tuple<OrderRepresentationList, OrderRepresentationList>>)marketDataHttpResult;
+
+            Tuple<OrderRepresentationList, OrderRepresentationList> orderBooks = okResponseMessage.Content;
+            Assert.AreEqual(3, orderBooks.Item1.Count()); // Count of the orders in the Bid Order book
+            Assert.AreEqual(3, orderBooks.Item2.Count());// Count of the orders in the Ask Order book
+
+            IHttpActionResult queryClosedOrders = orderController.QueryClosedOrders(null);
+            // ToDo: Closed Orders test continue
+        }
+
+        // ToDo: Open Orders test
     }
 }
