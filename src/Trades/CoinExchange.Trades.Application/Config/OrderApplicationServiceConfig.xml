@@ -9,4 +9,5 @@
   <object id="CancelOrderValidation" type="CoinExchange.Trades.Application.OrderServices.CancelOrderCommandValidation, CoinExchange.Trades.Application" singleton="true">
     <constructor-arg name="orderRepository" ref="OrderRepository" />
   </object>
+  <object id="OrderQueryService" type="CoinExchange.Trades.Application.OrderServices.StubbedOrderQueryService, CoinExchange.Trades.Application"/>
 </objects>
