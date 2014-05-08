@@ -7,11 +7,11 @@
     <constructor-arg name="marketDataQueryService" ref="MarketDataQueryService"/>
   </object>
 
-  <object id="MarketDataQueryService" type="CoinExchange.Trades.Application.MarketDataServices.MarketDataQueryService, CoinExchange.Trades.Application">
+  <!--<object id="MarketDataQueryService" type="CoinExchange.Trades.Application.MarketDataServices.MarketDataQueryService, CoinExchange.Trades.Application">
   <constructor-arg name="orderBookMemoryImage" ref="OrderBookMemoryImage"/>  
   <constructor-arg name="depthMemoryImage" ref="DepthMemoryImage"/>
   <constructor-arg name="bboMemoryImage" ref="BBOMemoryImage"/>
-  </object>
+  </object>-->
 
   <!--<object id="OrderBookMemoryImage" type="CoinExchange.Trades.ReadModel.MemoryImages.OrderBookMemoryImage, CoinExchange.Trades.ReadModel" />
   <object id="DepthMemoryImage" type="CoinExchange.Trades.ReadModel.MemoryImages.DepthMemoryImage, CoinExchange.Trades.ReadModel" />

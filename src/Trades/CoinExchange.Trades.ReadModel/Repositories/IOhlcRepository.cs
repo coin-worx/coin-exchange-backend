@@ -10,5 +10,6 @@ namespace CoinExchange.Trades.ReadModel.Repositories
     public interface IOhlcRepository
     {
         OhlcReadModel GetOhlcByDateTime(DateTime dateTime);
+        IList<object> GetOhlcByCurrencyPair(string currencyPair);
     }
 }

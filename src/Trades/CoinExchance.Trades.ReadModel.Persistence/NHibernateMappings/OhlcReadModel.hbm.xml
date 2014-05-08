@@ -11,5 +11,6 @@ assembly="CoinExchange.Trades.ReadModel" namespace="CoinExchange.Trades.ReadMode
     <property name="Low"  column="Low"/>
     <property name="Close"  column="Close"/>
     <property name="Volume"  column="Volume"/>
+    <property name="CurrencyPair"  column="CurrencyPair"/>
   </class>
 </hibernate-mapping>

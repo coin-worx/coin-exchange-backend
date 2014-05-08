@@ -16,8 +16,9 @@ namespace CoinExchange.Trades.ReadModel.DTO
             
         }
 
-        public OhlcReadModel(DateTime dateTime, decimal open, decimal high, decimal low, decimal close, decimal volume)
+        public OhlcReadModel(string currencyPair,DateTime dateTime, decimal open, decimal high, decimal low, decimal close, decimal volume)
         {
+            CurrencyPair = currencyPair;
             DateTime = dateTime;
             Open = open;
             High = high;
@@ -51,5 +52,6 @@ namespace CoinExchange.Trades.ReadModel.DTO
         public decimal Low { get; set; }
         public decimal Close { get; set; }
         public decimal Volume { get; set; }
+        public string CurrencyPair { get; set; }
     }
 }

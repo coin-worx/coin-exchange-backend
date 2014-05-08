@@ -100,7 +100,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Config\TadeEventListenerConfig.xml">
+    <EmbeddedResource Include="Config\TradeEventListenerConfig.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -112,6 +112,11 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Config\TickerInfoServiceConfig.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Config\OrderEventListenerConfig.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>

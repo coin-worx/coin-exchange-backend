@@ -16,6 +16,7 @@ using CoinExchange.Trades.Infrastructure.Persistence.RavenDb;
 using CoinExchange.Trades.Infrastructure.Services;
 using CoinExchange.Trades.Port.Adapter.Rest.DTOs.Order;
 using CoinExchange.Trades.Port.Adapter.Rest.Resources;
+using CoinExchange.Trades.ReadModel.DTO;
 using CoinExchange.Trades.ReadModel.MemoryImages;
 using Disruptor;
 using NUnit.Framework;
@@ -373,6 +374,93 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
         }
 
         #endregion End-to-End Test
+
+        #region TickerInfoResponse
+        [Test]
+        [Category("Integration")]
+        public void Test()
+        {
+            // Get the context
+            IApplicationContext applicationContext = ContextRegistry.GetContext();
+            Exchange exchange = new Exchange();
+            IEventStore inputEventStore = new RavenNEventStore(Constants.INPUT_EVENT_STORE);
+            IEventStore outputEventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
+            Journaler inputJournaler = new Journaler(inputEventStore);
+            Journaler outputJournaler = new Journaler(outputEventStore);
+            InputDisruptorPublisher.InitializeDisruptor(new IEventHandler<InputPayload>[] { exchange, inputJournaler });
+            OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { outputJournaler });
+
+            // Get the instance through Spring configuration
+            OrderController orderController = (OrderController)applicationContext["OrderController"];
+
+            ManualResetEvent manualResetEvent = new ManualResetEvent(false);
+            IHttpActionResult orderHttpResult = orderController.CreateOrder(new CreateOrderParam()
+            {
+                Pair = "XBTUSD",
+                Price = 491,
+                Volume = 100,
+                Side = "buy",
+                Type = "limit"
+            });
+
+            OkNegotiatedContentResult<NewOrderRepresentation> orderRepresentationContent = (OkNegotiatedContentResult<NewOrderRepresentation>)orderHttpResult;
+            Assert.IsNotNull(orderRepresentationContent.Content);
+            manualResetEvent.Reset();
+
+            orderController.CreateOrder(new CreateOrderParam()
+            {
+                Pair = "XBTUSD",
+                Price = 492,
+                Volume = 300,
+                Side = "buy",
+                Type = "limit"
+            });
+
+            orderController.CreateOrder(new CreateOrderParam()
+            {
+                Pair = "XBTUSD",
+                Price = 492,
+                Volume = 1000,
+                Side = "sell",
+                Type = "limit"
+            });
+
+            orderController.CreateOrder(new CreateOrderParam()
+            {
+                Pair = "XBTUSD",
+                Price = 492,
+                Volume = 900,
+                Side = "buy",
+                Type = "limit"
+            });
+
+            orderController.CreateOrder(new CreateOrderParam()
+            {
+                Pair = "XBTUSD",
+                Price = 498,
+                Volume = 800,
+                Side = "sell",
+                Type = "limit"
+            });
+
+            orderController.CreateOrder(new CreateOrderParam()
+            {
+                Pair = "XBTUSD",
+                Price = 497,
+                Volume = 700,
+                Side = "sell",
+                Type = "limit"
+            });
+
+            manualResetEvent.WaitOne(80000);
+            MarketController marketController = (MarketController)applicationContext["MarketController"];
+            IHttpActionResult tickerinfo = marketController.TickerInfo("XBTUSD");
+            OkNegotiatedContentResult<TickerInfoReadModel> readmodel = tickerinfo as OkNegotiatedContentResult<TickerInfoReadModel>;
+            InputDisruptorPublisher.Shutdown();
+            OutputDisruptor.ShutDown();
+        }
+
+        #endregion
 
         [Test]
         [Category("Integration")]

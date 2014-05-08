@@ -17,7 +17,7 @@ namespace CoinExchange.Trades.Application.MarketDataServices
         /// </summary>
         /// <param name="pairs"></param>
         /// <returns></returns>
-        public TickerRepresentation[] GetTickerInfo(string pairs)
+        public object GetTickerInfo(string pairs)
         {
             MarketData marketData = new MarketData(200, 200.33m, "Bid");
             TickerRepresentation representation = new TickerRepresentation(pairs, marketData, marketData, marketData, new decimal[] { 200, 300 },
