@@ -62,7 +62,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             OkNegotiatedContentResult<NewOrderRepresentation> orderRepresentationContent = (OkNegotiatedContentResult<NewOrderRepresentation>) orderHttpResult;
             Assert.IsNotNull(orderRepresentationContent.Content);
             manualResetEvent.Reset();
-            
+            manualResetEvent.WaitOne(1000);
             orderController.CreateOrder(new CreateOrderParam()
             {
                 Pair = "BTCUSD",
@@ -71,6 +71,9 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
                 Side = "buy",
                 Type = "limit"
             });
+
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(1000);
 
             orderController.CreateOrder(new CreateOrderParam()
             {
@@ -90,6 +93,9 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
                 Type = "limit"
             });
 
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(1000);
+
             orderController.CreateOrder(new CreateOrderParam()
             {
                 Pair = "BTCUSD",
@@ -99,6 +105,9 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
                 Type = "limit"
             });
 
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(1000);
+
             orderController.CreateOrder(new CreateOrderParam()
             {
                 Pair = "BTCUSD",
@@ -107,8 +116,9 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
                 Side = "sell",
                 Type = "limit"
             });
-            
-            manualResetEvent.WaitOne(80000);
+
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(2000);
             MarketController marketController = (MarketController)applicationContext["MarketController"];
             IHttpActionResult marketDataHttpResult = marketController.GetOrderBook("BTCUSD");
 
@@ -136,6 +146,230 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
 
             InputDisruptorPublisher.Shutdown();
             OutputDisruptor.ShutDown();
+        }
+
+        [Test]
+        [Category("Integration")]
+        public void SubmitOrdersAndGetDepthTest_SubmitsAnOrderAndGetsTheDepthAsTheResult_VerifiesIfDepthIsAsExpected()
+        {
+            // Get the context
+            IApplicationContext applicationContext = ContextRegistry.GetContext();
+            Exchange exchange = new Exchange();
+            IEventStore inputEventStore = new RavenNEventStore(Constants.INPUT_EVENT_STORE);
+            IEventStore outputEventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
+            Journaler inputJournaler = new Journaler(inputEventStore);
+            Journaler outputJournaler = new Journaler(outputEventStore);
+            InputDisruptorPublisher.InitializeDisruptor(new IEventHandler<InputPayload>[] { exchange, inputJournaler });
+            OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { outputJournaler });
+
+            // Get the instance through Spring configuration
+            OrderController orderController = (OrderController)applicationContext["OrderController"];
+
+            ManualResetEvent manualResetEvent = new ManualResetEvent(false);
+            IHttpActionResult orderHttpResult = orderController.CreateOrder(new CreateOrderParam()
+            {
+                Pair = "BTCUSD",
+                Price = 491,
+                Volume = 100,
+                Side = "buy",
+                Type = "limit"
+            });
+
+            OkNegotiatedContentResult<NewOrderRepresentation> orderRepresentationContent = (OkNegotiatedContentResult<NewOrderRepresentation>)orderHttpResult;
+            Assert.IsNotNull(orderRepresentationContent.Content);
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(1000);
+            orderController.CreateOrder(new CreateOrderParam()
+            {
+                Pair = "BTCUSD",
+                Price = 491,
+                Volume = 300,
+                Side = "buy",
+                Type = "limit"
+            });
+
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(1000);
+
+            orderController.CreateOrder(new CreateOrderParam()
+            {
+                Pair = "BTCUSD",
+                Price = 493,
+                Volume = 1000,
+                Side = "buy",
+                Type = "limit"
+            });
+
+            orderController.CreateOrder(new CreateOrderParam()
+            {
+                Pair = "BTCUSD",
+                Price = 498,
+                Volume = 900,
+                Side = "sell",
+                Type = "limit"
+            });
+
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(1000);
+
+            orderController.CreateOrder(new CreateOrderParam()
+            {
+                Pair = "BTCUSD",
+                Price = 498,
+                Volume = 800,
+                Side = "sell",
+                Type = "limit"
+            });
+
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(1000);
+
+            orderController.CreateOrder(new CreateOrderParam()
+            {
+                Pair = "BTCUSD",
+                Price = 497,
+                Volume = 700,
+                Side = "sell",
+                Type = "limit"
+            });
+
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(2000);
+            MarketController marketController = (MarketController)applicationContext["MarketController"];
+            IHttpActionResult marketDataHttpResult = marketController.GetDepth("BTCUSD");
+
+            OkNegotiatedContentResult<Tuple<Tuple<decimal, decimal, int>[], Tuple<decimal, decimal, int>[]>> okResponseMessage =
+                (OkNegotiatedContentResult<Tuple<Tuple<decimal, decimal, int>[], Tuple<decimal, decimal, int>[]>>)marketDataHttpResult;
+
+            Tuple<Tuple<decimal, decimal, int>[], Tuple<decimal, decimal, int>[]> returnedDepth = okResponseMessage.Content;
+
+            Assert.AreEqual(1000, returnedDepth.Item1[0].Item1); // Volume of the first Bid DepthLevel
+            Assert.AreEqual(493, returnedDepth.Item1[0].Item2); // Price of the first Bid DepthLevel
+            Assert.AreEqual(400, returnedDepth.Item1[1].Item1); // Volume of the second Bid DepthLevel
+            Assert.AreEqual(491, returnedDepth.Item1[1].Item2); // Price of the second Bid DepthLevel
+
+            Assert.AreEqual(700, returnedDepth.Item2[0].Item1); // Volume of the first Bid DepthLevel
+            Assert.AreEqual(497, returnedDepth.Item2[0].Item2); // Price of the first Bid DepthLevel
+            Assert.AreEqual(1700, returnedDepth.Item2[1].Item1); // Volume of the second Bid DepthLevel
+            Assert.AreEqual(498, returnedDepth.Item2[1].Item2); // Price of the second Bid DepthLevel
+        }
+
+        [Test]
+        [Category("Integration")]
+        public void SubmitsThenCancelsOrders_ChecksOrderBook_AssertsOnExpectedValues()
+        {
+            // Get the context
+            IApplicationContext applicationContext = ContextRegistry.GetContext();
+            Exchange exchange = new Exchange();
+            IEventStore inputEventStore = new RavenNEventStore(Constants.INPUT_EVENT_STORE);
+            IEventStore outputEventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
+            Journaler inputJournaler = new Journaler(inputEventStore);
+            Journaler outputJournaler = new Journaler(outputEventStore);
+            InputDisruptorPublisher.InitializeDisruptor(new IEventHandler<InputPayload>[] { exchange, inputJournaler });
+            OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { outputJournaler });
+
+            // Get the instance through Spring configuration
+            OrderController orderController = (OrderController)applicationContext["OrderController"];
+
+            ManualResetEvent manualResetEvent = new ManualResetEvent(false);
+            IHttpActionResult orderHttpResult = orderController.CreateOrder(new CreateOrderParam()
+            {
+                Pair = "BTCUSD",
+                Price = 491,
+                Volume = 100,
+                Side = "buy",
+                Type = "limit"
+            });
+
+            OkNegotiatedContentResult<NewOrderRepresentation> order1RepresentationContent = (OkNegotiatedContentResult<NewOrderRepresentation>)orderHttpResult;
+            Assert.IsNotNull(order1RepresentationContent.Content);
+
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(1000);
+            orderController.CreateOrder(new CreateOrderParam()
+            {
+                Pair = "BTCUSD",
+                Price = 492,
+                Volume = 300,
+                Side = "buy",
+                Type = "limit"
+            });
+
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(1000);
+
+            orderController.CreateOrder(new CreateOrderParam()
+            {
+                Pair = "BTCUSD",
+                Price = 493,
+                Volume = 1000,
+                Side = "buy",
+                Type = "limit"
+            });
+
+            orderController.CreateOrder(new CreateOrderParam()
+            {
+                Pair = "BTCUSD",
+                Price = 499,
+                Volume = 900,
+                Side = "sell",
+                Type = "limit"
+            });
+
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(1000);
+
+            orderController.CreateOrder(new CreateOrderParam()
+            {
+                Pair = "BTCUSD",
+                Price = 498,
+                Volume = 800,
+                Side = "sell",
+                Type = "limit"
+            });
+
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(1000);
+
+            orderController.CreateOrder(new CreateOrderParam()
+            {
+                Pair = "BTCUSD",
+                Price = 497,
+                Volume = 700,
+                Side = "sell",
+                Type = "limit"
+            });
+
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(2000);
+            MarketController marketController = (MarketController)applicationContext["MarketController"];
+            IHttpActionResult marketDataHttpResult = marketController.GetOrderBook("BTCUSD");
+
+            OkNegotiatedContentResult<Tuple<OrderRepresentationList, OrderRepresentationList>> okResponseMessage =
+                (OkNegotiatedContentResult<Tuple<OrderRepresentationList, OrderRepresentationList>>)marketDataHttpResult;
+
+            Tuple<OrderRepresentationList, OrderRepresentationList> orderBooks = okResponseMessage.Content;
+            Assert.AreEqual(3, orderBooks.Item1.Count()); // Count of the orders in the Bid Order book
+            Assert.AreEqual(3, orderBooks.Item2.Count());// Count of the orders in the Ask Order book
+
+            Assert.AreEqual(1000, orderBooks.Item1.ToList()[0].Item1); // Volume @ slot 1 in bid OrderBook
+            Assert.AreEqual(493, orderBooks.Item1.ToList()[0].Item2); // Price @ slot 1 in bid OrderBook
+            Assert.AreEqual(700, orderBooks.Item2.ToList()[0].Item1); // Volume @ slot 1 in ask OrderBook
+            Assert.AreEqual(497, orderBooks.Item2.ToList()[0].Item2); // Price @ slot 1 in ask OrderBook
+
+            Assert.AreEqual(300, orderBooks.Item1.ToList()[1].Item1); // Volume @ slot 2 in bid OrderBook
+            Assert.AreEqual(492, orderBooks.Item1.ToList()[1].Item2); // Price @ slot 2 in bid OrderBook
+            Assert.AreEqual(800, orderBooks.Item2.ToList()[1].Item1); // Volume @ slot 2 in ask OrderBook
+            Assert.AreEqual(498, orderBooks.Item2.ToList()[1].Item2); // Price @ slot 2 in ask OrderBook
+
+            Assert.AreEqual(100, orderBooks.Item1.ToList()[2].Item1); // Volume @ slot 3 in bid OrderBook
+            Assert.AreEqual(491, orderBooks.Item1.ToList()[2].Item2); // Price @ slot 3 in bid OrderBook
+            Assert.AreEqual(900, orderBooks.Item2.ToList()[2].Item1); // Volume @ slot 3 in ask OrderBook
+            Assert.AreEqual(499, orderBooks.Item2.ToList()[2].Item2); // Price @ slot 3 in ask OrderBook
+
+            IHttpActionResult httpActionResult = orderController.CancelOrder(order1RepresentationContent.Content.OrderId);
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(300000);
         }
 
         #endregion End-to-End Test

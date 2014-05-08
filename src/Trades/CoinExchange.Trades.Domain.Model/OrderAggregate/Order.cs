@@ -60,7 +60,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderAggregate
             this.DateTime = DateTime.Now;
             FilledQuantity = new Volume(0);
             FilledCost = new Price(0);
-            OpenQuantity = new Volume(0);
+            OpenQuantity = Volume;
         }
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderAggregate
             this.DateTime = DateTime.Now;
             FilledQuantity = new Volume(0);
             _filledCost = new Price(0);
-            OpenQuantity = new Volume(0);
+            OpenQuantity = Volume;
         }
 
         #region Methods
@@ -398,6 +398,9 @@ namespace CoinExchange.Trades.Domain.Model.OrderAggregate
             order.CurrencyPair = this.CurrencyPair;
             order.Volume = new Volume(this.Volume.Value);
             order.VolumeExecuted = this.VolumeExecuted;
+            order.OpenQuantity = this.OpenQuantity;
+            order.FilledQuantity = this.FilledQuantity;
+            order.FilledCost = this.FilledCost;
             return order;
         }
 

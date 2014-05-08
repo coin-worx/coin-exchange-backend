@@ -41,7 +41,7 @@ namespace CoinExchange.Trades.Application.OrderServices
             IOrderIdGenerator orderIdGenerator = ContextRegistry.GetContext()["OrderIdGenerator"] as IOrderIdGenerator;
             Order order = OrderFactory.CreateOrder(orderCommand.TraderId, orderCommand.Pair,
                 orderCommand.Type, orderCommand.Side, orderCommand.Volume, orderCommand.Price, orderIdGenerator);
-            //TODO:Publish the order to disruptor
+            
             InputDisruptorPublisher.Publish(InputPayload.CreatePayload(order));
             return new NewOrderRepresentation(order);
         }

@@ -8,7 +8,7 @@
     <constructor-arg name="orderQueryService" ref="OrderQueryService"/>
   </object>
 
-  <object id="OrderApplicationService" type="CoinExchange.Trades.Application.OrderServices.OrderApplicationService, CoinExchange.Trades.Application">
+  <!--<object id="OrderApplicationService" type="CoinExchange.Trades.Application.OrderServices.OrderApplicationService, CoinExchange.Trades.Application">
     <constructor-arg name="cancelOrderCommandValidation" ref="CancelOrderCommandValidation"/>
   </object>
   
@@ -22,5 +22,5 @@
   <object id="OrderQueryService" type="CoinExchange.Trades.Application.OrderServices.StubbedOrderQueryService, CoinExchange.Trades.Application"/>
   
 <object id="OrderIdGenerator" type="CoinExchange.Trades.Infrastructure.Services.StubbedOrderIdGenerator, CoinExchange.Trades.Infrastructure.Services"/>
-
+-->
 </objects>

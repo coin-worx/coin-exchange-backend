@@ -43,8 +43,15 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
             {
                 if (orderId != string.Empty)
                 {
-                    //TODO: Fetch traderid from api signature provided in header
-                    return Ok(_orderApplicationService.CancelOrder(new CancelOrderCommand(new OrderId(int.Parse(orderId)),new TraderId(123))));
+                    try
+                    {
+                        //TODO: Fetch traderid from api signature provided in header
+                        return Ok(_orderApplicationService.CancelOrder(new CancelOrderCommand(new OrderId(int.Parse(orderId)),new TraderId(123))));
+                    }
+                    catch (Exception exception)
+                    {
+                        return InternalServerError(exception);
+                    }
                 }
                 return BadRequest();
             }

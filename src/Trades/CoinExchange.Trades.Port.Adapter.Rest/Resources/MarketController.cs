@@ -75,6 +75,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
             try
             {
                 Tuple<OrderRepresentationList, OrderRepresentationList> list = _marketDataService.GetOrderBook(currencyPair, count);
+
                 if (list != null)
                 {
                     return Ok<Tuple<OrderRepresentationList, OrderRepresentationList>>(list);
