@@ -77,5 +77,10 @@ namespace CoinExchange.Trades.Application.MarketDataServices
 
             return list;*/
         }
+
+        public Tuple<Tuple<decimal, decimal, int>[], Tuple<decimal, decimal, int>[]> GetDepth(string currencyPair)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

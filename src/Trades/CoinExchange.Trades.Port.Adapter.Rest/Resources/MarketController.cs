@@ -86,5 +86,33 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                 return InternalServerError(ex);
             }
         }
+
+        /// <summary>
+        /// Returns the Depth in IHttpActionresult as a Tuple where 
+        /// Item1 = BidDepth,
+        /// Item2 = AskDepth
+        /// Each is an array of a Tuple of <decimal, decimal, int>, representing Volume, Price and OrderCount respectively
+        /// </summary>
+        /// <param name="currencyPair"></param>
+        /// <returns></returns>
+        [Route("marketdata/depth")]
+        [HttpGet]
+        public IHttpActionResult GetDepth(string currencyPair)
+        {
+            try
+            {
+                Tuple<Tuple<decimal, decimal, int>[], Tuple<decimal, decimal, int>[]> depth = _marketDataService.GetDepth(currencyPair);
+
+                if (depth != null)
+                {
+                    return Ok(depth);
+                }
+                return NotFound();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
     }
 }

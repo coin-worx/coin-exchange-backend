@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web.Http;
 using CoinExchange.Common.Domain.Model;
 using CoinExchange.Trades.Application.OrderServices;
@@ -70,7 +71,8 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                     return
                         Ok(
                             _orderApplicationService.CreateOrder(new CreateOrderCommand(order.Price, order.Type,
-                                order.Side, order.Pair,order.Volume,"")));
+                                // ToDo: Need to perform check on the API key and then provide the corresponding TraderId
+                                order.Side, order.Pair,order.Volume,Constants.GetTraderId("123456789"))));
                 }
                 return BadRequest();
             }

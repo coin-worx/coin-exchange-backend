@@ -57,6 +57,11 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
             return false;
         }
 
+        /// <summary>
+        /// Contains the BBO Representation
+        /// </summary>
+        /// <param name="currencyPair"></param>
+        /// <returns></returns>
         public BBORepresentation Contains(string currencyPair)
         {
             foreach (BBORepresentation bboRepresentation in _bboRepresentations)

@@ -20,6 +20,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private string BitCoinUsd = "BTCUSD";
+        private string XbtUsd = "XBTUSD";
         List<string> _currencyPairs = new List<string>();
         private ExchangeEssentialsList _exchangeEssentialsList = new ExchangeEssentialsList();
 
@@ -29,6 +30,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         public Exchange()
         {
             _currencyPairs.Add(BitCoinUsd);
+            _currencyPairs.Add(XbtUsd);
             foreach (var currencyPair in _currencyPairs)
             {
                 LimitOrderBook orderBook = new LimitOrderBook(currencyPair);
@@ -91,6 +93,8 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             {
                 case "BTCUSD":
                     return _exchangeEssentialsList.First().LimitOrderBook.PlaceOrder(order);
+                case "XBTUSD":
+                    return _exchangeEssentialsList.ToList()[1].LimitOrderBook.PlaceOrder(order);
             }
             return false;
         }
@@ -106,6 +110,8 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             {
                 case "BTCUSD":
                     return _exchangeEssentialsList.First().LimitOrderBook.CancelOrder(orderCancellation.OrderId);
+                case "XBTUSD":
+                    return _exchangeEssentialsList.ToList()[1].LimitOrderBook.CancelOrder(orderCancellation.OrderId);
             }
             return false;
         }
