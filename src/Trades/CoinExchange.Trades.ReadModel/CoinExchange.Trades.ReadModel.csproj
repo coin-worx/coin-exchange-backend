@@ -84,6 +84,7 @@
     <Compile Include="Repositories\ITradeRepository.cs" />
     <Compile Include="Services\OhlcCalculation.cs" />
     <Compile Include="Services\TickerInfoCalculation.cs" />
+    <Compile Include="Services\TickerInfoService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Common\CoinExchange.Common\CoinExchange.Common.csproj">
@@ -102,6 +103,16 @@
     <EmbeddedResource Include="Config\TadeEventListenerConfig.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Config\MemoryImageConfig.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Config\TickerInfoServiceConfig.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

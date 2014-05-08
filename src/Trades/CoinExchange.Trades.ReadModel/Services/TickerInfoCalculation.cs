@@ -52,10 +52,13 @@ namespace CoinExchange.Trades.ReadModel.Services
                 IList<TradeReadModel> trades = _tradeRepository.GetTradesBetweenDates(trade.ExecutionTime, DateTime.Today,trade.CurrencyPair);
                 if (trades != null)
                 {
-                    log.Debug("Total Trades="+trades.Count);
-                    openingPrice = trades[trades.Count - 1].Price;
-                    lastTradePrice = trades[0].Price;
-                    lastTradeVolume = trades[0].Volume;
+                    if (trades.Count > 0)
+                    {
+                        log.Debug("Total Trades=" + trades.Count);
+                        openingPrice = trades[trades.Count - 1].Price;
+                        lastTradePrice = trades[0].Price;
+                        lastTradeVolume = trades[0].Volume;
+                    }
                 }
                 tickerReadModel.UpdateTickerInfo(todays,last24Hours,openingPrice,lastTradePrice,lastTradeVolume);
                 _persistanceRepository.SaveOrUpdate(tickerReadModel);

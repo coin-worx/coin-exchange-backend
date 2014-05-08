@@ -13,8 +13,8 @@
   <constructor-arg name="bboMemoryImage" ref="BBOMemoryImage"/>
   </object>
 
-  <object id="OrderBookMemoryImage" type="CoinExchange.Trades.ReadModel.MemoryImages.OrderBookMemoryImage, CoinExchange.Trades.ReadModel" />
+  <!--<object id="OrderBookMemoryImage" type="CoinExchange.Trades.ReadModel.MemoryImages.OrderBookMemoryImage, CoinExchange.Trades.ReadModel" />
   <object id="DepthMemoryImage" type="CoinExchange.Trades.ReadModel.MemoryImages.DepthMemoryImage, CoinExchange.Trades.ReadModel" />
-  <object id="BBOMemoryImage" type="CoinExchange.Trades.ReadModel.MemoryImages.BBOMemoryImage, CoinExchange.Trades.ReadModel" />
+  <object id="BBOMemoryImage" type="CoinExchange.Trades.ReadModel.MemoryImages.BBOMemoryImage, CoinExchange.Trades.ReadModel" />-->
 
 </objects>
