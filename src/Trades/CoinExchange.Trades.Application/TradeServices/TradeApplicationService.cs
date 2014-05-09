@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using CoinExchange.Trades.Application.OrderServices.Representation;
 using CoinExchange.Trades.Application.TradeServices.Representation;
 using CoinExchange.Trades.Domain.Model.TradeAggregate;
+using CoinExchange.Trades.ReadModel.DTO;
 using CoinExchange.Trades.ReadModel.Repositories;
 
 namespace CoinExchange.Trades.Application.TradeServices
@@ -13,6 +14,11 @@ namespace CoinExchange.Trades.Application.TradeServices
     public class TradeApplicationService:ITradeApplicationService
     {
         private ITradeRepository _tradeRepository;
+
+        public TradeApplicationService(ITradeRepository tradeRepository)
+        {
+            _tradeRepository = tradeRepository;
+        }
 
         public List<OrderRepresentation> GetTradesHistory(TraderId traderId, string offset = "", string type = "all", bool trades = false, string start = "", string end = "")
         {

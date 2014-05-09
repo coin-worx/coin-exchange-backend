@@ -19,11 +19,11 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
     /// </summary>
     public class TradeController : ApiController
     {
-        private ITradeApplicationService _tradeQueryService;
+        private ITradeApplicationService _tradeApplicationService;
 
-        public TradeController(ITradeApplicationService tradeQueryService)
+        public TradeController(ITradeApplicationService tradeApplicationService)
         {
-            _tradeQueryService = tradeQueryService;
+            _tradeApplicationService = tradeApplicationService;
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                     string[] auth = headerParams.ToList()[0].Split(',');
                     apikey = auth[0];
                 }
-                List<OrderRepresentation> closedOrders = _tradeQueryService.GetTradesHistory(new TraderId(int.Parse(Constants.GetTraderId(apikey))), tradeHistoryParams.Offset,
+                List<OrderRepresentation> closedOrders = _tradeApplicationService.GetTradesHistory(new TraderId(int.Parse(Constants.GetTraderId(apikey))), tradeHistoryParams.Offset,
                     tradeHistoryParams.Type, tradeHistoryParams.Trades, tradeHistoryParams.Start, tradeHistoryParams.End);
 
                 if (closedOrders != null)
@@ -88,7 +88,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                     string[] auth = headerParams.ToList()[0].Split(',');
                     apikey = auth[0];
                 }
-                List<OrderRepresentation> trades = _tradeQueryService.QueryTrades(new TraderId(int.Parse(Constants.GetTraderId(apikey))), queryTradeParams.TxId, 
+                List<OrderRepresentation> trades = _tradeApplicationService.QueryTrades(new TraderId(int.Parse(Constants.GetTraderId(apikey))), queryTradeParams.TxId, 
                     queryTradeParams.IncludeTrades);
 
                 if (trades != null)
@@ -115,7 +115,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         {
             try
             {
-                var trades = _tradeQueryService.GetRecentTrades(currencyPair, since);
+                var trades = _tradeApplicationService.GetRecentTrades(currencyPair, since);
 
                 if (trades != null)
                 {
@@ -140,18 +140,10 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         public IHttpActionResult TradeVolume([FromBody]string pair)
         {
             try
-            { //get api key from header
-                var headers = Request.Headers;
-                string apikey = "";
-                IEnumerable<string> headerParams;
-                if (headers.TryGetValues("Auth", out headerParams))
-                {
-                    string[] auth = headerParams.ToList()[0].Split(',');
-                    apikey = auth[0];
-                }
+            {
                 if (pair != string.Empty)
                 {
-                    return Ok(_tradeQueryService.TradeVolume(pair));
+                    return Ok(_tradeApplicationService.TradeVolume(pair));
                 }
                 return BadRequest();
             }
