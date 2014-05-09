@@ -19,17 +19,18 @@ namespace CoinExchange.Trades.Infrastructure.Persistence.RavenDb
         private static readonly log4net.ILog Log = log4net.LogManager.GetLogger
         (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private static readonly Guid StreamId = Guid.NewGuid();
-        private static IStoreEvents _store;
-        private static IEventStream _stream;
+        private  Guid _streamId;
+        private  IStoreEvents _store;
+        private  IEventStream _stream;
 
         /// <summary>
         /// Default Constructor
         /// </summary>
         public RavenNEventStore(string eventStore)
         {
+            _streamId=Guid.NewGuid();
             _store = GetInitializedEventStore(new ReceiveCommit(),eventStore);
-            _stream = _store.OpenStream(StreamId, 0, int.MaxValue);
+            _stream = _store.OpenStream(_streamId, 0, int.MaxValue);
         }
 
         /// <summary>
@@ -56,20 +57,28 @@ namespace CoinExchange.Trades.Infrastructure.Persistence.RavenDb
         /// Initialize RavenDB NEventStore
         /// </summary>
         /// <returns></returns>
-        private static IStoreEvents GetInitializedEventStore(IDispatchCommits commits,string eventStore)
+        private IStoreEvents GetInitializedEventStore(IDispatchCommits commits,string eventStore)
         {
+            if (eventStore.Equals(Constants.OUTPUT_EVENT_STORE))
+            {
+                return Wireup.Init()
+                    .UsingRavenPersistence(Constants.RAVEN_DB_CONNECTIONSTRING_NAME)
+                    .DefaultDatabase(eventStore)
+                    .UsingAsynchronousDispatchScheduler(commits)
+                    .Build();
+            }
             return Wireup.Init()
-                .UsingRavenPersistence(Constants.RAVEN_DB_CONNECTIONSTRING_NAME)
-                .DefaultDatabase(eventStore)
-                .UsingAsynchronousDispatchScheduler(commits)
-                .Build();
+                    .UsingRavenPersistence(Constants.RAVEN_DB_CONNECTIONSTRING_NAME)
+                    .DefaultDatabase(eventStore)
+                    .UsingAsynchronousDispatchScheduler(null)
+                    .Build();
         }
 
         /// <summary>
         /// Write event to the stream(RavenDB collection)
         /// </summary>
         /// <param name="event"></param>
-        private static void OpenOrCreateStream(object @event)
+        private void OpenOrCreateStream(object @event)
         {
             _stream.Add(new EventMessage {Body = @event});
             _stream.CommitChanges(Guid.NewGuid());
@@ -88,7 +97,7 @@ namespace CoinExchange.Trades.Infrastructure.Persistence.RavenDb
         public object GetEvent(string id)
         {
             List<EventMessage> collection;
-            using (var stream = _store.OpenStream(StreamId, 0, int.MaxValue))
+            using (var stream = _store.OpenStream(_streamId, 0, int.MaxValue))
             {
                 collection = stream.CommittedEvents.ToList();
                 for (int i = 0; i < collection.Count; i++)
@@ -177,7 +186,7 @@ namespace CoinExchange.Trades.Infrastructure.Persistence.RavenDb
         {
             List<EventMessage> collection;
             List<Trade> trades=new List<Trade>();
-            using (var stream = _store.OpenStream(StreamId, 0, int.MaxValue))
+            using (var stream = _store.OpenStream(_streamId, 0, int.MaxValue))
             {
                 collection = stream.CommittedEvents.ToList();
                 for (int i = 0; i < collection.Count; i++)

@@ -10,6 +10,9 @@ using Spring.Transaction.Interceptor;
 
 namespace CoinExchange.Trades.ReadModel.Persistence.NHibernate
 {
+    /// <summary>
+    /// Order repository implementation
+    /// </summary>
     [Repository]
     public class OrderRepository : NHibernateSessionFactory,IOrderRepository
     {
@@ -19,6 +22,15 @@ namespace CoinExchange.Trades.ReadModel.Persistence.NHibernate
             return CurrentSession.Query<OrderReadModel>()
                 .Where(order => order.TraderId.Equals(traderId) && 
                 (order.Status.Equals("New") || order.Status.Equals("Accepted") || order.Status.Equals("PartiallyFilled")))
+                .AsQueryable()
+                .ToList();
+        }
+
+        [Transaction(ReadOnly = true)]
+        public List<OrderReadModel> GetClosedOrders(string traderId,DateTime start,DateTime end)
+        {
+            return CurrentSession.Query<OrderReadModel>()
+                .Where(order => order.TraderId.Equals(traderId) && order.Status.Equals("Closed") && order.OrderDateTime>=start && order.OrderDateTime<=end)
                 .AsQueryable()
                 .ToList();
         }
