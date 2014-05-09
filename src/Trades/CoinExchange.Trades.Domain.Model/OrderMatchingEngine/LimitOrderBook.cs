@@ -82,6 +82,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// <returns></returns>
         public bool PlaceOrder(Order order)
         {
+            order.Accepted();
             switch (order.OrderSide)
             {
                 case OrderSide.Sell:

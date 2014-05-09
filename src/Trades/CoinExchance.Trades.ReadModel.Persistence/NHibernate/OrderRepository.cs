@@ -17,7 +17,8 @@ namespace CoinExchange.Trades.ReadModel.Persistence.NHibernate
         public List<OrderReadModel> GetOpenOrders(string traderId)
         {
             return CurrentSession.Query<OrderReadModel>()
-                .Where(order => order.TraderId.Equals(traderId) && order.Status.Equals("Open"))
+                .Where(order => order.TraderId.Equals(traderId) && 
+                (order.Status.Equals("New") || order.Status.Equals("Accepted") || order.Status.Equals("PartiallyFilled")))
                 .AsQueryable()
                 .ToList();
         }
@@ -26,7 +27,8 @@ namespace CoinExchange.Trades.ReadModel.Persistence.NHibernate
         public List<OrderReadModel> GetClosedOrders(string traderId)
         {
             return CurrentSession.Query<OrderReadModel>()
-                .Where(order => order.TraderId.Equals(traderId) && order.Status.Equals("Closed"))
+                .Where(order => order.TraderId.Equals(traderId) &&
+                (order.Status.Equals("Cancelled") || order.Status.Equals("Rejected") || order.Status.Equals("Complete")))
                 .AsQueryable()
                 .ToList();
         }

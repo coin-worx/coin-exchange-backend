@@ -106,9 +106,8 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         {
             try
             {
-                // ToDo: In the next sprint related to business logic behind RESTful calls, need to split the ledgersIds comma
-                // separated list
-                object value = _orderQueryService.GetOpenOrders(new TraderId(1),
+                // ToDo: TraderId should be retreived after authorizing the API Key and getting the TraderId if API Key is valid
+                object value = _orderQueryService.GetOpenOrders(new TraderId(int.Parse(Constants.GetTraderId("123456789"))),
                     queryOpenOrdersParams.IncludeTrades, queryOpenOrdersParams.UserRefId);
 
                 if (value is List<OrderRepresentation>)
@@ -145,7 +144,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
             try
             {
                 // ToDo: Get the Trader ID after authentication using API key.
-                object orders = _orderQueryService.GetClosedOrders(new TraderId(Int16.Parse(Constants.GetTraderId("123456789"))),
+                object orders = _orderQueryService.GetClosedOrders(new TraderId(int.Parse(Constants.GetTraderId("123456789"))),
                     closedOrdersParams.IncludeTrades, closedOrdersParams.UserRefId, closedOrdersParams.StartTime,
                     closedOrdersParams.EndTime, closedOrdersParams.Offset, closedOrdersParams.CloseTime);
 
