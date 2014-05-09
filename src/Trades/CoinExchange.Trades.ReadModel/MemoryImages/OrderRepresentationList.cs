@@ -46,7 +46,7 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
         /// Add an Order to the List
         /// </summary>
         /// <returns></returns>
-        internal bool AddRecord(/*string currencyPair, OrderSide orderSide, */decimal volume, decimal price)
+        public bool AddRecord(/*string currencyPair, OrderSide orderSide, */decimal volume, decimal price)
         {
             /*if (volume != 0 && currencyPair == _currencyPair && orderSide == _orderSide)
             {*/

@@ -18,9 +18,7 @@ namespace CoinExchange.Trades.ReadModel.Persistence.NHibernate
         [Transaction(ReadOnly = true)]
         public IList<object> GetRecentTrades(string lastId, string pair)
         {
-            IList<dynamic> objects = CurrentSession.QueryOver<TradeReadModel>().Select(t => t.ExecutionDateTime, t => t.Price, t => t.Volume).List<dynamic>();
-
-            return objects.OrderBy(x => x[0]).ToList();
+            return CurrentSession.QueryOver<TradeReadModel>().Select(t => t.ExecutionDateTime, t => t.Price, t => t.Volume).OrderBy(x=>x.ExecutionDateTime).Asc.List<object>();
         }
 
         //[Transaction(ReadOnly = true)]
@@ -35,17 +33,25 @@ namespace CoinExchange.Trades.ReadModel.Persistence.NHibernate
         [Transaction(ReadOnly = true)]
         public IList<object> GetTraderTradeHistory(string traderId)
         {
-            return CurrentSession.QueryOver<TradeReadModel>().Select(t=>t.TradeId,t => t.ExecutionDateTime, t => t.Price, t => t.Volume,t=>t.CurrencyPair)
-                .Where(trade => trade.BuyTraderId==traderId || trade.SellTraderId==traderId)
-                .List<object>();
+            return
+                CurrentSession.QueryOver<TradeReadModel>().Select(t => t.TradeId, t => t.ExecutionDateTime, t => t.Price,
+                                                                  t => t.Volume, t => t.CurrencyPair)
+                    .Where(trade => trade.BuyTraderId == traderId || trade.SellTraderId == traderId)
+                    .OrderBy(x => x.ExecutionDateTime)
+                    .Asc
+                    .List<object>();
         }
 
         [Transaction(ReadOnly = true)]
         public IList<object> GetTraderTradeHistory(string traderId,DateTime start,DateTime end)
         {
-            return CurrentSession.QueryOver<TradeReadModel>().Select(t => t.TradeId, t => t.ExecutionDateTime, t => t.Price, t => t.Volume, t => t.CurrencyPair)
-                .Where(trade => trade.BuyTraderId == traderId || trade.SellTraderId == traderId)
-                .List<object>();
+            return
+                CurrentSession.QueryOver<TradeReadModel>().Select(t => t.TradeId, t => t.ExecutionDateTime, t => t.Price,
+                                                                  t => t.Volume, t => t.CurrencyPair)
+                    .Where(trade => trade.BuyTraderId == traderId || trade.SellTraderId == traderId)
+                    .OrderBy(x => x.ExecutionDateTime)
+                    .Asc
+                    .List<object>();
         }
         [Transaction(ReadOnly = true)]
         public TradeReadModel GetById(string tradeId)
@@ -69,5 +75,15 @@ namespace CoinExchange.Trades.ReadModel.Persistence.NHibernate
             var result = CurrentSession.CreateSQLQuery(sqlQuery).List();
             return result[0];
         }
+
+        [Transaction(ReadOnly = false)]
+        public void RollBack()
+        {
+            string sqlQuery = string.Format("DELETE FROM TRADE");
+
+            CurrentSession.CreateSQLQuery(sqlQuery).ExecuteUpdate();
+        }
+
+        
     }
 }

@@ -136,7 +136,7 @@
     <Compile Include="MarketDataControllerTests.cs" />
     <Compile Include="OrderControllerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TradesControllerTestCases.cs" />
+    <Compile Include="TradeControllerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Common\CoinExchange.Common\CoinExchange.Common.csproj">

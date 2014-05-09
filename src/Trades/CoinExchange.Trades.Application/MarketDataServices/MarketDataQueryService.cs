@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using CoinExchange.Trades.Application.MarketDataServices.Representation;
+using CoinExchange.Trades.Domain.Model.OrderAggregate;
 using CoinExchange.Trades.ReadModel.MemoryImages;
 using CoinExchange.Trades.ReadModel.Repositories;
 using CoinExchange.Trades.ReadModel.Services;
@@ -140,9 +142,30 @@ namespace CoinExchange.Trades.Application.MarketDataServices
         /// <returns></returns>
         public Tuple<OrderRepresentationList, OrderRepresentationList> GetOrderBook(string currencyPair, int count)
         {
-            OrderRepresentationList bidBook = this.GetBidBook(currencyPair);
-            OrderRepresentationList askBook = this.GetAskBook(currencyPair);
-            return new Tuple<OrderRepresentationList, OrderRepresentationList>(bidBook, askBook);
+            OrderRepresentationList originalBidBook = this.GetBidBook(currencyPair);
+            OrderRepresentationList originalAskBook = this.GetAskBook(currencyPair);
+
+            if (count > 0)
+            {
+                OrderRepresentationList bidBook = new OrderRepresentationList(currencyPair, OrderSide.Buy);
+                OrderRepresentationList askBook = new OrderRepresentationList(currencyPair, OrderSide.Sell);
+                for (int i = 0; i < count; i++)
+                {
+                    if (i < originalBidBook.Count())
+                    {
+                        bidBook.AddRecord(originalBidBook.ToList()[i].Item1, originalBidBook.ToList()[i].Item2);
+                    }
+                    if (i < originalAskBook.Count())
+                    {
+                        askBook.AddRecord(originalAskBook.ToList()[i].Item1, originalAskBook.ToList()[i].Item2);
+                    }
+                }
+                return new Tuple<OrderRepresentationList, OrderRepresentationList>(bidBook, askBook);
+            }
+            else
+            {
+                return new Tuple<OrderRepresentationList, OrderRepresentationList>(originalBidBook, originalAskBook);
+            }
         }
 
         /// <summary>

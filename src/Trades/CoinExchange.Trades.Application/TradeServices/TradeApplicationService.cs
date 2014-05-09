@@ -11,7 +11,7 @@ using CoinExchange.Trades.ReadModel.Repositories;
 
 namespace CoinExchange.Trades.Application.TradeServices
 {
-    public class TradeApplicationService:ITradeApplicationService
+    public class TradeApplicationService : ITradeApplicationService
     {
         private ITradeRepository _tradeRepository;
 
@@ -24,7 +24,7 @@ namespace CoinExchange.Trades.Application.TradeServices
         {
             if (start == "" || end == "")
             {
-                QueryTrades(traderId);
+                return QueryTrades(traderId);
             }
             return _tradeRepository.GetTraderTradeHistory(traderId.Id.ToString(), Convert.ToDateTime(start),
                 Convert.ToDateTime(end));

@@ -55,5 +55,6 @@ namespace CoinExchange.Trades.ReadModel.Repositories
         /// <returns></returns>
         object GetCustomDataBetweenDates(DateTime end, DateTime start,string currencyPair);
 
+        void RollBack();
     }
 }
