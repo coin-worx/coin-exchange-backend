@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web.Http;
 using CoinExchange.Common.Domain.Model;
 using CoinExchange.Trades.Application.OrderServices.Representation;
@@ -41,12 +42,21 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         {
             try
             {
-                List<OrderRepresentation> closedOrders = _tradeApplicationService.GetTradesHistory(new TraderId(1), tradeHistoryParams.Offset,
+                //get api key from header
+                var headers = Request.Headers;
+                string apikey = "";
+                IEnumerable<string> headerParams;
+                if (headers.TryGetValues("Auth", out headerParams))
+                {
+                    string[] auth = headerParams.ToList()[0].Split(',');
+                    apikey = auth[0];
+                }
+                var closedOrders = _tradeApplicationService.GetTradesHistory(new TraderId(int.Parse(Constants.GetTraderId(apikey))), tradeHistoryParams.Offset,
                     tradeHistoryParams.Type, tradeHistoryParams.Trades, tradeHistoryParams.Start, tradeHistoryParams.End);
 
                 if (closedOrders != null)
                 {
-                    return Ok<List<OrderRepresentation>>(closedOrders);
+                    return Ok(closedOrders);
                 }
                 return NotFound();
             }
@@ -69,12 +79,21 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         {
             try
             {
-                List<OrderRepresentation> trades = _tradeApplicationService.QueryTrades(new TraderId(1), queryTradeParams.TxId, 
+                //get api key from header
+                var headers = Request.Headers;
+                string apikey = "";
+                IEnumerable<string> headerParams;
+                if (headers.TryGetValues("Auth", out headerParams))
+                {
+                    string[] auth = headerParams.ToList()[0].Split(',');
+                    apikey = auth[0];
+                }
+                var trades = _tradeApplicationService.QueryTrades(new TraderId(int.Parse(Constants.GetTraderId(apikey))), queryTradeParams.TxId, 
                     queryTradeParams.IncludeTrades);
 
                 if (trades != null)
                 {
-                    return Ok<List<OrderRepresentation>>(trades);
+                    return Ok(trades);
                 }
                 return NotFound();
             }

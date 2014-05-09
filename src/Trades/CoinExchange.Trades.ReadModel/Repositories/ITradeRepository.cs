@@ -19,7 +19,16 @@ namespace CoinExchange.Trades.ReadModel.Repositories
         /// </summary>
         /// <param name="traderId"></param>
         /// <returns></returns>
-        IList<TradeReadModel> GetTraderTradeHistory(string traderId);
+        IList<object> GetTraderTradeHistory(string traderId);
+
+        /// <summary>
+        /// Get trades between specified date
+        /// </summary>
+        /// <param name="traderId"></param>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <returns></returns>
+        IList<object> GetTraderTradeHistory(string traderId, DateTime start, DateTime end);
 
         /// <summary>
         /// Get by Trade Id

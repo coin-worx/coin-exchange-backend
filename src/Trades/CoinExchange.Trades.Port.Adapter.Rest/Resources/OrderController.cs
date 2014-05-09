@@ -42,13 +42,22 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         {
             try
             {
+                //get api key from header
+                var headers = Request.Headers;
+                string apikey = "";
+                IEnumerable<string> headerParams;
+                if (headers.TryGetValues("Auth", out headerParams))
+                {
+                    string[] auth = headerParams.ToList()[0].Split(',');
+                    apikey = auth[0];
+                }
                 if (orderId != string.Empty)
                 {
                     try
                     {
                         //TODO: Fetch TraderId from api signature provided in header. Remove the Constant value of the GetSecretKey
                         return Ok(_orderApplicationService.CancelOrder(
-                                    new CancelOrderCommand(new OrderId(int.Parse(orderId)), new TraderId(Int32.Parse(Constants.GetTraderId("123456789"))))));
+                                    new CancelOrderCommand(new OrderId(int.Parse(orderId)), new TraderId(Int32.Parse(Constants.GetTraderId(apikey))))));
                     }
                     catch (Exception exception)
                     {
@@ -77,11 +86,20 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
             {
                 if (order != null)
                 {
+                    //get api key from header
+                    var headers = Request.Headers;
+                    string apikey = "";
+                    IEnumerable<string> headerParams;
+                    if (headers.TryGetValues("Auth", out headerParams))
+                    {
+                        string[] auth = headerParams.ToList()[0].Split(',');
+                        apikey = auth[0];
+                    }
                     return
                         Ok(
                             _orderApplicationService.CreateOrder(new CreateOrderCommand(order.Price, order.Type,
                                 // ToDo: Need to perform check on the API key and then provide the corresponding TraderId
-                                order.Side, order.Pair,order.Volume,Constants.GetTraderId("123456789"))));
+                                order.Side, order.Pair,order.Volume,Constants.GetTraderId(apikey))));
                 }
                 return BadRequest();
             }
@@ -106,8 +124,16 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         {
             try
             {
-                // ToDo: TraderId should be retreived after authorizing the API Key and getting the TraderId if API Key is valid
-                object value = _orderQueryService.GetOpenOrders(new TraderId(int.Parse(Constants.GetTraderId("123456789"))),
+                //get api key from header
+                var headers = Request.Headers;
+                string apikey = "";
+                IEnumerable<string> headerParams;
+                if (headers.TryGetValues("Auth", out headerParams))
+                {
+                    string[] auth = headerParams.ToList()[0].Split(',');
+                    apikey = auth[0];
+                }
+                object value = _orderQueryService.GetOpenOrders(new TraderId(int.Parse(Constants.GetTraderId(apikey))),
                     queryOpenOrdersParams.IncludeTrades, queryOpenOrdersParams.UserRefId);
 
                 if (value is List<OrderRepresentation>)
@@ -143,8 +169,16 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         {
             try
             {
-                // ToDo: Get the Trader ID after authentication using API key.
-                object orders = _orderQueryService.GetClosedOrders(new TraderId(int.Parse(Constants.GetTraderId("123456789"))),
+                //get api key from header
+                var headers = Request.Headers;
+                string apikey = "";
+                IEnumerable<string> headerParams;
+                if (headers.TryGetValues("Auth", out headerParams))
+                {
+                    string[] auth = headerParams.ToList()[0].Split(',');
+                    apikey = auth[0];
+                }
+                object orders = _orderQueryService.GetClosedOrders(new TraderId(int.Parse(Constants.GetTraderId(apikey))),
                     closedOrdersParams.IncludeTrades, closedOrdersParams.UserRefId, closedOrdersParams.StartTime,
                     closedOrdersParams.EndTime, closedOrdersParams.Offset, closedOrdersParams.CloseTime);
 

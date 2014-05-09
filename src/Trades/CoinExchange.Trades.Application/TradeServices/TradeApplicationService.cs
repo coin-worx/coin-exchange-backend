@@ -20,14 +20,19 @@ namespace CoinExchange.Trades.Application.TradeServices
             _tradeRepository = tradeRepository;
         }
 
-        public List<OrderRepresentation> GetTradesHistory(TraderId traderId, string offset = "", string type = "all", bool trades = false, string start = "", string end = "")
+        public object GetTradesHistory(TraderId traderId, string offset = "", string type = "all", bool trades = false, string start = "", string end = "")
         {
-            throw new NotImplementedException();
+            if (start == "" || end == "")
+            {
+                QueryTrades(traderId);
+            }
+            return _tradeRepository.GetTraderTradeHistory(traderId.Id.ToString(), Convert.ToDateTime(start),
+                Convert.ToDateTime(end));
         }
 
-        public List<OrderRepresentation> QueryTrades(TraderId traderId, string txId = "", bool includeTrades = false)
+        public object QueryTrades(TraderId traderId, string txId = "", bool includeTrades = false)
         {
-            throw new NotImplementedException();
+            return _tradeRepository.GetTraderTradeHistory(traderId.Id.ToString());
         }
 
         public IList<object> GetRecentTrades(string pair, string since)
