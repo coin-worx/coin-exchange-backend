@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -419,6 +421,8 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
 
             // Get the instance through Spring configuration
             OrderController orderController = (OrderController)applicationContext["OrderController"];
+            orderController.Request=new HttpRequestMessage(HttpMethod.Post, "");
+            orderController.Request.Headers.Add("Auth","123456789");
 
             ManualResetEvent manualResetEvent = new ManualResetEvent(false);
             IHttpActionResult orderHttpResult = orderController.CreateOrder(new CreateOrderParam()
