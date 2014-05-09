@@ -18,10 +18,9 @@ namespace CoinExchange.Trades.ReadModel.Persistence.NHibernate
         [Transaction(ReadOnly = true)]
         public IList<object> GetRecentTrades(string lastId, string pair)
         {
-            return CurrentSession.QueryOver<TradeReadModel>()
-                    .Select(t => t.ExecutionDateTime, t => t.Price, t => t.Volume)
-                    .List<object>();
+            IList<dynamic> objects = CurrentSession.QueryOver<TradeReadModel>().Select(t => t.ExecutionDateTime, t => t.Price, t => t.Volume).List<dynamic>();
 
+            return objects.OrderBy(x => x[0]).ToList();
         }
 
         [Transaction(ReadOnly = true)]

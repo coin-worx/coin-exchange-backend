@@ -51,14 +51,14 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             });
 
             manualResetEvent.Reset();
-            manualResetEvent.WaitOne(2000);
+            manualResetEvent.WaitOne(1000);
             orderController.CreateOrder(new CreateOrderParam()
                                         {
                                             Pair = "BTCUSD", Price = 492, Volume = 300, Side = "buy", Type = "limit"
                                         });
 
             manualResetEvent.Reset();
-            manualResetEvent.WaitOne(2000);
+            manualResetEvent.WaitOne(1000);
 
             orderController.CreateOrder(new CreateOrderParam()
                                         {
@@ -71,7 +71,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
                                         });
 
             manualResetEvent.Reset();
-            manualResetEvent.WaitOne(2000);
+            manualResetEvent.WaitOne(1000);
 
             orderController.CreateOrder(new CreateOrderParam()
                                         {
@@ -79,7 +79,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
                                         });
 
             manualResetEvent.Reset();
-            manualResetEvent.WaitOne(2000);
+            manualResetEvent.WaitOne(1000);
 
             orderController.CreateOrder(new CreateOrderParam()
                                         {
@@ -87,7 +87,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
                                         });
 
             manualResetEvent.Reset();
-            manualResetEvent.WaitOne(6000);
+            manualResetEvent.WaitOne(4000);
             IHttpActionResult httpActionResult = tradeController.RecentTrades("BTCUSD", "");
             OkNegotiatedContentResult<IList<object>> okResponse = (OkNegotiatedContentResult<IList<object>>) httpActionResult;
 
@@ -100,13 +100,13 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
                 newObjectsList.Add(objects);
             }
 
-            Assert.AreEqual(491, newObjectsList[0][1]);
-            Assert.AreEqual(100, newObjectsList[0][2]);
+            Assert.AreEqual(493, newObjectsList[0][1]);
+            Assert.AreEqual(1000, newObjectsList[0][2]);
 
             Assert.AreEqual(492, newObjectsList[1][1]);
             Assert.AreEqual(300, newObjectsList[1][2]);
 
-            Assert.AreEqual(493, newObjectsList[2][1]);
+            Assert.AreEqual(491, newObjectsList[2][1]);
             Assert.AreEqual(100, newObjectsList[2][2]);
         }
 
