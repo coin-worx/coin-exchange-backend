@@ -24,16 +24,23 @@ namespace CoinExchange.Trades.Application.OrderServices
 
         public CancelOrderResponse CancelOrder(CancelOrderCommand cancelOrderCommand)
         {
-            // Verify cancel order command
-            if (_commandValidationService.ValidateCancelOrderCommand(cancelOrderCommand))
+            try
             {
-                string currencyPair = _commandValidationService.GetCurrencyPair(cancelOrderCommand.OrderId);
-                OrderCancellation cancellation = new OrderCancellation(cancelOrderCommand.OrderId,
-                    cancelOrderCommand.TraderId,currencyPair);
-                InputDisruptorPublisher.Publish(InputPayload.CreatePayload(cancellation));
-                return new CancelOrderResponse(true,1);
+                // Verify cancel order command
+                if (_commandValidationService.ValidateCancelOrderCommand(cancelOrderCommand))
+                {
+                    string currencyPair = _commandValidationService.GetCurrencyPair(cancelOrderCommand.OrderId);
+                    OrderCancellation cancellation = new OrderCancellation(cancelOrderCommand.OrderId,
+                                                                           cancelOrderCommand.TraderId,currencyPair);
+                    InputDisruptorPublisher.Publish(InputPayload.CreatePayload(cancellation));
+                    return new CancelOrderResponse(1, true, "Cancel Request Successfull");
+                }
+                return new CancelOrderResponse(0, false, new InvalidDataException("Invalid orderid").ToString());
             }
-            throw new InvalidDataException("Invalid orderid");
+            catch (Exception exception)
+            {
+                return new CancelOrderResponse(0, false, exception.ToString());
+            }
         }
 
         public NewOrderRepresentation CreateOrder(CreateOrderCommand orderCommand)
