@@ -24,7 +24,7 @@ namespace CoinExchange.Trades.Application.TradeServices
         /// Returns orders of the user that have been filled/executed
         /// </summary>
         /// <returns></returns>
-        public List<OrderRepresentation> GetTradesHistory(TraderId traderId, string offset = "", string type = "all",
+        public object GetTradesHistory(TraderId traderId, string offset = "", string type = "all",
             bool trades = false, string start = "", string end = "")
         {
             List<OrderRepresentation> orderList = new List<OrderRepresentation> ();
@@ -96,7 +96,7 @@ namespace CoinExchange.Trades.Application.TradeServices
         /// <param name="txId"></param>
         /// <param name="includeTrades"></param>
         /// <returns></returns>
-        public List<OrderRepresentation> QueryTrades(TraderId traderId, string txId = "", bool includeTrades = false)
+        public object QueryTrades(TraderId traderId, string txId = "", bool includeTrades = false)
         {
             List<OrderRepresentation> orderList = new List<OrderRepresentation>();
             orderList.Add(new OrderRepresentation()

@@ -51,12 +51,12 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                     string[] auth = headerParams.ToList()[0].Split(',');
                     apikey = auth[0];
                 }
-                List<OrderRepresentation> closedOrders = _tradeApplicationService.GetTradesHistory(new TraderId(int.Parse(Constants.GetTraderId(apikey))), tradeHistoryParams.Offset,
+                var closedOrders = _tradeApplicationService.GetTradesHistory(new TraderId(int.Parse(Constants.GetTraderId(apikey))), tradeHistoryParams.Offset,
                     tradeHistoryParams.Type, tradeHistoryParams.Trades, tradeHistoryParams.Start, tradeHistoryParams.End);
 
                 if (closedOrders != null)
                 {
-                    return Ok<List<OrderRepresentation>>(closedOrders);
+                    return Ok(closedOrders);
                 }
                 return NotFound();
             }
@@ -88,12 +88,12 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                     string[] auth = headerParams.ToList()[0].Split(',');
                     apikey = auth[0];
                 }
-                List<OrderRepresentation> trades = _tradeApplicationService.QueryTrades(new TraderId(int.Parse(Constants.GetTraderId(apikey))), queryTradeParams.TxId, 
+                var trades = _tradeApplicationService.QueryTrades(new TraderId(int.Parse(Constants.GetTraderId(apikey))), queryTradeParams.TxId, 
                     queryTradeParams.IncludeTrades);
 
                 if (trades != null)
                 {
-                    return Ok<List<OrderRepresentation>>(trades);
+                    return Ok(trades);
                 }
                 return NotFound();
             }
