@@ -1,7 +1,9 @@
 ﻿using System.Linq;
 using System.Web.Http;
+using System.Web.Mvc;
 using CoinExchange.IdentityAccess.Application;
 using Common.Logging;
+using Spring.Context.Support;
 
 namespace CoinExchange.Rest.WebHost.App_Start
 {
@@ -27,7 +29,8 @@ namespace CoinExchange.Rest.WebHost.App_Start
 
             //add authentication handler
             config.MessageHandlers.Add(new AuthenticationHandler(new UserAuthentication()));
-         
+            config.DependencyResolver = new SpringDependencyResolver(ContextRegistry.GetContext());
+            
             log.Info("Application Initialized.");
         }
     }
