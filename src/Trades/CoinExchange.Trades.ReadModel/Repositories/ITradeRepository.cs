@@ -55,5 +55,12 @@ namespace CoinExchange.Trades.ReadModel.Repositories
         /// <returns></returns>
         object GetCustomDataBetweenDates(DateTime end, DateTime start,string currencyPair);
 
+        /// <summary>
+        /// Get Trades By OrderID
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        IList<object> GetTradesByorderId(string orderId);
+
     }
 }

@@ -24,6 +24,7 @@ namespace CoinExchange.Trades.ReadModel.DTO
         public string TraderId { get; private set; }
         public string CurrencyPair { get; private set; }
         public DateTime OrderDateTime { get; private set; }
+        public IList<object> Trades { get; set; }
 
         #endregion
 

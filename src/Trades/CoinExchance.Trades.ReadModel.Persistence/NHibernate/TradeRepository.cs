@@ -55,6 +55,14 @@ namespace CoinExchange.Trades.ReadModel.Persistence.NHibernate
         }
 
         [Transaction(ReadOnly = true)]
+        public IList<object> GetTradesByorderId(string orderId)
+        {
+            return CurrentSession.QueryOver<TradeReadModel>().Select(t => t.TradeId, t => t.ExecutionDateTime, t => t.Price, t => t.Volume, t => t.CurrencyPair)
+                .Where(trade => trade.BuyOrderId == orderId || trade.SellOrderId == orderId)
+                .List<object>();
+        }
+
+        [Transaction(ReadOnly = true)]
         public IList<TradeReadModel> GetTradesBetweenDates(DateTime end, DateTime start,string currencyPair)
         {
             return
