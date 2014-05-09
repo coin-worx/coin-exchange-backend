@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CoinExchange.Trades.Application.OrderServices.Representation;
+using CoinExchange.Trades.Domain.Model.OrderAggregate;
 using CoinExchange.Trades.Domain.Model.TradeAggregate;
 using CoinExchange.Trades.ReadModel.DTO;
 using CoinExchange.Trades.ReadModel.Repositories;
@@ -17,13 +18,15 @@ namespace CoinExchange.Trades.Application.OrderServices
     public class OrderQueryService : IOrderQueryService
     {
         private IOrderRepository _orderRepository = null;
+        private ITradeRepository _tradeRepository;
 
         /// <summary>
         /// Default Constructor
         /// </summary>
-        public OrderQueryService(IOrderRepository orderRepository)
+        public OrderQueryService(IOrderRepository orderRepository,ITradeRepository tradeRepository)
         {
             _orderRepository = orderRepository;
+            _tradeRepository = tradeRepository;
         }
 
         #region Implementation of IOrderQueryService
@@ -37,7 +40,15 @@ namespace CoinExchange.Trades.Application.OrderServices
         /// <returns></returns>
         public object GetOpenOrders(TraderId traderId, bool includeTrades = false, string userRefId = "")
         {
-            return _orderRepository.GetOpenOrders(traderId.Id.ToString(CultureInfo.InvariantCulture));
+            List<OrderReadModel> orders = _orderRepository.GetOpenOrders(traderId.Id.ToString(CultureInfo.InvariantCulture));
+            if (includeTrades)
+            {
+                for (int i = 0; i < orders.Count;i++)
+                {
+                    orders[0].Trades=_tradeRepository.GetTradesByorderId(orders[0].OrderId);
+                }
+            }
+            return orders;
         }
 
         /// <summary>
@@ -53,7 +64,15 @@ namespace CoinExchange.Trades.Application.OrderServices
         /// <returns></returns>
         public object GetClosedOrders(TraderId traderId, bool includeTrades = false, string userRefId = "", string startTime = "", string endTime = "", string offset = "", string closetime = "both")
         {
-            return _orderRepository.GetClosedOrders(traderId.Id.ToString(CultureInfo.InvariantCulture));
+            List<OrderReadModel> orders=_orderRepository.GetClosedOrders(traderId.Id.ToString(CultureInfo.InvariantCulture));
+            if (includeTrades)
+            {
+                for (int i = 0; i < orders.Count; i++)
+                {
+                    orders[0].Trades = _tradeRepository.GetTradesByorderId(orders[0].OrderId);
+                }
+            }
+            return orders;
         }
 
         #endregion

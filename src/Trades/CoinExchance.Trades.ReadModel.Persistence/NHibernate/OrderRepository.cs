@@ -30,9 +30,10 @@ namespace CoinExchange.Trades.ReadModel.Persistence.NHibernate
         public List<OrderReadModel> GetClosedOrders(string traderId,DateTime start,DateTime end)
         {
             return CurrentSession.Query<OrderReadModel>()
-                .Where(order => order.TraderId.Equals(traderId) && order.Status.Equals("Closed") && order.OrderDateTime>=start && order.OrderDateTime<=end)
+                .Where(order => order.TraderId.Equals(traderId) && order.Status.Equals("Closed") && order.OrderDateTime >= start && order.OrderDateTime <= end)
                 .AsQueryable()
                 .ToList();
+            
         }
 
         [Transaction(ReadOnly = true)]

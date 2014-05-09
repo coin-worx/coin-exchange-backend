@@ -56,5 +56,12 @@ namespace CoinExchange.Trades.ReadModel.Repositories
         object GetCustomDataBetweenDates(DateTime end, DateTime start,string currencyPair);
 
         void RollBack();
+
+        /// <summary>
+        /// Get Trades By OrderID
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        IList<object> GetTradesByorderId(string orderId);
     }
 }
