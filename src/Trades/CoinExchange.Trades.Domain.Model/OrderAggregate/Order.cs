@@ -401,6 +401,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderAggregate
             order.OpenQuantity = this.OpenQuantity;
             order.FilledQuantity = this.FilledQuantity;
             order.FilledCost = this.FilledCost;
+            order.DateTime = this.DateTime;
             return order;
         }
 

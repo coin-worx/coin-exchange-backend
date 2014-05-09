@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Results;
 using CoinExchange.Common.Domain.Model;
+using CoinExchange.Trades.Application.MarketDataServices.Representation;
 using CoinExchange.Trades.Application.OrderServices;
 using CoinExchange.Trades.Application.OrderServices.Representation;
 using CoinExchange.Trades.Domain.Model.OrderAggregate;
@@ -401,10 +402,10 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
 
         #endregion End-to-End Test
 
-        #region TickerInfoResponse
+        #region TickerInfoResponse and ohlc response
         [Test]
         [Category("Integration")]
-        public void Test()
+        public void SendSomeOrders_IfOrdersAreMatching_OhlcAndTickerInfoWillBeFormed()
         {
             // Get the context
             IApplicationContext applicationContext = ContextRegistry.GetContext();
@@ -432,7 +433,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             OkNegotiatedContentResult<NewOrderRepresentation> orderRepresentationContent = (OkNegotiatedContentResult<NewOrderRepresentation>)orderHttpResult;
             Assert.IsNotNull(orderRepresentationContent.Content);
             manualResetEvent.Reset();
-
+            manualResetEvent.WaitOne(3000);
             orderController.CreateOrder(new CreateOrderParam()
             {
                 Pair = "XBTUSD",
@@ -441,7 +442,8 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
                 Side = "buy",
                 Type = "limit"
             });
-
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(3000);
             orderController.CreateOrder(new CreateOrderParam()
             {
                 Pair = "XBTUSD",
@@ -450,7 +452,8 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
                 Side = "sell",
                 Type = "limit"
             });
-
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(3000);
             orderController.CreateOrder(new CreateOrderParam()
             {
                 Pair = "XBTUSD",
@@ -459,7 +462,8 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
                 Side = "buy",
                 Type = "limit"
             });
-
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(3000);
             orderController.CreateOrder(new CreateOrderParam()
             {
                 Pair = "XBTUSD",
@@ -468,7 +472,8 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
                 Side = "sell",
                 Type = "limit"
             });
-
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(3000);
             orderController.CreateOrder(new CreateOrderParam()
             {
                 Pair = "XBTUSD",
@@ -477,11 +482,44 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
                 Side = "sell",
                 Type = "limit"
             });
-
-            manualResetEvent.WaitOne(80000);
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(20000);
             MarketController marketController = (MarketController)applicationContext["MarketController"];
             IHttpActionResult tickerinfo = marketController.TickerInfo("XBTUSD");
-            OkNegotiatedContentResult<TickerInfoReadModel> readmodel = tickerinfo as OkNegotiatedContentResult<TickerInfoReadModel>;
+            OkNegotiatedContentResult<object> readmodel = (OkNegotiatedContentResult<object>)tickerinfo;
+            Assert.NotNull(readmodel);
+            TickerInfoReadModel model = readmodel.Content as TickerInfoReadModel;
+            Assert.NotNull(model);
+            Assert.AreEqual(model.CurrencyPair, "XBTUSD");
+            Assert.AreEqual(model.TradePrice, 492);
+            Assert.AreEqual(model.TradeVolume, 700);
+            Assert.AreEqual(model.OpeningPrice, 492);
+            Assert.AreEqual(model.TodaysHigh, 492);
+            Assert.AreEqual(model.Last24HoursHigh, 492);
+            Assert.AreEqual(model.TodaysLow, 492);
+            Assert.AreEqual(model.Last24HoursLow, 492);
+            Assert.AreEqual(model.TodaysVolume, 1000);
+            Assert.AreEqual(model.Last24HourVolume, 1000);
+            Assert.AreEqual(model.TodaysTrades, 2);
+            Assert.AreEqual(model.Last24HourTrades, 2);
+            Assert.AreEqual(model.TodaysVolumeWeight, 492);
+            Assert.AreEqual(model.Last24HourVolumeWeight, 492);
+            Assert.AreEqual(model.AskPrice,497);
+            Assert.AreEqual(model.AskVolume, 700);
+            Assert.AreEqual(model.BidPrice,492);
+            Assert.AreEqual(model.BidVolume,200);
+
+            IHttpActionResult ohlcActionResult = marketController.OhlcInfo("XBTUSD");
+            OkNegotiatedContentResult<OhlcRepresentation> representation = (OkNegotiatedContentResult<OhlcRepresentation>)ohlcActionResult;
+            Assert.NotNull(representation);
+            OhlcRepresentation ohlc = representation.Content as OhlcRepresentation;
+            Assert.NotNull(ohlc);
+            object[] ohlcValues = ohlc.OhlcInfo[0] as object[];
+            Assert.AreEqual(ohlc.PairName,"XBTUSD");
+            Assert.AreEqual(ohlcValues[0], 492);//open
+            Assert.AreEqual(ohlcValues[1], 492);//high
+            Assert.AreEqual(ohlcValues[2], 492);//low
+            Assert.AreEqual(ohlcValues[3], 492);//close
             InputDisruptorPublisher.Shutdown();
             OutputDisruptor.ShutDown();
         }
