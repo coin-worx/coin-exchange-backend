@@ -99,28 +99,31 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Config\TradeControllerConfig-Test.xml">
+    <EmbeddedResource Include="Config\TradeControllerConfig-Test.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
-    </None>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Config\MarketControllerConfig-Test.xml">
+    <EmbeddedResource Include="Config\MarketControllerConfig-Test.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    </EmbeddedResource>
     <None Include="Config\OrderControllerConfig-Test.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Config\MarketDataControllerConfig-Stage.xml">
+    <EmbeddedResource Include="Config\MarketDataControllerConfig-Stage.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Config\OrderControllerConfig-Stage.xml">
+    <EmbeddedResource Include="Config\OrderControllerConfig-Stage.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Config\TradeControllerConfig-Stage.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
