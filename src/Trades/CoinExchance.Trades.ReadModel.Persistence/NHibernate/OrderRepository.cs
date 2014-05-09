@@ -30,10 +30,12 @@ namespace CoinExchange.Trades.ReadModel.Persistence.NHibernate
         public List<OrderReadModel> GetClosedOrders(string traderId,DateTime start,DateTime end)
         {
             return CurrentSession.Query<OrderReadModel>()
-                .Where(order => order.TraderId.Equals(traderId) && order.Status.Equals("Closed") && order.OrderDateTime >= start && order.OrderDateTime <= end)
+                .Where(order => order.TraderId.Equals(traderId) &&
+                      (order.Status.Equals("Cancelled") || order.Status.Equals("Rejected") || order.Status.Equals("Complete"))
+                      && order.OrderDateTime >= start && order.OrderDateTime <= end)
                 .AsQueryable()
+                .OrderBy(x => x.OrderDateTime)
                 .ToList();
-            
         }
 
         [Transaction(ReadOnly = true)]
@@ -43,6 +45,7 @@ namespace CoinExchange.Trades.ReadModel.Persistence.NHibernate
                 .Where(order => order.TraderId.Equals(traderId) &&
                 (order.Status.Equals("Cancelled") || order.Status.Equals("Rejected") || order.Status.Equals("Complete")))
                 .AsQueryable()
+                .OrderBy(x => x.OrderDateTime)
                 .ToList();
         }
 
@@ -59,6 +62,14 @@ namespace CoinExchange.Trades.ReadModel.Persistence.NHibernate
         public OrderReadModel GetOrderById(string orderId)
         {
             return CurrentSession.Get<OrderReadModel>(orderId);
+        }
+
+        [Transaction(ReadOnly = false)]
+        public void RollBack()
+        {
+            string sqlQuery = string.Format("DELETE FROM COINEXCHANGE.ORDER");
+
+            CurrentSession.CreateSQLQuery(sqlQuery).ExecuteUpdate();
         }
     }
 }

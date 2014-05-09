@@ -18,6 +18,8 @@ using CoinExchange.Trades.Port.Adapter.Rest.DTOs.Order;
 using CoinExchange.Trades.Port.Adapter.Rest.Resources;
 using CoinExchange.Trades.ReadModel.DTO;
 using CoinExchange.Trades.ReadModel.MemoryImages;
+using CoinExchange.Trades.ReadModel.Persistence.NHibernate;
+using CoinExchange.Trades.ReadModel.Repositories;
 using Disruptor;
 using NUnit.Framework;
 using Spring.Context;
@@ -336,6 +338,8 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             orderController.Request = new HttpRequestMessage(HttpMethod.Post, "");
             orderController.Request.Headers.Add("Auth", "123456789");
 
+            OrderRepository orderRepository = (OrderRepository)applicationContext["OrderRepository"];
+
             IHttpActionResult httpActionResult = orderController.CreateOrder(new CreateOrderParam()
             {
                 Pair = "BTCUSD",
@@ -378,6 +382,10 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             Assert.IsFalse(cancelOrderResponse.Pending);
             Assert.AreEqual(0, cancelOrderResponse.Count);
             Assert.AreNotEqual("Cancel Request Successfull", cancelOrderResponse.ResponseMessage);
+
+            InputDisruptorPublisher.Shutdown();
+            OutputDisruptor.ShutDown();
+            orderRepository.RollBack();
         }
 
         [Test]
@@ -398,6 +406,8 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             OrderController orderController = (OrderController)applicationContext["OrderController"];
             orderController.Request = new HttpRequestMessage(HttpMethod.Post, "");
             orderController.Request.Headers.Add("Auth", "123456789");
+
+            OrderRepository orderRepository = (OrderRepository)applicationContext["OrderRepository"];
 
             IHttpActionResult httpActionResult = orderController.CreateOrder(new CreateOrderParam()
             {
@@ -441,6 +451,10 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             Assert.IsFalse(cancelOrderResponse.Pending);
             Assert.AreEqual(0, cancelOrderResponse.Count);
             Assert.AreNotEqual("Cancel Request Successfull", cancelOrderResponse.ResponseMessage);
+
+            InputDisruptorPublisher.Shutdown();
+            OutputDisruptor.ShutDown();
+            orderRepository.RollBack();
         }
 
         [Test]
@@ -461,6 +475,8 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             OrderController orderController = (OrderController)applicationContext["OrderController"];
             orderController.Request = new HttpRequestMessage(HttpMethod.Post, "");
             orderController.Request.Headers.Add("Auth", "123456789");
+
+            OrderRepository orderRepository = (OrderRepository)applicationContext["OrderRepository"];
 
             ManualResetEvent manualResetEvent = new ManualResetEvent(false);
             IHttpActionResult orderHttpResult = orderController.CreateOrder(new CreateOrderParam()
@@ -575,6 +591,10 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             Assert.AreEqual("BTCUSD", orderlist[5].CurrencyPair);
             Assert.AreEqual("Sell", orderlist[5].OrderSide);
             Assert.AreEqual(700, orderlist[5].Volume);
+
+            InputDisruptorPublisher.Shutdown();
+            OutputDisruptor.ShutDown();
+            orderRepository.RollBack();
         }
 
         [Test]
@@ -595,6 +615,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             OrderController orderController = (OrderController)applicationContext["OrderController"];
             orderController.Request = new HttpRequestMessage(HttpMethod.Post, "");
             orderController.Request.Headers.Add("Auth", "123456789");
+            OrderRepository orderRepository = (OrderRepository)applicationContext["OrderRepository"];
 
             ManualResetEvent manualResetEvent = new ManualResetEvent(false);
             IHttpActionResult orderHttpResult = orderController.CreateOrder(new CreateOrderParam()
@@ -606,43 +627,47 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             Assert.IsNotNull(order1RepresentationContent.Content);
 
             manualResetEvent.Reset();
-            manualResetEvent.WaitOne(1000);
+            manualResetEvent.WaitOne(2000);
+
             orderController.CreateOrder(new CreateOrderParam()
                                         {
                                             Pair = "BTCUSD", Price = 492, Volume = 300, Side = "buy", Type = "limit"
                                         });
 
             manualResetEvent.Reset();
-            manualResetEvent.WaitOne(1000);
+            manualResetEvent.WaitOne(2000);
 
             orderController.CreateOrder(new CreateOrderParam()
                                         {
                                             Pair = "BTCUSD", Price = 493, Volume = 1000, Side = "buy", Type = "limit"
                                         });
 
-            orderController.CreateOrder(new CreateOrderParam()
-                                        {
-                                            Pair = "BTCUSD", Price = 499, Volume = 900, Side = "sell", Type = "limit"
-                                        });
-
             manualResetEvent.Reset();
-            manualResetEvent.WaitOne(1000);
+            manualResetEvent.WaitOne(2000);
 
             orderController.CreateOrder(new CreateOrderParam()
                                         {
-                                            Pair = "BTCUSD", Price = 498, Volume = 800, Side = "sell", Type = "limit"
-                                        });
-
-            manualResetEvent.Reset();
-            manualResetEvent.WaitOne(1000);
-
-            orderController.CreateOrder(new CreateOrderParam()
-                                        {
-                                            Pair = "BTCUSD", Price = 497, Volume = 700, Side = "sell", Type = "limit"
+                                            Pair = "BTCUSD", Price = 497, Volume = 1000, Side = "sell", Type = "limit"
                                         });
 
             manualResetEvent.Reset();
             manualResetEvent.WaitOne(2000);
+
+            orderController.CreateOrder(new CreateOrderParam()
+                                        {
+                                            Pair = "BTCUSD", Price = 498, Volume = 300, Side = "sell", Type = "limit"
+                                        });
+
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(2000);
+
+            orderController.CreateOrder(new CreateOrderParam()
+                                        {
+                                            Pair = "BTCUSD", Price = 493, Volume = 100, Side = "sell", Type = "limit"
+                                        });
+
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(4000);
             MarketController marketController = (MarketController)applicationContext["MarketController"];
             IHttpActionResult marketDataHttpResult = marketController.GetOrderBook("BTCUSD");
 
@@ -651,7 +676,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
 
             Tuple<OrderRepresentationList, OrderRepresentationList> orderBooks = okResponseMessage.Content;
             Assert.AreEqual(3, orderBooks.Item1.Count()); // Count of the orders in the Bid Order book
-            Assert.AreEqual(3, orderBooks.Item2.Count());// Count of the orders in the Ask Order book
+            Assert.AreEqual(2, orderBooks.Item2.Count());// Count of the orders in the Ask Order book
 
             IHttpActionResult queryClosedOrders = orderController.QueryOpenOrders(new QueryOpenOrdersParams(true, ""));
 
@@ -672,19 +697,194 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             Assert.AreEqual(493, orderlist[2].Price);
             Assert.AreEqual("BTCUSD", orderlist[2].CurrencyPair);
             Assert.AreEqual("Buy", orderlist[2].OrderSide);
-            Assert.AreEqual(1000, orderlist[2].Volume);
-            Assert.AreEqual(499, orderlist[3].Price);
+            Assert.AreEqual(900, orderlist[2].Volume);
+
+            // List of Trades associated with this order, coming in as a list of object[] in each, where object[] contains
+            // TraderId, ExecutionDateTime, Price, Volume, Currencypair respectively.
+            IList<object> objectList = orderlist[2].Trades;
+            IList<object[]> tradesList = new List<object[]>();
+            for (int i = 0; i < objectList.Count; i++)
+            {
+                object[] objects = objectList[i] as object[];
+                tradesList.Add(objects);
+            }
+
+            Assert.AreEqual(1, tradesList.Count);
+            Assert.AreEqual(493, tradesList[0][2]);
+            Assert.AreEqual(100, tradesList[0][3]);
+            Assert.AreEqual("BTCUSD", tradesList[0][4]);
+
+            Assert.AreEqual(497, orderlist[3].Price);
             Assert.AreEqual("BTCUSD", orderlist[3].CurrencyPair);
             Assert.AreEqual("Sell", orderlist[3].OrderSide);
-            Assert.AreEqual(900, orderlist[3].Volume);
+            Assert.AreEqual(1000, orderlist[3].Volume);
             Assert.AreEqual(498, orderlist[4].Price);
             Assert.AreEqual("BTCUSD", orderlist[4].CurrencyPair);
             Assert.AreEqual("Sell", orderlist[4].OrderSide);
-            Assert.AreEqual(800, orderlist[4].Volume);
-            Assert.AreEqual(497, orderlist[5].Price);
-            Assert.AreEqual("BTCUSD", orderlist[5].CurrencyPair);
-            Assert.AreEqual("Sell", orderlist[5].OrderSide);
-            Assert.AreEqual(700, orderlist[5].Volume);
+            Assert.AreEqual(300, orderlist[4].Volume);
+
+            InputDisruptorPublisher.Shutdown();
+            OutputDisruptor.ShutDown();
+            orderRepository.RollBack();
+        }
+
+        [Test]
+        [Category("Integration")]
+        public void GetClosedOrdersAndIncludeTrades_RetreivesTheListOfClosedOrdersAndListOfTradesFromTheDatabase_VerifiesThatResultingOrdersAreInExpectedRange()
+        {
+            // Get the context
+            IApplicationContext applicationContext = ContextRegistry.GetContext();
+            Exchange exchange = new Exchange();
+            IEventStore inputEventStore = new RavenNEventStore(Constants.INPUT_EVENT_STORE);
+            IEventStore outputEventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
+            Journaler inputJournaler = new Journaler(inputEventStore);
+            Journaler outputJournaler = new Journaler(outputEventStore);
+            InputDisruptorPublisher.InitializeDisruptor(new IEventHandler<InputPayload>[] { exchange, inputJournaler });
+            OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { outputJournaler });
+
+            // Get the instance through Spring configuration
+            OrderController orderController = (OrderController)applicationContext["OrderController"];
+            orderController.Request = new HttpRequestMessage(HttpMethod.Post, "");
+            orderController.Request.Headers.Add("Auth", "123456789");
+
+            IOrderRepository orderRepository = (IOrderRepository)applicationContext["OrderRepository"];
+
+            ManualResetEvent manualResetEvent = new ManualResetEvent(false);
+            IHttpActionResult orderHttpResult = orderController.CreateOrder(new CreateOrderParam()
+            {
+                Pair = "BTCUSD",
+                Price = 491,
+                Volume = 100,
+                Side = "buy",
+                Type = "limit"
+            });
+
+            OkNegotiatedContentResult<NewOrderRepresentation> order1RepresentationContent = (OkNegotiatedContentResult<NewOrderRepresentation>)orderHttpResult;
+            Assert.IsNotNull(order1RepresentationContent.Content);
+
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(2000);
+
+            orderController.CreateOrder(new CreateOrderParam()
+            {
+                Pair = "BTCUSD",
+                Price = 492,
+                Volume = 300,
+                Side = "buy",
+                Type = "limit"
+            });
+
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(2000);
+
+            orderController.CreateOrder(new CreateOrderParam()
+            {
+                Pair = "BTCUSD",
+                Price = 493,
+                Volume = 1000,
+                Side = "buy",
+                Type = "limit"
+            });
+
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(2000);
+
+            orderController.CreateOrder(new CreateOrderParam()
+            {
+                Pair = "BTCUSD",
+                Price = 493,
+                Volume = 1000,
+                Side = "sell",
+                Type = "limit"
+            });
+
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(2000);
+
+            orderController.CreateOrder(new CreateOrderParam()
+            {
+                Pair = "BTCUSD",
+                Price = 498,
+                Volume = 300,
+                Side = "sell",
+                Type = "limit"
+            });
+
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(2000);
+
+            orderController.CreateOrder(new CreateOrderParam()
+            {
+                Pair = "BTCUSD",
+                Price = 497,
+                Volume = 100,
+                Side = "sell",
+                Type = "limit"
+            });
+
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(4000);
+            MarketController marketController = (MarketController)applicationContext["MarketController"];
+            IHttpActionResult marketDataHttpResult = marketController.GetOrderBook("BTCUSD");
+
+            OkNegotiatedContentResult<Tuple<OrderRepresentationList, OrderRepresentationList>> okResponseMessage =
+                (OkNegotiatedContentResult<Tuple<OrderRepresentationList, OrderRepresentationList>>)marketDataHttpResult;
+
+            Tuple<OrderRepresentationList, OrderRepresentationList> orderBooks = okResponseMessage.Content;
+            Assert.AreEqual(2, orderBooks.Item1.Count()); // Count of the orders in the Bid Order book
+            Assert.AreEqual(2, orderBooks.Item2.Count());// Count of the orders in the Ask Order book
+
+            IHttpActionResult queryClosedOrders = orderController.QueryClosedOrders(new QueryClosedOrdersParams(true, "", 
+                "", "", "", ""));
+
+            Assert.IsNotNull(queryClosedOrders);
+            OkNegotiatedContentResult<List<OrderReadModel>> reponseMessage =
+                                                        (OkNegotiatedContentResult<List<OrderReadModel>>)queryClosedOrders;
+
+            List<OrderReadModel> orderlist = reponseMessage.Content;
+
+            Assert.AreEqual(493, orderlist[0].Price);
+            Assert.AreEqual("BTCUSD", orderlist[0].CurrencyPair);
+            Assert.AreEqual("Buy", orderlist[0].OrderSide);
+
+            // List of Trades associated with this order, coming in as a list of object[] in each, where object[] contains
+            // TraderId, ExecutionDateTime, Price, Volume, Currencypair respectively.
+            IList<object> buyObjectList = orderlist[0].Trades;
+            IList<object[]> buyTradesList = new List<object[]>();
+            for (int i = 0; i < buyObjectList.Count; i++)
+            {
+                object[] objects = buyObjectList[i] as object[];
+                buyTradesList.Add(objects);
+            }
+            // Trades of the Buy Order 493@1000
+            Assert.AreEqual(1, buyTradesList.Count);
+            Assert.AreEqual(493, buyTradesList[0][2]);
+            Assert.AreEqual(1000, buyTradesList[0][3]);
+            Assert.AreEqual("BTCUSD", buyTradesList[0][4]);
+
+            Assert.AreEqual(493, orderlist[1].Price);
+            Assert.AreEqual("BTCUSD", orderlist[1].CurrencyPair);
+            Assert.AreEqual("Sell", orderlist[1].OrderSide);
+
+            // List of Trades associated with this order, coming in as a list of object[] in each, where object[] contains
+            // TraderId, ExecutionDateTime, Price, Volume, Currencypair respectively.
+            IList<object> sellObjectList = orderlist[1].Trades;
+            IList<object[]> sellTradesList = new List<object[]>();
+            for (int i = 0; i < sellObjectList.Count; i++)
+            {
+                object[] objects = sellObjectList[i] as object[];
+                sellTradesList.Add(objects);
+            }
+
+            // Trades of the Sell Order 493@1000
+            Assert.AreEqual(1, sellTradesList.Count);
+            Assert.AreEqual(493, sellTradesList[0][2]);
+            Assert.AreEqual(1000, sellTradesList[0][3]);
+            Assert.AreEqual("BTCUSD", sellTradesList[0][4]);
+
+            InputDisruptorPublisher.Shutdown();
+            OutputDisruptor.ShutDown();
+            orderRepository.RollBack();
         }
 
         [Test]
@@ -705,6 +905,8 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             OrderController orderController = (OrderController)applicationContext["OrderController"];
             orderController.Request = new HttpRequestMessage(HttpMethod.Post, "");
             orderController.Request.Headers.Add("Auth", "123456789");
+
+            OrderRepository orderRepository = (OrderRepository)applicationContext["OrderRepository"];
 
             ManualResetEvent manualResetEvent = new ManualResetEvent(false);
             IHttpActionResult buyOrderHttpResult = orderController.CreateOrder(new CreateOrderParam()
@@ -819,6 +1021,8 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
 
             InputDisruptorPublisher.Shutdown();
             OutputDisruptor.ShutDown();
+
+            orderRepository.RollBack();
         }
     }
 }

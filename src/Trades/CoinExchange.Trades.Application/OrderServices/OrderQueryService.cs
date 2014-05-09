@@ -45,7 +45,7 @@ namespace CoinExchange.Trades.Application.OrderServices
             {
                 for (int i = 0; i < orders.Count;i++)
                 {
-                    orders[0].Trades=_tradeRepository.GetTradesByorderId(orders[0].OrderId);
+                    orders[i].Trades = _tradeRepository.GetTradesByorderId(orders[i].OrderId);
                 }
             }
             return orders;
@@ -69,7 +69,7 @@ namespace CoinExchange.Trades.Application.OrderServices
             {
                 for (int i = 0; i < orders.Count; i++)
                 {
-                    orders[0].Trades = _tradeRepository.GetTradesByorderId(orders[0].OrderId);
+                    orders[i].Trades = _tradeRepository.GetTradesByorderId(orders[i].OrderId);
                 }
             }
             return orders;
