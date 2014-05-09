@@ -19,6 +19,7 @@ namespace CoinExchange.Trades.ReadModel.DTO
         public string OrderSide { get; private set; }
         public decimal Price { get; private set; }
         public decimal VolumeExecuted { get; private set; }
+        public decimal Volume { get; private set; }
         public string Status { get; private set; }
         public string TraderId { get; private set; }
         public string CurrencyPair { get; private set; }
@@ -34,7 +35,7 @@ namespace CoinExchange.Trades.ReadModel.DTO
             
         }
 
-        public OrderReadModel(string orderId, string orderType, string orderSide, decimal price, decimal volumeExecuted, string traderId, string status, string currencyPair,DateTime dateTime)
+        public OrderReadModel(string orderId, string orderType, string orderSide, decimal price, decimal volumeExecuted, string traderId, string status, string currencyPair,DateTime dateTime,decimal volume)
         {
             OrderId = orderId;
             OrderType = orderType;
@@ -45,6 +46,7 @@ namespace CoinExchange.Trades.ReadModel.DTO
             Status = status;
             CurrencyPair = currencyPair;
             OrderDateTime = dateTime;
+            Volume = volume;
         }
         
     }

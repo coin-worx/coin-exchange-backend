@@ -442,6 +442,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
                 Side = "buy",
                 Type = "limit"
             });
+            manualResetEvent.Reset();
             manualResetEvent.WaitOne(3000);
             orderController.CreateOrder(new CreateOrderParam()
             {
@@ -451,6 +452,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
                 Side = "sell",
                 Type = "limit"
             });
+            manualResetEvent.Reset();
             manualResetEvent.WaitOne(3000);
             orderController.CreateOrder(new CreateOrderParam()
             {
@@ -460,6 +462,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
                 Side = "buy",
                 Type = "limit"
             });
+            manualResetEvent.Reset();
             manualResetEvent.WaitOne(3000);
             orderController.CreateOrder(new CreateOrderParam()
             {
@@ -469,6 +472,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
                 Side = "sell",
                 Type = "limit"
             });
+            manualResetEvent.Reset();
             manualResetEvent.WaitOne(3000);
             orderController.CreateOrder(new CreateOrderParam()
             {
@@ -478,8 +482,8 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
                 Side = "sell",
                 Type = "limit"
             });
-
-            manualResetEvent.WaitOne(8000);
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(20000);
             MarketController marketController = (MarketController)applicationContext["MarketController"];
             IHttpActionResult tickerinfo = marketController.TickerInfo("XBTUSD");
             OkNegotiatedContentResult<object> readmodel = (OkNegotiatedContentResult<object>)tickerinfo;

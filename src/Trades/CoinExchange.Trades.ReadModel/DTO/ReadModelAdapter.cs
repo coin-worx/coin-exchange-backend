@@ -13,8 +13,8 @@ namespace CoinExchange.Trades.ReadModel.DTO
         public static OrderReadModel GetOrderReadModel(Order order)
         {
             OrderReadModel model = new OrderReadModel(order.OrderId.Id.ToString(), order.OrderType.ToString(),
-                order.OrderSide.ToString(), order.Price.Value, order.VolumeExecuted, order.TraderId.Id.ToString(),
-                order.OrderState.ToString(), order.CurrencyPair,order.DateTime);
+                order.OrderSide.ToString(), order.Price.Value, order.FilledQuantity.Value, order.TraderId.Id.ToString(),
+                order.OrderState.ToString(), order.CurrencyPair,order.DateTime,order.OpenQuantity.Value);
             return model;
         }
 
