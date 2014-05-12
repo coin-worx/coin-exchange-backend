@@ -72,6 +72,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="NHibernate\CurrencyPairRepository.cs" />
     <Compile Include="NHibernate\MarketDataRepository.cs" />
     <Compile Include="NHibernate\OhlcRepository.cs" />
     <Compile Include="NHibernate\OrderRepository.cs" />
@@ -82,6 +83,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CoinExchange.Trades.Domain.Model\CoinExchange.Trades.Domain.Model.csproj">
+      <Project>{32ac3710-adf8-4522-8f06-1f9c7a45e6e7}</Project>
+      <Name>CoinExchange.Trades.Domain.Model</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CoinExchange.Trades.ReadModel\CoinExchange.Trades.ReadModel.csproj">
       <Project>{e31a7aa3-da8b-4e3d-8e3b-684555a8dafc}</Project>
       <Name>CoinExchange.Trades.ReadModel</Name>
@@ -112,7 +117,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NHibernateMappings\AssetPairReadModel.hbm.xml">
+    <EmbeddedResource Include="NHibernateMappings\CurrencyPair.hbm.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>

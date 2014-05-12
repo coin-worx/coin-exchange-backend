@@ -11,6 +11,7 @@ assembly="CoinExchange.Trades.ReadModel" namespace="CoinExchange.Trades.ReadMode
     <property name="Price"  column="Price"/>
     <property name="VolumeExecuted"  column="VolumeExecuted"/>
     <property name="Volume"  column="Volume"/>
+    <property name="OpenQuantity"  column="OpenQuantity"/>
     <property name="Status"  column="Status"/>
     <property name="TraderId"  column="TraderId"/>
     <property name="CurrencyPair"  column="CurrencyPair"/>

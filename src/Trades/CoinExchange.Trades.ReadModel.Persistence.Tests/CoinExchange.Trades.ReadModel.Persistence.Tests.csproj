@@ -119,6 +119,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbstractConfiguration.cs" />
+    <Compile Include="CurrencyPairRepositoryTests.cs" />
     <Compile Include="OhlcCalculationTests.cs" />
     <Compile Include="OrderListenerTests.cs" />
     <Compile Include="OrderPersistenceTests.cs" />

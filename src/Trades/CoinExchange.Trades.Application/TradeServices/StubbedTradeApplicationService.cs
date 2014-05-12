@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using CoinExchange.Trades.Application.OrderServices.Representation;
 using CoinExchange.Trades.Application.TradeServices.Representation;
+using CoinExchange.Trades.Domain.Model.CurrencyPairAggregate;
 using CoinExchange.Trades.Domain.Model.OrderAggregate;
 using CoinExchange.Trades.Domain.Model.TradeAggregate;
 
@@ -191,7 +192,12 @@ namespace CoinExchange.Trades.Application.TradeServices
             TradeVolumeRepresentation response = new TradeVolumeRepresentation(fees, 1000, "ZUSD");
             return response;
         }
-
         
+        public IList<CurrencyPair> GetTradeableCurrencyPairs()
+        {
+            List<CurrencyPair> pairs=new List<CurrencyPair>();
+            pairs.Add(new CurrencyPair("BTC/USD","BTC","USD"));
+            return pairs;
+        }
     }
 }
