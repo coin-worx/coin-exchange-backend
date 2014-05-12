@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System.Threading;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace CoinExchange.Client.Console
@@ -14,7 +15,7 @@ namespace CoinExchange.Client.Console
             //call methods available in api
             //System.Console.WriteLine(client.CreateOrder("XBTUSD", "limit", "sell", 5, 10));
             //System.Console.WriteLine(client.QueryClosedOrdersParams(false,"","","","",""));
-            Scenario1(client);
+            Scenario3(client);
             System.Console.ReadKey();
         }
 
@@ -31,10 +32,8 @@ namespace CoinExchange.Client.Console
             System.Console.WriteLine(client.CreateOrder(currecyPair, "limit", "buy", 2, 253));
             System.Console.WriteLine(client.CreateOrder(currecyPair, "market", "sell", 5));
             System.Console.WriteLine(client.CreateOrder(currecyPair, "limit", "buy", 2, 250));
-
-            //Get trades
-            System.Console.WriteLine("-------Trades---------");
-            System.Console.WriteLine(client.GetTradeHistory("","",true,"",""));
+            Thread.Sleep(5000);
+            ScenarioResults(client);
         }
 
         /// <summary>
@@ -43,7 +42,22 @@ namespace CoinExchange.Client.Console
         /// <param name="client"></param>
         private void Scenario2(ApiClient client)
         {
-            
+            string currecyPair = "XBTUSD";
+            JObject joe = JObject.Parse(client.CreateOrder(currecyPair, "market", "buy", 10));
+            string orderId1 = joe.Property("OrderId").Value.ToString();
+            string orderId2 = JObject.Parse(client.CreateOrder(currecyPair, "limit", "sell", 5, 252)).Property("OrderId").Value.ToString();
+            string orderId3 = JObject.Parse(client.CreateOrder(currecyPair, "limit", "buy", 8, 245)).Property("OrderId").Value.ToString();
+            string orderId4 = JObject.Parse(client.CreateOrder(currecyPair, "limit", "buy", 7, 250)).Property("OrderId").Value.ToString();
+            string orderId5 = JObject.Parse(client.CreateOrder(currecyPair, "market", "buy", 3)).Property("OrderId").Value.ToString();
+            Thread.Sleep(2000);
+            System.Console.WriteLine(client.CancelOrder(orderId2));
+            string orderId6 = JObject.Parse(client.CreateOrder(currecyPair, "market", "buy", 10)).Property("OrderId").Value.ToString();
+            string orderId7 = JObject.Parse(client.CreateOrder(currecyPair, "market", "sell", 5)).Property("OrderId").Value.ToString();
+            System.Console.WriteLine(client.CancelOrder(orderId2));
+            string orderId9 = client.CreateOrder(currecyPair, "market", "sell", 4);
+            string orderId10 = client.CreateOrder(currecyPair, "market", "sell", 5);
+            Thread.Sleep(5000);
+            ScenarioResults(client);
         }
 
         /// <summary>
@@ -53,26 +67,40 @@ namespace CoinExchange.Client.Console
         private static void Scenario3(ApiClient client)
         {
             string currecyPair = "XBTUSD";
-            string orderId1 = client.CreateOrder(currecyPair, "limit", "sell", 5, 252);
-            string orderId2 = client.CreateOrder(currecyPair, "limit", "buy", 8, 245);
-            string orderId3 = client.CreateOrder(currecyPair, "limit", "buy", 7, 250);
-            string orderId4 = client.CreateOrder(currecyPair, "limit", "buy", 3, 250);
-            string orderId5 = client.CreateOrder(currecyPair, "limit", "sell", 5, 253);
-            string orderId6 = client.CreateOrder(currecyPair, "limit", "buy", 8, 240);
-            string orderId7 = client.CreateOrder(currecyPair, "limit", "buy", 7, 245);
-            string orderId8 = client.CreateOrder(currecyPair, "limit", "buy", 3, 247);
-            client.CancelOrder(orderId6);
-            client.CancelOrder(orderId1);
+            JObject joe = JObject.Parse(client.CreateOrder(currecyPair, "limit", "sell", 5, 252));
+            string orderId1 = joe.Property("OrderId").Value.ToString();
+            string orderId2 = JObject.Parse(client.CreateOrder(currecyPair, "limit", "buy", 8, 245)).Property("OrderId").Value.ToString();
+            string orderId3 = JObject.Parse(client.CreateOrder(currecyPair, "limit", "buy", 7, 250)).Property("OrderId").Value.ToString();
+            string orderId4 = JObject.Parse(client.CreateOrder(currecyPair, "limit", "buy", 3, 250)).Property("OrderId").Value.ToString();
+            string orderId5 = JObject.Parse(client.CreateOrder(currecyPair, "limit", "sell", 5, 253)).Property("OrderId").Value.ToString();
+            string orderId6 = JObject.Parse(client.CreateOrder(currecyPair, "limit", "buy", 8, 240)).Property("OrderId").Value.ToString();
+            string orderId7 = JObject.Parse(client.CreateOrder(currecyPair, "limit", "buy", 7, 245)).Property("OrderId").Value.ToString();
+            string orderId8 = JObject.Parse(client.CreateOrder(currecyPair, "limit", "buy", 3, 247)).Property("OrderId").Value.ToString();
+            Thread.Sleep(2000);
+            System.Console.WriteLine(client.CancelOrder(orderId6));
+            System.Console.WriteLine(client.CancelOrder(orderId1));
             string orderId9 = client.CreateOrder(currecyPair, "market", "sell", 9);
-            client.CancelOrder(orderId8);
-            client.CancelOrder(orderId7);
-            client.CancelOrder(orderId6);
-            client.CancelOrder(orderId5);
-            client.CancelOrder(orderId4);
-            client.CancelOrder(orderId3);
-            client.CancelOrder(orderId2);
-            client.CancelOrder(orderId1);
-            
+            System.Console.WriteLine(client.CancelOrder(orderId8));
+            System.Console.WriteLine(client.CancelOrder(orderId7));
+            System.Console.WriteLine(client.CancelOrder(orderId6));
+            System.Console.WriteLine(client.CancelOrder(orderId5));
+            System.Console.WriteLine(client.CancelOrder(orderId4));
+            System.Console.WriteLine(client.CancelOrder(orderId3));
+            System.Console.WriteLine(client.CancelOrder(orderId2));
+            System.Console.WriteLine(client.CancelOrder(orderId1));
+            Thread.Sleep(5000);
+            ScenarioResults(client);
+        }
+
+        private static void ScenarioResults(ApiClient client)
+        {
+            System.Console.WriteLine("------RESULTS------");
+            System.Console.WriteLine("------OPEN ORDERS------");
+            System.Console.WriteLine(client.QueryOpenOrdersParams(true, ""));
+            System.Console.WriteLine("------CLOSED ORDERS------");
+            System.Console.WriteLine(client.QueryClosedOrdersParams(true, "", "", "", "", ""));
+            System.Console.WriteLine("------TRADES------");
+            System.Console.WriteLine(client.GetTradeHistory("", "", true, "", ""));
         }
     }
 }

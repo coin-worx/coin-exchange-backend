@@ -172,8 +172,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
 
             Assert.IsNotNull(cancelOrderResponse);
             Assert.AreEqual(true, cancelOrderResponse.Pending);
-            Assert.AreEqual(1, cancelOrderResponse.Count);
-            Assert.AreEqual("Cancel Request Successfull", cancelOrderResponse.ResponseMessage);
+            Assert.AreEqual("Cancel Request Accepted", cancelOrderResponse.ResponseMessage);
 
             InputDisruptorPublisher.Shutdown();
             OutputDisruptor.ShutDown();
@@ -229,8 +228,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
 
             Assert.IsNotNull(cancelOrderResponse);
             Assert.AreEqual(true, cancelOrderResponse.Pending);
-            Assert.AreEqual(1, cancelOrderResponse.Count);
-            Assert.AreEqual("Cancel Request Successfull", cancelOrderResponse.ResponseMessage);
+            Assert.AreEqual("Cancel Request Accepted", cancelOrderResponse.ResponseMessage);
 
             InputDisruptorPublisher.Shutdown();
             OutputDisruptor.ShutDown();
@@ -287,8 +285,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
 
             Assert.IsNotNull(cancelOrderResponse);
             Assert.IsFalse(cancelOrderResponse.Pending);
-            Assert.AreEqual(0, cancelOrderResponse.Count);
-            Assert.AreNotEqual("Cancel Request Successfull", cancelOrderResponse.ResponseMessage);
+            Assert.AreNotEqual("Cancel Request Accepted", cancelOrderResponse.ResponseMessage);
 
             InputDisruptorPublisher.Shutdown();
             OutputDisruptor.ShutDown();
@@ -345,8 +342,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
 
             Assert.IsNotNull(cancelOrderResponse);
             Assert.IsFalse(cancelOrderResponse.Pending);
-            Assert.AreEqual(0, cancelOrderResponse.Count);
-            Assert.AreNotEqual("Cancel Request Successfull", cancelOrderResponse.ResponseMessage);
+            Assert.AreNotEqual("Cancel Request Accepted", cancelOrderResponse.ResponseMessage);
 
             InputDisruptorPublisher.Shutdown();
             OutputDisruptor.ShutDown();
@@ -402,8 +398,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
 
             Assert.IsNotNull(firstCancelOrderResponse);
             Assert.AreEqual(true, firstCancelOrderResponse.Pending);
-            Assert.AreEqual(1, firstCancelOrderResponse.Count);
-            Assert.AreEqual("Cancel Request Successfull", firstCancelOrderResponse.ResponseMessage);
+            Assert.AreEqual("Cancel Request Accepted", firstCancelOrderResponse.ResponseMessage);
 
             IHttpActionResult actionResult = orderController.CancelOrder(newOrderRepresentation.OrderId);
             Thread.Sleep(4000);
@@ -413,8 +408,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
 
             Assert.IsNotNull(cancelOrderResponse);
             Assert.IsFalse(cancelOrderResponse.Pending);
-            Assert.AreEqual(0, cancelOrderResponse.Count);
-            Assert.AreNotEqual("Cancel Request Successfull", cancelOrderResponse.ResponseMessage);
+            Assert.AreNotEqual("Cancel Request Accepted", cancelOrderResponse.ResponseMessage);
 
             InputDisruptorPublisher.Shutdown();
             OutputDisruptor.ShutDown();
@@ -471,8 +465,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
 
             Assert.IsNotNull(firstCancelOrderResponse);
             Assert.AreEqual(true, firstCancelOrderResponse.Pending);
-            Assert.AreEqual(1, firstCancelOrderResponse.Count);
-            Assert.AreEqual("Cancel Request Successfull", firstCancelOrderResponse.ResponseMessage);
+            Assert.AreEqual("Cancel Request Accepted", firstCancelOrderResponse.ResponseMessage);
 
             IHttpActionResult actionResult = orderController.CancelOrder(newOrderRepresentation.OrderId);
             Thread.Sleep(4000);
@@ -482,8 +475,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
 
             Assert.IsNotNull(cancelOrderResponse);
             Assert.IsFalse(cancelOrderResponse.Pending);
-            Assert.AreEqual(0, cancelOrderResponse.Count);
-            Assert.AreNotEqual("Cancel Request Successfull", cancelOrderResponse.ResponseMessage);
+            Assert.AreNotEqual("Cancel Request Accepted", cancelOrderResponse.ResponseMessage);
 
             InputDisruptorPublisher.Shutdown();
             OutputDisruptor.ShutDown();

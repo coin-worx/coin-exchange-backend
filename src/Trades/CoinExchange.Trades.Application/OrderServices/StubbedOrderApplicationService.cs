@@ -17,7 +17,7 @@ namespace CoinExchange.Trades.Application.OrderServices
         /// <returns></returns>
         public CancelOrderResponse CancelOrder(CancelOrderCommand cancelOrderCommand)
         {
-            return new CancelOrderResponse(true, 2);
+            return new CancelOrderResponse(true);
         }
 
         /// <summary>

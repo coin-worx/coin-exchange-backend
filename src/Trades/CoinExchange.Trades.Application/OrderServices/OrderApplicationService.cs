@@ -33,13 +33,13 @@ namespace CoinExchange.Trades.Application.OrderServices
                     OrderCancellation cancellation = new OrderCancellation(cancelOrderCommand.OrderId,
                                                                            cancelOrderCommand.TraderId,currencyPair);
                     InputDisruptorPublisher.Publish(InputPayload.CreatePayload(cancellation));
-                    return new CancelOrderResponse(1, true, "Cancel Request Successfull");
+                    return new CancelOrderResponse(true, "Cancel Request Accepted");
                 }
-                return new CancelOrderResponse(0, false, new InvalidDataException("Invalid orderid").ToString());
+                return new CancelOrderResponse(false, new InvalidDataException("Invalid orderid").ToString());
             }
             catch (Exception exception)
             {
-                return new CancelOrderResponse(0, false, exception.ToString());
+                return new CancelOrderResponse(false, exception.Message);
             }
         }
 
