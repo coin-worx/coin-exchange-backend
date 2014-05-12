@@ -394,6 +394,10 @@ namespace CoinExchange.Trades.Domain.Model.OrderAggregate
             {
                 order.Price = new Price(_price.Value);
             }
+            else
+            {
+                order.Price=new Price(0);
+            }
             order.TraderId = new TraderId(this.TraderId.Id);
             order.CurrencyPair = this.CurrencyPair;
             order.Volume = new Volume(this.Volume.Value);

@@ -20,7 +20,7 @@ namespace CoinExchange.Common.Domain.Model
         public const string ORDER_TYPE_MARKET = "market";
         public const string ORDER_SIDE_BUY = "buy";
         public const string ORDER_SIDE_SELL = "sell";
-        public const int DISRUPTOR_RING_SIZE = 8;//should always be multiple of 2
+        public const int DISRUPTOR_RING_SIZE = 32;//should always be multiple of 2
         public const string RAVEN_DB_DATABASE_NAME = "EventStore";
         public const string RAVEN_DB_CONNECTIONSTRING_NAME = "EventStore";
         public const int OUTPUT_DISRUPTOR_BYTE_ARRAY_SIZE = 200000;
@@ -29,9 +29,19 @@ namespace CoinExchange.Common.Domain.Model
 
         static Constants()
         {
+            //initiliaze trader ids
             _apiKeyToTraderId.Add("123456789", "122334455");
             _apiKeyToTraderId.Add("123456", "887766");
+            _apiKeyToTraderId.Add("22334","76540");
+            _apiKeyToTraderId.Add("74309", "199887");
+            _apiKeyToTraderId.Add("67854", "2064708");
+
+            //initialize secret keys
             _apiKeyToSecretKey.Add("123456789", "09887960");
+            _apiKeyToSecretKey.Add("123456", "AuroraBitCoinExchange");
+            _apiKeyToSecretKey.Add("22334", "777888999");
+            _apiKeyToSecretKey.Add("74309", "675400099");
+            _apiKeyToSecretKey.Add("67854", "789765450");
         }
 
         /// <summary>
