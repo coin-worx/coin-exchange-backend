@@ -25,7 +25,6 @@ namespace CoinExchange.Trades.ReadModel.Persistence
             get
             {
                 return _sessionFactory.GetCurrentSession();
-
             }
         }
     }

@@ -54,6 +54,8 @@ namespace CoinExchange.Trades.Application.Tests
                 Constants.ORDER_SIDE_BUY, 100, 945, new StubbedOrderIdGenerator());
             Order buyOrder3 = OrderFactory.CreateOrder("1234", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 946, new StubbedOrderIdGenerator());
+            Order buyOrder4 = OrderFactory.CreateOrder("12347", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 100, 940, new StubbedOrderIdGenerator());
 
             Order sellOrder1 = OrderFactory.CreateOrder("1244", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 100, 949, new StubbedOrderIdGenerator());
@@ -61,28 +63,33 @@ namespace CoinExchange.Trades.Application.Tests
                 Constants.ORDER_SIDE_SELL, 100, 948, new StubbedOrderIdGenerator());
             Order sellOrder3 = OrderFactory.CreateOrder("1222", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 100, 947, new StubbedOrderIdGenerator());
+            Order sellOrder4 = OrderFactory.CreateOrder("127633", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 100, 950, new StubbedOrderIdGenerator());
 
             limitOrderBook.AddOrder(buyOrder1);
             limitOrderBook.AddOrder(buyOrder2);
             limitOrderBook.AddOrder(buyOrder3);
+            limitOrderBook.AddOrder(buyOrder4);
             limitOrderBook.AddOrder(sellOrder1);
             limitOrderBook.AddOrder(sellOrder2);
             limitOrderBook.AddOrder(sellOrder3);
+            limitOrderBook.AddOrder(sellOrder4);
 
-            Assert.AreEqual(3, limitOrderBook.Bids.Count());
-            Assert.AreEqual(3, limitOrderBook.Asks.Count());
+            Assert.AreEqual(4, limitOrderBook.Bids.Count());
+            Assert.AreEqual(4, limitOrderBook.Asks.Count());
             orderBookMemoryImage.OnOrderBookChanged(limitOrderBook);
 
-            Tuple<OrderRepresentationList, OrderRepresentationList> bidList = memoryImageQueryService.GetOrderBook("BTCUSD", 10);
-            Assert.AreEqual("BTCUSD", bidList.Item1.CurrencyPair);
-            Assert.AreEqual(946, bidList.Item1.ToList()[0].Item2); // Volume
-            Assert.AreEqual(100, bidList.Item1.ToList()[0].Item1); // Price
+            Tuple<OrderRepresentationList, OrderRepresentationList> orderBooksTuple = memoryImageQueryService.GetOrderBook("BTCUSD", 3);
+            Assert.AreEqual(3, orderBooksTuple.Item1.Count());
+            Assert.AreEqual("BTCUSD", orderBooksTuple.Item1.CurrencyPair);
+            Assert.AreEqual(946, orderBooksTuple.Item1.ToList()[0].Item2); // Volume
+            Assert.AreEqual(100, orderBooksTuple.Item1.ToList()[0].Item1); // Price
 
-            Assert.AreEqual(945, bidList.Item1.ToList()[1].Item2); // Volume
-            Assert.AreEqual(100, bidList.Item1.ToList()[1].Item1); // Price
+            Assert.AreEqual(945, orderBooksTuple.Item1.ToList()[1].Item2); // Volume
+            Assert.AreEqual(100, orderBooksTuple.Item1.ToList()[1].Item1); // Price
 
-            Assert.AreEqual(941, bidList.Item1.ToList()[2].Item2); // Volume
-            Assert.AreEqual(100, bidList.Item1.ToList()[2].Item1); // Price
+            Assert.AreEqual(941, orderBooksTuple.Item1.ToList()[2].Item2); // Volume
+            Assert.AreEqual(100, orderBooksTuple.Item1.ToList()[2].Item1); // Price
         }
 
         [Test]
@@ -99,35 +106,42 @@ namespace CoinExchange.Trades.Application.Tests
                 Constants.ORDER_SIDE_BUY, 100, 945, new StubbedOrderIdGenerator());
             Order buyOrder3 = OrderFactory.CreateOrder("1234", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 946, new StubbedOrderIdGenerator());
+            Order buyOrder4 = OrderFactory.CreateOrder("12347", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_BUY, 100, 940, new StubbedOrderIdGenerator());
 
             Order sellOrder1 = OrderFactory.CreateOrder("1244", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 100, 949, new StubbedOrderIdGenerator());
             Order sellOrder2 = OrderFactory.CreateOrder("1222", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 100, 948, new StubbedOrderIdGenerator());
             Order sellOrder3 = OrderFactory.CreateOrder("1222", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
-                Constants.ORDER_SIDE_SELL, 100, 947, new StubbedOrderIdGenerator());
+                Constants.ORDER_SIDE_SELL, 700, 947, new StubbedOrderIdGenerator());
+            Order sellOrder4 = OrderFactory.CreateOrder("12643", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+                Constants.ORDER_SIDE_SELL, 100, 950, new StubbedOrderIdGenerator());
 
             limitOrderBook.AddOrder(buyOrder1);
             limitOrderBook.AddOrder(buyOrder2);
             limitOrderBook.AddOrder(buyOrder3);
+            limitOrderBook.AddOrder(buyOrder4);
             limitOrderBook.AddOrder(sellOrder1);
             limitOrderBook.AddOrder(sellOrder2);
             limitOrderBook.AddOrder(sellOrder3);
+            limitOrderBook.AddOrder(sellOrder4);
 
-            Assert.AreEqual(3, limitOrderBook.Bids.Count());
-            Assert.AreEqual(3, limitOrderBook.Asks.Count());
+            Assert.AreEqual(4, limitOrderBook.Bids.Count());
+            Assert.AreEqual(4, limitOrderBook.Asks.Count());
             orderBookMemoryImage.OnOrderBookChanged(limitOrderBook);
 
-            Tuple<OrderRepresentationList, OrderRepresentationList> askList = memoryImageQueryService.GetOrderBook("BTCUSD", 10);
-            Assert.AreEqual("BTCUSD", askList.Item2.CurrencyPair);
-            Assert.AreEqual(947, askList.Item2.ToList()[0].Item2); // Volume
-            Assert.AreEqual(100, askList.Item2.ToList()[0].Item1); // Price
+            Tuple<OrderRepresentationList, OrderRepresentationList> orderBooksTuple = memoryImageQueryService.GetOrderBook("BTCUSD", 3);
+            Assert.AreEqual(3, orderBooksTuple.Item2.Count());
+            Assert.AreEqual("BTCUSD", orderBooksTuple.Item2.CurrencyPair);
+            Assert.AreEqual(947, orderBooksTuple.Item2.ToList()[0].Item2); // Volume
+            Assert.AreEqual(700, orderBooksTuple.Item2.ToList()[0].Item1); // Price
 
-            Assert.AreEqual(948, askList.Item2.ToList()[1].Item2); // Volume
-            Assert.AreEqual(100, askList.Item2.ToList()[1].Item1); // Price
+            Assert.AreEqual(948, orderBooksTuple.Item2.ToList()[1].Item2); // Volume
+            Assert.AreEqual(100, orderBooksTuple.Item2.ToList()[1].Item1); // Price
 
-            Assert.AreEqual(949, askList.Item2.ToList()[2].Item2); // Volume
-            Assert.AreEqual(100, askList.Item2.ToList()[2].Item1); // Price
+            Assert.AreEqual(949, orderBooksTuple.Item2.ToList()[2].Item2); // Volume
+            Assert.AreEqual(100, orderBooksTuple.Item2.ToList()[2].Item1); // Price
         }
 
         [Test]

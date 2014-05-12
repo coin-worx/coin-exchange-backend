@@ -14,5 +14,6 @@ namespace CoinExchange.Trades.ReadModel.Repositories
         List<OrderReadModel> GetClosedOrders(string traderId);
         List<OrderReadModel> GetAllOrderOfTrader(string traderId);
         OrderReadModel GetOrderById(string orderId);
+        void RollBack();
     }
 }
