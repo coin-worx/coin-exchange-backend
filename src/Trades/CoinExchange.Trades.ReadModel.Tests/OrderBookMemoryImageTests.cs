@@ -39,14 +39,14 @@ namespace CoinExchange.Trades.ReadModel.Tests
         public void AddBuyOrderBookToMemoryImage_ChecksWhetherOrderBooksGetAddedToImageListsPrperly_VerifiesImageListsToConfirm()
         {
             LimitOrderBook orderBook = new LimitOrderBook(CurrencyConstants.BitCoinUsd);
-            Order buyOrder1 = new Order(new OrderId(1), CurrencyConstants.BitCoinUsd, new Price(1251), OrderSide.Buy,
-                      OrderType.Limit, new Volume(250), new TraderId(1));
-            Order buyOrder2 = new Order(new OrderId(2), CurrencyConstants.BitCoinUsd, new Price(1250), OrderSide.Buy,
-                      OrderType.Limit, new Volume(250), new TraderId(1));
-            Order buyOrder3 = new Order(new OrderId(3), CurrencyConstants.BitCoinUsd, new Price(1252), OrderSide.Buy,
-                      OrderType.Limit, new Volume(250), new TraderId(1));
-            Order buyOrder4 = new Order(new OrderId(4), CurrencyConstants.BitCoinUsd, new Price(1251), OrderSide.Buy,
-                      OrderType.Limit, new Volume(250), new TraderId(1));
+            Order buyOrder1 = new Order(new OrderId("1"), CurrencyConstants.BitCoinUsd, new Price(1251), OrderSide.Buy,
+                      OrderType.Limit, new Volume(250), new TraderId("1"));
+            Order buyOrder2 = new Order(new OrderId("2"), CurrencyConstants.BitCoinUsd, new Price(1250), OrderSide.Buy,
+                      OrderType.Limit, new Volume(250), new TraderId("2"));
+            Order buyOrder3 = new Order(new OrderId("3"), CurrencyConstants.BitCoinUsd, new Price(1252), OrderSide.Buy,
+                      OrderType.Limit, new Volume(250), new TraderId("3"));
+            Order buyOrder4 = new Order(new OrderId("4"), CurrencyConstants.BitCoinUsd, new Price(1251), OrderSide.Buy,
+                      OrderType.Limit, new Volume(250), new TraderId("4"));
 
             orderBook.AddOrder(buyOrder1);
             orderBook.AddOrder(buyOrder2);
@@ -67,14 +67,14 @@ namespace CoinExchange.Trades.ReadModel.Tests
         public void AddAskOrderBookToMemoryImage_ChecksWhetherOrderBooksGetAddedToImageListsPrperly_VerifiesImageListsToConfirm()
         {
             LimitOrderBook orderBook = new LimitOrderBook(CurrencyConstants.BitCoinUsd);
-            Order sellOrder1 = new Order(new OrderId(1), CurrencyConstants.BitCoinUsd, new Price(1251), OrderSide.Sell,
-                      OrderType.Limit, new Volume(250), new TraderId(1));
-            Order sellOrder2 = new Order(new OrderId(2), CurrencyConstants.BitCoinUsd, new Price(1250), OrderSide.Sell,
-                      OrderType.Limit, new Volume(250), new TraderId(1));
-            Order sellOrder3 = new Order(new OrderId(3), CurrencyConstants.BitCoinUsd, new Price(1252), OrderSide.Sell,
-                      OrderType.Limit, new Volume(250), new TraderId(1));
-            Order sellOrder4 = new Order(new OrderId(4), CurrencyConstants.BitCoinUsd, new Price(1251), OrderSide.Sell,
-                      OrderType.Limit, new Volume(250), new TraderId(1));
+            Order sellOrder1 = new Order(new OrderId("1"), CurrencyConstants.BitCoinUsd, new Price(1251), OrderSide.Sell,
+                      OrderType.Limit, new Volume(250), new TraderId("1"));
+            Order sellOrder2 = new Order(new OrderId("2"), CurrencyConstants.BitCoinUsd, new Price(1250), OrderSide.Sell,
+                      OrderType.Limit, new Volume(250), new TraderId("2"));
+            Order sellOrder3 = new Order(new OrderId("3"), CurrencyConstants.BitCoinUsd, new Price(1252), OrderSide.Sell,
+                      OrderType.Limit, new Volume(250), new TraderId("3"));
+            Order sellOrder4 = new Order(new OrderId("4"), CurrencyConstants.BitCoinUsd, new Price(1251), OrderSide.Sell,
+                      OrderType.Limit, new Volume(250), new TraderId("4"));
 
             orderBook.AddOrder(sellOrder1);
             orderBook.AddOrder(sellOrder2);
@@ -95,14 +95,14 @@ namespace CoinExchange.Trades.ReadModel.Tests
         public void CheckBidBookPrices_ChecksWhetherOrderOfBidsPricesIsSortedAsTheLimitOrderBook_VerifiesImageListsToConfirm()
         {
             LimitOrderBook orderBook = new LimitOrderBook(CurrencyConstants.BitCoinUsd);
-            Order buyOrder1 = new Order(new OrderId(1), CurrencyConstants.BitCoinUsd, new Price(1251), OrderSide.Buy,
-                      OrderType.Limit, new Volume(250), new TraderId(1));
-            Order buyOrder2 = new Order(new OrderId(2), CurrencyConstants.BitCoinUsd, new Price(1250), OrderSide.Buy,
-                      OrderType.Limit, new Volume(250), new TraderId(1));
-            Order buyOrder3 = new Order(new OrderId(3), CurrencyConstants.BitCoinUsd, new Price(1252), OrderSide.Buy,
-                      OrderType.Limit, new Volume(250), new TraderId(1));
-            Order buyOrder4 = new Order(new OrderId(4), CurrencyConstants.BitCoinUsd, new Price(1251), OrderSide.Buy,
-                      OrderType.Limit, new Volume(250), new TraderId(1));
+            Order buyOrder1 = new Order(new OrderId("1"), CurrencyConstants.BitCoinUsd, new Price(1251), OrderSide.Buy,
+                      OrderType.Limit, new Volume(250), new TraderId("1"));
+            Order buyOrder2 = new Order(new OrderId("2"), CurrencyConstants.BitCoinUsd, new Price(1250), OrderSide.Buy,
+                      OrderType.Limit, new Volume(250), new TraderId("2"));
+            Order buyOrder3 = new Order(new OrderId("3"), CurrencyConstants.BitCoinUsd, new Price(1252), OrderSide.Buy,
+                      OrderType.Limit, new Volume(250), new TraderId("3"));
+            Order buyOrder4 = new Order(new OrderId("4"), CurrencyConstants.BitCoinUsd, new Price(1251), OrderSide.Buy,
+                      OrderType.Limit, new Volume(250), new TraderId("4"));
 
             orderBook.AddOrder(buyOrder1);
             orderBook.AddOrder(buyOrder2);
@@ -134,14 +134,14 @@ namespace CoinExchange.Trades.ReadModel.Tests
         public void CheckAskBookPrices_ChecksWhetherOrderOfAsksPricesIsSortedAsTheLimitOrderBook_VerifiesImageListsToConfirm()
         {
             LimitOrderBook orderBook = new LimitOrderBook(CurrencyConstants.BitCoinUsd);
-            Order sellOrder1 = new Order(new OrderId(1), CurrencyConstants.BitCoinUsd, new Price(1251), OrderSide.Sell,
-                      OrderType.Limit, new Volume(250), new TraderId(1));
-            Order sellOrder2 = new Order(new OrderId(2), CurrencyConstants.BitCoinUsd, new Price(1250), OrderSide.Sell,
-                      OrderType.Limit, new Volume(250), new TraderId(1));
-            Order sellOrder3 = new Order(new OrderId(3), CurrencyConstants.BitCoinUsd, new Price(1252), OrderSide.Sell,
-                      OrderType.Limit, new Volume(250), new TraderId(1));
-            Order sellOrder4 = new Order(new OrderId(4), CurrencyConstants.BitCoinUsd, new Price(1251), OrderSide.Sell,
-                      OrderType.Limit, new Volume(250), new TraderId(1));
+            Order sellOrder1 = new Order(new OrderId("1"), CurrencyConstants.BitCoinUsd, new Price(1251), OrderSide.Sell,
+                      OrderType.Limit, new Volume(250), new TraderId("1"));
+            Order sellOrder2 = new Order(new OrderId("2"), CurrencyConstants.BitCoinUsd, new Price(1250), OrderSide.Sell,
+                      OrderType.Limit, new Volume(250), new TraderId("2"));
+            Order sellOrder3 = new Order(new OrderId("3"), CurrencyConstants.BitCoinUsd, new Price(1252), OrderSide.Sell,
+                      OrderType.Limit, new Volume(250), new TraderId("3"));
+            Order sellOrder4 = new Order(new OrderId("4"), CurrencyConstants.BitCoinUsd, new Price(1251), OrderSide.Sell,
+                      OrderType.Limit, new Volume(250), new TraderId("4"));
 
             orderBook.AddOrder(sellOrder1);
             orderBook.AddOrder(sellOrder2);
@@ -174,14 +174,14 @@ namespace CoinExchange.Trades.ReadModel.Tests
         public void CheckBidBookVolumes_ChecksWhetherOrderOfBidsVolumeIsSortedAsTheLimitOrderBook_VerifiesImageListsToConfirm()
         {
             LimitOrderBook orderBook = new LimitOrderBook(CurrencyConstants.BitCoinUsd);
-            Order buyOrder1 = new Order(new OrderId(1), CurrencyConstants.BitCoinUsd, new Price(1251), OrderSide.Buy,
-                      OrderType.Limit, new Volume(100), new TraderId(1));
-            Order buyOrder2 = new Order(new OrderId(2), CurrencyConstants.BitCoinUsd, new Price(1253), OrderSide.Buy,
-                      OrderType.Limit, new Volume(300), new TraderId(1));
-            Order buyOrder3 = new Order(new OrderId(3), CurrencyConstants.BitCoinUsd, new Price(1257), OrderSide.Buy,
-                      OrderType.Limit, new Volume(700), new TraderId(1));
-            Order buyOrder4 = new Order(new OrderId(4), CurrencyConstants.BitCoinUsd, new Price(1256), OrderSide.Buy,
-                      OrderType.Limit, new Volume(600), new TraderId(1));
+            Order buyOrder1 = new Order(new OrderId("1"), CurrencyConstants.BitCoinUsd, new Price(1251), OrderSide.Buy,
+                      OrderType.Limit, new Volume(100), new TraderId("1"));
+            Order buyOrder2 = new Order(new OrderId("2"), CurrencyConstants.BitCoinUsd, new Price(1253), OrderSide.Buy,
+                      OrderType.Limit, new Volume(300), new TraderId("2"));
+            Order buyOrder3 = new Order(new OrderId("3"), CurrencyConstants.BitCoinUsd, new Price(1257), OrderSide.Buy,
+                      OrderType.Limit, new Volume(700), new TraderId("3"));
+            Order buyOrder4 = new Order(new OrderId("4"), CurrencyConstants.BitCoinUsd, new Price(1256), OrderSide.Buy,
+                      OrderType.Limit, new Volume(600), new TraderId("4"));
 
             orderBook.AddOrder(buyOrder1);
             orderBook.AddOrder(buyOrder2);
@@ -214,14 +214,14 @@ namespace CoinExchange.Trades.ReadModel.Tests
         public void CheckAskBookVolumes_ChecksWhetherOrderOfAsksPricesIsSameAsTheLimitOrderBook_VerifiesImageListsToConfirm()
         {
             LimitOrderBook orderBook = new LimitOrderBook(CurrencyConstants.BitCoinUsd);
-            Order sellOrder1 = new Order(new OrderId(1), CurrencyConstants.BitCoinUsd, new Price(1251), OrderSide.Sell,
-                      OrderType.Limit, new Volume(100), new TraderId(1));
-            Order sellOrder2 = new Order(new OrderId(2), CurrencyConstants.BitCoinUsd, new Price(1250), OrderSide.Sell,
-                      OrderType.Limit, new Volume(200), new TraderId(1));
-            Order sellOrder3 = new Order(new OrderId(3), CurrencyConstants.BitCoinUsd, new Price(1252), OrderSide.Sell,
-                      OrderType.Limit, new Volume(300), new TraderId(1));
-            Order sellOrder4 = new Order(new OrderId(4), CurrencyConstants.BitCoinUsd, new Price(1253), OrderSide.Sell,
-                      OrderType.Limit, new Volume(400), new TraderId(1));
+            Order sellOrder1 = new Order(new OrderId("1"), CurrencyConstants.BitCoinUsd, new Price(1251), OrderSide.Sell,
+                      OrderType.Limit, new Volume(100), new TraderId("1"));
+            Order sellOrder2 = new Order(new OrderId("2"), CurrencyConstants.BitCoinUsd, new Price(1250), OrderSide.Sell,
+                      OrderType.Limit, new Volume(200), new TraderId("2"));
+            Order sellOrder3 = new Order(new OrderId("3"), CurrencyConstants.BitCoinUsd, new Price(1252), OrderSide.Sell,
+                      OrderType.Limit, new Volume(300), new TraderId("3"));
+            Order sellOrder4 = new Order(new OrderId("4"), CurrencyConstants.BitCoinUsd, new Price(1253), OrderSide.Sell,
+                      OrderType.Limit, new Volume(400), new TraderId("4"));
 
             orderBook.AddOrder(sellOrder1);
             orderBook.AddOrder(sellOrder2);

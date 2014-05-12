@@ -27,6 +27,8 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
     /// </summary>
     class TradeControllerTests
     {
+        // NOTE: MAKE SURE THERE ARE NO ORDERS OR TRADES IN THE DATABASE TABLES OTHERWISE TEST RESUTLS WILL BE AFFECTED
+
         [Test]
         [Category("Integration")]
         public void GetAllTradesTest_TestsTheMethodThatWillGetAllTradesForACurrencypair_AssertsTheValuesOfTheFetchedTrades()

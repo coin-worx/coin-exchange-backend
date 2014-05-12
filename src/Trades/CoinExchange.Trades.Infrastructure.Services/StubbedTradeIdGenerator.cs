@@ -14,7 +14,7 @@ namespace CoinExchange.Trades.Infrastructure.Services
     {
         public TradeId GenerateTradeId()
         {
-            return new TradeId((int)DateTime.Now.Ticks);
+            return new TradeId(Guid.NewGuid().ToString());
         }
     }
 }

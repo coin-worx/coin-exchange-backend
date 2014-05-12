@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -18,7 +19,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         private InputDisruptorPublisher _publisher;
         private InputPayload _receivedPayload;
         private ManualResetEvent _manualResetEvent;
-        private List<int> _receivedTraderId;
+        private List<string> _receivedTraderId;
         private int _counter = 0;
         public void OnNext(InputPayload data, long sequence, bool endOfBatch)
         {
@@ -46,7 +47,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         {
             InputDisruptorPublisher.InitializeDisruptor(new IEventHandler<InputPayload>[] { this });
             _manualResetEvent=new ManualResetEvent(false);
-            _receivedTraderId=new List<int>();
+            _receivedTraderId=new List<string>();
         }
 
         [TearDown]
@@ -71,7 +72,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         public void PublishCancelOrder_IfCancelOrderIsAddedInPayload_ReceiveCancelOrderInPayloadInConsumer()
         {
             _counter = 1;//as sending only one message
-            OrderCancellation cancelOrder=new OrderCancellation(new OrderId(123),new TraderId(123),"XBTUSD" );
+            OrderCancellation cancelOrder=new OrderCancellation(new OrderId("123"),new TraderId("123"),"XBTUSD" );
             InputPayload payload = InputPayload.CreatePayload(cancelOrder);
             InputDisruptorPublisher.Publish(payload);
             _manualResetEvent.WaitOne(2000);
@@ -82,20 +83,20 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         public void PublishOrders_ToCheckPayloadRefrenceDoesnotGetMixed_AllOrdersReceived()
         {
             _counter = 14;//as sending 15 messages
-            List<int> list=new List<int>();
+            List<string> list=new List<string>();
             for (int i = 1; i < 15; i++)
             {
                 Order order = OrderFactory.CreateOrder(i.ToString(), "XBTUSD", "limit", "buy", 5, 10,
                   new StubbedOrderIdGenerator());
                 InputPayload payload = InputPayload.CreatePayload(order);
                 InputDisruptorPublisher.Publish(payload);  
-                list.Add(i);
+                list.Add(i.ToString(CultureInfo.InvariantCulture));
             }
             _manualResetEvent.WaitOne(10000); 
             Assert.AreEqual(CompareList(list), true);
         }
 
-        private bool CompareList(List<int> list)
+        private bool CompareList(List<string> list)
         {
             for (int i = 0; i < list.Count; i++)
             {

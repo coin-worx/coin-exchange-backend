@@ -23,9 +23,9 @@ namespace CoinExchange.Trades.Domain.Model.Tests.Performance
             stopwatch.Start();
             for (int i = 0; i < 10000; i++)
             {
-                Order order = new Order(new OrderId(1), "XBTUSD", new Price(491 + i), OrderSide.Sell, OrderType.Limit,
+                Order order = new Order(new OrderId("1"), "XBTUSD", new Price(491 + i), OrderSide.Sell, OrderType.Limit,
                                         new Volume(2000),
-                                        new TraderId(1));
+                                        new TraderId("1"));
                 orders.Add(order);
                 /*orders = orders.OrderBy(x => x.Price.Value).ToList();*/
                 orders.Sort((x, y) => x.Price.Value.CompareTo(y.Price.Value));
@@ -47,9 +47,9 @@ namespace CoinExchange.Trades.Domain.Model.Tests.Performance
             stopwatch.Start();
             for (int i = 0; i < 10000; i++)
             {
-                Order order = new Order(new OrderId(1), "XBTUSD", new Price(491 + i), OrderSide.Sell, OrderType.Limit,
+                Order order = new Order(new OrderId("1"), "XBTUSD", new Price(491 + i), OrderSide.Sell, OrderType.Limit,
                                         new Volume(2000),
-                                        new TraderId(1));
+                                        new TraderId("1"));
                 _sortedList.Add(i, order);
             }
             stopwatch.Stop();
@@ -77,16 +77,16 @@ namespace CoinExchange.Trades.Domain.Model.Tests.Performance
 
                 Volume volume = new Volume(random.Next() % 10 + 1 * 100);
 
-                OrderId orderId = new OrderId(i);
+                OrderId orderId = new OrderId("i");
                 orderIds.Add(orderId);
                 orders[i] = new Order(orderId, "BTCUSD", price, isBuy ? OrderSide.Buy :
-                OrderSide.Sell, OrderType.Limit, volume, new TraderId(random.Next(1, 100)));
+                OrderSide.Sell, OrderType.Limit, volume, new TraderId(random.Next(1, 100).ToString()));
             }
 
             // Start time for checking LINQ's performance to search for an item
             var linqStart = DateTime.Now;
             Order linqOrder = (from order1 in orders
-                           where order1.OrderId.Id == 3007
+                           where order1.OrderId.Id == "3007"
                            select order1).ToList().First();
             var linqEnd = DateTime.Now;
 
@@ -96,7 +96,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests.Performance
             Order forOrder = null;
             for (int i = 0; i < orders.Length; i++)
             {
-                if (orders[i].OrderId.Id == 3007)
+                if (orders[i].OrderId.Id == "3007")
                 {
                     forOrder = orders[i];
                     break;
@@ -111,7 +111,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests.Performance
             Order foreachOrder = null;
             foreach (var order in orders)
             {
-                if (order.OrderId.Id == 3007)
+                if (order.OrderId.Id == "3007")
                 {
                     foreachOrder = order;
                     break;

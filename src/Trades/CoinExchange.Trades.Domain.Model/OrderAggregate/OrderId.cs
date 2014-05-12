@@ -4,6 +4,9 @@
  */
 
 using System;
+using System.Globalization;
+using Newtonsoft.Json;
+
 namespace CoinExchange.Trades.Domain.Model.OrderAggregate
 {
     /// <summary>
@@ -12,13 +15,23 @@ namespace CoinExchange.Trades.Domain.Model.OrderAggregate
     [Serializable]
     public class OrderId
     {
-        private readonly int _id;
+        private readonly string _id;
 
         /// <summary>
-        /// Default Constructor
+        /// Accepts integer ID 
         /// </summary>
         /// <param name="id"></param>
-        public OrderId(int id)
+        /*public OrderId(int id)
+        {
+            _id = id.ToString(CultureInfo.InvariantCulture);
+        }*/
+
+        /// <summary>
+        /// Accepts string ID
+        /// </summary>
+        /// <param name="id"></param>
+        [JsonConstructor]
+        public OrderId(string id)
         {
             _id = id;
         }
@@ -26,7 +39,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderAggregate
         /// <summary>
         /// The ID of the Order
         /// </summary>
-        public int Id { get { return _id; } }
+        public string Id { get { return _id; } }
 
         public override bool Equals(object obj)
         {

@@ -6,8 +6,7 @@ namespace CoinExchange.Trades.Application.OrderServices
 {
     public interface IOrderQueryService
     {
-        object GetOpenOrders(TraderId traderId, bool includeTrades = false,
-            string userRefId = "");
+        object GetOpenOrders(TraderId traderId, bool includeTrades = false);
 
         object GetClosedOrders(TraderId traderId, bool includeTrades = false,
             string userRefId = "",

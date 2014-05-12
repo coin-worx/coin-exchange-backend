@@ -90,17 +90,17 @@ namespace CoinExchange.Trades.ReadModel.Persistence.Tests
                 new StubbedOrderIdGenerator());
 
             DateTime dateTime = DateTime.Now.AddSeconds(-1*DateTime.Now.Second);
-            Trade trade5 = new Trade(new TradeId(1), "XBTUSD", new Price(2), new Volume(10), dateTime.AddDays(-1),
+            Trade trade5 = new Trade(new TradeId("1"), "XBTUSD", new Price(2), new Volume(10), dateTime.AddDays(-1),
                 buyOrder, sellOrder);
-            Trade trade6 = new Trade(new TradeId(2), "XBTUSD", new Price(3), new Volume(5), dateTime.AddDays(-1).AddMinutes(1),
+            Trade trade6 = new Trade(new TradeId("2"), "XBTUSD", new Price(3), new Volume(5), dateTime.AddDays(-1).AddMinutes(1),
                 buyOrder, sellOrder);
-            Trade trade1 = new Trade(new TradeId(3), "XBTUSD", new Price(10), new Volume(10), dateTime.AddSeconds(10),
+            Trade trade1 = new Trade(new TradeId("3"), "XBTUSD", new Price(10), new Volume(10), dateTime.AddSeconds(10),
                 buyOrder, sellOrder);
-            Trade trade2 = new Trade(new TradeId(4), "XBTUSD", new Price(15), new Volume(15), dateTime.AddSeconds(15),
+            Trade trade2 = new Trade(new TradeId("4"), "XBTUSD", new Price(15), new Volume(15), dateTime.AddSeconds(15),
                 buyOrder, sellOrder);
-            Trade trade3 = new Trade(new TradeId(5), "XBTUSD", new Price(20), new Volume(5), dateTime.AddSeconds(20),
+            Trade trade3 = new Trade(new TradeId("5"), "XBTUSD", new Price(20), new Volume(5), dateTime.AddSeconds(20),
                 buyOrder, sellOrder);
-            Trade trade4 = new Trade(new TradeId(6), "XBTUSD", new Price(5), new Volume(10), dateTime.AddSeconds(40),
+            Trade trade4 = new Trade(new TradeId("6"), "XBTUSD", new Price(5), new Volume(10), dateTime.AddSeconds(40),
                 buyOrder, sellOrder);
             
             OutputDisruptor.Publish(trade5);

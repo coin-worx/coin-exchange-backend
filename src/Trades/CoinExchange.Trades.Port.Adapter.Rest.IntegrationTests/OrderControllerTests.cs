@@ -33,6 +33,8 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
     [TestFixture]
     class OrderControllerTests
     {
+        // NOTE: MAKE SURE THERE ARE NO ORDERS OR TRADES IN THE DATABASE TABLES OTHERWISE TEST RESUTLS WILL BE AFFECTED
+
         [Test]
         [Category("Integration")]
         public void SendNewBuyOrderTest_TestsTheReturnedOrderRepresentationIfItIsAsExpected_VerfiesTheSubmittedState()
@@ -49,6 +51,9 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
 
             // Get the instance through Spring configuration
             OrderController orderController = (OrderController)applicationContext["OrderController"];
+            orderController.Request = new HttpRequestMessage(HttpMethod.Post, "");
+            orderController.Request.Headers.Add("Auth", "123456789");
+            IOrderRepository orderRepository = (IOrderRepository)applicationContext["OrderRepository"];
 
             IHttpActionResult httpActionResult = orderController.CreateOrder(new CreateOrderParam()
                                                 {
@@ -66,6 +71,10 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             Assert.AreEqual(100, newOrderRepresentation.Volume);
             Assert.AreEqual("Buy", newOrderRepresentation.Side);
             Assert.AreEqual("Limit", newOrderRepresentation.Type);
+
+            InputDisruptorPublisher.Shutdown();
+            OutputDisruptor.ShutDown();
+            orderRepository.RollBack();
         }
 
         [Test]
@@ -86,6 +95,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             OrderController orderController = (OrderController)applicationContext["OrderController"];
             orderController.Request = new HttpRequestMessage(HttpMethod.Post, "");
             orderController.Request.Headers.Add("Auth", "123456789");
+            IOrderRepository orderRepository = (IOrderRepository)applicationContext["OrderRepository"];
 
             IHttpActionResult httpActionResult = orderController.CreateOrder(new CreateOrderParam()
             {
@@ -107,6 +117,10 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             Assert.AreEqual(100, newOrderRepresentation.Volume);
             Assert.AreEqual("Sell", newOrderRepresentation.Side);
             Assert.AreEqual("Limit", newOrderRepresentation.Type);
+
+            InputDisruptorPublisher.Shutdown();
+            OutputDisruptor.ShutDown();
+            orderRepository.RollBack();
         }
 
         [Test]
@@ -127,6 +141,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             OrderController orderController = (OrderController)applicationContext["OrderController"];
             orderController.Request = new HttpRequestMessage(HttpMethod.Post, "");
             orderController.Request.Headers.Add("Auth", "123456789");
+            IOrderRepository orderRepository = (IOrderRepository)applicationContext["OrderRepository"];
 
             IHttpActionResult httpActionResult = orderController.CreateOrder(new CreateOrderParam()
             {
@@ -159,6 +174,10 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             Assert.AreEqual(true, cancelOrderResponse.Pending);
             Assert.AreEqual(1, cancelOrderResponse.Count);
             Assert.AreEqual("Cancel Request Successfull", cancelOrderResponse.ResponseMessage);
+
+            InputDisruptorPublisher.Shutdown();
+            OutputDisruptor.ShutDown();
+            orderRepository.RollBack();
         }
 
         [Test]
@@ -179,6 +198,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             OrderController orderController = (OrderController)applicationContext["OrderController"];
             orderController.Request = new HttpRequestMessage(HttpMethod.Post, "");
             orderController.Request.Headers.Add("Auth", "123456789");
+            IOrderRepository orderRepository = (IOrderRepository)applicationContext["OrderRepository"];
 
             IHttpActionResult httpActionResult = orderController.CreateOrder(new CreateOrderParam()
             {
@@ -211,6 +231,10 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             Assert.AreEqual(true, cancelOrderResponse.Pending);
             Assert.AreEqual(1, cancelOrderResponse.Count);
             Assert.AreEqual("Cancel Request Successfull", cancelOrderResponse.ResponseMessage);
+
+            InputDisruptorPublisher.Shutdown();
+            OutputDisruptor.ShutDown();
+            orderRepository.RollBack();
         }
 
         [Test]
@@ -231,6 +255,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             OrderController orderController = (OrderController)applicationContext["OrderController"];
             orderController.Request = new HttpRequestMessage(HttpMethod.Post, "");
             orderController.Request.Headers.Add("Auth", "123456789");
+            IOrderRepository orderRepository = (IOrderRepository)applicationContext["OrderRepository"];
 
             IHttpActionResult httpActionResult = orderController.CreateOrder(new CreateOrderParam()
             {
@@ -264,6 +289,10 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             Assert.IsFalse(cancelOrderResponse.Pending);
             Assert.AreEqual(0, cancelOrderResponse.Count);
             Assert.AreNotEqual("Cancel Request Successfull", cancelOrderResponse.ResponseMessage);
+
+            InputDisruptorPublisher.Shutdown();
+            OutputDisruptor.ShutDown();
+            orderRepository.RollBack();
         }
 
         [Test]
@@ -284,6 +313,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             OrderController orderController = (OrderController)applicationContext["OrderController"];
             orderController.Request = new HttpRequestMessage(HttpMethod.Post, "");
             orderController.Request.Headers.Add("Auth", "123456789");
+            IOrderRepository orderRepository = (IOrderRepository)applicationContext["OrderRepository"];
 
             IHttpActionResult httpActionResult = orderController.CreateOrder(new CreateOrderParam()
             {
@@ -317,6 +347,10 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             Assert.IsFalse(cancelOrderResponse.Pending);
             Assert.AreEqual(0, cancelOrderResponse.Count);
             Assert.AreNotEqual("Cancel Request Successfull", cancelOrderResponse.ResponseMessage);
+
+            InputDisruptorPublisher.Shutdown();
+            OutputDisruptor.ShutDown();
+            orderRepository.RollBack();
         }
 
         [Test]
@@ -337,8 +371,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             OrderController orderController = (OrderController)applicationContext["OrderController"];
             orderController.Request = new HttpRequestMessage(HttpMethod.Post, "");
             orderController.Request.Headers.Add("Auth", "123456789");
-
-            OrderRepository orderRepository = (OrderRepository)applicationContext["OrderRepository"];
+            IOrderRepository orderRepository = (IOrderRepository)applicationContext["OrderRepository"];
 
             IHttpActionResult httpActionResult = orderController.CreateOrder(new CreateOrderParam()
             {
@@ -407,7 +440,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             orderController.Request = new HttpRequestMessage(HttpMethod.Post, "");
             orderController.Request.Headers.Add("Auth", "123456789");
 
-            OrderRepository orderRepository = (OrderRepository)applicationContext["OrderRepository"];
+            IOrderRepository orderRepository = (IOrderRepository)applicationContext["OrderRepository"];
 
             IHttpActionResult httpActionResult = orderController.CreateOrder(new CreateOrderParam()
             {
@@ -476,7 +509,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             orderController.Request = new HttpRequestMessage(HttpMethod.Post, "");
             orderController.Request.Headers.Add("Auth", "123456789");
 
-            OrderRepository orderRepository = (OrderRepository)applicationContext["OrderRepository"];
+            IOrderRepository orderRepository = (IOrderRepository)applicationContext["OrderRepository"];
 
             ManualResetEvent manualResetEvent = new ManualResetEvent(false);
             IHttpActionResult orderHttpResult = orderController.CreateOrder(new CreateOrderParam()
@@ -492,7 +525,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             Assert.IsNotNull(order1RepresentationContent.Content);
 
             manualResetEvent.Reset();
-            manualResetEvent.WaitOne(1000);
+            manualResetEvent.WaitOne(2000);
             orderController.CreateOrder(new CreateOrderParam()
             {
                 Pair = "BTCUSD",
@@ -503,7 +536,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             });
 
             manualResetEvent.Reset();
-            manualResetEvent.WaitOne(1000);
+            manualResetEvent.WaitOne(2000);
 
             orderController.CreateOrder(new CreateOrderParam()
             {
@@ -513,6 +546,9 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
                 Side = "buy",
                 Type = "limit"
             });
+
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(2000);
 
             orderController.CreateOrder(new CreateOrderParam()
             {
@@ -524,7 +560,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             });
 
             manualResetEvent.Reset();
-            manualResetEvent.WaitOne(1000);
+            manualResetEvent.WaitOne(2000);
 
             orderController.CreateOrder(new CreateOrderParam()
             {
@@ -536,7 +572,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             });
 
             manualResetEvent.Reset();
-            manualResetEvent.WaitOne(1000);
+            manualResetEvent.WaitOne(2000);
 
             orderController.CreateOrder(new CreateOrderParam()
             {
@@ -548,7 +584,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             });
 
             manualResetEvent.Reset();
-            manualResetEvent.WaitOne(2000);
+            manualResetEvent.WaitOne(4000);
             MarketController marketController = (MarketController)applicationContext["MarketController"];
             IHttpActionResult marketDataHttpResult = marketController.GetOrderBook("BTCUSD");
 
@@ -559,11 +595,11 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             Assert.AreEqual(3, orderBooks.Item1.Count()); // Count of the orders in the Bid Order book
             Assert.AreEqual(3, orderBooks.Item2.Count());// Count of the orders in the Ask Order book
 
-            IHttpActionResult queryClosedOrders = orderController.QueryOpenOrders(new QueryOpenOrdersParams(false, ""));
+            IHttpActionResult queryOpenOrders = orderController.QueryOpenOrders(false);
 
-            Assert.IsNotNull(queryClosedOrders);
+            Assert.IsNotNull(queryOpenOrders);
             OkNegotiatedContentResult<List<OrderReadModel>> reponseMessage =
-                                                        (OkNegotiatedContentResult<List<OrderReadModel>>) queryClosedOrders;
+                                                        (OkNegotiatedContentResult<List<OrderReadModel>>) queryOpenOrders;
 
             List<OrderReadModel> orderlist = reponseMessage.Content;
 
@@ -615,7 +651,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             OrderController orderController = (OrderController)applicationContext["OrderController"];
             orderController.Request = new HttpRequestMessage(HttpMethod.Post, "");
             orderController.Request.Headers.Add("Auth", "123456789");
-            OrderRepository orderRepository = (OrderRepository)applicationContext["OrderRepository"];
+            IOrderRepository orderRepository = (IOrderRepository)applicationContext["OrderRepository"];
 
             ManualResetEvent manualResetEvent = new ManualResetEvent(false);
             IHttpActionResult orderHttpResult = orderController.CreateOrder(new CreateOrderParam()
@@ -678,11 +714,11 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             Assert.AreEqual(3, orderBooks.Item1.Count()); // Count of the orders in the Bid Order book
             Assert.AreEqual(2, orderBooks.Item2.Count());// Count of the orders in the Ask Order book
 
-            IHttpActionResult queryClosedOrders = orderController.QueryOpenOrders(new QueryOpenOrdersParams(true, ""));
+            IHttpActionResult queryOpenOrders = orderController.QueryOpenOrders(true);
 
-            Assert.IsNotNull(queryClosedOrders);
+            Assert.IsNotNull(queryOpenOrders);
             OkNegotiatedContentResult<List<OrderReadModel>> reponseMessage =
-                                                        (OkNegotiatedContentResult<List<OrderReadModel>>)queryClosedOrders;
+                                                        (OkNegotiatedContentResult<List<OrderReadModel>>)queryOpenOrders;
 
             List<OrderReadModel> orderlist = reponseMessage.Content;
 
@@ -823,7 +859,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             });
 
             manualResetEvent.Reset();
-            manualResetEvent.WaitOne(4000);
+            manualResetEvent.WaitOne(7000);
             MarketController marketController = (MarketController)applicationContext["MarketController"];
             IHttpActionResult marketDataHttpResult = marketController.GetOrderBook("BTCUSD");
 
@@ -906,7 +942,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             orderController.Request = new HttpRequestMessage(HttpMethod.Post, "");
             orderController.Request.Headers.Add("Auth", "123456789");
 
-            OrderRepository orderRepository = (OrderRepository)applicationContext["OrderRepository"];
+            IOrderRepository orderRepository = (IOrderRepository)applicationContext["OrderRepository"];
 
             ManualResetEvent manualResetEvent = new ManualResetEvent(false);
             IHttpActionResult buyOrderHttpResult = orderController.CreateOrder(new CreateOrderParam()
@@ -921,8 +957,8 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             OkNegotiatedContentResult<NewOrderRepresentation> buyOrderRepresentation = (OkNegotiatedContentResult<NewOrderRepresentation>)buyOrderHttpResult;
             Assert.IsNotNull(buyOrderRepresentation.Content);
 
-         /*   manualResetEvent.Reset();
-            manualResetEvent.WaitOne(1000);*/
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(1000);
             orderController.CreateOrder(new CreateOrderParam()
             {
                 Pair = "BTCUSD",
@@ -932,8 +968,8 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
                 Type = "limit"
             });
 
-            /*manualResetEvent.Reset();
-            manualResetEvent.WaitOne(1000);*/
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(1000);
 
             orderController.CreateOrder(new CreateOrderParam()
             {
@@ -953,8 +989,8 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
                 Type = "limit"
             });
 
-            /*manualResetEvent.Reset();
-            manualResetEvent.WaitOne(1000);*/
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(1000);
 
             orderController.CreateOrder(new CreateOrderParam()
             {
@@ -965,8 +1001,8 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
                 Type = "limit"
             });
 
-            /*manualResetEvent.Reset();
-            manualResetEvent.WaitOne(1000);*/
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(1000);
 
             IHttpActionResult sellOrderHttpContent = orderController.CreateOrder(new CreateOrderParam()
                                             {
@@ -976,8 +1012,8 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             OkNegotiatedContentResult<NewOrderRepresentation> sellOrderRepresentation = (OkNegotiatedContentResult<NewOrderRepresentation>)sellOrderHttpContent;
             Assert.IsNotNull(sellOrderRepresentation.Content);
 
-            /*manualResetEvent.Reset();
-            manualResetEvent.WaitOne(2000);*/
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(2000);
 
             Thread.Sleep(7000);
             MarketController marketController = (MarketController)applicationContext["MarketController"];
@@ -991,14 +1027,12 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             Assert.AreEqual(3, orderBooks.Item2.Count());// Count of the orders in the Ask Order book
 
             orderController.CancelOrder(buyOrderRepresentation.Content.OrderId);
-            /*manualResetEvent.Reset();
-            manualResetEvent.WaitOne(3000);*/
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(3000);
 
             orderController.CancelOrder(sellOrderRepresentation.Content.OrderId);
-            /*manualResetEvent.Reset();
-            manualResetEvent.WaitOne(30000);*/
-
-            Thread.Sleep(10000);
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(4000);
 
             IHttpActionResult queryOpenOrders = orderController.QueryClosedOrders(new QueryClosedOrdersParams(false, "", 
                 "", "", "", ""));

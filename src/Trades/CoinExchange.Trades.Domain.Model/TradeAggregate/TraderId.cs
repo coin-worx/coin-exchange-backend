@@ -13,13 +13,13 @@ namespace CoinExchange.Trades.Domain.Model.TradeAggregate
     [Serializable]
     public class TraderId
     {
-        private readonly int _id;
+        private readonly string _id;
 
         /// <summary>
-        /// Default Constructor
+        /// Accepts string ID
         /// </summary>
         /// <param name="id"></param>
-        public TraderId(int id)
+        public TraderId(string id)
         {
             _id = id;
         }
@@ -27,7 +27,7 @@ namespace CoinExchange.Trades.Domain.Model.TradeAggregate
         /// <summary>
         /// The ID of the Trader
         /// </summary>
-        public int Id { get { return _id; } }
+        public string Id { get { return _id; } }
 
         public override bool Equals(object obj)
         {

@@ -36,9 +36,8 @@ namespace CoinExchange.Trades.Application.OrderServices
         /// </summary>
         /// <param name="traderId"></param>
         /// <param name="includeTrades"></param>
-        /// <param name="userRefId"></param>
         /// <returns></returns>
-        public object GetOpenOrders(TraderId traderId, bool includeTrades = false, string userRefId = "")
+        public object GetOpenOrders(TraderId traderId, bool includeTrades = false)
         {
             List<OrderReadModel> orders = _orderRepository.GetOpenOrders(traderId.Id.ToString(CultureInfo.InvariantCulture));
             if (includeTrades)

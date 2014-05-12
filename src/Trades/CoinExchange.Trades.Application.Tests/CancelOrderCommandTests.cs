@@ -41,7 +41,7 @@ namespace CoinExchange.Trades.Application.Tests
         public void SendCancelOrderRequest_IfValidOrderAndTraderIdProvided_ReceiveResponseAndCommandShouldBePublishedOnDisruptor()
         {
             CancelOrderResponse response =
-                _orderseService.CancelOrder(new CancelOrderCommand(new OrderId(12), new TraderId(12)));
+                _orderseService.CancelOrder(new CancelOrderCommand(new OrderId("12"), new TraderId("12")));
             _manualResetEvent.WaitOne(3000);
             Assert.NotNull(response);
             Assert.NotNull(_cancellation);
@@ -52,7 +52,7 @@ namespace CoinExchange.Trades.Application.Tests
         public void SendCancelOrderRequest_IfTraderIdIsNull_ReceiveInvalidOperationException()
         {
             CancelOrderResponse response =
-                _orderseService.CancelOrder(new CancelOrderCommand(new OrderId(12), null));
+                _orderseService.CancelOrder(new CancelOrderCommand(new OrderId("12"), null));
         }
 
         [Test]

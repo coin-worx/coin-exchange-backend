@@ -23,6 +23,7 @@ namespace CoinExchange.Trades.ReadModel.Persistence.NHibernate
                 .Where(order => order.TraderId.Equals(traderId) && 
                 (order.Status.Equals("New") || order.Status.Equals("Accepted") || order.Status.Equals("PartiallyFilled")))
                 .AsQueryable()
+                .OrderBy(x => x.OrderDateTime)
                 .ToList();
         }
 

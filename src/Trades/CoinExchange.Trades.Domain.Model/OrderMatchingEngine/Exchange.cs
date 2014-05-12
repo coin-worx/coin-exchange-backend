@@ -179,7 +179,6 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             {
                 OrderCancellation cancellation=new OrderCancellation();
                 data.OrderCancellation.MemberWiseClone(cancellation);
-                //TODO: Modify cancel order function to order cancellation type
                 CancelOrder(cancellation);
             }
         }

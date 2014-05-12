@@ -52,6 +52,8 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
 
             // Get the instance through Spring configuration
             OrderController orderController = (OrderController)applicationContext["OrderController"];
+            orderController.Request = new HttpRequestMessage(HttpMethod.Post, "");
+            orderController.Request.Headers.Add("Auth", "123456789");
 
             ManualResetEvent manualResetEvent = new ManualResetEvent(false);
             IHttpActionResult orderHttpResult = orderController.CreateOrder(new CreateOrderParam()
@@ -170,6 +172,8 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
 
             // Get the instance through Spring configuration
             OrderController orderController = (OrderController)applicationContext["OrderController"];
+            orderController.Request = new HttpRequestMessage(HttpMethod.Post, "");
+            orderController.Request.Headers.Add("Auth", "123456789");
 
             ManualResetEvent manualResetEvent = new ManualResetEvent(false);
             IHttpActionResult orderHttpResult = orderController.CreateOrder(new CreateOrderParam()
@@ -258,6 +262,9 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             Assert.AreEqual(497, returnedDepth.Item2[0].Item2); // Price of the first Bid DepthLevel
             Assert.AreEqual(1700, returnedDepth.Item2[1].Item1); // Volume of the second Bid DepthLevel
             Assert.AreEqual(498, returnedDepth.Item2[1].Item2); // Price of the second Bid DepthLevel
+
+            InputDisruptorPublisher.Shutdown();
+            OutputDisruptor.ShutDown();
         }
 
         [Test]
@@ -276,6 +283,8 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
 
             // Get the instance through Spring configuration
             OrderController orderController = (OrderController)applicationContext["OrderController"];
+            orderController.Request = new HttpRequestMessage(HttpMethod.Post, "");
+            orderController.Request.Headers.Add("Auth", "123456789");
 
             ManualResetEvent manualResetEvent = new ManualResetEvent(false);
             IHttpActionResult orderHttpResult = orderController.CreateOrder(new CreateOrderParam()
@@ -400,6 +409,9 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             Assert.AreEqual(491, orderBooks.Item1.ToList()[2].Item2); // Price @ slot 3 in bid OrderBook*/
             Assert.AreEqual(900, orderBooks.Item2.ToList()[2].Item1); // Volume @ slot 3 in ask OrderBook
             Assert.AreEqual(499, orderBooks.Item2.ToList()[2].Item2); // Price @ slot 3 in ask OrderBook
+
+            InputDisruptorPublisher.Shutdown();
+            OutputDisruptor.ShutDown();
         }
 
         #endregion End-to-End Test
@@ -585,6 +597,9 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
 
             Assert.AreEqual(150, okResponseMessage.Content.Item2.ToList()[0].Item1);// Highest Ask Volumein Ask Order Book
             Assert.AreEqual(491.34M, okResponseMessage.Content.Item2.ToList()[0].Item2);// Highest Ask Price in Ask Order Book
+
+            InputDisruptorPublisher.Shutdown();
+            OutputDisruptor.ShutDown();
         }
 
         [Test]
@@ -624,6 +639,9 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             Assert.AreEqual(400, returnedDepths.Content.Item2.ToList()[0].Item1); // Aggregated Volume
             Assert.AreEqual(490, returnedDepths.Content.Item2.ToList()[0].Item2); // Price
             Assert.AreEqual(3, returnedDepths.Content.Item2.ToList()[0].Item3); // OrderCount
+
+            InputDisruptorPublisher.Shutdown();
+            OutputDisruptor.ShutDown();
         }
     }
 }

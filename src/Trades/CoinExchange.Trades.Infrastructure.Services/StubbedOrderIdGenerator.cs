@@ -11,14 +11,10 @@ namespace CoinExchange.Trades.Infrastructure.Services
     [Serializable]
     public class StubbedOrderIdGenerator:IOrderIdGenerator
     {
-        private static int _safeInstanceCount = 0;
-
         public OrderId GenerateOrderId()
         {
-            var increment = Interlocked.Increment(ref _safeInstanceCount);
-            return new OrderId(increment);
+            var orderid = Guid.NewGuid().ToString();
+            return new OrderId(orderid);
         }
-
-
     }
 }
