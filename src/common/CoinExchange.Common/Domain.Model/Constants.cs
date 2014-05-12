@@ -30,6 +30,7 @@ namespace CoinExchange.Common.Domain.Model
         static Constants()
         {
             _apiKeyToTraderId.Add("123456789", "122334455");
+            _apiKeyToTraderId.Add("123456", "887766");
             _apiKeyToSecretKey.Add("123456789", "09887960");
         }
 

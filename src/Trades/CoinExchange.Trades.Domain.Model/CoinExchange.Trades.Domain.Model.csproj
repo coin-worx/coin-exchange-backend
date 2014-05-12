@@ -75,6 +75,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CurrencyPairAggregate\CurrencyPair.cs" />
+    <Compile Include="CurrencyPairAggregate\ICurrencyPairRepository.cs" />
     <Compile Include="OrderMatchingEngine\BBOEvent.cs" />
     <Compile Include="OrderMatchingEngine\DepthEvent.cs" />
     <Compile Include="OrderMatchingEngine\ExchangeEssentials.cs" />
@@ -108,7 +110,6 @@
     <Compile Include="OrderMatchingEngine\OrderListener.cs" />
     <Compile Include="OrderMatchingEngine\TradeListener.cs" />
     <Compile Include="OrderMatchingEngine\Types.cs" />
-    <Compile Include="OrderAggregate\CurrencyPair.cs" />
     <Compile Include="OrderAggregate\Order.cs" />
     <Compile Include="OrderAggregate\OrderFactory.cs" />
     <Compile Include="OrderAggregate\OrderSide.cs" />

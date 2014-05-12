@@ -152,6 +152,24 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                 return InternalServerError(ex);
             }
         }
+
+        /// <summary>
+        /// List of tradeable currency pairs
+        /// </summary>
+        /// <returns></returns>
+        [Route("trades/tradeablecurrencypair")]
+        [HttpGet]
+        public IHttpActionResult TradeableCurrencyPair()
+        {
+            try
+            {
+                return Ok(_tradeApplicationService.GetTradeableCurrencyPairs());
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
   
     }
 }

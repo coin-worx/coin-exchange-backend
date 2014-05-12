@@ -9,7 +9,8 @@
             ApiClient client=new ApiClient(baseUrl);
             System.Console.WriteLine("Requesting....");
             //call methods available in api
-            System.Console.WriteLine(client.CreateOrder("xbtusd","limit","buy",10, 491));
+            System.Console.WriteLine(client.CreateOrder("XBTUSD", "limit", "sell", 5, 10));
+            //System.Console.WriteLine(client.QueryClosedOrdersParams(false,"","","","",""));
             System.Console.ReadKey();
         }
     }

@@ -5,5 +5,6 @@
 
   <object id="TradeApplicationService" type="CoinExchange.Trades.Application.TradeServices.TradeApplicationService, CoinExchange.Trades.Application">
     <constructor-arg name="tradeRepository" ref="TradeRepository"/>
+    <constructor-arg name="currencyPairRepository" ref="CurrencyPairRepository"/>
   </object>
 </objects>
