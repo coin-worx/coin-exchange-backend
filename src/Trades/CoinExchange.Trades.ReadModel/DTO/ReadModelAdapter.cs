@@ -14,7 +14,7 @@ namespace CoinExchange.Trades.ReadModel.DTO
         {
             OrderReadModel model = new OrderReadModel(order.OrderId.Id.ToString(), order.OrderType.ToString(),
                 order.OrderSide.ToString(), order.Price.Value, order.FilledQuantity.Value, order.TraderId.Id.ToString(),
-                order.OrderState.ToString(), order.CurrencyPair,order.DateTime,order.OpenQuantity.Value,order.OpenQuantity.Value);
+                order.OrderState.ToString(), order.CurrencyPair,order.DateTime,order.Volume.Value,order.OpenQuantity.Value);
             return model;
         }
 

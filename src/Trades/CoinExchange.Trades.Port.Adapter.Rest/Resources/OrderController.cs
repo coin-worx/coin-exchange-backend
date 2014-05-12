@@ -120,7 +120,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         [Route("orders/openorders")]
         [Authorize]
         [HttpPost]
-        public IHttpActionResult QueryOpenOrders([FromBody] bool includeTrades = false)
+        public IHttpActionResult QueryOpenOrders([FromBody] string includeTrades)
         {
             try
             {
@@ -134,7 +134,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                     apikey = auth[0];
                 }
                 object value = _orderQueryService.GetOpenOrders(new TraderId(Constants.GetTraderId(apikey)),
-                    includeTrades);
+                    Convert.ToBoolean(includeTrades));
 
                 if (value is List<OrderRepresentation>)
                 {

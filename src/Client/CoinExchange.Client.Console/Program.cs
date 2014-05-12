@@ -15,7 +15,7 @@ namespace CoinExchange.Client.Console
             //call methods available in api
             //System.Console.WriteLine(client.CreateOrder("XBTUSD", "limit", "sell", 5, 10));
             //System.Console.WriteLine(client.QueryClosedOrdersParams(false,"","","","",""));
-            Scenario3(client);
+            //Scenario3(client);
             System.Console.ReadKey();
         }
 

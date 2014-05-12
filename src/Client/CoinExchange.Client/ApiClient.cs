@@ -160,7 +160,7 @@ namespace CoinExchange.Client
             jsonObject.Add("includeTrades", includeTrades);
             jsonObject.Add("userRefId", userRefId);
             string url = _baseUrl + "/orders/openorders";
-            return RequestServer(jsonObject, url);
+            return TestPrivate(url,includeTrades.ToString());
         }
         /// <summary>
         /// Query user's closed orders
