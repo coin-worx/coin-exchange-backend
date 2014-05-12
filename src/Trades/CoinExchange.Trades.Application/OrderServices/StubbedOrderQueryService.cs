@@ -15,7 +15,7 @@ namespace CoinExchange.Trades.Application.OrderServices
         /// Gets the list for the Open orders
         /// </summary>
         /// <returns></returns>
-        public object GetOpenOrders(TraderId traderId, bool includeTrades = false, string userRefId = "")
+        public object GetOpenOrders(TraderId traderId, bool includeTrades = false)
         {
             List<OrderRepresentation> orderList = new List<OrderRepresentation>();
             orderList.Add(new OrderRepresentation()

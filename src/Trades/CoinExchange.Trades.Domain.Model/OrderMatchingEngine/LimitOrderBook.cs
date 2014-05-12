@@ -82,7 +82,6 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// <returns></returns>
         public bool PlaceOrder(Order order)
         {
-            order.Accepted();
             switch (order.OrderSide)
             {
                 case OrderSide.Sell:
@@ -431,11 +430,6 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         {
             decimal filledQuantity = Math.Min(inboundOrder.OpenQuantity.Value, matchedOrder.OpenQuantity.Value);
             decimal filledPrice = matchedOrder.Price.Value;
-
-            if (inboundOrder.OrderType == OrderType.Market && inboundOrder.Price.Value == 0)
-            {
-                filledPrice = inboundOrder.Price.Value;
-            }
 
             // Send Order accepted notification to subscribers
             if (sendOrderAcceptedEvent)

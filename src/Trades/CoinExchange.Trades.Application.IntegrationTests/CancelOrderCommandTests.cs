@@ -89,7 +89,7 @@ namespace CoinExchange.Trades.Application.IntegrationTests
             order.OrderState = OrderState.Complete;
             OrderReadModel model = ReadModelAdapter.GetOrderReadModel(order);
             _persistanceRepository.SaveOrUpdate(model);
-            CancelOrderCommand command = new CancelOrderCommand(new OrderId(1234), order.TraderId);
+            CancelOrderCommand command = new CancelOrderCommand(new OrderId("1234"), order.TraderId);
             ICancelOrderCommandValidation validation = new CancelOrderCommandValidation(_orderRepository);
             validation.ValidateCancelOrderCommand(command);
         }
@@ -103,7 +103,7 @@ namespace CoinExchange.Trades.Application.IntegrationTests
             order.OrderState = OrderState.Complete;
             OrderReadModel model = ReadModelAdapter.GetOrderReadModel(order);
             _persistanceRepository.SaveOrUpdate(model);
-            CancelOrderCommand command = new CancelOrderCommand(order.OrderId, new TraderId(2233));
+            CancelOrderCommand command = new CancelOrderCommand(order.OrderId, new TraderId("2233"));
             ICancelOrderCommandValidation validation = new CancelOrderCommandValidation(_orderRepository);
             validation.ValidateCancelOrderCommand(command);
         }

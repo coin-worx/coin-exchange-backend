@@ -13,7 +13,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderAggregate
         public static Order CreateOrder(string traderId,string currencyPair,string type, string side,decimal volume,decimal limitPrice, IOrderIdGenerator orderIdGenerator)
         {
             Order order=null;
-            TraderId id=new TraderId(int.Parse(traderId));
+            TraderId id=new TraderId(traderId);
             OrderId orderId = orderIdGenerator.GenerateOrderId();
             Volume orderVolume=new Volume(volume);
             if (side.Equals(Constants.ORDER_SIDE_BUY, StringComparison.CurrentCultureIgnoreCase) &&

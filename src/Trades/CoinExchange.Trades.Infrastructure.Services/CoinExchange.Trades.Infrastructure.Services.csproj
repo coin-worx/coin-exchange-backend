@@ -55,6 +55,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="Config\StubOrderIdGenerator.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

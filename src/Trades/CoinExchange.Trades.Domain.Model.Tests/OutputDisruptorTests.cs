@@ -158,7 +158,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
               new StubbedOrderIdGenerator());
             Order sellOrder = OrderFactory.CreateOrder("1234", "XBTUSD", "limit", "sell", 5, 11,
                new StubbedOrderIdGenerator());
-            Trade trade = new Trade(new TradeId(123), "XBTUSD", new Price(100), new Volume(10), DateTime.Now, buyOrder, sellOrder);
+            Trade trade = new Trade(new TradeId("123"), "XBTUSD", new Price(100), new Volume(10), DateTime.Now, buyOrder, sellOrder);
             //byte[] array1 = ObjectToByteArray(trade);
             OutputDisruptor.Publish(trade);
 

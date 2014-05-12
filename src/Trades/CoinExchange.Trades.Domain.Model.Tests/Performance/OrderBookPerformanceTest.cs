@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using CoinExchange.Common.Domain.Model;
 using CoinExchange.Trades.Domain.Model.OrderAggregate;
@@ -38,10 +39,10 @@ namespace CoinExchange.Trades.Domain.Model.Tests.Performance
 
                 Volume volume = new Volume(random.Next() % 10 + 1 * 100);
 
-                OrderId orderId = new OrderId(random.Next(1, 100));
+                OrderId orderId = new OrderId(random.Next(1, 100).ToString(CultureInfo.InvariantCulture));
                 orderIds.Add(orderId);
                 orders[i] = new Order(orderId, "BTCUSD", price, isBuy ? OrderSide.Buy :
-                OrderSide.Sell, OrderType.Limit,  volume, new TraderId(random.Next(1,100)));
+                OrderSide.Sell, OrderType.Limit,  volume, new TraderId(random.Next(1,100).ToString()));
             }
             JustAddOrdersToList(orders);
             AddOrdersAndCancel(_exchange.ExchangeEssentials.First().LimitOrderBook, orders, orderIds);

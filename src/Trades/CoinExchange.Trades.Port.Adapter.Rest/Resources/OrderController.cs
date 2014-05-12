@@ -57,7 +57,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                     {
                         //TODO: Fetch TraderId from api signature provided in header. Remove the Constant value of the GetSecretKey
                         return Ok(_orderApplicationService.CancelOrder(
-                                    new CancelOrderCommand(new OrderId(int.Parse(orderId)), new TraderId(Int32.Parse(Constants.GetTraderId(apikey))))));
+                                    new CancelOrderCommand(new OrderId(orderId), new TraderId(Constants.GetTraderId(apikey)))));
                     }
                     catch (Exception exception)
                     {
@@ -120,7 +120,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         [Route("orders/openorders")]
         [Authorize]
         [HttpPost]
-        public IHttpActionResult QueryOpenOrders([FromBody] QueryOpenOrdersParams queryOpenOrdersParams)
+        public IHttpActionResult QueryOpenOrders([FromBody] bool includeTrades = false)
         {
             try
             {
@@ -133,8 +133,8 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                     string[] auth = headerParams.ToList()[0].Split(',');
                     apikey = auth[0];
                 }
-                object value = _orderQueryService.GetOpenOrders(new TraderId(int.Parse(Constants.GetTraderId(apikey))),
-                    queryOpenOrdersParams.IncludeTrades, queryOpenOrdersParams.UserRefId);
+                object value = _orderQueryService.GetOpenOrders(new TraderId(Constants.GetTraderId(apikey)),
+                    includeTrades);
 
                 if (value is List<OrderRepresentation>)
                 {
@@ -178,7 +178,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                     string[] auth = headerParams.ToList()[0].Split(',');
                     apikey = auth[0];
                 }
-                object orders = _orderQueryService.GetClosedOrders(new TraderId(int.Parse(Constants.GetTraderId(apikey))),
+                object orders = _orderQueryService.GetClosedOrders(new TraderId(Constants.GetTraderId(apikey)),
                     closedOrdersParams.IncludeTrades, closedOrdersParams.UserRefId, closedOrdersParams.StartTime,
                     closedOrdersParams.EndTime, closedOrdersParams.Offset, closedOrdersParams.CloseTime);
 
