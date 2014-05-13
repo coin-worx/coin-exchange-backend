@@ -15,7 +15,7 @@ namespace CoinExchange.Client.Console
             //call methods available in api
             //System.Console.WriteLine(client.CreateOrder("XBTUSD", "limit", "sell", 5, 10));
             //System.Console.WriteLine(client.QueryClosedOrdersParams(false,"","","","",""));
-            //Scenario3(client);
+            Scenario1(client);
             System.Console.ReadKey();
         }
 
@@ -40,7 +40,7 @@ namespace CoinExchange.Client.Console
         /// Testing Scenario 2
         /// </summary>
         /// <param name="client"></param>
-        private void Scenario2(ApiClient client)
+        private static void Scenario2(ApiClient client)
         {
             string currecyPair = "XBTUSD";
             JObject joe = JObject.Parse(client.CreateOrder(currecyPair, "market", "buy", 10));

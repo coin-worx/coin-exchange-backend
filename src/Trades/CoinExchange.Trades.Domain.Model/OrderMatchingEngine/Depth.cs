@@ -125,11 +125,11 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// <param name="orderSide"></param>
         public void FillOrder(Price originalOrderPrice, Price filledPrice, Volume filledVolume, bool filled, OrderSide orderSide)
         {
-            if (orderSide == OrderSide.Buy && _ignoreBidFillVolume != null)
+            if (orderSide == OrderSide.Buy && _ignoreBidFillVolume != null && _ignoreBidFillVolume.Value != 0)
             {
                 _ignoreBidFillVolume -= filledVolume;
             }
-            else if (orderSide == OrderSide.Sell && _ignoreAskFillVolume != null)
+            else if (orderSide == OrderSide.Sell && _ignoreAskFillVolume != null && _ignoreAskFillVolume.Value != 0)
             {
                 _ignoreAskFillVolume -= filledVolume;
             }
@@ -229,7 +229,8 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             if (_size > 1)
             {
                 // Check if the second last level of the bids is not null, restore using that level
-                if (_bidLevels[Array.FindIndex(_bidLevels, depthLevel => depthLevel == _bidLevels.Last()) - 1].Price.Value != 0)
+                if (_bidLevels[Array.FindIndex(_bidLevels, depthLevel => depthLevel == _bidLevels.Last()) - 1].Price != null && 
+                    _bidLevels[Array.FindIndex(_bidLevels, depthLevel => depthLevel == _bidLevels.Last()) - 1].Price.Value != 0)
                 {
                     restorationPrice = _bidLevels[Array.FindIndex(_bidLevels, depthLevel => depthLevel == _bidLevels.Last()) - 1].Price;
                     return true;
@@ -255,7 +256,8 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             if (_size > 1)
             {
                 // Check if the second last level of the asks is not null, restore using that level
-                if (_askLevels[Array.FindIndex(_askLevels, depthLevel => depthLevel == _askLevels.Last()) - 1].Price.Value != 0)
+                if (_askLevels[Array.FindIndex(_askLevels, depthLevel => depthLevel == _askLevels.Last()) - 1].Price != null &&
+                    _askLevels[Array.FindIndex(_askLevels, depthLevel => depthLevel == _askLevels.Last()) - 1].Price.Value != 0)
                 {
                     restorationPrice = _askLevels[Array.FindIndex(_askLevels, depthLevel => depthLevel == _askLevels.Last()) - 1].Price;
                     return true;
@@ -437,7 +439,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// <param name="inboundLevel"> </param>
         /// <param name="orderSide"></param>
         /// <returns></returns>
-        public void EraseLevel(DepthLevel inboundLevel, OrderSide orderSide)
+        public bool EraseLevel(DepthLevel inboundLevel, OrderSide orderSide)
         {
             // Specifies the last element with a non-null price in the current side Depthlevel array
             bool isLastLevel = orderSide == OrderSide.Buy ? (
@@ -457,11 +459,11 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
                 {
                     case OrderSide.Buy:
                         _bidExcessLevels.RemoveLevel(inboundLevel.Price);
-                        break;
+                        return true;
 
                     case OrderSide.Sell:
                         _askExcessLevels.RemoveLevel(inboundLevel.Price);
-                        break;
+                        return true;
                 }
             }
             // Otherwise, remove the level from the current slot and move all other levels to one slot back
@@ -476,45 +478,52 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
 
                 ++_lastChangeId;
 
-                // Move from the current level to the last
-                while (currentLevelIndex < backEndLevelIndex)
+                if (currentLevelIndex >= 0)
                 {
-                    // In the first loop, currentLevelIndex starts from the level which is being removed, inboundLevelIndex
-                    // so we make every value null
-                    if (currentLevelIndex == inboundLevelIndex)
+                    // Move from the current level to the last
+                    while (currentLevelIndex < backEndLevelIndex)
                     {
-                        sideLevels[currentLevelIndex].UpdatePrice(new Price(0));
-                        sideLevels[currentLevelIndex].UpdateVolume(new Volume(0));
-                        sideLevels[currentLevelIndex].UpdateOrderCount(0);
-                        sideLevels[currentLevelIndex].ChangeExcessStatus(false);
-                    }
-                    sideLevels[currentLevelIndex] = sideLevels[currentLevelIndex + 1];
-                    UpdateLevelIndex(sideLevels, currentLevelIndex, currentLevelIndex + 1);
-                    sideLevels[currentLevelIndex].LastChange(new ChangeId(_lastChangeId));
-
-                    currentLevelIndex++;
-                }
-                // The last element after the loop is done will be the same as the second last one as the slots have been 
-                // shifted back. So we remove this level as this is the duplicate of the level before it
-                sideLevels[currentLevelIndex] = new DepthLevel(new Price(0));
-                
-                if (isLastLevel || sideLevels.Last().Price == null || sideLevels.Last().Price.Value == 0)
-                {
-                    if (orderSide == OrderSide.Buy && (isLastLevel || sideLevels.Last().Price == null || sideLevels.Last().Price.Value == 0))
-                    {
-                        RemoveLevelFromExcess(_bidExcessLevels, _bidLevels);
-                    }
-                    else if (orderSide == OrderSide.Sell && (isLastLevel || sideLevels.Last().Price == null || sideLevels.Last().Price.Value == 0))
-                    {
-                        RemoveLevelFromExcess(_askExcessLevels, _askLevels);
-                    }
-                    else
-                    {
+                        // In the first loop, currentLevelIndex starts from the level which is being removed, inboundLevelIndex
+                        // so we make every value null
+                        if (currentLevelIndex == inboundLevelIndex)
+                        {
+                            sideLevels[currentLevelIndex].UpdatePrice(null);
+                            sideLevels[currentLevelIndex].UpdateVolume(null);
+                            sideLevels[currentLevelIndex].UpdateOrderCount(0);
+                            sideLevels[currentLevelIndex].ChangeExcessStatus(false);
+                        }
+                        sideLevels[currentLevelIndex] = sideLevels[currentLevelIndex + 1];
+                        UpdateLevelIndex(sideLevels, currentLevelIndex, currentLevelIndex + 1);
                         sideLevels[currentLevelIndex].LastChange(new ChangeId(_lastChangeId));
+
+                        currentLevelIndex++;
                     }
+                    // The last element after the loop is done will be the same as the second last one as the slots have been 
+                    // shifted back. So we remove this level as this is the duplicate of the level before it
+                    sideLevels[currentLevelIndex] = new DepthLevel(null);
+
+                    if (isLastLevel || sideLevels.Last().Price == null || sideLevels.Last().Price.Value == 0)
+                    {
+                        if (orderSide == OrderSide.Buy &&
+                            (isLastLevel || sideLevels.Last().Price == null || sideLevels.Last().Price.Value == 0))
+                        {
+                            RemoveLevelFromExcess(_bidExcessLevels, _bidLevels);
+                        }
+                        else if (orderSide == OrderSide.Sell &&
+                                 (isLastLevel || sideLevels.Last().Price == null || sideLevels.Last().Price.Value == 0))
+                        {
+                            RemoveLevelFromExcess(_askExcessLevels, _askLevels);
+                        }
+                        else
+                        {
+                            sideLevels[currentLevelIndex].LastChange(new ChangeId(_lastChangeId));
+                        }
+                    }
+                    sideLevels[currentLevelIndex].LastChange(new ChangeId(_lastChangeId));
+                    return true;
                 }
-                sideLevels[currentLevelIndex].LastChange(new ChangeId(_lastChangeId));
             }
+            return false;
         }
 
         /// <summary>
