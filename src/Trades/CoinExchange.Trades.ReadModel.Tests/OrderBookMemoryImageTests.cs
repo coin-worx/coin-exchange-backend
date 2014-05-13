@@ -115,7 +115,8 @@ namespace CoinExchange.Trades.ReadModel.Tests
             Assert.AreEqual(CurrencyConstants.BitCoinUsd, orderBookMemory.BidBooks.First().CurrencyPair, "Currency pair of " +
                             "the first book in the memory image's list of BidOrderBook representations");
             Assert.AreEqual(1, orderBookMemory.BidBooks.Count());
-            Assert.AreEqual(1, orderBookMemory.BidBooks.Count());
+            Assert.AreEqual(1, orderBookMemory.AskBooks.Count());
+
             Assert.AreEqual(4, orderBookMemory.BidBooks.First().Count(), "Count of the Bids in the first Bid Book present in the memory image");
             Assert.AreEqual(0, orderBookMemory.AskBooks.First().Count(), "Count of the Asks in te first Ask Book present in the memory image");
 
@@ -126,7 +127,7 @@ namespace CoinExchange.Trades.ReadModel.Tests
             Assert.AreEqual(1250, orderBookMemory.BidBooks.First().ToList()[3].Item2);
 
             Assert.AreEqual(1, orderBookMemory.BidBooks.Count());
-            Assert.AreEqual(1, orderBookMemory.BidBooks.Count());
+            Assert.AreEqual(1, orderBookMemory.AskBooks.Count());
         }
 
         [Test]
@@ -154,7 +155,7 @@ namespace CoinExchange.Trades.ReadModel.Tests
             Assert.AreEqual(CurrencyConstants.BitCoinUsd, orderBookMemory.BidBooks.First().CurrencyPair, "Currency pair of " +
                             "the first book in the memory image's list of BidOrderBook representations");
             Assert.AreEqual(1, orderBookMemory.BidBooks.Count());
-            Assert.AreEqual(1, orderBookMemory.BidBooks.Count());
+            Assert.AreEqual(1, orderBookMemory.AskBooks.Count());
 
             Assert.AreEqual(0, orderBookMemory.BidBooks.First().Count(), "Count of the Bids in the first Bid Book present in the memory image");
             Assert.AreEqual(4, orderBookMemory.AskBooks.First().Count(), "Count of the Asks in te first Ask Book present in the memory image");
@@ -166,7 +167,7 @@ namespace CoinExchange.Trades.ReadModel.Tests
             Assert.AreEqual(1252, orderBookMemory.AskBooks.First().ToList()[3].Item2);
 
             Assert.AreEqual(1, orderBookMemory.BidBooks.Count());
-            Assert.AreEqual(1, orderBookMemory.BidBooks.Count());
+            Assert.AreEqual(1, orderBookMemory.AskBooks.Count());
         }
 
         [Test]
@@ -194,7 +195,7 @@ namespace CoinExchange.Trades.ReadModel.Tests
             Assert.AreEqual(CurrencyConstants.BitCoinUsd, orderBookMemory.BidBooks.First().CurrencyPair, "Currency pair of " +
                             "the first book in the memory image's list of BidOrderBook representations");
             Assert.AreEqual(1, orderBookMemory.BidBooks.Count());
-            Assert.AreEqual(1, orderBookMemory.BidBooks.Count());
+            Assert.AreEqual(1, orderBookMemory.AskBooks.Count());
 
             Assert.AreEqual(4, orderBookMemory.BidBooks.First().Count(), "Count of the Bids in the first Bid Book present in the memory image");
             Assert.AreEqual(0, orderBookMemory.AskBooks.First().Count(), "Count of the Asks in te first Ask Book present in the memory image");
@@ -206,7 +207,7 @@ namespace CoinExchange.Trades.ReadModel.Tests
             Assert.AreEqual(100, orderBookMemory.BidBooks.First().ToList()[3].Item1);
 
             Assert.AreEqual(1, orderBookMemory.BidBooks.Count());
-            Assert.AreEqual(1, orderBookMemory.BidBooks.Count());
+            Assert.AreEqual(1, orderBookMemory.AskBooks.Count());
         }
 
         [Test]
@@ -234,7 +235,7 @@ namespace CoinExchange.Trades.ReadModel.Tests
             Assert.AreEqual(CurrencyConstants.BitCoinUsd, orderBookMemory.AskBooks.First().CurrencyPair, "Currency pair of " +
                             "the first book in the memory image's list of BidOrderBook representations");
             Assert.AreEqual(1, orderBookMemory.BidBooks.Count());
-            Assert.AreEqual(1, orderBookMemory.BidBooks.Count());
+            Assert.AreEqual(1, orderBookMemory.AskBooks.Count());
 
             Assert.AreEqual(0, orderBookMemory.BidBooks.First().Count(), "Count of the Bids in the first Bid Book present in the memory image");
             Assert.AreEqual(4, orderBookMemory.AskBooks.First().Count(), "Count of the Asks in te first Ask Book present in the memory image");
@@ -246,7 +247,124 @@ namespace CoinExchange.Trades.ReadModel.Tests
             Assert.AreEqual(400, orderBookMemory.AskBooks.First().ToList()[3].Item1);
 
             Assert.AreEqual(1, orderBookMemory.BidBooks.Count());
+            Assert.AreEqual(1, orderBookMemory.AskBooks.Count());
+        }
+
+        [Test]
+        [Category("Unit")]
+        public void BuyOrdersPartiallyFilledTest_ChecksIfFilledOrdersAreRepresentedCorrectlyInBidBooksVolumes_VerifiesThroughBidBookOutput()
+        {
+            LimitOrderBook orderBook = new LimitOrderBook(CurrencyConstants.BitCoinUsd);
+
+            Order buyOrder1 = new Order(new OrderId("1"), CurrencyConstants.BitCoinUsd, new Price(941), OrderSide.Buy,
+                      OrderType.Limit, new Volume(200), new TraderId("1"));
+            Order buyOrder2 = new Order(new OrderId("2"), CurrencyConstants.BitCoinUsd, new Price(942), OrderSide.Buy,
+                      OrderType.Limit, new Volume(400), new TraderId("2"));
+            Order buyOrder3 = new Order(new OrderId("3"), CurrencyConstants.BitCoinUsd, new Price(943), OrderSide.Buy,
+                      OrderType.Limit, new Volume(600), new TraderId("3"));
+            Order buyOrder4 = new Order(new OrderId("4"), CurrencyConstants.BitCoinUsd, new Price(944), OrderSide.Buy,
+                      OrderType.Limit, new Volume(800), new TraderId("4"));
+
+            Order sellOrder1 = new Order(new OrderId("1"), CurrencyConstants.BitCoinUsd, new Price(941), OrderSide.Sell,
+                      OrderType.Limit, new Volume(100), new TraderId("5"));
+            Order sellOrder2 = new Order(new OrderId("2"), CurrencyConstants.BitCoinUsd, new Price(942), OrderSide.Sell,
+                      OrderType.Limit, new Volume(200), new TraderId("6"));
+            Order sellOrder3 = new Order(new OrderId("3"), CurrencyConstants.BitCoinUsd, new Price(943), OrderSide.Sell,
+                      OrderType.Limit, new Volume(300), new TraderId("7"));
+            Order sellOrder4 = new Order(new OrderId("4"), CurrencyConstants.BitCoinUsd, new Price(944), OrderSide.Sell,
+                      OrderType.Limit, new Volume(400), new TraderId("8"));
+
+            orderBook.AddOrder(sellOrder1);
+            orderBook.AddOrder(sellOrder2);
+            orderBook.AddOrder(sellOrder3);
+            orderBook.AddOrder(sellOrder4);
+            orderBook.AddOrder(buyOrder1);
+            orderBook.AddOrder(buyOrder2);
+            orderBook.AddOrder(buyOrder3);
+            orderBook.AddOrder(buyOrder4);
+
+            OrderBookMemoryImage orderBookMemory = new OrderBookMemoryImage();
+            orderBookMemory.OnOrderBookChanged(orderBook);
+
+            Assert.AreEqual(CurrencyConstants.BitCoinUsd, orderBookMemory.BidBooks.First().CurrencyPair, "Currency pair of " +
+                            "the first book in the memory image's list of BidOrderBook representations");
+            // Both books contain one currency pair
             Assert.AreEqual(1, orderBookMemory.BidBooks.Count());
+            Assert.AreEqual(1, orderBookMemory.AskBooks.Count());
+
+            // Each currency pair contains several entries for the orders
+            Assert.AreEqual(4, orderBookMemory.BidBooks.First().Count(), "Count of the Bids in the first Bid Book present in the memory image");
+            Assert.AreEqual(0, orderBookMemory.AskBooks.First().Count(), "Count of the Asks in te first Ask Book present in the memory image");
+
+            // Check the Prices elements of the first order book in the Memory Image's list of Order representations
+            Assert.AreEqual(400, orderBookMemory.BidBooks.First().ToList()[0].Item1);
+            Assert.AreEqual(300, orderBookMemory.BidBooks.First().ToList()[1].Item1);
+            Assert.AreEqual(200, orderBookMemory.BidBooks.First().ToList()[2].Item1);
+            Assert.AreEqual(100, orderBookMemory.BidBooks.First().ToList()[3].Item1);
+
+            Assert.AreEqual(944, orderBookMemory.BidBooks.First().ToList()[0].Item2);
+            Assert.AreEqual(943, orderBookMemory.BidBooks.First().ToList()[1].Item2);
+            Assert.AreEqual(942, orderBookMemory.BidBooks.First().ToList()[2].Item2);
+            Assert.AreEqual(941, orderBookMemory.BidBooks.First().ToList()[3].Item2);
+        }
+
+        [Test]
+        [Category("Unit")]
+        public void SellOrdersPartiallyFilledTest_ChecksIfFilledOrdersAreRepresentedCorrectlyInAskBooksVolumes_VerifiesThroughAskBookOutput()
+        {
+            LimitOrderBook orderBook = new LimitOrderBook(CurrencyConstants.BitCoinUsd);
+
+            Order buyOrder1 = new Order(new OrderId("1"), CurrencyConstants.BitCoinUsd, new Price(941), OrderSide.Buy,
+                      OrderType.Limit, new Volume(100), new TraderId("1"));
+            Order buyOrder2 = new Order(new OrderId("2"), CurrencyConstants.BitCoinUsd, new Price(942), OrderSide.Buy,
+                      OrderType.Limit, new Volume(200), new TraderId("2"));
+            Order buyOrder3 = new Order(new OrderId("3"), CurrencyConstants.BitCoinUsd, new Price(943), OrderSide.Buy,
+                      OrderType.Limit, new Volume(300), new TraderId("3"));
+            Order buyOrder4 = new Order(new OrderId("4"), CurrencyConstants.BitCoinUsd, new Price(944), OrderSide.Buy,
+                      OrderType.Limit, new Volume(400), new TraderId("4"));
+
+            Order sellOrder1 = new Order(new OrderId("5"), CurrencyConstants.BitCoinUsd, new Price(941), OrderSide.Sell,
+                      OrderType.Limit, new Volume(200), new TraderId("5"));
+            Order sellOrder2 = new Order(new OrderId("6"), CurrencyConstants.BitCoinUsd, new Price(942), OrderSide.Sell,
+                      OrderType.Limit, new Volume(400), new TraderId("6"));
+            Order sellOrder3 = new Order(new OrderId("7"), CurrencyConstants.BitCoinUsd, new Price(943), OrderSide.Sell,
+                      OrderType.Limit, new Volume(600), new TraderId("7"));
+            Order sellOrder4 = new Order(new OrderId("8"), CurrencyConstants.BitCoinUsd, new Price(944), OrderSide.Sell,
+                      OrderType.Limit, new Volume(800), new TraderId("8"));
+
+            orderBook.AddOrder(buyOrder1);
+            orderBook.AddOrder(buyOrder2);
+            orderBook.AddOrder(buyOrder3);
+            orderBook.AddOrder(buyOrder4);
+            orderBook.AddOrder(sellOrder4);
+            orderBook.AddOrder(sellOrder3);
+            orderBook.AddOrder(sellOrder2);
+            orderBook.AddOrder(sellOrder1);
+            
+            OrderBookMemoryImage orderBookMemory = new OrderBookMemoryImage();
+            orderBookMemory.OnOrderBookChanged(orderBook);
+
+            Assert.AreEqual(CurrencyConstants.BitCoinUsd, orderBookMemory.BidBooks.First().CurrencyPair, "Currency pair of " +
+                            "the first book in the memory image's list of BidOrderBook representations");
+            // Both books contain one currency pair
+            Assert.AreEqual(1, orderBookMemory.BidBooks.Count());
+            Assert.AreEqual(1, orderBookMemory.AskBooks.Count());
+
+            // Each currency pair contains several entries for the orders
+            Assert.AreEqual(0, orderBookMemory.BidBooks.First().Count(), "Count of the Bids in the first Bid Book present in the memory image");
+            Assert.AreEqual(4, orderBookMemory.AskBooks.First().Count(), "Count of the Asks in te first Ask Book present in the memory image");
+
+            // Check the Volume elements of the first order book in the Memory Image's list of Order representations
+            Assert.AreEqual(100, orderBookMemory.AskBooks.First().ToList()[0].Item1);
+            Assert.AreEqual(200, orderBookMemory.AskBooks.First().ToList()[1].Item1);
+            Assert.AreEqual(300, orderBookMemory.AskBooks.First().ToList()[2].Item1);
+            Assert.AreEqual(400, orderBookMemory.AskBooks.First().ToList()[3].Item1);
+
+            // Check Prices
+            Assert.AreEqual(941, orderBookMemory.AskBooks.First().ToList()[0].Item2);
+            Assert.AreEqual(942, orderBookMemory.AskBooks.First().ToList()[1].Item2);
+            Assert.AreEqual(943, orderBookMemory.AskBooks.First().ToList()[2].Item2);
+            Assert.AreEqual(944, orderBookMemory.AskBooks.First().ToList()[3].Item2);
         }
 
         #endregion Object to simplified representation Conversion Tests
