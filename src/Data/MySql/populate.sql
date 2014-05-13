@@ -1,0 +1,1 @@
+INSERT into coinexchange.CurrencyPair values ('BTC/USD','USD','BTC')
