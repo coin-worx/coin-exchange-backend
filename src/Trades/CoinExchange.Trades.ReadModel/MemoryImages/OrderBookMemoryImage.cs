@@ -121,9 +121,9 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
             // Add each order(Bid or Ask) in the correponding order list (Bids list or Asks list)
             foreach (Order order in orderList)
             {
-                orderRepresentationList.AddRecord(order.Volume.Value, order.Price.Value);
+                orderRepresentationList.AddRecord(order.OpenQuantity.Value, order.Price.Value);
                 Log.Debug("Order Representation added to Currency Pair : " + order.CurrencyPair + 
-                          ". Volume: " + order.Volume.Value + " | Price: " + order.Price.Value);   
+                          ". OpenQuantity: " + order.OpenQuantity.Value + " | Price: " + order.Price.Value);   
             }
             // Add the new orderList (order book for bids or asks) to the OrderBooksList of this memory image
             orderRepresentationBook.AddRecord(orderRepresentationList);

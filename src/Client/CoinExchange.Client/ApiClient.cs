@@ -137,7 +137,7 @@ namespace CoinExchange.Client
         /// <param name="side"></param>
         /// <param name="price"></param>
         /// <returns></returns>
-        public string CreateOrder(string pair, string type, string side,decimal volume, decimal price=0)
+        public string CreateOrder(string pair, string type, string side,decimal volume, decimal price = 0)
         {
             JObject jsonObject = new JObject();
             jsonObject.Add("Pair", pair);

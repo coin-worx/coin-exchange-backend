@@ -8,6 +8,7 @@ using CoinExchange.Common.Domain.Model;
 using CoinExchange.Trades.Domain.Model.OrderAggregate;
 using CoinExchange.Trades.Domain.Model.OrderMatchingEngine;
 using CoinExchange.Trades.Domain.Model.Services;
+using CoinExchange.Trades.Domain.Model.TradeAggregate;
 using CoinExchange.Trades.Infrastructure.Persistence.RavenDb;
 using CoinExchange.Trades.Infrastructure.Services;
 using CoinExchange.Trades.ReadModel.MemoryImages;
@@ -625,6 +626,171 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
 
             OutputDisruptor.ShutDown();
         }
+
+        [Test]
+        [Category(Integration)]
+        public void BuyOrdersPartialFillTest_ChecksWhetherLimitOrderBookGetsUpdatedAtTheMemoryImageWhenIncomingBuyOrdersMatchParitally_VerifiesThroughTheListsInOrderBookMemoryImage()
+        {
+            // Initialize memory image
+            OrderBookMemoryImage orderBookMemoryImage = new OrderBookMemoryImage();
+
+            // Initialize the output Disruptor and assign the journaler as the event handler
+            IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
+            Journaler journaler = new Journaler(eventStore);
+            OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
+
+            // Start exchagne to accept orders
+            Exchange exchange = new Exchange();
+            Order buyOrder1 = new Order(new OrderId("1"), CurrencyConstants.BitCoinUsd, new Price(941.34M), OrderSide.Buy,
+                      OrderType.Limit, new Volume(200), new TraderId("1"));
+            Order buyOrder2 = new Order(new OrderId("2"), CurrencyConstants.BitCoinUsd, new Price(942.34M), OrderSide.Buy,
+                      OrderType.Limit, new Volume(400), new TraderId("2"));
+            Order buyOrder3 = new Order(new OrderId("3"), CurrencyConstants.BitCoinUsd, new Price(943.34M), OrderSide.Buy,
+                      OrderType.Limit, new Volume(600), new TraderId("3"));
+            Order buyOrder4 = new Order(new OrderId("4"), CurrencyConstants.BitCoinUsd, new Price(944.34M), OrderSide.Buy,
+                      OrderType.Limit, new Volume(900), new TraderId("4"));
+
+            Order sellOrder1 = new Order(new OrderId("1"), CurrencyConstants.BitCoinUsd, new Price(941.34M), OrderSide.Sell,
+                      OrderType.Limit, new Volume(100), new TraderId("5"));
+            Order sellOrder2 = new Order(new OrderId("2"), CurrencyConstants.BitCoinUsd, new Price(942.34M), OrderSide.Sell,
+                      OrderType.Limit, new Volume(200), new TraderId("6"));
+            Order sellOrder3 = new Order(new OrderId("3"), CurrencyConstants.BitCoinUsd, new Price(943.34M), OrderSide.Sell,
+                      OrderType.Limit, new Volume(300), new TraderId("7"));
+            Order sellOrder4 = new Order(new OrderId("4"), CurrencyConstants.BitCoinUsd, new Price(945.34M), OrderSide.Sell,
+                      OrderType.Limit, new Volume(400), new TraderId("8"));
+
+            exchange.PlaceNewOrder(sellOrder1);
+            exchange.PlaceNewOrder(sellOrder2);
+            exchange.PlaceNewOrder(sellOrder3);
+            exchange.PlaceNewOrder(sellOrder4);
+            exchange.PlaceNewOrder(buyOrder1);
+            exchange.PlaceNewOrder(buyOrder2);
+            exchange.PlaceNewOrder(buyOrder3);
+            exchange.PlaceNewOrder(buyOrder4);
+
+            Assert.AreEqual(4, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
+
+            Assert.AreEqual(1, orderBookMemoryImage.BidBooks.Count());
+            Assert.AreEqual(1, orderBookMemoryImage.AskBooks.Count());
+
+            Assert.AreEqual(CurrencyConstants.BitCoinUsd, orderBookMemoryImage.BidBooks.First().CurrencyPair);
+            Assert.AreEqual(CurrencyConstants.BitCoinUsd, orderBookMemoryImage.AskBooks.First().CurrencyPair);
+
+            ManualResetEvent manualResetEvent = new ManualResetEvent(false);
+            manualResetEvent.WaitOne(4000);
+
+            Assert.AreEqual(4, orderBookMemoryImage.BidBooks.First().Count(), "Count of the bids in the first bid book in the list of bid books");
+            Assert.AreEqual(1, orderBookMemoryImage.AskBooks.First().Count(), "Count of the asks in the first ask book in the list of ask books");
+
+            // BidsOrderBooks -> First BidOrderBook -> First Bid's volume in first OrderBook
+            Assert.AreEqual(900, orderBookMemoryImage.BidBooks.First().First().Item1, "Volume of first bids in the first bid book in the bids book list in  memory image");
+            // BidsOrderBooks -> First BidOrderBook -> First Bid's price in first OrderBook
+            Assert.AreEqual(944.34M, orderBookMemoryImage.BidBooks.First().First().Item2, "Price of first bids in the first bid book in the bids book list in  memory image");
+            // BidsOrderBooks -> First BidOrderBook -> First Bid's volume in first OrderBook
+            Assert.AreEqual(300, orderBookMemoryImage.BidBooks.First().ToList()[1].Item1, "Volume of Second Bid");
+            // BidsOrderBooks -> First BidOrderBook -> First Bid's price in first OrderBook
+            Assert.AreEqual(943.34M, orderBookMemoryImage.BidBooks.First().ToList()[1].Item2, "Price of Second Bid");
+            // BidsOrderBooks -> First BidOrderBook -> First Bid's volume in first OrderBook
+            Assert.AreEqual(200, orderBookMemoryImage.BidBooks.First().ToList()[2].Item1, "Volume of Second Bid");
+            // BidsOrderBooks -> First BidOrderBook -> First Bid's price in first OrderBook
+            Assert.AreEqual(942.34M, orderBookMemoryImage.BidBooks.First().ToList()[2].Item2, "Price of Second Bid");
+            // BidsOrderBooks -> First BidOrderBook -> First Bid's volume in first OrderBook
+            Assert.AreEqual(100, orderBookMemoryImage.BidBooks.First().ToList()[3].Item1, "Volume of Second Bid");
+            // BidsOrderBooks -> First BidOrderBook -> First Bid's price in first OrderBook
+            Assert.AreEqual(941.34M, orderBookMemoryImage.BidBooks.First().ToList()[3].Item2, "Price of Second Bid");
+
+            // AsksOrderBooks -> First AskOrderBook -> First Ask's volume in first OrderBook
+            Assert.AreEqual(400, orderBookMemoryImage.AskBooks.First().First().Item1, "Volume of first ask in the first ask book in the ask books list in memory image");        
+            // AsksOrderBooks -> First AskOrderBook -> First Ask's price in first OrderBook
+            Assert.AreEqual(945.34, orderBookMemoryImage.AskBooks.First().First().Item2, "Price of first ask in the first ask book in the ask books list in memory image");
+
+            OutputDisruptor.ShutDown();
+        }
+
+        [Test]
+        [Category(Integration)]
+        public void SellOrdersPartialFillTest_ChecksWhetherLimitOrderBookGetsUpdatedAtTheMemoryImageWhenIncomingSellOrdersMatchParitally_VerifiesThroughTheListsInOrderBookMemoryImage()
+        {
+            // Initialize memory image
+            OrderBookMemoryImage orderBookMemoryImage = new OrderBookMemoryImage();
+
+            // Initialize the output Disruptor and assign the journaler as the event handler
+            IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
+            Journaler journaler = new Journaler(eventStore);
+            OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
+
+            // Start exchange to accept orders
+            Exchange exchange = new Exchange();
+            Order buyOrder1 = new Order(new OrderId("1"), CurrencyConstants.BitCoinUsd, new Price(941.34M), OrderSide.Buy,
+                      OrderType.Limit, new Volume(100), new TraderId("1"));
+            Order buyOrder2 = new Order(new OrderId("2"), CurrencyConstants.BitCoinUsd, new Price(942.34M), OrderSide.Buy,
+                      OrderType.Limit, new Volume(200), new TraderId("2"));
+            Order buyOrder3 = new Order(new OrderId("3"), CurrencyConstants.BitCoinUsd, new Price(943.34M), OrderSide.Buy,
+                      OrderType.Limit, new Volume(300), new TraderId("3"));
+            Order buyOrder4 = new Order(new OrderId("4"), CurrencyConstants.BitCoinUsd, new Price(940.34M), OrderSide.Buy,
+                      OrderType.Limit, new Volume(400), new TraderId("4"));
+
+            Order sellOrder1 = new Order(new OrderId("1"), CurrencyConstants.BitCoinUsd, new Price(941.34M), OrderSide.Sell,
+                      OrderType.Limit, new Volume(200), new TraderId("5"));
+            Order sellOrder2 = new Order(new OrderId("2"), CurrencyConstants.BitCoinUsd, new Price(942.34M), OrderSide.Sell,
+                      OrderType.Limit, new Volume(400), new TraderId("6"));
+            Order sellOrder3 = new Order(new OrderId("3"), CurrencyConstants.BitCoinUsd, new Price(943.34M), OrderSide.Sell,
+                      OrderType.Limit, new Volume(600), new TraderId("7"));
+            Order sellOrder4 = new Order(new OrderId("4"), CurrencyConstants.BitCoinUsd, new Price(945.34M), OrderSide.Sell,
+                      OrderType.Limit, new Volume(800), new TraderId("8"));
+
+            exchange.PlaceNewOrder(buyOrder1);
+            exchange.PlaceNewOrder(buyOrder2);
+            exchange.PlaceNewOrder(buyOrder3);
+            
+            exchange.PlaceNewOrder(sellOrder3);
+            exchange.PlaceNewOrder(sellOrder2);
+            exchange.PlaceNewOrder(sellOrder1);
+
+            exchange.PlaceNewOrder(buyOrder4);
+            exchange.PlaceNewOrder(sellOrder4);
+
+            Assert.AreEqual(1, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
+            Assert.AreEqual(4, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
+
+            Assert.AreEqual(1, orderBookMemoryImage.BidBooks.Count());
+            Assert.AreEqual(1, orderBookMemoryImage.AskBooks.Count());
+
+            Assert.AreEqual(CurrencyConstants.BitCoinUsd, orderBookMemoryImage.BidBooks.First().CurrencyPair);
+            Assert.AreEqual(CurrencyConstants.BitCoinUsd, orderBookMemoryImage.AskBooks.First().CurrencyPair);
+
+            ManualResetEvent manualResetEvent = new ManualResetEvent(false);
+            manualResetEvent.WaitOne(4000);
+
+            Assert.AreEqual(1, orderBookMemoryImage.BidBooks.First().Count(), "Count of the bids in the first bid book in the list of bid books");
+            Assert.AreEqual(4, orderBookMemoryImage.AskBooks.First().Count(), "Count of the asks in the first ask book in the list of ask books");
+
+            // BidsOrderBooks -> First BidOrderBook -> First Bid's volume in first OrderBook
+            Assert.AreEqual(400, orderBookMemoryImage.BidBooks.First().First().Item1, "Volume of first bids in the first bid book in the bids book list in  memory image");
+            // BidsOrderBooks -> First BidOrderBook -> First Bid's price in first OrderBook
+            Assert.AreEqual(940.34M, orderBookMemoryImage.BidBooks.First().First().Item2, "Price of first bids in the first bid book in the bids book list in  memory image");
+            
+            // AsksOrderBooks -> First AskOrderBook -> First Ask's volume in first OrderBook
+            Assert.AreEqual(100, orderBookMemoryImage.AskBooks.First().First().Item1, "Volume of first ask in the first ask book in the ask books list in memory image");
+            // AsksOrderBooks -> First AskOrderBook -> First Ask's price in first OrderBook
+            Assert.AreEqual(941.34, orderBookMemoryImage.AskBooks.First().First().Item2, "Price of first ask in the first ask book in the ask books list in memory image");
+            // BidsOrderBooks -> First BidOrderBook -> First Bid's volume in first OrderBook
+            Assert.AreEqual(200, orderBookMemoryImage.AskBooks.First().ToList()[1].Item1, "Volume of Second Ask");
+            // AsksOrderBooks -> First AskOrderBook -> First Ask's price in first OrderBook
+            Assert.AreEqual(942.34M, orderBookMemoryImage.AskBooks.First().ToList()[1].Item2, "Price of Second Ask");
+            // AsksOrderBooks -> First AskOrderBook -> First Ask's volume in first OrderBook
+            Assert.AreEqual(300, orderBookMemoryImage.AskBooks.First().ToList()[2].Item1, "Volume of Second Ask");
+            // AsksOrderBooks -> First AskOrderBook -> First Ask's price in first OrderBook
+            Assert.AreEqual(943.34M, orderBookMemoryImage.AskBooks.First().ToList()[2].Item2, "Price of Second Ask");
+            // AsksOrderBooks -> First AskOrderBook -> First Ask's volume in first OrderBook
+            Assert.AreEqual(800, orderBookMemoryImage.AskBooks.First().ToList()[3].Item1, "Volume of Second Ask");
+            // AsksOrderBooks -> First AskOrderBook -> First Ask's price in first OrderBook
+            Assert.AreEqual(945.34M, orderBookMemoryImage.AskBooks.First().ToList()[3].Item2, "Price of Second Ask");
+
+            OutputDisruptor.ShutDown();
+        }
+
 
         #endregion Disruptor Tests
     }
