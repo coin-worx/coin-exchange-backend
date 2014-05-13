@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
+using CoinExchange.Common.Tests;
 using CoinExchange.Trades.Domain.Model.OrderAggregate;
 using CoinExchange.Trades.Domain.Model.Services;
 using CoinExchange.Trades.Infrastructure.Persistence.RavenDb;
@@ -17,35 +13,31 @@ using CoinExchange.Trades.ReadModel.Repositories;
 using Disruptor;
 using NHibernate;
 using NUnit.Framework;
-using Raven.Abstractions.Data;
 using Spring.Context.Support;
-using Spring.Data.NHibernate;
-using Spring.Data.NHibernate.Support;
-using Spring.Testing.NUnit;
-using Spring.Transaction.Support;
+using System.Configuration;
 using Constants = CoinExchange.Common.Domain.Model.Constants;
 namespace CoinExchange.Trades.ReadModel.Persistence.Tests
 {
     [TestFixture]
-    public class OrderListenerTests:AbstractConfiguration
+    public class OrderListenerTests//:AbstractConfiguration
     {
         private ManualResetEvent _manualResetEvent;
         private IEventStore _eventStore;
         private OrderEventListener _listener;
-        private IPersistanceRepository _persistance;
+        private IPersistanceRepository _persistance = ContextRegistry.GetContext()["PersistenceRepository"] as IPersistanceRepository;
 
         public IOrderRepository OrderRepository
         {
-            set { _orderRepository = value; }
+            set { _orderRepository = ContextRegistry.GetContext()["OrderRepository"] as IOrderRepository; }
         }
 
         public IPersistanceRepository Persistance
         {
-            set { _persistance = value; }
+            set { _persistance = ContextRegistry.GetContext()["PersistenceRepository"] as IPersistanceRepository; }
         }
 
         private ISessionFactory sessionFactory;
-        private IOrderRepository _orderRepository;
+        private IOrderRepository _orderRepository = ContextRegistry.GetContext()["OrderRepository"] as IOrderRepository;
 
 
         public ISessionFactory SessionFactory
@@ -53,10 +45,16 @@ namespace CoinExchange.Trades.ReadModel.Persistence.Tests
             set { sessionFactory = value; }
         }
 
+        private DatabaseUtility _databaseUtility;
         [SetUp]
         public new void SetUp()
         {
             BeforeSetup();
+            var connection = ConfigurationManager.ConnectionStrings["MySql"].ToString();
+            _databaseUtility=new DatabaseUtility(connection);
+            _databaseUtility.Create();
+            _databaseUtility.Populate();
+            
             //initialize journaler
             _eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
             Journaler journaler = new Journaler(_eventStore);
@@ -70,6 +68,8 @@ namespace CoinExchange.Trades.ReadModel.Persistence.Tests
         [TearDown]
         public new void TearDown()
         {
+            OutputDisruptor.ShutDown();
+            _databaseUtility.Create();
             BeforeTearDown();
             AfterTearDown();
         }

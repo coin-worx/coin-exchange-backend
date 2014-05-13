@@ -104,6 +104,23 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinExchange.Trades.ReadMod
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinExchange.Trades.ReadModel.IntegrationTests", "Trades\CoinExchange.Trades.ReadModel.IntegrationTests\CoinExchange.Trades.ReadModel.IntegrationTests.csproj", "{20C99C5A-BF22-4BE7-9309-9994658A1E14}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinExchange.Common.Tests", "common\CoinExchange.Common.Tests\CoinExchange.Common.Tests.csproj", "{BBF58888-03CD-47F4-AEB9-BC6070D97920}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{25A69626-C318-4832-8E81-CED56CC9966C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MySql", "MySql", "{8580CC98-B35F-468C-A0CE-A4F6FE5EDE7C}"
+	ProjectSection(SolutionItems) = preProject
+		Data\create.sql = Data\create.sql
+		Data\drop.sql = Data\drop.sql
+		Data\populate.sql = Data\populate.sql
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RavenDB", "RavenDB", "{3CDFE443-EEA2-4DD5-A912-432A42A69832}"
+	ProjectSection(SolutionItems) = preProject
+		Data\RavenDB\InputEventStore.ravendump = Data\RavenDB\InputEventStore.ravendump
+		Data\RavenDB\OutputEventStore.ravendump = Data\RavenDB\OutputEventStore.ravendump
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -250,6 +267,10 @@ Global
 		{20C99C5A-BF22-4BE7-9309-9994658A1E14}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{20C99C5A-BF22-4BE7-9309-9994658A1E14}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{20C99C5A-BF22-4BE7-9309-9994658A1E14}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BBF58888-03CD-47F4-AEB9-BC6070D97920}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBF58888-03CD-47F4-AEB9-BC6070D97920}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBF58888-03CD-47F4-AEB9-BC6070D97920}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBF58888-03CD-47F4-AEB9-BC6070D97920}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -291,6 +312,7 @@ Global
 		{D61DBD04-95DC-4EB1-AD54-1FF929AC2814} = {D9EFBBF7-E413-432F-A8DD-47607BA9C3A0}
 		{583A125D-9199-4122-B8BA-FD520068F083} = {D9EFBBF7-E413-432F-A8DD-47607BA9C3A0}
 		{611EF683-34FE-43F4-AD9A-DFD79731AB0A} = {D9EFBBF7-E413-432F-A8DD-47607BA9C3A0}
+		{BBF58888-03CD-47F4-AEB9-BC6070D97920} = {D9EFBBF7-E413-432F-A8DD-47607BA9C3A0}
 		{523DACA3-BEC6-45E9-90D4-8F6F8A1266D7} = {AA8A8F0B-1478-43D4-8392-2DEC3441AA8B}
 		{7B5B2BB2-D8A1-49BC-A332-FEFEC344DB27} = {36A9A006-E77F-42D7-818B-C437AE7C49F7}
 		{27F0351B-4650-4217-8BF1-0CA41745D15E} = {36A9A006-E77F-42D7-818B-C437AE7C49F7}
@@ -299,5 +321,7 @@ Global
 		{8C2F9E03-DA0E-48BB-BCDE-04312DBB8D6A} = {1EEB49D9-7B09-48D6-89B1-47BE575465D9}
 		{6229EAE5-0E6B-41A4-9FE4-560A868549CC} = {1EEB49D9-7B09-48D6-89B1-47BE575465D9}
 		{20C99C5A-BF22-4BE7-9309-9994658A1E14} = {1EEB49D9-7B09-48D6-89B1-47BE575465D9}
+		{8580CC98-B35F-468C-A0CE-A4F6FE5EDE7C} = {25A69626-C318-4832-8E81-CED56CC9966C}
+		{3CDFE443-EEA2-4DD5-A912-432A42A69832} = {25A69626-C318-4832-8E81-CED56CC9966C}
 	EndGlobalSection
 EndGlobal
