@@ -55,13 +55,10 @@ namespace CoinExchange.Trades.Application.OrderServices
         /// </summary>
         /// <param name="traderId"></param>
         /// <param name="includeTrades"></param>
-        /// <param name="userRefId"></param>
         /// <param name="startTime"></param>
         /// <param name="endTime"></param>
-        /// <param name="offset"></param>
-        /// <param name="closetime"></param>
         /// <returns></returns>
-        public object GetClosedOrders(TraderId traderId, bool includeTrades = false, string userRefId = "", string startTime = "", string endTime = "", string offset = "", string closetime = "both")
+        public object GetClosedOrders(TraderId traderId, bool includeTrades = false, string startTime = "", string endTime = "")
         {
             List<OrderReadModel> orders=_orderRepository.GetClosedOrders(traderId.Id.ToString(CultureInfo.InvariantCulture));
             if (includeTrades)
@@ -75,5 +72,10 @@ namespace CoinExchange.Trades.Application.OrderServices
         }
 
         #endregion
+        
+        public object GetOrderById(TraderId traderId,OrderId orderId)
+        {
+            return _orderRepository.GetOrderById(traderId,orderId);
+        }
     }
 }

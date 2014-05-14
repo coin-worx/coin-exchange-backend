@@ -218,8 +218,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
 
             manualResetEvent.Reset();
             manualResetEvent.WaitOne(4000);
-            IHttpActionResult httpActionResult = tradeController.GetTradeHistory(new TradeHistoryParams("", "", false, 
-                "", ""));
+            IHttpActionResult httpActionResult = tradeController.GetTradeHistory(new TradeHistoryParams("", ""));
             OkNegotiatedContentResult<object> okResponseObject = (OkNegotiatedContentResult<object>)httpActionResult;
 
             IList<object> objectList = (IList<object>)okResponseObject.Content;
@@ -339,8 +338,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
 
             manualResetEvent.Reset();
             manualResetEvent.WaitOne(4000);
-            IHttpActionResult httpActionResult = tradeController.GetTradeHistory(new TradeHistoryParams("", "", false,
-                "2014/05/09", "2014/05/09"));
+            IHttpActionResult httpActionResult = tradeController.GetTradeHistory(new TradeHistoryParams("2014/05/09", "2014/05/09"));
             OkNegotiatedContentResult<object> okResponseObject = (OkNegotiatedContentResult<object>)httpActionResult;
 
             IList<object> objectList = (IList<object>)okResponseObject.Content;

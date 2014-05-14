@@ -120,7 +120,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         [Route("orders/openorders")]
         [Authorize]
         [HttpPost]
-        public IHttpActionResult QueryOpenOrders([FromBody] string includeTrades)
+        public IHttpActionResult QueryOpenOrders([FromBody] string includeTrades="FALSE")
         {
             try
             {
@@ -179,8 +179,8 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                     apikey = auth[0];
                 }
                 object orders = _orderQueryService.GetClosedOrders(new TraderId(Constants.GetTraderId(apikey)),
-                    closedOrdersParams.IncludeTrades, closedOrdersParams.UserRefId, closedOrdersParams.StartTime,
-                    closedOrdersParams.EndTime, closedOrdersParams.Offset, closedOrdersParams.CloseTime);
+                    closedOrdersParams.IncludeTrades,closedOrdersParams.StartTime,
+                    closedOrdersParams.EndTime);
 
                 if (orders is List<OrderRepresentation>)
                 {
@@ -193,6 +193,31 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                     return Ok<List<OrderReadModel>>(openOrderList);
                 }
                 return NotFound();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        [Route("orders/queryorders")]
+        [Authorize]
+        [HttpPost]
+        public IHttpActionResult QueryOrders([FromBody] string orderId)
+        {
+            try
+            {
+                //get api key from header
+                var headers = Request.Headers;
+                string apikey = "";
+                IEnumerable<string> headerParams;
+                if (headers.TryGetValues("Auth", out headerParams))
+                {
+                    string[] auth = headerParams.ToList()[0].Split(',');
+                    apikey = auth[0];
+                }
+                object orders = _orderQueryService.GetOrderById(new TraderId(Constants.GetTraderId(apikey)),new OrderId(orderId) );
+                return Ok(orders);
             }
             catch (Exception ex)
             {

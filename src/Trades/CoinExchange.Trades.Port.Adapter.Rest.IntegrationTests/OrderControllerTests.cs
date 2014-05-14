@@ -864,8 +864,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             Assert.AreEqual(2, orderBooks.Item1.Count()); // Count of the orders in the Bid Order book
             Assert.AreEqual(2, orderBooks.Item2.Count());// Count of the orders in the Ask Order book
 
-            IHttpActionResult queryClosedOrders = orderController.QueryClosedOrders(new QueryClosedOrdersParams(true, "", 
-                "", "", "", ""));
+            IHttpActionResult queryClosedOrders = orderController.QueryClosedOrders(new QueryClosedOrdersParams(true, "", ""));
 
             Assert.IsNotNull(queryClosedOrders);
             OkNegotiatedContentResult<List<OrderReadModel>> reponseMessage =
@@ -1028,8 +1027,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             manualResetEvent.Reset();
             manualResetEvent.WaitOne(4000);
 
-            IHttpActionResult queryOpenOrders = orderController.QueryClosedOrders(new QueryClosedOrdersParams(false, "", 
-                "", "", "", ""));
+            IHttpActionResult queryOpenOrders = orderController.QueryClosedOrders(new QueryClosedOrdersParams(false,"", ""));
 
             Assert.IsNotNull(queryOpenOrders);
             OkNegotiatedContentResult<List<OrderReadModel>> reponseMessage =

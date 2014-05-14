@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using CoinExchange.Trades.Application.OrderServices.Representation;
 using CoinExchange.Trades.Domain.Model.OrderAggregate;
 using CoinExchange.Trades.Domain.Model.TradeAggregate;
+using CoinExchange.Trades.ReadModel.DTO;
 
 namespace CoinExchange.Trades.Application.OrderServices
 {
@@ -77,8 +78,7 @@ namespace CoinExchange.Trades.Application.OrderServices
         /// Gets the list for the Closed orders
         /// </summary>
         /// <returns></returns>
-        public object GetClosedOrders(TraderId traderId, bool includeTrades = false, string userRefId = "",
-            string startTime = "", string endTime = "", string offset = "", string closetime = "both")
+        public object GetClosedOrders(TraderId traderId, bool includeTrades = false,string startTime = "", string endTime = "")
         {
             List<OrderRepresentation> orderList = new List<OrderRepresentation>();
             orderList.Add(new OrderRepresentation()
@@ -137,6 +137,12 @@ namespace CoinExchange.Trades.Application.OrderServices
             });
 
             return orderList;
+        }
+
+
+        public object GetOrderById(TraderId traderId,OrderId orderId)
+        {
+            return new OrderReadModel(orderId.Id, "market", "buy", 0, 10, traderId.Id, "Closed", "XBTUSD", DateTime.Now, 10, 0);
         }
     }
 }

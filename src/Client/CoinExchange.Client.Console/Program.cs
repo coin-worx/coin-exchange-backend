@@ -37,15 +37,15 @@ namespace CoinExchange.Client.Console
         /// </summary>
         private static void Scenario1(ApiClient client)
         {
-            string currecyPair = "XBTUSD";
-            //Create orders
-            System.Console.WriteLine(client.CreateOrder(currecyPair, "limit", "buy", 10, 250));
-            System.Console.WriteLine(client.CreateOrder(currecyPair, "limit", "sell", 5, 252));
-            System.Console.WriteLine(client.CreateOrder(currecyPair, "market", "buy", 3));
-            System.Console.WriteLine(client.CreateOrder(currecyPair, "limit", "buy", 2, 253));
-            System.Console.WriteLine(client.CreateOrder(currecyPair, "market", "sell", 5));
-            System.Console.WriteLine(client.CreateOrder(currecyPair, "limit", "buy", 2, 250));
-            Thread.Sleep(5000);
+            //string currecyPair = "XBTUSD";
+            ////Create orders
+            //System.Console.WriteLine(client.CreateOrder(currecyPair, "limit", "buy", 10, 250));
+            //System.Console.WriteLine(client.CreateOrder(currecyPair, "limit", "sell", 5, 252));
+            //System.Console.WriteLine(client.CreateOrder(currecyPair, "market", "buy", 3));
+            //System.Console.WriteLine(client.CreateOrder(currecyPair, "limit", "buy", 2, 253));
+            //System.Console.WriteLine(client.CreateOrder(currecyPair, "market", "sell", 5));
+            //System.Console.WriteLine(client.CreateOrder(currecyPair, "limit", "buy", 2, 250));
+            //Thread.Sleep(5000);
             ScenarioResults(client);
 
             var results = JsonConvert.DeserializeObject<dynamic>(client.QueryClosedOrdersParams(false, "", "", "", "", ""));
@@ -115,9 +115,9 @@ namespace CoinExchange.Client.Console
             System.Console.WriteLine("------OPEN ORDERS------");
             System.Console.WriteLine(client.QueryOpenOrdersParams(true, ""));
             System.Console.WriteLine("------CLOSED ORDERS------");
-            System.Console.WriteLine(client.QueryClosedOrdersParams(true, "", "", "", "", ""));
+            System.Console.WriteLine(client.QueryClosedOrdersParams(true, "", ""));
             System.Console.WriteLine("------TRADES------");
-            System.Console.WriteLine(client.GetTradeHistory("", "", true, "", ""));
+            System.Console.WriteLine(client.GetTradeHistory("", ""));
         }
     }
 }

@@ -23,7 +23,7 @@ namespace CoinExchange.Trades.Application.TradeServices
             _currencyPairRepository = currencyPairRepository;
         }
 
-        public object GetTradesHistory(TraderId traderId, string offset = "", string type = "all", bool trades = false, string start = "", string end = "")
+        public object GetTradesHistory(TraderId traderId, string start = "", string end = "")
         {
             if (start == "" || end == "")
             {

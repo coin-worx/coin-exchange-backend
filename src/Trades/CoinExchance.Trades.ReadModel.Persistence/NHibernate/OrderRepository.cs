@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using CoinExchange.Trades.Domain.Model.OrderAggregate;
+using CoinExchange.Trades.Domain.Model.TradeAggregate;
 using CoinExchange.Trades.ReadModel.DTO;
 using CoinExchange.Trades.ReadModel.Repositories;
 using NHibernate.Criterion;
@@ -63,6 +65,15 @@ namespace CoinExchange.Trades.ReadModel.Persistence.NHibernate
         public OrderReadModel GetOrderById(string orderId)
         {
             return CurrentSession.Get<OrderReadModel>(orderId);
+        }
+
+        [Transaction(ReadOnly = true)]
+        public OrderReadModel GetOrderById(TraderId traderId,OrderId orderId)
+        {
+            OrderReadModel model=CurrentSession.Get<OrderReadModel>(orderId.Id);
+            if (model.TraderId.Equals(traderId.Id, StringComparison.InvariantCultureIgnoreCase))
+                return model;
+            return null;
         }
 
         [Transaction(ReadOnly = false)]

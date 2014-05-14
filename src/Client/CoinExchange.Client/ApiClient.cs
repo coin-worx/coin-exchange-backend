@@ -221,6 +221,17 @@ namespace CoinExchange.Client
         }
 
         /// <summary>
+        /// Query the order
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        public string QueryOrderInfo(string orderId)
+        {
+            string url = _baseUrl + "/orders/queryorders";
+            return TestPrivate(url, orderId);
+        }      
+
+        /// <summary>
         /// Returns the Order Book
         /// </summary>
         /// <param name="currencyPair"></param>
