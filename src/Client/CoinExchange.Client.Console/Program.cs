@@ -37,20 +37,16 @@ namespace CoinExchange.Client.Console
         /// </summary>
         private static void Scenario1(ApiClient client)
         {
-            //string currecyPair = "XBTUSD";
-            ////Create orders
-            //System.Console.WriteLine(client.CreateOrder(currecyPair, "limit", "buy", 10, 250));
-            //System.Console.WriteLine(client.CreateOrder(currecyPair, "limit", "sell", 5, 252));
-            //System.Console.WriteLine(client.CreateOrder(currecyPair, "market", "buy", 3));
-            //System.Console.WriteLine(client.CreateOrder(currecyPair, "limit", "buy", 2, 253));
-            //System.Console.WriteLine(client.CreateOrder(currecyPair, "market", "sell", 5));
-            //System.Console.WriteLine(client.CreateOrder(currecyPair, "limit", "buy", 2, 250));
-            //Thread.Sleep(5000);
+            string currencyPair = "XBTUSD";
+            //Create orders
+            System.Console.WriteLine(client.CreateOrder(currencyPair, "limit", "buy", 10, 250));
+            System.Console.WriteLine(client.CreateOrder(currencyPair, "limit", "sell", 5, 252));
+            System.Console.WriteLine(client.CreateOrder(currencyPair, "market", "buy", 3));
+            System.Console.WriteLine(client.CreateOrder(currencyPair, "limit", "buy", 2, 253));
+            System.Console.WriteLine(client.CreateOrder(currencyPair, "market", "sell", 5));
+            System.Console.WriteLine(client.CreateOrder(currencyPair, "limit", "buy", 2, 250));
+            Thread.Sleep(5000);
             ScenarioResults(client);
-
-            var results = JsonConvert.DeserializeObject<dynamic>(client.QueryClosedOrdersParams(false, "", "", "", "", ""));
-            var id = results[0].Id;
-            var name = results[0].Name;
         }
 
         /// <summary>

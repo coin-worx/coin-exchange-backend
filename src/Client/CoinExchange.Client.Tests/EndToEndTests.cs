@@ -378,7 +378,7 @@ namespace CoinExchange.Client.Tests
         private Newtonsoft.Json.Linq.JArray GetClosedOrders(ApiClient apiClient)
         {
             Newtonsoft.Json.Linq.JArray deserializeObject =
-                JsonConvert.DeserializeObject<dynamic>(apiClient.QueryClosedOrdersParams(true, "", "", "", "", ""));
+                JsonConvert.DeserializeObject<dynamic>(apiClient.QueryClosedOrdersParams(true, "", ""));
             return deserializeObject;
         }
 

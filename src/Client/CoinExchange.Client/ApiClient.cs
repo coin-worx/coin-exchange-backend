@@ -106,26 +106,22 @@ namespace CoinExchange.Client
 
         }
         #region Private Calls Methods
+
         /// <summary>
         /// Return Trade History
         /// </summary>
-        /// <param name="offset"></param>
-        /// <param name="type"></param>
-        /// <param name="trades"></param>
         /// <param name="start"></param>
         /// <param name="end"></param>
         /// <returns></returns>
-        public string GetTradeHistory(string offset, string type, bool trades, string start, string end)
+        public string GetTradeHistory(string start, string end)
         {
-            JObject jsonObject=new JObject();
-            jsonObject.Add("Offset", offset);
-            jsonObject.Add("Type", type);
-            jsonObject.Add("Trades", trades);
+            JObject jsonObject = new JObject();
             jsonObject.Add("Start", start);
             jsonObject.Add("End", end);
             string url = _baseUrl + "/trades/tradehistory";
-            return RequestServer(jsonObject,url);
+            return RequestServer(jsonObject, url);
         }
+
         /// <summary>
         /// Query trades of specific txid
         /// </summary>
@@ -140,6 +136,7 @@ namespace CoinExchange.Client
             string url = _baseUrl + "/trades/querytrades";
             return RequestServer(jsonObject, url);
         }
+
         /// <summary>
         /// Return trade volume of pair
         /// </summary>
@@ -150,6 +147,7 @@ namespace CoinExchange.Client
             string url = _baseUrl + "/trades/tradevolume";
             return TestPrivate(url,pair);
         }
+
         /// <summary>
         /// Cancel the order
         /// </summary>
@@ -160,6 +158,7 @@ namespace CoinExchange.Client
             string url = _baseUrl + "/orders/cancelorder";
             return TestPrivate(url, txid);
         }
+
         /// <summary>
         /// Create user order
         /// </summary>
@@ -196,32 +195,24 @@ namespace CoinExchange.Client
         }
 
         /// <summary>
-        /// Query user's closed orders
+        /// Query Closed Orders
         /// </summary>
         /// <param name="includeTrades"></param>
-        /// <param name="userRefId"></param>
         /// <param name="startTime"></param>
         /// <param name="endTime"></param>
-        /// <param name="offset"></param>
-        /// <param name="closeTime"></param>
         /// <returns></returns>
-        public string QueryClosedOrdersParams(bool includeTrades, string userRefId, string startTime, string endTime,
-            string offset,
-            string closeTime)
+        public string QueryClosedOrdersParams(bool includeTrades,string startTime, string endTime)
         {
             JObject jsonObject = new JObject();
             jsonObject.Add("includeTrades", includeTrades);
-            jsonObject.Add("userRefId", userRefId);
             jsonObject.Add("startTime", startTime);
             jsonObject.Add("endTime", endTime);
-            jsonObject.Add("offset", offset);
-            jsonObject.Add("closeTime", closeTime);
             string url = _baseUrl + "/orders/closedorders";
             return RequestServer(jsonObject, url);
         }
-
+        
         /// <summary>
-        /// Query the order
+        /// Gets teh Order Info
         /// </summary>
         /// <param name="orderId"></param>
         /// <returns></returns>
@@ -229,7 +220,7 @@ namespace CoinExchange.Client
         {
             string url = _baseUrl + "/orders/queryorders";
             return TestPrivate(url, orderId);
-        }      
+        }
 
         /// <summary>
         /// Returns the Order Book
