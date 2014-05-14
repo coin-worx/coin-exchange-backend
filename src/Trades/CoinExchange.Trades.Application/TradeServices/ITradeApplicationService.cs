@@ -11,8 +11,7 @@ namespace CoinExchange.Trades.Application.TradeServices
     /// </summary>
     public interface ITradeApplicationService
     {
-        object GetTradesHistory(TraderId traderId, string offset = "", string type = "all",
-            bool trades = false, string start = "", string end = "");
+        object GetTradesHistory(TraderId traderId, string start = "", string end = "");
 
         object QueryTrades(TraderId traderId, string txId = "", bool includeTrades = false);
         IList<object> GetRecentTrades(string pair, string since);

@@ -51,8 +51,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                     string[] auth = headerParams.ToList()[0].Split(',');
                     apikey = auth[0];
                 }
-                var closedOrders = _tradeApplicationService.GetTradesHistory(new TraderId(Constants.GetTraderId(apikey)), tradeHistoryParams.Offset,
-                    tradeHistoryParams.Type, tradeHistoryParams.Trades, tradeHistoryParams.Start, tradeHistoryParams.End);
+                var closedOrders = _tradeApplicationService.GetTradesHistory(new TraderId(Constants.GetTraderId(apikey)),tradeHistoryParams.Start, tradeHistoryParams.End);
 
                 if (closedOrders != null)
                 {

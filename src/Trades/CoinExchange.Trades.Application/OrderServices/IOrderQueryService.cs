@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using CoinExchange.Trades.Application.OrderServices.Representation;
+using CoinExchange.Trades.Domain.Model.OrderAggregate;
 using CoinExchange.Trades.Domain.Model.TradeAggregate;
 
 namespace CoinExchange.Trades.Application.OrderServices
@@ -9,7 +10,8 @@ namespace CoinExchange.Trades.Application.OrderServices
         object GetOpenOrders(TraderId traderId, bool includeTrades = false);
 
         object GetClosedOrders(TraderId traderId, bool includeTrades = false,
-            string userRefId = "",
-            string startTime = "", string endTime = "", string offset = "", string closetime = "both");
+            string startTime = "", string endTime = "");
+
+        object GetOrderById(TraderId traderId,OrderId orderId);
     }
 }

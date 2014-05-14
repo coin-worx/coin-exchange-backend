@@ -40,6 +40,5 @@ namespace CoinExchange.Trades.Application.OrderServices.Representation
         public string Type { get; private set; }
         public decimal Price { get; private set; }
         public decimal Volume { get; set; }
-
     }
 }
