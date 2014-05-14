@@ -98,16 +98,9 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
             DepthLevelRepresentationList depthLevelsRepresentations = new DepthLevelRepresentationList(depthLevels.Length);
             for (int i = 0; i < depthLevels.Length; i++)
             {
-                if (depthLevels[i].Price != null)
-                {
-                    depthLevelsRepresentations.AddDepthLevel(i, depthLevels[i]);
-                }
+                depthLevelsRepresentations.AddDepthLevel(i, depthLevels[i]);
             }
-            if (depthLevelsRepresentations.Any())
-            {
-                return depthLevelsRepresentations;
-            }
-            return null;
+            return depthLevelsRepresentations;
         }
 
         /// <summary>

@@ -89,7 +89,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// <returns></returns>
         public bool PlaceNewOrder(Order order)
         {
-            switch (order.CurrencyPair)
+            switch (order.CurrencyPair.ToUpper())
             {
                 case "BTCUSD":
                     return _exchangeEssentialsList.First().LimitOrderBook.PlaceOrder(order);

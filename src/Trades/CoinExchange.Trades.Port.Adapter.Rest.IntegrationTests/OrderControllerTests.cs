@@ -725,7 +725,9 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             Assert.AreEqual(493, orderlist[2].Price);
             Assert.AreEqual("BTCUSD", orderlist[2].CurrencyPair);
             Assert.AreEqual("Buy", orderlist[2].OrderSide);
-            Assert.AreEqual(900, orderlist[2].Volume);
+            Assert.AreEqual(1000, orderlist[2].Volume);
+            Assert.AreEqual(900, orderlist[2].OpenQuantity);
+            Assert.AreEqual(100, orderlist[2].VolumeExecuted);
 
             // List of Trades associated with this order, coming in as a list of object[] in each, where object[] contains
             // TraderId, ExecutionDateTime, Price, Volume, Currencypair respectively.

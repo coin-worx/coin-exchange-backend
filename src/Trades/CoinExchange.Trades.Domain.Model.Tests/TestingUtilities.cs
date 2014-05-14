@@ -38,7 +38,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
                     Console.WriteLine("OrderCount = " + depthLevel.OrderCount);
                     matched = false;
                 }
-                if (!depthLevel.AggregatedVolume.Equals(volume))
+                if (depthLevel.AggregatedVolume != null && !depthLevel.AggregatedVolume.Equals(volume))
                 {
                     Console.WriteLine("Volume = " + depthLevel.AggregatedVolume.Value);
                     matched = false;
