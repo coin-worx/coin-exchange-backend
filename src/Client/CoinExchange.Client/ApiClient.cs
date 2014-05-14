@@ -21,6 +21,37 @@ namespace CoinExchange.Client
             _baseUrl = baseUrl;
         }
 
+        public string HttpGetRequest(string url = "http://localhost:51780/api")
+        {
+            string message = "";
+            for (int i = 0; i < 2; i++)
+            {
+                try
+                {
+                    HttpWebRequest request = (HttpWebRequest) WebRequest.Create(url);
+                    request.Method = "GET";
+                    request.ContentType = "application/json; charset=utf-8";
+                    HttpWebResponse response = (HttpWebResponse) request.GetResponse();
+
+                    // Get the stream associated with the response.
+                    Stream receiveStream = response.GetResponseStream();
+
+                    // Pipes the stream to a higher level stream reader with the required encoding format. 
+                    StreamReader readStream = new StreamReader(receiveStream, Encoding.UTF8);
+                    message = readStream.ReadToEnd();
+                    response.Close();
+                    readStream.Close();
+                    return message;
+                }
+                catch (WebException exe)
+                {
+                    nonce = exe.Response.Headers["Nounce"];
+                    message = exe.Response.ToString();
+                }
+            }
+            return message;
+        }
+
         public string TestPrivate(string url = "http://localhost:51780/api", params object[] a_params)
         {
             string message = "";
@@ -148,6 +179,7 @@ namespace CoinExchange.Client
             string url = _baseUrl + "/orders/createorder";
             return RequestServer(jsonObject, url);
         }
+
         /// <summary>
         /// Query user open orders
         /// </summary>
@@ -162,6 +194,7 @@ namespace CoinExchange.Client
             string url = _baseUrl + "/orders/openorders";
             return TestPrivate(url,includeTrades.ToString());
         }
+
         /// <summary>
         /// Query user's closed orders
         /// </summary>
@@ -186,6 +219,29 @@ namespace CoinExchange.Client
             string url = _baseUrl + "/orders/closedorders";
             return RequestServer(jsonObject, url);
         }
+
+        /// <summary>
+        /// Returns the Order Book
+        /// </summary>
+        /// <param name="currencyPair"></param>
+        /// <returns></returns>
+        public string GetOrderBook(string currencyPair)
+        {
+            string url = _baseUrl + "/marketdata/orderbook?currencyPair=" + currencyPair;
+            return HttpGetRequest(url);
+        }
+
+        /// <summary>
+        /// Returns the Depth
+        /// </summary>
+        /// <param name="currencyPair"></param>
+        /// <returns></returns>
+        public string GetDepth(string currencyPair)
+        {
+            string url = _baseUrl + "/marketdata/depth?currencyPair=" + currencyPair;
+            return HttpGetRequest(url);
+        }
+
         #endregion
         /// <summary>
         /// Private call requests

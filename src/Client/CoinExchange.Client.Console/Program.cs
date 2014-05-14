@@ -1,4 +1,8 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Configuration;
+using System.Threading;
+using CoinExchange.Client.Tests;
+using CoinExchange.Common.Tests;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -10,12 +14,21 @@ namespace CoinExchange.Client.Console
         {
             string baseUrl = "http://rockblanc.cloudapp.net/dev";
             baseUrl = "http://localhost:51780";
-            ApiClient client=new ApiClient(baseUrl);
-            System.Console.WriteLine("Requesting....");
+            
+            DatabaseUtility _databaseUtility;
+            var connection = ConfigurationManager.ConnectionStrings["MySql"].ToString();
+            _databaseUtility = new DatabaseUtility(connection);
+            _databaseUtility.Create();
+            _databaseUtility.Populate();
+            EndToEndTests endToEndTests = new EndToEndTests();
+            endToEndTests.Scenario2Test_TestsScenario2AndItsOutcome_VerifiesThroughMarketDataOrderAndTradesResults();
+
+            //ApiClient client=new ApiClient(baseUrl);
+            //System.Console.WriteLine("Requesting....");
             //call methods available in api
             //System.Console.WriteLine(client.CreateOrder("XBTUSD", "limit", "sell", 5, 10));
             //System.Console.WriteLine(client.QueryClosedOrdersParams(false,"","","","",""));
-            Scenario1(client);
+            //Scenario1(client);
             System.Console.ReadKey();
         }
 
@@ -34,6 +47,10 @@ namespace CoinExchange.Client.Console
             System.Console.WriteLine(client.CreateOrder(currecyPair, "limit", "buy", 2, 250));
             Thread.Sleep(5000);
             ScenarioResults(client);
+
+            var results = JsonConvert.DeserializeObject<dynamic>(client.QueryClosedOrdersParams(false, "", "", "", "", ""));
+            var id = results[0].Id;
+            var name = results[0].Name;
         }
 
         /// <summary>
