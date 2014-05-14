@@ -84,12 +84,9 @@ namespace CoinExchange.Client
         /// <param name="start"></param>
         /// <param name="end"></param>
         /// <returns></returns>
-        public string GetTradeHistory(string offset, string type, bool trades, string start, string end)
+        public string GetTradeHistory(string start, string end)
         {
             JObject jsonObject=new JObject();
-            jsonObject.Add("Offset", offset);
-            jsonObject.Add("Type", type);
-            jsonObject.Add("Trades", trades);
             jsonObject.Add("Start", start);
             jsonObject.Add("End", end);
             string url = _baseUrl + "/trades/tradehistory";
@@ -172,19 +169,25 @@ namespace CoinExchange.Client
         /// <param name="offset"></param>
         /// <param name="closeTime"></param>
         /// <returns></returns>
-        public string QueryClosedOrdersParams(bool includeTrades, string userRefId, string startTime, string endTime,
-            string offset,
-            string closeTime)
+        public string QueryClosedOrdersParams(bool includeTrades,string startTime, string endTime)
         {
             JObject jsonObject = new JObject();
             jsonObject.Add("includeTrades", includeTrades);
-            jsonObject.Add("userRefId", userRefId);
             jsonObject.Add("startTime", startTime);
             jsonObject.Add("endTime", endTime);
-            jsonObject.Add("offset", offset);
-            jsonObject.Add("closeTime", closeTime);
             string url = _baseUrl + "/orders/closedorders";
             return RequestServer(jsonObject, url);
+        }
+
+        /// <summary>
+        /// Query the order
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        public string QueryOrderInfo(string orderId)
+        {
+            string url = _baseUrl + "/orders/queryorders";
+            return TestPrivate(url, orderId);
         }
         #endregion
         /// <summary>

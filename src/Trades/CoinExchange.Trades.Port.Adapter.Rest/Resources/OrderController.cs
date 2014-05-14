@@ -217,18 +217,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                     apikey = auth[0];
                 }
                 object orders = _orderQueryService.GetOrderById(new TraderId(Constants.GetTraderId(apikey)),new OrderId(orderId) );
-
-                if (orders is List<OrderRepresentation>)
-                {
-                    List<OrderRepresentation> openOrderList = (List<OrderRepresentation>)orders;
-                    return Ok<List<OrderRepresentation>>(openOrderList);
-                }
-                else if (orders is List<OrderReadModel>)
-                {
-                    List<OrderReadModel> openOrderList = (List<OrderReadModel>)orders;
-                    return Ok<List<OrderReadModel>>(openOrderList);
-                }
-                return NotFound();
+                return Ok(orders);
             }
             catch (Exception ex)
             {

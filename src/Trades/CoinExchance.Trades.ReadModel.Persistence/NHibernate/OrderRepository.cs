@@ -70,7 +70,7 @@ namespace CoinExchange.Trades.ReadModel.Persistence.NHibernate
         [Transaction(ReadOnly = true)]
         public OrderReadModel GetOrderById(TraderId traderId,OrderId orderId)
         {
-            OrderReadModel model=CurrentSession.Get<OrderReadModel>(orderId);
+            OrderReadModel model=CurrentSession.Get<OrderReadModel>(orderId.Id);
             if (model.TraderId.Equals(traderId.Id, StringComparison.InvariantCultureIgnoreCase))
                 return model;
             return null;
