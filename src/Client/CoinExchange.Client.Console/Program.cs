@@ -21,7 +21,7 @@ namespace CoinExchange.Client.Console
             _databaseUtility.Create();
             _databaseUtility.Populate();
             EndToEndTests endToEndTests = new EndToEndTests();
-            endToEndTests.Scenario2Test_TestsScenario2AndItsOutcome_VerifiesThroughMarketDataOrderAndTradesResults();
+            endToEndTests.Scenario1Test_TestsScenario1AndItsOutcome_VerifiesThroughMarketDataOrderAndTradesResults();
 
             //ApiClient client=new ApiClient(baseUrl);
             //System.Console.WriteLine("Requesting....");

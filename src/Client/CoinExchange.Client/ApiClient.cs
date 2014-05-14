@@ -189,7 +189,6 @@ namespace CoinExchange.Client
         {
             JObject jsonObject = new JObject();
             jsonObject.Add("includeTrades", includeTrades);
-            jsonObject.Add("userRefId", userRefId);
             string url = _baseUrl + "/orders/openorders";
             return TestPrivate(url,includeTrades.ToString());
         }
