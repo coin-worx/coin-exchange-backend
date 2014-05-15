@@ -12,5 +12,14 @@
         }
         public string Start { get; set; }
         public string End { get; set; }
+
+        /// <summary>
+        /// Custom to string method
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return string.Format("Trade History Params, Start={0}, End={1}", Start, End);
+        }
     }
 }

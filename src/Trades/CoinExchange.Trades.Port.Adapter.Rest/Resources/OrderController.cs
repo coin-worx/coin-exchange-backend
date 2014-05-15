@@ -18,6 +18,8 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
     /// </summary>
     public class OrderController : ApiController
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger
+        (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private IOrderApplicationService _orderApplicationService;
         private IOrderQueryService _orderQueryService;
 
@@ -40,6 +42,10 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         [HttpPost]
         public IHttpActionResult CancelOrder([FromBody]string orderId)
         {
+            if (log.IsDebugEnabled)
+            {
+                log.Debug("Cancel Order Call: OrderId="+orderId);
+            }
             try
             {
                 //get api key from header
@@ -51,24 +57,25 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                     string[] auth = headerParams.ToList()[0].Split(',');
                     apikey = auth[0];
                 }
+                if (log.IsDebugEnabled)
+                {
+                    log.Debug("Cancel Order Call: apikey=" + apikey);
+                }
                 if (orderId != string.Empty)
                 {
-                    try
-                    {
-                        //TODO: Fetch TraderId from api signature provided in header. Remove the Constant value of the GetSecretKey
-                        return Ok(_orderApplicationService.CancelOrder(
-                                    new CancelOrderCommand(new OrderId(orderId), new TraderId(Constants.GetTraderId(apikey)))));
-                    }
-                    catch (Exception exception)
-                    {
-                        return InternalServerError(exception);
-                    }
+                    return Ok(_orderApplicationService.CancelOrder(
+                        new CancelOrderCommand(new OrderId(orderId), new TraderId(Constants.GetTraderId(apikey)))));
+
                 }
                 return BadRequest();
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                return InternalServerError(ex);
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Cancel Order Call Error", exception);
+                }
+                return InternalServerError(exception);
             }
         }
 
@@ -82,6 +89,10 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         [HttpPost]
         public IHttpActionResult CreateOrder([FromBody]CreateOrderParam order)
         {
+            if (log.IsDebugEnabled)
+            {
+                log.Debug("Create Order Call: " + order);
+            }
             try
             {
                 if (order != null)
@@ -95,6 +106,10 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                         string[] auth = headerParams.ToList()[0].Split(',');
                         apikey = auth[0];
                     }
+                    if (log.IsDebugEnabled)
+                    {
+                        log.Debug("Createl Order Call: ApiKey=" + apikey);
+                    }
                     return
                         Ok(
                             _orderApplicationService.CreateOrder(new CreateOrderCommand(order.Price, order.Type,
@@ -103,9 +118,13 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                 }
                 return BadRequest();
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                return InternalServerError(ex);
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Create Order Call Error", exception);
+                }
+                return InternalServerError(exception);
             }
         }
 
@@ -122,6 +141,10 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         [HttpPost]
         public IHttpActionResult QueryOpenOrders([FromBody] string includeTrades="FALSE")
         {
+            if (log.IsDebugEnabled)
+            {
+                log.Debug("Query Open Orders Call: IncludeTrades=" + includeTrades);
+            }
             try
             {
                 //get api key from header
@@ -132,6 +155,10 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                 {
                     string[] auth = headerParams.ToList()[0].Split(',');
                     apikey = auth[0];
+                }
+                if (log.IsDebugEnabled)
+                {
+                    log.Debug("Query Open Orders Call: ApiKey=" + apikey);
                 }
                 object value = _orderQueryService.GetOpenOrders(new TraderId(Constants.GetTraderId(apikey)),
                     Convert.ToBoolean(includeTrades));
@@ -147,11 +174,15 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                     return Ok<List<OrderReadModel>>(openOrderList);
                 }
                 
-                return NotFound();
+                return BadRequest();
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                return InternalServerError(ex);
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Query Open Orders Call Error", exception);
+                }
+                return InternalServerError(exception);
             }
         }
 
@@ -167,6 +198,10 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         [HttpPost]
         public IHttpActionResult QueryClosedOrders([FromBody] QueryClosedOrdersParams closedOrdersParams)
         {
+            if (log.IsDebugEnabled)
+            {
+                log.Debug("Query Closed Orders Call: " + closedOrdersParams);
+            }
             try
             {
                 //get api key from header
@@ -177,6 +212,10 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                 {
                     string[] auth = headerParams.ToList()[0].Split(',');
                     apikey = auth[0];
+                }
+                if (log.IsDebugEnabled)
+                {
+                    log.Debug("Query Closed Orders Call: ApiKey=" + apikey);
                 }
                 object orders = _orderQueryService.GetClosedOrders(new TraderId(Constants.GetTraderId(apikey)),
                     closedOrdersParams.IncludeTrades,closedOrdersParams.StartTime,
@@ -192,11 +231,15 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                     List<OrderReadModel> openOrderList = (List<OrderReadModel>)orders;
                     return Ok<List<OrderReadModel>>(openOrderList);
                 }
-                return NotFound();
+                return BadRequest();
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                return InternalServerError(ex);
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Query Closed Orders Call Error", exception);
+                }
+                return InternalServerError(exception);
             }
         }
 
@@ -205,6 +248,10 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         [HttpPost]
         public IHttpActionResult QueryOrders([FromBody] string orderId)
         {
+            if (log.IsDebugEnabled)
+            {
+                log.Debug("Query Orders Call: OrderId=" + orderId);
+            }
             try
             {
                 //get api key from header
@@ -216,12 +263,20 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                     string[] auth = headerParams.ToList()[0].Split(',');
                     apikey = auth[0];
                 }
+                if (log.IsDebugEnabled)
+                {
+                    log.Debug("Query Orders Call: ApiKey=" + apikey);
+                }
                 object orders = _orderQueryService.GetOrderById(new TraderId(Constants.GetTraderId(apikey)),new OrderId(orderId) );
                 return Ok(orders);
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                return InternalServerError(ex);
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Query Orders Call Error", exception);
+                }
+                return InternalServerError(exception);
             }
         }
     }

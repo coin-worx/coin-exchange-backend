@@ -60,7 +60,16 @@ namespace CoinExchange.Trades.Application.OrderServices
         /// <returns></returns>
         public object GetClosedOrders(TraderId traderId, bool includeTrades = false, string startTime = "", string endTime = "")
         {
-            List<OrderReadModel> orders=_orderRepository.GetClosedOrders(traderId.Id.ToString(CultureInfo.InvariantCulture));
+            List<OrderReadModel> orders;
+            if (startTime == "" || endTime == "")
+            {
+                orders =_orderRepository.GetClosedOrders(traderId.Id.ToString(CultureInfo.InvariantCulture));
+            }
+            else
+            {
+                orders = _orderRepository.GetClosedOrders(traderId.Id.ToString(), Convert.ToDateTime(startTime),
+                    Convert.ToDateTime(endTime));
+            }
             if (includeTrades)
             {
                 for (int i = 0; i < orders.Count; i++)
