@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Results;
 using CoinExchange.Common.Domain.Model;
+using CoinExchange.Common.Tests;
 using CoinExchange.Trades.Application.MarketDataServices.Representation;
 using CoinExchange.Trades.Application.OrderServices;
 using CoinExchange.Trades.Application.OrderServices.Representation;
@@ -34,6 +36,33 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
     [TestFixture]
     class MarketDataControllerTests
     {
+        private DatabaseUtility _databaseUtility;
+        private IApplicationContext _applicationContext;
+
+        [SetUp]
+        public void Setup()
+        {
+            var connection = ConfigurationManager.ConnectionStrings["MySql"].ToString();
+            _databaseUtility = new DatabaseUtility(connection);
+            _databaseUtility.Create();
+            _databaseUtility.Populate();
+            _applicationContext = ContextRegistry.GetContext();
+            Exchange exchange = new Exchange();
+            IEventStore inputEventStore = new RavenNEventStore(Constants.INPUT_EVENT_STORE);
+            IEventStore outputEventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
+            Journaler inputJournaler = new Journaler(inputEventStore);
+            Journaler outputJournaler = new Journaler(outputEventStore);
+            InputDisruptorPublisher.InitializeDisruptor(new IEventHandler<InputPayload>[] { exchange, inputJournaler });
+            OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { outputJournaler });
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            InputDisruptorPublisher.Shutdown();
+            OutputDisruptor.ShutDown();
+            _databaseUtility.Create();
+        }
         #region End-to-End Test
 
         [Test]
@@ -41,17 +70,10 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
         public void SubmitOrderAndGetOrderBookTest_SubmitsTheOrderAndChecksIfOrderBookReflectsTheChangesExpected_VerifiesThroughOrderBooksFields()
         {
             // Get the context
-            IApplicationContext applicationContext = ContextRegistry.GetContext();
-            Exchange exchange = new Exchange();
-            IEventStore inputEventStore = new RavenNEventStore(Constants.INPUT_EVENT_STORE);
-            IEventStore outputEventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
-            Journaler inputJournaler = new Journaler(inputEventStore);
-            Journaler outputJournaler = new Journaler(outputEventStore);
-            InputDisruptorPublisher.InitializeDisruptor(new IEventHandler<InputPayload>[] { exchange, inputJournaler });
-            OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[]{outputJournaler});
-
+            //IApplicationContext applicationContext = ContextRegistry.GetContext();
+            
             // Get the instance through Spring configuration
-            OrderController orderController = (OrderController)applicationContext["OrderController"];
+            OrderController orderController = (OrderController)_applicationContext["OrderController"];
             orderController.Request = new HttpRequestMessage(HttpMethod.Post, "");
             orderController.Request.Headers.Add("Auth", "123456789");
 
@@ -125,7 +147,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
 
             manualResetEvent.Reset();
             manualResetEvent.WaitOne(2000);
-            MarketController marketController = (MarketController)applicationContext["MarketController"];
+            MarketController marketController = (MarketController)_applicationContext["MarketController"];
             IHttpActionResult marketDataHttpResult = marketController.GetOrderBook("BTCUSD");
 
             OkNegotiatedContentResult<Tuple<OrderRepresentationList, OrderRepresentationList>> okResponseMessage =
@@ -152,26 +174,15 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
 
             manualResetEvent.Reset();
             manualResetEvent.WaitOne(8000);
-            InputDisruptorPublisher.Shutdown();
-            OutputDisruptor.ShutDown();
+            
         }
 
         [Test]
         [Category("Integration")]
         public void SubmitOrdersAndGetDepthTest_SubmitsAnOrderAndGetsTheDepthAsTheResult_VerifiesIfDepthIsAsExpected()
         {
-            // Get the context
-            IApplicationContext applicationContext = ContextRegistry.GetContext();
-            Exchange exchange = new Exchange();
-            IEventStore inputEventStore = new RavenNEventStore(Constants.INPUT_EVENT_STORE);
-            IEventStore outputEventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
-            Journaler inputJournaler = new Journaler(inputEventStore);
-            Journaler outputJournaler = new Journaler(outputEventStore);
-            InputDisruptorPublisher.InitializeDisruptor(new IEventHandler<InputPayload>[] { exchange, inputJournaler });
-            OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { outputJournaler });
-
             // Get the instance through Spring configuration
-            OrderController orderController = (OrderController)applicationContext["OrderController"];
+            OrderController orderController = (OrderController)_applicationContext["OrderController"];
             orderController.Request = new HttpRequestMessage(HttpMethod.Post, "");
             orderController.Request.Headers.Add("Auth", "123456789");
 
@@ -245,7 +256,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
 
             manualResetEvent.Reset();
             manualResetEvent.WaitOne(2000);
-            MarketController marketController = (MarketController)applicationContext["MarketController"];
+            MarketController marketController = (MarketController)_applicationContext["MarketController"];
             IHttpActionResult marketDataHttpResult = marketController.GetDepth("BTCUSD");
 
             OkNegotiatedContentResult<Tuple<Tuple<decimal, decimal, int>[], Tuple<decimal, decimal, int>[]>> okResponseMessage =
@@ -263,8 +274,6 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             Assert.AreEqual(1700, returnedDepth.Item2[1].Item1); // Volume of the second Bid DepthLevel
             Assert.AreEqual(498, returnedDepth.Item2[1].Item2); // Price of the second Bid DepthLevel
 
-            InputDisruptorPublisher.Shutdown();
-            OutputDisruptor.ShutDown();
         }
 
         [Test]
@@ -272,17 +281,10 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
         public void SubmitsThenCancelsOrders_ChecksOrderBook_AssertsOnExpectedValues()
         {
             // Get the context
-            IApplicationContext applicationContext = ContextRegistry.GetContext();
-            Exchange exchange = new Exchange();
-            IEventStore inputEventStore = new RavenNEventStore(Constants.INPUT_EVENT_STORE);
-            IEventStore outputEventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
-            Journaler inputJournaler = new Journaler(inputEventStore);
-            Journaler outputJournaler = new Journaler(outputEventStore);
-            InputDisruptorPublisher.InitializeDisruptor(new IEventHandler<InputPayload>[] { exchange, inputJournaler });
-            OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { outputJournaler });
-
+            //IApplicationContext applicationContext = ContextRegistry.GetContext();
+           
             // Get the instance through Spring configuration
-            OrderController orderController = (OrderController)applicationContext["OrderController"];
+            OrderController orderController = (OrderController)_applicationContext["OrderController"];
             orderController.Request = new HttpRequestMessage(HttpMethod.Post, "");
             orderController.Request.Headers.Add("Auth", "123456789");
 
@@ -357,7 +359,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
 
             manualResetEvent.Reset();
             manualResetEvent.WaitOne(2000);
-            MarketController marketController = (MarketController)applicationContext["MarketController"];
+            MarketController marketController = (MarketController)_applicationContext["MarketController"];
             IHttpActionResult marketDataHttpResult = marketController.GetOrderBook("BTCUSD");
 
             OkNegotiatedContentResult<Tuple<OrderRepresentationList, OrderRepresentationList>> okResponseMessage =
@@ -409,9 +411,6 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             Assert.AreEqual(491, orderBooks.Item1.ToList()[2].Item2); // Price @ slot 3 in bid OrderBook*/
             Assert.AreEqual(900, orderBooks.Item2.ToList()[2].Item1); // Volume @ slot 3 in ask OrderBook
             Assert.AreEqual(499, orderBooks.Item2.ToList()[2].Item2); // Price @ slot 3 in ask OrderBook
-
-            InputDisruptorPublisher.Shutdown();
-            OutputDisruptor.ShutDown();
         }
 
         #endregion End-to-End Test
@@ -422,17 +421,10 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
         public void SendSomeOrders_IfOrdersAreMatching_OhlcAndTickerInfoWillBeFormed()
         {
             // Get the context
-            IApplicationContext applicationContext = ContextRegistry.GetContext();
-            Exchange exchange = new Exchange();
-            IEventStore inputEventStore = new RavenNEventStore(Constants.INPUT_EVENT_STORE);
-            IEventStore outputEventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
-            Journaler inputJournaler = new Journaler(inputEventStore);
-            Journaler outputJournaler = new Journaler(outputEventStore);
-            InputDisruptorPublisher.InitializeDisruptor(new IEventHandler<InputPayload>[] { exchange, inputJournaler });
-            OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { outputJournaler });
-
+           // IApplicationContext applicationContext = ContextRegistry.GetContext();
+           
             // Get the instance through Spring configuration
-            OrderController orderController = (OrderController)applicationContext["OrderController"];
+            OrderController orderController = (OrderController)_applicationContext["OrderController"];
             orderController.Request=new HttpRequestMessage(HttpMethod.Post, "");
             orderController.Request.Headers.Add("Auth","123456789");
 
@@ -500,7 +492,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             });
             manualResetEvent.Reset();
             manualResetEvent.WaitOne(20000);
-            MarketController marketController = (MarketController)applicationContext["MarketController"];
+            MarketController marketController = (MarketController)_applicationContext["MarketController"];
             IHttpActionResult tickerinfo = marketController.TickerInfo("XBTUSD");
             OkNegotiatedContentResult<object> readmodel = (OkNegotiatedContentResult<object>)tickerinfo;
             Assert.NotNull(readmodel);
@@ -536,8 +528,6 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             Assert.AreEqual(ohlcValues[1], 492);//high
             Assert.AreEqual(ohlcValues[2], 492);//low
             Assert.AreEqual(ohlcValues[3], 492);//close
-            InputDisruptorPublisher.Shutdown();
-            OutputDisruptor.ShutDown();
         }
 
         #endregion
@@ -547,10 +537,10 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
         public void GetOrderBookTest_ChecksIfOrderBookIsRetreivedProperly_ValidatesReturnedOrderBook()
         {
             // Get the context
-            IApplicationContext applicationContext = ContextRegistry.GetContext();
+           // IApplicationContext applicationContext = ContextRegistry.GetContext();
 
             // Get the instance through Spring configuration
-            MarketController marketController = (MarketController)applicationContext["MarketController"];
+            MarketController marketController = (MarketController)_applicationContext["MarketController"];
             LimitOrderBook limitOrderBook = new LimitOrderBook("XBTUSD");
 
             Order buyOrder1 = OrderFactory.CreateOrder("1233", "XBTUSD", Constants.ORDER_TYPE_LIMIT,
@@ -573,7 +563,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             limitOrderBook.PlaceOrder(sellOrder2);
             limitOrderBook.PlaceOrder(sellrder3);
 
-            OrderBookMemoryImage orderBookMemoryImage = (OrderBookMemoryImage) applicationContext["OrderBookMemoryImage"];
+            OrderBookMemoryImage orderBookMemoryImage = (OrderBookMemoryImage) _applicationContext["OrderBookMemoryImage"];
             orderBookMemoryImage.OnOrderBookChanged(limitOrderBook);
             IHttpActionResult httpActionResult = marketController.GetOrderBook("XBTUSD");
 
@@ -597,9 +587,6 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
 
             Assert.AreEqual(150, okResponseMessage.Content.Item2.ToList()[0].Item1);// Highest Ask Volumein Ask Order Book
             Assert.AreEqual(491.34M, okResponseMessage.Content.Item2.ToList()[0].Item2);// Highest Ask Price in Ask Order Book
-
-            InputDisruptorPublisher.Shutdown();
-            OutputDisruptor.ShutDown();
         }
 
         [Test]
@@ -607,10 +594,10 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
         public void GetDepthFromControllerTest_TestsTheLinkBetweenMarketControllerAndMArketQueryService_ChecksTheOutputToBeAsExpected()
         {
             // Get the context
-            IApplicationContext applicationContext = ContextRegistry.GetContext();
+            //IApplicationContext applicationContext = ContextRegistry.GetContext();
 
             // Get the instance through Spring configuration
-            MarketController marketController = (MarketController)applicationContext["MarketController"];
+            MarketController marketController = (MarketController)_applicationContext["MarketController"];
              Depth depth = new Depth("XBTUSD", 3);
 
             depth.AddOrder(new Price(491), new Volume(100), OrderSide.Buy);
@@ -621,7 +608,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             depth.AddOrder(new Price(490), new Volume(100), OrderSide.Sell);
             depth.AddOrder(new Price(490), new Volume(200), OrderSide.Sell);
 
-            DepthMemoryImage depthMemoryImage = (DepthMemoryImage)applicationContext["DepthMemoryImage"];
+            DepthMemoryImage depthMemoryImage = (DepthMemoryImage)_applicationContext["DepthMemoryImage"];
             depthMemoryImage.OnDepthArrived(depth);
             
             IHttpActionResult httpActionResult = marketController.GetDepth("XBTUSD");
@@ -639,9 +626,6 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             Assert.AreEqual(400, returnedDepths.Content.Item2.ToList()[0].Item1); // Aggregated Volume
             Assert.AreEqual(490, returnedDepths.Content.Item2.ToList()[0].Item2); // Price
             Assert.AreEqual(3, returnedDepths.Content.Item2.ToList()[0].Item3); // OrderCount
-
-            InputDisruptorPublisher.Shutdown();
-            OutputDisruptor.ShutDown();
         }
     }
 }

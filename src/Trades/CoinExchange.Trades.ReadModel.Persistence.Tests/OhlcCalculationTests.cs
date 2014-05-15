@@ -23,7 +23,7 @@ using Spring.Context.Support;
 namespace CoinExchange.Trades.ReadModel.Persistence.Tests
 {
     [TestFixture]
-    public class OhlcCalculationTests//:AbstractConfiguration
+    public class OhlcCalculationTests
     {
         private ManualResetEvent _manualResetEvent;
         private IEventStore _eventStore;
@@ -31,12 +31,8 @@ namespace CoinExchange.Trades.ReadModel.Persistence.Tests
         private IPersistanceRepository _persistance=ContextRegistry.GetContext()["PersistenceRepository"] as IPersistanceRepository;
         private IOhlcRepository _ohlcRepository=ContextRegistry.GetContext()["OhlcRepository"] as IOhlcRepository;
         private ITradeRepository _tradeRepository=ContextRegistry.GetContext()["TradeRepository"] as ITradeRepository;
-        
-        public IOhlcRepository OhlcRepository
-        {
-            set { _ohlcRepository = value; }
-        }
         private DatabaseUtility _databaseUtility;
+
         [SetUp]
         public new void SetUp()
         {
@@ -63,6 +59,7 @@ namespace CoinExchange.Trades.ReadModel.Persistence.Tests
         {
             BeforeTearDown();
             _databaseUtility.Create();
+            OutputDisruptor.ShutDown();
             AfterTearDown();
         }
 
@@ -108,7 +105,6 @@ namespace CoinExchange.Trades.ReadModel.Persistence.Tests
             Assert.AreEqual(model2.Low, 2);
             Assert.AreEqual(model2.Close, 10);
             Assert.AreEqual(model2.Volume, 15);
-            
         }
 
         protected virtual void BeforeSetup() { }

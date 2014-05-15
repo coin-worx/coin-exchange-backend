@@ -51,60 +51,7 @@ namespace CoinExchange.Client
             }
             return message;
         }
-
-        public string TestPrivate(string url = "http://localhost:51780/api", params object[] a_params)
-        {
-            string message = "";
-            for (int i = 0; i < 2; i++)
-            {
-                try
-                {
-                    HttpWebRequest request = (HttpWebRequest) WebRequest.Create(url);
-                    request.Method = "POST";
-                    request.ContentType = "application/json; charset=utf-8";
-                    string hash = String.Format("{0}:{1}:{2}", key, url, secretkey).ToMD5Hash();
-                    string split = String.Format("{0},{1},{2},{3},{4}", key, nonce, cnounce, ++counter, hash);
-                    request.Headers.Add("Auth", split);
-                    using (var writer = new StreamWriter(request.GetRequestStream()))
-                    {
-                        JObject joe = new JObject();
-                        if (a_params != null)
-                        {
-                            if (a_params.Length > 0)
-                            {
-                                JArray props = new JArray();
-                                foreach (var p in a_params)
-                                {
-                                    props.Add(p);
-                                    joe.Add(new JProperty("", props));
-                                    string json = JsonConvert.SerializeObject(p);
-                                    writer.Write(json);
-                                }
-                            }
-                        }
-                    }
-                    HttpWebResponse response = (HttpWebResponse) request.GetResponse();
-
-                    // Get the stream associated with the response.
-                    Stream receiveStream = response.GetResponseStream();
-
-                    // Pipes the stream to a higher level stream reader with the required encoding format. 
-                    StreamReader readStream = new StreamReader(receiveStream, Encoding.UTF8);
-                    message = readStream.ReadToEnd();
-                    response.Close();
-                    readStream.Close();
-                    return message;
-                }
-                catch (WebException exe)
-                {
-                    nonce = exe.Response.Headers["Nounce"];
-                    message = exe.Response.ToString();
-                }
-             
-            }
-            return message;
-
-        }
+        
         #region Private Calls Methods
 
         /// <summary>
@@ -119,7 +66,7 @@ namespace CoinExchange.Client
             jsonObject.Add("Start", start);
             jsonObject.Add("End", end);
             string url = _baseUrl + "/trades/tradehistory";
-            return RequestServer(jsonObject, url);
+            return HttpPostRequest(jsonObject, url);
         }
 
         /// <summary>
@@ -134,7 +81,7 @@ namespace CoinExchange.Client
             jsonObject.Add("txId", txId);
             jsonObject.Add("includeTrades", includeTrades);
             string url = _baseUrl + "/trades/querytrades";
-            return RequestServer(jsonObject, url);
+            return HttpPostRequest(jsonObject, url);
         }
 
         /// <summary>
@@ -145,7 +92,9 @@ namespace CoinExchange.Client
         public string GetTradeVolume(string pair)
         {
             string url = _baseUrl + "/trades/tradevolume";
-            return TestPrivate(url,pair);
+            JObject obj = new JObject();
+            obj.Add("", pair);
+            return HttpPostRequest(obj,url);
         }
 
         /// <summary>
@@ -156,7 +105,9 @@ namespace CoinExchange.Client
         public string CancelOrder(string txid)
         {
             string url = _baseUrl + "/orders/cancelorder";
-            return TestPrivate(url, txid);
+            JObject obj = new JObject();
+            obj.Add("", txid);
+            return HttpPostRequest(obj, url);
         }
 
         /// <summary>
@@ -176,7 +127,7 @@ namespace CoinExchange.Client
             jsonObject.Add("Price", price);
             jsonObject.Add("Volume", volume);
             string url = _baseUrl + "/orders/createorder";
-            return RequestServer(jsonObject, url);
+            return HttpPostRequest(jsonObject, url);
         }
 
         /// <summary>
@@ -187,10 +138,10 @@ namespace CoinExchange.Client
         /// <returns></returns>
         public string QueryOpenOrdersParams(bool includeTrades, string userRefId)
         {
-            JObject jsonObject = new JObject();
-            jsonObject.Add("includeTrades", includeTrades);
+            JObject obj = new JObject();
+            obj.Add("", includeTrades.ToString());
             string url = _baseUrl + "/orders/openorders";
-            return TestPrivate(url,includeTrades.ToString());
+            return HttpPostRequest(obj,url);
         }
 
         /// <summary>
@@ -207,7 +158,7 @@ namespace CoinExchange.Client
             jsonObject.Add("startTime", startTime);
             jsonObject.Add("endTime", endTime);
             string url = _baseUrl + "/orders/closedorders";
-            return RequestServer(jsonObject, url);
+            return HttpPostRequest(jsonObject, url);
         }
         
         /// <summary>
@@ -217,8 +168,10 @@ namespace CoinExchange.Client
         /// <returns></returns>
         public string QueryOrderInfo(string orderId)
         {
+            JObject obj = new JObject();
+            obj.Add("", orderId);
             string url = _baseUrl + "/orders/queryorders";
-            return TestPrivate(url, orderId);
+            return HttpPostRequest(obj, url);
         }
 
         /// <summary>
@@ -250,7 +203,7 @@ namespace CoinExchange.Client
         /// <param name="param"></param>
         /// <param name="url"></param>
         /// <returns></returns>
-        private string RequestServer(JObject param,string url)
+        private string HttpPostRequest(JObject param,string url)
         {
             string message = "";
             for (int i = 0; i < 2; i++)

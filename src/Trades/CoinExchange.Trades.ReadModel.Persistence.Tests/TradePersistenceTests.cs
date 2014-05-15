@@ -66,6 +66,10 @@ namespace CoinExchange.Trades.ReadModel.Persistence.Tests
             _persistanceRepository.SaveOrUpdate(model);
             IList<object> getTrades = _tradeRepository.GetRecentTrades("", "XBTUSD");
             Assert.NotNull(getTrades);
+            Assert.AreEqual(getTrades.Count, 1);
+            object[] received = getTrades[0] as object[];
+            Assert.AreEqual(received[1], 100);
+            Assert.AreEqual(received[2], 10);
         }
 
         [Test]
@@ -81,18 +85,12 @@ namespace CoinExchange.Trades.ReadModel.Persistence.Tests
             _persistanceRepository.SaveOrUpdate(model);
             //model.TradeId = DateTime.Now.Millisecond.ToString();
             var getTrades = _tradeRepository.GetTraderTradeHistory("1234");
-            //Assert.NotNull(getTrades);
-            //bool check = false;
-            //for (int i = 0; i < getTrades.Count; i++)
-            //{
-            //    if (!(getTrades[i].BuyTraderId.Equals("999") || getTrades[i].SellTraderId.Equals("1234")))
-            //    {
-            //        check = false;
-            //        break;
-            //    }
-            //    check = true;
-            //}
-            //Assert.AreEqual(check, true);
+            Assert.NotNull(getTrades);
+            Assert.AreEqual(getTrades.Count,1);
+            object[] received = getTrades[0] as object[];
+            Assert.AreEqual(received[2],100);
+            Assert.AreEqual(received[3],10);
+            Assert.AreEqual(received[4],"XBTUSD");
         }
 
         private void AssertAreEqual(TradeReadModel expected, TradeReadModel actual)

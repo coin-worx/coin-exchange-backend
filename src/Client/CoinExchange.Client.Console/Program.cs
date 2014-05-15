@@ -13,22 +13,9 @@ namespace CoinExchange.Client.Console
         static void Main(string[] args)
         {
             string baseUrl = "http://rockblanc.cloudapp.net/dev";
-            baseUrl = "http://localhost:51780";
-            
-            DatabaseUtility _databaseUtility;
-            var connection = ConfigurationManager.ConnectionStrings["MySql"].ToString();
-            _databaseUtility = new DatabaseUtility(connection);
-            _databaseUtility.Create();
-            _databaseUtility.Populate();
-            EndToEndTests endToEndTests = new EndToEndTests();
-            endToEndTests.Scenario1Test_TestsScenario1AndItsOutcome_VerifiesThroughMarketDataOrderAndTradesResults();
-
-            //ApiClient client=new ApiClient(baseUrl);
-            //System.Console.WriteLine("Requesting....");
-            //call methods available in api
-            //System.Console.WriteLine(client.CreateOrder("XBTUSD", "limit", "sell", 5, 10));
-            //System.Console.WriteLine(client.QueryClosedOrdersParams(false,"","","","",""));
-            //Scenario1(client);
+            //baseUrl = "http://localhost:51780";
+            ApiClient client=new ApiClient(baseUrl);
+            Scenario1(client);
             System.Console.ReadKey();
         }
 
@@ -37,15 +24,15 @@ namespace CoinExchange.Client.Console
         /// </summary>
         private static void Scenario1(ApiClient client)
         {
-            string currencyPair = "XBTUSD";
-            //Create orders
-            System.Console.WriteLine(client.CreateOrder(currencyPair, "limit", "buy", 10, 250));
-            System.Console.WriteLine(client.CreateOrder(currencyPair, "limit", "sell", 5, 252));
-            System.Console.WriteLine(client.CreateOrder(currencyPair, "market", "buy", 3));
-            System.Console.WriteLine(client.CreateOrder(currencyPair, "limit", "buy", 2, 253));
-            System.Console.WriteLine(client.CreateOrder(currencyPair, "market", "sell", 5));
-            System.Console.WriteLine(client.CreateOrder(currencyPair, "limit", "buy", 2, 250));
-            Thread.Sleep(5000);
+            //string currencyPair = "XBTUSD";
+            ////Create orders
+            //System.Console.WriteLine(client.CreateOrder(currencyPair, "limit", "buy", 10, 250));
+            //System.Console.WriteLine(client.CreateOrder(currencyPair, "limit", "sell", 5, 252));
+            //System.Console.WriteLine(client.CreateOrder(currencyPair, "market", "buy", 3));
+            //System.Console.WriteLine(client.CreateOrder(currencyPair, "limit", "buy", 2, 253));
+            //System.Console.WriteLine(client.CreateOrder(currencyPair, "market", "sell", 5));
+            //System.Console.WriteLine(client.CreateOrder(currencyPair, "limit", "buy", 2, 250));
+            //Thread.Sleep(5000);
             ScenarioResults(client);
         }
 
