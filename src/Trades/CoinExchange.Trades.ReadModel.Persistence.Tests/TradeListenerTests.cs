@@ -1,4 +1,6 @@
-﻿using System.Threading;
+﻿using System.Configuration;
+using System.Threading;
+using CoinExchange.Common.Tests;
 using CoinExchange.Trades.Domain.Model.OrderAggregate;
 using CoinExchange.Trades.Domain.Model.Services;
 using CoinExchange.Trades.Domain.Model.TradeAggregate;
@@ -17,42 +19,23 @@ using Constants = CoinExchange.Common.Domain.Model.Constants;
 namespace CoinExchange.Trades.ReadModel.Persistence.Tests
 {
     [TestFixture]
-    public class TradeListenerTests : AbstractConfiguration
+    public class TradeListenerTests
     {
-
         private ManualResetEvent _manualResetEvent;
         private IEventStore _eventStore;
-        private TradeEventListener _listener;
-        private IPersistanceRepository _persistance;
-
-        public ITradeRepository TradeRepository
-        {
-            set { _tradeRepository = value; }
-        }
-
-        public IPersistanceRepository Persistance
-        {
-            set { _persistance = value; }
-        }
-
-        private ISessionFactory sessionFactory;
-        private ITradeRepository _tradeRepository;
-
-
-        public ISessionFactory SessionFactory
-        {
-            set { sessionFactory = value; }
-        }
-
-        public TradeEventListener Listener
-        {
-            set { _listener = value; }
-        }
+        private TradeEventListener _listener = ContextRegistry.GetContext()["TradeEventListener"] as TradeEventListener;
+        private IPersistanceRepository _persistance = ContextRegistry.GetContext()["PersistenceRepository"] as IPersistanceRepository;
+        private ITradeRepository _tradeRepository = ContextRegistry.GetContext()["TradeRepository"] as ITradeRepository;
+        private DatabaseUtility _databaseUtility;
 
         [SetUp]
         public new void SetUp()
         {
             BeforeSetup();
+            var connection = ConfigurationManager.ConnectionStrings["MySql"].ToString();
+            _databaseUtility = new DatabaseUtility(connection);
+            _databaseUtility.Create();
+            _databaseUtility.Populate();
             //_persistance = ContextRegistry.GetContext()["PersistenceRepository"] as IPersistanceRepository;
             //_orderRepository = ContextRegistry.GetContext()["OrderRepository"] as IOrderRepository;
             //initialize journaler
@@ -67,7 +50,7 @@ namespace CoinExchange.Trades.ReadModel.Persistence.Tests
 
         [Test]
         [Category("Integration")]
-        public void PublishTradeToOutputDisruptor_IfOrderListenerIsInitiated_ItShouldSaveInDatabase()
+        public void PublishTradeToOutputDisruptor_IfTradeListenerIsInitiated_ItShouldSaveInDatabase()
         {
             Order buyOrder = OrderFactory.CreateOrder("123", "XBTUSD", "limit", "buy", 10, 100,
               new StubbedOrderIdGenerator());
@@ -92,7 +75,8 @@ namespace CoinExchange.Trades.ReadModel.Persistence.Tests
         public new void TearDown()
         {
             BeforeTearDown();
-            EndTransaction();
+            _databaseUtility.Create();
+            OutputDisruptor.ShutDown();
             AfterTearDown();
         }
 

@@ -11,6 +11,8 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
     /// </summary>
     public class MarketController : ApiController
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger
+            (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private IMarketDataQueryService _marketDataService;
 
         /// <summary>
@@ -30,13 +32,21 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         [Route("marketdata/tickerinfo")]
         public IHttpActionResult TickerInfo(string currencyPair)
         {
+            if (log.IsDebugEnabled)
+            {
+                log.Debug("Ticker Info Call: Currency Pair:"+currencyPair);
+            }
             try
             {
                 return Ok(_marketDataService.GetTickerInfo(currencyPair));
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                return InternalServerError(ex);
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Ticker Info Error",exception);
+                }
+                return InternalServerError(exception);
             }
         }
 
@@ -51,13 +61,21 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         [Route("marketdata/ohlcinfo")]
         public IHttpActionResult OhlcInfo(string currencyPair, int interval = 1, string since = "")
         {
+            if (log.IsDebugEnabled)
+            {
+                log.Debug("Ohlc Info Call: Currency Pair="+currencyPair);
+            }
             try
             {
                 return Ok(_marketDataService.GetOhlcInfo(currencyPair,interval, since));
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                return InternalServerError(ex);
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Ohlc Info Error", exception);
+                }
+                return InternalServerError(exception);
             }
         }
 
@@ -72,6 +90,10 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         [HttpGet]
         public IHttpActionResult GetOrderBook(string currencyPair, int count = 0)
         {
+            if (log.IsDebugEnabled)
+            {
+                log.Debug("Get Order Book Call: Currency Pair=" + currencyPair);
+            }
             try
             {
                 Tuple<OrderRepresentationList, OrderRepresentationList> list = _marketDataService.GetOrderBook(currencyPair, count);
@@ -80,11 +102,15 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                 {
                     return Ok<Tuple<OrderRepresentationList, OrderRepresentationList>>(list);
                 }
-                return NotFound();
+                return BadRequest();
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                return InternalServerError(ex);
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Get Order Book Call Error", exception);
+                }
+                return InternalServerError(exception);
             }
         }
 
@@ -100,6 +126,10 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         [HttpGet]
         public IHttpActionResult GetDepth(string currencyPair)
         {
+            if (log.IsDebugEnabled)
+            {
+                log.Debug("Get Depth Call: Currency Pair=" + currencyPair);
+            }
             try
             {
                 Tuple<Tuple<decimal, decimal, int>[], Tuple<decimal, decimal, int>[]> depth = _marketDataService.GetDepth(currencyPair);
@@ -108,11 +138,15 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                 {
                     return Ok(depth);
                 }
-                return NotFound();
+                return BadRequest();
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                return InternalServerError(ex);
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Get Depth Call Error", exception);
+                }
+                return InternalServerError(exception);
             }
         }
     }

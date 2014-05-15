@@ -19,6 +19,8 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
     /// </summary>
     public class TradeController : ApiController
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger
+     (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private ITradeApplicationService _tradeApplicationService;
 
         public TradeController(ITradeApplicationService tradeApplicationService)
@@ -40,6 +42,10 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         [HttpPost]
         public IHttpActionResult GetTradeHistory([FromBody]TradeHistoryParams tradeHistoryParams)
         {
+            if (log.IsDebugEnabled)
+            {
+                log.Debug("Trade History Call Recevied:" + tradeHistoryParams);
+            }
             try
             {
                 //get api key from header
@@ -51,17 +57,22 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                     string[] auth = headerParams.ToList()[0].Split(',');
                     apikey = auth[0];
                 }
+                log.Debug("Api Key:" + apikey);
                 var closedOrders = _tradeApplicationService.GetTradesHistory(new TraderId(Constants.GetTraderId(apikey)),tradeHistoryParams.Start, tradeHistoryParams.End);
 
                 if (closedOrders != null)
                 {
                     return Ok(closedOrders);
                 }
-                return NotFound();
+                return BadRequest();
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                return InternalServerError(ex);
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Trade History Call Error", exception);
+                }
+                return InternalServerError(exception);
             }
         }
 
@@ -94,11 +105,15 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                 {
                     return Ok(trades);
                 }
-                return NotFound();
+                return BadRequest();
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                return InternalServerError(ex);
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Query Trades Call Error", exception);
+                }
+                return InternalServerError(exception);
             }
         }
 
@@ -112,6 +127,10 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         [HttpGet]
         public IHttpActionResult RecentTrades(string currencyPair, string since = "")
         {
+            if (log.IsDebugEnabled)
+            {
+                log.Debug(string.Format("Recent Trades call: currency pair={0}",currencyPair));
+            }
             try
             {
                 var trades = _tradeApplicationService.GetRecentTrades(currencyPair, since);
@@ -120,11 +139,15 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                 {
                     return Ok(trades);
                 }
-                return NotFound();
+                return BadRequest();
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                return InternalServerError(ex);
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Recent Trades Call Error", exception);
+                }
+                return InternalServerError(exception);
             }
         }
 
@@ -160,13 +183,21 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         [HttpGet]
         public IHttpActionResult TradeableCurrencyPair()
         {
+            if (log.IsDebugEnabled)
+            {
+                log.Debug("Tradeabale Currency Pair Call");
+            }
             try
             {
                 return Ok(_tradeApplicationService.GetTradeableCurrencyPairs());
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                return InternalServerError(ex);
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Recent Trades Call Error", exception);
+                }
+                return InternalServerError(exception);
             }
         }
   

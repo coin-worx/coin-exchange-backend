@@ -30,5 +30,15 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.DTOs.Order
         public string Type;
         public decimal Price;
         public decimal Volume;
+
+        /// <summary>
+        /// Custom To string method
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return string.Format("Order parameters, Currency Pair={0},Side={1},Type={2},Price={3}," +
+                                 "Volume={4}", Pair, Side, Type, Price, Volume);
+        }
     }
 }

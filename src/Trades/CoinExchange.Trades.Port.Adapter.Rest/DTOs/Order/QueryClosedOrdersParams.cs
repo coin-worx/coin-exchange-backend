@@ -23,6 +23,16 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.DTOs.Order
         }
 
         /// <summary>
+        /// Cutom tostring method
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return string.Format("Closed Order Params, IncludeTrades={0},StartTime={1},EndTimr={2}", IncludeTrades,
+                StartTime, EndTime);
+        }
+
+        /// <summary>
         /// IncludeTrades
         /// </summary>
         public bool IncludeTrades { get { return _includeTrades; } }

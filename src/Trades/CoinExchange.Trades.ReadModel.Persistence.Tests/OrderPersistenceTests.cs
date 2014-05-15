@@ -54,20 +54,17 @@ namespace CoinExchange.Trades.ReadModel.Persistence.Tests
         {
             Order order = OrderFactory.CreateOrder("999", "XBTUSD", "limit", "buy", 5, 10,
                new StubbedOrderIdGenerator());
+            Order order1 = OrderFactory.CreateOrder("100", "XBTUSD", "limit", "buy", 5, 10,
+               new StubbedOrderIdGenerator());
             string id = DateTime.Now.ToString();
             OrderReadModel model = ReadModelAdapter.GetOrderReadModel(order);
             _persistanceRepository.SaveOrUpdate(model);
+            OrderReadModel model1 = ReadModelAdapter.GetOrderReadModel(order1);
+            _persistanceRepository.SaveOrUpdate(model1);
             IList<OrderReadModel> getReadModel = _orderRepository.GetOpenOrders("999");
-            bool check = true;
             Assert.NotNull(getReadModel);
-            for (int i = 0; i < getReadModel.Count; i++)
-            {
-                if (!getReadModel[i].TraderId.Equals("999") || !getReadModel[i].Status.Equals("Open"))
-                {
-                    check = false;
-                }
-            }
-            Assert.AreEqual(check, true);
+            Assert.AreEqual(getReadModel.Count,1);
+            AssertAreEqual(getReadModel[0],model);
         }
 
         [Test]
@@ -75,20 +72,14 @@ namespace CoinExchange.Trades.ReadModel.Persistence.Tests
         {
             Order order = OrderFactory.CreateOrder("999", "XBTUSD", "limit", "buy", 5, 10,
                new StubbedOrderIdGenerator());
+            order.OrderState=OrderState.Complete;
             string id = DateTime.Now.ToString();
             OrderReadModel model = ReadModelAdapter.GetOrderReadModel(order);
             _persistanceRepository.SaveOrUpdate(model);
             IList<OrderReadModel> getReadModel = _orderRepository.GetClosedOrders("999");
-            bool check = true;
             Assert.NotNull(getReadModel);
-            for (int i = 0; i < getReadModel.Count; i++)
-            {
-                if (!getReadModel[i].TraderId.Equals("999") || !getReadModel[i].Status.Equals("Closed"))
-                {
-                    check = false;
-                }
-            }
-            Assert.AreEqual(check, true);
+            Assert.AreEqual(getReadModel.Count, 1);
+            AssertAreEqual(getReadModel[0], model);
         }
 
         private void AssertAreEqual(OrderReadModel expected, OrderReadModel actual)

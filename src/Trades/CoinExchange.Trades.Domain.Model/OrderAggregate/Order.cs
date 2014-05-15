@@ -261,6 +261,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderAggregate
             set
             {
                 AssertionConcern.AssertArgumentNotNull(value,"Volume not specified");
+                AssertionConcern.AssertGreaterThanZero(value.Value,"Volume must be greater than 0");
                 _volume = value;
             }
         }

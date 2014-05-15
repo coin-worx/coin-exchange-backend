@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using CoinExchange.Common.Domain.Model;
+using CoinExchange.Common.Tests;
 using CoinExchange.Trades.Domain.Model.OrderAggregate;
 using CoinExchange.Trades.Domain.Model.Services;
 using CoinExchange.Trades.Domain.Model.TradeAggregate;
@@ -16,51 +18,30 @@ using CoinExchange.Trades.ReadModel.Repositories;
 using Disruptor;
 using NHibernate;
 using NUnit.Framework;
+using Spring.Context.Support;
 
 namespace CoinExchange.Trades.ReadModel.Persistence.Tests
 {
     [TestFixture]
-    public class OhlcCalculationTests:AbstractConfiguration
+    public class OhlcCalculationTests
     {
         private ManualResetEvent _manualResetEvent;
         private IEventStore _eventStore;
-        private TradeEventListener _listener;
-        private IPersistanceRepository _persistance;
-        private IOhlcRepository _ohlcRepository;
-
-        public ITradeRepository TradeRepository
-        {
-            set { _tradeRepository = value; }
-        }
-
-        public IPersistanceRepository Persistance
-        {
-            set { _persistance = value; }
-        }
-
-        private ISessionFactory sessionFactory;
-        private ITradeRepository _tradeRepository;
-        
-        public ISessionFactory SessionFactory
-        {
-            set { sessionFactory = value; }
-        }
-
-        public TradeEventListener Listener
-        {
-            set { _listener = value; }
-        }
-
-        public IOhlcRepository OhlcRepository
-        {
-            set { _ohlcRepository = value; }
-        }
+        private TradeEventListener _listener=ContextRegistry.GetContext()["TradeEventListener"] as TradeEventListener;
+        private IPersistanceRepository _persistance=ContextRegistry.GetContext()["PersistenceRepository"] as IPersistanceRepository;
+        private IOhlcRepository _ohlcRepository=ContextRegistry.GetContext()["OhlcRepository"] as IOhlcRepository;
+        private ITradeRepository _tradeRepository=ContextRegistry.GetContext()["TradeRepository"] as ITradeRepository;
+        private DatabaseUtility _databaseUtility;
 
         [SetUp]
         public new void SetUp()
         {
             BeforeSetup();
             log4net.Config.XmlConfigurator.Configure();
+            var connection = ConfigurationManager.ConnectionStrings["MySql"].ToString();
+            _databaseUtility = new DatabaseUtility(connection);
+            _databaseUtility.Create();
+            _databaseUtility.Populate();
             //_persistance = ContextRegistry.GetContext()["PersistenceRepository"] as IPersistanceRepository;
             //_orderRepository = ContextRegistry.GetContext()["OrderRepository"] as IOrderRepository;
             //initialize journaler
@@ -69,7 +50,7 @@ namespace CoinExchange.Trades.ReadModel.Persistence.Tests
             //assign journaler to disruptor as its consumer
             OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
             _manualResetEvent = new ManualResetEvent(false);
-            //  _listener = new TradeEventListener(_persistance);
+           // _listener = new TradeEventListener(_persistance);
             AfterSetup();
         }
 
@@ -77,7 +58,8 @@ namespace CoinExchange.Trades.ReadModel.Persistence.Tests
         public new void TearDown()
         {
             BeforeTearDown();
-            EndTransaction();
+            _databaseUtility.Create();
+            OutputDisruptor.ShutDown();
             AfterTearDown();
         }
 
@@ -105,8 +87,8 @@ namespace CoinExchange.Trades.ReadModel.Persistence.Tests
             OutputDisruptor.Publish(trade5);
             OutputDisruptor.Publish(trade6);
             _manualResetEvent.WaitOne(10000);
-            OhlcReadModel model = _ohlcRepository.GetOhlcByDateTime(dateTime);
-            OhlcReadModel model2 = _ohlcRepository.GetOhlcByDateTime(dateTime.AddMinutes(1));
+            OhlcReadModel model = _ohlcRepository.GetOhlcByDateTime(dateTime.AddMinutes(1));
+            OhlcReadModel model2 = _ohlcRepository.GetOhlcByDateTime(dateTime.AddMinutes(2));
 
             //bar 1 verification(will form from trade 1-4)
             Assert.NotNull(model);
@@ -123,7 +105,6 @@ namespace CoinExchange.Trades.ReadModel.Persistence.Tests
             Assert.AreEqual(model2.Low, 2);
             Assert.AreEqual(model2.Close, 10);
             Assert.AreEqual(model2.Volume, 15);
-            
         }
 
         protected virtual void BeforeSetup() { }
