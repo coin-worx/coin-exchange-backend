@@ -120,7 +120,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         [Route("orders/openorders")]
         [Authorize]
         [HttpPost]
-        public IHttpActionResult QueryOpenOrders([FromBody] string includeTrades="FALSE")
+        public IHttpActionResult QueryOpenOrders([FromBody] string includeTrades)
         {
             try
             {

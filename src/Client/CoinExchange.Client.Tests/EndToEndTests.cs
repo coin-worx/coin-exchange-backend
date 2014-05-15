@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using CoinExchange.Common.Tests;
+using CoinExchange.Rest.WebHost;
 using NUnit.Framework;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -70,7 +72,6 @@ namespace CoinExchange.Client.Tests
             Assert.IsNull(depth.m_Item2[4].Value);
 
             dynamic openOrders = GetOpenOrders(apiClient);
-            GetOpenOrders(apiClient);
             //------------------- Open Orders -------------------------            
             Assert.AreEqual(2, openOrders.Count);
             // First Open Order
@@ -329,7 +330,7 @@ namespace CoinExchange.Client.Tests
 
             //------------------------- Open Orders ----------------------------------
             dynamic openOrders = GetOpenOrders(apiClient);
-            Assert.IsNull(openOrders);
+            Assert.AreEqual(0, openOrders.Count);
             //---------------------------------------------------------------------
 
             //-------------------------- Closed Orders ----------------------------
@@ -542,16 +543,7 @@ namespace CoinExchange.Client.Tests
         /// </summary>
         private Newtonsoft.Json.Linq.JArray GetOpenOrders(ApiClient apiClient)
         {
-            Newtonsoft.Json.Linq.JArray deserializeObject = null;
-            try
-            {
-                deserializeObject = JsonConvert.DeserializeObject<dynamic>(apiClient.QueryOpenOrdersParams(true, ""));
-            }
-            catch (JsonReaderException exception)
-            {
-                Console.WriteLine(exception);
-            }
-            return deserializeObject;
+            return JsonConvert.DeserializeObject<dynamic>(apiClient.QueryOpenOrdersParams(true, ""));
         }
 
         /// <summary>

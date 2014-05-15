@@ -5,6 +5,7 @@ using CoinExchange.Client.Tests;
 using CoinExchange.Common.Tests;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using CoinExchange.Trades.Port.Adapter.Rest;
 
 namespace CoinExchange.Client.Console
 {
@@ -20,8 +21,9 @@ namespace CoinExchange.Client.Console
             _databaseUtility = new DatabaseUtility(connection);
             _databaseUtility.Create();
             _databaseUtility.Populate();
-            EndToEndTests endToEndTests = new EndToEndTests();
+            Trades.Port.Adapter.Rest.IntegrationTests.EndToEndTests endToEndTests = new Trades.Port.Adapter.Rest.IntegrationTests.EndToEndTests();
             endToEndTests.Scenario1Test_TestsScenario1AndItsOutcome_VerifiesThroughMarketDataOrderAndTradesResults();
+            Thread.Sleep(5000);
 
             //ApiClient client=new ApiClient(baseUrl);
             //System.Console.WriteLine("Requesting....");
