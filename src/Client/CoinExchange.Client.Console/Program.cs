@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Configuration;
 using System.Threading;
-using CoinExchange.Client.Tests;
 using CoinExchange.Common.Tests;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -21,16 +20,9 @@ namespace CoinExchange.Client.Console
             _databaseUtility = new DatabaseUtility(connection);
             _databaseUtility.Create();
             _databaseUtility.Populate();
-            Trades.Port.Adapter.Rest.IntegrationTests.EndToEndTests endToEndTests = new Trades.Port.Adapter.Rest.IntegrationTests.EndToEndTests();
-            endToEndTests.Scenario1Test_TestsScenario1AndItsOutcome_VerifiesThroughMarketDataOrderAndTradesResults();
+            EndToEndConsoleTests endToEndTests = new EndToEndConsoleTests();
+            endToEndTests.Scenario1EndtoEndTest();
             Thread.Sleep(5000);
-
-            //ApiClient client=new ApiClient(baseUrl);
-            //System.Console.WriteLine("Requesting....");
-            //call methods available in api
-            //System.Console.WriteLine(client.CreateOrder("XBTUSD", "limit", "sell", 5, 10));
-            //System.Console.WriteLine(client.QueryClosedOrdersParams(false,"","","","",""));
-            //Scenario1(client);
             System.Console.ReadKey();
         }
 

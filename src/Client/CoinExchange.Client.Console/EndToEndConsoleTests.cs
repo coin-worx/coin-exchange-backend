@@ -1,25 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Reflection;
-using System.Text;
+﻿using System.Configuration;
 using System.Threading;
-using System.Threading.Tasks;
 using CoinExchange.Common.Tests;
-using CoinExchange.Rest.WebHost;
 using NUnit.Framework;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace CoinExchange.Client.Tests
+namespace CoinExchange.Client.Console
 {
-    [TestFixture]
-    public class EndToEndTests
+    public class EndToEndConsoleTests
     {
         private DatabaseUtility _databaseUtility;
         
-        [SetUp]
         public new void SetUp()
         {
             var connection = ConfigurationManager.ConnectionStrings["MySql"].ToString();
@@ -28,15 +19,15 @@ namespace CoinExchange.Client.Tests
             _databaseUtility.Populate();
         }
 
-        [TearDown]
         public new void TearDown()
         {
             _databaseUtility.Create();
         }
 
-        [Test]
-        [Category("Integration")]
-        public void Scenario1Test_TestsScenario1AndItsOutcome_VerifiesThroughMarketDataOrderAndTradesResults()
+        /// <summary>
+        /// Scenario 1 end to end test
+        /// </summary>
+        public void Scenario1EndtoEndTest()
         {
             ApiClient apiClient = GetClient();
             Scenario1OrderCreation(apiClient);
@@ -146,9 +137,10 @@ namespace CoinExchange.Client.Tests
             //------------------- Trades -------------------------
         }
 
-        [Test]
-        [Category("Integration")]
-        public void Scenario2Test_TestsScenario2AndItsOutcome_VerifiesThroughMarketDataOrderAndTradesResults()
+        /// <summary>
+        /// Scenario2 end to end test
+        /// </summary>
+        public void Scenario2EndToEndTest()
         {
             ApiClient apiClient = GetClient();
             Scenario2OrderCreation(apiClient);
@@ -293,9 +285,10 @@ namespace CoinExchange.Client.Tests
             //-----------------------------------------------------------------------
         }
 
-        [Test]
-        [Category("Integration")]
-        public void Scenario3Test_TestsScenario3AndItsOutcome_VerifiesThroughMarketDataOrderAndTradesResults()
+        /// <summary>
+        /// Scenario 3 End to End test
+        /// </summary>
+        public void Scenario3EndToEndTest()
         {
             ApiClient apiClient = GetClient();
             Scenario3OrderCreation(apiClient);
@@ -444,17 +437,17 @@ namespace CoinExchange.Client.Tests
         {
             string currecyPair = "XBTUSD";
             //Create orders
-            Console.WriteLine(client.CreateOrder(currecyPair, "limit", "buy", 10, 250));
+            System.Console.WriteLine(client.CreateOrder(currecyPair, "limit", "buy", 10, 250));
             Thread.Sleep(1200);
-            Console.WriteLine(client.CreateOrder(currecyPair, "limit", "sell", 5, 252));
+            System.Console.WriteLine(client.CreateOrder(currecyPair, "limit", "sell", 5, 252));
             Thread.Sleep(1200);
-            Console.WriteLine(client.CreateOrder(currecyPair, "market", "buy", 3));
+            System.Console.WriteLine(client.CreateOrder(currecyPair, "market", "buy", 3));
             Thread.Sleep(1200);
-            Console.WriteLine(client.CreateOrder(currecyPair, "limit", "buy", 2, 253));
+            System.Console.WriteLine(client.CreateOrder(currecyPair, "limit", "buy", 2, 253));
             Thread.Sleep(1200);
-            Console.WriteLine(client.CreateOrder(currecyPair, "market", "sell", 5));
+            System.Console.WriteLine(client.CreateOrder(currecyPair, "market", "sell", 5));
             Thread.Sleep(1200);
-            Console.WriteLine(client.CreateOrder(currecyPair, "limit", "buy", 2, 250));
+            System.Console.WriteLine(client.CreateOrder(currecyPair, "limit", "buy", 2, 250));
             Thread.Sleep(5000);
         }
 
