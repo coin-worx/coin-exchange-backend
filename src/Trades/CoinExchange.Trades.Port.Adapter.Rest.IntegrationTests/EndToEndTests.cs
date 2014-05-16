@@ -71,14 +71,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
         {
             // Get the context
             IApplicationContext applicationContext = ContextRegistry.GetContext();
-            //Exchange exchange = new Exchange();
-            //IEventStore inputEventStore = new RavenNEventStore(Constants.INPUT_EVENT_STORE);
-            //IEventStore outputEventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
-            //Journaler inputJournaler = new Journaler(inputEventStore);
-            //Journaler outputJournaler = new Journaler(outputEventStore);
-            //InputDisruptorPublisher.InitializeDisruptor(new IEventHandler<InputPayload>[] { exchange, inputJournaler });
-            //OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { outputJournaler });
-
+            
             // Get the instance through Spring configuration
             OrderController orderController = (OrderController)applicationContext["OrderController"];
             TradeController tradeController = (TradeController)applicationContext["TradeController"];
@@ -226,13 +219,6 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
         {
             // Get the context
             IApplicationContext applicationContext = ContextRegistry.GetContext();
-            //Exchange exchange = new Exchange();
-            //IEventStore inputEventStore = new RavenNEventStore(Constants.INPUT_EVENT_STORE);
-            //IEventStore outputEventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
-            //Journaler inputJournaler = new Journaler(inputEventStore);
-            //Journaler outputJournaler = new Journaler(outputEventStore);
-            //InputDisruptorPublisher.InitializeDisruptor(new IEventHandler<InputPayload>[] { exchange, inputJournaler });
-            //OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { outputJournaler });
 
             // Get the instance through Spring configuration
             OrderController orderController = (OrderController)applicationContext["OrderController"];
@@ -395,13 +381,43 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             Assert.AreEqual(5, trades[1][3]);
             Assert.AreEqual("XBTUSD", trades[1][4]);
 
-            Assert.AreEqual(250, trades[2][2]);
-            Assert.AreEqual(2, trades[2][3]);
-            Assert.AreEqual("XBTUSD", trades[2][4]);
+            // These trades execute simultaneously, so when queried from the database and sorted as per the time when 
+            // they were saved in the database, they can be queried out of the order as we expected because they have the
+            // same time. So we check if one trade came before the other and place assertions for it then for the other and 
+            // vice versa
+            if ((decimal)trades[2][2] == 250 && (decimal)trades[2][3] == 2)
+            {
+                Assert.AreEqual(250, trades[2][2]);
+                Assert.AreEqual(2, trades[2][3]);
+                Assert.AreEqual("XBTUSD", trades[2][4]);
+            }
+            else if ((decimal)trades[2][2] == 245 && (decimal)trades[2][3] == 2)
+            {
+                Assert.AreEqual(245, trades[2][2]);
+                Assert.AreEqual(2, trades[2][3]);
+                Assert.AreEqual("XBTUSD", trades[2][4]);
+            }
+            else
+            {
+                throw new Exception("No assertions could be made on expected trade");
+            }
 
-            Assert.AreEqual(245, trades[3][2]);
-            Assert.AreEqual(2, trades[3][3]);
-            Assert.AreEqual("XBTUSD", trades[3][4]);
+            if ((decimal)trades[3][2] == 250 && (decimal)trades[3][3] == 2)
+            {
+                Assert.AreEqual(250, trades[3][2]);
+                Assert.AreEqual(2, trades[3][3]);
+                Assert.AreEqual("XBTUSD", trades[3][4]);
+            }
+            else if ((decimal)trades[3][2] == 245 && (decimal)trades[3][3] == 2)
+            {
+                Assert.AreEqual(245, trades[3][2]);
+                Assert.AreEqual(2, trades[3][3]);
+                Assert.AreEqual("XBTUSD", trades[3][4]);
+            }
+            else
+            {
+                throw new Exception("No assertions could be made on expected trade");
+            }
 
             Assert.AreEqual(245, trades[4][2]);
             Assert.AreEqual(5, trades[4][3]);
@@ -409,21 +425,13 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             //-----------------------------------------------------------------------
         }
 
-
         [Test]
         [Category("Integration")]
         public void Scenario3Test_TestsScenario3AndItsOutcome_VerifiesThroughMarketDataOrderAndTradesResults()
         {
             // Get the context
             IApplicationContext applicationContext = ContextRegistry.GetContext();
-            //Exchange exchange = new Exchange();
-            //IEventStore inputEventStore = new RavenNEventStore(Constants.INPUT_EVENT_STORE);
-            //IEventStore outputEventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
-            //Journaler inputJournaler = new Journaler(inputEventStore);
-            //Journaler outputJournaler = new Journaler(outputEventStore);
-            //InputDisruptorPublisher.InitializeDisruptor(new IEventHandler<InputPayload>[] { exchange, inputJournaler });
-            //OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { outputJournaler });
-
+            
             // Get the instance through Spring configuration
             OrderController orderController = (OrderController)applicationContext["OrderController"];
             TradeController tradeController = (TradeController)applicationContext["TradeController"];
@@ -572,14 +580,43 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
                 trades.Add(objects);
             }
 
-            // This call return list of object, so we have to explicitly check values within elements
-            Assert.AreEqual(250, trades[0][2]);// Price
-            Assert.AreEqual(7, trades[0][3]);// Volume
-            Assert.AreEqual("XBTUSD", trades[0][4]);
+            // These trades execute simultaneously, so when queried from the database and sorted as per the time when 
+            // they were saved in the database, they can be queried out of the order as we expected because they have the
+            // same time. So we check if one trade came before the other and place assertions for it then for the other and 
+            // vice versa
+            if ((decimal)trades[0][3] == 7)
+            {
+                Assert.AreEqual(250, trades[0][2]);// Price
+                Assert.AreEqual(7, trades[0][3]); // Volume
+                Assert.AreEqual("XBTUSD", trades[0][4]); // CurrencyPair
+            }
+            else if ((decimal)trades[0][3] == 2)
+            {
+                Assert.AreEqual(250, trades[0][2]);
+                Assert.AreEqual(2, trades[0][3]);
+                Assert.AreEqual("XBTUSD", trades[0][4]);
+            }
+            else
+            {
+                throw new Exception("No assertions could be made on expected trade");
+            }
 
-            Assert.AreEqual(250, trades[1][2]);
-            Assert.AreEqual(2, trades[1][3]);
-            Assert.AreEqual("XBTUSD", trades[1][4]);
+            if ((decimal)trades[1][3] == 7)
+            {
+                Assert.AreEqual(250, trades[1][2]);// Price
+                Assert.AreEqual(7, trades[1][3]); // Volume
+                Assert.AreEqual("XBTUSD", trades[1][4]); // CurrencyPair
+            }
+            else if ((decimal)trades[1][3] == 2)
+            {
+                Assert.AreEqual(250, trades[1][2]);// Price
+                Assert.AreEqual(2, trades[1][3]); // Volume
+                Assert.AreEqual("XBTUSD", trades[1][4]); // CurrencyPair
+            }
+            else
+            {
+                throw new Exception("No assertions could be made on expected trade");
+            }
             //-----------------------------------------------------------------------
         }
 

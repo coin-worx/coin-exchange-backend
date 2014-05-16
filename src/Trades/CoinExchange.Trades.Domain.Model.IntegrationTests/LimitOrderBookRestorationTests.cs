@@ -78,6 +78,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             exchange.PlaceNewOrder(buyOrder2);
             exchange.PlaceNewOrder(sellOrder1);
             exchange.PlaceNewOrder(sellOrder2);
+            Thread.Sleep(1500);
 
             Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
@@ -98,6 +99,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             replayService.ReplayOrderBooks(exchange, journaler);
+            Thread.Sleep(1500);
             // Get all orders from the EventStore and send to the LimitOrderBook to restore its state
             var orders = journaler.GetAllOrders();
 
@@ -159,6 +161,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             exchange.PlaceNewOrder(buyOrder2);
             exchange.PlaceNewOrder(buyOrder3);
             exchange.PlaceNewOrder(buyOrder4);
+            Thread.Sleep(3000);
 
             ManualResetEvent manualReset = new ManualResetEvent(false);
             manualReset.WaitOne(4000);
@@ -196,6 +199,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             replayService.ReplayOrderBooks(exchange, journaler);
+            Thread.Sleep(3000);
             Log.Debug("Replay service started for Exchange.");
             // Get all orders from the EventStore and send to the LimitOrderBook to restore its state
             var orders = journaler.GetAllOrders();
@@ -277,6 +281,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             exchange.PlaceNewOrder(sellOrder2);
             exchange.PlaceNewOrder(sellOrder3);
             exchange.PlaceNewOrder(sellOrder4);
+            Thread.Sleep(3000);
 
             Assert.AreEqual(1, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(1, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
@@ -310,6 +315,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             replayService.ReplayOrderBooks(exchange, journaler);
+            Thread.Sleep(3000);
             // Get all orders from the EventStore and send to the LimitOrderBook to restore its state
             var orders = journaler.GetAllOrders();
 
@@ -390,6 +396,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             exchange.PlaceNewOrder(sellOrder2);
             exchange.PlaceNewOrder(sellOrder3);
             exchange.PlaceNewOrder(sellOrder4);
+            Thread.Sleep(3000);
 
             var preCrashOrders = journaler.GetAllOrders();
             int completeOrdersCount = 0;
@@ -432,6 +439,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             replayService.ReplayOrderBooks(exchange, journaler);
+            Thread.Sleep(3000);
             // Get all orders from the EventStore and send to the LimitOrderBook to restore its state
             var orders = journaler.GetAllOrders();
 
@@ -520,6 +528,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             exchange.PlaceNewOrder(sellOrder2);
             exchange.PlaceNewOrder(sellOrder3);
             exchange.PlaceNewOrder(sellOrder4);
+            Thread.Sleep(3000);
 
             var preCrashOrders = journaler.GetAllOrders();
             int partialFillOrdersCount = 0;
@@ -586,6 +595,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             replayService.ReplayOrderBooks(exchange, journaler);
+            Thread.Sleep(3000);
             // Get all orders from the EventStore and send to the LimitOrderBook to restore its state
             var orders = journaler.GetAllOrders();
 
@@ -698,6 +708,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             exchange.PlaceNewOrder(sellOrder2);
             exchange.PlaceNewOrder(sellOrder3);
             exchange.PlaceNewOrder(buyOrder4);
+            Thread.Sleep(3000);
 
             var preCrashOrders = journaler.GetAllOrders();
             int partialFillOrdersCount = 0;
@@ -764,6 +775,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             replayService.ReplayOrderBooks(exchange, journaler);
+            Thread.Sleep(3000);
             // Get all orders from the EventStore and send to the LimitOrderBook to restore its state
             var orders = journaler.GetAllOrders();
 
@@ -933,6 +945,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             replayService.ReplayOrderBooks(exchange, journaler);
+            Thread.Sleep(2000);
             // Get all orders from the EventStore and send to the LimitOrderBook to restore its state
             var orders = journaler.GetOrdersForReplay(exchange.ExchangeEssentials.First().LimitOrderBook);
 
@@ -1156,7 +1169,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             exchange.PlaceNewOrder(sellOrder4);
 
             ManualResetEvent manualReset = new ManualResetEvent(false);
-            manualReset.WaitOne(2000);
+            manualReset.WaitOne(3000);
 
             Assert.AreEqual(1, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(3, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
@@ -1209,6 +1222,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
 
             exchange = new Exchange();
             replayService.ReplayOrderBooks(exchange, journaler);
+            Thread.Sleep(3000);
 
             var postCrashOrders = journaler.GetAllOrders();
             partialFillOrdersCount = 0;
@@ -1297,7 +1311,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             exchange.PlaceNewOrder(sellOrder4);
 
             ManualResetEvent manualReset = new ManualResetEvent(false);
-            manualReset.WaitOne(2000);
+            manualReset.WaitOne(3000);
 
             Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
@@ -1338,6 +1352,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
 
             exchange = new Exchange();
             replayService.ReplayOrderBooks(exchange, journaler);
+            Thread.Sleep(3000);
 
             var postCrashOrders = journaler.GetAllOrders();
             partialFillOrdersCount = 0;
@@ -1526,6 +1541,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             exchange.PlaceNewOrder(buyOrder2);
             exchange.PlaceNewOrder(sellOrder2);
             exchange.PlaceNewOrder(sellOrder1);
+            Thread.Sleep(2000);
             
             Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
@@ -1556,7 +1572,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(1, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             exchange.PlaceNewOrder(buyOrder3);
-
+            Thread.Sleep(800);
             Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
@@ -1602,6 +1618,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
             replayService.ReplayOrderBooks(exchange, journaler);
+            Thread.Sleep(3000);
 
             Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
@@ -1676,6 +1693,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             exchange.PlaceNewOrder(buyOrder2);
             exchange.PlaceNewOrder(sellOrder2);
             exchange.PlaceNewOrder(sellOrder1);
+            Thread.Sleep(4000);
 
             Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
@@ -1706,6 +1724,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             exchange.PlaceNewOrder(sellOrder3);
+            Thread.Sleep(800);
 
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
@@ -1753,6 +1772,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
             replayService.ReplayOrderBooks(exchange, journaler);
+            Thread.Sleep(3000);
 
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
