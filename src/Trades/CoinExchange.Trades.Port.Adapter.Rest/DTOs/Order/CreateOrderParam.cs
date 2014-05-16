@@ -11,6 +11,20 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.DTOs.Order
     /// </summary>
     public class CreateOrderParam
     {
+        public CreateOrderParam()
+        {
+            
+        }
+
+        public CreateOrderParam(string currencyPair, string side, string type, decimal price, decimal volume)
+        {
+            Pair = currencyPair;
+            Side = side;
+            Type = type;
+            Price = price;
+            Volume = volume;
+        }
+
         public string Pair;
         public string Side;
         public string Type;

@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Configuration;
 using System.Threading;
-using CoinExchange.Client.Tests;
 using CoinExchange.Common.Tests;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;

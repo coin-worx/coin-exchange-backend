@@ -69,6 +69,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\log4net.1.2.10\lib\2.0\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="NEventStore">
       <HintPath>..\..\packages\NEventStore.4.0.0.15\lib\net40\NEventStore.dll</HintPath>
     </Reference>
@@ -134,6 +135,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="EndToEndTests.cs" />
     <Compile Include="MarketDataControllerTests.cs" />
     <Compile Include="OrderControllerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

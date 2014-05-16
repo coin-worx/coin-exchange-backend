@@ -36,7 +36,6 @@ namespace CoinExchange.Rest.WebHost
             //DependencyResolver.SetResolver(new SpringDependencyResolver(ContextRegistry.GetContext()));
             //DependencyResolver.SetResolver(new SpringDependencyResolver(ContextRegistry.GetContext()));
             InitiliazeApplication();
-            
         }
 
         //protected override System.Web.Http.Dependencies.IDependencyResolver BuildWebApiDependencyResolver()
