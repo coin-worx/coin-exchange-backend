@@ -1,6 +1,5 @@
 # Coin Exchange Backend - README
 #Setting up RavenDB
-Following steps are required to configure RavenDB.
 1. Download the RavenDB from here: http://hibernatingrhinos.com/downloads/RavenDB%20Installer/2879
 2. Run the Setup installation.
 3. While installing the RavenDB, please select "Development" in Tragetting environment.
