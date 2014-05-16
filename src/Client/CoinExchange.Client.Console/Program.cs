@@ -15,7 +15,9 @@ namespace CoinExchange.Client.Console
             string baseUrl = "http://rockblanc.cloudapp.net/dev";
             //baseUrl = "http://localhost:51780";
             ApiClient client=new ApiClient(baseUrl);
-            Scenario1(client);
+            //Scenario3(client);
+            //ScenarioResults(client);
+            System.Console.WriteLine(client.QueryOpenOrdersParams(true, ""));
             System.Console.ReadKey();
         }
 
@@ -24,15 +26,15 @@ namespace CoinExchange.Client.Console
         /// </summary>
         private static void Scenario1(ApiClient client)
         {
-            //string currencyPair = "XBTUSD";
-            ////Create orders
-            //System.Console.WriteLine(client.CreateOrder(currencyPair, "limit", "buy", 10, 250));
-            //System.Console.WriteLine(client.CreateOrder(currencyPair, "limit", "sell", 5, 252));
-            //System.Console.WriteLine(client.CreateOrder(currencyPair, "market", "buy", 3));
-            //System.Console.WriteLine(client.CreateOrder(currencyPair, "limit", "buy", 2, 253));
-            //System.Console.WriteLine(client.CreateOrder(currencyPair, "market", "sell", 5));
-            //System.Console.WriteLine(client.CreateOrder(currencyPair, "limit", "buy", 2, 250));
-            //Thread.Sleep(5000);
+            string currencyPair = "XBTUSD";
+            //Create orders
+            System.Console.WriteLine(client.CreateOrder(currencyPair, "limit", "buy", 10, 250));
+            System.Console.WriteLine(client.CreateOrder(currencyPair, "limit", "sell", 5, 252));
+            System.Console.WriteLine(client.CreateOrder(currencyPair, "market", "buy", 3));
+            System.Console.WriteLine(client.CreateOrder(currencyPair, "limit", "buy", 2, 253));
+            System.Console.WriteLine(client.CreateOrder(currencyPair, "market", "sell", 5));
+            System.Console.WriteLine(client.CreateOrder(currencyPair, "limit", "buy", 2, 250));
+            Thread.Sleep(5000);
             ScenarioResults(client);
         }
 
@@ -76,7 +78,7 @@ namespace CoinExchange.Client.Console
             string orderId6 = JObject.Parse(client.CreateOrder(currecyPair, "limit", "buy", 8, 240)).Property("OrderId").Value.ToString();
             string orderId7 = JObject.Parse(client.CreateOrder(currecyPair, "limit", "buy", 7, 245)).Property("OrderId").Value.ToString();
             string orderId8 = JObject.Parse(client.CreateOrder(currecyPair, "limit", "buy", 3, 247)).Property("OrderId").Value.ToString();
-            Thread.Sleep(2000);
+            Thread.Sleep(5000);
             System.Console.WriteLine(client.CancelOrder(orderId6));
             System.Console.WriteLine(client.CancelOrder(orderId1));
             string orderId9 = client.CreateOrder(currecyPair, "market", "sell", 9);
