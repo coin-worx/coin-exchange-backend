@@ -1,4 +1,18 @@
 # Coin Exchange Backend - README
+#Technologies required:
+1. Visual Studio 2012
+2. .NET Framework 4.5
+3. Database: MySql (preferably the latest version, e.g. 5.6), RavenDB
+
+#Code Base
+1. Download and install Git.
+2. Right the folder which you want to be the home for the codebase, and choose Git Bash.(For integration of IntelliJ with Git, refer to the section below Setting Up the Environment->IntelliJ point 4 onward)
+3. Paste git clone git@bitbucket.org:abaziz/coin-exchange-backend.git
+4. Give the password when prompted.
+
+#Project Structure
+- Working code directory is coin-exchange-backend\src.
+
 #Setting up RavenDB
 1. Download the RavenDB from here: http://hibernatingrhinos.com/downloads/RavenDB%20Installer/2879
 2. Run the Setup installation.
