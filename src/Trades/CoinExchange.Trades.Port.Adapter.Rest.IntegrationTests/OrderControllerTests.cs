@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Results;
 using CoinExchange.Common.Domain.Model;
+using CoinExchange.Common.Tests;
 using CoinExchange.Trades.Application.OrderServices.Representation;
 using CoinExchange.Trades.Domain.Model.OrderAggregate;
 using CoinExchange.Trades.Domain.Model.OrderMatchingEngine;
@@ -34,6 +36,38 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
     class OrderControllerTests
     {
         // NOTE: MAKE SURE THERE ARE NO ORDERS OR TRADES IN THE DATABASE TABLES OTHERWISE TEST RESUTLS WILL BE AFFECTED
+        private DatabaseUtility _databaseUtility;
+        private IEventStore inputEventStore;
+        private IEventStore outputEventStore;
+        private Journaler inputJournaler;
+        private Journaler outputJournaler;
+
+
+        [SetUp]
+        public new void SetUp()
+        {
+            var connection = ConfigurationManager.ConnectionStrings["MySql"].ToString();
+            _databaseUtility = new DatabaseUtility(connection);
+            _databaseUtility.Create();
+            _databaseUtility.Populate();
+            inputEventStore = new RavenNEventStore(Constants.INPUT_EVENT_STORE);
+            outputEventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
+            inputJournaler = new Journaler(inputEventStore);
+            outputJournaler = new Journaler(outputEventStore);
+            Exchange exchange = new Exchange();
+            InputDisruptorPublisher.InitializeDisruptor(new IEventHandler<InputPayload>[] { exchange, inputJournaler });
+            OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { outputJournaler });
+        }
+
+        [TearDown]
+        public new void TearDown()
+        {
+            _databaseUtility.Create();
+            InputDisruptorPublisher.Shutdown();
+            OutputDisruptor.ShutDown();
+            inputEventStore.RemoveAllEvents();
+            outputEventStore.RemoveAllEvents();
+        }
 
         [Test]
         [Category("Integration")]
@@ -41,13 +75,13 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
         {
             // Get the context
             IApplicationContext applicationContext = ContextRegistry.GetContext();
-            Exchange exchange = new Exchange();
-            IEventStore inputEventStore = new RavenNEventStore(Constants.INPUT_EVENT_STORE);
-            IEventStore outputEventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
-            Journaler inputJournaler = new Journaler(inputEventStore);
-            Journaler outputJournaler = new Journaler(outputEventStore);
-            InputDisruptorPublisher.InitializeDisruptor(new IEventHandler<InputPayload>[] { exchange, inputJournaler });
-            OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { outputJournaler });
+            //Exchange exchange = new Exchange();
+            //IEventStore inputEventStore = new RavenNEventStore(Constants.INPUT_EVENT_STORE);
+            //IEventStore outputEventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
+            //Journaler inputJournaler = new Journaler(inputEventStore);
+            //Journaler outputJournaler = new Journaler(outputEventStore);
+            //InputDisruptorPublisher.InitializeDisruptor(new IEventHandler<InputPayload>[] { exchange, inputJournaler });
+            //OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { outputJournaler });
 
             // Get the instance through Spring configuration
             OrderController orderController = (OrderController)applicationContext["OrderController"];
@@ -83,13 +117,13 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
         {
             // Get the context
             IApplicationContext applicationContext = ContextRegistry.GetContext();
-            Exchange exchange = new Exchange();
-            IEventStore inputEventStore = new RavenNEventStore(Constants.INPUT_EVENT_STORE);
-            IEventStore outputEventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
-            Journaler inputJournaler = new Journaler(inputEventStore);
-            Journaler outputJournaler = new Journaler(outputEventStore);
-            InputDisruptorPublisher.InitializeDisruptor(new IEventHandler<InputPayload>[] { exchange, inputJournaler });
-            OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { outputJournaler });
+            //Exchange exchange = new Exchange();
+            //IEventStore inputEventStore = new RavenNEventStore(Constants.INPUT_EVENT_STORE);
+            //IEventStore outputEventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
+            //Journaler inputJournaler = new Journaler(inputEventStore);
+            //Journaler outputJournaler = new Journaler(outputEventStore);
+            //InputDisruptorPublisher.InitializeDisruptor(new IEventHandler<InputPayload>[] { exchange, inputJournaler });
+            //OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { outputJournaler });
 
             // Get the instance through Spring configuration
             OrderController orderController = (OrderController)applicationContext["OrderController"];
@@ -129,13 +163,13 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
         {
             // Get the context
             IApplicationContext applicationContext = ContextRegistry.GetContext();
-            Exchange exchange = new Exchange();
-            IEventStore inputEventStore = new RavenNEventStore(Constants.INPUT_EVENT_STORE);
-            IEventStore outputEventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
-            Journaler inputJournaler = new Journaler(inputEventStore);
-            Journaler outputJournaler = new Journaler(outputEventStore);
-            InputDisruptorPublisher.InitializeDisruptor(new IEventHandler<InputPayload>[] { exchange, inputJournaler });
-            OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { outputJournaler });
+            //Exchange exchange = new Exchange();
+            //IEventStore inputEventStore = new RavenNEventStore(Constants.INPUT_EVENT_STORE);
+            //IEventStore outputEventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
+            //Journaler inputJournaler = new Journaler(inputEventStore);
+            //Journaler outputJournaler = new Journaler(outputEventStore);
+            //InputDisruptorPublisher.InitializeDisruptor(new IEventHandler<InputPayload>[] { exchange, inputJournaler });
+            //OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { outputJournaler });
 
             // Get the instance through Spring configuration
             OrderController orderController = (OrderController)applicationContext["OrderController"];
@@ -185,13 +219,13 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
         {
             // Get the context
             IApplicationContext applicationContext = ContextRegistry.GetContext();
-            Exchange exchange = new Exchange();
-            IEventStore inputEventStore = new RavenNEventStore(Constants.INPUT_EVENT_STORE);
-            IEventStore outputEventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
-            Journaler inputJournaler = new Journaler(inputEventStore);
-            Journaler outputJournaler = new Journaler(outputEventStore);
-            InputDisruptorPublisher.InitializeDisruptor(new IEventHandler<InputPayload>[] { exchange, inputJournaler });
-            OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { outputJournaler });
+            //Exchange exchange = new Exchange();
+            //IEventStore inputEventStore = new RavenNEventStore(Constants.INPUT_EVENT_STORE);
+            //IEventStore outputEventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
+            //Journaler inputJournaler = new Journaler(inputEventStore);
+            //Journaler outputJournaler = new Journaler(outputEventStore);
+            //InputDisruptorPublisher.InitializeDisruptor(new IEventHandler<InputPayload>[] { exchange, inputJournaler });
+            //OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { outputJournaler });
 
             // Get the instance through Spring configuration
             OrderController orderController = (OrderController)applicationContext["OrderController"];
@@ -241,13 +275,13 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
         {
             // Get the context
             IApplicationContext applicationContext = ContextRegistry.GetContext();
-            Exchange exchange = new Exchange();
-            IEventStore inputEventStore = new RavenNEventStore(Constants.INPUT_EVENT_STORE);
-            IEventStore outputEventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
-            Journaler inputJournaler = new Journaler(inputEventStore);
-            Journaler outputJournaler = new Journaler(outputEventStore);
-            InputDisruptorPublisher.InitializeDisruptor(new IEventHandler<InputPayload>[] { exchange, inputJournaler });
-            OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { outputJournaler });
+            //Exchange exchange = new Exchange();
+            //IEventStore inputEventStore = new RavenNEventStore(Constants.INPUT_EVENT_STORE);
+            //IEventStore outputEventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
+            //Journaler inputJournaler = new Journaler(inputEventStore);
+            //Journaler outputJournaler = new Journaler(outputEventStore);
+            //InputDisruptorPublisher.InitializeDisruptor(new IEventHandler<InputPayload>[] { exchange, inputJournaler });
+            //OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { outputJournaler });
 
             // Get the instance through Spring configuration
             OrderController orderController = (OrderController)applicationContext["OrderController"];
@@ -298,13 +332,13 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
         {
             // Get the context
             IApplicationContext applicationContext = ContextRegistry.GetContext();
-            Exchange exchange = new Exchange();
-            IEventStore inputEventStore = new RavenNEventStore(Constants.INPUT_EVENT_STORE);
-            IEventStore outputEventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
-            Journaler inputJournaler = new Journaler(inputEventStore);
-            Journaler outputJournaler = new Journaler(outputEventStore);
-            InputDisruptorPublisher.InitializeDisruptor(new IEventHandler<InputPayload>[] { exchange, inputJournaler });
-            OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { outputJournaler });
+            //Exchange exchange = new Exchange();
+            //IEventStore inputEventStore = new RavenNEventStore(Constants.INPUT_EVENT_STORE);
+            //IEventStore outputEventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
+            //Journaler inputJournaler = new Journaler(inputEventStore);
+            //Journaler outputJournaler = new Journaler(outputEventStore);
+            //InputDisruptorPublisher.InitializeDisruptor(new IEventHandler<InputPayload>[] { exchange, inputJournaler });
+            //OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { outputJournaler });
 
             // Get the instance through Spring configuration
             OrderController orderController = (OrderController)applicationContext["OrderController"];
@@ -355,13 +389,13 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
         {
             // Get the context
             IApplicationContext applicationContext = ContextRegistry.GetContext();
-            Exchange exchange = new Exchange();
-            IEventStore inputEventStore = new RavenNEventStore(Constants.INPUT_EVENT_STORE);
-            IEventStore outputEventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
-            Journaler inputJournaler = new Journaler(inputEventStore);
-            Journaler outputJournaler = new Journaler(outputEventStore);
-            InputDisruptorPublisher.InitializeDisruptor(new IEventHandler<InputPayload>[] { exchange, inputJournaler });
-            OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { outputJournaler });
+            //Exchange exchange = new Exchange();
+            //IEventStore inputEventStore = new RavenNEventStore(Constants.INPUT_EVENT_STORE);
+            //IEventStore outputEventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
+            //Journaler inputJournaler = new Journaler(inputEventStore);
+            //Journaler outputJournaler = new Journaler(outputEventStore);
+            //InputDisruptorPublisher.InitializeDisruptor(new IEventHandler<InputPayload>[] { exchange, inputJournaler });
+            //OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { outputJournaler });
 
             // Get the instance through Spring configuration
             OrderController orderController = (OrderController)applicationContext["OrderController"];
@@ -421,13 +455,13 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
         {
             // Get the context
             IApplicationContext applicationContext = ContextRegistry.GetContext();
-            Exchange exchange = new Exchange();
-            IEventStore inputEventStore = new RavenNEventStore(Constants.INPUT_EVENT_STORE);
-            IEventStore outputEventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
-            Journaler inputJournaler = new Journaler(inputEventStore);
-            Journaler outputJournaler = new Journaler(outputEventStore);
-            InputDisruptorPublisher.InitializeDisruptor(new IEventHandler<InputPayload>[] { exchange, inputJournaler });
-            OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { outputJournaler });
+            //Exchange exchange = new Exchange();
+            //IEventStore inputEventStore = new RavenNEventStore(Constants.INPUT_EVENT_STORE);
+            //IEventStore outputEventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
+            //Journaler inputJournaler = new Journaler(inputEventStore);
+            //Journaler outputJournaler = new Journaler(outputEventStore);
+            //InputDisruptorPublisher.InitializeDisruptor(new IEventHandler<InputPayload>[] { exchange, inputJournaler });
+            //OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { outputJournaler });
 
             // Get the instance through Spring configuration
             OrderController orderController = (OrderController)applicationContext["OrderController"];
@@ -488,13 +522,13 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
         {
             // Get the context
             IApplicationContext applicationContext = ContextRegistry.GetContext();
-            Exchange exchange = new Exchange();
-            IEventStore inputEventStore = new RavenNEventStore(Constants.INPUT_EVENT_STORE);
-            IEventStore outputEventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
-            Journaler inputJournaler = new Journaler(inputEventStore);
-            Journaler outputJournaler = new Journaler(outputEventStore);
-            InputDisruptorPublisher.InitializeDisruptor(new IEventHandler<InputPayload>[] { exchange, inputJournaler });
-            OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { outputJournaler });
+            //Exchange exchange = new Exchange();
+            //IEventStore inputEventStore = new RavenNEventStore(Constants.INPUT_EVENT_STORE);
+            //IEventStore outputEventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
+            //Journaler inputJournaler = new Journaler(inputEventStore);
+            //Journaler outputJournaler = new Journaler(outputEventStore);
+            //InputDisruptorPublisher.InitializeDisruptor(new IEventHandler<InputPayload>[] { exchange, inputJournaler });
+            //OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { outputJournaler });
 
             // Get the instance through Spring configuration
             OrderController orderController = (OrderController)applicationContext["OrderController"];
@@ -631,13 +665,13 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
         {
             // Get the context
             IApplicationContext applicationContext = ContextRegistry.GetContext();
-            Exchange exchange = new Exchange();
-            IEventStore inputEventStore = new RavenNEventStore(Constants.INPUT_EVENT_STORE);
-            IEventStore outputEventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
-            Journaler inputJournaler = new Journaler(inputEventStore);
-            Journaler outputJournaler = new Journaler(outputEventStore);
-            InputDisruptorPublisher.InitializeDisruptor(new IEventHandler<InputPayload>[] { exchange, inputJournaler });
-            OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { outputJournaler });
+            //Exchange exchange = new Exchange();
+            //IEventStore inputEventStore = new RavenNEventStore(Constants.INPUT_EVENT_STORE);
+            //IEventStore outputEventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
+            //Journaler inputJournaler = new Journaler(inputEventStore);
+            //Journaler outputJournaler = new Journaler(outputEventStore);
+            //InputDisruptorPublisher.InitializeDisruptor(new IEventHandler<InputPayload>[] { exchange, inputJournaler });
+            //OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { outputJournaler });
 
             // Get the instance through Spring configuration
             OrderController orderController = (OrderController)applicationContext["OrderController"];
@@ -764,13 +798,13 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
         {
             // Get the context
             IApplicationContext applicationContext = ContextRegistry.GetContext();
-            Exchange exchange = new Exchange();
-            IEventStore inputEventStore = new RavenNEventStore(Constants.INPUT_EVENT_STORE);
-            IEventStore outputEventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
-            Journaler inputJournaler = new Journaler(inputEventStore);
-            Journaler outputJournaler = new Journaler(outputEventStore);
-            InputDisruptorPublisher.InitializeDisruptor(new IEventHandler<InputPayload>[] { exchange, inputJournaler });
-            OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { outputJournaler });
+            //Exchange exchange = new Exchange();
+            //IEventStore inputEventStore = new RavenNEventStore(Constants.INPUT_EVENT_STORE);
+            //IEventStore outputEventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
+            //Journaler inputJournaler = new Journaler(inputEventStore);
+            //Journaler outputJournaler = new Journaler(outputEventStore);
+            //InputDisruptorPublisher.InitializeDisruptor(new IEventHandler<InputPayload>[] { exchange, inputJournaler });
+            //OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { outputJournaler });
 
             // Get the instance through Spring configuration
             OrderController orderController = (OrderController)applicationContext["OrderController"];
@@ -922,13 +956,13 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
         {
             // Get the context
             IApplicationContext applicationContext = ContextRegistry.GetContext();
-            Exchange exchange = new Exchange();
-            IEventStore inputEventStore = new RavenNEventStore(Constants.INPUT_EVENT_STORE);
-            IEventStore outputEventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
-            Journaler inputJournaler = new Journaler(inputEventStore);
-            Journaler outputJournaler = new Journaler(outputEventStore);
-            InputDisruptorPublisher.InitializeDisruptor(new IEventHandler<InputPayload>[] { exchange, inputJournaler });
-            OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { outputJournaler });
+            //Exchange exchange = new Exchange();
+            //IEventStore inputEventStore = new RavenNEventStore(Constants.INPUT_EVENT_STORE);
+            //IEventStore outputEventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
+            //Journaler inputJournaler = new Journaler(inputEventStore);
+            //Journaler outputJournaler = new Journaler(outputEventStore);
+            //InputDisruptorPublisher.InitializeDisruptor(new IEventHandler<InputPayload>[] { exchange, inputJournaler });
+            //OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { outputJournaler });
 
             // Get the instance through Spring configuration
             OrderController orderController = (OrderController)applicationContext["OrderController"];

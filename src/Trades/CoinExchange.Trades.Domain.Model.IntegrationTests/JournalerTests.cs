@@ -36,7 +36,8 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
         [TearDown]
         public void TearDown()
         {
-
+            InputDisruptorPublisher.Shutdown();
+            _eventStore.RemoveAllEvents();
         }
 
         [Test]

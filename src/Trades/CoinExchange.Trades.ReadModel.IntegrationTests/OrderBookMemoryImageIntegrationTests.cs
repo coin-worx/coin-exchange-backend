@@ -21,7 +21,22 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
     class OrderBookMemoryImageIntegrationTests
     {
         private const string Integration = "Integration";
+        private IEventStore eventStore;
+        private Journaler journaler;
 
+        [SetUp]
+        public void Setup()
+        {
+            eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
+            journaler = new Journaler(eventStore);
+            OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
+        }
+        [TearDown]
+        public void TearDown()
+        {
+            OutputDisruptor.ShutDown();
+            eventStore.RemoveAllEvents();
+        }
         #region Disruptor Tests
 
         [Test]
@@ -30,8 +45,8 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
         {
             OrderBookMemoryImage orderBookMemoryImage = new OrderBookMemoryImage();
 
-            IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
-            Journaler journaler = new Journaler(eventStore);
+            //IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
+           // Journaler journaler = new Journaler(eventStore);
             LimitOrderBook limitOrderBook = new LimitOrderBook(CurrencyConstants.BitCoinUsd);
             Order buyOrder1 = OrderFactory.CreateOrder("1234", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 250, 491.34M, new StubbedOrderIdGenerator());
@@ -52,7 +67,6 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
 
             //byte[] array2 = ObjectToByteArray(limitOrderBook);
             ManualResetEvent manualResetEvent = new ManualResetEvent(false);
-            OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
             OutputDisruptor.Publish(limitOrderBook);
             manualResetEvent.WaitOne(4000);
 
@@ -85,9 +99,9 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             OrderBookMemoryImage orderBookMemoryImage = new OrderBookMemoryImage();
 
             // Initialize the output Disruptor and assign the journaler as the event handler
-            IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
-            Journaler journaler = new Journaler(eventStore);
-            OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
+            //IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
+            //Journaler journaler = new Journaler(eventStore);
+            //OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
 
             // Start exchagne to accept orders
             Exchange exchange = new Exchange();
@@ -164,9 +178,9 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             OrderBookMemoryImage orderBookMemoryImage = new OrderBookMemoryImage();
 
             // Initialize the output Disruptor and assign the journaler as the event handler
-            IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
-            Journaler journaler = new Journaler(eventStore);
-            OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
+            //IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
+            //Journaler journaler = new Journaler(eventStore);
+            //OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
 
             // Start exchagne to accept orders
             Exchange exchange = new Exchange();
@@ -252,9 +266,9 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             OrderBookMemoryImage orderBookMemoryImage = new OrderBookMemoryImage();
 
             // Initialize the output Disruptor and assign the journaler as the event handler
-            IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
-            Journaler journaler = new Journaler(eventStore);
-            OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
+            //IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
+            //Journaler journaler = new Journaler(eventStore);
+            //OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
 
             // Start exchagne to accept orders
             Exchange exchange = new Exchange();
@@ -345,9 +359,9 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             OrderBookMemoryImage orderBookMemoryImage = new OrderBookMemoryImage();
 
             // Initialize the output Disruptor and assign the journaler as the event handler
-            IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
-            Journaler journaler = new Journaler(eventStore);
-            OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
+            //IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
+            //Journaler journaler = new Journaler(eventStore);
+            //OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
 
             // Start exchagne to accept orders
             Exchange exchange = new Exchange();
@@ -490,9 +504,9 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             OrderBookMemoryImage orderBookMemoryImage = new OrderBookMemoryImage();
 
             // Initialize the output Disruptor and assign the journaler as the event handler
-            IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
-            Journaler journaler = new Journaler(eventStore);
-            OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
+            //IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
+            //Journaler journaler = new Journaler(eventStore);
+           // OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
 
             // Start exchagne to accept orders
             Exchange exchange = new Exchange();
@@ -635,9 +649,9 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             OrderBookMemoryImage orderBookMemoryImage = new OrderBookMemoryImage();
 
             // Initialize the output Disruptor and assign the journaler as the event handler
-            IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
-            Journaler journaler = new Journaler(eventStore);
-            OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
+            //IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
+            //Journaler journaler = new Journaler(eventStore);
+            //OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
 
             // Start exchagne to accept orders
             Exchange exchange = new Exchange();
@@ -716,9 +730,9 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             OrderBookMemoryImage orderBookMemoryImage = new OrderBookMemoryImage();
 
             // Initialize the output Disruptor and assign the journaler as the event handler
-            IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
-            Journaler journaler = new Journaler(eventStore);
-            OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
+            //IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
+            //Journaler journaler = new Journaler(eventStore);
+            //OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
 
             // Start exchange to accept orders
             Exchange exchange = new Exchange();

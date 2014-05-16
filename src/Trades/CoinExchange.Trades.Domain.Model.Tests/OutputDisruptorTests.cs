@@ -60,7 +60,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         [TearDown]
         public void TearDown()
         {
-
+            OutputDisruptor.ShutDown();
         }
 
         [Test]

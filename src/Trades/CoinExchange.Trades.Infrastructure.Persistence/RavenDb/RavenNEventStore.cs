@@ -146,7 +146,6 @@ namespace CoinExchange.Trades.Infrastructure.Persistence.RavenDb
         public void RemoveAllEvents()
         {
             _store.Advanced.Purge();
-            _stream.CommittedEvents.Clear();
         }
 
         /// <summary>

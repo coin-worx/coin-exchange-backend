@@ -38,7 +38,8 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
     {
         private DatabaseUtility _databaseUtility;
         private IApplicationContext _applicationContext;
-
+        private IEventStore inputEventStore;
+        private IEventStore outputEventStore;
         [SetUp]
         public void Setup()
         {
@@ -48,8 +49,8 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             _databaseUtility.Populate();
             _applicationContext = ContextRegistry.GetContext();
             Exchange exchange = new Exchange();
-            IEventStore inputEventStore = new RavenNEventStore(Constants.INPUT_EVENT_STORE);
-            IEventStore outputEventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
+            inputEventStore = new RavenNEventStore(Constants.INPUT_EVENT_STORE);
+            outputEventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
             Journaler inputJournaler = new Journaler(inputEventStore);
             Journaler outputJournaler = new Journaler(outputEventStore);
             InputDisruptorPublisher.InitializeDisruptor(new IEventHandler<InputPayload>[] { exchange, inputJournaler });
@@ -62,6 +63,8 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             InputDisruptorPublisher.Shutdown();
             OutputDisruptor.ShutDown();
             _databaseUtility.Create();
+            inputEventStore.RemoveAllEvents();
+            outputEventStore.RemoveAllEvents();
         }
         #region End-to-End Test
 
