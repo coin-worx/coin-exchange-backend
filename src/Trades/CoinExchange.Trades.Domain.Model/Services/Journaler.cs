@@ -114,14 +114,17 @@ namespace CoinExchange.Trades.Domain.Model.Services
         {
             List<Order> replayOrderList = new List<Order>();
             var orders = _eventStore.GetOrdersByCurrencyPair(limitOrderBook.CurrencyPair);
-            foreach (Order order in orders)
+            if (orders != null)
             {
-                // Only going to choose those orders that were submitted after the last snapshot and are of state accepted 
-                // or Cancelled
-                if (/*order.DateTime > limitOrderBook.LastSnapshotTaken && */
-                   (order.OrderState == OrderState.Accepted || order.OrderState == OrderState.Cancelled))
+                foreach (Order order in orders)
                 {
-                    replayOrderList.Add(order);
+                    // Only going to choose those orders that were submitted after the last snapshot and are of state accepted 
+                    // or Cancelled
+                    if ( /*order.DateTime > limitOrderBook.LastSnapshotTaken && */
+                        (order.OrderState == OrderState.Accepted || order.OrderState == OrderState.Cancelled))
+                    {
+                        replayOrderList.Add(order);
+                    }
                 }
             }
             if (replayOrderList.Count <= 0)
