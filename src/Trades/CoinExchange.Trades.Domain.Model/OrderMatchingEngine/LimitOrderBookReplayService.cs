@@ -22,16 +22,19 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             {
                 List<Order> ordersForReplay = journaler.GetOrdersForReplay(exchangeEssential.LimitOrderBook);
 
-                Order[] deepCopy = (Order[]) GetCopy(ordersForReplay.ToArray());
-                foreach (var order in deepCopy)
+                if (ordersForReplay != null)
                 {
-                    if (order.OrderState == OrderState.Accepted)
+                    Order[] deepCopy = (Order[]) GetCopy(ordersForReplay.ToArray());
+                    foreach (var order in deepCopy)
                     {
-                        exchange.PlaceNewOrder(order);
-                    }
-                    else if (order.OrderState == OrderState.Cancelled)
-                    {
-                        exchange.CancelOrder(new OrderCancellation(order.OrderId, order.TraderId, order.CurrencyPair));
+                        if (order.OrderState == OrderState.Accepted)
+                        {
+                            exchange.PlaceNewOrder(order);
+                        }
+                        else if (order.OrderState == OrderState.Cancelled)
+                        {
+                            exchange.CancelOrder(new OrderCancellation(order.OrderId, order.TraderId, order.CurrencyPair));
+                        }
                     }
                 }
             }
