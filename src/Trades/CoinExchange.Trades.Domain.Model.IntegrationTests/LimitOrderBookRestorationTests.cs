@@ -29,10 +29,18 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
         private static readonly log4net.ILog Log = log4net.LogManager.GetLogger
             (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
+        private IEventStore eventStore;
         [SetUp]
         public void Setup()
         {
             log4net.Config.XmlConfigurator.Configure();
+            eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            eventStore.RemoveAllEvents();
         }
 
         private const string Integration = "Integration";
@@ -44,7 +52,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
         public void AddNewOrdersAndRestore_AddOrdersToLimitOrderBookAndThenRestoresThemAfterOrderBookCrash_VerifiesFromTheBidAndAskBooks()
         {
             // Initialize the output Disruptor and assign the journaler as the event handler
-            IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
+            //IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
             Journaler journaler = new Journaler(eventStore);
             LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
             OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] {journaler});
@@ -111,7 +119,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             ()
         {
             // Initialize the output Disruptor and assign the journaler as the event handler
-            IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
+            //IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
             Journaler journaler = new Journaler(eventStore);
             LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
             OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] {journaler});
@@ -229,7 +237,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             ()
         {
             // Initialize the output Disruptor and assign the journaler as the event handler
-            IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
+           // IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
             Journaler journaler = new Journaler(eventStore);
             LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
             OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] {journaler});
@@ -342,7 +350,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             ()
         {
             // Initialize the output Disruptor and assign the journaler as the event handler
-            IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
+           // IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
             Journaler journaler = new Journaler(eventStore);
             LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
             OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] {journaler});
@@ -472,7 +480,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             ()
         {
             // Initialize the output Disruptor and assign the journaler as the event handler
-            IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
+           // IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
             Journaler journaler = new Journaler(eventStore);
             LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
             OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] {journaler});
@@ -650,7 +658,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             ()
         {
             // Initialize the output Disruptor and assign the journaler as the event handler
-            IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
+            //IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
             Journaler journaler = new Journaler(eventStore);
             LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
             OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] {journaler});
@@ -825,7 +833,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
         public void CancelOrdersTest_ChecksIfOrdersAreRemovedFromTheOrderBookAfterRestore_VerifiesThroughBidAndAskBooks()
         {
             // Initialize the output Disruptor and assign the journaler as the event handler
-            IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
+            //IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
             Journaler journaler = new Journaler(eventStore);
             LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
             OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] {journaler});
@@ -978,7 +986,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
         public void BidMultipleMatchesTest_EntersBidOrdertoMatchAndUpdatesDepth_ValidatesBidsAnsAsksIfTheyAreAsExpected()
         {
             // Initialize the output Disruptor and assign the journaler as the event handler
-            IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
+            //IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
             Journaler journaler = new Journaler(eventStore);
             LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
             OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] {journaler});
@@ -1102,7 +1110,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
         public void AskMultipleMatchesTest_EntersAskOrdertoMatchAndUpdatesBook_ValidatesDepthLevelsIfTheyPerformAsExpected()
         {
             // Initialize the output Disruptor and assign the journaler as the event handler
-            IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
+           // IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
             Journaler journaler = new Journaler(eventStore);
             LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
             OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] {journaler});
@@ -1253,7 +1261,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
         public void MultipleRepeatMatchBidTest_MatchesManyAsksToBidButBidVolumeRemains_VerifiesbyOrderBooksLists()
         {
             // Initialize the output Disruptor and assign the journaler as the event handler
-            IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
+           // IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
             Journaler journaler = new Journaler(eventStore);
             LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
             OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] {journaler});
@@ -1370,7 +1378,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
         public void MultipleRepeatMatchAskTest_MatchesManyBidsToAskButAskVolumeRemains_VerifiesUsingOrderBooksLists()
         {
             // Initialize the output Disruptor and assign the journaler as the event handler
-            IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
+            //IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
             Journaler journaler = new Journaler(eventStore);
             LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
             OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
@@ -1491,7 +1499,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
         public void AskCancelThenBidMatchTest_TestsWhetherTheOrderIsCancelledAndThenBidOrderisMatched_VerifiesThroughBooksLists()
         {
             // Initialize the output Disruptor and assign the journaler as the event handler
-            IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
+            //IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
             Journaler journaler = new Journaler(eventStore);
             LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
             OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
@@ -1641,7 +1649,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
         public void BidCancelThenAskMatchTest_TestsWhetherTheOrderIsCancelledAndThenAskOrderisMatched_VerifiesThroughBooksLists()
         {
             // Initialize the output Disruptor and assign the journaler as the event handler
-            IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
+            //IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
             Journaler journaler = new Journaler(eventStore);
             LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
             OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
