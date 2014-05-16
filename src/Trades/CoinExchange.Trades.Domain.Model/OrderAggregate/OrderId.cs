@@ -5,6 +5,7 @@
 
 using System;
 using System.Globalization;
+using CoinExchange.Common.Domain.Model;
 using Newtonsoft.Json;
 
 namespace CoinExchange.Trades.Domain.Model.OrderAggregate
@@ -33,6 +34,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderAggregate
         [JsonConstructor]
         public OrderId(string id)
         {
+            AssertionConcern.AssertNullOrEmptyString(id,"OrderId cannot be null");
             _id = id;
         }
 

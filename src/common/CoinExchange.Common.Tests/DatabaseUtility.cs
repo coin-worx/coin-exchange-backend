@@ -9,6 +9,8 @@ namespace CoinExchange.Common.Tests
     /// </summary>
     public class DatabaseUtility
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger
+            (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private string _connectionString;
         private MySqlConnection _mySqlConnection;
         private string _filePath = Path.GetFullPath(@"~\..\..\..\..\..\Data\MySql\");
@@ -59,7 +61,10 @@ namespace CoinExchange.Common.Tests
             }
             catch (Exception exception)
             {
-
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Execute Script Exception:",exception);
+                }
             }
             finally
             {

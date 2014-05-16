@@ -100,14 +100,12 @@ namespace CoinExchange.Client
         /// <summary>
         /// Cancel the order
         /// </summary>
-        /// <param name="txid"></param>
+        /// <param name="orderId"></param>
         /// <returns></returns>
-        public string CancelOrder(string txid)
+        public string CancelOrder(string orderId)
         {
             string url = _baseUrl + "/orders/cancelorder";
-            JObject obj = new JObject();
-            obj.Add("", txid);
-            return HttpPostRequest(obj, url);
+            return HttpPostRequest(orderId, url);
         }
 
         /// <summary>
@@ -138,10 +136,8 @@ namespace CoinExchange.Client
         /// <returns></returns>
         public string QueryOpenOrdersParams(bool includeTrades, string userRefId)
         {
-            JObject obj = new JObject();
-            obj.Add("", includeTrades.ToString());
             string url = _baseUrl + "/orders/openorders";
-            return HttpPostRequest(obj,url);
+            return HttpPostRequest(includeTrades.ToString(),url);
         }
 
         /// <summary>
@@ -168,10 +164,8 @@ namespace CoinExchange.Client
         /// <returns></returns>
         public string QueryOrderInfo(string orderId)
         {
-            JObject obj = new JObject();
-            obj.Add("", orderId);
             string url = _baseUrl + "/orders/queryorders";
-            return HttpPostRequest(obj, url);
+            return HttpPostRequest(orderId, url);
         }
 
         /// <summary>
@@ -197,13 +191,14 @@ namespace CoinExchange.Client
         }
 
         #endregion
+        
         /// <summary>
         /// Private call requests
         /// </summary>
         /// <param name="param"></param>
         /// <param name="url"></param>
         /// <returns></returns>
-        private string HttpPostRequest(JObject param,string url)
+        private string HttpPostRequest(object param, string url)
         {
             string message = "";
             for (int i = 0; i < 2; i++)

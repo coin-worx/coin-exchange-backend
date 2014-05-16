@@ -40,5 +40,13 @@ namespace CoinExchange.Common.Domain.Model
                 throw new InvalidOperationException(message);
             }
         }
+
+        public static void AssertNullOrEmptyString(string value, string message)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                throw new ArgumentNullException(message);
+            }
+        }
     }
 }
