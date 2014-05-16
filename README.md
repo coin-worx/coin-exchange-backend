@@ -6,7 +6,7 @@
 
 #Code Base
 1. Download and install Git.
-2. Right the folder which you want to be the home for the codebase, and choose Git Bash.(For integration of IntelliJ with Git, refer to the section below Setting Up the Environment->IntelliJ point 4 onward)
+2. Right the folder which you want to be the home for the codebase, and choose Git Bash.
 3. Paste git clone git@bitbucket.org:abaziz/coin-exchange-backend.git
 4. Give the password when prompted.
 
