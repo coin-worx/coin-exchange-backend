@@ -17,7 +17,8 @@ namespace CoinExchange.Trades.Domain.Model.Tests.Performance
     class OrderBookPerformanceTest
     {
         private Exchange _exchange = null;
-        [Test]
+        
+        //[Test]
         public void PerformanceTest()
         {
             // Initialize the output Disruptor and assign the journaler as the event handler

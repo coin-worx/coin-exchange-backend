@@ -104,6 +104,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             replayService.ReplayOrderBooks(exchange, journaler);
+            Thread.Sleep(3000);
             
             Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
@@ -196,6 +197,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
 
             replayService.ReplayOrderBooks(exchange, journaler);
             Log.Debug("Replay service started for Exchange.");
+            Thread.Sleep(3000);
             
             Assert.AreEqual(1, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(1, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
@@ -255,6 +257,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             exchange.PlaceNewOrder(sellOrder2);
             exchange.PlaceNewOrder(sellOrder3);
             exchange.PlaceNewOrder(sellOrder4);
+            Thread.Sleep(3000);
 
             Assert.AreEqual(1, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(1, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
@@ -277,6 +280,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             replayService.ReplayOrderBooks(exchange, journaler);
+            Thread.Sleep(3000);
 
             Assert.AreEqual(1, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(1, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
@@ -329,13 +333,21 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
                 Constants.ORDER_SIDE_SELL, 500, 945, new StubbedOrderIdGenerator());
 
             exchange.PlaceNewOrder(buyOrder1);
+            Thread.Sleep(1200);
             exchange.PlaceNewOrder(buyOrder2);
+            Thread.Sleep(1200);
             exchange.PlaceNewOrder(buyOrder3);
+            Thread.Sleep(1200);
             exchange.PlaceNewOrder(buyOrder4);
+            Thread.Sleep(1200);
             exchange.PlaceNewOrder(sellOrder1);
+            Thread.Sleep(1200);
             exchange.PlaceNewOrder(sellOrder2);
+            Thread.Sleep(1200);
             exchange.PlaceNewOrder(sellOrder3);
+            Thread.Sleep(1200);
             exchange.PlaceNewOrder(sellOrder4);
+            Thread.Sleep(1200);
 
             Assert.AreEqual(3, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(3, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
@@ -370,7 +382,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             replayService.ReplayOrderBooks(exchange, journaler);
-            
+            Thread.Sleep(4000);
             Assert.AreEqual(3, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(3, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
@@ -441,6 +453,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             exchange.PlaceNewOrder(sellOrder2);
             exchange.PlaceNewOrder(sellOrder3);
             exchange.PlaceNewOrder(sellOrder4);
+            Thread.Sleep(3000);
 
             Assert.AreEqual(4, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(3, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
@@ -478,6 +491,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             replayService.ReplayOrderBooks(exchange, journaler);
+            Thread.Sleep(3000);
             
             Assert.AreEqual(4, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(3, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
@@ -552,7 +566,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             exchange.PlaceNewOrder(sellOrder2);
             exchange.PlaceNewOrder(sellOrder3);
             exchange.PlaceNewOrder(buyOrder4);
-
+            Thread.Sleep(5000);
             Assert.AreEqual(3, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(4, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
@@ -589,6 +603,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             replayService.ReplayOrderBooks(exchange, journaler);
+            Thread.Sleep(3000);
             
             Assert.AreEqual(3, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(4, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
@@ -663,6 +678,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             exchange.PlaceNewOrder(sellOrder2);
             exchange.PlaceNewOrder(sellOrder3);
             exchange.PlaceNewOrder(buyOrder4);
+            Thread.Sleep(3000);
 
             Assert.AreEqual(4, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(4, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
@@ -863,6 +879,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
 
             exchange = new Exchange();
             replayService.ReplayOrderBooks(exchange, journaler);
+            Thread.Sleep(3000);
 
             // Bid levels
             Assert.AreEqual(1249, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[0].Price.Value);
@@ -934,6 +951,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
 
             exchange = new Exchange();
             replayService.ReplayOrderBooks(exchange, journaler);
+            Thread.Sleep(3000);
             //------------------------Depth Checks------------------------------
             // Bid levels
             Assert.AreEqual(942, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[0].Price.Value);
@@ -1128,6 +1146,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
             replayService.ReplayOrderBooks(exchange, journaler);
+            Thread.Sleep(3000);
 
             Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
@@ -1181,7 +1200,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             exchange.PlaceNewOrder(buyOrder2);
             exchange.PlaceNewOrder(sellOrder2);
             exchange.PlaceNewOrder(sellOrder1);
-
+            Thread.Sleep(3000);
             Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
@@ -1218,6 +1237,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(1, exchange.ExchangeEssentials.First().DepthOrderBook.Depth.BidLevels[0].OrderCount);
 
             exchange.PlaceNewOrder(sellOrder3);
+            Thread.Sleep(1000);
 
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
@@ -1274,6 +1294,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
             replayService.ReplayOrderBooks(exchange, journaler);
+            Thread.Sleep(3000);
 
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
