@@ -98,7 +98,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                 {
                     return Ok<Rate>(rate);
                 }
-                return BadRequest();
+                return NotFound();
             }
             catch (Exception exception)
             {
@@ -125,7 +125,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                 {
                     return Ok<RatesList>(rates);
                 }
-                return BadRequest();
+                return NotFound();
             }
             catch (Exception exception)
             {
