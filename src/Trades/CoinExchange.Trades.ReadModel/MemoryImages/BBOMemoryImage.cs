@@ -16,6 +16,7 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
         private List<string> _currencyPairs = new List<string>(); 
 
         private BBORepresentationList _bboRepresentationList = null;
+        private RatesList _ratesList = null;
 
         /// <summary>
         /// Default Constructor
@@ -25,6 +26,7 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
             _currencyPairs = new List<string>();
             InitializeCurrencyPairs();
             _bboRepresentationList = new BBORepresentationList();
+            _ratesList = new RatesList();
             BBOEvent.BBOChanged += OnBBOArrived;
         }
 
@@ -54,6 +56,7 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
         public void OnBBOArrived(string currencyPair, DepthLevel bestBid, DepthLevel bestAsk)
         {
             _bboRepresentationList.AddBBO(currencyPair, bestBid, bestAsk);
+            _ratesList.AddRate(currencyPair, bestBid.Price.Value, bestAsk.Price.Value);
         }
 
         /// <summary>
@@ -63,6 +66,14 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
         public BBORepresentationList BBORepresentationList
         {
             get { return _bboRepresentationList; }
+        }
+
+        /// <summary>
+        /// Contains the Rates for each and every currency pair. Rate is the midpoint between the best bid and the best ask
+        /// </summary>
+        public RatesList RatesList
+        {
+            get { return _ratesList; }
         }
     }
 }

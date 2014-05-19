@@ -11,5 +11,7 @@ namespace CoinExchange.Trades.Application.MarketDataServices
         OhlcRepresentation GetOhlcInfo(string pair, int interval, string since);
         Tuple<OrderRepresentationList, OrderRepresentationList> GetOrderBook(string symbol, int count);
         Tuple<Tuple<decimal, decimal, int>[], Tuple<decimal, decimal, int>[]> GetDepth(string currencyPair);
+        Rate GetRate(string currencyPair);
+        RatesList GetAllRates();
     }
 }

@@ -75,6 +75,8 @@
     <Compile Include="MemoryImages\OrderBookMemoryImage.cs" />
     <Compile Include="MemoryImages\OrderRepresentationBookList.cs" />
     <Compile Include="MemoryImages\OrderRepresentationList.cs" />
+    <Compile Include="MemoryImages\Rate.cs" />
+    <Compile Include="MemoryImages\RatesList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\IMarketDataRepository.cs" />
     <Compile Include="Repositories\IOhlcRepository.cs" />

@@ -80,6 +80,64 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         }
 
         /// <summary>
+        /// Public call to return the Rate for a particular currency
+        /// </summary>
+        /// <returns></returns>
+        [Route("marketdata/rate")]
+        [HttpGet]
+        public IHttpActionResult GetRate(string currencyPair)
+        {
+            if (log.IsDebugEnabled)
+            {
+                log.Debug("Get Rate Call: Currency Pair = " + currencyPair);
+            }
+            try
+            {
+                Rate rate = _marketDataService.GetRate(currencyPair);
+                if (rate != null)
+                {
+                    return Ok<Rate>(rate);
+                }
+                return BadRequest();
+            }
+            catch (Exception exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Get Rate Call Error", exception);
+                }
+                return InternalServerError(exception);
+            }
+        }
+
+        [Route("marketdata/rates")]
+        [HttpGet]
+        public IHttpActionResult GetAllRates()
+        {
+            if (log.IsDebugEnabled)
+            {
+                log.Debug("Get All Rates Call");
+            }
+            try
+            {
+                RatesList rates = _marketDataService.GetAllRates();
+                if (rates != null)
+                {
+                    return Ok<RatesList>(rates);
+                }
+                return BadRequest();
+            }
+            catch (Exception exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Get All Rates Call Error", exception);
+                }
+                return InternalServerError(exception);
+            }
+        }
+
+        /// <summary>
         /// Public call that returns the Orders for a particular currency pair
         /// Params:
         /// 1. currencyPair (Required)

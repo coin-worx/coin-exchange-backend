@@ -50,6 +50,31 @@ namespace CoinExchange.Trades.Application.MarketDataServices
         }
 
         /// <summary>
+        /// Gets the Rate(midpoint of the best bid and the best ask) for the given currency Pair
+        /// </summary>
+        /// <param name="currencyPair"></param>
+        /// <returns></returns>
+        public Rate GetRate(string currencyPair)
+        {
+            foreach (Rate rate in _bboMemoryImage.RatesList)
+            {
+                if (rate.CurrencyPair == currencyPair)
+                {
+                    return rate;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Gets the Rates for every CurrencyPair maintaining an OrderBook
+        /// </summary>
+        public RatesList GetAllRates()
+        {
+            return _bboMemoryImage.RatesList;
+        }
+
+        /// <summary>
         /// Retreives the LimitOrderBook for bids specified by the Currency pair
         /// </summary>
         /// <param name="currencyPair"></param>
