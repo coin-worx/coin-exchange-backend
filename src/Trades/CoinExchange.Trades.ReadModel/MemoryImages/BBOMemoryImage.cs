@@ -56,7 +56,10 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
         public void OnBBOArrived(string currencyPair, DepthLevel bestBid, DepthLevel bestAsk)
         {
             _bboRepresentationList.AddBBO(currencyPair, bestBid, bestAsk);
-            _ratesList.AddRate(currencyPair, bestBid.Price.Value, bestAsk.Price.Value);
+            if (bestBid != null && bestAsk != null && bestBid.Price != null && bestAsk.Price != null)
+            {
+                _ratesList.AddRate(currencyPair, bestBid.Price.Value, bestAsk.Price.Value);
+            }
         }
 
         /// <summary>

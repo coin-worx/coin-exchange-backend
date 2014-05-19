@@ -114,7 +114,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                         Ok(
                             _orderApplicationService.CreateOrder(new CreateOrderCommand(order.Price, order.Type,
                                 // ToDo: Need to perform check on the API key and then provide the corresponding TraderId
-                                order.Side, order.Pair,order.Volume,Constants.GetTraderId(apikey))));
+                                order.Side, order.Pair,order.Volume, Constants.GetTraderId(apikey))));
                 }
                 return BadRequest();
             }
