@@ -603,7 +603,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
 
             // Get the instance through Spring configuration
             MarketController marketController = (MarketController)_applicationContext["MarketController"];
-             Depth depth = new Depth("XBTUSD", 3);
+            Depth depth = new Depth("XBTUSD", 3);
 
             depth.AddOrder(new Price(491), new Volume(100), OrderSide.Buy);
             depth.AddOrder(new Price(492), new Volume(100), OrderSide.Buy);
@@ -633,6 +633,231 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             Assert.AreEqual(400, returnedDepths.AskDepth.ToList()[0].Item1); // Aggregated Volume
             Assert.AreEqual(490, returnedDepths.AskDepth.ToList()[0].Item2); // Price
             Assert.AreEqual(3, returnedDepths.AskDepth.ToList()[0].Item3); // OrderCount
+        }
+
+        [Test]
+        [Category("Integration")]
+        public void GetRateTest_ChecksTheRateForTheGivenCurrencyPairAfterSubmittingDepthLevels_ChecksTheRateReturnedToVerify()
+        {
+            MarketController marketController = (MarketController)_applicationContext["MarketController"];
+            BBOMemoryImage bboMemoryImage = (BBOMemoryImage)_applicationContext["BBOMemoryImage"];
+
+            DepthLevel bidLevel1 = new DepthLevel(new Price(491));
+            DepthLevel bidLevel2 = new DepthLevel(new Price(492));
+            DepthLevel bidLevel3 = new DepthLevel(new Price(493));
+
+            DepthLevel askLevel1 = new DepthLevel(new Price(494));
+            DepthLevel askLevel2 = new DepthLevel(new Price(495));
+            DepthLevel askLevel3 = new DepthLevel(new Price(496));
+            bboMemoryImage.OnBBOArrived("XBT/USD", bidLevel1, askLevel1);
+            IHttpActionResult httpActionResult = marketController.GetRate("XBT/USD");
+
+            OkNegotiatedContentResult<Rate> returnedOkRate = (OkNegotiatedContentResult<Rate>)httpActionResult;
+            Rate rate = returnedOkRate.Content;
+
+            Assert.AreEqual("XBT/USD", rate.CurrencyPair);
+            Assert.AreEqual(492.5, rate.RateValue); // MidPoint of bidLevel1 = 491 & askLevel1 = 494
+
+            bboMemoryImage.OnBBOArrived("XBT/USD", bidLevel2, askLevel2);
+            httpActionResult = marketController.GetRate("XBT/USD");
+            returnedOkRate = (OkNegotiatedContentResult<Rate>)httpActionResult;
+            rate = returnedOkRate.Content;
+
+            Assert.AreEqual("XBT/USD", rate.CurrencyPair);
+            Assert.AreEqual(493.5, rate.RateValue); // MidPoint of bidLevel2 = 492 & askLevel2 = 495
+
+            bboMemoryImage.OnBBOArrived("XBT/USD", bidLevel3, askLevel3);
+            httpActionResult = marketController.GetRate("XBT/USD");
+            returnedOkRate = (OkNegotiatedContentResult<Rate>)httpActionResult;
+            rate = returnedOkRate.Content;
+
+            Assert.AreEqual("XBT/USD", rate.CurrencyPair);
+            Assert.AreEqual(494.5, rate.RateValue); // MidPoint of bidLevel3 = 493 & askLevel3 = 496
+        }
+
+        [Test]
+        [Category("Integration")]
+        public void GetRatesTest_ChecksTheRatesForAllCurrencyPairsSubmittingDepthLevels_ChecksTheRatesReturnedToVerify()
+        {
+            MarketController marketController = (MarketController)_applicationContext["MarketController"];
+            BBOMemoryImage bboMemoryImage = (BBOMemoryImage)_applicationContext["BBOMemoryImage"];
+
+            DepthLevel xbtUsdBidLevel = new DepthLevel(new Price(491));
+            DepthLevel ltcUsdBidLevel = new DepthLevel(new Price(492));
+            DepthLevel btcUsdBidLevel = new DepthLevel(new Price(493));
+
+            DepthLevel xbtUsdAskLevel = new DepthLevel(new Price(494));
+            DepthLevel ltcUsdAskLevel = new DepthLevel(new Price(495));
+            DepthLevel btcUsdAskLevel = new DepthLevel(new Price(496));
+            bboMemoryImage.OnBBOArrived("XBT/USD", xbtUsdBidLevel, xbtUsdAskLevel);
+            bboMemoryImage.OnBBOArrived("LTC/USD", ltcUsdBidLevel, ltcUsdAskLevel);
+            bboMemoryImage.OnBBOArrived("BTC/USD", btcUsdBidLevel, btcUsdAskLevel);
+            IHttpActionResult httpActionResult = marketController.GetAllRates();
+
+            OkNegotiatedContentResult<RatesList> returnedOkRate = (OkNegotiatedContentResult<RatesList>)httpActionResult;
+            RatesList ratesList = returnedOkRate.Content;
+
+            Assert.AreEqual("XBT/USD", ratesList.ToList()[0].CurrencyPair);
+            Assert.AreEqual(492.5, ratesList.ToList()[0].RateValue); // MidPoint of xbtUsdBidLevel = 491 & xbtUsdAskLevel = 494
+            Assert.AreEqual("LTC/USD", ratesList.ToList()[1].CurrencyPair);
+            Assert.AreEqual(493.5, ratesList.ToList()[1].RateValue); // MidPoint of ltcUsdBidLevel = 492 & ltcUsdAskLevel = 495
+            Assert.AreEqual("BTC/USD", ratesList.ToList()[2].CurrencyPair);
+            Assert.AreEqual(494.5, ratesList.ToList()[2].RateValue); // MidPoint of btcUsdBidLevel = 493 & btcUsdAskLevel = 496
+        }
+
+        [Test]
+        [Category("Integration")]
+        public void GetRateEndToEndTests_SubmitsOrdersAndChecksTheRateForOneCurrencyPair_VerifiesThroughTheReturnedRate()
+        {
+            // Get the instance through Spring configuration
+            OrderController orderController = (OrderController)_applicationContext["OrderController"];
+            orderController.Request = new HttpRequestMessage(HttpMethod.Post, "");
+            orderController.Request.Headers.Add("Auth", "123456789");
+            MarketController marketController = (MarketController)_applicationContext["MarketController"];
+
+            ManualResetEvent manualResetEvent = new ManualResetEvent(false);
+            IHttpActionResult orderHttpResult = orderController.CreateOrder(new CreateOrderParam()
+            {
+                Pair = "XBTUSD",
+                Price = 491,
+                Volume = 100,
+                Side = "buy",
+                Type = "limit"
+            });
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(2000);
+            orderController.CreateOrder(new CreateOrderParam()
+            {
+                Pair = "XBTUSD",
+                Price = 494,
+                Volume = 900,
+                Side = "sell",
+                Type = "limit"
+            });
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(2000);
+
+            IHttpActionResult httpActionResult = marketController.GetRate("XBTUSD");
+            OkNegotiatedContentResult<Rate> okResponse = (OkNegotiatedContentResult<Rate>)httpActionResult;
+
+            Rate rate = okResponse.Content;
+
+            Assert.AreEqual("XBTUSD", rate.CurrencyPair);
+            Assert.AreEqual(492.5, rate.RateValue); // MidPoint of xbtUsdBidLevel = 491 & xbtUsdAskLevel = 494
+            
+            orderController.CreateOrder(new CreateOrderParam()
+            {
+                Pair = "XBTUSD",
+                Price = 493,
+                Volume = 1000,
+                Side = "buy",
+                Type = "limit"
+            });
+            
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(2000);
+            httpActionResult = marketController.GetRate("XBTUSD");
+            okResponse = (OkNegotiatedContentResult<Rate>)httpActionResult;
+
+            rate = okResponse.Content;
+
+            Assert.AreEqual("XBTUSD", rate.CurrencyPair);
+            Assert.AreEqual(493.5, rate.RateValue); // MidPoint of xbtUsdBidLevel = 493 & xbtUsdAskLevel = 496
+            // Fill the existing top Ask order
+            orderController.CreateOrder(new CreateOrderParam()
+            {
+                Pair = "XBTUSD",
+                Price = 494,
+                Volume = 900,
+                Side = "buy",
+                Type = "limit"
+            });
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(2000);
+            // Send a new Ask order to stay on top of the ask book
+            orderController.CreateOrder(new CreateOrderParam()
+            {
+                Pair = "XBTUSD",
+                Price = 496,
+                Volume = 900,
+                Side = "sell",
+                Type = "limit"
+            });
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(2000);
+            httpActionResult = marketController.GetRate("XBTUSD");
+            okResponse = (OkNegotiatedContentResult<Rate>)httpActionResult;
+
+            rate = okResponse.Content;
+
+            Assert.AreEqual("XBTUSD", rate.CurrencyPair);
+            Assert.AreEqual(494.5, rate.RateValue); // MidPoint of xbtUsdBidLevel = 493 & xbtUsdAskLevel = 496
+        }
+
+        [Test]
+        [Category("Integration")]
+        public void GetRatesEndToEndTests_SubmitsOrdersAndChecksTheRatesForCurrencyPairs_VerifiesThroughTheReturnedRatesList()
+        {
+            // Get the instance through Spring configuration
+            OrderController orderController = (OrderController)_applicationContext["OrderController"];
+            orderController.Request = new HttpRequestMessage(HttpMethod.Post, "");
+            orderController.Request.Headers.Add("Auth", "123456789");
+
+            ManualResetEvent manualResetEvent = new ManualResetEvent(false);
+            IHttpActionResult orderHttpResult = orderController.CreateOrder(new CreateOrderParam()
+            {
+                Pair = "XBTUSD",
+                Price = 491,
+                Volume = 100,
+                Side = "buy",
+                Type = "limit"
+            });
+
+            OkNegotiatedContentResult<NewOrderRepresentation> orderRepresentationContent = (OkNegotiatedContentResult<NewOrderRepresentation>)orderHttpResult;
+            Assert.IsNotNull(orderRepresentationContent.Content);
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(2000);
+            orderController.CreateOrder(new CreateOrderParam()
+            {
+                Pair = "BTCUSD",
+                Price = 493,
+                Volume = 1000,
+                Side = "buy",
+                Type = "limit"
+            });
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(2000);
+            orderController.CreateOrder(new CreateOrderParam()
+            {
+                Pair = "XBTUSD",
+                Price = 494,
+                Volume = 900,
+                Side = "sell",
+                Type = "limit"
+            });
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(2000);
+            orderController.CreateOrder(new CreateOrderParam()
+            {
+                Pair = "BTCUSD",
+                Price = 496,
+                Volume = 700,
+                Side = "sell",
+                Type = "limit"
+            });
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(2000);
+            MarketController marketController = (MarketController)_applicationContext["MarketController"];
+
+            IHttpActionResult httpActionResult = marketController.GetAllRates();
+            OkNegotiatedContentResult<RatesList> okResponse = (OkNegotiatedContentResult<RatesList>) httpActionResult;
+
+            RatesList ratesList = okResponse.Content;
+
+            Assert.AreEqual("XBTUSD", ratesList.ToList()[0].CurrencyPair);
+            Assert.AreEqual(492.5, ratesList.ToList()[0].RateValue); // MidPoint of xbtUsdBidLevel = 491 & xbtUsdAskLevel = 494
+            Assert.AreEqual("BTCUSD", ratesList.ToList()[1].CurrencyPair);
+            Assert.AreEqual(494.5, ratesList.ToList()[1].RateValue); // MidPoint of btcUsdBidLevel = 493 & btcUsdAskLevel = 496
         }
     }
 }

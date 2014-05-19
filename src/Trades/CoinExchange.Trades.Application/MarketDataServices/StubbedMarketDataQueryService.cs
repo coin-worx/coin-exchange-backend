@@ -82,5 +82,28 @@ namespace CoinExchange.Trades.Application.MarketDataServices
         {
             throw new NotImplementedException();
         }
+
+        /// <summary>
+        /// Get Rate for the given Currency Pair
+        /// </summary>
+        /// <param name="currencyPair"></param>
+        /// <returns></returns>
+        public Rate GetRate(string currencyPair)
+        {
+            return new Rate(currencyPair, 495.87M);
+        }
+
+        /// <summary>
+        /// Get Rates for all the currency pairs
+        /// </summary>
+        /// <returns></returns>
+        public RatesList GetAllRates()
+        {
+            RatesList ratesList = new RatesList();
+            ratesList.AddRate("XBT/USD", 491.34M, 495.65M);
+            ratesList.AddRate("LTC/USD", 496.34M, 499.65M);
+
+            return ratesList;
+        }
     }
 }

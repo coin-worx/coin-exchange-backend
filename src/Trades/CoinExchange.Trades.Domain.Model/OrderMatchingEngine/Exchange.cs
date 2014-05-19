@@ -93,7 +93,11 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             {
                 case "BTCUSD":
                     return _exchangeEssentialsList.First().LimitOrderBook.PlaceOrder(order);
+                case "BTC/USD":
+                    return _exchangeEssentialsList.First().LimitOrderBook.PlaceOrder(order);
                 case "XBTUSD":
+                    return _exchangeEssentialsList.ToList()[1].LimitOrderBook.PlaceOrder(order);
+                case "XBT/USD":
                     return _exchangeEssentialsList.ToList()[1].LimitOrderBook.PlaceOrder(order);
             }
             return false;

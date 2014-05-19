@@ -13,5 +13,7 @@ namespace CoinExchange.Trades.Application.MarketDataServices
         object GetOrderBook(string symbol, int count);
         //Tuple<Tuple<decimal, decimal, int>[], Tuple<decimal, decimal, int>[]> GetDepth(string currencyPair);
         object GetDepth(string currencyPair);
+        Rate GetRate(string currencyPair);
+        RatesList GetAllRates();
     }
 }
