@@ -87,10 +87,10 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             // ------------------------------- Order Book ------------------------------
             IHttpActionResult orderBookResponse = marketController.GetOrderBook("XBTUSD");
 
-            OkNegotiatedContentResult<Tuple<OrderRepresentationList, OrderRepresentationList>> okOrderBookResponse =
-                (OkNegotiatedContentResult<Tuple<OrderRepresentationList, OrderRepresentationList>>) orderBookResponse;
-
-            Tuple<OrderRepresentationList, OrderRepresentationList> orderBook = okOrderBookResponse.Content;
+            OkNegotiatedContentResult<object> okOrderBookResponse =
+                (OkNegotiatedContentResult<object>) orderBookResponse;
+            OrderBookRepresentation representation = okOrderBookResponse.Content as OrderBookRepresentation;
+            Tuple<OrderRepresentationList, OrderRepresentationList> orderBook =new Tuple<OrderRepresentationList, OrderRepresentationList>(representation.Bids,representation.Asks);
 
             // Item1 = Bid Book, Item1[i].Item1 = Volume of 'i' Bid, Item1[i].Item2 = Price of 'i' Bid
             Assert.AreEqual(5, orderBook.Item1.ToList()[0].Item1);
@@ -103,25 +103,25 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             // ------------------------------- Order Book ------------------------------
             IHttpActionResult depthResponse = marketController.GetDepth("XBTUSD");
 
-            OkNegotiatedContentResult<Tuple<Tuple<decimal, decimal, int>[], Tuple<decimal, decimal, int>[]>> okDepth
-                = (OkNegotiatedContentResult<Tuple<Tuple<decimal, decimal, int>[], Tuple<decimal, decimal, int>[]>>)depthResponse;
+            OkNegotiatedContentResult<object> okDepth
+                = (OkNegotiatedContentResult<object>)depthResponse;
 
-            Tuple<Tuple<decimal, decimal, int>[], Tuple<decimal, decimal, int>[]> depth = okDepth.Content;
+            DepthTupleRepresentation depth = okDepth.Content as DepthTupleRepresentation;
             // Item1 = Bid Book, Item1.Item1 = Aggregated Volume, Item1.Item2 = Price, Item1.Item3 = Number of Orders
-            Assert.AreEqual(7, depth.Item1[0].Item1);
-            Assert.AreEqual(250, depth.Item1[0].Item2);
-            Assert.AreEqual(2, depth.Item1[0].Item3);
-            Assert.IsNull(depth.Item1[1]);
-            Assert.IsNull(depth.Item1[2]);
-            Assert.IsNull(depth.Item1[3]);
-            Assert.IsNull(depth.Item1[4]);
+            Assert.AreEqual(7, depth.BidDepth[0].Item1);
+            Assert.AreEqual(250, depth.BidDepth[0].Item2);
+            Assert.AreEqual(2, depth.BidDepth[0].Item3);
+            Assert.IsNull(depth.BidDepth[1]);
+            Assert.IsNull(depth.BidDepth[2]);
+            Assert.IsNull(depth.BidDepth[3]);
+            Assert.IsNull(depth.BidDepth[4]);
 
-            // Item2 = Bid Book, Item2.Item1 = Aggregated Volume, Item2.Item2 = Price, Item2.Item3 = Number of Orders
-            Assert.IsNull(depth.Item2[0]);
-            Assert.IsNull(depth.Item2[1]);
-            Assert.IsNull(depth.Item2[2]);
-            Assert.IsNull(depth.Item2[3]);
-            Assert.IsNull(depth.Item2[4]);
+            // Item2 = Ask Book, Item2.Item1 = Aggregated Volume, Item2.Item2 = Price, Item2.Item3 = Number of Orders
+            Assert.IsNull(depth.AskDepth[0]);
+            Assert.IsNull(depth.AskDepth[1]);
+            Assert.IsNull(depth.AskDepth[2]);
+            Assert.IsNull(depth.AskDepth[3]);
+            Assert.IsNull(depth.AskDepth[4]);
 
             //------------------- Open Orders -------------------------       
             IHttpActionResult openOrdersResponse = GetOpenOrders(orderController);
@@ -134,8 +134,8 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             Assert.AreEqual(10, openOrders[0].Volume);
             Assert.AreEqual(5, openOrders[0].VolumeExecuted);
             Assert.AreEqual(5, openOrders[0].OpenQuantity);
-            Assert.AreEqual("Limit", openOrders[0].OrderType);
-            Assert.AreEqual("Buy", openOrders[0].OrderSide);
+            Assert.AreEqual("Limit", openOrders[0].Type);
+            Assert.AreEqual("Buy", openOrders[0].Side);
             Assert.AreEqual("PartiallyFilled", openOrders[0].Status);
 
             // Second Open Order
@@ -143,8 +143,8 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             Assert.AreEqual(2, openOrders[1].Volume);
             Assert.AreEqual(0, openOrders[1].VolumeExecuted);
             Assert.AreEqual(2, openOrders[1].OpenQuantity);
-            Assert.AreEqual("Limit", openOrders[1].OrderType);
-            Assert.AreEqual("Buy", openOrders[1].OrderSide);
+            Assert.AreEqual("Limit", openOrders[1].Type);
+            Assert.AreEqual("Buy", openOrders[1].Side);
             Assert.AreEqual("Accepted", openOrders[1].Status);
             //------------------- Open Orders -------------------------
 
@@ -156,32 +156,32 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             Assert.AreEqual(5, closedOrders[0].Volume);
             Assert.AreEqual(5, closedOrders[0].VolumeExecuted);
             Assert.AreEqual(0, closedOrders[0].OpenQuantity);
-            Assert.AreEqual("Limit", closedOrders[0].OrderType);
-            Assert.AreEqual("Sell", closedOrders[0].OrderSide);
+            Assert.AreEqual("Limit", closedOrders[0].Type);
+            Assert.AreEqual("Sell", closedOrders[0].Side);
             Assert.AreEqual("Complete", closedOrders[0].Status);
 
             Assert.AreEqual(0, closedOrders[1].Price);
             Assert.AreEqual(3, closedOrders[1].Volume);
             Assert.AreEqual(3, closedOrders[1].VolumeExecuted);
             Assert.AreEqual(0, closedOrders[1].OpenQuantity);
-            Assert.AreEqual("Market", closedOrders[1].OrderType);
-            Assert.AreEqual("Buy", closedOrders[1].OrderSide);
+            Assert.AreEqual("Market", closedOrders[1].Type);
+            Assert.AreEqual("Buy", closedOrders[1].Side);
             Assert.AreEqual("Complete", closedOrders[1].Status);
 
             Assert.AreEqual(253, closedOrders[2].Price);
             Assert.AreEqual(2, closedOrders[2].Volume);
             Assert.AreEqual(2, closedOrders[2].VolumeExecuted);
             Assert.AreEqual(0, closedOrders[2].OpenQuantity);
-            Assert.AreEqual("Limit", closedOrders[2].OrderType);
-            Assert.AreEqual("Buy", closedOrders[2].OrderSide);
+            Assert.AreEqual("Limit", closedOrders[2].Type);
+            Assert.AreEqual("Buy", closedOrders[2].Side);
             Assert.AreEqual("Complete", closedOrders[2].Status);
 
             Assert.AreEqual(0, closedOrders[3].Price);
             Assert.AreEqual(5, closedOrders[3].Volume);
             Assert.AreEqual(5, closedOrders[3].VolumeExecuted);
             Assert.AreEqual(0, closedOrders[3].OpenQuantity);
-            Assert.AreEqual("Market", closedOrders[3].OrderType);
-            Assert.AreEqual("Sell", closedOrders[3].OrderSide);
+            Assert.AreEqual("Market", closedOrders[3].Type);
+            Assert.AreEqual("Sell", closedOrders[3].Side);
             Assert.AreEqual("Complete", closedOrders[3].Status);
             //------------------- Closed Orders -------------------------
 
@@ -235,10 +235,11 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             // ------------------------------- Order Book ------------------------------
             IHttpActionResult orderBookResponse = marketController.GetOrderBook("XBTUSD");
 
-            OkNegotiatedContentResult<Tuple<OrderRepresentationList, OrderRepresentationList>> okOrderBookResponse =
-                (OkNegotiatedContentResult<Tuple<OrderRepresentationList, OrderRepresentationList>>)orderBookResponse;
+            OkNegotiatedContentResult<object> okOrderBookResponse =
+                (OkNegotiatedContentResult<object>)orderBookResponse;
 
-            Tuple<OrderRepresentationList, OrderRepresentationList> orderBook = okOrderBookResponse.Content;
+            OrderBookRepresentation representation = okOrderBookResponse.Content as OrderBookRepresentation;
+            Tuple<OrderRepresentationList, OrderRepresentationList> orderBook = new Tuple<OrderRepresentationList, OrderRepresentationList>(representation.Bids,representation.Asks);
 
             // Item1 = Bid Book, Item1[i].Item1 = Volume of 'i' Bid, Item1[i].Item2 = Price of 'i' Bid
             Assert.AreEqual(1, orderBook.Item1.Count());
@@ -252,26 +253,26 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             // --------------------------------- Depth ---------------------------------
             IHttpActionResult depthResponse = marketController.GetDepth("XBTUSD");
 
-            OkNegotiatedContentResult<Tuple<Tuple<decimal, decimal, int>[], Tuple<decimal, decimal, int>[]>> okDepth
-                = (OkNegotiatedContentResult<Tuple<Tuple<decimal, decimal, int>[], Tuple<decimal, decimal, int>[]>>)depthResponse;
+            OkNegotiatedContentResult<object> okDepth
+                = (OkNegotiatedContentResult<object>)depthResponse;
 
-            Tuple<Tuple<decimal, decimal, int>[], Tuple<decimal, decimal, int>[]> depth = okDepth.Content;
+            DepthTupleRepresentation depth = okDepth.Content as DepthTupleRepresentation;
 
             // Item1 = Bid Book, Item1.Item1 = Aggregated Volume, Item1.Item2 = Price, Item1.Item3 = Number of Orders
-            Assert.AreEqual(1, depth.Item1[0].Item1);
-            Assert.AreEqual(245, depth.Item1[0].Item2);
-            Assert.AreEqual(1, depth.Item1[0].Item3);
-            Assert.IsNull(depth.Item1[1]);
-            Assert.IsNull(depth.Item1[2]);
-            Assert.IsNull(depth.Item1[3]);
-            Assert.IsNull(depth.Item1[4]);
+            Assert.AreEqual(1, depth.BidDepth[0].Item1);
+            Assert.AreEqual(245, depth.BidDepth[0].Item2);
+            Assert.AreEqual(1, depth.BidDepth[0].Item3);
+            Assert.IsNull(depth.BidDepth[1]);
+            Assert.IsNull(depth.BidDepth[2]);
+            Assert.IsNull(depth.BidDepth[3]);
+            Assert.IsNull(depth.BidDepth[4]);
 
             // Item2 = Bid Book, Item2.Item1 = Aggregated Volume, Item2.Item2 = Price, Item2.Item3 = Number of Orders
-            Assert.IsNull(depth.Item2[0]);
-            Assert.IsNull(depth.Item2[1]);
-            Assert.IsNull(depth.Item2[2]);
-            Assert.IsNull(depth.Item2[3]);
-            Assert.IsNull(depth.Item2[4]);
+            Assert.IsNull(depth.AskDepth[0]);
+            Assert.IsNull(depth.AskDepth[1]);
+            Assert.IsNull(depth.AskDepth[2]);
+            Assert.IsNull(depth.AskDepth[3]);
+            Assert.IsNull(depth.AskDepth[4]);
 
             // -----------------------------------------------------------------------
 
@@ -286,8 +287,8 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             Assert.AreEqual(8, openOrders[0].Volume);
             Assert.AreEqual(7, openOrders[0].VolumeExecuted);
             Assert.AreEqual(1, openOrders[0].OpenQuantity);
-            Assert.AreEqual("Limit", openOrders[0].OrderType);
-            Assert.AreEqual("Buy", openOrders[0].OrderSide);
+            Assert.AreEqual("Limit", openOrders[0].Type);
+            Assert.AreEqual("Buy", openOrders[0].Side);
             Assert.AreEqual("PartiallyFilled", openOrders[0].Status);
             //---------------------------------------------------------------------
 
@@ -299,64 +300,64 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             Assert.AreEqual(10, closedOrders[0].Volume);
             Assert.AreEqual(0, closedOrders[0].VolumeExecuted);
             Assert.AreEqual(10, closedOrders[0].OpenQuantity);
-            Assert.AreEqual("Market", closedOrders[0].OrderType);
-            Assert.AreEqual("Buy", closedOrders[0].OrderSide);
+            Assert.AreEqual("Market", closedOrders[0].Type);
+            Assert.AreEqual("Buy", closedOrders[0].Side);
             Assert.AreEqual("Rejected", closedOrders[0].Status);
 
             Assert.AreEqual(252, closedOrders[1].Price);
             Assert.AreEqual(5, closedOrders[1].Volume);
             Assert.AreEqual(3, closedOrders[1].VolumeExecuted);
             Assert.AreEqual(2, closedOrders[1].OpenQuantity);
-            Assert.AreEqual("Limit", closedOrders[1].OrderType);
-            Assert.AreEqual("Sell", closedOrders[1].OrderSide);
+            Assert.AreEqual("Limit", closedOrders[1].Type);
+            Assert.AreEqual("Sell", closedOrders[1].Side);
             Assert.AreEqual("Cancelled", closedOrders[1].Status);
 
             Assert.AreEqual(250, closedOrders[2].Price);
             Assert.AreEqual(7, closedOrders[2].Volume);
             Assert.AreEqual(7, closedOrders[2].VolumeExecuted);
             Assert.AreEqual(0, closedOrders[2].OpenQuantity);
-            Assert.AreEqual("Limit", closedOrders[2].OrderType);
-            Assert.AreEqual("Buy", closedOrders[2].OrderSide);
+            Assert.AreEqual("Limit", closedOrders[2].Type);
+            Assert.AreEqual("Buy", closedOrders[2].Side);
             Assert.AreEqual("Complete", closedOrders[2].Status);
 
             Assert.AreEqual(0, closedOrders[3].Price);
             Assert.AreEqual(3, closedOrders[3].Volume);
             Assert.AreEqual(3, closedOrders[3].VolumeExecuted);
             Assert.AreEqual(0, closedOrders[3].OpenQuantity);
-            Assert.AreEqual("Market", closedOrders[3].OrderType);
-            Assert.AreEqual("Buy", closedOrders[3].OrderSide);
+            Assert.AreEqual("Market", closedOrders[3].Type);
+            Assert.AreEqual("Buy", closedOrders[3].Side);
             Assert.AreEqual("Complete", closedOrders[3].Status);
 
             Assert.AreEqual(0, closedOrders[4].Price);
             Assert.AreEqual(10, closedOrders[4].Volume);
             Assert.AreEqual(0, closedOrders[4].VolumeExecuted);
             Assert.AreEqual(10, closedOrders[4].OpenQuantity);
-            Assert.AreEqual("Market", closedOrders[4].OrderType);
-            Assert.AreEqual("Buy", closedOrders[4].OrderSide);
+            Assert.AreEqual("Market", closedOrders[4].Type);
+            Assert.AreEqual("Buy", closedOrders[4].Side);
             Assert.AreEqual("Rejected", closedOrders[4].Status);
 
             Assert.AreEqual(0, closedOrders[5].Price);
             Assert.AreEqual(5, closedOrders[5].Volume);
             Assert.AreEqual(5, closedOrders[5].VolumeExecuted);
             Assert.AreEqual(0, closedOrders[5].OpenQuantity);
-            Assert.AreEqual("Market", closedOrders[5].OrderType);
-            Assert.AreEqual("Sell", closedOrders[5].OrderSide);
+            Assert.AreEqual("Market", closedOrders[5].Type);
+            Assert.AreEqual("Sell", closedOrders[5].Side);
             Assert.AreEqual("Complete", closedOrders[5].Status);
 
             Assert.AreEqual(0, closedOrders[6].Price);
             Assert.AreEqual(4, closedOrders[6].Volume);
             Assert.AreEqual(4, closedOrders[6].VolumeExecuted);
             Assert.AreEqual(0, closedOrders[6].OpenQuantity);
-            Assert.AreEqual("Market", closedOrders[6].OrderType);
-            Assert.AreEqual("Sell", closedOrders[6].OrderSide);
+            Assert.AreEqual("Market", closedOrders[6].Type);
+            Assert.AreEqual("Sell", closedOrders[6].Side);
             Assert.AreEqual("Complete", closedOrders[6].Status);
 
             Assert.AreEqual(0, closedOrders[7].Price);
             Assert.AreEqual(5, closedOrders[7].Volume);
             Assert.AreEqual(5, closedOrders[7].VolumeExecuted);
             Assert.AreEqual(0, closedOrders[7].OpenQuantity);
-            Assert.AreEqual("Market", closedOrders[7].OrderType);
-            Assert.AreEqual("Sell", closedOrders[7].OrderSide);
+            Assert.AreEqual("Market", closedOrders[7].Type);
+            Assert.AreEqual("Sell", closedOrders[7].Side);
             Assert.AreEqual("Complete", closedOrders[7].Status);
             //------------------------------------------------------------------------
 
@@ -447,10 +448,11 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             // ------------------------------- Order Book ------------------------------
             IHttpActionResult orderBookResponse = marketController.GetOrderBook("XBTUSD");
 
-            OkNegotiatedContentResult<Tuple<OrderRepresentationList, OrderRepresentationList>> okOrderBookResponse =
-                (OkNegotiatedContentResult<Tuple<OrderRepresentationList, OrderRepresentationList>>)orderBookResponse;
+            OkNegotiatedContentResult<object> okOrderBookResponse =
+                (OkNegotiatedContentResult<object>)orderBookResponse;
 
-            Tuple<OrderRepresentationList, OrderRepresentationList> orderBook = okOrderBookResponse.Content;
+            OrderBookRepresentation representation = okOrderBookResponse.Content as OrderBookRepresentation;
+            Tuple<OrderRepresentationList, OrderRepresentationList> orderBook = new Tuple<OrderRepresentationList, OrderRepresentationList>(representation.Bids,representation.Asks);
             // Item1 = Bid Book, Item1[i].Item1 = Volume of 'i' Bid, Item1[i].Item2 = Price of 'i' Bid
             Assert.AreEqual(0, orderBook.Item1.Count());
             // Item2 = Bid Book, Item2[i].Item1 = Volume of Ask at index 'i', Item2[i].Item2 = Price of Bid at index 'i'
@@ -460,24 +462,24 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             // --------------------------------- Depth ---------------------------------
             IHttpActionResult depthResponse = marketController.GetDepth("XBTUSD");
 
-            OkNegotiatedContentResult<Tuple<Tuple<decimal, decimal, int>[], Tuple<decimal, decimal, int>[]>> okDepth
-                = (OkNegotiatedContentResult<Tuple<Tuple<decimal, decimal, int>[], Tuple<decimal, decimal, int>[]>>)depthResponse;
+            OkNegotiatedContentResult<object> okDepth
+                = (OkNegotiatedContentResult<object>)depthResponse;
 
-            Tuple<Tuple<decimal, decimal, int>[], Tuple<decimal, decimal, int>[]> depth = okDepth.Content;
+            DepthTupleRepresentation depth = okDepth.Content as DepthTupleRepresentation;
 
             // Item1 = Bid Book, Item1.Item1 = Aggregated Volume, Item1.Item2 = Price, Item1.Item3 = Number of Orders
-            Assert.IsNull(depth.Item1[0]);
-            Assert.IsNull(depth.Item1[1]);
-            Assert.IsNull(depth.Item1[2]);
-            Assert.IsNull(depth.Item1[3]);
-            Assert.IsNull(depth.Item1[4]);
+            Assert.IsNull(depth.BidDepth[0]);
+            Assert.IsNull(depth.BidDepth[1]);
+            Assert.IsNull(depth.BidDepth[2]);
+            Assert.IsNull(depth.BidDepth[3]);
+            Assert.IsNull(depth.BidDepth[4]);
 
             // Item2 = Bid Book, Item2.Item1 = Aggregated Volume, Item2.Item2 = Price, Item2.Item3 = Number of Orders
-            Assert.IsNull(depth.Item2[0]);
-            Assert.IsNull(depth.Item2[1]);
-            Assert.IsNull(depth.Item2[2]);
-            Assert.IsNull(depth.Item2[3]);
-            Assert.IsNull(depth.Item2[4]);
+            Assert.IsNull(depth.AskDepth[0]);
+            Assert.IsNull(depth.AskDepth[1]);
+            Assert.IsNull(depth.AskDepth[2]);
+            Assert.IsNull(depth.AskDepth[3]);
+            Assert.IsNull(depth.AskDepth[4]);
 
             // -----------------------------------------------------------------------
 
@@ -498,72 +500,72 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             Assert.AreEqual(5, closedOrders[0].Volume);
             Assert.AreEqual(0, closedOrders[0].VolumeExecuted);
             Assert.AreEqual(5, closedOrders[0].OpenQuantity);
-            Assert.AreEqual("Limit", closedOrders[0].OrderType);
-            Assert.AreEqual("Sell", closedOrders[0].OrderSide);
+            Assert.AreEqual("Limit", closedOrders[0].Type);
+            Assert.AreEqual("Sell", closedOrders[0].Side);
             Assert.AreEqual("Cancelled", closedOrders[0].Status);
 
             Assert.AreEqual(245, closedOrders[1].Price);
             Assert.AreEqual(8, closedOrders[1].Volume);
             Assert.AreEqual(0, closedOrders[1].VolumeExecuted);
             Assert.AreEqual(8, closedOrders[1].OpenQuantity);
-            Assert.AreEqual("Limit", closedOrders[1].OrderType);
-            Assert.AreEqual("Buy", closedOrders[1].OrderSide);
+            Assert.AreEqual("Limit", closedOrders[1].Type);
+            Assert.AreEqual("Buy", closedOrders[1].Side);
             Assert.AreEqual("Cancelled", closedOrders[1].Status);
 
             Assert.AreEqual(250, closedOrders[2].Price);
             Assert.AreEqual(7, closedOrders[2].Volume);
             Assert.AreEqual(7, closedOrders[2].VolumeExecuted);
             Assert.AreEqual(0, closedOrders[2].OpenQuantity);
-            Assert.AreEqual("Limit", closedOrders[2].OrderType);
-            Assert.AreEqual("Buy", closedOrders[2].OrderSide);
+            Assert.AreEqual("Limit", closedOrders[2].Type);
+            Assert.AreEqual("Buy", closedOrders[2].Side);
             Assert.AreEqual("Complete", closedOrders[2].Status);
 
             Assert.AreEqual(250, closedOrders[3].Price);
             Assert.AreEqual(3, closedOrders[3].Volume);
             Assert.AreEqual(2, closedOrders[3].VolumeExecuted);
             Assert.AreEqual(1, closedOrders[3].OpenQuantity);
-            Assert.AreEqual("Limit", closedOrders[3].OrderType);
-            Assert.AreEqual("Buy", closedOrders[3].OrderSide);
+            Assert.AreEqual("Limit", closedOrders[3].Type);
+            Assert.AreEqual("Buy", closedOrders[3].Side);
             Assert.AreEqual("Cancelled", closedOrders[3].Status);
 
             Assert.AreEqual(253, closedOrders[4].Price);
             Assert.AreEqual(5, closedOrders[4].Volume);
             Assert.AreEqual(0, closedOrders[4].VolumeExecuted);
             Assert.AreEqual(5, closedOrders[4].OpenQuantity);
-            Assert.AreEqual("Limit", closedOrders[4].OrderType);
-            Assert.AreEqual("Sell", closedOrders[4].OrderSide);
+            Assert.AreEqual("Limit", closedOrders[4].Type);
+            Assert.AreEqual("Sell", closedOrders[4].Side);
             Assert.AreEqual("Cancelled", closedOrders[4].Status);
 
             Assert.AreEqual(240, closedOrders[5].Price);
             Assert.AreEqual(8, closedOrders[5].Volume);
             Assert.AreEqual(0, closedOrders[5].VolumeExecuted);
             Assert.AreEqual(8, closedOrders[5].OpenQuantity);
-            Assert.AreEqual("Limit", closedOrders[5].OrderType);
-            Assert.AreEqual("Buy", closedOrders[5].OrderSide);
+            Assert.AreEqual("Limit", closedOrders[5].Type);
+            Assert.AreEqual("Buy", closedOrders[5].Side);
             Assert.AreEqual("Cancelled", closedOrders[5].Status);
 
             Assert.AreEqual(245, closedOrders[6].Price);
             Assert.AreEqual(7, closedOrders[6].Volume);
             Assert.AreEqual(0, closedOrders[6].VolumeExecuted);
             Assert.AreEqual(7, closedOrders[6].OpenQuantity);
-            Assert.AreEqual("Limit", closedOrders[6].OrderType);
-            Assert.AreEqual("Buy", closedOrders[6].OrderSide);
+            Assert.AreEqual("Limit", closedOrders[6].Type);
+            Assert.AreEqual("Buy", closedOrders[6].Side);
             Assert.AreEqual("Cancelled", closedOrders[6].Status);
 
             Assert.AreEqual(247, closedOrders[7].Price);
             Assert.AreEqual(3, closedOrders[7].Volume);
             Assert.AreEqual(0, closedOrders[7].VolumeExecuted);
             Assert.AreEqual(3, closedOrders[7].OpenQuantity);
-            Assert.AreEqual("Limit", closedOrders[7].OrderType);
-            Assert.AreEqual("Buy", closedOrders[7].OrderSide);
+            Assert.AreEqual("Limit", closedOrders[7].Type);
+            Assert.AreEqual("Buy", closedOrders[7].Side);
             Assert.AreEqual("Cancelled", closedOrders[7].Status);
 
             Assert.AreEqual(0, closedOrders[8].Price);
             Assert.AreEqual(9, closedOrders[8].Volume);
             Assert.AreEqual(9, closedOrders[8].VolumeExecuted);
             Assert.AreEqual(0, closedOrders[8].OpenQuantity);
-            Assert.AreEqual("Market", closedOrders[8].OrderType);
-            Assert.AreEqual("Sell", closedOrders[8].OrderSide);
+            Assert.AreEqual("Market", closedOrders[8].Type);
+            Assert.AreEqual("Sell", closedOrders[8].Side);
             Assert.AreEqual("Complete", closedOrders[8].Status);
             //------------------------------------------------------------------------
 

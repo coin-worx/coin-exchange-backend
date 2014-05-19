@@ -50,7 +50,7 @@ namespace CoinExchange.Trades.Application.MarketDataServices
         /// Returns the Order Book
         /// </summary>
         /// <returns></returns>
-        public Tuple<OrderRepresentationList, OrderRepresentationList> GetOrderBook(string symbol, int count)
+        public object GetOrderBook(string symbol, int count)
         {
             OrderRepresentationList bidList = new OrderRepresentationList(symbol, OrderSide.Buy);
             bidList.UpdateAtIndex(0, 1000, 491.34M);
@@ -78,7 +78,7 @@ namespace CoinExchange.Trades.Application.MarketDataServices
             return list;*/
         }
 
-        public Tuple<Tuple<decimal, decimal, int>[], Tuple<decimal, decimal, int>[]> GetDepth(string currencyPair)
+        public object GetDepth(string currencyPair)
         {
             throw new NotImplementedException();
         }

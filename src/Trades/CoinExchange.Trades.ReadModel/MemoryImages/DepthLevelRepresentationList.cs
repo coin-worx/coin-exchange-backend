@@ -12,7 +12,7 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
     /// <summary>
     /// Represents the Depth levels in a simplified format
     /// </summary>
-    public class DepthLevelRepresentationList : IEnumerable<Tuple<decimal, decimal, int>>
+    public class DepthLevelRepresentationList : IEnumerable<DepthTuple>
     {
         // Get the Current Logger
         private static readonly log4net.ILog Log = log4net.LogManager.GetLogger
@@ -24,7 +24,7 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
         /// 2. Price
         /// 3. OrderCount
         /// </summary>
-        private Tuple<decimal, decimal, int>[] _depthLevelList = null;
+        private DepthTuple[] _depthLevelList = null;
         private int _size = 0;
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
         /// <param name="size"></param>
         public DepthLevelRepresentationList(int size)
         {
-            _depthLevelList = new Tuple<decimal, decimal, int>[size];
+            _depthLevelList = new DepthTuple[size];
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
         {
             if (depthLevel.AggregatedVolume != null && depthLevel.Price != null)
             {
-                _depthLevelList[index] = new Tuple<decimal, decimal, int>(depthLevel.AggregatedVolume.Value,
+                _depthLevelList[index] = new DepthTuple(depthLevel.AggregatedVolume.Value,
                                                                           depthLevel.Price.Value, depthLevel.OrderCount);
                 return true;
             }
@@ -74,7 +74,7 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
         /// <summary>
         /// DepthLevels representation
         /// </summary>
-        public Tuple<decimal, decimal, int>[] DepthLevels
+        public DepthTuple[] DepthLevels
         {
             get { return _depthLevelList; }
         }
@@ -85,9 +85,9 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
         /// GetEnumerator(specific)
         /// </summary>
         /// <returns></returns>
-        IEnumerator<Tuple<decimal, decimal, int>> IEnumerable<Tuple<decimal, decimal, int>>.GetEnumerator()
+        IEnumerator<DepthTuple> IEnumerable<DepthTuple>.GetEnumerator()
         {
-            foreach (Tuple<decimal, decimal, int> orderStats in _depthLevelList)
+            foreach (var orderStats in _depthLevelList)
             {
                 // Lets check for end of list (its bad code since we used arrays)
                 if (orderStats == null)
@@ -107,7 +107,7 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
         /// <returns></returns>
         public IEnumerator GetEnumerator()
         {
-            foreach (Tuple<decimal, decimal, int> orderStats in _depthLevelList)
+            foreach (DepthTuple orderStats in _depthLevelList)
             {
                 // Lets check for end of list (its bad code since we used arrays)
                 if (orderStats == null)

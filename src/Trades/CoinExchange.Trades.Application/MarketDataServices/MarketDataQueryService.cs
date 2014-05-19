@@ -87,7 +87,7 @@ namespace CoinExchange.Trades.Application.MarketDataServices
         /// </summary>
         /// <param name="currencyPair"></param>
         /// <returns></returns>
-        private Tuple<decimal, decimal, int>[] GetBidDepth(string currencyPair)
+        private DepthTuple[] GetBidDepth(string currencyPair)
         {
             // Traverse within each key value pair and find the currency pair stored
             foreach (KeyValuePair<string, DepthLevelRepresentationList> keyValuePair in _depthMemoryImage.BidDepths)
@@ -106,7 +106,7 @@ namespace CoinExchange.Trades.Application.MarketDataServices
         /// </summary>
         /// <param name="currencyPair"></param>
         /// <returns></returns>
-        private Tuple<decimal, decimal, int>[] GetAskDepth(string currencyPair)
+        private DepthTuple[] GetAskDepth(string currencyPair)
         {
             // Traverse within each key value pair and find the currency pair stored
             foreach (KeyValuePair<string, DepthLevelRepresentationList> keyValuePair in _depthMemoryImage.AskDepths)
@@ -140,7 +140,7 @@ namespace CoinExchange.Trades.Application.MarketDataServices
         /// <param name="currencyPair"></param>
         /// <param name="count"></param>
         /// <returns></returns>
-        public Tuple<OrderRepresentationList, OrderRepresentationList> GetOrderBook(string currencyPair, int count)
+        public object GetOrderBook(string currencyPair, int count)
         {
             OrderRepresentationList originalBidBook = this.GetBidBook(currencyPair);
             OrderRepresentationList originalAskBook = this.GetAskBook(currencyPair);
@@ -160,11 +160,11 @@ namespace CoinExchange.Trades.Application.MarketDataServices
                         askBook.AddRecord(originalAskBook.ToList()[i].Item1, originalAskBook.ToList()[i].Item2);
                     }
                 }
-                return new Tuple<OrderRepresentationList, OrderRepresentationList>(bidBook, askBook);
+                return new OrderBookRepresentation(bidBook,askBook);
             }
             else
             {
-                return new Tuple<OrderRepresentationList, OrderRepresentationList>(originalBidBook, originalAskBook);
+                return new OrderBookRepresentation(originalBidBook, originalAskBook);
             }
         }
 
@@ -176,12 +176,12 @@ namespace CoinExchange.Trades.Application.MarketDataServices
         /// </summary>
         /// <param name="currencyPair"></param>
         /// <returns></returns>
-        public Tuple<Tuple<decimal, decimal, int>[], Tuple<decimal, decimal, int>[]> GetDepth(string currencyPair)
+        public object GetDepth(string currencyPair)
         {
-            Tuple<decimal, decimal, int>[] bidDepth = GetBidDepth(currencyPair);
-            Tuple<decimal, decimal, int>[] askDepth = GetAskDepth(currencyPair);
+            //Tuple<decimal, decimal, int>[] bidDepth = GetBidDepth(currencyPair);
+            //Tuple<decimal, decimal, int>[] askDepth = GetAskDepth(currencyPair);
 
-            return new Tuple<Tuple<decimal, decimal, int>[], Tuple<decimal, decimal, int>[]>(bidDepth, askDepth);
+            return new DepthTupleRepresentation(GetBidDepth(currencyPair), GetAskDepth(currencyPair));
         }
 
         #endregion

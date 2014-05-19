@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Net.Http;
@@ -24,6 +23,7 @@ using CoinExchange.Trades.Port.Adapter.Rest.Resources;
 using CoinExchange.Trades.ReadModel.DTO;
 using CoinExchange.Trades.ReadModel.MemoryImages;
 using Disruptor;
+using NHibernate.Linq;
 using NUnit.Framework;
 using Spring.Context;
 using Spring.Context.Support;
@@ -153,10 +153,10 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             MarketController marketController = (MarketController)_applicationContext["MarketController"];
             IHttpActionResult marketDataHttpResult = marketController.GetOrderBook("BTCUSD");
 
-            OkNegotiatedContentResult<Tuple<OrderRepresentationList, OrderRepresentationList>> okResponseMessage =
-                (OkNegotiatedContentResult<Tuple<OrderRepresentationList, OrderRepresentationList>>)marketDataHttpResult;
-
-            Tuple<OrderRepresentationList, OrderRepresentationList> orderBooks = okResponseMessage.Content;
+            OkNegotiatedContentResult<object> okResponseMessage =
+                (OkNegotiatedContentResult<object>)marketDataHttpResult;
+            OrderBookRepresentation representation = okResponseMessage.Content as OrderBookRepresentation;
+            System.Tuple<OrderRepresentationList, OrderRepresentationList> orderBooks = new System.Tuple<OrderRepresentationList, OrderRepresentationList>(representation.Bids , representation.Asks);
             Assert.AreEqual(3, orderBooks.Item1.Count()); // Count of the orders in the Bid Order book
             Assert.AreEqual(3, orderBooks.Item2.Count());// Count of the orders in the Ask Order book
 
@@ -262,20 +262,19 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             MarketController marketController = (MarketController)_applicationContext["MarketController"];
             IHttpActionResult marketDataHttpResult = marketController.GetDepth("BTCUSD");
 
-            OkNegotiatedContentResult<Tuple<Tuple<decimal, decimal, int>[], Tuple<decimal, decimal, int>[]>> okResponseMessage =
-                (OkNegotiatedContentResult<Tuple<Tuple<decimal, decimal, int>[], Tuple<decimal, decimal, int>[]>>)marketDataHttpResult;
+            OkNegotiatedContentResult<object> okResponseMessage =
+                (OkNegotiatedContentResult<object>)marketDataHttpResult;
+            DepthTupleRepresentation returnedDepth = okResponseMessage.Content as DepthTupleRepresentation;
 
-            Tuple<Tuple<decimal, decimal, int>[], Tuple<decimal, decimal, int>[]> returnedDepth = okResponseMessage.Content;
+            Assert.AreEqual(1000, returnedDepth.BidDepth[0].Item1); // Volume of the first Bid DepthLevel
+            Assert.AreEqual(493, returnedDepth.BidDepth[0].Item2); // Price of the first Bid DepthLevel
+            Assert.AreEqual(400, returnedDepth.BidDepth[1].Item1); // Volume of the second Bid DepthLevel
+            Assert.AreEqual(491, returnedDepth.BidDepth[1].Item2); // Price of the second Bid DepthLevel
 
-            Assert.AreEqual(1000, returnedDepth.Item1[0].Item1); // Volume of the first Bid DepthLevel
-            Assert.AreEqual(493, returnedDepth.Item1[0].Item2); // Price of the first Bid DepthLevel
-            Assert.AreEqual(400, returnedDepth.Item1[1].Item1); // Volume of the second Bid DepthLevel
-            Assert.AreEqual(491, returnedDepth.Item1[1].Item2); // Price of the second Bid DepthLevel
-
-            Assert.AreEqual(700, returnedDepth.Item2[0].Item1); // Volume of the first Bid DepthLevel
-            Assert.AreEqual(497, returnedDepth.Item2[0].Item2); // Price of the first Bid DepthLevel
-            Assert.AreEqual(1700, returnedDepth.Item2[1].Item1); // Volume of the second Bid DepthLevel
-            Assert.AreEqual(498, returnedDepth.Item2[1].Item2); // Price of the second Bid DepthLevel
+            Assert.AreEqual(700, returnedDepth.AskDepth[0].Item1); // Volume of the first Ask DepthLevel
+            Assert.AreEqual(497, returnedDepth.AskDepth[0].Item2); // Price of the first Ask DepthLevel
+            Assert.AreEqual(1700, returnedDepth.AskDepth[1].Item1); // Volume of the second Ask DepthLevel
+            Assert.AreEqual(498, returnedDepth.AskDepth[1].Item2); // Price of the second Ask DepthLevel
 
         }
 
@@ -365,10 +364,11 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             MarketController marketController = (MarketController)_applicationContext["MarketController"];
             IHttpActionResult marketDataHttpResult = marketController.GetOrderBook("BTCUSD");
 
-            OkNegotiatedContentResult<Tuple<OrderRepresentationList, OrderRepresentationList>> okResponseMessage =
-                (OkNegotiatedContentResult<Tuple<OrderRepresentationList, OrderRepresentationList>>)marketDataHttpResult;
+            OkNegotiatedContentResult<object> okResponseMessage =
+                (OkNegotiatedContentResult<object>)marketDataHttpResult;
+            OrderBookRepresentation representation = okResponseMessage.Content as OrderBookRepresentation;
 
-            Tuple<OrderRepresentationList, OrderRepresentationList> orderBooks = okResponseMessage.Content;
+            System.Tuple<OrderRepresentationList, OrderRepresentationList> orderBooks = new System.Tuple<OrderRepresentationList, OrderRepresentationList>(representation.Bids,representation.Asks);
             Assert.AreEqual(3, orderBooks.Item1.Count()); // Count of the orders in the Bid Order book
             Assert.AreEqual(3, orderBooks.Item2.Count());// Count of the orders in the Ask Order book
 
@@ -394,9 +394,10 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             marketDataHttpResult = marketController.GetOrderBook("BTCUSD");
 
             okResponseMessage =
-                (OkNegotiatedContentResult<Tuple<OrderRepresentationList, OrderRepresentationList>>)marketDataHttpResult;
+                (OkNegotiatedContentResult<object>)marketDataHttpResult;
+            representation = okResponseMessage.Content as OrderBookRepresentation;
 
-            orderBooks = okResponseMessage.Content;
+            orderBooks = new System.Tuple<OrderRepresentationList, OrderRepresentationList>(representation.Bids,representation.Asks);
             Assert.AreEqual(2, orderBooks.Item1.Count()); // Count of the orders in the Bid Order book
             Assert.AreEqual(3, orderBooks.Item2.Count());// Count of the orders in the Ask Order book
 
@@ -570,26 +571,27 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             orderBookMemoryImage.OnOrderBookChanged(limitOrderBook);
             IHttpActionResult httpActionResult = marketController.GetOrderBook("XBTUSD");
 
-            OkNegotiatedContentResult<Tuple<OrderRepresentationList, OrderRepresentationList>> okResponseMessage =
-                (OkNegotiatedContentResult<Tuple<OrderRepresentationList, OrderRepresentationList>>)httpActionResult;
+            OkNegotiatedContentResult<object> okResponseMessage =
+                (OkNegotiatedContentResult<object>)httpActionResult;
+            OrderBookRepresentation representation = okResponseMessage.Content as OrderBookRepresentation;
 
             Assert.IsNotNull(okResponseMessage);
-            Assert.IsNotNull(okResponseMessage.Content);
+            Assert.IsNotNull(representation);
             // Check the Currency Pair for Bid Book
-            Assert.AreEqual("XBTUSD", okResponseMessage.Content.Item1.CurrencyPair);
+            Assert.AreEqual("XBTUSD", representation.Bids.CurrencyPair);
             // Check the Currency Pair for Ask Book
-            Assert.AreEqual("XBTUSD", okResponseMessage.Content.Item2.CurrencyPair);
+            Assert.AreEqual("XBTUSD", representation.Asks.CurrencyPair);
 
             // Count of the number of Bids in the Bid Order Book
-            Assert.AreEqual(3, okResponseMessage.Content.Item1.Count());
+            Assert.AreEqual(3, representation.Bids.Count());
             // Count of the number of Asks in the Ask Order Book
-            Assert.AreEqual(3, okResponseMessage.Content.Item2.Count());
+            Assert.AreEqual(3, representation.Asks.Count());
 
-            Assert.AreEqual(50, okResponseMessage.Content.Item1.ToList()[0].Item1);// Highest Bid Volumein Bid Order Book
-            Assert.AreEqual(483.34M, okResponseMessage.Content.Item1.ToList()[0].Item2);// Highest Bid Price in Bid Order Book
+            Assert.AreEqual(50, representation.Bids.ToList()[0].Item1);// Highest Bid Volumein Bid Order Book
+            Assert.AreEqual(483.34M, representation.Bids.ToList()[0].Item2);// Highest Bid Price in Bid Order Book
 
-            Assert.AreEqual(150, okResponseMessage.Content.Item2.ToList()[0].Item1);// Highest Ask Volumein Ask Order Book
-            Assert.AreEqual(491.34M, okResponseMessage.Content.Item2.ToList()[0].Item2);// Highest Ask Price in Ask Order Book
+            Assert.AreEqual(150, representation.Asks.ToList()[0].Item1);// Highest Ask Volumein Ask Order Book
+            Assert.AreEqual(491.34M, representation.Asks.ToList()[0].Item2);// Highest Ask Price in Ask Order Book
         }
 
         [Test]
@@ -616,19 +618,21 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             
             IHttpActionResult httpActionResult = marketController.GetDepth("XBTUSD");
 
-            OkNegotiatedContentResult<Tuple<Tuple<decimal, decimal, int>[], Tuple<decimal, decimal, int>[]>> returnedDepths =
-            (OkNegotiatedContentResult<Tuple<Tuple<decimal, decimal, int>[], Tuple<decimal, decimal, int>[]>>) httpActionResult;
+            OkNegotiatedContentResult<object> result =
+            (OkNegotiatedContentResult<object>) httpActionResult;
 
-            Assert.IsNotNull(returnedDepths.Content);
+            DepthTupleRepresentation returnedDepths = result.Content as DepthTupleRepresentation;
+
+            Assert.IsNotNull(returnedDepths);
             // Bid Depth First Element represented as Item1
-            Assert.AreEqual(300, returnedDepths.Content.Item1.ToList()[0].Item1); // Aggregated Volume
-            Assert.AreEqual(492, returnedDepths.Content.Item1.ToList()[0].Item2); // Price
-            Assert.AreEqual(2, returnedDepths.Content.Item1.ToList()[0].Item3); // OrderCount
+            Assert.AreEqual(300, returnedDepths.BidDepth.ToList()[0].Item1); // Aggregated Volume
+            Assert.AreEqual(492, returnedDepths.BidDepth.ToList()[0].Item2); // Price
+            Assert.AreEqual(2, returnedDepths.BidDepth.ToList()[0].Item3); // OrderCount
 
             // Ask Depth First Element represented as Item2
-            Assert.AreEqual(400, returnedDepths.Content.Item2.ToList()[0].Item1); // Aggregated Volume
-            Assert.AreEqual(490, returnedDepths.Content.Item2.ToList()[0].Item2); // Price
-            Assert.AreEqual(3, returnedDepths.Content.Item2.ToList()[0].Item3); // OrderCount
+            Assert.AreEqual(400, returnedDepths.AskDepth.ToList()[0].Item1); // Aggregated Volume
+            Assert.AreEqual(490, returnedDepths.AskDepth.ToList()[0].Item2); // Price
+            Assert.AreEqual(3, returnedDepths.AskDepth.ToList()[0].Item3); // OrderCount
         }
     }
 }

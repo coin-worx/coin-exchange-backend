@@ -15,7 +15,7 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
     /// 2. Price
     /// in every slot
     /// </summary>
-    public class OrderRepresentationList : IEnumerable<Tuple<decimal, decimal>>
+    public class OrderRepresentationList : IEnumerable<OrderRecord>
     {
         // Get the Current Logger
         private static readonly log4net.ILog Log = log4net.LogManager.GetLogger
@@ -26,7 +26,7 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
         /// 1. Volume
         /// 2. Price
         /// </summary>
-        private List<Tuple<decimal, decimal>> _orderRecordList = new List<Tuple<decimal, decimal>>();
+        private List<OrderRecord> _orderRecordList = new List<OrderRecord>();
 
         private string _currencyPair = null;
         private OrderSide _orderSide;
@@ -50,7 +50,7 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
         {
             /*if (volume != 0 && currencyPair == _currencyPair && orderSide == _orderSide)
             {*/
-                _orderRecordList.Add(new Tuple<decimal, decimal>(volume, price));
+                _orderRecordList.Add(new OrderRecord(price,volume));
 
                 Log.Debug("New Order record added: CurrencyPair = " + _currencyPair + " | Volume = " + volume + " | " +
                           "Price = " + price);
@@ -73,7 +73,7 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
         {
             if (index < _orderRecordList.Count)
             {
-                _orderRecordList[index] = new Tuple<decimal, decimal>(volume, price);
+                _orderRecordList[index] = new OrderRecord(price, volume);
                 return true;
             }
             else
@@ -105,9 +105,9 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
         /// GetEnumerator(specific)
         /// </summary>
         /// <returns></returns>
-        IEnumerator<Tuple<decimal, decimal>> IEnumerable<Tuple<decimal, decimal>>.GetEnumerator()
+        IEnumerator<OrderRecord> IEnumerable<OrderRecord>.GetEnumerator()
         {
-            foreach (Tuple<decimal, decimal> orderStats in _orderRecordList)
+            foreach (var orderStats in _orderRecordList)
             {
                 // Lets check for end of list (its bad code since we used arrays)
                 if (orderStats == null)
@@ -127,7 +127,7 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
         /// <returns></returns>
         public IEnumerator GetEnumerator()
         {
-            foreach (Tuple<decimal, decimal> orderStats in _orderRecordList)
+            foreach (OrderRecord orderStats in _orderRecordList)
             {
                 // Lets check for end of list (its bad code since we used arrays)
                 if (orderStats == null)

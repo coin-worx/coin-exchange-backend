@@ -9,8 +9,8 @@ namespace CoinExchange.Client
 {
     public class ApiClient
     {
-        private string key = "123456";
-        private string secretkey = "AuroraBitCoinExchange";
+        private string key = "55555";
+        private string secretkey = "s3cr3t";
         private string nonce = "";
         private string cnounce = "asdfgh";
         private int counter = 0;

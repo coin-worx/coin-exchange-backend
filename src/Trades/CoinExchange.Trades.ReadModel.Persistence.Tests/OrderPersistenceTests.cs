@@ -85,8 +85,8 @@ namespace CoinExchange.Trades.ReadModel.Persistence.Tests
         private void AssertAreEqual(OrderReadModel expected, OrderReadModel actual)
         {
             Assert.AreEqual(expected.OrderId, actual.OrderId);
-            Assert.AreEqual(expected.OrderSide, actual.OrderSide);
-            Assert.AreEqual(expected.OrderType, actual.OrderType);
+            Assert.AreEqual(expected.Side, actual.Side);
+            Assert.AreEqual(expected.Type, actual.Type);
             Assert.AreEqual(expected.Price, actual.Price);
             Assert.AreEqual(expected.Status, actual.Status);
             Assert.AreEqual(expected.TraderId, actual.TraderId);

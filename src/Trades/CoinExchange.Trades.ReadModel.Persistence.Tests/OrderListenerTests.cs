@@ -85,8 +85,8 @@ namespace CoinExchange.Trades.ReadModel.Persistence.Tests
             OrderReadModel receivedOrder = _orderRepository.GetOrderById(order.OrderId.Id.ToString());
             Assert.NotNull(receivedOrder);
             Assert.AreEqual(receivedOrder.OrderId,order.OrderId.Id.ToString());
-            Assert.AreEqual(receivedOrder.OrderSide, order.OrderSide.ToString());
-            Assert.AreEqual(receivedOrder.OrderType, order.OrderType.ToString());
+            Assert.AreEqual(receivedOrder.Side, order.OrderSide.ToString());
+            Assert.AreEqual(receivedOrder.Type, order.OrderType.ToString());
             Assert.AreEqual(receivedOrder.Price, order.Price.Value);
             Assert.AreEqual(receivedOrder.CurrencyPair, order.CurrencyPair);
        }

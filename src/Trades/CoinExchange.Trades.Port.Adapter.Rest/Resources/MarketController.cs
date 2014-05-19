@@ -96,11 +96,11 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
             }
             try
             {
-                Tuple<OrderRepresentationList, OrderRepresentationList> list = _marketDataService.GetOrderBook(currencyPair, count);
+                var list = _marketDataService.GetOrderBook(currencyPair, count);
 
                 if (list != null)
                 {
-                    return Ok<Tuple<OrderRepresentationList, OrderRepresentationList>>(list);
+                    return Ok(list);
                 }
                 return BadRequest();
             }
@@ -132,7 +132,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
             }
             try
             {
-                Tuple<Tuple<decimal, decimal, int>[], Tuple<decimal, decimal, int>[]> depth = _marketDataService.GetDepth(currencyPair);
+                var depth = _marketDataService.GetDepth(currencyPair);
 
                 if (depth != null)
                 {

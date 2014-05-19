@@ -44,6 +44,10 @@
     <Reference Include="log4net">
       <HintPath>..\..\packages\log4net.1.2.10\lib\2.0\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -68,11 +72,15 @@
     <Compile Include="MemoryImages\DepthLevelRepresentationList.cs" />
     <Compile Include="MemoryImages\DepthMemoryImage.cs" />
     <Compile Include="MemoryImages\DepthRepresentation.cs" />
+    <Compile Include="MemoryImages\DepthTuple.cs" />
+    <Compile Include="MemoryImages\DepthTupleRepresentation.cs" />
     <Compile Include="MemoryImages\IBBOMemoryImage.cs" />
     <Compile Include="MemoryImages\IDepthMemoryImage.cs" />
     <Compile Include="MemoryImages\IMemoryImage.cs" />
     <Compile Include="MemoryImages\IOrderBookMemoryImage.cs" />
     <Compile Include="MemoryImages\OrderBookMemoryImage.cs" />
+    <Compile Include="MemoryImages\OrderBookRepresentation.cs" />
+    <Compile Include="MemoryImages\OrderRecord.cs" />
     <Compile Include="MemoryImages\OrderRepresentationBookList.cs" />
     <Compile Include="MemoryImages\OrderRepresentationList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

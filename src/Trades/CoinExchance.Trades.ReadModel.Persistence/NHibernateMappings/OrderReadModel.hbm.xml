@@ -5,9 +5,9 @@ assembly="CoinExchange.Trades.ReadModel" namespace="CoinExchange.Trades.ReadMode
     <id name="OrderId" column="OrderId">
       <generator class="assigned" />
     </id>
-    <property name="OrderSide"  column="OrderSide"/>
-    <property name="OrderType"  column="OrderType"/>
-    <property name="OrderDateTime"  column="OrderDateTime"/>
+    <property name="Side"  column="OrderSide"/>
+    <property name="Type"  column="OrderType"/>
+    <property name="DateTime"  column="OrderDateTime"/>
     <property name="Price"  column="Price"/>
     <property name="VolumeExecuted"  column="VolumeExecuted"/>
     <property name="Volume"  column="Volume"/>
