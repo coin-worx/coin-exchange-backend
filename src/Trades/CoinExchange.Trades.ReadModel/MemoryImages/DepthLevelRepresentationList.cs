@@ -47,7 +47,7 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
             if (depthLevel.AggregatedVolume != null && depthLevel.Price != null)
             {
                 _depthLevelList[index] = new DepthTuple(depthLevel.AggregatedVolume.Value,
-                                                                          depthLevel.Price.Value, depthLevel.OrderCount);
+                                              depthLevel.Price.Value, depthLevel.OrderCount);
                 return true;
             }
             return false;

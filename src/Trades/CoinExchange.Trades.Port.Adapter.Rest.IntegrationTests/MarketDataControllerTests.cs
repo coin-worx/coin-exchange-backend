@@ -160,20 +160,20 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             Assert.AreEqual(3, orderBooks.Item1.Count()); // Count of the orders in the Bid Order book
             Assert.AreEqual(3, orderBooks.Item2.Count());// Count of the orders in the Ask Order book
 
-            Assert.AreEqual(1000, orderBooks.Item1.ToList()[0].Item1); // Volume @ slot 1 in bid OrderBook
-            Assert.AreEqual(493, orderBooks.Item1.ToList()[0].Item2); // Price @ slot 1 in bid OrderBook
-            Assert.AreEqual(700, orderBooks.Item2.ToList()[0].Item1); // Volume @ slot 1 in ask OrderBook
-            Assert.AreEqual(497, orderBooks.Item2.ToList()[0].Item2); // Price @ slot 1 in ask OrderBook
+            Assert.AreEqual(1000, orderBooks.Item1.ToList()[0].Volume); // Volume @ slot 1 in bid OrderBook
+            Assert.AreEqual(493, orderBooks.Item1.ToList()[0].Price); // Price @ slot 1 in bid OrderBook
+            Assert.AreEqual(700, orderBooks.Item2.ToList()[0].Volume); // Volume @ slot 1 in ask OrderBook
+            Assert.AreEqual(497, orderBooks.Item2.ToList()[0].Price); // Price @ slot 1 in ask OrderBook
 
-            Assert.AreEqual(300, orderBooks.Item1.ToList()[1].Item1); // Volume @ slot 2 in bid OrderBook
-            Assert.AreEqual(492, orderBooks.Item1.ToList()[1].Item2); // Price @ slot 2 in bid OrderBook
-            Assert.AreEqual(800, orderBooks.Item2.ToList()[1].Item1); // Volume @ slot 2 in ask OrderBook
-            Assert.AreEqual(498, orderBooks.Item2.ToList()[1].Item2); // Price @ slot 2 in ask OrderBook
+            Assert.AreEqual(300, orderBooks.Item1.ToList()[1].Volume); // Volume @ slot 2 in bid OrderBook
+            Assert.AreEqual(492, orderBooks.Item1.ToList()[1].Price); // Price @ slot 2 in bid OrderBook
+            Assert.AreEqual(800, orderBooks.Item2.ToList()[1].Volume); // Volume @ slot 2 in ask OrderBook
+            Assert.AreEqual(498, orderBooks.Item2.ToList()[1].Price); // Price @ slot 2 in ask OrderBook
 
-            Assert.AreEqual(100, orderBooks.Item1.ToList()[2].Item1); // Volume @ slot 3 in bid OrderBook
-            Assert.AreEqual(491, orderBooks.Item1.ToList()[2].Item2); // Price @ slot 3 in bid OrderBook
-            Assert.AreEqual(900, orderBooks.Item2.ToList()[2].Item1); // Volume @ slot 3 in ask OrderBook
-            Assert.AreEqual(499, orderBooks.Item2.ToList()[2].Item2); // Price @ slot 3 in ask OrderBook
+            Assert.AreEqual(100, orderBooks.Item1.ToList()[2].Volume); // Volume @ slot 3 in bid OrderBook
+            Assert.AreEqual(491, orderBooks.Item1.ToList()[2].Price); // Price @ slot 3 in bid OrderBook
+            Assert.AreEqual(900, orderBooks.Item2.ToList()[2].Volume); // Volume @ slot 3 in ask OrderBook
+            Assert.AreEqual(499, orderBooks.Item2.ToList()[2].Price); // Price @ slot 3 in ask OrderBook
 
             manualResetEvent.Reset();
             manualResetEvent.WaitOne(8000);
@@ -266,15 +266,15 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
                 (OkNegotiatedContentResult<object>)marketDataHttpResult;
             DepthTupleRepresentation returnedDepth = okResponseMessage.Content as DepthTupleRepresentation;
 
-            Assert.AreEqual(1000, returnedDepth.BidDepth[0].Item1); // Volume of the first Bid DepthLevel
-            Assert.AreEqual(493, returnedDepth.BidDepth[0].Item2); // Price of the first Bid DepthLevel
-            Assert.AreEqual(400, returnedDepth.BidDepth[1].Item1); // Volume of the second Bid DepthLevel
-            Assert.AreEqual(491, returnedDepth.BidDepth[1].Item2); // Price of the second Bid DepthLevel
+            Assert.AreEqual(1000, returnedDepth.BidDepth[0].Volume); // Volume of the first Bid DepthLevel
+            Assert.AreEqual(493, returnedDepth.BidDepth[0].Price); // Price of the first Bid DepthLevel
+            Assert.AreEqual(400, returnedDepth.BidDepth[1].Volume); // Volume of the second Bid DepthLevel
+            Assert.AreEqual(491, returnedDepth.BidDepth[1].Price); // Price of the second Bid DepthLevel
 
-            Assert.AreEqual(700, returnedDepth.AskDepth[0].Item1); // Volume of the first Ask DepthLevel
-            Assert.AreEqual(497, returnedDepth.AskDepth[0].Item2); // Price of the first Ask DepthLevel
-            Assert.AreEqual(1700, returnedDepth.AskDepth[1].Item1); // Volume of the second Ask DepthLevel
-            Assert.AreEqual(498, returnedDepth.AskDepth[1].Item2); // Price of the second Ask DepthLevel
+            Assert.AreEqual(700, returnedDepth.AskDepth[0].Volume); // Volume of the first Ask DepthLevel
+            Assert.AreEqual(497, returnedDepth.AskDepth[0].Price); // Price of the first Ask DepthLevel
+            Assert.AreEqual(1700, returnedDepth.AskDepth[1].Volume); // Volume of the second Ask DepthLevel
+            Assert.AreEqual(498, returnedDepth.AskDepth[1].Price); // Price of the second Ask DepthLevel
 
         }
 
@@ -372,20 +372,20 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             Assert.AreEqual(3, orderBooks.Item1.Count()); // Count of the orders in the Bid Order book
             Assert.AreEqual(3, orderBooks.Item2.Count());// Count of the orders in the Ask Order book
 
-            Assert.AreEqual(1000, orderBooks.Item1.ToList()[0].Item1); // Volume @ slot 1 in bid OrderBook
-            Assert.AreEqual(493, orderBooks.Item1.ToList()[0].Item2); // Price @ slot 1 in bid OrderBook
-            Assert.AreEqual(700, orderBooks.Item2.ToList()[0].Item1); // Volume @ slot 1 in ask OrderBook
-            Assert.AreEqual(497, orderBooks.Item2.ToList()[0].Item2); // Price @ slot 1 in ask OrderBook
+            Assert.AreEqual(1000, orderBooks.Item1.ToList()[0].Volume); // Volume @ slot 1 in bid OrderBook
+            Assert.AreEqual(493, orderBooks.Item1.ToList()[0].Price); // Price @ slot 1 in bid OrderBook
+            Assert.AreEqual(700, orderBooks.Item2.ToList()[0].Volume); // Volume @ slot 1 in ask OrderBook
+            Assert.AreEqual(497, orderBooks.Item2.ToList()[0].Price); // Price @ slot 1 in ask OrderBook
 
-            Assert.AreEqual(300, orderBooks.Item1.ToList()[1].Item1); // Volume @ slot 2 in bid OrderBook
-            Assert.AreEqual(492, orderBooks.Item1.ToList()[1].Item2); // Price @ slot 2 in bid OrderBook
-            Assert.AreEqual(800, orderBooks.Item2.ToList()[1].Item1); // Volume @ slot 2 in ask OrderBook
-            Assert.AreEqual(498, orderBooks.Item2.ToList()[1].Item2); // Price @ slot 2 in ask OrderBook
+            Assert.AreEqual(300, orderBooks.Item1.ToList()[1].Volume); // Volume @ slot 2 in bid OrderBook
+            Assert.AreEqual(492, orderBooks.Item1.ToList()[1].Price); // Price @ slot 2 in bid OrderBook
+            Assert.AreEqual(800, orderBooks.Item2.ToList()[1].Volume); // Volume @ slot 2 in ask OrderBook
+            Assert.AreEqual(498, orderBooks.Item2.ToList()[1].Price); // Price @ slot 2 in ask OrderBook
 
-            Assert.AreEqual(100, orderBooks.Item1.ToList()[2].Item1); // Volume @ slot 3 in bid OrderBook
-            Assert.AreEqual(491, orderBooks.Item1.ToList()[2].Item2); // Price @ slot 3 in bid OrderBook
-            Assert.AreEqual(900, orderBooks.Item2.ToList()[2].Item1); // Volume @ slot 3 in ask OrderBook
-            Assert.AreEqual(499, orderBooks.Item2.ToList()[2].Item2); // Price @ slot 3 in ask OrderBook
+            Assert.AreEqual(100, orderBooks.Item1.ToList()[2].Volume); // Volume @ slot 3 in bid OrderBook
+            Assert.AreEqual(491, orderBooks.Item1.ToList()[2].Price); // Price @ slot 3 in bid OrderBook
+            Assert.AreEqual(900, orderBooks.Item2.ToList()[2].Volume); // Volume @ slot 3 in ask OrderBook
+            Assert.AreEqual(499, orderBooks.Item2.ToList()[2].Price); // Price @ slot 3 in ask OrderBook
 
             IHttpActionResult httpActionResult = orderController.CancelOrder(order1RepresentationContent.Content.OrderId);
             manualResetEvent.Reset();
@@ -401,20 +401,20 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             Assert.AreEqual(2, orderBooks.Item1.Count()); // Count of the orders in the Bid Order book
             Assert.AreEqual(3, orderBooks.Item2.Count());// Count of the orders in the Ask Order book
 
-            Assert.AreEqual(1000, orderBooks.Item1.ToList()[0].Item1); // Volume @ slot 1 in bid OrderBook
-            Assert.AreEqual(493, orderBooks.Item1.ToList()[0].Item2); // Price @ slot 1 in bid OrderBook
-            Assert.AreEqual(700, orderBooks.Item2.ToList()[0].Item1); // Volume @ slot 1 in ask OrderBook
-            Assert.AreEqual(497, orderBooks.Item2.ToList()[0].Item2); // Price @ slot 1 in ask OrderBook
+            Assert.AreEqual(1000, orderBooks.Item1.ToList()[0].Volume); // Volume @ slot 1 in bid OrderBook
+            Assert.AreEqual(493, orderBooks.Item1.ToList()[0].Price); // Price @ slot 1 in bid OrderBook
+            Assert.AreEqual(700, orderBooks.Item2.ToList()[0].Volume); // Volume @ slot 1 in ask OrderBook
+            Assert.AreEqual(497, orderBooks.Item2.ToList()[0].Price); // Price @ slot 1 in ask OrderBook
 
-            Assert.AreEqual(300, orderBooks.Item1.ToList()[1].Item1); // Volume @ slot 2 in bid OrderBook
-            Assert.AreEqual(492, orderBooks.Item1.ToList()[1].Item2); // Price @ slot 2 in bid OrderBook
-            Assert.AreEqual(800, orderBooks.Item2.ToList()[1].Item1); // Volume @ slot 2 in ask OrderBook
-            Assert.AreEqual(498, orderBooks.Item2.ToList()[1].Item2); // Price @ slot 2 in ask OrderBook
+            Assert.AreEqual(300, orderBooks.Item1.ToList()[1].Volume); // Volume @ slot 2 in bid OrderBook
+            Assert.AreEqual(492, orderBooks.Item1.ToList()[1].Price); // Price @ slot 2 in bid OrderBook
+            Assert.AreEqual(800, orderBooks.Item2.ToList()[1].Volume); // Volume @ slot 2 in ask OrderBook
+            Assert.AreEqual(498, orderBooks.Item2.ToList()[1].Price); // Price @ slot 2 in ask OrderBook
 
             /*Assert.AreEqual(100, orderBooks.Item1.ToList()[2].Item1); // Volume @ slot 3 in bid OrderBook
             Assert.AreEqual(491, orderBooks.Item1.ToList()[2].Item2); // Price @ slot 3 in bid OrderBook*/
-            Assert.AreEqual(900, orderBooks.Item2.ToList()[2].Item1); // Volume @ slot 3 in ask OrderBook
-            Assert.AreEqual(499, orderBooks.Item2.ToList()[2].Item2); // Price @ slot 3 in ask OrderBook
+            Assert.AreEqual(900, orderBooks.Item2.ToList()[2].Volume); // Volume @ slot 3 in ask OrderBook
+            Assert.AreEqual(499, orderBooks.Item2.ToList()[2].Price); // Price @ slot 3 in ask OrderBook
         }
 
         #endregion End-to-End Test
@@ -587,11 +587,11 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             // Count of the number of Asks in the Ask Order Book
             Assert.AreEqual(3, representation.Asks.Count());
 
-            Assert.AreEqual(50, representation.Bids.ToList()[0].Item1);// Highest Bid Volumein Bid Order Book
-            Assert.AreEqual(483.34M, representation.Bids.ToList()[0].Item2);// Highest Bid Price in Bid Order Book
+            Assert.AreEqual(50, representation.Bids.ToList()[0].Volume);// Highest Bid Volumein Bid Order Book
+            Assert.AreEqual(483.34M, representation.Bids.ToList()[0].Price);// Highest Bid Price in Bid Order Book
 
-            Assert.AreEqual(150, representation.Asks.ToList()[0].Item1);// Highest Ask Volumein Ask Order Book
-            Assert.AreEqual(491.34M, representation.Asks.ToList()[0].Item2);// Highest Ask Price in Ask Order Book
+            Assert.AreEqual(150, representation.Asks.ToList()[0].Volume);// Highest Ask Volumein Ask Order Book
+            Assert.AreEqual(491.34M, representation.Asks.ToList()[0].Price);// Highest Ask Price in Ask Order Book
         }
 
         [Test]
@@ -625,14 +625,14 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
 
             Assert.IsNotNull(returnedDepths);
             // Bid Depth First Element represented as Item1
-            Assert.AreEqual(300, returnedDepths.BidDepth.ToList()[0].Item1); // Aggregated Volume
-            Assert.AreEqual(492, returnedDepths.BidDepth.ToList()[0].Item2); // Price
-            Assert.AreEqual(2, returnedDepths.BidDepth.ToList()[0].Item3); // OrderCount
+            Assert.AreEqual(300, returnedDepths.BidDepth.ToList()[0].Volume); // Aggregated Volume
+            Assert.AreEqual(492, returnedDepths.BidDepth.ToList()[0].Price); // Price
+            Assert.AreEqual(2, returnedDepths.BidDepth.ToList()[0].OrderCount); // OrderCount
 
             // Ask Depth First Element represented as Item2
-            Assert.AreEqual(400, returnedDepths.AskDepth.ToList()[0].Item1); // Aggregated Volume
-            Assert.AreEqual(490, returnedDepths.AskDepth.ToList()[0].Item2); // Price
-            Assert.AreEqual(3, returnedDepths.AskDepth.ToList()[0].Item3); // OrderCount
+            Assert.AreEqual(400, returnedDepths.AskDepth.ToList()[0].Volume); // Aggregated Volume
+            Assert.AreEqual(490, returnedDepths.AskDepth.ToList()[0].Price); // Price
+            Assert.AreEqual(3, returnedDepths.AskDepth.ToList()[0].OrderCount); // OrderCount
         }
 
         [Test]
@@ -689,19 +689,19 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             DepthLevel xbtUsdAskLevel = new DepthLevel(new Price(494));
             DepthLevel ltcUsdAskLevel = new DepthLevel(new Price(495));
             DepthLevel btcUsdAskLevel = new DepthLevel(new Price(496));
-            bboMemoryImage.OnBBOArrived("XBT/USD", xbtUsdBidLevel, xbtUsdAskLevel);
-            bboMemoryImage.OnBBOArrived("LTC/USD", ltcUsdBidLevel, ltcUsdAskLevel);
-            bboMemoryImage.OnBBOArrived("BTC/USD", btcUsdBidLevel, btcUsdAskLevel);
+            bboMemoryImage.OnBBOArrived("XBTUSD", xbtUsdBidLevel, xbtUsdAskLevel);
+            bboMemoryImage.OnBBOArrived("LTCUSD", ltcUsdBidLevel, ltcUsdAskLevel);
+            bboMemoryImage.OnBBOArrived("BTCUSD", btcUsdBidLevel, btcUsdAskLevel);
             IHttpActionResult httpActionResult = marketController.GetAllRates();
 
             OkNegotiatedContentResult<RatesList> returnedOkRate = (OkNegotiatedContentResult<RatesList>)httpActionResult;
             RatesList ratesList = returnedOkRate.Content;
 
-            Assert.AreEqual("XBT/USD", ratesList.ToList()[0].CurrencyPair);
+            Assert.AreEqual("XBTUSD", ratesList.ToList()[0].CurrencyPair);
             Assert.AreEqual(492.5, ratesList.ToList()[0].RateValue); // MidPoint of xbtUsdBidLevel = 491 & xbtUsdAskLevel = 494
-            Assert.AreEqual("LTC/USD", ratesList.ToList()[1].CurrencyPair);
+            Assert.AreEqual("LTCUSD", ratesList.ToList()[1].CurrencyPair);
             Assert.AreEqual(493.5, ratesList.ToList()[1].RateValue); // MidPoint of ltcUsdBidLevel = 492 & ltcUsdAskLevel = 495
-            Assert.AreEqual("BTC/USD", ratesList.ToList()[2].CurrencyPair);
+            Assert.AreEqual("BTCUSD", ratesList.ToList()[2].CurrencyPair);
             Assert.AreEqual(494.5, ratesList.ToList()[2].RateValue); // MidPoint of btcUsdBidLevel = 493 & btcUsdAskLevel = 496
         }
 

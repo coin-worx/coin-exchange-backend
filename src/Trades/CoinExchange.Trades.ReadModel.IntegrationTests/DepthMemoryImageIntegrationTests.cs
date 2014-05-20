@@ -106,23 +106,23 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             
             // Values of the prices and volumes and order counts in each depth level for each curernc pair's bid and ask depth
             // Vlaues at first depth level price in bids
-            Assert.AreEqual(493.34M, depthMemoryImage.BidDepths.First().Value.ToList()[0].Item2); // Price
-            Assert.AreEqual(350, depthMemoryImage.BidDepths.First().Value.ToList()[0].Item1); // Volume
-            Assert.AreEqual(2, depthMemoryImage.BidDepths.First().Value.ToList()[0].Item3); // Number of orders
+            Assert.AreEqual(493.34M, depthMemoryImage.BidDepths.First().Value.ToList()[0].Price); // Price
+            Assert.AreEqual(350, depthMemoryImage.BidDepths.First().Value.ToList()[0].Volume); // Volume
+            Assert.AreEqual(2, depthMemoryImage.BidDepths.First().Value.ToList()[0].OrderCount); // Number of orders
 
             // Values at second depth price in bids
-            Assert.AreEqual(491.34M, depthMemoryImage.BidDepths.First().Value.ToList()[1].Item2);
-            Assert.AreEqual(700, depthMemoryImage.BidDepths.First().Value.ToList()[1].Item1);
-            Assert.AreEqual(3, depthMemoryImage.BidDepths.First().Value.ToList()[1].Item3);
+            Assert.AreEqual(491.34M, depthMemoryImage.BidDepths.First().Value.ToList()[1].Price);
+            Assert.AreEqual(700, depthMemoryImage.BidDepths.First().Value.ToList()[1].Volume);
+            Assert.AreEqual(3, depthMemoryImage.BidDepths.First().Value.ToList()[1].OrderCount);
 
             // Values at second depth price in asks
-            Assert.AreEqual(494.34M, depthMemoryImage.AskDepths.First().Value.ToList()[0].Item2);
-            Assert.AreEqual(600, depthMemoryImage.AskDepths.First().Value.ToList()[0].Item1);
-            Assert.AreEqual(3, depthMemoryImage.AskDepths.First().Value.ToList()[0].Item3);
+            Assert.AreEqual(494.34M, depthMemoryImage.AskDepths.First().Value.ToList()[0].Price);
+            Assert.AreEqual(600, depthMemoryImage.AskDepths.First().Value.ToList()[0].Volume);
+            Assert.AreEqual(3, depthMemoryImage.AskDepths.First().Value.ToList()[0].OrderCount);
 
-            Assert.AreEqual(496.34M, depthMemoryImage.AskDepths.First().Value.ToList()[1].Item2);
-            Assert.AreEqual(450, depthMemoryImage.AskDepths.First().Value.ToList()[1].Item1);
-            Assert.AreEqual(2, depthMemoryImage.AskDepths.First().Value.ToList()[1].Item3);
+            Assert.AreEqual(496.34M, depthMemoryImage.AskDepths.First().Value.ToList()[1].Price);
+            Assert.AreEqual(450, depthMemoryImage.AskDepths.First().Value.ToList()[1].Volume);
+            Assert.AreEqual(2, depthMemoryImage.AskDepths.First().Value.ToList()[1].OrderCount);
 
             OutputDisruptor.ShutDown();
         }
@@ -193,24 +193,24 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
 
             // Values of the prices and volumes and order counts in each depth level for each curernc pair's bid and ask depth
             // Vlaues at first depth level price in bids
-            Assert.AreEqual(493.34M, depthMemoryImage.BidDepths.First().Value.ToList()[0].Item2); // Price
-            Assert.AreEqual(350, depthMemoryImage.BidDepths.First().Value.ToList()[0].Item1); // Volume
-            Assert.AreEqual(2, depthMemoryImage.BidDepths.First().Value.ToList()[0].Item3); // Number of orders
+            Assert.AreEqual(493.34M, depthMemoryImage.BidDepths.First().Value.ToList()[0].Price); // Price
+            Assert.AreEqual(350, depthMemoryImage.BidDepths.First().Value.ToList()[0].Volume); // Volume
+            Assert.AreEqual(2, depthMemoryImage.BidDepths.First().Value.ToList()[0].OrderCount); // Number of orders
 
             // Values at second depth price in bids
-            Assert.AreEqual(491.34M, depthMemoryImage.BidDepths.First().Value.ToList()[1].Item2);
-            Assert.AreEqual(700, depthMemoryImage.BidDepths.First().Value.ToList()[1].Item1);
-            Assert.AreEqual(3, depthMemoryImage.BidDepths.First().Value.ToList()[1].Item3);
+            Assert.AreEqual(491.34M, depthMemoryImage.BidDepths.First().Value.ToList()[1].Price);
+            Assert.AreEqual(700, depthMemoryImage.BidDepths.First().Value.ToList()[1].Volume);
+            Assert.AreEqual(3, depthMemoryImage.BidDepths.First().Value.ToList()[1].OrderCount);
 
             // Values at first depth price in asks
-            Assert.AreEqual(494.34M, depthMemoryImage.AskDepths.First().Value.ToList()[0].Item2);
-            Assert.AreEqual(400, depthMemoryImage.AskDepths.First().Value.ToList()[0].Item1);
-            Assert.AreEqual(2, depthMemoryImage.AskDepths.First().Value.ToList()[0].Item3);
+            Assert.AreEqual(494.34M, depthMemoryImage.AskDepths.First().Value.ToList()[0].Price);
+            Assert.AreEqual(400, depthMemoryImage.AskDepths.First().Value.ToList()[0].Volume);
+            Assert.AreEqual(2, depthMemoryImage.AskDepths.First().Value.ToList()[0].OrderCount);
 
             // Values at second depth price in asks
-            Assert.AreEqual(496.34M, depthMemoryImage.AskDepths.First().Value.ToList()[1].Item2);
-            Assert.AreEqual(450, depthMemoryImage.AskDepths.First().Value.ToList()[1].Item1);
-            Assert.AreEqual(2, depthMemoryImage.AskDepths.First().Value.ToList()[1].Item3);
+            Assert.AreEqual(496.34M, depthMemoryImage.AskDepths.First().Value.ToList()[1].Price);
+            Assert.AreEqual(450, depthMemoryImage.AskDepths.First().Value.ToList()[1].Volume);
+            Assert.AreEqual(2, depthMemoryImage.AskDepths.First().Value.ToList()[1].OrderCount);
 
             // Place a matching sell order to fill buy orders at 491.34
             exchange.PlaceNewOrder(sellOrder5);
@@ -235,18 +235,18 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
 
             // Values of the prices and volumes and order counts in each depth level for each curernc pair's bid and ask depth
             // Values at first depth level price in bids        
-            Assert.AreEqual(491.34M, depthMemoryImage.BidDepths.First().Value.ToList()[0].Item2);
-            Assert.AreEqual(700, depthMemoryImage.BidDepths.First().Value.ToList()[0].Item1);
-            Assert.AreEqual(3, depthMemoryImage.BidDepths.First().Value.ToList()[0].Item3);
+            Assert.AreEqual(491.34M, depthMemoryImage.BidDepths.First().Value.ToList()[0].Price);
+            Assert.AreEqual(700, depthMemoryImage.BidDepths.First().Value.ToList()[0].Volume);
+            Assert.AreEqual(3, depthMemoryImage.BidDepths.First().Value.ToList()[0].OrderCount);
 
             // Values at first depth level price in asks
-            Assert.AreEqual(494.34M, depthMemoryImage.AskDepths.First().Value.ToList()[0].Item2);
-            Assert.AreEqual(400, depthMemoryImage.AskDepths.First().Value.ToList()[0].Item1);
-            Assert.AreEqual(2, depthMemoryImage.AskDepths.First().Value.ToList()[0].Item3);
+            Assert.AreEqual(494.34M, depthMemoryImage.AskDepths.First().Value.ToList()[0].Price);
+            Assert.AreEqual(400, depthMemoryImage.AskDepths.First().Value.ToList()[0].Volume);
+            Assert.AreEqual(2, depthMemoryImage.AskDepths.First().Value.ToList()[0].OrderCount);
 
-            Assert.AreEqual(496.34M, depthMemoryImage.AskDepths.First().Value.ToList()[1].Item2);
-            Assert.AreEqual(450, depthMemoryImage.AskDepths.First().Value.ToList()[1].Item1);
-            Assert.AreEqual(2, depthMemoryImage.AskDepths.First().Value.ToList()[1].Item3);
+            Assert.AreEqual(496.34M, depthMemoryImage.AskDepths.First().Value.ToList()[1].Price);
+            Assert.AreEqual(450, depthMemoryImage.AskDepths.First().Value.ToList()[1].Volume);
+            Assert.AreEqual(2, depthMemoryImage.AskDepths.First().Value.ToList()[1].OrderCount);
 
             OutputDisruptor.ShutDown();
         }
@@ -317,24 +317,24 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
 
             // Values of the prices and volumes and order counts in each depth level for each curernc pair's bid and ask depth
             // Vlaues at first depth level price in bids
-            Assert.AreEqual(493.34M, depthMemoryImage.BidDepths.First().Value.ToList()[0].Item2); // Price
-            Assert.AreEqual(350, depthMemoryImage.BidDepths.First().Value.ToList()[0].Item1); // Volume
-            Assert.AreEqual(2, depthMemoryImage.BidDepths.First().Value.ToList()[0].Item3); // Number of orders
+            Assert.AreEqual(493.34M, depthMemoryImage.BidDepths.First().Value.ToList()[0].Price); // Price
+            Assert.AreEqual(350, depthMemoryImage.BidDepths.First().Value.ToList()[0].Volume); // Volume
+            Assert.AreEqual(2, depthMemoryImage.BidDepths.First().Value.ToList()[0].OrderCount); // Number of orders
 
             // Values at second depth price in bids
-            Assert.AreEqual(491.34M, depthMemoryImage.BidDepths.First().Value.ToList()[1].Item2);
-            Assert.AreEqual(200, depthMemoryImage.BidDepths.First().Value.ToList()[1].Item1);
-            Assert.AreEqual(2, depthMemoryImage.BidDepths.First().Value.ToList()[1].Item3);
+            Assert.AreEqual(491.34M, depthMemoryImage.BidDepths.First().Value.ToList()[1].Price);
+            Assert.AreEqual(200, depthMemoryImage.BidDepths.First().Value.ToList()[1].Volume);
+            Assert.AreEqual(2, depthMemoryImage.BidDepths.First().Value.ToList()[1].OrderCount);
 
             // Values at first depth price in asks
-            Assert.AreEqual(494.34M, depthMemoryImage.AskDepths.First().Value.ToList()[0].Item2);
-            Assert.AreEqual(700, depthMemoryImage.AskDepths.First().Value.ToList()[0].Item1);
-            Assert.AreEqual(3, depthMemoryImage.AskDepths.First().Value.ToList()[0].Item3);
+            Assert.AreEqual(494.34M, depthMemoryImage.AskDepths.First().Value.ToList()[0].Price);
+            Assert.AreEqual(700, depthMemoryImage.AskDepths.First().Value.ToList()[0].Volume);
+            Assert.AreEqual(3, depthMemoryImage.AskDepths.First().Value.ToList()[0].OrderCount);
 
             // Values at second depth price in asks
-            Assert.AreEqual(496.34M, depthMemoryImage.AskDepths.First().Value.ToList()[1].Item2);
-            Assert.AreEqual(450, depthMemoryImage.AskDepths.First().Value.ToList()[1].Item1);
-            Assert.AreEqual(2, depthMemoryImage.AskDepths.First().Value.ToList()[1].Item3);
+            Assert.AreEqual(496.34M, depthMemoryImage.AskDepths.First().Value.ToList()[1].Price);
+            Assert.AreEqual(450, depthMemoryImage.AskDepths.First().Value.ToList()[1].Volume);
+            Assert.AreEqual(2, depthMemoryImage.AskDepths.First().Value.ToList()[1].OrderCount);
 
             // Place a matching sell order to fill buy orders at 491.34
             exchange.PlaceNewOrder(buyOrder5);
@@ -359,19 +359,19 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
 
             // Values of the prices and volumes and order counts in each depth level for each curernc pair's bid and ask depth
             // Vlaues at first depth level price in bids
-            Assert.AreEqual(493.34M, depthMemoryImage.BidDepths.First().Value.ToList()[0].Item2); // Price
-            Assert.AreEqual(350, depthMemoryImage.BidDepths.First().Value.ToList()[0].Item1); // Volume
-            Assert.AreEqual(2, depthMemoryImage.BidDepths.First().Value.ToList()[0].Item3); // Number of orders
+            Assert.AreEqual(493.34M, depthMemoryImage.BidDepths.First().Value.ToList()[0].Price); // Price
+            Assert.AreEqual(350, depthMemoryImage.BidDepths.First().Value.ToList()[0].Volume); // Volume
+            Assert.AreEqual(2, depthMemoryImage.BidDepths.First().Value.ToList()[0].OrderCount); // Number of orders
 
             // Values at second depth price in bids
-            Assert.AreEqual(491.34M, depthMemoryImage.BidDepths.First().Value.ToList()[1].Item2);
-            Assert.AreEqual(200, depthMemoryImage.BidDepths.First().Value.ToList()[1].Item1);
-            Assert.AreEqual(2, depthMemoryImage.BidDepths.First().Value.ToList()[1].Item3);
+            Assert.AreEqual(491.34M, depthMemoryImage.BidDepths.First().Value.ToList()[1].Price);
+            Assert.AreEqual(200, depthMemoryImage.BidDepths.First().Value.ToList()[1].Volume);
+            Assert.AreEqual(2, depthMemoryImage.BidDepths.First().Value.ToList()[1].OrderCount);
 
             // Values at first depth price in asks
-            Assert.AreEqual(496.34M, depthMemoryImage.AskDepths.First().Value.ToList()[0].Item2);
-            Assert.AreEqual(450, depthMemoryImage.AskDepths.First().Value.ToList()[0].Item1);
-            Assert.AreEqual(2, depthMemoryImage.AskDepths.First().Value.ToList()[0].Item3);
+            Assert.AreEqual(496.34M, depthMemoryImage.AskDepths.First().Value.ToList()[0].Price);
+            Assert.AreEqual(450, depthMemoryImage.AskDepths.First().Value.ToList()[0].Volume);
+            Assert.AreEqual(2, depthMemoryImage.AskDepths.First().Value.ToList()[0].OrderCount);
 
             OutputDisruptor.ShutDown();
         }
@@ -444,23 +444,23 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
 
             // Values of the prices and volumes and order counts in each depth level for each curernc pair's bid and ask depth
             // Vlaues at first depth level price in bids
-            Assert.AreEqual(493.34M, depthMemoryImage.BidDepths.First().Value.ToList()[0].Item2); // Price
-            Assert.AreEqual(350, depthMemoryImage.BidDepths.First().Value.ToList()[0].Item1); // Volume
-            Assert.AreEqual(2, depthMemoryImage.BidDepths.First().Value.ToList()[0].Item3); // Number of orders
+            Assert.AreEqual(493.34M, depthMemoryImage.BidDepths.First().Value.ToList()[0].Price); // Price
+            Assert.AreEqual(350, depthMemoryImage.BidDepths.First().Value.ToList()[0].Volume); // Volume
+            Assert.AreEqual(2, depthMemoryImage.BidDepths.First().Value.ToList()[0].OrderCount); // Number of orders
 
             // Values at second depth price in bids
-            Assert.AreEqual(491.34M, depthMemoryImage.BidDepths.First().Value.ToList()[1].Item2);
-            Assert.AreEqual(700, depthMemoryImage.BidDepths.First().Value.ToList()[1].Item1);
-            Assert.AreEqual(3, depthMemoryImage.BidDepths.First().Value.ToList()[1].Item3);
+            Assert.AreEqual(491.34M, depthMemoryImage.BidDepths.First().Value.ToList()[1].Price);
+            Assert.AreEqual(700, depthMemoryImage.BidDepths.First().Value.ToList()[1].Volume);
+            Assert.AreEqual(3, depthMemoryImage.BidDepths.First().Value.ToList()[1].OrderCount);
 
             // Values at second depth price in asks
-            Assert.AreEqual(494.34M, depthMemoryImage.AskDepths.First().Value.ToList()[0].Item2);
-            Assert.AreEqual(400, depthMemoryImage.AskDepths.First().Value.ToList()[0].Item1);
-            Assert.AreEqual(2, depthMemoryImage.AskDepths.First().Value.ToList()[0].Item3);
+            Assert.AreEqual(494.34M, depthMemoryImage.AskDepths.First().Value.ToList()[0].Price);
+            Assert.AreEqual(400, depthMemoryImage.AskDepths.First().Value.ToList()[0].Volume);
+            Assert.AreEqual(2, depthMemoryImage.AskDepths.First().Value.ToList()[0].OrderCount);
 
-            Assert.AreEqual(496.34M, depthMemoryImage.AskDepths.First().Value.ToList()[1].Item2);
-            Assert.AreEqual(450, depthMemoryImage.AskDepths.First().Value.ToList()[1].Item1);
-            Assert.AreEqual(2, depthMemoryImage.AskDepths.First().Value.ToList()[1].Item3);
+            Assert.AreEqual(496.34M, depthMemoryImage.AskDepths.First().Value.ToList()[1].Price);
+            Assert.AreEqual(450, depthMemoryImage.AskDepths.First().Value.ToList()[1].Volume);
+            Assert.AreEqual(2, depthMemoryImage.AskDepths.First().Value.ToList()[1].OrderCount);
 
             // Place a matching sell order to fill buy orders at 491.34
             exchange.PlaceNewOrder(sellOrder5);
@@ -485,23 +485,23 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
 
             // Values of the prices and volumes and order counts in each depth level for each curernc pair's bid and ask depth
             // Values at first depth level price in bids
-            Assert.AreEqual(493.34M, depthMemoryImage.BidDepths.First().Value.ToList()[0].Item2); // Price
-            Assert.AreEqual(100, depthMemoryImage.BidDepths.First().Value.ToList()[0].Item1); // Volume
-            Assert.AreEqual(1, depthMemoryImage.BidDepths.First().Value.ToList()[0].Item3); // Number of orders
+            Assert.AreEqual(493.34M, depthMemoryImage.BidDepths.First().Value.ToList()[0].Price); // Price
+            Assert.AreEqual(100, depthMemoryImage.BidDepths.First().Value.ToList()[0].Volume); // Volume
+            Assert.AreEqual(1, depthMemoryImage.BidDepths.First().Value.ToList()[0].OrderCount); // Number of orders
 
             // Values at second depth level price in bids
-            Assert.AreEqual(491.34M, depthMemoryImage.BidDepths.First().Value.ToList()[1].Item2); // Price
-            Assert.AreEqual(700, depthMemoryImage.BidDepths.First().Value.ToList()[1].Item1); // Volume
-            Assert.AreEqual(3, depthMemoryImage.BidDepths.First().Value.ToList()[1].Item3); // Number of orders
+            Assert.AreEqual(491.34M, depthMemoryImage.BidDepths.First().Value.ToList()[1].Price); // Price
+            Assert.AreEqual(700, depthMemoryImage.BidDepths.First().Value.ToList()[1].Volume); // Volume
+            Assert.AreEqual(3, depthMemoryImage.BidDepths.First().Value.ToList()[1].OrderCount); // Number of orders
 
             // Values at first depth price in asks
-            Assert.AreEqual(494.34M, depthMemoryImage.AskDepths.First().Value.ToList()[0].Item2);
-            Assert.AreEqual(400, depthMemoryImage.AskDepths.First().Value.ToList()[0].Item1);
-            Assert.AreEqual(2, depthMemoryImage.AskDepths.First().Value.ToList()[0].Item3);
+            Assert.AreEqual(494.34M, depthMemoryImage.AskDepths.First().Value.ToList()[0].Price);
+            Assert.AreEqual(400, depthMemoryImage.AskDepths.First().Value.ToList()[0].Volume);
+            Assert.AreEqual(2, depthMemoryImage.AskDepths.First().Value.ToList()[0].OrderCount);
 
-            Assert.AreEqual(496.34M, depthMemoryImage.AskDepths.First().Value.ToList()[1].Item2);
-            Assert.AreEqual(450, depthMemoryImage.AskDepths.First().Value.ToList()[1].Item1);
-            Assert.AreEqual(2, depthMemoryImage.AskDepths.First().Value.ToList()[1].Item3);
+            Assert.AreEqual(496.34M, depthMemoryImage.AskDepths.First().Value.ToList()[1].Price);
+            Assert.AreEqual(450, depthMemoryImage.AskDepths.First().Value.ToList()[1].Volume);
+            Assert.AreEqual(2, depthMemoryImage.AskDepths.First().Value.ToList()[1].OrderCount);
 
             // Place a matching buy order to fill sell orders
             exchange.PlaceNewOrder(sellOrder6);
@@ -526,19 +526,19 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
 
             // Values of the prices and volumes and order counts in each depth level for each curernc pair's bid and ask depth
             // Values at first depth level price in bids
-            Assert.AreEqual(491.34M, depthMemoryImage.BidDepths.First().Value.ToList()[0].Item2); // Price
-            Assert.AreEqual(700, depthMemoryImage.BidDepths.First().Value.ToList()[0].Item1); // Volume
-            Assert.AreEqual(3, depthMemoryImage.BidDepths.First().Value.ToList()[0].Item3); // Number of orders
+            Assert.AreEqual(491.34M, depthMemoryImage.BidDepths.First().Value.ToList()[0].Price); // Price
+            Assert.AreEqual(700, depthMemoryImage.BidDepths.First().Value.ToList()[0].Volume); // Volume
+            Assert.AreEqual(3, depthMemoryImage.BidDepths.First().Value.ToList()[0].OrderCount); // Number of orders
 
             // Values at first depth price in asks
-            Assert.AreEqual(494.34M, depthMemoryImage.AskDepths.First().Value.ToList()[0].Item2);
-            Assert.AreEqual(400, depthMemoryImage.AskDepths.First().Value.ToList()[0].Item1);
-            Assert.AreEqual(2, depthMemoryImage.AskDepths.First().Value.ToList()[0].Item3);
+            Assert.AreEqual(494.34M, depthMemoryImage.AskDepths.First().Value.ToList()[0].Price);
+            Assert.AreEqual(400, depthMemoryImage.AskDepths.First().Value.ToList()[0].Volume);
+            Assert.AreEqual(2, depthMemoryImage.AskDepths.First().Value.ToList()[0].OrderCount);
 
             // Values at second depth price in asks
-            Assert.AreEqual(496.34M, depthMemoryImage.AskDepths.First().Value.ToList()[1].Item2);
-            Assert.AreEqual(450, depthMemoryImage.AskDepths.First().Value.ToList()[1].Item1);
-            Assert.AreEqual(2, depthMemoryImage.AskDepths.First().Value.ToList()[1].Item3);
+            Assert.AreEqual(496.34M, depthMemoryImage.AskDepths.First().Value.ToList()[1].Price);
+            Assert.AreEqual(450, depthMemoryImage.AskDepths.First().Value.ToList()[1].Volume);
+            Assert.AreEqual(2, depthMemoryImage.AskDepths.First().Value.ToList()[1].OrderCount);
 
             OutputDisruptor.ShutDown();
         }
@@ -611,24 +611,24 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
 
             // Values of the prices and volumes and order counts in each depth level for each curernc pair's bid and ask depth
             // Vlaues at first depth level price in bids
-            Assert.AreEqual(493.34M, depthMemoryImage.BidDepths.First().Value.ToList()[0].Item2); // Price
-            Assert.AreEqual(350, depthMemoryImage.BidDepths.First().Value.ToList()[0].Item1); // Volume
-            Assert.AreEqual(2, depthMemoryImage.BidDepths.First().Value.ToList()[0].Item3); // Number of orders
+            Assert.AreEqual(493.34M, depthMemoryImage.BidDepths.First().Value.ToList()[0].Price); // Price
+            Assert.AreEqual(350, depthMemoryImage.BidDepths.First().Value.ToList()[0].Volume); // Volume
+            Assert.AreEqual(2, depthMemoryImage.BidDepths.First().Value.ToList()[0].OrderCount); // Number of orders
 
             // Values at second depth price in bids
-            Assert.AreEqual(491.34M, depthMemoryImage.BidDepths.First().Value.ToList()[1].Item2);
-            Assert.AreEqual(200, depthMemoryImage.BidDepths.First().Value.ToList()[1].Item1);
-            Assert.AreEqual(2, depthMemoryImage.BidDepths.First().Value.ToList()[1].Item3);
+            Assert.AreEqual(491.34M, depthMemoryImage.BidDepths.First().Value.ToList()[1].Price);
+            Assert.AreEqual(200, depthMemoryImage.BidDepths.First().Value.ToList()[1].Volume);
+            Assert.AreEqual(2, depthMemoryImage.BidDepths.First().Value.ToList()[1].OrderCount);
 
             // Values at first depth price in asks
-            Assert.AreEqual(494.34M, depthMemoryImage.AskDepths.First().Value.ToList()[0].Item2);
-            Assert.AreEqual(700, depthMemoryImage.AskDepths.First().Value.ToList()[0].Item1);
-            Assert.AreEqual(3, depthMemoryImage.AskDepths.First().Value.ToList()[0].Item3);
+            Assert.AreEqual(494.34M, depthMemoryImage.AskDepths.First().Value.ToList()[0].Price);
+            Assert.AreEqual(700, depthMemoryImage.AskDepths.First().Value.ToList()[0].Volume);
+            Assert.AreEqual(3, depthMemoryImage.AskDepths.First().Value.ToList()[0].OrderCount);
 
             // Values at second depth price in asks
-            Assert.AreEqual(496.34M, depthMemoryImage.AskDepths.First().Value.ToList()[1].Item2);
-            Assert.AreEqual(450, depthMemoryImage.AskDepths.First().Value.ToList()[1].Item1);
-            Assert.AreEqual(2, depthMemoryImage.AskDepths.First().Value.ToList()[1].Item3);
+            Assert.AreEqual(496.34M, depthMemoryImage.AskDepths.First().Value.ToList()[1].Price);
+            Assert.AreEqual(450, depthMemoryImage.AskDepths.First().Value.ToList()[1].Volume);
+            Assert.AreEqual(2, depthMemoryImage.AskDepths.First().Value.ToList()[1].OrderCount);
 
             // Place a matching buy order to fill sell orders
             exchange.PlaceNewOrder(buyOrder5);
@@ -653,19 +653,19 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
 
             // Values of the prices and volumes and order counts in each depth level for each curernc pair's bid and ask depth
             // Vlaues at first depth level price in bids
-            Assert.AreEqual(493.34M, depthMemoryImage.BidDepths.First().Value.ToList()[0].Item2); // Price
-            Assert.AreEqual(350, depthMemoryImage.BidDepths.First().Value.ToList()[0].Item1); // Volume
-            Assert.AreEqual(2, depthMemoryImage.BidDepths.First().Value.ToList()[0].Item3); // Number of orders
+            Assert.AreEqual(493.34M, depthMemoryImage.BidDepths.First().Value.ToList()[0].Price); // Price
+            Assert.AreEqual(350, depthMemoryImage.BidDepths.First().Value.ToList()[0].Volume); // Volume
+            Assert.AreEqual(2, depthMemoryImage.BidDepths.First().Value.ToList()[0].OrderCount); // Number of orders
 
             // Values at second depth price in bids
-            Assert.AreEqual(491.34M, depthMemoryImage.BidDepths.First().Value.ToList()[1].Item2);
-            Assert.AreEqual(200, depthMemoryImage.BidDepths.First().Value.ToList()[1].Item1);
-            Assert.AreEqual(2, depthMemoryImage.BidDepths.First().Value.ToList()[1].Item3);
+            Assert.AreEqual(491.34M, depthMemoryImage.BidDepths.First().Value.ToList()[1].Price);
+            Assert.AreEqual(200, depthMemoryImage.BidDepths.First().Value.ToList()[1].Volume);
+            Assert.AreEqual(2, depthMemoryImage.BidDepths.First().Value.ToList()[1].OrderCount);
 
             // Values at first depth price in asks
-            Assert.AreEqual(496.34M, depthMemoryImage.AskDepths.First().Value.ToList()[0].Item2);
-            Assert.AreEqual(450, depthMemoryImage.AskDepths.First().Value.ToList()[0].Item1);
-            Assert.AreEqual(2, depthMemoryImage.AskDepths.First().Value.ToList()[0].Item3);
+            Assert.AreEqual(496.34M, depthMemoryImage.AskDepths.First().Value.ToList()[0].Price);
+            Assert.AreEqual(450, depthMemoryImage.AskDepths.First().Value.ToList()[0].Volume);
+            Assert.AreEqual(2, depthMemoryImage.AskDepths.First().Value.ToList()[0].OrderCount);
 
             // Place a matching buy order to fill sell orders
             exchange.PlaceNewOrder(buyOrder6);
@@ -690,19 +690,19 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
 
             // Values of the prices and volumes and order counts in each depth level for each curernc pair's bid and ask depth
             // Vlaues at first depth level price in bids
-            Assert.AreEqual(493.34M, depthMemoryImage.BidDepths.First().Value.ToList()[0].Item2); // Price
-            Assert.AreEqual(350, depthMemoryImage.BidDepths.First().Value.ToList()[0].Item1); // Volume
-            Assert.AreEqual(2, depthMemoryImage.BidDepths.First().Value.ToList()[0].Item3); // Number of orders
+            Assert.AreEqual(493.34M, depthMemoryImage.BidDepths.First().Value.ToList()[0].Price); // Price
+            Assert.AreEqual(350, depthMemoryImage.BidDepths.First().Value.ToList()[0].Volume); // Volume
+            Assert.AreEqual(2, depthMemoryImage.BidDepths.First().Value.ToList()[0].OrderCount); // Number of orders
 
             // Values at second depth price in bids
-            Assert.AreEqual(491.34M, depthMemoryImage.BidDepths.First().Value.ToList()[1].Item2);
-            Assert.AreEqual(200, depthMemoryImage.BidDepths.First().Value.ToList()[1].Item1);
-            Assert.AreEqual(2, depthMemoryImage.BidDepths.First().Value.ToList()[1].Item3);
+            Assert.AreEqual(491.34M, depthMemoryImage.BidDepths.First().Value.ToList()[1].Price);
+            Assert.AreEqual(200, depthMemoryImage.BidDepths.First().Value.ToList()[1].Volume);
+            Assert.AreEqual(2, depthMemoryImage.BidDepths.First().Value.ToList()[1].OrderCount);
 
             // Values at first depth price in asks
-            Assert.AreEqual(496.34M, depthMemoryImage.AskDepths.First().Value.ToList()[0].Item2);
-            Assert.AreEqual(200, depthMemoryImage.AskDepths.First().Value.ToList()[0].Item1);
-            Assert.AreEqual(1, depthMemoryImage.AskDepths.First().Value.ToList()[0].Item3);
+            Assert.AreEqual(496.34M, depthMemoryImage.AskDepths.First().Value.ToList()[0].Price);
+            Assert.AreEqual(200, depthMemoryImage.AskDepths.First().Value.ToList()[0].Volume);
+            Assert.AreEqual(1, depthMemoryImage.AskDepths.First().Value.ToList()[0].OrderCount);
 
             OutputDisruptor.ShutDown();
         }
@@ -780,23 +780,23 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
 
             // Values of the prices and volumes and order counts in each depth level for each curernc pair's bid and ask depth
             // Vlaues at first depth level price in bids
-            Assert.AreEqual(493.34M, depthMemoryImage.BidDepths.First().Value.ToList()[0].Item2); // Price
-            Assert.AreEqual(300, depthMemoryImage.BidDepths.First().Value.ToList()[0].Item1); // Volume
-            Assert.AreEqual(2, depthMemoryImage.BidDepths.First().Value.ToList()[0].Item3); // Number of orders
+            Assert.AreEqual(493.34M, depthMemoryImage.BidDepths.First().Value.ToList()[0].Price); // Price
+            Assert.AreEqual(300, depthMemoryImage.BidDepths.First().Value.ToList()[0].Volume); // Volume
+            Assert.AreEqual(2, depthMemoryImage.BidDepths.First().Value.ToList()[0].OrderCount); // Number of orders
 
             // Values at second depth price in bids
-            Assert.AreEqual(491.34M, depthMemoryImage.BidDepths.First().Value.ToList()[1].Item2);
-            Assert.AreEqual(700, depthMemoryImage.BidDepths.First().Value.ToList()[1].Item1);
-            Assert.AreEqual(3, depthMemoryImage.BidDepths.First().Value.ToList()[1].Item3);
+            Assert.AreEqual(491.34M, depthMemoryImage.BidDepths.First().Value.ToList()[1].Price);
+            Assert.AreEqual(700, depthMemoryImage.BidDepths.First().Value.ToList()[1].Volume);
+            Assert.AreEqual(3, depthMemoryImage.BidDepths.First().Value.ToList()[1].OrderCount);
 
             // Values at second depth price in asks
-            Assert.AreEqual(494.34M, depthMemoryImage.AskDepths.First().Value.ToList()[0].Item2);
-            Assert.AreEqual(650, depthMemoryImage.AskDepths.First().Value.ToList()[0].Item1);
-            Assert.AreEqual(3, depthMemoryImage.AskDepths.First().Value.ToList()[0].Item3);
+            Assert.AreEqual(494.34M, depthMemoryImage.AskDepths.First().Value.ToList()[0].Price);
+            Assert.AreEqual(650, depthMemoryImage.AskDepths.First().Value.ToList()[0].Volume);
+            Assert.AreEqual(3, depthMemoryImage.AskDepths.First().Value.ToList()[0].OrderCount);
 
-            Assert.AreEqual(496.34M, depthMemoryImage.AskDepths.First().Value.ToList()[1].Item2);
-            Assert.AreEqual(450, depthMemoryImage.AskDepths.First().Value.ToList()[1].Item1);
-            Assert.AreEqual(2, depthMemoryImage.AskDepths.First().Value.ToList()[1].Item3);
+            Assert.AreEqual(496.34M, depthMemoryImage.AskDepths.First().Value.ToList()[1].Price);
+            Assert.AreEqual(450, depthMemoryImage.AskDepths.First().Value.ToList()[1].Volume);
+            Assert.AreEqual(2, depthMemoryImage.AskDepths.First().Value.ToList()[1].OrderCount);
 
             exchange.CancelOrder(new OrderCancellation(buyOrder1Id, buyOrder1.TraderId, buyOrder1.CurrencyPair));
             exchange.CancelOrder(new OrderCancellation(sellOrder2Id, sellOrder2.TraderId, sellOrder2.CurrencyPair));
@@ -821,23 +821,23 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
 
             // Values of the prices and volumes and order counts in each depth level for each curernc pair's bid and ask depth
             // Vlaues at first depth level price in bids
-            Assert.AreEqual(493.34M, depthMemoryImage.BidDepths.First().Value.ToList()[0].Item2); // Price
-            Assert.AreEqual(100, depthMemoryImage.BidDepths.First().Value.ToList()[0].Item1); // Volume
-            Assert.AreEqual(1, depthMemoryImage.BidDepths.First().Value.ToList()[0].Item3); // Number of orders
+            Assert.AreEqual(493.34M, depthMemoryImage.BidDepths.First().Value.ToList()[0].Price); // Price
+            Assert.AreEqual(100, depthMemoryImage.BidDepths.First().Value.ToList()[0].Volume); // Volume
+            Assert.AreEqual(1, depthMemoryImage.BidDepths.First().Value.ToList()[0].OrderCount); // Number of orders
 
             // Values at second depth price in bids
-            Assert.AreEqual(491.34M, depthMemoryImage.BidDepths.First().Value.ToList()[1].Item2);
-            Assert.AreEqual(700, depthMemoryImage.BidDepths.First().Value.ToList()[1].Item1);
-            Assert.AreEqual(3, depthMemoryImage.BidDepths.First().Value.ToList()[1].Item3);
+            Assert.AreEqual(491.34M, depthMemoryImage.BidDepths.First().Value.ToList()[1].Price);
+            Assert.AreEqual(700, depthMemoryImage.BidDepths.First().Value.ToList()[1].Volume);
+            Assert.AreEqual(3, depthMemoryImage.BidDepths.First().Value.ToList()[1].OrderCount);
 
             // Values at second depth price in asks
-            Assert.AreEqual(494.34M, depthMemoryImage.AskDepths.First().Value.ToList()[0].Item2);
-            Assert.AreEqual(450, depthMemoryImage.AskDepths.First().Value.ToList()[0].Item1);
-            Assert.AreEqual(2, depthMemoryImage.AskDepths.First().Value.ToList()[0].Item3);
+            Assert.AreEqual(494.34M, depthMemoryImage.AskDepths.First().Value.ToList()[0].Price);
+            Assert.AreEqual(450, depthMemoryImage.AskDepths.First().Value.ToList()[0].Volume);
+            Assert.AreEqual(2, depthMemoryImage.AskDepths.First().Value.ToList()[0].OrderCount);
 
-            Assert.AreEqual(496.34M, depthMemoryImage.AskDepths.First().Value.ToList()[1].Item2);
-            Assert.AreEqual(450, depthMemoryImage.AskDepths.First().Value.ToList()[1].Item1);
-            Assert.AreEqual(2, depthMemoryImage.AskDepths.First().Value.ToList()[1].Item3);
+            Assert.AreEqual(496.34M, depthMemoryImage.AskDepths.First().Value.ToList()[1].Price);
+            Assert.AreEqual(450, depthMemoryImage.AskDepths.First().Value.ToList()[1].Volume);
+            Assert.AreEqual(2, depthMemoryImage.AskDepths.First().Value.ToList()[1].OrderCount);
 
             exchange.CancelOrder(new OrderCancellation(buyOrder4Id, buyOrder4.TraderId, buyOrder4.CurrencyPair));
             exchange.CancelOrder(new OrderCancellation(sellOrder3Id, sellOrder3.TraderId, sellOrder3.CurrencyPair));
@@ -863,14 +863,14 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
 
             // Values of the prices and volumes and order counts in each depth level for each curernc pair's bid and ask depth
             // Values at first depth level price in bids, lower depth gets shifted one level up
-            Assert.AreEqual(491.34M, depthMemoryImage.BidDepths.First().Value.ToList()[0].Item2);
-            Assert.AreEqual(700, depthMemoryImage.BidDepths.First().Value.ToList()[0].Item1);
-            Assert.AreEqual(3, depthMemoryImage.BidDepths.First().Value.ToList()[0].Item3);
+            Assert.AreEqual(491.34M, depthMemoryImage.BidDepths.First().Value.ToList()[0].Price);
+            Assert.AreEqual(700, depthMemoryImage.BidDepths.First().Value.ToList()[0].Volume);
+            Assert.AreEqual(3, depthMemoryImage.BidDepths.First().Value.ToList()[0].OrderCount);
 
             // Values at first depth price in asks, lower depth gets shifted one level up
-            Assert.AreEqual(496.34M, depthMemoryImage.AskDepths.First().Value.ToList()[0].Item2);
-            Assert.AreEqual(450, depthMemoryImage.AskDepths.First().Value.ToList()[0].Item1);
-            Assert.AreEqual(2, depthMemoryImage.AskDepths.First().Value.ToList()[0].Item3);
+            Assert.AreEqual(496.34M, depthMemoryImage.AskDepths.First().Value.ToList()[0].Price);
+            Assert.AreEqual(450, depthMemoryImage.AskDepths.First().Value.ToList()[0].Volume);
+            Assert.AreEqual(2, depthMemoryImage.AskDepths.First().Value.ToList()[0].OrderCount);
 
             OutputDisruptor.ShutDown();
         }

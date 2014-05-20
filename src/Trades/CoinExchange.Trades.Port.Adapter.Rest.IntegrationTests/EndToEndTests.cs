@@ -93,10 +93,10 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             Tuple<OrderRepresentationList, OrderRepresentationList> orderBook =new Tuple<OrderRepresentationList, OrderRepresentationList>(representation.Bids,representation.Asks);
 
             // Item1 = Bid Book, Item1[i].Item1 = Volume of 'i' Bid, Item1[i].Item2 = Price of 'i' Bid
-            Assert.AreEqual(5, orderBook.Item1.ToList()[0].Item1);
-            Assert.AreEqual(250, orderBook.Item1.ToList()[0].Item2);
-            Assert.AreEqual(2, orderBook.Item1.ToList()[1].Item1);
-            Assert.AreEqual(250, orderBook.Item1.ToList()[1].Item2);
+            Assert.AreEqual(5, orderBook.Item1.ToList()[0].Volume);
+            Assert.AreEqual(250, orderBook.Item1.ToList()[0].Price);
+            Assert.AreEqual(2, orderBook.Item1.ToList()[1].Volume);
+            Assert.AreEqual(250, orderBook.Item1.ToList()[1].Price);
 
             // Item2 = Ask Book, Item2[i].Item1 = Volume of Ask at index 'i', Item2[i].Item2 = Price of Ask at index 'i'
             Assert.AreEqual(0, orderBook.Item2.Count());
@@ -108,9 +108,9 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
 
             DepthTupleRepresentation depth = okDepth.Content as DepthTupleRepresentation;
             // Item1 = Bid Book, Item1.Item1 = Aggregated Volume, Item1.Item2 = Price, Item1.Item3 = Number of Orders
-            Assert.AreEqual(7, depth.BidDepth[0].Item1);
-            Assert.AreEqual(250, depth.BidDepth[0].Item2);
-            Assert.AreEqual(2, depth.BidDepth[0].Item3);
+            Assert.AreEqual(7, depth.BidDepth[0].Volume);
+            Assert.AreEqual(250, depth.BidDepth[0].Price);
+            Assert.AreEqual(2, depth.BidDepth[0].OrderCount);
             Assert.IsNull(depth.BidDepth[1]);
             Assert.IsNull(depth.BidDepth[2]);
             Assert.IsNull(depth.BidDepth[3]);
@@ -243,8 +243,8 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
 
             // Item1 = Bid Book, Item1[i].Item1 = Volume of 'i' Bid, Item1[i].Item2 = Price of 'i' Bid
             Assert.AreEqual(1, orderBook.Item1.Count());
-            Assert.AreEqual(1, orderBook.Item1.ToList()[0].Item1);
-            Assert.AreEqual(245, orderBook.Item1.ToList()[0].Item2);
+            Assert.AreEqual(1, orderBook.Item1.ToList()[0].Volume);
+            Assert.AreEqual(245, orderBook.Item1.ToList()[0].Price);
 
             // Item2 = Bid Book, Item2[i].Item1 = Volume of Ask at index 'i', Item2[i].Item2 = Price of Bid at index 'i'
             Assert.AreEqual(0, orderBook.Item2.Count());
@@ -259,9 +259,9 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             DepthTupleRepresentation depth = okDepth.Content as DepthTupleRepresentation;
 
             // Item1 = Bid Book, Item1.Item1 = Aggregated Volume, Item1.Item2 = Price, Item1.Item3 = Number of Orders
-            Assert.AreEqual(1, depth.BidDepth[0].Item1);
-            Assert.AreEqual(245, depth.BidDepth[0].Item2);
-            Assert.AreEqual(1, depth.BidDepth[0].Item3);
+            Assert.AreEqual(1, depth.BidDepth[0].Volume);
+            Assert.AreEqual(245, depth.BidDepth[0].Price);
+            Assert.AreEqual(1, depth.BidDepth[0].OrderCount);
             Assert.IsNull(depth.BidDepth[1]);
             Assert.IsNull(depth.BidDepth[2]);
             Assert.IsNull(depth.BidDepth[3]);

@@ -82,14 +82,14 @@ namespace CoinExchange.Trades.Application.Tests
             OrderBookRepresentation orderBooksTuple = (OrderBookRepresentation)memoryImageQueryService.GetOrderBook("BTCUSD", 3);
             Assert.AreEqual(3, orderBooksTuple.Bids.Count());
             Assert.AreEqual("BTCUSD", orderBooksTuple.Bids.CurrencyPair);
-            Assert.AreEqual(100, orderBooksTuple.Bids.ToList()[0].Item1); // Volume
-            Assert.AreEqual(946, orderBooksTuple.Bids.ToList()[0].Item2); // Price
+            Assert.AreEqual(100, orderBooksTuple.Bids.ToList()[0].Volume); // Volume
+            Assert.AreEqual(946, orderBooksTuple.Bids.ToList()[0].Price); // Price
 
-            Assert.AreEqual(100, orderBooksTuple.Bids.ToList()[1].Item1); // Volume
-            Assert.AreEqual(945, orderBooksTuple.Bids.ToList()[1].Item2); // Price
+            Assert.AreEqual(100, orderBooksTuple.Bids.ToList()[1].Volume); // Volume
+            Assert.AreEqual(945, orderBooksTuple.Bids.ToList()[1].Price); // Price
 
-            Assert.AreEqual(100, orderBooksTuple.Bids.ToList()[2].Item1); // Volume
-            Assert.AreEqual(941, orderBooksTuple.Bids.ToList()[2].Item2); // Price
+            Assert.AreEqual(100, orderBooksTuple.Bids.ToList()[2].Volume); // Volume
+            Assert.AreEqual(941, orderBooksTuple.Bids.ToList()[2].Price); // Price
         }
 
         [Test]
@@ -134,14 +134,14 @@ namespace CoinExchange.Trades.Application.Tests
             OrderBookRepresentation orderBooksTuple = (OrderBookRepresentation)memoryImageQueryService.GetOrderBook("BTCUSD", 3);
             Assert.AreEqual(3, orderBooksTuple.Asks.Count());
             Assert.AreEqual("BTCUSD", orderBooksTuple.Asks.CurrencyPair);
-            Assert.AreEqual(700, orderBooksTuple.Asks.ToList()[0].Item1); // Volume
-            Assert.AreEqual(947, orderBooksTuple.Asks.ToList()[0].Item2); // Price
+            Assert.AreEqual(700, orderBooksTuple.Asks.ToList()[0].Volume); // Volume
+            Assert.AreEqual(947, orderBooksTuple.Asks.ToList()[0].Price); // Price
 
-            Assert.AreEqual(100, orderBooksTuple.Asks.ToList()[1].Item1); // Volume
-            Assert.AreEqual(948, orderBooksTuple.Asks.ToList()[1].Item2); // Price
+            Assert.AreEqual(100, orderBooksTuple.Asks.ToList()[1].Volume); // Volume
+            Assert.AreEqual(948, orderBooksTuple.Asks.ToList()[1].Price); // Price
 
-            Assert.AreEqual(100, orderBooksTuple.Asks.ToList()[2].Item1); // Volume
-            Assert.AreEqual(949, orderBooksTuple.Asks.ToList()[2].Item2); // Price
+            Assert.AreEqual(100, orderBooksTuple.Asks.ToList()[2].Volume); // Volume
+            Assert.AreEqual(949, orderBooksTuple.Asks.ToList()[2].Price); // Price
         }
 
         [Test]
@@ -165,15 +165,15 @@ namespace CoinExchange.Trades.Application.Tests
 
             var returnedDepth = memoryImageQueryService.GetDepth("BTCUSD") as DepthTupleRepresentation;
 
-            Assert.AreEqual(500, returnedDepth.BidDepth[0].Item1); // Aggregated Volume
-            Assert.AreEqual(943, returnedDepth.BidDepth[0].Item2); // Price
-            Assert.AreEqual(1, returnedDepth.BidDepth[0].Item3); // OrderCount
-            Assert.AreEqual(200, returnedDepth.BidDepth[1].Item1); // Aggregated Volume
-            Assert.AreEqual(942, returnedDepth.BidDepth[1].Item2); // Price
-            Assert.AreEqual(1, returnedDepth.BidDepth[1].Item3); // OrderCount
-            Assert.AreEqual(500, returnedDepth.BidDepth[2].Item1); // Aggregated Volume
-            Assert.AreEqual(941, returnedDepth.BidDepth[2].Item2); // Price
-            Assert.AreEqual(2, returnedDepth.BidDepth[2].Item3); // OrderCount
+            Assert.AreEqual(500, returnedDepth.BidDepth[0].Volume); // Aggregated Volume
+            Assert.AreEqual(943, returnedDepth.BidDepth[0].Price); // Price
+            Assert.AreEqual(1, returnedDepth.BidDepth[0].OrderCount); // OrderCount
+            Assert.AreEqual(200, returnedDepth.BidDepth[1].Volume); // Aggregated Volume
+            Assert.AreEqual(942, returnedDepth.BidDepth[1].Price); // Price
+            Assert.AreEqual(1, returnedDepth.BidDepth[1].OrderCount); // OrderCount
+            Assert.AreEqual(500, returnedDepth.BidDepth[2].Volume); // Aggregated Volume
+            Assert.AreEqual(941, returnedDepth.BidDepth[2].Price); // Price
+            Assert.AreEqual(2, returnedDepth.BidDepth[2].OrderCount); // OrderCount
             Assert.IsNull(returnedDepth.BidDepth[3]); // Index three is null as there is no level present for it
         }
 
@@ -198,12 +198,12 @@ namespace CoinExchange.Trades.Application.Tests
 
             var returnedDepth = memoryImageQueryService.GetDepth("BTCUSD") as DepthTupleRepresentation;
 
-            Assert.AreEqual(300, returnedDepth.AskDepth[0].Item1); // Aggregated Volume
-            Assert.AreEqual(948, returnedDepth.AskDepth[0].Item2); // Price
-            Assert.AreEqual(1, returnedDepth.AskDepth[0].Item3); // OrderCount
-            Assert.AreEqual(900, returnedDepth.AskDepth[1].Item1); // Aggregated Volume
-            Assert.AreEqual(949, returnedDepth.AskDepth[1].Item2); // Price
-            Assert.AreEqual(3, returnedDepth.AskDepth[1].Item3); // OrderCount
+            Assert.AreEqual(300, returnedDepth.AskDepth[0].Volume); // Aggregated Volume
+            Assert.AreEqual(948, returnedDepth.AskDepth[0].Price); // Price
+            Assert.AreEqual(1, returnedDepth.AskDepth[0].OrderCount); // OrderCount
+            Assert.AreEqual(900, returnedDepth.AskDepth[1].Volume); // Aggregated Volume
+            Assert.AreEqual(949, returnedDepth.AskDepth[1].Price); // Price
+            Assert.AreEqual(3, returnedDepth.AskDepth[1].OrderCount); // OrderCount
             Assert.IsNull(returnedDepth.AskDepth[2]); // Second index is null as there is no depth level for it
         }
     }

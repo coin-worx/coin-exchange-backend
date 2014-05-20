@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
@@ -23,6 +22,7 @@ using CoinExchange.Trades.ReadModel.MemoryImages;
 using CoinExchange.Trades.ReadModel.Persistence.NHibernate;
 using CoinExchange.Trades.ReadModel.Repositories;
 using Disruptor;
+using NHibernate.Linq;
 using NUnit.Framework;
 using Spring.Context;
 using Spring.Context.Support;
@@ -614,10 +614,12 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             MarketController marketController = (MarketController)applicationContext["MarketController"];
             IHttpActionResult marketDataHttpResult = marketController.GetOrderBook("BTCUSD");
 
-            OkNegotiatedContentResult<Tuple<OrderRepresentationList, OrderRepresentationList>> okResponseMessage =
-                (OkNegotiatedContentResult<Tuple<OrderRepresentationList, OrderRepresentationList>>)marketDataHttpResult;
+            OkNegotiatedContentResult<object> okResponseMessage =
+                (OkNegotiatedContentResult<object>)marketDataHttpResult;
 
-            Tuple<OrderRepresentationList, OrderRepresentationList> orderBooks = okResponseMessage.Content;
+            OrderBookRepresentation representation = okResponseMessage.Content as OrderBookRepresentation;
+
+            System.Tuple<OrderRepresentationList, OrderRepresentationList> orderBooks = new System.Tuple<OrderRepresentationList, OrderRepresentationList>(representation.Bids, representation.Asks);
             Assert.AreEqual(3, orderBooks.Item1.Count()); // Count of the orders in the Bid Order book
             Assert.AreEqual(3, orderBooks.Item2.Count());// Count of the orders in the Ask Order book
 
@@ -733,10 +735,11 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             MarketController marketController = (MarketController)applicationContext["MarketController"];
             IHttpActionResult marketDataHttpResult = marketController.GetOrderBook("BTCUSD");
 
-            OkNegotiatedContentResult<Tuple<OrderRepresentationList, OrderRepresentationList>> okResponseMessage =
-                (OkNegotiatedContentResult<Tuple<OrderRepresentationList, OrderRepresentationList>>)marketDataHttpResult;
+            OkNegotiatedContentResult<object> okResponseMessage =
+                (OkNegotiatedContentResult<object>)marketDataHttpResult;
+            OrderBookRepresentation representation = okResponseMessage.Content as OrderBookRepresentation;
 
-            Tuple<OrderRepresentationList, OrderRepresentationList> orderBooks = okResponseMessage.Content;
+            System.Tuple<OrderRepresentationList, OrderRepresentationList> orderBooks = new System.Tuple<OrderRepresentationList, OrderRepresentationList>(representation.Bids, representation.Asks);
             Assert.AreEqual(3, orderBooks.Item1.Count()); // Count of the orders in the Bid Order book
             Assert.AreEqual(2, orderBooks.Item2.Count());// Count of the orders in the Ask Order book
 
@@ -891,10 +894,10 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             MarketController marketController = (MarketController)applicationContext["MarketController"];
             IHttpActionResult marketDataHttpResult = marketController.GetOrderBook("BTCUSD");
 
-            OkNegotiatedContentResult<Tuple<OrderRepresentationList, OrderRepresentationList>> okResponseMessage =
-                (OkNegotiatedContentResult<Tuple<OrderRepresentationList, OrderRepresentationList>>)marketDataHttpResult;
-
-            Tuple<OrderRepresentationList, OrderRepresentationList> orderBooks = okResponseMessage.Content;
+            OkNegotiatedContentResult<object> okResponseMessage =
+                (OkNegotiatedContentResult<object>)marketDataHttpResult;
+            OrderBookRepresentation representation = okResponseMessage.Content as OrderBookRepresentation;
+            System.Tuple<OrderRepresentationList, OrderRepresentationList> orderBooks = new System.Tuple<OrderRepresentationList, OrderRepresentationList>(representation.Bids,representation.Asks);
             Assert.AreEqual(2, orderBooks.Item1.Count()); // Count of the orders in the Bid Order book
             Assert.AreEqual(2, orderBooks.Item2.Count());// Count of the orders in the Ask Order book
 
@@ -1046,10 +1049,11 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             MarketController marketController = (MarketController)applicationContext["MarketController"];
             IHttpActionResult marketDataHttpResult = marketController.GetOrderBook("BTCUSD");
 
-            OkNegotiatedContentResult<Tuple<OrderRepresentationList, OrderRepresentationList>> okResponseMessage =
-                (OkNegotiatedContentResult<Tuple<OrderRepresentationList, OrderRepresentationList>>)marketDataHttpResult;
+            OkNegotiatedContentResult<object> okResponseMessage =
+                (OkNegotiatedContentResult<object>)marketDataHttpResult;
+            OrderBookRepresentation representation = okResponseMessage.Content as OrderBookRepresentation;
 
-            Tuple<OrderRepresentationList, OrderRepresentationList> orderBooks = okResponseMessage.Content;
+            System.Tuple<OrderRepresentationList, OrderRepresentationList> orderBooks = new System.Tuple<OrderRepresentationList, OrderRepresentationList>(representation.Bids,representation.Asks);
             Assert.AreEqual(3, orderBooks.Item1.Count()); // Count of the orders in the Bid Order book
             Assert.AreEqual(3, orderBooks.Item2.Count());// Count of the orders in the Ask Order book
 

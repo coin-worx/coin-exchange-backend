@@ -12,12 +12,9 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
     /// </summary>
     public class DepthTuple
     {
-        [JsonProperty(PropertyName = "Volume")]
-        public decimal Item1 { get; private set; }
-        [JsonProperty(PropertyName = "Price")]
-        public decimal Item2 { get; private set; }
-        [JsonProperty(PropertyName = "OrderCount")]
-        public int Item3 { get; private set; }
+        public decimal Volume { get; private set; }
+        public decimal Price { get; private set; }
+        public int OrderCount { get; private set; }
 
         /// <summary>
         /// default constructor
@@ -27,9 +24,9 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
         /// <param name="volume"></param>
         public DepthTuple(decimal volume, decimal price, int orderCount)
         {
-            Item3 = orderCount;
-            Item2 = price;
-            Item1 = volume;
+            OrderCount = orderCount;
+            Price = price;
+            Volume = volume;
         }
     }
 }

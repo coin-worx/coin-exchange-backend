@@ -86,10 +86,10 @@ namespace CoinExchange.Trades.ReadModel.Tests
 
             Assert.AreEqual(4, depthMemoryImage.BidDepths.First().Value.Count());
 
-            Assert.AreEqual(498, depthMemoryImage.BidDepths.First().Value.First().Item2);
-            Assert.AreEqual(496, depthMemoryImage.BidDepths.First().Value.ToList()[1].Item2);
-            Assert.AreEqual(493, depthMemoryImage.BidDepths.First().Value.ToList()[2].Item2);
-            Assert.AreEqual(491, depthMemoryImage.BidDepths.First().Value.ToList()[3].Item2);
+            Assert.AreEqual(498, depthMemoryImage.BidDepths.First().Value.First().Price);
+            Assert.AreEqual(496, depthMemoryImage.BidDepths.First().Value.ToList()[1].Price);
+            Assert.AreEqual(493, depthMemoryImage.BidDepths.First().Value.ToList()[2].Price);
+            Assert.AreEqual(491, depthMemoryImage.BidDepths.First().Value.ToList()[3].Price);
         }
 
         [Test]
@@ -114,10 +114,10 @@ namespace CoinExchange.Trades.ReadModel.Tests
 
             Assert.AreEqual(4, depthMemoryImage.AskDepths.First().Value.Count());
 
-            Assert.AreEqual(491, depthMemoryImage.AskDepths.First().Value.First().Item2);
-            Assert.AreEqual(493, depthMemoryImage.AskDepths.First().Value.ToList()[1].Item2);
-            Assert.AreEqual(496, depthMemoryImage.AskDepths.First().Value.ToList()[2].Item2);
-            Assert.AreEqual(498, depthMemoryImage.AskDepths.First().Value.ToList()[3].Item2);
+            Assert.AreEqual(491, depthMemoryImage.AskDepths.First().Value.First().Price);
+            Assert.AreEqual(493, depthMemoryImage.AskDepths.First().Value.ToList()[1].Price);
+            Assert.AreEqual(496, depthMemoryImage.AskDepths.First().Value.ToList()[2].Price);
+            Assert.AreEqual(498, depthMemoryImage.AskDepths.First().Value.ToList()[3].Price);
         }
 
         [Test]
@@ -142,10 +142,10 @@ namespace CoinExchange.Trades.ReadModel.Tests
 
             Assert.AreEqual(4, depthMemoryImage.BidDepths.First().Value.Count());
 
-            Assert.AreEqual(800, depthMemoryImage.BidDepths.First().Value.First().Item1);
-            Assert.AreEqual(600, depthMemoryImage.BidDepths.First().Value.ToList()[1].Item1);
-            Assert.AreEqual(300, depthMemoryImage.BidDepths.First().Value.ToList()[2].Item1);
-            Assert.AreEqual(100, depthMemoryImage.BidDepths.First().Value.ToList()[3].Item1);
+            Assert.AreEqual(800, depthMemoryImage.BidDepths.First().Value.First().Volume);
+            Assert.AreEqual(600, depthMemoryImage.BidDepths.First().Value.ToList()[1].Volume);
+            Assert.AreEqual(300, depthMemoryImage.BidDepths.First().Value.ToList()[2].Volume);
+            Assert.AreEqual(100, depthMemoryImage.BidDepths.First().Value.ToList()[3].Volume);
         }
 
         [Test]
@@ -170,10 +170,10 @@ namespace CoinExchange.Trades.ReadModel.Tests
 
             Assert.AreEqual(4, depthMemoryImage.AskDepths.First().Value.Count());
 
-            Assert.AreEqual(100, depthMemoryImage.AskDepths.First().Value.First().Item1);
-            Assert.AreEqual(300, depthMemoryImage.AskDepths.First().Value.ToList()[1].Item1);
-            Assert.AreEqual(600, depthMemoryImage.AskDepths.First().Value.ToList()[2].Item1);
-            Assert.AreEqual(800, depthMemoryImage.AskDepths.First().Value.ToList()[3].Item1);
+            Assert.AreEqual(100, depthMemoryImage.AskDepths.First().Value.First().Volume);
+            Assert.AreEqual(300, depthMemoryImage.AskDepths.First().Value.ToList()[1].Volume);
+            Assert.AreEqual(600, depthMemoryImage.AskDepths.First().Value.ToList()[2].Volume);
+            Assert.AreEqual(800, depthMemoryImage.AskDepths.First().Value.ToList()[3].Volume);
         }
 
         [Test]
@@ -206,21 +206,21 @@ namespace CoinExchange.Trades.ReadModel.Tests
             Assert.AreEqual(1, depthMemoryImage.AskDepths.Count());
 
             // Bids in DepthMemoryImage
-            Assert.AreEqual(800, depthMemoryImage.BidDepths.First().Value.DepthLevels[0].Item1);
-            Assert.AreEqual(498, depthMemoryImage.BidDepths.First().Value.DepthLevels[0].Item2);
-            Assert.AreEqual(1, depthMemoryImage.BidDepths.First().Value.DepthLevels[0].Item3);
-            Assert.AreEqual(600, depthMemoryImage.BidDepths.First().Value.DepthLevels[1].Item1);
-            Assert.AreEqual(496, depthMemoryImage.BidDepths.First().Value.DepthLevels[1].Item2);
-            Assert.AreEqual(1, depthMemoryImage.BidDepths.First().Value.DepthLevels[1].Item3);
-            Assert.AreEqual(300, depthMemoryImage.BidDepths.First().Value.DepthLevels[2].Item1);
-            Assert.AreEqual(493, depthMemoryImage.BidDepths.First().Value.DepthLevels[2].Item2);
-            Assert.AreEqual(1, depthMemoryImage.BidDepths.First().Value.DepthLevels[2].Item3);
-            Assert.AreEqual(100, depthMemoryImage.BidDepths.First().Value.DepthLevels[3].Item1);
-            Assert.AreEqual(491, depthMemoryImage.BidDepths.First().Value.DepthLevels[3].Item2);
-            Assert.AreEqual(1, depthMemoryImage.BidDepths.First().Value.DepthLevels[3].Item3);
+            Assert.AreEqual(800, depthMemoryImage.BidDepths.First().Value.DepthLevels[0].Volume);
+            Assert.AreEqual(498, depthMemoryImage.BidDepths.First().Value.DepthLevels[0].Price);
+            Assert.AreEqual(1, depthMemoryImage.BidDepths.First().Value.DepthLevels[0].OrderCount);
+            Assert.AreEqual(600, depthMemoryImage.BidDepths.First().Value.DepthLevels[1].Volume);
+            Assert.AreEqual(496, depthMemoryImage.BidDepths.First().Value.DepthLevels[1].Price);
+            Assert.AreEqual(1, depthMemoryImage.BidDepths.First().Value.DepthLevels[1].OrderCount);
+            Assert.AreEqual(300, depthMemoryImage.BidDepths.First().Value.DepthLevels[2].Volume);
+            Assert.AreEqual(493, depthMemoryImage.BidDepths.First().Value.DepthLevels[2].Price);
+            Assert.AreEqual(1, depthMemoryImage.BidDepths.First().Value.DepthLevels[2].OrderCount);
+            Assert.AreEqual(100, depthMemoryImage.BidDepths.First().Value.DepthLevels[3].Volume);
+            Assert.AreEqual(491, depthMemoryImage.BidDepths.First().Value.DepthLevels[3].Price);
+            Assert.AreEqual(1, depthMemoryImage.BidDepths.First().Value.DepthLevels[3].OrderCount);
             // Asks in DepthMemoryImage
-            Assert.AreEqual(491, depthMemoryImage.AskDepths.First().Value.DepthLevels[0].Item2);
-            Assert.AreEqual(498, depthMemoryImage.AskDepths.First().Value.DepthLevels[3].Item2);
+            Assert.AreEqual(491, depthMemoryImage.AskDepths.First().Value.DepthLevels[0].Price);
+            Assert.AreEqual(498, depthMemoryImage.AskDepths.First().Value.DepthLevels[3].Price);
 
             DepthLevel depthLevel498 = depth.FindLevel(new Price(498), OrderSide.Buy, depth.BidLevels);
             depth.EraseLevel(depthLevel498, OrderSide.Buy);
@@ -249,8 +249,8 @@ namespace CoinExchange.Trades.ReadModel.Tests
             Assert.IsNull(depthMemoryImage.BidDepths.First().Value.DepthLevels[2]);
             Assert.IsNull(depthMemoryImage.BidDepths.First().Value.DepthLevels[3]);
             // Asks in DepthMemoryImage
-            Assert.AreEqual(491, depthMemoryImage.AskDepths.First().Value.DepthLevels[0].Item2);
-            Assert.AreEqual(498, depthMemoryImage.AskDepths.First().Value.DepthLevels[3].Item2);
+            Assert.AreEqual(491, depthMemoryImage.AskDepths.First().Value.DepthLevels[0].Price);
+            Assert.AreEqual(498, depthMemoryImage.AskDepths.First().Value.DepthLevels[3].Price);
         }
 
         [Test]
@@ -283,31 +283,31 @@ namespace CoinExchange.Trades.ReadModel.Tests
             Assert.AreEqual(1, depthMemoryImage.AskDepths.Count());
 
             // Bids in DepthMemoryImage
-            Assert.AreEqual(800, depthMemoryImage.BidDepths.First().Value.DepthLevels[0].Item1);
-            Assert.AreEqual(498, depthMemoryImage.BidDepths.First().Value.DepthLevels[0].Item2);
-            Assert.AreEqual(1, depthMemoryImage.BidDepths.First().Value.DepthLevels[0].Item3);
-            Assert.AreEqual(600, depthMemoryImage.BidDepths.First().Value.DepthLevels[1].Item1);
-            Assert.AreEqual(496, depthMemoryImage.BidDepths.First().Value.DepthLevels[1].Item2);
-            Assert.AreEqual(1, depthMemoryImage.BidDepths.First().Value.DepthLevels[1].Item3);
-            Assert.AreEqual(300, depthMemoryImage.BidDepths.First().Value.DepthLevels[2].Item1);
-            Assert.AreEqual(493, depthMemoryImage.BidDepths.First().Value.DepthLevels[2].Item2);
-            Assert.AreEqual(1, depthMemoryImage.BidDepths.First().Value.DepthLevels[2].Item3);
-            Assert.AreEqual(100, depthMemoryImage.BidDepths.First().Value.DepthLevels[3].Item1);
-            Assert.AreEqual(491, depthMemoryImage.BidDepths.First().Value.DepthLevels[3].Item2);
-            Assert.AreEqual(1, depthMemoryImage.BidDepths.First().Value.DepthLevels[3].Item3);
+            Assert.AreEqual(800, depthMemoryImage.BidDepths.First().Value.DepthLevels[0].Volume);
+            Assert.AreEqual(498, depthMemoryImage.BidDepths.First().Value.DepthLevels[0].Price);
+            Assert.AreEqual(1, depthMemoryImage.BidDepths.First().Value.DepthLevels[0].OrderCount);
+            Assert.AreEqual(600, depthMemoryImage.BidDepths.First().Value.DepthLevels[1].Volume);
+            Assert.AreEqual(496, depthMemoryImage.BidDepths.First().Value.DepthLevels[1].Price);
+            Assert.AreEqual(1, depthMemoryImage.BidDepths.First().Value.DepthLevels[1].OrderCount);
+            Assert.AreEqual(300, depthMemoryImage.BidDepths.First().Value.DepthLevels[2].Volume);
+            Assert.AreEqual(493, depthMemoryImage.BidDepths.First().Value.DepthLevels[2].Price);
+            Assert.AreEqual(1, depthMemoryImage.BidDepths.First().Value.DepthLevels[2].OrderCount);
+            Assert.AreEqual(100, depthMemoryImage.BidDepths.First().Value.DepthLevels[3].Volume);
+            Assert.AreEqual(491, depthMemoryImage.BidDepths.First().Value.DepthLevels[3].Price);
+            Assert.AreEqual(1, depthMemoryImage.BidDepths.First().Value.DepthLevels[3].OrderCount);
             // Asks in DepthMemoryImage
-            Assert.AreEqual(100, depthMemoryImage.AskDepths.First().Value.DepthLevels[0].Item1);
-            Assert.AreEqual(491, depthMemoryImage.AskDepths.First().Value.DepthLevels[0].Item2);
-            Assert.AreEqual(1, depthMemoryImage.AskDepths.First().Value.DepthLevels[0].Item3);
-            Assert.AreEqual(300, depthMemoryImage.AskDepths.First().Value.DepthLevels[1].Item1);
-            Assert.AreEqual(493, depthMemoryImage.AskDepths.First().Value.DepthLevels[1].Item2);
-            Assert.AreEqual(1, depthMemoryImage.AskDepths.First().Value.DepthLevels[1].Item3);
-            Assert.AreEqual(600, depthMemoryImage.AskDepths.First().Value.DepthLevels[2].Item1);
-            Assert.AreEqual(496, depthMemoryImage.AskDepths.First().Value.DepthLevels[2].Item2);
-            Assert.AreEqual(1, depthMemoryImage.AskDepths.First().Value.DepthLevels[2].Item3);
-            Assert.AreEqual(800, depthMemoryImage.AskDepths.First().Value.DepthLevels[3].Item1);
-            Assert.AreEqual(498, depthMemoryImage.AskDepths.First().Value.DepthLevels[3].Item2);
-            Assert.AreEqual(1, depthMemoryImage.AskDepths.First().Value.DepthLevels[3].Item3);
+            Assert.AreEqual(100, depthMemoryImage.AskDepths.First().Value.DepthLevels[0].Volume);
+            Assert.AreEqual(491, depthMemoryImage.AskDepths.First().Value.DepthLevels[0].Price);
+            Assert.AreEqual(1, depthMemoryImage.AskDepths.First().Value.DepthLevels[0].OrderCount);
+            Assert.AreEqual(300, depthMemoryImage.AskDepths.First().Value.DepthLevels[1].Volume);
+            Assert.AreEqual(493, depthMemoryImage.AskDepths.First().Value.DepthLevels[1].Price);
+            Assert.AreEqual(1, depthMemoryImage.AskDepths.First().Value.DepthLevels[1].OrderCount);
+            Assert.AreEqual(600, depthMemoryImage.AskDepths.First().Value.DepthLevels[2].Volume);
+            Assert.AreEqual(496, depthMemoryImage.AskDepths.First().Value.DepthLevels[2].Price);
+            Assert.AreEqual(1, depthMemoryImage.AskDepths.First().Value.DepthLevels[2].OrderCount);
+            Assert.AreEqual(800, depthMemoryImage.AskDepths.First().Value.DepthLevels[3].Volume);
+            Assert.AreEqual(498, depthMemoryImage.AskDepths.First().Value.DepthLevels[3].Price);
+            Assert.AreEqual(1, depthMemoryImage.AskDepths.First().Value.DepthLevels[3].OrderCount);
 
             DepthLevel depthLevel498 = depth.FindLevel(new Price(498), OrderSide.Sell, depth.AskLevels);
             depth.EraseLevel(depthLevel498, OrderSide.Sell);
@@ -330,10 +330,10 @@ namespace CoinExchange.Trades.ReadModel.Tests
             Assert.AreEqual(1, depthMemoryImage.AskDepths.Count());
 
             // Bids in DepthMemoryImage
-            Assert.AreEqual(498, depthMemoryImage.BidDepths.First().Value.DepthLevels[0].Item2);
-            Assert.AreEqual(496, depthMemoryImage.BidDepths.First().Value.DepthLevels[1].Item2);
-            Assert.AreEqual(493, depthMemoryImage.BidDepths.First().Value.DepthLevels[2].Item2);
-            Assert.AreEqual(491, depthMemoryImage.BidDepths.First().Value.DepthLevels[3].Item2);
+            Assert.AreEqual(498, depthMemoryImage.BidDepths.First().Value.DepthLevels[0].Price);
+            Assert.AreEqual(496, depthMemoryImage.BidDepths.First().Value.DepthLevels[1].Price);
+            Assert.AreEqual(493, depthMemoryImage.BidDepths.First().Value.DepthLevels[2].Price);
+            Assert.AreEqual(491, depthMemoryImage.BidDepths.First().Value.DepthLevels[3].Price);
             // Asks in DepthMemoryImage
             Assert.IsNull(depthMemoryImage.AskDepths.First().Value.DepthLevels[0]);
             Assert.IsNull(depthMemoryImage.AskDepths.First().Value.DepthLevels[1]);

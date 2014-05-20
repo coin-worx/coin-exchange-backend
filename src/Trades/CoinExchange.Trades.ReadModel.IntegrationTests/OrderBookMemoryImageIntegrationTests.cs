@@ -80,13 +80,13 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             Assert.AreEqual(1, orderBookMemoryImage.AskBooks.First().Count(), "Count of the asks in the first ask book in the list of ask books");
 
             // BidsOrderBooks -> First BidOrderBook -> First Bid's volume in first OrderBook
-            Assert.AreEqual(250, orderBookMemoryImage.BidBooks.First().First().Item1, "Volume of first bids in the first bid book in the bids book list in  memory image");
+            Assert.AreEqual(250, orderBookMemoryImage.BidBooks.First().First().Volume, "Volume of first bids in the first bid book in the bids book list in  memory image");
             // AsksOrderBooks -> First AskOrderBook -> First Ask's volume in first OrderBook
-            Assert.AreEqual(200, orderBookMemoryImage.AskBooks.First().First().Item1, "Volume of first ask in the first ask book in the ask books list in memory image");
+            Assert.AreEqual(200, orderBookMemoryImage.AskBooks.First().First().Volume, "Volume of first ask in the first ask book in the ask books list in memory image");
             // BidsOrderBooks -> First BidOrderBook -> First Bid's price in first OrderBook
-            Assert.AreEqual(491.34, orderBookMemoryImage.BidBooks.First().First().Item2, "Volume of first bids in the first bid book in the bids book list in  memory image");
+            Assert.AreEqual(491.34, orderBookMemoryImage.BidBooks.First().First().Price, "Volume of first bids in the first bid book in the bids book list in  memory image");
             // AsksOrderBooks -> First AskOrderBook -> First Ask's price in first OrderBook
-            Assert.AreEqual(494.34, orderBookMemoryImage.AskBooks.First().First().Item2, "Volume of first ask in the first ask book in the ask books list in memory image");
+            Assert.AreEqual(494.34, orderBookMemoryImage.AskBooks.First().First().Price, "Volume of first ask in the first ask book in the ask books list in memory image");
 
             OutputDisruptor.ShutDown();
         }
@@ -135,13 +135,13 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             Assert.AreEqual(1, orderBookMemoryImage.AskBooks.First().Count(), "Count of the asks in the first ask book in the list of ask books");
 
             // BidsOrderBooks -> First BidOrderBook -> First Bid's volume in first OrderBook
-            Assert.AreEqual(100, orderBookMemoryImage.BidBooks.First().First().Item1, "Volume of first bids in the first bid book in the bids book list in  memory image");
+            Assert.AreEqual(100, orderBookMemoryImage.BidBooks.First().First().Volume, "Volume of first bids in the first bid book in the bids book list in  memory image");
             // AsksOrderBooks -> First AskOrderBook -> First Ask's volume in first OrderBook
-            Assert.AreEqual(250, orderBookMemoryImage.AskBooks.First().First().Item1, "Volume of first ask in the first ask book in the ask books list in memory image");
+            Assert.AreEqual(250, orderBookMemoryImage.AskBooks.First().First().Volume, "Volume of first ask in the first ask book in the ask books list in memory image");
             // BidsOrderBooks -> First BidOrderBook -> First Bid's price in first OrderBook
-            Assert.AreEqual(491.34, orderBookMemoryImage.BidBooks.First().First().Item2, "Volume of first bids in the first bid book in the bids book list in  memory image");
+            Assert.AreEqual(491.34, orderBookMemoryImage.BidBooks.First().First().Price, "Volume of first bids in the first bid book in the bids book list in  memory image");
             // AsksOrderBooks -> First AskOrderBook -> First Ask's price in first OrderBook
-            Assert.AreEqual(496.34, orderBookMemoryImage.AskBooks.First().First().Item2, "Volume of first ask in the first ask book in the ask books list in memory image");
+            Assert.AreEqual(496.34, orderBookMemoryImage.AskBooks.First().First().Price, "Volume of first ask in the first ask book in the ask books list in memory image");
 
             exchange.PlaceNewOrder(buyOrder1);
             exchange.PlaceNewOrder(sellOrder2);
@@ -159,13 +159,13 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             Assert.AreEqual(2, orderBookMemoryImage.AskBooks.First().Count(), "Count of the asks in the first ask book in the list of ask books");
 
             // BidsOrderBooks -> First BidOrderBook -> First Bid's volume in first OrderBook
-            Assert.AreEqual(250, orderBookMemoryImage.BidBooks.First().First().Item1, "Volume of first bids in the first bid book in the bids book list in  memory image");
+            Assert.AreEqual(250, orderBookMemoryImage.BidBooks.First().First().Volume, "Volume of first bids in the first bid book in the bids book list in  memory image");
             // AsksOrderBooks -> First AskOrderBook -> First Ask's volume in first OrderBook
-            Assert.AreEqual(200, orderBookMemoryImage.AskBooks.First().First().Item1, "Volume of first ask in the first ask book in the ask books list in memory image");
+            Assert.AreEqual(200, orderBookMemoryImage.AskBooks.First().First().Volume, "Volume of first ask in the first ask book in the ask books list in memory image");
             // BidsOrderBooks -> First BidOrderBook -> First Bid's price in first OrderBook
-            Assert.AreEqual(493.34, orderBookMemoryImage.BidBooks.First().First().Item2, "Volume of first bids in the first bid book in the bids book list in  memory image");
+            Assert.AreEqual(493.34, orderBookMemoryImage.BidBooks.First().First().Price, "Volume of first bids in the first bid book in the bids book list in  memory image");
             // AsksOrderBooks -> First AskOrderBook -> First Ask's price in first OrderBook
-            Assert.AreEqual(494.34, orderBookMemoryImage.AskBooks.First().First().Item2, "Volume of first ask in the first ask book in the ask books list in memory image");
+            Assert.AreEqual(494.34, orderBookMemoryImage.AskBooks.First().First().Price, "Volume of first ask in the first ask book in the ask books list in memory image");
 
             OutputDisruptor.ShutDown();
         }
@@ -215,18 +215,18 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             Assert.AreEqual(1, orderBookMemoryImage.AskBooks.First().Count(), "Count of the asks in the first ask book in the list of ask books");
 
             // BidsOrderBooks -> First BidOrderBook -> First Bid's volume in first OrderBook
-            Assert.AreEqual(250, orderBookMemoryImage.BidBooks.First().First().Item1, "Volume of first bids in the first bid book in the bids book list in  memory image");
+            Assert.AreEqual(250, orderBookMemoryImage.BidBooks.First().First().Volume, "Volume of first bids in the first bid book in the bids book list in  memory image");
             // AsksOrderBooks -> First AskOrderBook -> First Ask's volume in first OrderBook
-            Assert.AreEqual(250, orderBookMemoryImage.AskBooks.First().First().Item1, "Volume of first ask in the first ask book in the ask books list in memory image");
+            Assert.AreEqual(250, orderBookMemoryImage.AskBooks.First().First().Volume, "Volume of first ask in the first ask book in the ask books list in memory image");
             // BidsOrderBooks -> First BidOrderBook -> First Bid's price in first OrderBook
-            Assert.AreEqual(493.34, orderBookMemoryImage.BidBooks.First().First().Item2, "Price of first bids in the first bid book in the bids book list in  memory image");
+            Assert.AreEqual(493.34, orderBookMemoryImage.BidBooks.First().First().Price, "Price of first bids in the first bid book in the bids book list in  memory image");
             // AsksOrderBooks -> First AskOrderBook -> First Ask's price in first OrderBook
-            Assert.AreEqual(496.34, orderBookMemoryImage.AskBooks.First().First().Item2, "Price of first ask in the first ask book in the ask books list in memory image");
+            Assert.AreEqual(496.34, orderBookMemoryImage.AskBooks.First().First().Price, "Price of first ask in the first ask book in the ask books list in memory image");
 
             // BidsOrderBooks -> First BidOrderBook -> Second Bid's volume in first OrderBook
-            Assert.AreEqual(100, orderBookMemoryImage.BidBooks.First().ToList()[1].Item1, "Volume of first bids in the first bid book in the bids book list in  memory image");
+            Assert.AreEqual(100, orderBookMemoryImage.BidBooks.First().ToList()[1].Volume, "Volume of first bids in the first bid book in the bids book list in  memory image");
             // BidsOrderBooks -> First BidOrderBook -> Second Bid's price in first OrderBook
-            Assert.AreEqual(491.34M, orderBookMemoryImage.BidBooks.First().ToList()[1].Item2, "Price of first bids in the first bid book in the bids book list in  memory image");
+            Assert.AreEqual(491.34M, orderBookMemoryImage.BidBooks.First().ToList()[1].Price, "Price of first bids in the first bid book in the bids book list in  memory image");
 
             exchange.PlaceNewOrder(sellOrder2);
 
@@ -247,13 +247,13 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             Assert.AreEqual(1, orderBookMemoryImage.AskBooks.First().Count(), "Count of the asks in the first ask book in the list of ask books");
 
             // BidsOrderBooks -> First BidOrderBook -> First Bid's volume in first OrderBook
-            Assert.AreEqual(100, orderBookMemoryImage.BidBooks.First().First().Item1, "Volume of first bids in the first bid book in the bids book list in  memory image");
+            Assert.AreEqual(100, orderBookMemoryImage.BidBooks.First().First().Volume, "Volume of first bids in the first bid book in the bids book list in  memory image");
             // AsksOrderBooks -> First AskOrderBook -> First Ask's volume in first OrderBook
-            Assert.AreEqual(250, orderBookMemoryImage.AskBooks.First().First().Item1, "Volume of first ask in the first ask book in the ask books list in memory image");
+            Assert.AreEqual(250, orderBookMemoryImage.AskBooks.First().First().Volume, "Volume of first ask in the first ask book in the ask books list in memory image");
             // BidsOrderBooks -> First BidOrderBook -> First Bid's price in first OrderBook
-            Assert.AreEqual(491.34, orderBookMemoryImage.BidBooks.First().First().Item2, "Price of first bids in the first bid book in the bids book list in  memory image");
+            Assert.AreEqual(491.34, orderBookMemoryImage.BidBooks.First().First().Price, "Price of first bids in the first bid book in the bids book list in  memory image");
             // AsksOrderBooks -> First AskOrderBook -> First Ask's price in first OrderBook
-            Assert.AreEqual(496.34, orderBookMemoryImage.AskBooks.First().First().Item2, "Price of first ask in the first ask book in the ask books list in memory image");
+            Assert.AreEqual(496.34, orderBookMemoryImage.AskBooks.First().First().Price, "Price of first ask in the first ask book in the ask books list in memory image");
 
             OutputDisruptor.ShutDown();
         }
@@ -303,18 +303,18 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             Assert.AreEqual(2, orderBookMemoryImage.AskBooks.First().Count(), "Count of the asks in the first ask book in the list of ask books");
 
             // BidsOrderBooks -> First BidOrderBook -> First Bid's volume in first OrderBook
-            Assert.AreEqual(250, orderBookMemoryImage.BidBooks.First().First().Item1, "Volume of first bids in the first bid book in the bids book list in  memory image");
+            Assert.AreEqual(250, orderBookMemoryImage.BidBooks.First().First().Volume, "Volume of first bids in the first bid book in the bids book list in  memory image");
             // AsksOrderBooks -> First AskOrderBook -> First Ask's volume in first OrderBook
-            Assert.AreEqual(250, orderBookMemoryImage.AskBooks.First().First().Item1, "Volume of first ask in the first ask book in the ask books list in memory image");
+            Assert.AreEqual(250, orderBookMemoryImage.AskBooks.First().First().Volume, "Volume of first ask in the first ask book in the ask books list in memory image");
             // BidsOrderBooks -> First BidOrderBook -> First Bid's price in first OrderBook
-            Assert.AreEqual(486.34, orderBookMemoryImage.BidBooks.First().First().Item2, "Price of first bids in the first bid book in the bids book list in  memory image");
+            Assert.AreEqual(486.34, orderBookMemoryImage.BidBooks.First().First().Price, "Price of first bids in the first bid book in the bids book list in  memory image");
             // AsksOrderBooks -> First AskOrderBook -> First Ask's price in first OrderBook
-            Assert.AreEqual(492.34, orderBookMemoryImage.AskBooks.First().First().Item2, "Price of first ask in the first ask book in the ask books list in memory image");
+            Assert.AreEqual(492.34, orderBookMemoryImage.AskBooks.First().First().Price, "Price of first ask in the first ask book in the ask books list in memory image");
 
             // AsksOrderBooks -> First AskOrderBook -> Second Ask's volume in first OrderBook
-            Assert.AreEqual(250, orderBookMemoryImage.AskBooks.First().ToList()[1].Item1, "Volume of second ask in the first ask book in the ask books list in memory image");
+            Assert.AreEqual(250, orderBookMemoryImage.AskBooks.First().ToList()[1].Volume, "Volume of second ask in the first ask book in the ask books list in memory image");
             // AsksOrderBooks -> First AskOrderBook -> Second Ask's price in first OrderBook
-            Assert.AreEqual(496.34, orderBookMemoryImage.AskBooks.First().ToList()[1].Item2, "Price of second ask in the first ask book in the ask books list in memory image");
+            Assert.AreEqual(496.34, orderBookMemoryImage.AskBooks.First().ToList()[1].Price, "Price of second ask in the first ask book in the ask books list in memory image");
 
             exchange.PlaceNewOrder(buyOrder2);
 
@@ -335,13 +335,13 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             Assert.AreEqual(1, orderBookMemoryImage.AskBooks.First().Count(), "Count of the asks in the first ask book in the list of ask books");
 
             // BidsOrderBooks -> First BidOrderBook -> First Bid's volume in first OrderBook
-            Assert.AreEqual(250, orderBookMemoryImage.BidBooks.First().First().Item1, "Volume of first bids in the first bid book in the bids book list in  memory image");
+            Assert.AreEqual(250, orderBookMemoryImage.BidBooks.First().First().Volume, "Volume of first bids in the first bid book in the bids book list in  memory image");
             // AsksOrderBooks -> First AskOrderBook -> First Ask's volume in first OrderBook
-            Assert.AreEqual(250, orderBookMemoryImage.AskBooks.First().First().Item1, "Volume of first ask in the first ask book in the ask books list in memory image");
+            Assert.AreEqual(250, orderBookMemoryImage.AskBooks.First().First().Volume, "Volume of first ask in the first ask book in the ask books list in memory image");
             // BidsOrderBooks -> First BidOrderBook -> First Bid's price in first OrderBook
-            Assert.AreEqual(486.34, orderBookMemoryImage.BidBooks.First().First().Item2, "Price of first bids in the first bid book in the bids book list in  memory image");
+            Assert.AreEqual(486.34, orderBookMemoryImage.BidBooks.First().First().Price, "Price of first bids in the first bid book in the bids book list in  memory image");
             // AsksOrderBooks -> First AskOrderBook -> First Ask's price in first OrderBook
-            Assert.AreEqual(496.34, orderBookMemoryImage.AskBooks.First().First().Item2, "Price of first ask in the first ask book in the ask books list in memory image");
+            Assert.AreEqual(496.34, orderBookMemoryImage.AskBooks.First().First().Price, "Price of first ask in the first ask book in the ask books list in memory image");
 
             OutputDisruptor.ShutDown();
         }
@@ -403,27 +403,27 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             Assert.AreEqual(2, orderBookMemoryImage.AskBooks.First().Count(), "Count of the asks in the first ask book in the list of ask books");
 
             // BidsOrderBooks -> First BidOrderBook -> First Bid's volume in first OrderBook
-            Assert.AreEqual(400, orderBookMemoryImage.BidBooks.First().First().Item1, "Volume of first bids in the first bid book in the bids book list in  memory image");
+            Assert.AreEqual(400, orderBookMemoryImage.BidBooks.First().First().Volume, "Volume of first bids in the first bid book in the bids book list in  memory image");
             // AsksOrderBooks -> First AskOrderBook -> First Ask's volume in first OrderBook
-            Assert.AreEqual(500, orderBookMemoryImage.AskBooks.First().First().Item1, "Volume of first ask in the first ask book in the ask books list in memory image");
+            Assert.AreEqual(500, orderBookMemoryImage.AskBooks.First().First().Volume, "Volume of first ask in the first ask book in the ask books list in memory image");
             // BidsOrderBooks -> First BidOrderBook -> First Bid's price in first OrderBook
-            Assert.AreEqual(494.34, orderBookMemoryImage.BidBooks.First().First().Item2, "Price of first bids in the first bid book in the bids book list in  memory image");
+            Assert.AreEqual(494.34, orderBookMemoryImage.BidBooks.First().First().Price, "Price of first bids in the first bid book in the bids book list in  memory image");
             // AsksOrderBooks -> First AskOrderBook -> First Ask's price in first OrderBook
-            Assert.AreEqual(495.34, orderBookMemoryImage.AskBooks.First().First().Item2, "Price of first ask in the first ask book in the ask books list in memory image");
+            Assert.AreEqual(495.34, orderBookMemoryImage.AskBooks.First().First().Price, "Price of first ask in the first ask book in the ask books list in memory image");
 
             // BidsOrderBooks -> First BidOrderBook -> Second Bid's volume in first OrderBook
-            Assert.AreEqual(300, orderBookMemoryImage.BidBooks.First().ToList()[1].Item1, "Volume of Second bids in the first bid book in the bids book list in  memory image");
+            Assert.AreEqual(300, orderBookMemoryImage.BidBooks.First().ToList()[1].Volume, "Volume of Second bids in the first bid book in the bids book list in  memory image");
             // AsksOrderBooks -> First AskOrderBook -> Second Ask's volume in first OrderBook
-            Assert.AreEqual(250, orderBookMemoryImage.AskBooks.First().ToList()[1].Item1, "Volume of Second ask in the first ask book in the ask books list in memory image");
+            Assert.AreEqual(250, orderBookMemoryImage.AskBooks.First().ToList()[1].Volume, "Volume of Second ask in the first ask book in the ask books list in memory image");
             // BidsOrderBooks -> First BidOrderBook -> Second Bid's price in first OrderBook
-            Assert.AreEqual(493.34, orderBookMemoryImage.BidBooks.First().ToList()[1].Item2, "Price of Second bids in the first bid book in the bids book list in  memory image");
+            Assert.AreEqual(493.34, orderBookMemoryImage.BidBooks.First().ToList()[1].Price, "Price of Second bids in the first bid book in the bids book list in  memory image");
             // AsksOrderBooks -> First AskOrderBook -> Second Ask's price in first OrderBook
-            Assert.AreEqual(496.34, orderBookMemoryImage.AskBooks.First().ToList()[1].Item2, "Price of Second ask in the first ask book in the ask books list in memory image");
+            Assert.AreEqual(496.34, orderBookMemoryImage.AskBooks.First().ToList()[1].Price, "Price of Second ask in the first ask book in the ask books list in memory image");
 
             // BidsOrderBooks -> First BidOrderBook -> Third Bid's volume in first OrderBook
-            Assert.AreEqual(600, orderBookMemoryImage.BidBooks.First().ToList()[2].Item1, "Volume of third bid in the first bid book in the bids book list in  memory image");
+            Assert.AreEqual(600, orderBookMemoryImage.BidBooks.First().ToList()[2].Volume, "Volume of third bid in the first bid book in the bids book list in  memory image");
             // BidsOrderBooks -> First BidOrderBook -> Third Bid's price in first OrderBook
-            Assert.AreEqual(486.34, orderBookMemoryImage.BidBooks.First().ToList()[2].Item2, "Price of third bid in the first bid book in the bids book list in  memory image");
+            Assert.AreEqual(486.34, orderBookMemoryImage.BidBooks.First().ToList()[2].Price, "Price of third bid in the first bid book in the bids book list in  memory image");
 
             exchange.CancelOrder(new OrderCancellation(buyOrder3Id, buyOrder3.TraderId, buyOrder3.CurrencyPair));
 
@@ -444,22 +444,22 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             Assert.AreEqual(2, orderBookMemoryImage.AskBooks.First().Count(), "Count of the asks in the first ask book in the list of ask books");
 
             // BidsOrderBooks -> First BidOrderBook -> First Bid's volume in first OrderBook
-            Assert.AreEqual(300, orderBookMemoryImage.BidBooks.First().First().Item1, "Volume of first bids in the first bid book in the bids book list in  memory image");
+            Assert.AreEqual(300, orderBookMemoryImage.BidBooks.First().First().Volume, "Volume of first bids in the first bid book in the bids book list in  memory image");
             // AsksOrderBooks -> First AskOrderBook -> First Ask's volume in first OrderBook
-            Assert.AreEqual(500, orderBookMemoryImage.AskBooks.First().First().Item1, "Volume of first ask in the first ask book in the ask books list in memory image");
+            Assert.AreEqual(500, orderBookMemoryImage.AskBooks.First().First().Volume, "Volume of first ask in the first ask book in the ask books list in memory image");
             // BidsOrderBooks -> First BidOrderBook -> First Bid's price in first OrderBook
-            Assert.AreEqual(493.34, orderBookMemoryImage.BidBooks.First().First().Item2, "Price of first bids in the first bid book in the bids book list in  memory image");
+            Assert.AreEqual(493.34, orderBookMemoryImage.BidBooks.First().First().Price, "Price of first bids in the first bid book in the bids book list in  memory image");
             // AsksOrderBooks -> First AskOrderBook -> First Ask's price in first OrderBook
-            Assert.AreEqual(495.34, orderBookMemoryImage.AskBooks.First().First().Item2, "Price of first ask in the first ask book in the ask books list in memory image");
+            Assert.AreEqual(495.34, orderBookMemoryImage.AskBooks.First().First().Price, "Price of first ask in the first ask book in the ask books list in memory image");
 
             // BidsOrderBooks -> First BidOrderBook -> Second Bid's volume in first OrderBook
-            Assert.AreEqual(600, orderBookMemoryImage.BidBooks.First().ToList()[1].Item1, "Volume of Second bids in the first bid book in the bids book list in  memory image");
+            Assert.AreEqual(600, orderBookMemoryImage.BidBooks.First().ToList()[1].Volume, "Volume of Second bids in the first bid book in the bids book list in  memory image");
             // AsksOrderBooks -> First AskOrderBook -> Second Ask's volume in first OrderBook
-            Assert.AreEqual(250, orderBookMemoryImage.AskBooks.First().ToList()[1].Item1, "Volume of Second ask in the first ask book in the ask books list in memory image");
+            Assert.AreEqual(250, orderBookMemoryImage.AskBooks.First().ToList()[1].Volume, "Volume of Second ask in the first ask book in the ask books list in memory image");
             // BidsOrderBooks -> First BidOrderBook -> Second Bid's price in first OrderBook
-            Assert.AreEqual(486.34, orderBookMemoryImage.BidBooks.First().ToList()[1].Item2, "Price of Second bids in the first bid book in the bids book list in  memory image");
+            Assert.AreEqual(486.34, orderBookMemoryImage.BidBooks.First().ToList()[1].Price, "Price of Second bids in the first bid book in the bids book list in  memory image");
             // AsksOrderBooks -> First AskOrderBook -> Second Ask's price in first OrderBook
-            Assert.AreEqual(496.34, orderBookMemoryImage.AskBooks.First().ToList()[1].Item2, "Price of Second ask in the first ask book in the ask books list in memory image");
+            Assert.AreEqual(496.34, orderBookMemoryImage.AskBooks.First().ToList()[1].Price, "Price of Second ask in the first ask book in the ask books list in memory image");
 
             exchange.CancelOrder(new OrderCancellation(buyOrder2Id, buyOrder2.TraderId, buyOrder2.CurrencyPair));
 
@@ -480,18 +480,18 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             Assert.AreEqual(2, orderBookMemoryImage.AskBooks.First().Count(), "Count of the asks in the first ask book in the list of ask books");
 
             // BidsOrderBooks -> First BidOrderBook -> First Bid's volume in first OrderBook
-            Assert.AreEqual(600, orderBookMemoryImage.BidBooks.First().First().Item1, "Volume of first bids in the first bid book in the bids book list in  memory image");
+            Assert.AreEqual(600, orderBookMemoryImage.BidBooks.First().First().Volume, "Volume of first bids in the first bid book in the bids book list in  memory image");
             // AsksOrderBooks -> First AskOrderBook -> First Ask's volume in first OrderBook
-            Assert.AreEqual(500, orderBookMemoryImage.AskBooks.First().First().Item1, "Volume of first ask in the first ask book in the ask books list in memory image");
+            Assert.AreEqual(500, orderBookMemoryImage.AskBooks.First().First().Volume, "Volume of first ask in the first ask book in the ask books list in memory image");
             // BidsOrderBooks -> First BidOrderBook -> First Bid's price in first OrderBook
-            Assert.AreEqual(486.34, orderBookMemoryImage.BidBooks.First().First().Item2, "Price of first bids in the first bid book in the bids book list in  memory image");
+            Assert.AreEqual(486.34, orderBookMemoryImage.BidBooks.First().First().Price, "Price of first bids in the first bid book in the bids book list in  memory image");
             // AsksOrderBooks -> First AskOrderBook -> First Ask's price in first OrderBook
-            Assert.AreEqual(495.34, orderBookMemoryImage.AskBooks.First().First().Item2, "Price of first ask in the first ask book in the ask books list in memory image");
+            Assert.AreEqual(495.34, orderBookMemoryImage.AskBooks.First().First().Price, "Price of first ask in the first ask book in the ask books list in memory image");
 
             // AsksOrderBooks -> First AskOrderBook -> Second Ask's volume in first OrderBook
-            Assert.AreEqual(250, orderBookMemoryImage.AskBooks.First().ToList()[1].Item1, "Volume of Second ask in the first ask book in the ask books list in memory image");
+            Assert.AreEqual(250, orderBookMemoryImage.AskBooks.First().ToList()[1].Volume, "Volume of Second ask in the first ask book in the ask books list in memory image");
             // AsksOrderBooks -> First AskOrderBook -> Second Ask's price in first OrderBook
-            Assert.AreEqual(496.34, orderBookMemoryImage.AskBooks.First().ToList()[1].Item2, "Price of Second ask in the first ask book in the ask books list in memory image");
+            Assert.AreEqual(496.34, orderBookMemoryImage.AskBooks.First().ToList()[1].Price, "Price of Second ask in the first ask book in the ask books list in memory image");
 
             OutputDisruptor.ShutDown();
         }
@@ -551,31 +551,31 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             Assert.AreEqual(3, orderBookMemoryImage.AskBooks.First().Count(), "Count of the asks in the first ask book in the list of ask books");
 
             // BidsOrderBooks -> First BidOrderBook -> First Bid's volume in first OrderBook
-            Assert.AreEqual(400, orderBookMemoryImage.BidBooks.First().First().Item1, "Volume of first bids in the first bid book in the bids book list in  memory image");
+            Assert.AreEqual(400, orderBookMemoryImage.BidBooks.First().First().Volume, "Volume of first bids in the first bid book in the bids book list in  memory image");
             // AsksOrderBooks -> First AskOrderBook -> First Ask's volume in first OrderBook
-            Assert.AreEqual(100, orderBookMemoryImage.AskBooks.First().First().Item1, "Volume of first ask in the first ask book in the ask books list in memory image");
+            Assert.AreEqual(100, orderBookMemoryImage.AskBooks.First().First().Volume, "Volume of first ask in the first ask book in the ask books list in memory image");
             // BidsOrderBooks -> First BidOrderBook -> First Bid's price in first OrderBook
-            Assert.AreEqual(494.34, orderBookMemoryImage.BidBooks.First().First().Item2, "Price of first bids in the first bid book in the bids book list in  memory image");
+            Assert.AreEqual(494.34, orderBookMemoryImage.BidBooks.First().First().Price, "Price of first bids in the first bid book in the bids book list in  memory image");
             // AsksOrderBooks -> First AskOrderBook -> First Ask's price in first OrderBook
-            Assert.AreEqual(495.34, orderBookMemoryImage.AskBooks.First().First().Item2, "Price of first ask in the first ask book in the ask books list in memory image");
+            Assert.AreEqual(495.34, orderBookMemoryImage.AskBooks.First().First().Price, "Price of first ask in the first ask book in the ask books list in memory image");
 
             // BidsOrderBooks -> First BidOrderBook -> Second Bid's volume in first OrderBook
-            Assert.AreEqual(300, orderBookMemoryImage.BidBooks.First().ToList()[1].Item1, "Volume of Second bids in the first bid book in the bids book list in  memory image");
+            Assert.AreEqual(300, orderBookMemoryImage.BidBooks.First().ToList()[1].Volume, "Volume of Second bids in the first bid book in the bids book list in  memory image");
             // AsksOrderBooks -> First AskOrderBook -> Second Ask's volume in first OrderBook
-            Assert.AreEqual(300, orderBookMemoryImage.AskBooks.First().ToList()[1].Item1, "Volume of Second ask in the first ask book in the ask books list in memory image");
+            Assert.AreEqual(300, orderBookMemoryImage.AskBooks.First().ToList()[1].Volume, "Volume of Second ask in the first ask book in the ask books list in memory image");
             // BidsOrderBooks -> First BidOrderBook -> Second Bid's price in first OrderBook
-            Assert.AreEqual(493.34, orderBookMemoryImage.BidBooks.First().ToList()[1].Item2, "Price of Second bids in the first bid book in the bids book list in  memory image");
+            Assert.AreEqual(493.34, orderBookMemoryImage.BidBooks.First().ToList()[1].Price, "Price of Second bids in the first bid book in the bids book list in  memory image");
             // AsksOrderBooks -> First AskOrderBook -> Second Ask's price in first OrderBook
-            Assert.AreEqual(496.34, orderBookMemoryImage.AskBooks.First().ToList()[1].Item2, "Price of Second ask in the first ask book in the ask books list in memory image");
+            Assert.AreEqual(496.34, orderBookMemoryImage.AskBooks.First().ToList()[1].Price, "Price of Second ask in the first ask book in the ask books list in memory image");
 
             // BidsOrderBooks -> First BidOrderBook -> Third Bid's volume in first OrderBook
-            Assert.AreEqual(600, orderBookMemoryImage.BidBooks.First().ToList()[2].Item1, "Volume of Third bids in the first bid book in the bids book list in  memory image");
+            Assert.AreEqual(600, orderBookMemoryImage.BidBooks.First().ToList()[2].Volume, "Volume of Third bids in the first bid book in the bids book list in  memory image");
             // AsksOrderBooks -> First AskOrderBook -> Third Ask's volume in first OrderBook
-            Assert.AreEqual(500, orderBookMemoryImage.AskBooks.First().ToList()[2].Item1, "Volume of Third ask in the first ask book in the ask books list in memory image");
+            Assert.AreEqual(500, orderBookMemoryImage.AskBooks.First().ToList()[2].Volume, "Volume of Third ask in the first ask book in the ask books list in memory image");
             // BidsOrderBooks -> First BidOrderBook -> Third Bid's price in first OrderBook
-            Assert.AreEqual(486.34, orderBookMemoryImage.BidBooks.First().ToList()[2].Item2, "Price of Third bids in the first bid book in the bids book list in  memory image");
+            Assert.AreEqual(486.34, orderBookMemoryImage.BidBooks.First().ToList()[2].Price, "Price of Third bids in the first bid book in the bids book list in  memory image");
             // AsksOrderBooks -> First AskOrderBook -> Third Ask's price in first OrderBook
-            Assert.AreEqual(497.34, orderBookMemoryImage.AskBooks.First().ToList()[2].Item2, "Price of Third ask in the first ask book in the ask books list in memory image");
+            Assert.AreEqual(497.34, orderBookMemoryImage.AskBooks.First().ToList()[2].Price, "Price of Third ask in the first ask book in the ask books list in memory image");
 
             exchange.CancelOrder(new OrderCancellation(sellOrder3Id, sellOrder3.TraderId, sellOrder3.CurrencyPair));
 
@@ -595,22 +595,22 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             Assert.AreEqual(2, orderBookMemoryImage.AskBooks.First().Count(), "Count of the asks in the first ask book in the list of ask books");
 
             // BidsOrderBooks -> First BidOrderBook ->  Bid's volume in first OrderBook
-            Assert.AreEqual(400, orderBookMemoryImage.BidBooks.First().First().Item1, "Volume of first bids in the first bid book in the bids book list in  memory image");
+            Assert.AreEqual(400, orderBookMemoryImage.BidBooks.First().First().Volume, "Volume of first bids in the first bid book in the bids book list in  memory image");
             // AsksOrderBooks -> First AskOrderBook -> First Ask's volume in first OrderBook
-            Assert.AreEqual(100, orderBookMemoryImage.AskBooks.First().First().Item1, "Volume of first ask in the first ask book in the ask books list in memory image");
+            Assert.AreEqual(100, orderBookMemoryImage.AskBooks.First().First().Volume, "Volume of first ask in the first ask book in the ask books list in memory image");
             // BidsOrderBooks -> First BidOrderBook -> First Bid's price in first OrderBook
-            Assert.AreEqual(494.34, orderBookMemoryImage.BidBooks.First().First().Item2, "Price of first bids in the first bid book in the bids book list in  memory image");
+            Assert.AreEqual(494.34, orderBookMemoryImage.BidBooks.First().First().Price, "Price of first bids in the first bid book in the bids book list in  memory image");
             // AsksOrderBooks -> First AskOrderBook -> First Ask's price in first OrderBook
-            Assert.AreEqual(495.34, orderBookMemoryImage.AskBooks.First().First().Item2, "Price of first ask in the first ask book in the ask books list in memory image");
+            Assert.AreEqual(495.34, orderBookMemoryImage.AskBooks.First().First().Price, "Price of first ask in the first ask book in the ask books list in memory image");
 
             // BidsOrderBooks -> First BidOrderBook -> Second Bid's volume in first OrderBook
-            Assert.AreEqual(300, orderBookMemoryImage.BidBooks.First().ToList()[1].Item1, "Volume of Second bids in the first bid book in the bids book list in  memory image");
+            Assert.AreEqual(300, orderBookMemoryImage.BidBooks.First().ToList()[1].Volume, "Volume of Second bids in the first bid book in the bids book list in  memory image");
             // AsksOrderBooks -> First AskOrderBook -> Second Ask's volume in first OrderBook
-            Assert.AreEqual(500, orderBookMemoryImage.AskBooks.First().ToList()[1].Item1, "Volume of Second ask in the first ask book in the ask books list in memory image");
+            Assert.AreEqual(500, orderBookMemoryImage.AskBooks.First().ToList()[1].Volume, "Volume of Second ask in the first ask book in the ask books list in memory image");
             // BidsOrderBooks -> First BidOrderBook -> Second Bid's price in first OrderBook
-            Assert.AreEqual(493.34, orderBookMemoryImage.BidBooks.First().ToList()[1].Item2, "Price of Second bids in the first bid book in the bids book list in  memory image");
+            Assert.AreEqual(493.34, orderBookMemoryImage.BidBooks.First().ToList()[1].Price, "Price of Second bids in the first bid book in the bids book list in  memory image");
             // AsksOrderBooks -> First AskOrderBook -> Second Ask's price in first OrderBook
-            Assert.AreEqual(497.34, orderBookMemoryImage.AskBooks.First().ToList()[1].Item2, "Price of Second ask in the first ask book in the ask books list in memory image");
+            Assert.AreEqual(497.34, orderBookMemoryImage.AskBooks.First().ToList()[1].Price, "Price of Second ask in the first ask book in the ask books list in memory image");
 
             exchange.CancelOrder(new OrderCancellation(sellOrder1Id, sellOrder1.TraderId, sellOrder1.CurrencyPair));
 
@@ -630,13 +630,13 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             Assert.AreEqual(1, orderBookMemoryImage.AskBooks.First().Count(), "Count of the asks in the first ask book in the list of ask books");
 
             // BidsOrderBooks -> First BidOrderBook -> Third Bid's volume in first OrderBook
-            Assert.AreEqual(400, orderBookMemoryImage.BidBooks.First().First().Item1, "Volume of Third bids in the first bid book in the bids book list in  memory image");
+            Assert.AreEqual(400, orderBookMemoryImage.BidBooks.First().First().Volume, "Volume of Third bids in the first bid book in the bids book list in  memory image");
             // AsksOrderBooks -> First AskOrderBook -> Third Ask's volume in first OrderBook
-            Assert.AreEqual(500, orderBookMemoryImage.AskBooks.First().First().Item1, "Volume of Third ask in the first ask book in the ask books list in memory image");
+            Assert.AreEqual(500, orderBookMemoryImage.AskBooks.First().First().Volume, "Volume of Third ask in the first ask book in the ask books list in memory image");
             // BidsOrderBooks -> First BidOrderBook -> Third Bid's price in first OrderBook
-            Assert.AreEqual(494.34, orderBookMemoryImage.BidBooks.First().First().Item2, "Price of Third bids in the first bid book in the bids book list in  memory image");
+            Assert.AreEqual(494.34, orderBookMemoryImage.BidBooks.First().First().Price, "Price of Third bids in the first bid book in the bids book list in  memory image");
             // AsksOrderBooks -> First AskOrderBook -> Third Ask's price in first OrderBook
-            Assert.AreEqual(497.34, orderBookMemoryImage.AskBooks.First().First().Item2, "Price of Third ask in the first ask book in the ask books list in memory image");
+            Assert.AreEqual(497.34, orderBookMemoryImage.AskBooks.First().First().Price, "Price of Third ask in the first ask book in the ask books list in memory image");
 
             OutputDisruptor.ShutDown();
         }
@@ -698,26 +698,26 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             Assert.AreEqual(1, orderBookMemoryImage.AskBooks.First().Count(), "Count of the asks in the first ask book in the list of ask books");
 
             // BidsOrderBooks -> First BidOrderBook -> First Bid's volume in first OrderBook
-            Assert.AreEqual(900, orderBookMemoryImage.BidBooks.First().First().Item1, "Volume of first bids in the first bid book in the bids book list in  memory image");
+            Assert.AreEqual(900, orderBookMemoryImage.BidBooks.First().First().Volume, "Volume of first bids in the first bid book in the bids book list in  memory image");
             // BidsOrderBooks -> First BidOrderBook -> First Bid's price in first OrderBook
-            Assert.AreEqual(944.34M, orderBookMemoryImage.BidBooks.First().First().Item2, "Price of first bids in the first bid book in the bids book list in  memory image");
+            Assert.AreEqual(944.34M, orderBookMemoryImage.BidBooks.First().First().Price, "Price of first bids in the first bid book in the bids book list in  memory image");
             // BidsOrderBooks -> First BidOrderBook -> First Bid's volume in first OrderBook
-            Assert.AreEqual(300, orderBookMemoryImage.BidBooks.First().ToList()[1].Item1, "Volume of Second Bid");
+            Assert.AreEqual(300, orderBookMemoryImage.BidBooks.First().ToList()[1].Volume, "Volume of Second Bid");
             // BidsOrderBooks -> First BidOrderBook -> First Bid's price in first OrderBook
-            Assert.AreEqual(943.34M, orderBookMemoryImage.BidBooks.First().ToList()[1].Item2, "Price of Second Bid");
+            Assert.AreEqual(943.34M, orderBookMemoryImage.BidBooks.First().ToList()[1].Price, "Price of Second Bid");
             // BidsOrderBooks -> First BidOrderBook -> First Bid's volume in first OrderBook
-            Assert.AreEqual(200, orderBookMemoryImage.BidBooks.First().ToList()[2].Item1, "Volume of Second Bid");
+            Assert.AreEqual(200, orderBookMemoryImage.BidBooks.First().ToList()[2].Volume, "Volume of Second Bid");
             // BidsOrderBooks -> First BidOrderBook -> First Bid's price in first OrderBook
-            Assert.AreEqual(942.34M, orderBookMemoryImage.BidBooks.First().ToList()[2].Item2, "Price of Second Bid");
+            Assert.AreEqual(942.34M, orderBookMemoryImage.BidBooks.First().ToList()[2].Price, "Price of Second Bid");
             // BidsOrderBooks -> First BidOrderBook -> First Bid's volume in first OrderBook
-            Assert.AreEqual(100, orderBookMemoryImage.BidBooks.First().ToList()[3].Item1, "Volume of Second Bid");
+            Assert.AreEqual(100, orderBookMemoryImage.BidBooks.First().ToList()[3].Volume, "Volume of Second Bid");
             // BidsOrderBooks -> First BidOrderBook -> First Bid's price in first OrderBook
-            Assert.AreEqual(941.34M, orderBookMemoryImage.BidBooks.First().ToList()[3].Item2, "Price of Second Bid");
+            Assert.AreEqual(941.34M, orderBookMemoryImage.BidBooks.First().ToList()[3].Price, "Price of Second Bid");
 
             // AsksOrderBooks -> First AskOrderBook -> First Ask's volume in first OrderBook
-            Assert.AreEqual(400, orderBookMemoryImage.AskBooks.First().First().Item1, "Volume of first ask in the first ask book in the ask books list in memory image");        
+            Assert.AreEqual(400, orderBookMemoryImage.AskBooks.First().First().Volume, "Volume of first ask in the first ask book in the ask books list in memory image");        
             // AsksOrderBooks -> First AskOrderBook -> First Ask's price in first OrderBook
-            Assert.AreEqual(945.34, orderBookMemoryImage.AskBooks.First().First().Item2, "Price of first ask in the first ask book in the ask books list in memory image");
+            Assert.AreEqual(945.34, orderBookMemoryImage.AskBooks.First().First().Price, "Price of first ask in the first ask book in the ask books list in memory image");
 
             OutputDisruptor.ShutDown();
         }
@@ -781,26 +781,26 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             Assert.AreEqual(4, orderBookMemoryImage.AskBooks.First().Count(), "Count of the asks in the first ask book in the list of ask books");
 
             // BidsOrderBooks -> First BidOrderBook -> First Bid's volume in first OrderBook
-            Assert.AreEqual(400, orderBookMemoryImage.BidBooks.First().First().Item1, "Volume of first bids in the first bid book in the bids book list in  memory image");
+            Assert.AreEqual(400, orderBookMemoryImage.BidBooks.First().First().Volume, "Volume of first bids in the first bid book in the bids book list in  memory image");
             // BidsOrderBooks -> First BidOrderBook -> First Bid's price in first OrderBook
-            Assert.AreEqual(940.34M, orderBookMemoryImage.BidBooks.First().First().Item2, "Price of first bids in the first bid book in the bids book list in  memory image");
+            Assert.AreEqual(940.34M, orderBookMemoryImage.BidBooks.First().First().Price, "Price of first bids in the first bid book in the bids book list in  memory image");
             
             // AsksOrderBooks -> First AskOrderBook -> First Ask's volume in first OrderBook
-            Assert.AreEqual(100, orderBookMemoryImage.AskBooks.First().First().Item1, "Volume of first ask in the first ask book in the ask books list in memory image");
+            Assert.AreEqual(100, orderBookMemoryImage.AskBooks.First().First().Volume, "Volume of first ask in the first ask book in the ask books list in memory image");
             // AsksOrderBooks -> First AskOrderBook -> First Ask's price in first OrderBook
-            Assert.AreEqual(941.34, orderBookMemoryImage.AskBooks.First().First().Item2, "Price of first ask in the first ask book in the ask books list in memory image");
+            Assert.AreEqual(941.34, orderBookMemoryImage.AskBooks.First().First().Price, "Price of first ask in the first ask book in the ask books list in memory image");
             // BidsOrderBooks -> First BidOrderBook -> First Bid's volume in first OrderBook
-            Assert.AreEqual(200, orderBookMemoryImage.AskBooks.First().ToList()[1].Item1, "Volume of Second Ask");
+            Assert.AreEqual(200, orderBookMemoryImage.AskBooks.First().ToList()[1].Volume, "Volume of Second Ask");
             // AsksOrderBooks -> First AskOrderBook -> First Ask's price in first OrderBook
-            Assert.AreEqual(942.34M, orderBookMemoryImage.AskBooks.First().ToList()[1].Item2, "Price of Second Ask");
+            Assert.AreEqual(942.34M, orderBookMemoryImage.AskBooks.First().ToList()[1].Price, "Price of Second Ask");
             // AsksOrderBooks -> First AskOrderBook -> First Ask's volume in first OrderBook
-            Assert.AreEqual(300, orderBookMemoryImage.AskBooks.First().ToList()[2].Item1, "Volume of Second Ask");
+            Assert.AreEqual(300, orderBookMemoryImage.AskBooks.First().ToList()[2].Volume, "Volume of Second Ask");
             // AsksOrderBooks -> First AskOrderBook -> First Ask's price in first OrderBook
-            Assert.AreEqual(943.34M, orderBookMemoryImage.AskBooks.First().ToList()[2].Item2, "Price of Second Ask");
+            Assert.AreEqual(943.34M, orderBookMemoryImage.AskBooks.First().ToList()[2].Price, "Price of Second Ask");
             // AsksOrderBooks -> First AskOrderBook -> First Ask's volume in first OrderBook
-            Assert.AreEqual(800, orderBookMemoryImage.AskBooks.First().ToList()[3].Item1, "Volume of Second Ask");
+            Assert.AreEqual(800, orderBookMemoryImage.AskBooks.First().ToList()[3].Volume, "Volume of Second Ask");
             // AsksOrderBooks -> First AskOrderBook -> First Ask's price in first OrderBook
-            Assert.AreEqual(945.34M, orderBookMemoryImage.AskBooks.First().ToList()[3].Item2, "Price of Second Ask");
+            Assert.AreEqual(945.34M, orderBookMemoryImage.AskBooks.First().ToList()[3].Price, "Price of Second Ask");
 
             OutputDisruptor.ShutDown();
         }

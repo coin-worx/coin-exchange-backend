@@ -121,10 +121,10 @@ namespace CoinExchange.Trades.ReadModel.Tests
             Assert.AreEqual(0, orderBookMemory.AskBooks.First().Count(), "Count of the Asks in te first Ask Book present in the memory image");
 
             // Check the Prices elements of the first order book in the Memory Image's list of Order representations
-            Assert.AreEqual(1252, orderBookMemory.BidBooks.First().ToList()[0].Item2);
-            Assert.AreEqual(1251, orderBookMemory.BidBooks.First().ToList()[1].Item2);
-            Assert.AreEqual(1251, orderBookMemory.BidBooks.First().ToList()[2].Item2);
-            Assert.AreEqual(1250, orderBookMemory.BidBooks.First().ToList()[3].Item2);
+            Assert.AreEqual(1252, orderBookMemory.BidBooks.First().ToList()[0].Price);
+            Assert.AreEqual(1251, orderBookMemory.BidBooks.First().ToList()[1].Price);
+            Assert.AreEqual(1251, orderBookMemory.BidBooks.First().ToList()[2].Price);
+            Assert.AreEqual(1250, orderBookMemory.BidBooks.First().ToList()[3].Price);
 
             Assert.AreEqual(1, orderBookMemory.BidBooks.Count());
             Assert.AreEqual(1, orderBookMemory.AskBooks.Count());
@@ -161,10 +161,10 @@ namespace CoinExchange.Trades.ReadModel.Tests
             Assert.AreEqual(4, orderBookMemory.AskBooks.First().Count(), "Count of the Asks in te first Ask Book present in the memory image");
 
             // Check the Prices elements of the first order book in the Memory Image's list of Order representations
-            Assert.AreEqual(1250, orderBookMemory.AskBooks.First().ToList()[0].Item2);
-            Assert.AreEqual(1251, orderBookMemory.AskBooks.First().ToList()[1].Item2);
-            Assert.AreEqual(1251, orderBookMemory.AskBooks.First().ToList()[2].Item2);
-            Assert.AreEqual(1252, orderBookMemory.AskBooks.First().ToList()[3].Item2);
+            Assert.AreEqual(1250, orderBookMemory.AskBooks.First().ToList()[0].Price);
+            Assert.AreEqual(1251, orderBookMemory.AskBooks.First().ToList()[1].Price);
+            Assert.AreEqual(1251, orderBookMemory.AskBooks.First().ToList()[2].Price);
+            Assert.AreEqual(1252, orderBookMemory.AskBooks.First().ToList()[3].Price);
 
             Assert.AreEqual(1, orderBookMemory.BidBooks.Count());
             Assert.AreEqual(1, orderBookMemory.AskBooks.Count());
@@ -201,10 +201,10 @@ namespace CoinExchange.Trades.ReadModel.Tests
             Assert.AreEqual(0, orderBookMemory.AskBooks.First().Count(), "Count of the Asks in te first Ask Book present in the memory image");
 
             // Check the Prices elements of the first order book in the Memory Image's list of Order representations
-            Assert.AreEqual(700, orderBookMemory.BidBooks.First().ToList()[0].Item1);
-            Assert.AreEqual(600, orderBookMemory.BidBooks.First().ToList()[1].Item1);
-            Assert.AreEqual(300, orderBookMemory.BidBooks.First().ToList()[2].Item1);
-            Assert.AreEqual(100, orderBookMemory.BidBooks.First().ToList()[3].Item1);
+            Assert.AreEqual(700, orderBookMemory.BidBooks.First().ToList()[0].Volume);
+            Assert.AreEqual(600, orderBookMemory.BidBooks.First().ToList()[1].Volume);
+            Assert.AreEqual(300, orderBookMemory.BidBooks.First().ToList()[2].Volume);
+            Assert.AreEqual(100, orderBookMemory.BidBooks.First().ToList()[3].Volume);
 
             Assert.AreEqual(1, orderBookMemory.BidBooks.Count());
             Assert.AreEqual(1, orderBookMemory.AskBooks.Count());
@@ -241,10 +241,10 @@ namespace CoinExchange.Trades.ReadModel.Tests
             Assert.AreEqual(4, orderBookMemory.AskBooks.First().Count(), "Count of the Asks in te first Ask Book present in the memory image");
 
             // Check the Prices elements of the first order book in the Memory Image's list of Order representations
-            Assert.AreEqual(200, orderBookMemory.AskBooks.First().ToList()[0].Item1);
-            Assert.AreEqual(100, orderBookMemory.AskBooks.First().ToList()[1].Item1);
-            Assert.AreEqual(300, orderBookMemory.AskBooks.First().ToList()[2].Item1);
-            Assert.AreEqual(400, orderBookMemory.AskBooks.First().ToList()[3].Item1);
+            Assert.AreEqual(200, orderBookMemory.AskBooks.First().ToList()[0].Volume);
+            Assert.AreEqual(100, orderBookMemory.AskBooks.First().ToList()[1].Volume);
+            Assert.AreEqual(300, orderBookMemory.AskBooks.First().ToList()[2].Volume);
+            Assert.AreEqual(400, orderBookMemory.AskBooks.First().ToList()[3].Volume);
 
             Assert.AreEqual(1, orderBookMemory.BidBooks.Count());
             Assert.AreEqual(1, orderBookMemory.AskBooks.Count());
@@ -297,15 +297,15 @@ namespace CoinExchange.Trades.ReadModel.Tests
             Assert.AreEqual(0, orderBookMemory.AskBooks.First().Count(), "Count of the Asks in te first Ask Book present in the memory image");
 
             // Check the Prices elements of the first order book in the Memory Image's list of Order representations
-            Assert.AreEqual(400, orderBookMemory.BidBooks.First().ToList()[0].Item1);
-            Assert.AreEqual(300, orderBookMemory.BidBooks.First().ToList()[1].Item1);
-            Assert.AreEqual(200, orderBookMemory.BidBooks.First().ToList()[2].Item1);
-            Assert.AreEqual(100, orderBookMemory.BidBooks.First().ToList()[3].Item1);
+            Assert.AreEqual(400, orderBookMemory.BidBooks.First().ToList()[0].Volume);
+            Assert.AreEqual(300, orderBookMemory.BidBooks.First().ToList()[1].Volume);
+            Assert.AreEqual(200, orderBookMemory.BidBooks.First().ToList()[2].Volume);
+            Assert.AreEqual(100, orderBookMemory.BidBooks.First().ToList()[3].Volume);
 
-            Assert.AreEqual(944, orderBookMemory.BidBooks.First().ToList()[0].Item2);
-            Assert.AreEqual(943, orderBookMemory.BidBooks.First().ToList()[1].Item2);
-            Assert.AreEqual(942, orderBookMemory.BidBooks.First().ToList()[2].Item2);
-            Assert.AreEqual(941, orderBookMemory.BidBooks.First().ToList()[3].Item2);
+            Assert.AreEqual(944, orderBookMemory.BidBooks.First().ToList()[0].Price);
+            Assert.AreEqual(943, orderBookMemory.BidBooks.First().ToList()[1].Price);
+            Assert.AreEqual(942, orderBookMemory.BidBooks.First().ToList()[2].Price);
+            Assert.AreEqual(941, orderBookMemory.BidBooks.First().ToList()[3].Price);
         }
 
         [Test]
@@ -355,16 +355,16 @@ namespace CoinExchange.Trades.ReadModel.Tests
             Assert.AreEqual(4, orderBookMemory.AskBooks.First().Count(), "Count of the Asks in te first Ask Book present in the memory image");
 
             // Check the Volume elements of the first order book in the Memory Image's list of Order representations
-            Assert.AreEqual(100, orderBookMemory.AskBooks.First().ToList()[0].Item1);
-            Assert.AreEqual(200, orderBookMemory.AskBooks.First().ToList()[1].Item1);
-            Assert.AreEqual(300, orderBookMemory.AskBooks.First().ToList()[2].Item1);
-            Assert.AreEqual(400, orderBookMemory.AskBooks.First().ToList()[3].Item1);
+            Assert.AreEqual(100, orderBookMemory.AskBooks.First().ToList()[0].Volume);
+            Assert.AreEqual(200, orderBookMemory.AskBooks.First().ToList()[1].Volume);
+            Assert.AreEqual(300, orderBookMemory.AskBooks.First().ToList()[2].Volume);
+            Assert.AreEqual(400, orderBookMemory.AskBooks.First().ToList()[3].Volume);
 
             // Check Prices
-            Assert.AreEqual(941, orderBookMemory.AskBooks.First().ToList()[0].Item2);
-            Assert.AreEqual(942, orderBookMemory.AskBooks.First().ToList()[1].Item2);
-            Assert.AreEqual(943, orderBookMemory.AskBooks.First().ToList()[2].Item2);
-            Assert.AreEqual(944, orderBookMemory.AskBooks.First().ToList()[3].Item2);
+            Assert.AreEqual(941, orderBookMemory.AskBooks.First().ToList()[0].Price);
+            Assert.AreEqual(942, orderBookMemory.AskBooks.First().ToList()[1].Price);
+            Assert.AreEqual(943, orderBookMemory.AskBooks.First().ToList()[2].Price);
+            Assert.AreEqual(944, orderBookMemory.AskBooks.First().ToList()[3].Price);
         }
 
         #endregion Object to simplified representation Conversion Tests

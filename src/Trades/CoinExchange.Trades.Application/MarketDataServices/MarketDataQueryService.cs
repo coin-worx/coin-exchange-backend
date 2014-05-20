@@ -178,11 +178,11 @@ namespace CoinExchange.Trades.Application.MarketDataServices
                 {
                     if (i < originalBidBook.Count())
                     {
-                        bidBook.AddRecord(originalBidBook.ToList()[i].Item1, originalBidBook.ToList()[i].Item2);
+                        bidBook.AddRecord(originalBidBook.ToList()[i].Volume, originalBidBook.ToList()[i].Price);
                     }
                     if (i < originalAskBook.Count())
                     {
-                        askBook.AddRecord(originalAskBook.ToList()[i].Item1, originalAskBook.ToList()[i].Item2);
+                        askBook.AddRecord(originalAskBook.ToList()[i].Volume, originalAskBook.ToList()[i].Price);
                     }
                 }
                 return new OrderBookRepresentation(bidBook,askBook);
