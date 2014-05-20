@@ -58,7 +58,7 @@ namespace CoinExchange.Trades.Application.MarketDataServices
         {
             foreach (Rate rate in _bboMemoryImage.RatesList)
             {
-                if (rate.CurrencyPair == currencyPair)
+                if (rate.CurrencyPair.Equals(currencyPair, StringComparison.InvariantCultureIgnoreCase))
                 {
                     return rate;
                 }
@@ -82,7 +82,7 @@ namespace CoinExchange.Trades.Application.MarketDataServices
         {
             foreach (OrderRepresentationList bidBook in _orderBookMemoryImage.BidBooks)
             {
-                if (bidBook.CurrencyPair == currencyPair)
+                if (bidBook.CurrencyPair.Equals(currencyPair, StringComparison.InvariantCultureIgnoreCase))
                 {
                     return bidBook;
                 }
@@ -99,7 +99,7 @@ namespace CoinExchange.Trades.Application.MarketDataServices
         {
             foreach (OrderRepresentationList askBook in _orderBookMemoryImage.AskBooks)
             {
-                if (askBook.CurrencyPair == currencyPair)
+                if (askBook.CurrencyPair.Equals(currencyPair, StringComparison.InvariantCultureIgnoreCase))
                 {
                     return askBook;
                 }
@@ -117,7 +117,7 @@ namespace CoinExchange.Trades.Application.MarketDataServices
             // Traverse within each key value pair and find the currency pair stored
             foreach (KeyValuePair<string, DepthLevelRepresentationList> keyValuePair in _depthMemoryImage.BidDepths)
             {
-                if (keyValuePair.Key == currencyPair)
+                if (keyValuePair.Key.Equals(currencyPair, StringComparison.InvariantCultureIgnoreCase))
                 {
                     DepthLevelRepresentationList depthLevels = keyValuePair.Value;
                     return depthLevels.DepthLevels;
@@ -136,7 +136,7 @@ namespace CoinExchange.Trades.Application.MarketDataServices
             // Traverse within each key value pair and find the currency pair stored
             foreach (KeyValuePair<string, DepthLevelRepresentationList> keyValuePair in _depthMemoryImage.AskDepths)
             {
-                if (keyValuePair.Key == currencyPair)
+                if (keyValuePair.Key.Equals(currencyPair, StringComparison.InvariantCultureIgnoreCase))
                 {
                     DepthLevelRepresentationList depthLevels = keyValuePair.Value;
                     return depthLevels.DepthLevels;
