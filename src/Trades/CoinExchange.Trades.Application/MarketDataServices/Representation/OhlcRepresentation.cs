@@ -8,14 +8,14 @@ namespace CoinExchange.Trades.Application.MarketDataServices.Representation
     /// </summary>
     public class OhlcRepresentation
     {
-        public List<Ohlc> Ohlc { get; set; }
+        //public List<Ohlc> Ohlc { get; set; }
         public string PairName { get; set; }
         public long Last { get; set; }
         public IList<object> OhlcInfo { get; set; }
 
         public OhlcRepresentation(List<Ohlc> ohlc, string pairName, long last)
         {
-            Ohlc = ohlc;
+            //Ohlc = ohlc;
             PairName = pairName;
             Last = last;
         }

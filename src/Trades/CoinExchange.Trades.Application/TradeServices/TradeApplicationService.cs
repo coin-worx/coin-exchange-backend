@@ -27,15 +27,15 @@ namespace CoinExchange.Trades.Application.TradeServices
         {
             if (start == "" || end == "")
             {
-                return QueryTrades(traderId);
+                return _tradeRepository.GetTraderTradeHistory(traderId.Id.ToString());
             }
             return _tradeRepository.GetTraderTradeHistory(traderId.Id.ToString(), Convert.ToDateTime(start),
                 Convert.ToDateTime(end));
         }
 
-        public object QueryTrades(TraderId traderId, string txId = "", bool includeTrades = false)
+        public object QueryTrades(string orderId)
         {
-            return _tradeRepository.GetTraderTradeHistory(traderId.Id.ToString());
+            return _tradeRepository.GetTradesByorderId(orderId);
         }
 
         public IList<object> GetRecentTrades(string pair, string since)

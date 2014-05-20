@@ -96,7 +96,7 @@ namespace CoinExchange.Trades.Application.TradeServices
         /// <param name="txId"></param>
         /// <param name="includeTrades"></param>
         /// <returns></returns>
-        public object QueryTrades(TraderId traderId, string txId = "", bool includeTrades = false)
+        public object QueryTrades(string orderId)
         {
             List<OrderRepresentation> orderList = new List<OrderRepresentation>();
             orderList.Add(new OrderRepresentation()

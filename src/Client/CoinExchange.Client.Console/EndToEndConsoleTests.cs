@@ -559,7 +559,7 @@ namespace CoinExchange.Client.Console
         private Newtonsoft.Json.Linq.JArray GetTrades(ApiClient apiClient)
         {
             Newtonsoft.Json.Linq.JArray deserializeObject =
-                JsonConvert.DeserializeObject<dynamic>(apiClient.QueryTrades("", false));
+                JsonConvert.DeserializeObject<dynamic>(apiClient.QueryTrades(""));
             return deserializeObject;
         }
 

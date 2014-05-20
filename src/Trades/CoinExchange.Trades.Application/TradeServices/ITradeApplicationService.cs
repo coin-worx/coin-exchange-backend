@@ -13,7 +13,7 @@ namespace CoinExchange.Trades.Application.TradeServices
     {
         object GetTradesHistory(TraderId traderId, string start = "", string end = "");
 
-        object QueryTrades(TraderId traderId, string txId = "", bool includeTrades = false);
+        object QueryTrades(string orderId);
         IList<object> GetRecentTrades(string pair, string since);
         TradeVolumeRepresentation TradeVolume(string pair);
         IList<CurrencyPair> GetTradeableCurrencyPairs();

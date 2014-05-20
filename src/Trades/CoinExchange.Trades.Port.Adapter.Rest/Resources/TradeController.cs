@@ -6,6 +6,7 @@ using CoinExchange.Common.Domain.Model;
 using CoinExchange.Trades.Application.OrderServices.Representation;
 using CoinExchange.Trades.Application.TradeServices;
 using CoinExchange.Trades.Application.TradeServices.Representation;
+using CoinExchange.Trades.Domain.Model.OrderAggregate;
 using CoinExchange.Trades.Domain.Model.TradeAggregate;
 using CoinExchange.Trades.Port.Adapter.Rest.DTOs;
 using CoinExchange.Trades.Port.Adapter.Rest.DTOs.Trade;
@@ -85,7 +86,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         [Route("trades/querytrades")]
         [Authorize]
         [HttpPost]
-        public IHttpActionResult QueryTrades([FromBody]QueryTradeParams queryTradeParams)
+        public IHttpActionResult QueryTrades([FromBody]string orderId)
         {
             try
             {
@@ -98,8 +99,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                     string[] auth = headerParams.ToList()[0].Split(',');
                     apikey = auth[0];
                 }
-                var trades = _tradeApplicationService.QueryTrades(new TraderId(Constants.GetTraderId(apikey)), queryTradeParams.TxId, 
-                    queryTradeParams.IncludeTrades);
+                var trades = _tradeApplicationService.QueryTrades(orderId);
 
                 if (trades != null)
                 {
