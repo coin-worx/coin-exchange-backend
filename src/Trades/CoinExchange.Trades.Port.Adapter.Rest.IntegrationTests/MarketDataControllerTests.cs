@@ -62,6 +62,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
         {
             InputDisruptorPublisher.Shutdown();
             OutputDisruptor.ShutDown();
+            ContextRegistry.Clear();
             _databaseUtility.Create();
             inputEventStore.RemoveAllEvents();
             outputEventStore.RemoveAllEvents();
@@ -701,7 +702,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             Assert.AreEqual(492.5, ratesList.ToList()[0].RateValue); // MidPoint of xbtUsdBidLevel = 491 & xbtUsdAskLevel = 494
             Assert.AreEqual("LTC/USD", ratesList.ToList()[1].CurrencyPair);
             Assert.AreEqual(493.5, ratesList.ToList()[1].RateValue); // MidPoint of ltcUsdBidLevel = 492 & ltcUsdAskLevel = 495
-            Assert.AreEqual("BTC/USD", ratesList.ToList()[2].CurrencyPair);
+            Assert.AreEqual("BTCUSD", ratesList.ToList()[2].CurrencyPair);
             Assert.AreEqual(494.5, ratesList.ToList()[2].RateValue); // MidPoint of btcUsdBidLevel = 493 & btcUsdAskLevel = 496
         }
 
