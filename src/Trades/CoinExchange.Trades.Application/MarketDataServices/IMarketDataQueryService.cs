@@ -9,8 +9,10 @@ namespace CoinExchange.Trades.Application.MarketDataServices
     {
         object GetTickerInfo(string pairs);
         OhlcRepresentation GetOhlcInfo(string pair, int interval, string since);
-        Tuple<OrderRepresentationList, OrderRepresentationList> GetOrderBook(string symbol, int count);
-        Tuple<Tuple<decimal, decimal, int>[], Tuple<decimal, decimal, int>[]> GetDepth(string currencyPair);
+        //Tuple<OrderRepresentationList, OrderRepresentationList> GetOrderBook(string symbol, int count);
+        object GetOrderBook(string symbol, int count);
+        //Tuple<Tuple<decimal, decimal, int>[], Tuple<decimal, decimal, int>[]> GetDepth(string currencyPair);
+        object GetDepth(string currencyPair);
         Rate GetRate(string currencyPair);
         RatesList GetAllRates();
     }
