@@ -689,19 +689,19 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             DepthLevel xbtUsdAskLevel = new DepthLevel(new Price(494));
             DepthLevel ltcUsdAskLevel = new DepthLevel(new Price(495));
             DepthLevel btcUsdAskLevel = new DepthLevel(new Price(496));
-            bboMemoryImage.OnBBOArrived("XBTUSD", xbtUsdBidLevel, xbtUsdAskLevel);
-            bboMemoryImage.OnBBOArrived("LTCUSD", ltcUsdBidLevel, ltcUsdAskLevel);
-            bboMemoryImage.OnBBOArrived("BTCUSD", btcUsdBidLevel, btcUsdAskLevel);
+            bboMemoryImage.OnBBOArrived("XBT/USD", xbtUsdBidLevel, xbtUsdAskLevel);
+            bboMemoryImage.OnBBOArrived("LTC/USD", ltcUsdBidLevel, ltcUsdAskLevel);
+            bboMemoryImage.OnBBOArrived("BTC/USD", btcUsdBidLevel, btcUsdAskLevel);
             IHttpActionResult httpActionResult = marketController.GetAllRates();
 
             OkNegotiatedContentResult<RatesList> returnedOkRate = (OkNegotiatedContentResult<RatesList>)httpActionResult;
             RatesList ratesList = returnedOkRate.Content;
 
-            Assert.AreEqual("XBTUSD", ratesList.ToList()[0].CurrencyPair);
+            Assert.AreEqual("XBT/USD", ratesList.ToList()[0].CurrencyPair);
             Assert.AreEqual(492.5, ratesList.ToList()[0].RateValue); // MidPoint of xbtUsdBidLevel = 491 & xbtUsdAskLevel = 494
-            Assert.AreEqual("LTCUSD", ratesList.ToList()[1].CurrencyPair);
+            Assert.AreEqual("LTC/USD", ratesList.ToList()[1].CurrencyPair);
             Assert.AreEqual(493.5, ratesList.ToList()[1].RateValue); // MidPoint of ltcUsdBidLevel = 492 & ltcUsdAskLevel = 495
-            Assert.AreEqual("BTCUSD", ratesList.ToList()[2].CurrencyPair);
+            Assert.AreEqual("BTC/USD", ratesList.ToList()[2].CurrencyPair);
             Assert.AreEqual(494.5, ratesList.ToList()[2].RateValue); // MidPoint of btcUsdBidLevel = 493 & btcUsdAskLevel = 496
         }
 
