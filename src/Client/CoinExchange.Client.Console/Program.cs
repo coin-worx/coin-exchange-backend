@@ -14,10 +14,10 @@ namespace CoinExchange.Client.Console
             string baseUrl = "http://rockblanc.cloudapp.net/dev";
             baseUrl = "http://localhost:51780";
             ApiClient client=new ApiClient(baseUrl);
-            Scenario1(client);
+            //Scenario1(client);
             //ScenarioResults(client);
-            //System.Console.WriteLine(client.QueryOpenOrdersParams(true, ""));
-            System.Console.ReadKey();
+            System.Console.WriteLine(client.CancelOrder("d2134ee4-0bfd-46db-aeda-76c725187909"));
+           System.Console.ReadKey();
         }
 
         /// <summary>

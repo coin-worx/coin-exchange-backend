@@ -72,16 +72,12 @@ namespace CoinExchange.Client
         /// <summary>
         /// Query trades of specific txid
         /// </summary>
-        /// <param name="txId"></param>
-        /// <param name="includeTrades"></param>
+        /// <param name="orderId"></param>
         /// <returns></returns>
-        public string QueryTrades(string txId, bool includeTrades)
+        public string QueryTrades(string orderId)
         {
-            JObject jsonObject = new JObject();
-            jsonObject.Add("txId", txId);
-            jsonObject.Add("includeTrades", includeTrades);
             string url = _baseUrl + "/trades/querytrades";
-            return HttpPostRequest(jsonObject, url);
+            return HttpPostRequest(orderId, url);
         }
 
         /// <summary>
