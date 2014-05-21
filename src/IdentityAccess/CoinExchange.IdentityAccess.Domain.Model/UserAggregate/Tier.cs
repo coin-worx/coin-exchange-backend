@@ -10,7 +10,7 @@
         /// </summary>
         /// <param name="tierName"></param>
         /// <param name="tierLevel"></param>
-        public Tier(string tierName, TierLevel tierLevel)
+        public Tier(string tierName, string tierLevel)
         {
             TierName = tierName;
             TierLevel = tierLevel;
@@ -24,6 +24,6 @@
         /// <summary>
         /// Tier's Level
         /// </summary>
-        public TierLevel TierLevel { get; private set; }
+        public string TierLevel { get; private set; }
     }
 }
