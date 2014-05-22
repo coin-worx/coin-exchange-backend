@@ -24,7 +24,23 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         private UserDocumentsList _userDocumentsList;
         
         /// <summary>
-        /// Parameterized Constructor
+        /// Constructor for Sign Up
+        /// </summary>
+        public User(string email, string username, string password, string country, TimeZone timeZone,
+            string publicKey)
+        {
+            _username = username;
+            _password = password;
+            _publicKey = publicKey;
+            _email = email;
+            _timeZone = timeZone;
+
+            _tierStatusList = new TierStatusList();
+            _userDocumentsList = new UserDocumentsList();
+        }
+
+        /// <summary>
+        /// Constructor for filling in all the information
         /// </summary>
         /// <param name="username"></param>
         /// <param name="password"></param>
