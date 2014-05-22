@@ -11,6 +11,11 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
     /// </summary>
     public class SecurityKeys
     {
+        //default constructor
+        public SecurityKeys()
+        {
+            
+        }
         /// <summary>
         /// Parameterized Constructor
         /// </summary>
@@ -31,5 +36,16 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         /// Value of the Secret Key
         /// </summary>
         public string SecretKey { get; private set; }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is SecurityKeys)
+            {
+                SecurityKeys keys = obj as SecurityKeys;
+                return ApiKey.Equals(keys.ApiKey, StringComparison.InvariantCultureIgnoreCase) &&
+                       SecretKey.Equals(keys.SecretKey, StringComparison.InvariantCultureIgnoreCase);
+            }
+            return false;
+        }
     }
 }

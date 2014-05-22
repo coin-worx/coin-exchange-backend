@@ -47,5 +47,8 @@
   <object id="UserRepository" type="CoinExchange.IdentityAccess.Infrastructure.Persistence.Repositories.UserRepository, CoinExchange.IdentityAccess.Infrastructure.Persistence">
     <property name="SessionFactory" ref="NHibernateSessionFactory"/>
   </object>
+  <object id="DigitalSignatureInfoRepository" type="CoinExchange.IdentityAccess.Infrastructure.Persistence.Repositories.DigitalSignatureInfoRepository, CoinExchange.IdentityAccess.Infrastructure.Persistence">
+    <property name="SessionFactory" ref="NHibernateSessionFactory"/>
+  </object>
   <tx:attribute-driven/>
 </objects>

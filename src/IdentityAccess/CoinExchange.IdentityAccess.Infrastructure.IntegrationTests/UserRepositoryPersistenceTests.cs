@@ -5,8 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using CoinExchange.IdentityAccess.Domain.Model.Repositories;
 using CoinExchange.IdentityAccess.Domain.Model.UserAggregate;
+using NHibernate;
 using NHibernate.Mapping;
 using NUnit.Framework;
+using Spring.Data.NHibernate;
 
 namespace CoinExchange.IdentityAccess.Infrastructure.IntegrationTests
 {
@@ -15,6 +17,7 @@ namespace CoinExchange.IdentityAccess.Infrastructure.IntegrationTests
     {
         private IPersistenceRepository _persistenceRepository;
         private IUserRepository _userRepository;
+        private ISessionFactory _sessionFactory;
 
         //properties will be injected based on type
         public IUserRepository UserRepository
@@ -39,7 +42,7 @@ namespace CoinExchange.IdentityAccess.Infrastructure.IntegrationTests
             Assert.AreEqual(user.PublicKey, receivedUser.PublicKey);
             Assert.AreEqual(user.Language, receivedUser.Language);
             Assert.AreEqual(user.AutoLogout, receivedUser.AutoLogout);
-            Assert.AreEqual(user.TimeZone,receivedUser.TimeZone);
+            Assert.AreEqual(user.TimeZone.ToString(),receivedUser.TimeZone.ToString());
             Assert.AreEqual(user.Country, receivedUser.Country);
             Assert.AreEqual(user.State, receivedUser.State);
             Assert.AreEqual(user.PhoneNumber, receivedUser.PhoneNumber);

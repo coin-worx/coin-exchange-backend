@@ -3,10 +3,30 @@
 namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
 {
     /// <summary>
-    /// API Key
+    /// Digital Signature Info(Api key and Secret key)
     /// </summary>
     public class DigitalSignatureInfo
     {
+        /// <summary>
+        /// Default Constructor
+        /// </summary>
+        public DigitalSignatureInfo()
+        {
+            
+        }
+
+        public DigitalSignatureInfo(string keyDescription, SecurityKeys securityKeys, string userName, DateTime expirationDate, DateTime startDate, DateTime endDate, DateTime lastModified, bool systemGenerated)
+        {
+            KeyDescription = keyDescription;
+            SecurityKeys = securityKeys;
+            UserName = userName;
+            ExpirationDate = expirationDate;
+            StartDate = startDate;
+            EndDate = endDate;
+            LastModified = lastModified;
+            SystemGenerated = systemGenerated;
+        }
+
         #region Private Fields
 
         private SecurityKeys _securityKeys;
@@ -60,6 +80,13 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
 
         #endregion Methods
 
+        /// <summary>
+        /// Key Description
+        /// </summary>
+        public string KeyDescription
+        {
+            get; private set;
+        }
         /// <summary>
         /// Security Keys
         /// </summary>
