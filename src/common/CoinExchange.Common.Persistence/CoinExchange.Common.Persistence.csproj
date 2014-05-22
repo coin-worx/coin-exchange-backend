@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{CB2CCA81-C266-49A4-9FA0-40416EC2318E}</ProjectGuid>
+    <ProjectGuid>{883065B5-A9C8-4ECD-9317-B39EE17000EC}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CoinExchange.IdentityAccess.Domain.Model</RootNamespace>
-    <AssemblyName>CoinExchange.IdentityAccess.Domain.Model</AssemblyName>
+    <RootNamespace>CoinExchange.Common.Persistence</RootNamespace>
+    <AssemblyName>CoinExchange.Common.Persistence</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -39,26 +39,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Repositories\IUserRepository.cs" />
-    <Compile Include="SecurityKeysAggregate\IActivationKeyGenerationService.cs" />
-    <Compile Include="SecurityKeysAggregate\Permission.cs" />
-    <Compile Include="SecurityKeysAggregate\SecurityKeyPairPermission.cs" />
-    <Compile Include="SecurityKeysAggregate\SecurityKeys.cs" />
-    <Compile Include="SecurityKeysAggregate\DigitalSignatureInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repositories\IPersistenceRepository.cs" />
-    <Compile Include="UserAggregate\IPasswordEncryptionService.cs" />
-    <Compile Include="UserAggregate\Status.cs" />
-    <Compile Include="UserAggregate\Tier.cs" />
-    <Compile Include="UserAggregate\TierStatusList.cs" />
-    <Compile Include="UserAggregate\UserDocument.cs" />
-    <Compile Include="UserAggregate\UserDocumentsList.cs" />
-    <Compile Include="UserAggregate\UserTierStatus.cs" />
-    <Compile Include="UserAggregate\Address.cs" />
-    <Compile Include="UserAggregate\Language.cs" />
-    <Compile Include="UserAggregate\User.cs" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

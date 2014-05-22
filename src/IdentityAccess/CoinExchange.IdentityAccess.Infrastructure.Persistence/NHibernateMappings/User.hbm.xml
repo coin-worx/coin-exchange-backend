@@ -1,0 +1,24 @@
+﻿<?xml version="1.0"?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+assembly="CoinExchange.IdentityAccess.Domain.Model" namespace="CoinExchange.IdentityAccess.Domain.Model.UserAggregate">
+  <class name="User" table="User" lazy="false">
+    <id name="Username" column="UserName">
+      <generator class="assigned" />
+    </id>
+    <property name="Password"  column="Password"/>
+    <property name="PublicKey"  column="PublicKey"/>
+    <property name="Email"  column="Email"/>
+    <property name="Language"  column="Language"/>
+    <property name="TimeZone"  column="TimeZone"/>
+    <property name="AutoLogout" type="TimeSpan" column="AutoLogout"/>
+    <property name="LastLogin"  column="LastLogin"/>
+    <property name="State"  column="State"/>
+    <property name="Country"  column="Country"/>
+    <property name="ActivationKey"  column="ActivationKey"/>
+    <property name="PhoneNumber"  column="PhoneNumber"/>
+    <component name="Address">
+      <property name="Address1" column="Address1"/>
+      <property name="Address2" column="Address2"/>
+    </component>
+    </class>
+</hibernate-mapping>

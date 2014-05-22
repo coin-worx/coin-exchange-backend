@@ -14,12 +14,12 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         /// <summary>
         /// parameterized Constructor
         /// </summary>
-        /// <param name="apiKey"></param>
+        /// <param name="securityKeys"></param>
         /// <param name="permissionId"></param>
         /// <param name="isAllowed"></param>
-        public SecurityKeyPairPermission(ApiKey apiKey, Permission permissionId, bool isAllowed)
+        public SecurityKeyPairPermission(SecurityKeys securityKeys, Permission permissionId, bool isAllowed)
         {
-            ApiKey = apiKey;
+            SecurityKeys = securityKeys;
             PermissionId = permissionId;
             IsAllowed = isAllowed;
         }
@@ -27,7 +27,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         /// <summary>
         /// API Key
         /// </summary>
-        public ApiKey ApiKey { get; private set; }
+        public SecurityKeys SecurityKeys { get; private set; }
 
         /// <summary>
         /// Permission ID

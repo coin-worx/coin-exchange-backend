@@ -105,5 +105,27 @@ CREATE TABLE `trade` (
   PRIMARY KEY (`TradeId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+/*Table structure for table `user` */
+
+DROP TABLE IF EXISTS `user`;
+
+CREATE TABLE `user` (
+  `UserName` varchar(50) NOT NULL,
+  `Password` varchar(100) DEFAULT NULL,
+  `PublicKey` varchar(100) DEFAULT NULL,
+  `Email` varchar(50) DEFAULT NULL,
+  `Language` varchar(100) DEFAULT NULL,
+  `TimeZone` varchar(100) DEFAULT NULL,
+  `AutoLogout` bigint(20) DEFAULT NULL,
+  `LastLogin` datetime DEFAULT NULL,
+  `ActivationKey` varchar(50) DEFAULT NULL,
+  `Country` varchar(50) DEFAULT NULL,
+  `State` varchar(50) DEFAULT NULL,
+  `PhoneNumber` varchar(50) DEFAULT NULL,
+  `Address1` varchar(100) DEFAULT NULL,
+  `Address2` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`UserName`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

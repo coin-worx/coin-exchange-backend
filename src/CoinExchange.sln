@@ -157,6 +157,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinExchange.IdentityAccess
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinExchange.IdentityAccess.Infrastructure.Services", "IdentityAccess\CoinExchange.IdentityAccess.Infrastructure.Services\CoinExchange.IdentityAccess.Infrastructure.Services.csproj", "{4921A0E0-8197-4D15-932B-06D667BF9275}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinExchange.IdentityAccess.Infrastructure.Persistence", "IdentityAccess\CoinExchange.IdentityAccess.Infrastructure.Persistence\CoinExchange.IdentityAccess.Infrastructure.Persistence.csproj", "{41EC439D-9E31-4911-B1A6-E5F0A8C01637}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -363,6 +365,10 @@ Global
 		{4921A0E0-8197-4D15-932B-06D667BF9275}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4921A0E0-8197-4D15-932B-06D667BF9275}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4921A0E0-8197-4D15-932B-06D667BF9275}.Release|Any CPU.Build.0 = Release|Any CPU
+		{41EC439D-9E31-4911-B1A6-E5F0A8C01637}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{41EC439D-9E31-4911-B1A6-E5F0A8C01637}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{41EC439D-9E31-4911-B1A6-E5F0A8C01637}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{41EC439D-9E31-4911-B1A6-E5F0A8C01637}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -426,6 +432,7 @@ Global
 		{22A8139A-B784-4515-9F82-D50660C0636C} = {4005EF1F-B428-41ED-8185-0E97FFCC33EB}
 		{0F18B07C-B8FA-4A0A-8CB1-FAE9BEEE8969} = {4005EF1F-B428-41ED-8185-0E97FFCC33EB}
 		{4921A0E0-8197-4D15-932B-06D667BF9275} = {4005EF1F-B428-41ED-8185-0E97FFCC33EB}
+		{41EC439D-9E31-4911-B1A6-E5F0A8C01637} = {4005EF1F-B428-41ED-8185-0E97FFCC33EB}
 		{CB2CCA81-C266-49A4-9FA0-40416EC2318E} = {2E89993D-0127-475B-B7C9-8B6A97DB67CC}
 		{282ABDCD-5E77-4662-8439-E0669FE7FAA1} = {2E89993D-0127-475B-B7C9-8B6A97DB67CC}
 		{B481B48C-74E8-4743-A8F5-30B8D7C90C25} = {2E89993D-0127-475B-B7C9-8B6A97DB67CC}

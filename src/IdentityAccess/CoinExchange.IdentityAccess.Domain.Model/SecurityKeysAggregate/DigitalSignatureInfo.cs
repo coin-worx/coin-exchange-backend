@@ -5,12 +5,11 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
     /// <summary>
     /// API Key
     /// </summary>
-    public class SecurityKeysPair
+    public class DigitalSignatureInfo
     {
         #region Private Fields
 
-        private ApiKey _apiKey;
-        private SecretKey _secretKey;
+        private SecurityKeys _securityKeys;
 
         #endregion Private Fields
 
@@ -19,28 +18,13 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         /// <summary>
         /// Change the value of the API Key
         /// </summary>
-        /// <param name="apiKey"></param>
+        /// <param name="securityKeys"> </param>
         /// <returns></returns>
-        public bool ChangeApiKeyValue(ApiKey apiKey)
+        public bool ChangeApiKeyValue(SecurityKeys securityKeys)
         {
-            if (IsApiKeyValid(apiKey))
+            if (IsApiKeyValid(securityKeys.ApiKey) && IsSecretKeyValid(securityKeys.SecretKey))
             {
-                _apiKey = apiKey;
-                return true;
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// Change the value of the Secret Key
-        /// </summary>
-        /// <param name="secretKey"></param>
-        /// <returns></returns>
-        public bool ChangeSecretKeyValue(SecretKey secretKey)
-        {
-            if (IsSecretKeyValid(secretKey))
-            {
-                _secretKey = secretKey;
+                _securityKeys = securityKeys;
                 return true;
             }
             return false;
@@ -51,9 +35,9 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         /// </summary>
         /// <param name="apiKey"></param>
         /// <returns></returns>
-        private bool IsApiKeyValid(ApiKey apiKey)
+        private bool IsApiKeyValid(string apiKey)
         {
-            if (apiKey != null && !string.IsNullOrEmpty(apiKey.Value))
+            if (!string.IsNullOrEmpty(apiKey))
             {
                 return true;
             }
@@ -65,9 +49,9 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         /// </summary>
         /// <param name="secretKey"></param>
         /// <returns></returns>
-        private bool IsSecretKeyValid(SecretKey secretKey)
+        private bool IsSecretKeyValid(string secretKey)
         {
-            if (secretKey != null && !string.IsNullOrEmpty(secretKey.Value))
+            if (!string.IsNullOrEmpty(secretKey))
             {
                 return true;
             }
@@ -77,11 +61,14 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         #endregion Methods
 
         /// <summary>
-        /// API Key
+        /// Security Keys
         /// </summary>
-        public ApiKey ApiKey { get { return _apiKey; } private set { _apiKey = value; } }
+        public SecurityKeys SecurityKeys { get { return _securityKeys; } set { _securityKeys = value; } }
 
-        public SecretKey SecretKey { get { return _secretKey; } set { _secretKey = value; } }
+        /// <summary>
+        /// Username
+        /// </summary>
+        public string UserName { get; private set; }
 
         /// <summary>
         /// Expiration Date
