@@ -69,6 +69,7 @@
   <ItemGroup>
     <Content Include="Config\ApplicationServicesConfig-Test.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
   <ItemGroup>
