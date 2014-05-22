@@ -26,6 +26,23 @@ CREATE TABLE `currencypair` (
   PRIMARY KEY (`CurrencyPairName`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
 
+/*Table structure for table `digitalsignatureinfo` */
+
+DROP TABLE IF EXISTS `digitalsignatureinfo`;
+
+CREATE TABLE `digitalsignatureinfo` (
+  `KeyDescription` varchar(50) NOT NULL,
+  `ApiKey` varchar(100) DEFAULT NULL,
+  `SecretKey` varchar(100) DEFAULT NULL,
+  `ExpirationDate` datetime DEFAULT NULL,
+  `StartDate` datetime DEFAULT NULL,
+  `EndDate` datetime DEFAULT NULL,
+  `LastModified` datetime DEFAULT NULL,
+  `SystemGenerated` tinyint(1) DEFAULT NULL,
+  `UserName` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`KeyDescription`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 /*Table structure for table `ohlc` */
 
 DROP TABLE IF EXISTS `ohlc`;
@@ -60,6 +77,16 @@ CREATE TABLE `order` (
   `OpenQuantity` decimal(10,5) DEFAULT NULL,
   PRIMARY KEY (`OrderId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Table structure for table `permission` */
+
+DROP TABLE IF EXISTS `permission`;
+
+CREATE TABLE `permission` (
+  `PermissionId` int(11) NOT NULL AUTO_INCREMENT,
+  `PermissionName` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`PermissionId`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 
 /*Table structure for table `tickerinfo` */
 
@@ -115,7 +142,7 @@ CREATE TABLE `user` (
   `PublicKey` varchar(100) DEFAULT NULL,
   `Email` varchar(50) DEFAULT NULL,
   `Language` varchar(100) DEFAULT NULL,
-  `TimeZone` varchar(100) DEFAULT NULL,
+  `TimeZone` mediumblob,
   `AutoLogout` bigint(20) DEFAULT NULL,
   `LastLogin` datetime DEFAULT NULL,
   `ActivationKey` varchar(50) DEFAULT NULL,

@@ -1,0 +1,19 @@
+﻿<?xml version="1.0"?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+assembly="CoinExchange.IdentityAccess.Domain.Model" namespace="CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate">
+  <class name="DigitalSignatureInfo" table="DigitalSignatureInfo" lazy="false">
+    <id name="KeyDescription" column="KeyDescription">
+      <generator class="assigned" />
+    </id>
+    <property name="UserName"  column="UserName"/>
+    <property name="ExpirationDate"  column="ExpirationDate"/>
+    <property name="StartDate"  column="StartDate"/>
+    <property name="EndDate"  column="EndDate"/>
+    <property name="LastModified"  column="LastModified"/>
+    <property name="SystemGenerated" column="SystemGenerated"/>
+    <component name="SecurityKeys">
+      <property name="ApiKey" column="ApiKey"/>
+      <property name="SecretKey" column="SecretKey"/>
+    </component>
+  </class>
+</hibernate-mapping>
