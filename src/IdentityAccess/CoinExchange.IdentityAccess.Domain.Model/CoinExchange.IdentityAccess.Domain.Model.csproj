@@ -49,7 +49,6 @@
     <Compile Include="Repositories\IPersistenceRepository.cs" />
     <Compile Include="UserAggregate\Status.cs" />
     <Compile Include="UserAggregate\Tier.cs" />
-    <Compile Include="UserAggregate\TierLevel.cs" />
     <Compile Include="UserAggregate\TierStatusList.cs" />
     <Compile Include="UserAggregate\UserDocument.cs" />
     <Compile Include="UserAggregate\UserDocumentsList.cs" />
