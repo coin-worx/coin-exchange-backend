@@ -30,11 +30,33 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Antlr3.Runtime, Version=3.1.3.42154, Culture=neutral, PublicKeyToken=3a9cab8f8d22bfb7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Antlr.3.1.3.42154\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Core">
+      <HintPath>..\..\packages\Castle.Core.2.5.2\lib\NET35\Castle.Core.dll</HintPath>
+    </Reference>
     <Reference Include="Common.Logging">
       <HintPath>..\..\packages\Common.Logging.1.2.0\lib\1.0\Common.Logging.dll</HintPath>
     </Reference>
+    <Reference Include="Iesi.Collections, Version=1.0.1.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Iesi.Collections.1.0.1\lib\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate, Version=3.0.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\NHibernate.3.0.0.4000\lib\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate.ByteCode.Castle">
+      <HintPath>..\..\packages\NHibernate.3.0.0.4000\lib\NHibernate.ByteCode.Castle.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Remotion.Data.Linq, Version=1.13.41.2, Culture=neutral, PublicKeyToken=cab60358ab4081ea, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\NHibernate.3.0.0.4000\lib\Remotion.Data.Linq.dll</HintPath>
     </Reference>
     <Reference Include="Spring.Aop">
       <HintPath>..\..\packages\Spring.Aop.1.3.2\lib\net40\Spring.Aop.dll</HintPath>
@@ -45,7 +67,11 @@
     <Reference Include="Spring.Data">
       <HintPath>..\..\packages\Spring.Data.1.3.2\lib\net40\Spring.Data.dll</HintPath>
     </Reference>
+    <Reference Include="Spring.Data.NHibernate30">
+      <HintPath>..\..\packages\Spring.Data.NHibernate30.1.3.2\lib\net40\Spring.Data.NHibernate30.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -54,6 +80,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DigitalSignatureServiceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegistrationApplicationServiceTests.cs" />
   </ItemGroup>
@@ -62,9 +89,21 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\common\CoinExchange.Common.Tests\CoinExchange.Common.Tests.csproj">
+      <Project>{bbf58888-03cd-47f4-aeb9-bc6070d97920}</Project>
+      <Name>CoinExchange.Common.Tests</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CoinExchange.IdentityAccess.Application\CoinExchange.IdentityAccess.Application.csproj">
       <Project>{523daca3-bec6-45e9-90d4-8f6f8a1266d7}</Project>
       <Name>CoinExchange.IdentityAccess.Application</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CoinExchange.IdentityAccess.Domain.Model\CoinExchange.IdentityAccess.Domain.Model.csproj">
+      <Project>{cb2cca81-c266-49a4-9fa0-40416ec2318e}</Project>
+      <Name>CoinExchange.IdentityAccess.Domain.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CoinExchange.IdentityAccess.Infrastructure.Persistence\CoinExchange.IdentityAccess.Infrastructure.Persistence.csproj">
+      <Project>{41ec439d-9e31-4911-b1a6-e5f0a8c01637}</Project>
+      <Name>CoinExchange.IdentityAccess.Infrastructure.Persistence</Name>
     </ProjectReference>
     <ProjectReference Include="..\CoinExchange.IdentityAccess.Infrastructure.Services\CoinExchange.IdentityAccess.Infrastructure.Services.csproj">
       <Project>{4921a0e0-8197-4d15-932b-06d667bf9275}</Project>

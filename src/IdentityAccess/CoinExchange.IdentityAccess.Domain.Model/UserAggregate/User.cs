@@ -36,14 +36,23 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         /// <summary>
         /// Constructor for Sign Up
         /// </summary>
+        /// <param name="email"></param>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        /// <param name="country"></param>
+        /// <param name="timeZone"></param>
+        /// <param name="publicKey"></param>
+        /// <param name="activationKey"></param>
         public User(string email, string username, string password, string country, TimeZone timeZone,
-            string publicKey)
+            string publicKey, string activationKey)
         {
             _username = username;
             _password = password;
             _publicKey = publicKey;
+            _country = country;
             _email = email;
             _timeZone = timeZone;
+            _activationKey = activationKey;
 
             _tierStatusList = new TierStatusList();
             _userDocumentsList = new UserDocumentsList();
@@ -61,8 +70,13 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         /// <param name="timeZone"></param>
         /// <param name="autoLogout"></param>
         /// <param name="lastLogin"></param>
+        /// <param name="country"> </param>
+        /// <param name="state"> </param>
+        /// <param name="phoneNumber"> </param>
+        /// <param name="activationKey"> </param>
         public User(string username, string password, string publicKey, Address address, string email, Language language,
-            TimeZone timeZone, TimeSpan autoLogout, DateTime lastLogin,string country, string state, string phoneNumber,string activationKey)
+            TimeZone timeZone, TimeSpan autoLogout, DateTime lastLogin, string country, string state, string phoneNumber, 
+            string activationKey)
         {
              Username = username;
             _password = password;

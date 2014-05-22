@@ -21,7 +21,7 @@ namespace CoinExchange.IdentityAccess.Application.Registration
         /// <param name="timeZone"></param>
         /// <param name="publicKey"></param>
         /// <returns></returns>
-        bool CreateAccount(string email, string username, string password, string country, TimeZone timeZone,
+        string CreateAccount(string email, string username, string password, string country, TimeZone timeZone,
             string publicKey);
     }
 }

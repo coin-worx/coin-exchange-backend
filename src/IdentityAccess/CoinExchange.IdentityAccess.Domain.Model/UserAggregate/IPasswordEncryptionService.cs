@@ -17,5 +17,14 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         /// <param name="password"></param>
         /// <returns></returns>
         string EncryptPassword(string password);
+
+        /// <summary>
+        /// Verifies if the password entered by the user will become the same as the hashed password after hashing, returns 
+        /// true if yes
+        /// </summary>
+        /// <param name="enteredPassword"></param>
+        /// <param name="hashedPassword"></param>
+        /// <returns></returns>
+        bool VerifyPassword(string enteredPassword, string hashedPassword);
     }
 }

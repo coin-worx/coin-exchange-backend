@@ -5,6 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate;
+using CoinExchange.IdentityAccess.Domain.Model.UserAggregate;
 
 namespace CoinExchange.IdentityAccess.Infrastructure.Services
 {

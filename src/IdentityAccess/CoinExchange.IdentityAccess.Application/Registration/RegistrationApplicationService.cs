@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CoinExchange.IdentityAccess.Domain.Model.Repositories;
 using CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate;
 using CoinExchange.IdentityAccess.Domain.Model.UserAggregate;
 
@@ -13,14 +14,16 @@ namespace CoinExchange.IdentityAccess.Application.Registration
     /// </summary>
     public class RegistrationApplicationService : IRegistrationApplicationService
     {
+        private IPersistenceRepository _persistenceRepository;
         private IPasswordEncryptionService _passwordEncryptionService;
         private IActivationKeyGenerationService _activationKeyGenerationService;
 
         /// <summary>
         /// Parameterized Constructor
         /// </summary>
-        public RegistrationApplicationService(IPasswordEncryptionService passwordEncryptionService, IActivationKeyGenerationService activationKeyGenerationService)
+        public RegistrationApplicationService(IPersistenceRepository persistenceRepository, IPasswordEncryptionService passwordEncryptionService, IActivationKeyGenerationService activationKeyGenerationService)
         {
+            _persistenceRepository = persistenceRepository;
             _passwordEncryptionService = passwordEncryptionService;
             _activationKeyGenerationService = activationKeyGenerationService;
         }
@@ -35,12 +38,19 @@ namespace CoinExchange.IdentityAccess.Application.Registration
         /// <param name="timeZone"></param>
         /// <param name="publicKey"></param>
         /// <returns></returns>
-        public bool CreateAccount(string email, string username, string password, string country, TimeZone timeZone, 
+        public string CreateAccount(string email, string username, string password, string country, TimeZone timeZone, 
             string publicKey)
         {
-            User user = new User(email, username, password, country, timeZone, publicKey);
-            // ToDo: Send to the repository
-            return false;
+            // Hash the Password
+            string hashedPassword = _passwordEncryptionService.EncryptPassword(password);
+            // Generate new activation key
+            string activationKey = _activationKeyGenerationService.GenerateNewActivationKey();
+            // Create new user
+            User user = new User(email, username, hashedPassword, country, timeZone, publicKey, activationKey);
+            // Save to persistence
+            _persistenceRepository.SaveUpdate(user);
+            // return Activation Key
+            return activationKey;
         }
     }
 }

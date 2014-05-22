@@ -40,7 +40,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Repositories\IUserRepository.cs" />
-    <Compile Include="SecurityKeysAggregate\IActivationKeyGenerationService.cs" />
+    <Compile Include="SecurityKeysAggregate\ISecurityKeysGenerationService.cs" />
+    <Compile Include="UserAggregate\IActivationKeyGenerationService.cs" />
     <Compile Include="SecurityKeysAggregate\Permission.cs" />
     <Compile Include="SecurityKeysAggregate\SecurityKeyPairPermission.cs" />
     <Compile Include="SecurityKeysAggregate\SecurityKeys.cs" />

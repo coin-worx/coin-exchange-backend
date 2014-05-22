@@ -46,6 +46,8 @@
     <Compile Include="Authentication\IAuthenticationService.cs" />
     <Compile Include="Authentication\Nonce.cs" />
     <Compile Include="Authentication\HashHelper.cs" />
+    <Compile Include="DigitalSignature\DigitalSignatureApplicationService.cs" />
+    <Compile Include="DigitalSignature\IDigitalSignatureApplicationService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Registration\IRegistrationApplicationService.cs" />
     <Compile Include="Registration\RegistrationApplicationService.cs" />
@@ -68,6 +70,9 @@
     <Content Include="Config\ApplicationServicesConfig-Test.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="NewFolder1\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -5,6 +5,6 @@
     /// </summary>
     public interface IPersistenceRepository
     {
-        void SaveUpdate(object Tentity);
+        void SaveUpdate(object entity);
     }
 }

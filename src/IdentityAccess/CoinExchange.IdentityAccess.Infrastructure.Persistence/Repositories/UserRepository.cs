@@ -14,7 +14,7 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Persistence.Repositories
     /// User repository implementation
     /// </summary>
     [Repository]
-    public class UserRepository:NHibernateSessionFactory,IUserRepository
+    public class UserRepository : NHibernateSessionFactory, IUserRepository
     {
         [Transaction(ReadOnly = true)]
         public User GetUserByUserName(string username)
