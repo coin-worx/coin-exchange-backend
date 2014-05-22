@@ -24,7 +24,7 @@ namespace CoinExchange.Rest.WebHost.App_Start
             );
 
             //return Json format
-            var appXmlType = config.Formatters.XmlFormatter.SupportedMediaTypes.FirstOrDefault(t => t.MediaType == "application/xml");
+            var appXmlType = config.Formatters.XmlFormatter.SupportedMediaTypes.FirstOrDefault(t => t.MediaType == "application/json");
             config.Formatters.XmlFormatter.SupportedMediaTypes.Remove(appXmlType);
 
             //add authentication handler

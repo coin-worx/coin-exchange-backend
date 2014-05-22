@@ -22,7 +22,17 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         private DateTime _lastLogin;
         private TierStatusList _tierStatusList;
         private UserDocumentsList _userDocumentsList;
-        
+        private string _phoneNumber;
+        private string _country;
+        private string _state;
+        private string _activationKey;
+
+        //default constructor
+        public User()
+        {
+            
+        }
+
         /// <summary>
         /// Parameterized Constructor
         /// </summary>
@@ -36,9 +46,9 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         /// <param name="autoLogout"></param>
         /// <param name="lastLogin"></param>
         public User(string username, string password, string publicKey, Address address, string email, Language language,
-            TimeZone timeZone, TimeSpan autoLogout, DateTime lastLogin)
+            TimeZone timeZone, TimeSpan autoLogout, DateTime lastLogin,string country, string state, string phoneNumber,string activationKey)
         {
-            _username = username;
+             Username = username;
             _password = password;
             _publicKey = publicKey;
             _address = address;
@@ -47,6 +57,10 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
             _timeZone = timeZone;
             _autoLogout = autoLogout;
             _lastLogin = lastLogin;
+            Country = country;
+            PhoneNumber = phoneNumber;
+            State = state;
+            ActivationKey = activationKey;
 
             _tierStatusList = new TierStatusList();
             _userDocumentsList = new UserDocumentsList();
@@ -75,9 +89,9 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         }
 
         /// <summary>
-        /// Username
+        /// Username (Once set cannot be changed)
         /// </summary>
-        public string Username { get { return _username; } set { _username = value; } }
+        public string Username { get { return _username; } private set { _username = value; } }
 
         /// <summary>
         /// Password
@@ -118,6 +132,42 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         /// Last Login
         /// </summary>
         public DateTime LastLogin { get { return _lastLogin; } set { _lastLogin = value; } }
+
+        /// <summary>
+        /// Country State of user
+        /// </summary>
+        public string State
+        {
+            get { return _state; }
+            set { _state = value; }
+        }
+
+        /// <summary>
+        /// Residence Country
+        /// </summary>
+        public string Country
+        {
+            get { return _country; }
+            set { _country = value; }
+        }
+
+        /// <summary>
+        /// Phone Number
+        /// </summary>
+        public string PhoneNumber
+        {
+            get { return _phoneNumber; }
+            set { _phoneNumber = value; }
+        }
+
+        public string ActivationKey
+        {
+            get { return _activationKey; }
+            set
+            {
+                _activationKey = value;
+            }
+        }
 
         /// <summary>
         /// List of the Tier associated with this user
