@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CoinExchange.IdentityAccess.Application.RegistrationServices.Commands;
 using CoinExchange.IdentityAccess.Domain.Model.Repositories;
-using CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate;
 using CoinExchange.IdentityAccess.Domain.Model.UserAggregate;
 
-namespace CoinExchange.IdentityAccess.Application.Registration
+namespace CoinExchange.IdentityAccess.Application.RegistrationServices
 {
     /// <summary>
     /// Registration Application Service
@@ -31,22 +26,17 @@ namespace CoinExchange.IdentityAccess.Application.Registration
         /// <summary>
         /// Request from the client to create a new account
         /// </summary>
-        /// <param name="email"></param>
-        /// <param name="username"></param>
-        /// <param name="password"></param>
-        /// <param name="country"></param>
-        /// <param name="timeZone"></param>
-        /// <param name="publicKey"></param>
+        /// <param name="signupUserCommand"> </param>
         /// <returns></returns>
-        public string CreateAccount(string email, string username, string password, string country, TimeZone timeZone, 
-            string publicKey)
+        public string CreateAccount(SignupUserCommand signupUserCommand)
         {
             // Hash the Password
-            string hashedPassword = _passwordEncryptionService.EncryptPassword(password);
+            string hashedPassword = _passwordEncryptionService.EncryptPassword(signupUserCommand.Password);
             // Generate new activation key
             string activationKey = _activationKeyGenerationService.GenerateNewActivationKey();
             // Create new user
-            User user = new User(email, username, hashedPassword, country, timeZone, publicKey, activationKey);
+            User user = new User(signupUserCommand.Email, signupUserCommand.Username, hashedPassword,
+                signupUserCommand.Country, signupUserCommand.TimeZone, signupUserCommand.PgpPublicKey, activationKey);
             // Save to persistence
             _persistenceRepository.SaveUpdate(user);
             // return Activation Key

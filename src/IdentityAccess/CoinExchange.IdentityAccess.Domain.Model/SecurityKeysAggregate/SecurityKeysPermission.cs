@@ -9,12 +9,12 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
     /// <summary>
     /// Represents the Permissions for a pair of API Key <-> SecretKey
     /// </summary>
-    public class DigitalSignaturePermission
+    public class SecurityKeysPermission
     {
         /// <summary>
         /// Default constructor
         /// </summary>
-        public DigitalSignaturePermission()
+        public SecurityKeysPermission()
         {
             
         }
@@ -25,9 +25,9 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         /// <param name="securityKeys"></param>
         /// <param name="permissionId"></param>
         /// <param name="isAllowed"></param>
-        public DigitalSignaturePermission(DigitalSignature securityKeys, Permission permissionId, bool isAllowed)
+        public SecurityKeysPermission(SecurityKeysPair securityKeys, Permission permissionId, bool isAllowed)
         {
-            ApiKey = securityKeys.ApiKey;
+            ApiKey = securityKeys.ApiKey.Value;
             Permission = permissionId;
             IsAllowed = isAllowed;
         }

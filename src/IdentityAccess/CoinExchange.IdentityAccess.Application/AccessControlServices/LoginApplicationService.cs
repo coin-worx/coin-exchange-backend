@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Management.Instrumentation;
-using System.Text;
-using System.Threading.Tasks;
+using CoinExchange.IdentityAccess.Application.AccessControlServices.Commands;
 using CoinExchange.IdentityAccess.Domain.Model.Repositories;
 using CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate;
 using CoinExchange.IdentityAccess.Domain.Model.UserAggregate;
 
-namespace CoinExchange.IdentityAccess.Application.AccessControl
+namespace CoinExchange.IdentityAccess.Application.AccessControlServices
 {
     /// <summary>
     /// Serves the login operation(s)
@@ -36,27 +33,25 @@ namespace CoinExchange.IdentityAccess.Application.AccessControl
         /// <summary>
         /// Login call by the user, logs user in if username and password are correct
         /// </summary>
-        /// <param name="username"></param>
-        /// <param name="password"></param>
         /// <returns></returns>
-        public ValidationEssentials Login(string username, string password)
+        public UserValidationEssentials Login(LoginCommand loginCommand)
         {
-            User user = _userRepository.GetUserByUserName(username);
+            User user = _userRepository.GetUserByUserName(loginCommand.Username);
             if (user != null)
             {
-                if(_passwordEncryptionService.VerifyPassword(password, user.Password))
+                if(_passwordEncryptionService.VerifyPassword(loginCommand.Password, user.Password))
                 {
-                    return new ValidationEssentials(_securityKeysGenerationService.GenerateNewSecurityKeys(),
+                    return new UserValidationEssentials(_securityKeysGenerationService.GenerateNewSecurityKeys(),
                         user.AutoLogout);
                 }
                 else
                 {
-                    throw new Exception(string.Format("Password incorrect for username: {0}", username));
+                    throw new Exception(string.Format("Password incorrect for username: {0}", loginCommand.Username));
                 }
             }
             else
             {
-                throw new InstanceNotFoundException(string.Format("No user could be found for the username: {0}", username));
+                throw new InstanceNotFoundException(string.Format("No user could be found for the username: {0}", loginCommand.Username));
             }
             return null;
         }

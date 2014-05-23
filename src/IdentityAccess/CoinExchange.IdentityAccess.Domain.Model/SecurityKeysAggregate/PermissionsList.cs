@@ -10,15 +10,15 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
     /// <summary>
     /// List for storing the Permissions
     /// </summary>
-    public class PermissionsList : IEnumerable<DigitalSignaturePermission>
+    public class PermissionsList : IEnumerable<SecurityKeysPermission>
     {
-        private List<DigitalSignaturePermission> _permissionList = new List<DigitalSignaturePermission>();
+        private List<SecurityKeysPermission> _permissionList = new List<SecurityKeysPermission>();
 
         /// <summary>
         /// Add an element
         /// </summary>
         /// <returns></returns>
-        internal bool AddPermission(DigitalSignaturePermission digitalSignaturePermission)
+        internal bool AddPermission(SecurityKeysPermission digitalSignaturePermission)
         {
             _permissionList.Add(digitalSignaturePermission);
             return true;
@@ -29,12 +29,12 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         /// </summary>
         /// <param name="digitalSignaturePermission"></param>
         /// <returns></returns>
-        internal bool RemoveTierStatus(DigitalSignaturePermission digitalSignaturePermission)
+        internal bool RemoveTierStatus(SecurityKeysPermission digitalSignaturePermission)
         {
             _permissionList.Remove(digitalSignaturePermission);
             return true;
         }
-        public IEnumerator<DigitalSignaturePermission> GetEnumerator()
+        public IEnumerator<SecurityKeysPermission> GetEnumerator()
         {
             foreach (var permission in _permissionList)
             {

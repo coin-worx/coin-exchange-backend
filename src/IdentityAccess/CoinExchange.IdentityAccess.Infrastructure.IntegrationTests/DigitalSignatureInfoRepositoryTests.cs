@@ -13,7 +13,7 @@ namespace CoinExchange.IdentityAccess.Infrastructure.IntegrationTests
     public class DigitalSignatureInfoRepositoryTests:AbstractConfiguration
     {
         private IPersistenceRepository _persistenceRepository;
-        private IDigitalSignatureInfoRepository _digitalSignatureInfoRepository;
+        private ISecurityKeysRepository _digitalSignatureInfoRepository;
 
         //properties will be injected based on type
         public IPersistenceRepository PersistenceRepository
@@ -21,7 +21,7 @@ namespace CoinExchange.IdentityAccess.Infrastructure.IntegrationTests
             set { _persistenceRepository = value; }
         }
 
-        public IDigitalSignatureInfoRepository DigitalSignatureInfoRepository
+        public ISecurityKeysRepository DigitalSignatureInfoRepository
         {
             set { _digitalSignatureInfoRepository = value; }
         }
@@ -30,13 +30,13 @@ namespace CoinExchange.IdentityAccess.Infrastructure.IntegrationTests
         [Category("Integration")]
         public void CreateDigitalSignatureInfo_PersistAndReadFromDatabaseByDescriptionKey_SavedAndReadInfoShouldBeSame()
         {
-            DigitalSignature keys=new DigitalSignature("123456","secretkey");
-            DigitalSignatureInfo digitalSignatureInfo=new DigitalSignatureInfo("1",keys,"user1",DateTime.Today.AddDays(1),DateTime.Today.AddDays(-20),DateTime.Today,DateTime.Now,true);
+            SecurityKeysPair digitalSignatureInfo=new SecurityKeysPair("1", new ApiKey("123456"), new SecretKey("secretkey"),"user1",DateTime.Today.AddDays(1),DateTime.Today.AddDays(-20),DateTime.Today,DateTime.Now,true);
             _persistenceRepository.SaveUpdate(digitalSignatureInfo);
             var readInfo = _digitalSignatureInfoRepository.GetByKeyDescription("1");
             Assert.NotNull(readInfo);
             Assert.AreEqual(readInfo.KeyDescription,"1");
-            Assert.AreEqual(readInfo.SecurityKeys, keys);
+            Assert.AreEqual(readInfo.ApiKey.Value, "123456");
+            Assert.AreEqual(readInfo.SecretKey.Value, "secretkey");
             Assert.AreEqual(readInfo.UserName, digitalSignatureInfo.UserName);
             Assert.AreEqual(readInfo.SystemGenerated, digitalSignatureInfo.SystemGenerated);
             Assert.AreEqual(readInfo.ExpirationDate, digitalSignatureInfo.ExpirationDate);
@@ -47,13 +47,13 @@ namespace CoinExchange.IdentityAccess.Infrastructure.IntegrationTests
         [Category("Integration")]
         public void CreateDigitalSignatureInfo_PersistAndReadFromDatabaseByApiKey_SavedAndReadInfoShouldBeSame()
         {
-            DigitalSignature keys = new DigitalSignature("123456", "secretkey");
-            DigitalSignatureInfo digitalSignatureInfo = new DigitalSignatureInfo("1", keys, "user1", DateTime.Today.AddDays(1), DateTime.Today.AddDays(-20), DateTime.Today, DateTime.Now, true);
+            SecurityKeysPair digitalSignatureInfo = new SecurityKeysPair("1", new ApiKey("123456"), new SecretKey("secretkey"), "user1", DateTime.Today.AddDays(1), DateTime.Today.AddDays(-20), DateTime.Today, DateTime.Now, true);
             _persistenceRepository.SaveUpdate(digitalSignatureInfo);
             var readInfo = _digitalSignatureInfoRepository.GetByApiKey("123456");
             Assert.NotNull(readInfo);
             Assert.AreEqual(readInfo.KeyDescription, "1");
-            Assert.AreEqual(readInfo.SecurityKeys, keys);
+            Assert.AreEqual(readInfo.ApiKey.Value, "123456");
+            Assert.AreEqual(readInfo.SecretKey.Value, "secretkey");
             Assert.AreEqual(readInfo.UserName, digitalSignatureInfo.UserName);
             Assert.AreEqual(readInfo.SystemGenerated, digitalSignatureInfo.SystemGenerated);
             Assert.AreEqual(readInfo.ExpirationDate, digitalSignatureInfo.ExpirationDate);

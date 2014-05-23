@@ -11,9 +11,9 @@ namespace CoinExchange.IdentityAccess.Domain.Model.Repositories
     /// <summary>
     /// Digital signature info repository
     /// </summary>
-    public interface IDigitalSignatureInfoRepository
+    public interface ISecurityKeysRepository
     {
-        DigitalSignatureInfo GetByKeyDescription(string keyDescription);
-        DigitalSignatureInfo GetByApiKey(string apiKey);
+        SecurityKeysPair GetByKeyDescription(string keyDescription);
+        SecurityKeysPair GetByApiKey(string apiKey);
     }
 }

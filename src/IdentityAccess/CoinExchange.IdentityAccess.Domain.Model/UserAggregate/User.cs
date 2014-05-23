@@ -13,7 +13,6 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
     {
         private string _username;
         private string _password;
-        private string _publicKey;
         private string _pgpPublicKey;
         private string _address1;
         private string _address2;
@@ -51,7 +50,6 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
             _username = username;
             _password = password;
             _pgpPublicKey = pgpPublicKey;
-            _publicKey = _username.GetHashCode().ToString("x");
             _country = country;
             _email = email;
             _timeZone = timeZone;
