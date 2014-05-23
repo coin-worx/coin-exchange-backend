@@ -14,6 +14,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         private string _username;
         private string _password;
         private string _publicKey;
+        private string _pgpPublicKey;
         private Address _address;
         private string _email;
         private Language _language;
@@ -41,14 +42,15 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         /// <param name="password"></param>
         /// <param name="country"></param>
         /// <param name="timeZone"></param>
-        /// <param name="publicKey"></param>
+        /// <param name="pgpPublicKey"></param>
         /// <param name="activationKey"></param>
         public User(string email, string username, string password, string country, TimeZone timeZone,
-            string publicKey, string activationKey)
+            string pgpPublicKey, string activationKey)
         {
             _username = username;
             _password = password;
-            _publicKey = publicKey;
+            _pgpPublicKey = pgpPublicKey;
+            _publicKey = _username.GetHashCode().ToString("x");
             _country = country;
             _email = email;
             _timeZone = timeZone;
@@ -63,7 +65,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         /// </summary>
         /// <param name="username"></param>
         /// <param name="password"></param>
-        /// <param name="publicKey"></param>
+        /// <param name="pgpPublicKey"></param>
         /// <param name="address"></param>
         /// <param name="email"></param>
         /// <param name="language"></param>
@@ -74,13 +76,13 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         /// <param name="state"> </param>
         /// <param name="phoneNumber"> </param>
         /// <param name="activationKey"> </param>
-        public User(string username, string password, string publicKey, Address address, string email, Language language,
+        public User(string username, string password, string pgpPublicKey, Address address, string email, Language language,
             TimeZone timeZone, TimeSpan autoLogout, DateTime lastLogin, string country, string state, string phoneNumber, 
             string activationKey)
         {
              Username = username;
             _password = password;
-            _publicKey = publicKey;
+            _pgpPublicKey = pgpPublicKey;
             _address = address;
             _email = email;
             _language = language;
@@ -131,7 +133,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         /// <summary>
         /// Public Key
         /// </summary>
-        public string PublicKey { get { return _publicKey; } set { _publicKey = value; } }
+        public string PublicKey { get { return _pgpPublicKey; } set { _pgpPublicKey = value; } }
 
         /// <summary>
         /// Address

@@ -42,10 +42,12 @@
     <Compile Include="Repositories\IDigitalSignatureInfoRepository.cs" />
     <Compile Include="Repositories\IUserRepository.cs" />
     <Compile Include="SecurityKeysAggregate\ISecurityKeysGenerationService.cs" />
+    <Compile Include="SecurityKeysAggregate\PermissionsList.cs" />
+    <Compile Include="SecurityKeysAggregate\ValidationEssentials.cs" />
     <Compile Include="UserAggregate\IActivationKeyGenerationService.cs" />
     <Compile Include="SecurityKeysAggregate\Permission.cs" />
-    <Compile Include="SecurityKeysAggregate\SecurityKeyPairPermission.cs" />
-    <Compile Include="SecurityKeysAggregate\SecurityKeys.cs" />
+    <Compile Include="SecurityKeysAggregate\DigitalSignaturePermission.cs" />
+    <Compile Include="SecurityKeysAggregate\DigitalSignature.cs" />
     <Compile Include="SecurityKeysAggregate\DigitalSignatureInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\IPersistenceRepository.cs" />

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CoinExchange.Common.Tests;
-using CoinExchange.IdentityAccess.Application.DigitalSignature;
+using CoinExchange.IdentityAccess.Application.DigitalSignatureServices;
 using CoinExchange.IdentityAccess.Application.Registration;
 using CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate;
 using NUnit.Framework;
@@ -36,6 +36,7 @@ namespace CoinExchange.IdentityAccess.Application.Tests
             ContextRegistry.Clear();
             _databaseUtility.Create();
         }
+
         [Test]
         public void ServiceStartuptest_TestsIfTheServiceStartsAsExpectedThroughSpring_VerifiesThroughTheStateOfTheObject()
         {
@@ -50,7 +51,7 @@ namespace CoinExchange.IdentityAccess.Application.Tests
             IDigitalSignatureApplicationService registrationService =
                 (IDigitalSignatureApplicationService)_applicationContext["DigitalSignatureApplicationService"];
 
-            SecurityKeys securityKeys = registrationService.GetNewKey();
+            DigitalSignature securityKeys = registrationService.GetNewKey();
 
             Assert.IsNotNull(securityKeys);
             Assert.IsNotNull(securityKeys.ApiKey);
