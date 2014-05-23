@@ -14,7 +14,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         /// <summary>
         /// Default constructor
         /// </summary>
-        public SecurityKeyPairPermission()
+        public DigitalSignaturePermission()
         {
             
         }
