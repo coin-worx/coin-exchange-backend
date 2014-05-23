@@ -9,10 +9,10 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
     /// <summary>
     /// Contains the API Key and Secret Key
     /// </summary>
-    public class SecurityKeys
+    public class DigitalSignature
     {
         //default constructor
-        public SecurityKeys()
+        public DigitalSignature()
         {
             
         }
@@ -21,7 +21,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         /// </summary>
         /// <param name="apiKey"></param>
         /// <param name="secretKey"> </param>
-        public SecurityKeys(string apiKey, string secretKey)
+        public DigitalSignature(string apiKey, string secretKey)
         {
             this.ApiKey = apiKey;
             this.SecretKey = secretKey;
@@ -39,9 +39,9 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
 
         public override bool Equals(object obj)
         {
-            if (obj is SecurityKeys)
+            if (obj is DigitalSignature)
             {
-                SecurityKeys keys = obj as SecurityKeys;
+                DigitalSignature keys = obj as DigitalSignature;
                 return ApiKey.Equals(keys.ApiKey, StringComparison.InvariantCultureIgnoreCase) &&
                        SecretKey.Equals(keys.SecretKey, StringComparison.InvariantCultureIgnoreCase);
             }

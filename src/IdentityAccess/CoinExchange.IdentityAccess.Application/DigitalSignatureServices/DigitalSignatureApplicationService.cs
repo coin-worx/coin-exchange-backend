@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CoinExchange.IdentityAccess.Domain.Model.Repositories;
 using CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate;
 
-namespace CoinExchange.IdentityAccess.Application.DigitalSignature
+namespace CoinExchange.IdentityAccess.Application.DigitalSignatureServices
 {
     /// <summary>
     /// Serves operations related to the Digital Signature(API Secret Key pair)
@@ -27,11 +22,9 @@ namespace CoinExchange.IdentityAccess.Application.DigitalSignature
         /// Generates a new API key and Secret Key pair
         /// </summary>
         /// <returns></returns>
-        public SecurityKeys GetNewKey()
+        public DigitalSignature GetNewKey()
         {
-            Tuple<string, string> keysTuple = _securityKeysGenerationService.GenerateNewApiKey();
-            SecurityKeys securityKeys = new SecurityKeys(keysTuple.Item1, keysTuple.Item2);
-            return securityKeys;
+            return _securityKeysGenerationService.GenerateNewSecurityKeys();
         }
 
         /// <summary>

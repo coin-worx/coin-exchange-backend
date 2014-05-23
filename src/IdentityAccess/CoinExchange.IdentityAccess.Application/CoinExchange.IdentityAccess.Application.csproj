@@ -42,12 +42,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AccessControl\ILoginApplicationService.cs" />
+    <Compile Include="AccessControl\LoginApplicationService.cs" />
     <Compile Include="Authentication\Commands\AuthenticateCommand.cs" />
     <Compile Include="Authentication\IAuthenticationService.cs" />
     <Compile Include="Authentication\Nonce.cs" />
     <Compile Include="Authentication\HashHelper.cs" />
-    <Compile Include="DigitalSignature\DigitalSignatureApplicationService.cs" />
-    <Compile Include="DigitalSignature\IDigitalSignatureApplicationService.cs" />
+    <Compile Include="DigitalSignatureServices\DigitalSignatureApplicationService.cs" />
+    <Compile Include="DigitalSignatureServices\IDigitalSignatureApplicationService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Registration\IRegistrationApplicationService.cs" />
     <Compile Include="Registration\RegistrationApplicationService.cs" />
@@ -72,9 +74,7 @@
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="NewFolder1\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

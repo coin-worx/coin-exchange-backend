@@ -7,15 +7,22 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
     /// </summary>
     public class DigitalSignatureInfo
     {
+        #region Private Fields
+
+        private DigitalSignature _securityKeys;
+        private PermissionsList _permissionsList;
+
+        #endregion Private Fields
+
         /// <summary>
         /// Default Constructor
         /// </summary>
         public DigitalSignatureInfo()
         {
-            
+            _permissionsList = new PermissionsList();
         }
 
-        public DigitalSignatureInfo(string keyDescription, SecurityKeys securityKeys, string userName, DateTime expirationDate, DateTime startDate, DateTime endDate, DateTime lastModified, bool systemGenerated)
+        public DigitalSignatureInfo(string keyDescription, DigitalSignature securityKeys, string userName, DateTime expirationDate, DateTime startDate, DateTime endDate, DateTime lastModified, bool systemGenerated)
         {
             KeyDescription = keyDescription;
             SecurityKeys = securityKeys;
@@ -25,22 +32,40 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
             EndDate = endDate;
             LastModified = lastModified;
             SystemGenerated = systemGenerated;
+
+            _permissionsList = new PermissionsList();
         }
 
-        #region Private Fields
-
-        private SecurityKeys _securityKeys;
-
-        #endregion Private Fields
-
         #region Methods
+
+        /// <summary>
+        /// Adds the permission to the given list of permissions
+        /// </summary>
+        /// <param name="permission"></param>
+        /// <returns></returns>
+        public bool AddPermission(DigitalSignaturePermission permission)
+        {
+            _permissionsList.AddPermission(permission);
+            return true;
+        }
+
+        /// <summary>
+        /// Removes the given permission from the allowed permision for this Digital Signature
+        /// </summary>
+        /// <param name="permission"></param>
+        /// <returns></returns>
+        public bool RemovePermission(DigitalSignaturePermission permission)
+        {
+            _permissionsList.RemoveTierStatus(permission);
+            return true;
+        }
 
         /// <summary>
         /// Change the value of the API Key
         /// </summary>
         /// <param name="securityKeys"> </param>
         /// <returns></returns>
-        public bool ChangeApiKeyValue(SecurityKeys securityKeys)
+        public bool ChangeApiKeyValue(DigitalSignature securityKeys)
         {
             if (IsApiKeyValid(securityKeys.ApiKey) && IsSecretKeyValid(securityKeys.SecretKey))
             {
@@ -90,7 +115,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         /// <summary>
         /// Security Keys
         /// </summary>
-        public SecurityKeys SecurityKeys { get { return _securityKeys; } set { _securityKeys = value; } }
+        public DigitalSignature SecurityKeys { get { return _securityKeys; } set { _securityKeys = value; } }
 
         /// <summary>
         /// Username

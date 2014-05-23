@@ -30,7 +30,7 @@ namespace CoinExchange.IdentityAccess.Infrastructure.IntegrationTests
         [Category("Integration")]
         public void CreateDigitalSignatureInfo_PersistAndReadFromDatabaseByDescriptionKey_SavedAndReadInfoShouldBeSame()
         {
-            SecurityKeys keys=new SecurityKeys("123456","secretkey");
+            DigitalSignature keys=new DigitalSignature("123456","secretkey");
             DigitalSignatureInfo digitalSignatureInfo=new DigitalSignatureInfo("1",keys,"user1",DateTime.Today.AddDays(1),DateTime.Today.AddDays(-20),DateTime.Today,DateTime.Now,true);
             _persistenceRepository.SaveUpdate(digitalSignatureInfo);
             var readInfo = _digitalSignatureInfoRepository.GetByKeyDescription("1");
@@ -47,7 +47,7 @@ namespace CoinExchange.IdentityAccess.Infrastructure.IntegrationTests
         [Category("Integration")]
         public void CreateDigitalSignatureInfo_PersistAndReadFromDatabaseByApiKey_SavedAndReadInfoShouldBeSame()
         {
-            SecurityKeys keys = new SecurityKeys("123456", "secretkey");
+            DigitalSignature keys = new DigitalSignature("123456", "secretkey");
             DigitalSignatureInfo digitalSignatureInfo = new DigitalSignatureInfo("1", keys, "user1", DateTime.Today.AddDays(1), DateTime.Today.AddDays(-20), DateTime.Today, DateTime.Now, true);
             _persistenceRepository.SaveUpdate(digitalSignatureInfo);
             var readInfo = _digitalSignatureInfoRepository.GetByApiKey("123456");

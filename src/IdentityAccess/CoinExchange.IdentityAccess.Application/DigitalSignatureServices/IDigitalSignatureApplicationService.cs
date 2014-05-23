@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate;
+﻿using CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate;
 
-namespace CoinExchange.IdentityAccess.Application.DigitalSignature
+namespace CoinExchange.IdentityAccess.Application.DigitalSignatureServices
 {
     /// <summary>
     /// Interface for Digital Signature Application Service
@@ -16,7 +11,7 @@ namespace CoinExchange.IdentityAccess.Application.DigitalSignature
         /// Generates new key
         /// </summary>
         /// <returns></returns>
-        SecurityKeys GetNewKey();
+        DigitalSignature GetNewKey();
 
         /// <summary>
         /// Set new permission
