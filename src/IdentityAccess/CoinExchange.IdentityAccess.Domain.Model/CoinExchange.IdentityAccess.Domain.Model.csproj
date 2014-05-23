@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="Repositories\IDigitalSignatureInfoRepository.cs" />
     <Compile Include="Repositories\IUserRepository.cs" />
+    <Compile Include="SecurityKeysAggregate\IPermissionRepository.cs" />
     <Compile Include="SecurityKeysAggregate\ISecurityKeysGenerationService.cs" />
     <Compile Include="UserAggregate\IActivationKeyGenerationService.cs" />
     <Compile Include="SecurityKeysAggregate\Permission.cs" />

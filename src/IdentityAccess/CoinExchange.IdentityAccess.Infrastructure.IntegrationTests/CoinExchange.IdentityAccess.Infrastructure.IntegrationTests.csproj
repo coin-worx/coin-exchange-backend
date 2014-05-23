@@ -81,6 +81,7 @@
   <ItemGroup>
     <Compile Include="AbstractConfiguration.cs" />
     <Compile Include="DigitalSignatureInfoRepositoryTests.cs" />
+    <Compile Include="PermisssionRepositoryTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserRepositoryPersistenceTests.cs" />
   </ItemGroup>

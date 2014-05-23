@@ -12,6 +12,14 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
     public class Permission
     {
         /// <summary>
+        /// Default constructor
+        /// </summary>
+        public Permission()
+        {
+            
+        }
+
+        /// <summary>
         /// Parameterized Constructor
         /// </summary>
         /// <param name="permissionId"></param>

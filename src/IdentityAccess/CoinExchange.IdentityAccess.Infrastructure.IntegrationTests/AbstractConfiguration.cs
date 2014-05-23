@@ -17,7 +17,7 @@ namespace CoinExchange.IdentityAccess.Infrastructure.IntegrationTests
             {
                 return new[]
                     {
-                        "assembly://CoinExchange.IdentityAccess.Infrastructure.Persistence/CoinExchange.IdentityAccess.Infrastructure.Persistence/InfrastructurePersistenceConfig-Test.xml",
+                        "assembly://CoinExchange.IdentityAccess.Infrastructure.Persistence/CoinExchange.IdentityAccess.Infrastructure.Persistence/InfrastructurePersistenceConfig.xml",
                     };
             }
         }
