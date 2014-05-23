@@ -5,7 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CoinExchange.Common.Tests;
-using CoinExchange.IdentityAccess.Application.Registration;
+using CoinExchange.IdentityAccess.Application.RegistrationServices;
+using CoinExchange.IdentityAccess.Application.RegistrationServices.Commands;
 using CoinExchange.IdentityAccess.Domain.Model.Repositories;
 using CoinExchange.IdentityAccess.Domain.Model.UserAggregate;
 using NUnit.Framework;
@@ -54,7 +55,8 @@ namespace CoinExchange.IdentityAccess.Application.Tests
                 (IUserRepository)_applicationContext["UserRepository"];
             IPasswordEncryptionService passwordEncryption =
                 (IPasswordEncryptionService)_applicationContext["PasswordEncryptionService"];
-            string activationKey = registrationService.CreateAccount("dummy@dumdum.com", "Bob", "iamnotalice", "Wonderland", TimeZone.CurrentTimeZone, "");
+            string activationKey = registrationService.CreateAccount(new SignupUserCommand(
+                "dummy@dumdum.com", "Bob", "iamnotalice", "Wonderland", TimeZone.CurrentTimeZone, ""));
 
             User receivedUser = userRepository.GetUserByUserName("Bob");
             Assert.NotNull(receivedUser);

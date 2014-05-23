@@ -39,17 +39,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Repositories\IDigitalSignatureInfoRepository.cs" />
+    <Compile Include="Repositories\ISecurityKeysRepository.cs" />
     <Compile Include="Repositories\IUserRepository.cs" />
+    <Compile Include="SecurityKeysAggregate\ApiKey.cs" />
     <Compile Include="SecurityKeysAggregate\IPermissionRepository.cs" />
     <Compile Include="SecurityKeysAggregate\ISecurityKeysGenerationService.cs" />
     <Compile Include="SecurityKeysAggregate\PermissionsList.cs" />
-    <Compile Include="SecurityKeysAggregate\ValidationEssentials.cs" />
+    <Compile Include="SecurityKeysAggregate\SecretKey.cs" />
+    <Compile Include="SecurityKeysAggregate\UserValidationEssentials.cs" />
     <Compile Include="UserAggregate\IActivationKeyGenerationService.cs" />
     <Compile Include="SecurityKeysAggregate\Permission.cs" />
-    <Compile Include="SecurityKeysAggregate\DigitalSignaturePermission.cs" />
-    <Compile Include="SecurityKeysAggregate\DigitalSignature.cs" />
-    <Compile Include="SecurityKeysAggregate\DigitalSignatureInfo.cs" />
+    <Compile Include="SecurityKeysAggregate\SecurityKeysPermission.cs" />
+    <Compile Include="SecurityKeysAggregate\SecurityKeysPair.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\IPersistenceRepository.cs" />
     <Compile Include="UserAggregate\IPasswordEncryptionService.cs" />

@@ -5,11 +5,12 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
     /// <summary>
     /// Digital Signature Info(Api key and Secret key)
     /// </summary>
-    public class DigitalSignatureInfo
+    public class SecurityKeysPair
     {
         #region Private Fields
 
-        private DigitalSignature _securityKeys;
+        private ApiKey _apiKey;
+        private SecretKey _secretKey;
         private PermissionsList _permissionsList;
 
         #endregion Private Fields
@@ -17,15 +18,38 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         /// <summary>
         /// Default Constructor
         /// </summary>
-        public DigitalSignatureInfo()
+        public SecurityKeysPair()
         {
             _permissionsList = new PermissionsList();
         }
 
-        public DigitalSignatureInfo(string keyDescription, DigitalSignature securityKeys, string userName, DateTime expirationDate, DateTime startDate, DateTime endDate, DateTime lastModified, bool systemGenerated)
+        /// <summary>
+        /// Parameterized Constructor
+        /// </summary>
+        public SecurityKeysPair(ApiKey apiKey, SecretKey secretKey)
+        {
+            _apiKey = apiKey;
+            _secretKey = secretKey;
+            _permissionsList = new PermissionsList();
+        }
+
+        /// <summary>
+        /// Parameterized Constructor
+        /// </summary>
+        /// <param name="keyDescription"></param>
+        /// <param name="apiKey"></param>
+        /// <param name="secretKey"></param>
+        /// <param name="userName"></param>
+        /// <param name="expirationDate"></param>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <param name="lastModified"></param>
+        /// <param name="systemGenerated"></param>
+        public SecurityKeysPair(string keyDescription, ApiKey apiKey, SecretKey secretKey, string userName, DateTime expirationDate, DateTime startDate, DateTime endDate, DateTime lastModified, bool systemGenerated)
         {
             KeyDescription = keyDescription;
-            SecurityKeys = securityKeys;
+            _apiKey = apiKey;
+            _secretKey = secretKey;
             UserName = userName;
             ExpirationDate = expirationDate;
             StartDate = startDate;
@@ -43,7 +67,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         /// </summary>
         /// <param name="permission"></param>
         /// <returns></returns>
-        public bool AddPermission(DigitalSignaturePermission permission)
+        public bool AddPermission(SecurityKeysPermission permission)
         {
             _permissionsList.AddPermission(permission);
             return true;
@@ -54,7 +78,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         /// </summary>
         /// <param name="permission"></param>
         /// <returns></returns>
-        public bool RemovePermission(DigitalSignaturePermission permission)
+        public bool RemovePermission(SecurityKeysPermission permission)
         {
             _permissionsList.RemoveTierStatus(permission);
             return true;
@@ -63,13 +87,28 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         /// <summary>
         /// Change the value of the API Key
         /// </summary>
-        /// <param name="securityKeys"> </param>
+        /// <param name="apiKey"> </param>
         /// <returns></returns>
-        public bool ChangeApiKeyValue(DigitalSignature securityKeys)
+        public bool ChangeApiKeyValue(ApiKey apiKey)
         {
-            if (IsApiKeyValid(securityKeys.ApiKey) && IsSecretKeyValid(securityKeys.SecretKey))
+            if (IsApiKeyValid(apiKey))
             {
-                _securityKeys = securityKeys;
+                _apiKey = apiKey;
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Change the value of the Secret Key
+        /// </summary>
+        /// <param name="secretKey"> </param>
+        /// <returns></returns>
+        public bool ChangeSecretKeyValue(SecretKey secretKey)
+        {
+            if (IsSecretKeyValid(secretKey))
+            {
+                _secretKey = secretKey;
                 return true;
             }
             return false;
@@ -80,9 +119,9 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         /// </summary>
         /// <param name="apiKey"></param>
         /// <returns></returns>
-        private bool IsApiKeyValid(string apiKey)
+        private bool IsApiKeyValid(ApiKey apiKey)
         {
-            if (!string.IsNullOrEmpty(apiKey))
+            if (apiKey != null && !string.IsNullOrEmpty(apiKey.Value))
             {
                 return true;
             }
@@ -94,9 +133,9 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         /// </summary>
         /// <param name="secretKey"></param>
         /// <returns></returns>
-        private bool IsSecretKeyValid(string secretKey)
+        private bool IsSecretKeyValid(SecretKey secretKey)
         {
-            if (!string.IsNullOrEmpty(secretKey))
+            if (secretKey!= null && !string.IsNullOrEmpty(secretKey.Value))
             {
                 return true;
             }
@@ -112,10 +151,16 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         {
             get; private set;
         }
+
         /// <summary>
-        /// Security Keys
+        /// API Key
         /// </summary>
-        public DigitalSignature SecurityKeys { get { return _securityKeys; } set { _securityKeys = value; } }
+        public ApiKey ApiKey { get { return _apiKey; } set { _apiKey = value; } }
+
+        /// <summary>
+        /// Secret Key
+        /// </summary>
+        public SecretKey SecretKey { get { return _secretKey; } set { _secretKey = value; } }
 
         /// <summary>
         /// Username

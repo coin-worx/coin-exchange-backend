@@ -1,19 +1,19 @@
 ﻿using System;
 using CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate;
 
-namespace CoinExchange.IdentityAccess.Application.DigitalSignatureServices
+namespace CoinExchange.IdentityAccess.Application.SecurityKeysServices
 {
     /// <summary>
     /// Serves operations related to the Digital Signature(API Secret Key pair)
     /// </summary>
-    public class DigitalSignatureApplicationService : IDigitalSignatureApplicationService
+    public class SecurityKeysApplicationService : ISecurityKeysApplicationService
     {
         private ISecurityKeysGenerationService _securityKeysGenerationService;
 
         /// <summary>
         /// Initializes the service for operating operations for the DigitalSignatures
         /// </summary>
-        public DigitalSignatureApplicationService(ISecurityKeysGenerationService securityKeysGenerationService)
+        public SecurityKeysApplicationService(ISecurityKeysGenerationService securityKeysGenerationService)
         {
             _securityKeysGenerationService = securityKeysGenerationService;
         }
@@ -22,7 +22,7 @@ namespace CoinExchange.IdentityAccess.Application.DigitalSignatureServices
         /// Generates a new API key and Secret Key pair
         /// </summary>
         /// <returns></returns>
-        public DigitalSignature GetNewKey()
+        public SecurityKeysPair GetNewKey()
         {
             return _securityKeysGenerationService.GenerateNewSecurityKeys();
         }

@@ -42,18 +42,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AccessControl\ILoginApplicationService.cs" />
-    <Compile Include="AccessControl\LoginApplicationService.cs" />
+    <Compile Include="AccessControlServices\Commands\LoginCommand.cs" />
+    <Compile Include="AccessControlServices\Commands\LogoutCommand.cs" />
+    <Compile Include="AccessControlServices\ILoginApplicationService.cs" />
+    <Compile Include="AccessControlServices\ILogoutApplicationService.cs" />
+    <Compile Include="AccessControlServices\LoginApplicationService.cs" />
+    <Compile Include="AccessControlServices\LogoutApplicationService.cs" />
     <Compile Include="Authentication\Commands\AuthenticateCommand.cs" />
     <Compile Include="Authentication\IAuthenticationService.cs" />
     <Compile Include="Authentication\Nonce.cs" />
     <Compile Include="Authentication\HashHelper.cs" />
-    <Compile Include="DigitalSignatureServices\DigitalSignatureApplicationService.cs" />
-    <Compile Include="DigitalSignatureServices\IDigitalSignatureApplicationService.cs" />
+    <Compile Include="SecurityKeysServices\SecurityKeysApplicationService.cs" />
+    <Compile Include="SecurityKeysServices\ISecurityKeysApplicationService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Registration\IRegistrationApplicationService.cs" />
-    <Compile Include="Registration\RegistrationApplicationService.cs" />
+    <Compile Include="RegistrationServices\Commands\SignupUserCommand.cs" />
+    <Compile Include="RegistrationServices\IRegistrationApplicationService.cs" />
+    <Compile Include="RegistrationServices\RegistrationApplicationService.cs" />
     <Compile Include="UserAuthentication.cs" />
+    <Compile Include="UserServices\IUserApplicationService.cs" />
+    <Compile Include="UserServices\UserApplicationService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Common\CoinExchange.Common\CoinExchange.Common.csproj">
@@ -69,7 +76,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Config\ApplicationServicesConfig-Test.xml">
+    <Content Include="Config\ApplicationServicesConfig.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </Content>

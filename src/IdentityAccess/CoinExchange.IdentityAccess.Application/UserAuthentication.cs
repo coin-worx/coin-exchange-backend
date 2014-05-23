@@ -13,6 +13,7 @@ namespace CoinExchange.IdentityAccess.Application
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger
             (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         public bool Authenticate(AuthenticateCommand command)
         {
             if (Nonce.IsValid(command.Nonce, command.Counter))

@@ -14,20 +14,20 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Persistence.Repositories
     /// Repository for DigitalSignatureInfo
     /// </summary>
     [Repository]
-    public class DigitalSignatureInfoRepository:NHibernateSessionFactory,IDigitalSignatureInfoRepository
+    public class SecurityKeysPairRepository : NHibernateSessionFactory, ISecurityKeysRepository
     {
         [Transaction(ReadOnly = true)]
-        public DigitalSignatureInfo GetByKeyDescription(string keyDescription)
+        public SecurityKeysPair GetByKeyDescription(string keyDescription)
         {
-            return CurrentSession.Get<DigitalSignatureInfo>(keyDescription);
+            return CurrentSession.Get<SecurityKeysPair>(keyDescription);
         }
 
         [Transaction(ReadOnly = true)]
-        public DigitalSignatureInfo GetByApiKey(string apiKey)
+        public SecurityKeysPair GetByApiKey(string apiKey)
         {
             return
-                CurrentSession.QueryOver<DigitalSignatureInfo>()
-                    .Where(x => x.SecurityKeys.ApiKey == apiKey)
+                CurrentSession.QueryOver<SecurityKeysPair>()
+                    .Where(x => x.ApiKey.Value == apiKey)
                     .SingleOrDefault();
         }
     }
