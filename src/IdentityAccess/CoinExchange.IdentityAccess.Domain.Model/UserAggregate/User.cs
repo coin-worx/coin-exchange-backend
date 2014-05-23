@@ -15,7 +15,8 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         private string _password;
         private string _publicKey;
         private string _pgpPublicKey;
-        private Address _address;
+        private string _address1;
+        private string _address2;
         private string _email;
         private Language _language;
         private TimeZone _timeZone;
@@ -76,14 +77,14 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         /// <param name="state"> </param>
         /// <param name="phoneNumber"> </param>
         /// <param name="activationKey"> </param>
-        public User(string username, string password, string pgpPublicKey, Address address, string email, Language language,
+        public User(string username, string password, string pgpPublicKey, string address, string email, Language language,
             TimeZone timeZone, TimeSpan autoLogout, DateTime lastLogin, string country, string state, string phoneNumber, 
             string activationKey)
         {
              Username = username;
             _password = password;
             _pgpPublicKey = pgpPublicKey;
-            _address = address;
+            Address1 = address;
             _email = email;
             _language = language;
             _timeZone = timeZone;
@@ -136,10 +137,14 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         public string PublicKey { get { return _pgpPublicKey; } set { _pgpPublicKey = value; } }
 
         /// <summary>
-        /// Address
+        /// Address 1
         /// </summary>
-        public Address Address { get { return _address; } set { _address = value; } }
+        public string Address1 { get { return _address1; } set { _address1 = value; } }
 
+        /// <summary>
+        /// Address 2
+        /// </summary>
+        public string Address2 { get { return _address2; } set { _address2 = value; } }
         /// <summary>
         /// Email
         /// </summary>
