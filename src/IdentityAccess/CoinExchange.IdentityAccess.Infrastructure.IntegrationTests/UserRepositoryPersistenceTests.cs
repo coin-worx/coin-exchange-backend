@@ -33,7 +33,7 @@ namespace CoinExchange.IdentityAccess.Infrastructure.IntegrationTests
         [Category("Integration")]
         public void CreateNewUser_PersistUserAndGetThatUserFromDB_BothUserAreSame()
         {
-           User user=new User("NewUser","asdf","12345",new Address("xyz","abc"),"user88@gmail.com",Language.English, TimeZone.CurrentTimeZone,new TimeSpan(1,1,1,1),DateTime.Now,"Pakistan","","2233344","1234"); 
+           User user=new User("NewUser","asdf","12345","xyz","user88@gmail.com",Language.English, TimeZone.CurrentTimeZone,new TimeSpan(1,1,1,1),DateTime.Now,"Pakistan","","2233344","1234"); 
            _persistenceRepository.SaveUpdate(user);
            User receivedUser = _userRepository.GetUserByUserName("NewUser");
             Assert.NotNull(receivedUser);
@@ -46,7 +46,7 @@ namespace CoinExchange.IdentityAccess.Infrastructure.IntegrationTests
             Assert.AreEqual(user.Country, receivedUser.Country);
             Assert.AreEqual(user.State, receivedUser.State);
             Assert.AreEqual(user.PhoneNumber, receivedUser.PhoneNumber);
-            Assert.AreEqual(user.Address,receivedUser.Address);
+            Assert.AreEqual(user.Address1,receivedUser.Address1);
             Assert.AreEqual(user.ActivationKey, receivedUser.ActivationKey);
         }
     }

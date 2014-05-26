@@ -97,9 +97,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NHibernateMappings\DigitalSignatureInfo.hbm.xml">
+    <None Include="NHibernateMappings\DigitalSignatureInfo.hbm.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="NHibernateMappings\Permission.hbm.xml">

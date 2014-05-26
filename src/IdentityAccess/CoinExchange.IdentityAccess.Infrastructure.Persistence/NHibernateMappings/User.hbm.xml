@@ -16,9 +16,7 @@ assembly="CoinExchange.IdentityAccess.Domain.Model" namespace="CoinExchange.Iden
     <property name="Country"  column="Country"/>
     <property name="ActivationKey"  column="ActivationKey"/>
     <property name="PhoneNumber"  column="PhoneNumber"/>
-    <component name="Address">
-      <property name="Address1" column="Address1"/>
-      <property name="Address2" column="Address2"/>
-    </component>
+    <property name="Address1" column="Address1"/>
+    <property name="Address2" column="Address2"/>
     </class>
 </hibernate-mapping>
