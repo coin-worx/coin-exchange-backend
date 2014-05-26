@@ -60,9 +60,8 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
 
             UserValidationEssentials userValidationEssentials = loginApplicationService.Login(new LoginCommand("Bob", "alice"));
             Assert.IsNotNull(userValidationEssentials);
-            Assert.IsNotNull(userValidationEssentials.SecurityKeys);
-            Assert.IsNotNull(userValidationEssentials.SecurityKeys.ApiKey);
-            Assert.IsNotNull(userValidationEssentials.SecurityKeys.SecretKey);
+            Assert.IsNotNull(userValidationEssentials.ApiKey);
+            Assert.IsNotNull(userValidationEssentials.SecretKey);
             Assert.IsNotNull(userValidationEssentials.SessionLogoutTime);
         }
 

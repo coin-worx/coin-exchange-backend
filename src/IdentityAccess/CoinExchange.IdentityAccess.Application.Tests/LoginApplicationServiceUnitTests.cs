@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using CoinExchange.Common.Tests;
 using CoinExchange.IdentityAccess.Application.AccessControlServices;
 using CoinExchange.IdentityAccess.Application.AccessControlServices.Commands;
+using CoinExchange.IdentityAccess.Application.SecurityKeysServices;
 using CoinExchange.IdentityAccess.Domain.Model.Repositories;
 using CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate;
 using CoinExchange.IdentityAccess.Infrastructure.Persistence.Repositories;
@@ -39,9 +40,12 @@ namespace CoinExchange.IdentityAccess.Application.Tests
         public void LoginSuccessfulTest_ChecksIfTheSecurityKeysAreProperlyReturnedWhileLoggingIn_VerifiesTheReturnedKeysToConfirm()
         {
             IUserRepository userRepository = new MockUserRepository();
+            IPersistRepository persistRepository = new MockPersistenceRepository(false);
+            ISecurityKeysApplicationService securityKeysApplicationService = new SecurityKeysApplicationService(new SecurityKeysGenerationService(),
+                persistRepository);
             IPasswordEncryptionService passwordEncryptionService = new PasswordEncryptionService();
             ILoginApplicationService loginApplicationService = new LoginApplicationService(userRepository, passwordEncryptionService, 
-                new SecurityKeysGenerationService());
+                securityKeysApplicationService);
 
             string enteredPassword = "whereistheJoker";
             User user = new User("batman@gotham.com", "brucewayne", passwordEncryptionService.EncryptPassword(enteredPassword),
@@ -53,9 +57,8 @@ namespace CoinExchange.IdentityAccess.Application.Tests
                 new LoginCommand("brucewayne", enteredPassword));
 
             Assert.IsNotNull(userValidationEssentials);
-            Assert.IsNotNull(userValidationEssentials.SecurityKeys);
-            Assert.IsNotNull(userValidationEssentials.SecurityKeys.ApiKey);
-            Assert.IsNotNull(userValidationEssentials.SecurityKeys.SecretKey);
+            Assert.IsNotNull(userValidationEssentials.ApiKey);
+            Assert.IsNotNull(userValidationEssentials.SecretKey);
             Assert.AreEqual(userValidationEssentials.SessionLogoutTime, user.AutoLogout);
         }
 
@@ -64,9 +67,12 @@ namespace CoinExchange.IdentityAccess.Application.Tests
         public void LoginfailDueToIncorrectUsernameTest_MakesSureLoginFailsInCaseOfWrongUsername_VerifiesTheReturnedNullResultToConfirm()
         {
             IUserRepository userRepository = new MockUserRepository();
+            IPersistRepository persistRepository = new MockPersistenceRepository(false);
+            ISecurityKeysApplicationService securityKeysApplicationService = new SecurityKeysApplicationService(new SecurityKeysGenerationService(),
+                persistRepository);
             IPasswordEncryptionService passwordEncryptionService = new PasswordEncryptionService();
             ILoginApplicationService loginApplicationService = new LoginApplicationService(userRepository, passwordEncryptionService,
-                new SecurityKeysGenerationService());
+                securityKeysApplicationService);
 
             string enteredPassword = "whereistheJoker";
             User user = new User("batman@gotham.com", "brucewayne", passwordEncryptionService.EncryptPassword(enteredPassword),
@@ -85,10 +91,12 @@ namespace CoinExchange.IdentityAccess.Application.Tests
         public void LoginfailDueToIncorrectPasswordTest_MakesSureLoginFailsInCaseOfWrongPassword_VerifiesTheReturnedNullResultToConfirm()
         {
             IUserRepository userRepository = new MockUserRepository();
+            IPersistRepository persistRepository = new MockPersistenceRepository(false);
+            ISecurityKeysApplicationService securityKeysApplicationService = new SecurityKeysApplicationService(new SecurityKeysGenerationService(),
+                persistRepository);
             IPasswordEncryptionService passwordEncryptionService = new PasswordEncryptionService();
             ILoginApplicationService loginApplicationService = new LoginApplicationService(userRepository, passwordEncryptionService,
-                new SecurityKeysGenerationService());
-
+                securityKeysApplicationService);
             string enteredPassword = "whereistheJoker";
             User user = new User("batman@gotham.com", "brucewayne", passwordEncryptionService.EncryptPassword(enteredPassword),
                 "Ninja County", TimeZone.CurrentTimeZone, "", "");

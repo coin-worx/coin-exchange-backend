@@ -74,11 +74,8 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate.AuthenticationS
                 {
                     if (securityKeysPair.ExpirationDate < DateTime.Now)
                     {
-                        foreach (var securityPermission in securityKeysPair.PermissionList)
-                        {
-                            // ToDo: Implement after Master Data is loaded by Bilal for Permissions. Need to verify 
-                            // the request from the URI and then check for the corresponding permission
-                        }
+                        // ToDo: Implement after Master Data is loaded by Bilal for Permissions. Need to verify 
+                        // the request from the URI and then check for the corresponding permission
                     }
                 }
             }

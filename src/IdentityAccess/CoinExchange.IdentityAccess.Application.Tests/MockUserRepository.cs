@@ -32,6 +32,21 @@ namespace CoinExchange.IdentityAccess.Application.Tests
             return null;
         }
 
+        public User GetUserByActivationKey(string activationKey)
+        {
+            throw new NotImplementedException();
+        }
+
+        public User GetUserByEmail(string email)
+        {
+            throw new NotImplementedException();
+        }
+
+        public User GetUserByEmailAndUserName(string username, string email)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Adds the User to the User collection only in this Mock implementation
         /// </summary>

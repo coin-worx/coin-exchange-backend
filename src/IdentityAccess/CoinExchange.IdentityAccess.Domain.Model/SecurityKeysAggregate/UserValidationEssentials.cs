@@ -15,18 +15,24 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         /// <summary>
         /// Parametrized Constructor
         /// </summary>
-        /// <param name="digitalSignature"></param>
+        /// <param name="securityKeys"> </param>
         /// <param name="sessionLogoutTime"></param>
-        public UserValidationEssentials(SecurityKeysPair digitalSignature, TimeSpan sessionLogoutTime)
+        public UserValidationEssentials(Tuple<ApiKey, SecretKey> securityKeys, TimeSpan sessionLogoutTime)
         {
-            SecurityKeys = digitalSignature;
+            ApiKey = securityKeys.Item1;
+            SecretKey = securityKeys.Item2;
             SessionLogoutTime = sessionLogoutTime;
         }
 
         /// <summary>
-        /// The Pair of API and Secret Key
+        /// API Key
         /// </summary>
-        public SecurityKeysPair SecurityKeys { get; private set; }
+        public ApiKey ApiKey { get; private set; }
+
+        /// <summary>
+        /// Secret Key
+        /// </summary>
+        public SecretKey SecretKey { get; private set; }
 
         /// <summary>
         /// Logout time mentioned by the user for which these keys are applicable after login

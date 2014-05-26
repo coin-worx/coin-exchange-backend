@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
 {
@@ -11,7 +13,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
 
         private ApiKey _apiKey;
         private SecretKey _secretKey;
-        private PermissionsList _permissionsList;
+        private IList<SecurityKeysPermission> _securityKeysPermissions { get; set; }
 
         #endregion Private Fields
 
@@ -20,7 +22,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         /// </summary>
         public SecurityKeysPair()
         {
-            _permissionsList = new PermissionsList();
+            _securityKeysPermissions=new List<SecurityKeysPermission>();
         }
 
         /// <summary>
@@ -30,7 +32,25 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         {
             _apiKey = apiKey;
             _secretKey = secretKey;
-            _permissionsList = new PermissionsList();
+        }
+
+        /// <summary>
+        /// Parameterized Constructor
+        /// </summary>
+        public SecurityKeysPair(string username, ApiKey apiKey, SecretKey secretKey, bool isSystemGenerated)
+        {
+            this.UserName = username;
+            _apiKey = apiKey;
+            _secretKey = secretKey;
+
+            if (isSystemGenerated)
+            {
+                SystemGenerated = true;
+            }
+            else
+            {
+                SystemGenerated = false;
+            }
         }
 
         /// <summary>
@@ -45,7 +65,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         /// <param name="endDate"></param>
         /// <param name="lastModified"></param>
         /// <param name="systemGenerated"></param>
-        public SecurityKeysPair(string keyDescription, ApiKey apiKey, SecretKey secretKey, string userName, DateTime expirationDate, DateTime startDate, DateTime endDate, DateTime lastModified, bool systemGenerated)
+        public SecurityKeysPair(string keyDescription, ApiKey apiKey, SecretKey secretKey, string userName, DateTime expirationDate, DateTime startDate, DateTime endDate, DateTime lastModified, bool systemGenerated, IList<SecurityKeysPermission> securityKeysPermissions)
         {
             KeyDescription = keyDescription;
             _apiKey = apiKey;
@@ -56,32 +76,48 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
             EndDate = endDate;
             LastModified = lastModified;
             SystemGenerated = systemGenerated;
-
-            _permissionsList = new PermissionsList();
-        }
+            _securityKeysPermissions = securityKeysPermissions;
+         }
 
         #region Methods
 
         /// <summary>
-        /// Adds the permission to the given list of permissions
+        /// Update security permissions
         /// </summary>
-        /// <param name="permission"></param>
+        /// <param name="permissions"></param>
         /// <returns></returns>
-        public bool AddPermission(SecurityKeysPermission permission)
+        public bool UpdatePermissions(SecurityKeysPermission[] permissions)
         {
-            _permissionsList.AddPermission(permission);
+            for(int i=0;i<_securityKeysPermissions.Count;i++)
+            {
+                for (int j = 0; j < permissions.Length; j++)
+                {
+                    if (
+                        _securityKeysPermissions[i].Permission.PermissionId.Equals(
+                            permissions[j].Permission.PermissionId))
+                    {
+                        _securityKeysPermissions[i].IsAllowed = permissions[j].IsAllowed;
+                    }
+                }
+            }
             return true;
         }
 
         /// <summary>
-        /// Removes the given permission from the allowed permision for this Digital Signature
+        /// Validate permissions
         /// </summary>
-        /// <param name="permission"></param>
+        /// <param name="permissionId"></param>
         /// <returns></returns>
-        public bool RemovePermission(SecurityKeysPermission permission)
+        public bool ValidatePermission(string permissionId)
         {
-            _permissionsList.RemoveTierStatus(permission);
-            return true;
+            for (int i = 0; i < _securityKeysPermissions.Count; i++)
+            {
+                if (_securityKeysPermissions[i].Permission.PermissionId.Equals(permissionId))
+                {
+                    return _securityKeysPermissions[i].IsAllowed;
+                }
+            }
+            return false;
         }
 
         /// <summary>
@@ -191,10 +227,5 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         /// SystemGenerated
         /// </summary>
         public bool SystemGenerated { get; private set; }
-
-        /// <summary>
-        /// List of Permissions granted to this Security Keys Pair
-        /// </summary>
-        public PermissionsList PermissionList { get { return _permissionsList; } private set { _permissionsList = value; } }
     }
 }

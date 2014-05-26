@@ -5,12 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CoinExchange.IdentityAccess.Domain.Model.Repositories;
+using CoinExchange.IdentityAccess.Domain.Model.UserAggregate;
 
 namespace CoinExchange.IdentityAccess.Application.Tests
 {
-    public class MockPersistenceRepository : IPersistenceRepository
+    public class MockPersistenceRepository : IPersistRepository
     {
         private bool _shouldPretendToSave = false;
+        private List<User> usersList = new List<User>();
 
         /// <summary>
         /// Accepts parameter to check whether to pretend to save the object and throw an exception, or just do nothing
@@ -30,6 +32,10 @@ namespace CoinExchange.IdentityAccess.Application.Tests
             if (_shouldPretendToSave)
             {
                 throw new DataException("Could not save object in database");
+            }
+            if (entity is User)
+            {
+                usersList.Add(entity as User);
             }
         }
     }

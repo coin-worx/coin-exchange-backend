@@ -12,7 +12,7 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Services
     /// </summary>
     public class SecurityKeysGenerationService : ISecurityKeysGenerationService
     {
-        public SecurityKeysPair GenerateNewSecurityKeys()
+        public Tuple<ApiKey, SecretKey> GenerateNewSecurityKeys()
         {
             Guid apiKeyGuid = Guid.NewGuid();
             string apiKeyGuidString = Convert.ToBase64String(apiKeyGuid.ToByteArray());
@@ -27,7 +27,7 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Services
             secretKeyGuidString = secretKeyGuidString.Replace("=", "");
             secretKeyGuidString = secretKeyGuidString.Replace("/", "");
             secretKeyGuidString = secretKeyGuidString.Replace("+", "");
-            return new SecurityKeysPair(new ApiKey(apiKeyGuidString), new SecretKey(secretKeyGuidString));
+            return new Tuple<ApiKey, SecretKey>(new ApiKey(apiKeyGuidString), new SecretKey(secretKeyGuidString));
         }
     }
 }

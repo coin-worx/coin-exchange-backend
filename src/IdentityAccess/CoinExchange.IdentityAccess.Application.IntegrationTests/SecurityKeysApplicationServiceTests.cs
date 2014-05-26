@@ -1,4 +1,5 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Configuration;
 using CoinExchange.Common.Tests;
 using CoinExchange.IdentityAccess.Application.SecurityKeysServices;
 using CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate;
@@ -45,11 +46,11 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             ISecurityKeysApplicationService registrationService =
                 (ISecurityKeysApplicationService)_applicationContext["SecurityKeysApplicationService"];
 
-            SecurityKeysPair securityKeys = registrationService.GetNewKey();
+            Tuple<ApiKey, SecretKey> securityKeys = registrationService.CreateSystemGeneratedKey("Bob");
 
             Assert.IsNotNull(securityKeys);
-            Assert.IsNotNull(securityKeys.ApiKey);
-            Assert.IsNotNull(securityKeys.SecretKey);
+            Assert.IsNotNull(securityKeys.Item1);
+            Assert.IsNotNull(securityKeys.Item2);
         }
     }
 }

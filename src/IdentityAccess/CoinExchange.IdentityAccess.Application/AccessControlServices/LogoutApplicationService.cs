@@ -25,7 +25,7 @@ namespace CoinExchange.IdentityAccess.Application.AccessControlServices
         /// <returns></returns>
         public bool Logout(LogoutCommand logoutCommand)
         {
-            SecurityKeysPair securityKeysPair = _securityKeysRepository.GetByApiKey(logoutCommand.ValidationEssentials.SecurityKeys.ApiKey.Value);
+            SecurityKeysPair securityKeysPair = _securityKeysRepository.GetByApiKey(logoutCommand.ValidationEssentials.ApiKey.Value);
 
             // ToDO: Soft Delete the digital signature after the feature is implemented by Bilal in the repository
             return false;

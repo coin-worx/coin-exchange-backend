@@ -1,4 +1,5 @@
 ﻿using System;
+using CoinExchange.IdentityAccess.Domain.Model.Repositories;
 using CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate;
 
 namespace CoinExchange.IdentityAccess.Application.SecurityKeysServices
@@ -9,28 +10,44 @@ namespace CoinExchange.IdentityAccess.Application.SecurityKeysServices
     public class SecurityKeysApplicationService : ISecurityKeysApplicationService
     {
         private ISecurityKeysGenerationService _securityKeysGenerationService;
+        private IPersistRepository _persistRepository;
 
         /// <summary>
         /// Initializes the service for operating operations for the DigitalSignatures
         /// </summary>
-        public SecurityKeysApplicationService(ISecurityKeysGenerationService securityKeysGenerationService)
+        public SecurityKeysApplicationService(ISecurityKeysGenerationService securityKeysGenerationService, 
+            IPersistRepository persistenceRepository)
         {
             _securityKeysGenerationService = securityKeysGenerationService;
+            _persistRepository = persistenceRepository;
         }
 
         /// <summary>
         /// Generates a new API key and Secret Key pair
         /// </summary>
         /// <returns></returns>
-        public SecurityKeysPair GetNewKey()
+        public Tuple<ApiKey, SecretKey> CreateSystemGeneratedKey(string username)
         {
-            return _securityKeysGenerationService.GenerateNewSecurityKeys();
+            if (!string.IsNullOrEmpty(username))
+            {
+                Tuple<ApiKey, SecretKey> securityKeys = _securityKeysGenerationService.GenerateNewSecurityKeys();
+                SecurityKeysPair securityKeysPair = new SecurityKeysPair(username, securityKeys.Item1,
+                                                                         securityKeys.Item2, true);
+                _persistRepository.SaveUpdate(securityKeysPair);
+                return securityKeys;
+            }
+            return null;
+        }
+
+        public bool CreateUserGeneratedKey()
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
         /// Set the permissions
         /// </summary>
-        public void SetPermission()
+        public void SetPermissions(SecurityKeysPermission[] securityKeysPermissions)
         {
             throw new NotImplementedException();
         }

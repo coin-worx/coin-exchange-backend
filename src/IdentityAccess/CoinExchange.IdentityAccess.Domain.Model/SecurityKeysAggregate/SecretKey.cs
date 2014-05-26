@@ -12,6 +12,14 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
     public class SecretKey
     {
         /// <summary>
+        /// Default constructor
+        /// </summary>
+        public SecretKey()
+        {
+            
+        }
+
+        /// <summary>
         /// ParameterizedCOnstrcutor
         /// </summary>
         /// <param name="value"></param>

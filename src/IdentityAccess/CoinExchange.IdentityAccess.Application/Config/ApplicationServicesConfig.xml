@@ -5,7 +5,7 @@
 
   <object id="RegistrationApplicationService" type="CoinExchange.IdentityAccess.Application.RegistrationServices.RegistrationApplicationService, 
           CoinExchange.IdentityAccess.Application">
-    <constructor-arg name="persistenceRepository" ref="PersistenceRepository"/>
+    <constructor-arg name="persistenceRepository" ref="PersistRepository"/>
     <constructor-arg name="passwordEncryptionService" ref="PasswordEncryptionService"/>
     <constructor-arg name="activationKeyGenerationService" ref="ActivationKeyGenerationService"/>
   </object>
@@ -13,13 +13,14 @@
 <object id="SecurityKeysApplicationService" type="CoinExchange.IdentityAccess.Application.SecurityKeysServices.SecurityKeysApplicationService, 
           CoinExchange.IdentityAccess.Application">
     <constructor-arg name="securityKeysGenerationService" ref="SecurityKeysGenerationService"/>
-  </object>
+    <constructor-arg name="persistenceRepository" ref="PersistRepository"/>
+</object>
   
 <object id="LoginApplicationService" type="CoinExchange.IdentityAccess.Application.AccessControlServices.LoginApplicationService, 
           CoinExchange.IdentityAccess.Application">
   <constructor-arg name="userRepository" ref="UserRepository"/>
     <constructor-arg name="passwordEncryptionService" ref="PasswordEncryptionService"/>
-  <constructor-arg name="securityKeysGenerationService" ref="SecurityKeysGenerationService"/>
+  <constructor-arg name="securityKeysApplicationService" ref="SecurityKeysApplicationService"/>
   </object>
   
 <object id="LogoutApplicationService" type="CoinExchange.IdentityAccess.Application.AccessControlServices.LogoutApplicationService, 

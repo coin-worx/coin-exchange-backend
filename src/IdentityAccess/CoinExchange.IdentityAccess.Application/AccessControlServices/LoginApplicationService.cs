@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Management.Instrumentation;
 using CoinExchange.IdentityAccess.Application.AccessControlServices.Commands;
+using CoinExchange.IdentityAccess.Application.SecurityKeysServices;
 using CoinExchange.IdentityAccess.Domain.Model.Repositories;
 using CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate;
 using CoinExchange.IdentityAccess.Domain.Model.UserAggregate;
@@ -18,17 +19,17 @@ namespace CoinExchange.IdentityAccess.Application.AccessControlServices
 
         private IUserRepository _userRepository;
         private IPasswordEncryptionService _passwordEncryptionService;
-        private ISecurityKeysGenerationService _securityKeysGenerationService;
+        private ISecurityKeysApplicationService _securityKeysApplicationService;
 
         /// <summary>
         /// Initializes with the UserRepository and PasswordEncryption service 
         /// </summary>
         public LoginApplicationService(IUserRepository userRepository, IPasswordEncryptionService passwordEncryptionService,
-            ISecurityKeysGenerationService securityKeysGenerationService)
+                                       ISecurityKeysApplicationService securityKeysApplicationService)
         {
             _userRepository = userRepository;
             _passwordEncryptionService = passwordEncryptionService;
-            _securityKeysGenerationService = securityKeysGenerationService;
+            _securityKeysApplicationService = securityKeysApplicationService;
         }
 
         /// <summary>
@@ -42,8 +43,8 @@ namespace CoinExchange.IdentityAccess.Application.AccessControlServices
             {
                 if(_passwordEncryptionService.VerifyPassword(loginCommand.Password, user.Password))
                 {
-                    return new UserValidationEssentials(_securityKeysGenerationService.GenerateNewSecurityKeys(),
-                        user.AutoLogout);
+                    Tuple<ApiKey, SecretKey> securityKeys = _securityKeysApplicationService.CreateSystemGeneratedKey(loginCommand.Username);
+                    return new UserValidationEssentials(securityKeys, user.AutoLogout);
                 }
                 else
                 {

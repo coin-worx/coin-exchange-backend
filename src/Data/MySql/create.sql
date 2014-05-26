@@ -26,23 +26,6 @@ CREATE TABLE `currencypair` (
   PRIMARY KEY (`CurrencyPairName`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
 
-/*Table structure for table `digitalsignatureinfo` */
-
-DROP TABLE IF EXISTS `digitalsignatureinfo`;
-
-CREATE TABLE `digitalsignatureinfo` (
-  `KeyDescription` varchar(50) NOT NULL,
-  `ApiKey` varchar(100) DEFAULT NULL,
-  `SecretKey` varchar(100) DEFAULT NULL,
-  `ExpirationDate` datetime DEFAULT NULL,
-  `StartDate` datetime DEFAULT NULL,
-  `EndDate` datetime DEFAULT NULL,
-  `LastModified` datetime DEFAULT NULL,
-  `SystemGenerated` tinyint(1) DEFAULT NULL,
-  `UserName` varchar(50) DEFAULT NULL,
-  PRIMARY KEY (`KeyDescription`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
 /*Table structure for table `ohlc` */
 
 DROP TABLE IF EXISTS `ohlc`;
@@ -57,7 +40,7 @@ CREATE TABLE `ohlc` (
   `Volume` decimal(10,5) DEFAULT NULL,
   `CurrencyPair` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Table structure for table `order` */
 
@@ -83,10 +66,41 @@ CREATE TABLE `order` (
 DROP TABLE IF EXISTS `permission`;
 
 CREATE TABLE `permission` (
-  `PermissionId` int(11) NOT NULL AUTO_INCREMENT,
+  `PermissionId` varchar(10) NOT NULL,
   `PermissionName` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`PermissionId`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Table structure for table `securitykeyspair` */
+
+DROP TABLE IF EXISTS `securitykeyspair`;
+
+CREATE TABLE `securitykeyspair` (
+  `KeyDescription` varchar(50) NOT NULL,
+  `ApiKey` varchar(100) DEFAULT NULL,
+  `SecretKey` varchar(100) DEFAULT NULL,
+  `ExpirationDate` datetime DEFAULT NULL,
+  `StartDate` datetime DEFAULT NULL,
+  `EndDate` datetime DEFAULT NULL,
+  `LastModified` datetime DEFAULT NULL,
+  `SystemGenerated` tinyint(1) DEFAULT NULL,
+  `UserName` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`KeyDescription`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Table structure for table `securitykeyspermission` */
+
+DROP TABLE IF EXISTS `securitykeyspermission`;
+
+CREATE TABLE `securitykeyspermission` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `KeyDescription` varchar(100) DEFAULT NULL,
+  `PermissionId` varchar(10) DEFAULT NULL,
+  `IsAllowed` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`Id`),
+  KEY `FK_apikeypermission` (`PermissionId`),
+  CONSTRAINT `FK_apikeypermission` FOREIGN KEY (`PermissionId`) REFERENCES `permission` (`PermissionId`)
+) ENGINE=InnoDB AUTO_INCREMENT=202 DEFAULT CHARSET=latin1;
 
 /*Table structure for table `tickerinfo` */
 
@@ -113,7 +127,7 @@ CREATE TABLE `tickerinfo` (
   `Last24HourVolume` decimal(10,5) DEFAULT NULL,
   `CurrencyPair` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=latin1 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
 
 /*Table structure for table `trade` */
 
