@@ -48,17 +48,12 @@
     <Compile Include="AccessControlServices\ILogoutApplicationService.cs" />
     <Compile Include="AccessControlServices\LoginApplicationService.cs" />
     <Compile Include="AccessControlServices\LogoutApplicationService.cs" />
-    <Compile Include="Authentication\Commands\AuthenticateCommand.cs" />
-    <Compile Include="Authentication\IAuthenticationService.cs" />
-    <Compile Include="Authentication\Nonce.cs" />
-    <Compile Include="Authentication\HashHelper.cs" />
     <Compile Include="SecurityKeysServices\SecurityKeysApplicationService.cs" />
     <Compile Include="SecurityKeysServices\ISecurityKeysApplicationService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegistrationServices\Commands\SignupUserCommand.cs" />
     <Compile Include="RegistrationServices\IRegistrationApplicationService.cs" />
     <Compile Include="RegistrationServices\RegistrationApplicationService.cs" />
-    <Compile Include="UserAuthentication.cs" />
     <Compile Include="UserServices\IUserApplicationService.cs" />
     <Compile Include="UserServices\UserApplicationService.cs" />
   </ItemGroup>

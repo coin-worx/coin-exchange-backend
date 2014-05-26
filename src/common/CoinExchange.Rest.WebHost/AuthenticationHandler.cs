@@ -9,14 +9,22 @@ using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
-using CoinExchange.IdentityAccess.Application.Authentication;
-using CoinExchange.IdentityAccess.Application.Authentication.Commands;
+using CoinExchange.IdentityAccess.Domain.Model.UserAggregate.AuthenticationServices;
+using CoinExchange.IdentityAccess.Domain.Model.UserAggregate.AuthenticationServices.Commands;
 
 namespace CoinExchange.Rest.WebHost
 {
+    /// <summary>
+    /// Authenticates every Http Request
+    /// </summary>
     public class AuthenticationHandler : DelegatingHandler
     {
         private IAuthenticationService _authenticationService;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="service"></param>
         public AuthenticationHandler(IAuthenticationService service)
         {
             _authenticationService = service;

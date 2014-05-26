@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="log4net">
+      <HintPath>..\..\packages\log4net.1.2.10\lib\2.0\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -47,6 +50,11 @@
     <Compile Include="SecurityKeysAggregate\PermissionsList.cs" />
     <Compile Include="SecurityKeysAggregate\SecretKey.cs" />
     <Compile Include="SecurityKeysAggregate\UserValidationEssentials.cs" />
+    <Compile Include="UserAggregate\AuthenticationServices\Commands\AuthenticateCommand.cs" />
+    <Compile Include="UserAggregate\AuthenticationServices\HashHelper.cs" />
+    <Compile Include="UserAggregate\AuthenticationServices\IAuthenticationService.cs" />
+    <Compile Include="UserAggregate\AuthenticationServices\Nonce.cs" />
+    <Compile Include="UserAggregate\AuthenticationServices\UserAuthentication.cs" />
     <Compile Include="UserAggregate\IActivationKeyGenerationService.cs" />
     <Compile Include="SecurityKeysAggregate\Permission.cs" />
     <Compile Include="SecurityKeysAggregate\SecurityKeysPermission.cs" />
@@ -64,7 +72,15 @@
     <Compile Include="UserAggregate\Language.cs" />
     <Compile Include="UserAggregate\User.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\CoinExchange.Common\CoinExchange.Common.csproj">
+      <Project>{d61dbd04-95dc-4eb1-ad54-1ff929ac2814}</Project>
+      <Name>CoinExchange.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

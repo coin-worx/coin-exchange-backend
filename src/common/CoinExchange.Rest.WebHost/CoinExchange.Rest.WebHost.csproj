@@ -173,6 +173,14 @@
       <Project>{523daca3-bec6-45e9-90d4-8f6f8a1266d7}</Project>
       <Name>CoinExchange.IdentityAccess.Application</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\IdentityAccess\CoinExchange.IdentityAccess.Domain.Model\CoinExchange.IdentityAccess.Domain.Model.csproj">
+      <Project>{cb2cca81-c266-49a4-9fa0-40416ec2318e}</Project>
+      <Name>CoinExchange.IdentityAccess.Domain.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\IdentityAccess\CoinExchange.IdentityAccess.Infrastructure.Persistence\CoinExchange.IdentityAccess.Infrastructure.Persistence.csproj">
+      <Project>{41ec439d-9e31-4911-b1a6-e5f0a8c01637}</Project>
+      <Name>CoinExchange.IdentityAccess.Infrastructure.Persistence</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Trades\CoinExchance.Trades.ReadModel.Persistence\CoinExchange.Trades.ReadModel.Persistence.csproj">
       <Project>{9fca647f-ed19-4bef-a2ff-093ae27974e9}</Project>
       <Name>CoinExchange.Trades.ReadModel.Persistence</Name>

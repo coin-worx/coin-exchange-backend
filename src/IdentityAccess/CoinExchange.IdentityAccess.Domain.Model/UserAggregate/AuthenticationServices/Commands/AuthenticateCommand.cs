@@ -1,4 +1,4 @@
-﻿namespace CoinExchange.IdentityAccess.Application.Authentication.Commands
+﻿namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate.AuthenticationServices.Commands
 {
     public class AuthenticateCommand
     {

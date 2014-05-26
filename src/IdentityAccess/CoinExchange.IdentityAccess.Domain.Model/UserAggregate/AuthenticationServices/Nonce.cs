@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace CoinExchange.IdentityAccess.Application.Authentication
+namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate.AuthenticationServices
 {
     /// <summary>
     /// Serves the purpose of maintaing and genrating nonces
