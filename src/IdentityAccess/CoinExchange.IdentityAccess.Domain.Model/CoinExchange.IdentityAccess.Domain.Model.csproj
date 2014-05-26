@@ -44,6 +44,7 @@
     <Compile Include="SecurityKeysAggregate\ApiKey.cs" />
     <Compile Include="SecurityKeysAggregate\IPermissionRepository.cs" />
     <Compile Include="SecurityKeysAggregate\ISecurityKeysGenerationService.cs" />
+    <Compile Include="SecurityKeysAggregate\PermissionsConstant.cs" />
     <Compile Include="SecurityKeysAggregate\PermissionsList.cs" />
     <Compile Include="SecurityKeysAggregate\SecretKey.cs" />
     <Compile Include="SecurityKeysAggregate\UserValidationEssentials.cs" />

@@ -12,6 +12,14 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
     public class ApiKey
     {
         /// <summary>
+        /// default constructor
+        /// </summary>
+        public ApiKey()
+        {
+            
+        }
+
+        /// <summary>
         /// ParameterizedCOnstrcutor
         /// </summary>
         /// <param name="value"></param>

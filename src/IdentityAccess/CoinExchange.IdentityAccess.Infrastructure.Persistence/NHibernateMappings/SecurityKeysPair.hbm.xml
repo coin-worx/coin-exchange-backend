@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0"?>
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
 assembly="CoinExchange.IdentityAccess.Domain.Model" namespace="CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate">
-  <class name="DigitalSignatureInfo" table="DigitalSignatureInfo" lazy="false">
+  <class name="SecurityKeysPair" table="SecurityKeysPair" lazy="false">
     <id name="KeyDescription" column="KeyDescription">
       <generator class="assigned" />
     </id>
@@ -11,9 +11,16 @@ assembly="CoinExchange.IdentityAccess.Domain.Model" namespace="CoinExchange.Iden
     <property name="EndDate"  column="EndDate"/>
     <property name="LastModified"  column="LastModified"/>
     <property name="SystemGenerated" column="SystemGenerated"/>
-    <component name="SecurityKeys">
-      <property name="ApiKey" column="ApiKey"/>
-      <property name="SecretKey" column="SecretKey"/>
+    <component name="ApiKey">
+      <property name="Value" column="ApiKey"/>
     </component>
+    <component name="SecretKey">
+      <property name="Value" column="SecretKey"/>
+    </component>
+    <bag name="_securityKeysPermissions" table="SecurityKeysPermission" cascade="all" inverse="true" lazy="false">
+      <key column="KeyDescription"/>
+      <one-to-many
+         class="SecurityKeysPermission"/>
+    </bag>
   </class>
 </hibernate-mapping>
