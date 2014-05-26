@@ -87,6 +87,7 @@
     <Compile Include="LogoutApplicationServicesUnitTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegistrationApplicationServiceUnitTests.cs" />
+    <Compile Include="UserApplicationServiceTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

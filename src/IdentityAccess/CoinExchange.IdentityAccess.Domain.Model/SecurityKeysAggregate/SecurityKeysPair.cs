@@ -37,11 +37,12 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         /// <summary>
         /// Parameterized Constructor
         /// </summary>
-        public SecurityKeysPair(string username, ApiKey apiKey, SecretKey secretKey, bool isSystemGenerated)
+        public SecurityKeysPair(string username, ApiKey apiKey, SecretKey secretKey, bool isSystemGenerated, string keyDescription)
         {
             this.UserName = username;
             _apiKey = apiKey;
             _secretKey = secretKey;
+            this.KeyDescription = keyDescription;
 
             if (isSystemGenerated)
             {

@@ -31,6 +31,25 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
         /// <returns></returns>
         bool ActivateAccount(string activationKey, string username, string password);
 
+        /// <summary>
+        /// Request to Cancel the Account Activation after the user has signed up for an account but has not activated the account
+        /// </summary>
+        /// <param name="activationKey"></param>
+        /// <returns></returns>
         bool CancelAccountActivation(string activationKey);
+
+        /// <summary>
+        /// Request to remind the user
+        /// </summary>
+        /// <returns></returns>
+        bool ForgotUsername(string email);
+
+        /// <summary>
+        /// Forgot Password
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        bool ForgotPassword(string email, string username);
     }
 }
