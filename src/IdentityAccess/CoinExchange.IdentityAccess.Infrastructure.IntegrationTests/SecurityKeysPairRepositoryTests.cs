@@ -13,12 +13,12 @@ namespace CoinExchange.IdentityAccess.Infrastructure.IntegrationTests
     [TestFixture]
     public class SecurityKeysPairRepositoryTests:AbstractConfiguration
     {
-        private IPersistRepository _persistenceRepository;
+        private IIdentityAccessPersistenceRepository _persistenceRepository;
         private ISecurityKeysRepository _securityKeysPairRepository;
         private IPermissionRepository _permissionRepository;
 
         //properties will be injected based on type
-        public IPersistRepository PersistenceRepository
+        public IIdentityAccessPersistenceRepository PersistenceRepository
         {
             set { _persistenceRepository = value; }
         }

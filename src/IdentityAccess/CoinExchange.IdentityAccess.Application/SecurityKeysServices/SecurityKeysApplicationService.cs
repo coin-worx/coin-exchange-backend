@@ -10,13 +10,13 @@ namespace CoinExchange.IdentityAccess.Application.SecurityKeysServices
     public class SecurityKeysApplicationService : ISecurityKeysApplicationService
     {
         private ISecurityKeysGenerationService _securityKeysGenerationService;
-        private IPersistRepository _persistRepository;
+        private IIdentityAccessPersistenceRepository _persistRepository;
 
         /// <summary>
         /// Initializes the service for operating operations for the DigitalSignatures
         /// </summary>
         public SecurityKeysApplicationService(ISecurityKeysGenerationService securityKeysGenerationService, 
-            IPersistRepository persistenceRepository)
+            IIdentityAccessPersistenceRepository persistenceRepository)
         {
             _securityKeysGenerationService = securityKeysGenerationService;
             _persistRepository = persistenceRepository;

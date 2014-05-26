@@ -3,7 +3,7 @@
     /// <summary>
     /// For persisting Identity Access Domain models to Db
     /// </summary>
-    public interface IPersistRepository
+    public interface IIdentityAccessPersistenceRepository
     {
         void SaveUpdate(object entity);
     }

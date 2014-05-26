@@ -15,7 +15,7 @@ namespace CoinExchange.IdentityAccess.Infrastructure.IntegrationTests
     [TestFixture]
     public class UserRepositoryPersistenceTests:AbstractConfiguration
     {
-        private IPersistRepository _persistenceRepository;
+        private IIdentityAccessPersistenceRepository _persistenceRepository;
         private IUserRepository _userRepository;
         private ISessionFactory _sessionFactory;
 
@@ -24,7 +24,7 @@ namespace CoinExchange.IdentityAccess.Infrastructure.IntegrationTests
         {
             set { _userRepository = value; }
         }
-        public IPersistRepository PersistenceRepository
+        public IIdentityAccessPersistenceRepository PersistenceRepository
         {
             set { _persistenceRepository = value; }
         }

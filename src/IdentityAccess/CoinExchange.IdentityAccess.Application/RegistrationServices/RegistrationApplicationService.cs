@@ -12,7 +12,7 @@ namespace CoinExchange.IdentityAccess.Application.RegistrationServices
     /// </summary>
     public class RegistrationApplicationService : IRegistrationApplicationService
     {
-        private IPersistRepository _persistenceRepository;
+        private IIdentityAccessPersistenceRepository _persistenceRepository;
         // Get the Current Logger
         private static readonly log4net.ILog Log = log4net.LogManager.GetLogger
         (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -22,7 +22,7 @@ namespace CoinExchange.IdentityAccess.Application.RegistrationServices
         /// <summary>
         /// Parameterized Constructor
         /// </summary>
-        public RegistrationApplicationService(IPersistRepository persistenceRepository, IPasswordEncryptionService passwordEncryptionService, IActivationKeyGenerationService activationKeyGenerationService)
+        public RegistrationApplicationService(IIdentityAccessPersistenceRepository persistenceRepository, IPasswordEncryptionService passwordEncryptionService, IActivationKeyGenerationService activationKeyGenerationService)
         {
             _persistenceRepository = persistenceRepository;
             _passwordEncryptionService = passwordEncryptionService;

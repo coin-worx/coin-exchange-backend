@@ -40,7 +40,7 @@ namespace CoinExchange.IdentityAccess.Application.Tests
         public void LoginSuccessfulTest_ChecksIfTheSecurityKeysAreProperlyReturnedWhileLoggingIn_VerifiesTheReturnedKeysToConfirm()
         {
             IUserRepository userRepository = new MockUserRepository();
-            IPersistRepository persistRepository = new MockPersistenceRepository(false);
+            IIdentityAccessPersistenceRepository persistRepository = new MockPersistenceRepository(false);
             ISecurityKeysApplicationService securityKeysApplicationService = new SecurityKeysApplicationService(new SecurityKeysGenerationService(),
                 persistRepository);
             IPasswordEncryptionService passwordEncryptionService = new PasswordEncryptionService();
@@ -67,7 +67,7 @@ namespace CoinExchange.IdentityAccess.Application.Tests
         public void LoginfailDueToIncorrectUsernameTest_MakesSureLoginFailsInCaseOfWrongUsername_VerifiesTheReturnedNullResultToConfirm()
         {
             IUserRepository userRepository = new MockUserRepository();
-            IPersistRepository persistRepository = new MockPersistenceRepository(false);
+            IIdentityAccessPersistenceRepository persistRepository = new MockPersistenceRepository(false);
             ISecurityKeysApplicationService securityKeysApplicationService = new SecurityKeysApplicationService(new SecurityKeysGenerationService(),
                 persistRepository);
             IPasswordEncryptionService passwordEncryptionService = new PasswordEncryptionService();
@@ -91,7 +91,7 @@ namespace CoinExchange.IdentityAccess.Application.Tests
         public void LoginfailDueToIncorrectPasswordTest_MakesSureLoginFailsInCaseOfWrongPassword_VerifiesTheReturnedNullResultToConfirm()
         {
             IUserRepository userRepository = new MockUserRepository();
-            IPersistRepository persistRepository = new MockPersistenceRepository(false);
+            IIdentityAccessPersistenceRepository persistRepository = new MockPersistenceRepository(false);
             ISecurityKeysApplicationService securityKeysApplicationService = new SecurityKeysApplicationService(new SecurityKeysGenerationService(),
                 persistRepository);
             IPasswordEncryptionService passwordEncryptionService = new PasswordEncryptionService();

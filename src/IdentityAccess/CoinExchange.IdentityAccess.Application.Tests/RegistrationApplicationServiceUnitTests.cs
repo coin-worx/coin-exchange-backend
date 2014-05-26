@@ -34,7 +34,7 @@ namespace CoinExchange.IdentityAccess.Application.Tests
         [Category("Unit")]
         public void UserCreatedTest_ChecksIfTheRegistrationServiceCreatesAUserAsExpected()
         {
-            IPersistRepository persistenceRepository = new MockPersistenceRepository(false);
+            IIdentityAccessPersistenceRepository persistenceRepository = new MockPersistenceRepository(false);
             RegistrationApplicationService registrationApplicationService = new RegistrationApplicationService(persistenceRepository, 
                 new PasswordEncryptionService(), new ActivationKeyGenerationService());
 
@@ -50,7 +50,7 @@ namespace CoinExchange.IdentityAccess.Application.Tests
         [Category("Unit")]
         public void EmailNotProvidedTest_TestsIfNewUserIsNotCreatedWhenEmailIsNotGiven_ChecksActivationKeyisNotReturnedToConfirm()
         {
-            IPersistRepository persistenceRepository = new MockPersistenceRepository(false);
+            IIdentityAccessPersistenceRepository persistenceRepository = new MockPersistenceRepository(false);
             RegistrationApplicationService registrationApplicationService = new RegistrationApplicationService(persistenceRepository,
                 new PasswordEncryptionService(), new ActivationKeyGenerationService());
 
@@ -65,7 +65,7 @@ namespace CoinExchange.IdentityAccess.Application.Tests
         [Category("Unit")]
         public void UsernameNotProvidedTest_TestsIfNewUserIsNotCreatedWhenUsernameIsNotGiven_ChecksActivationKeyisNotReturnedToConfirm()
         {
-            IPersistRepository persistenceRepository = new MockPersistenceRepository(false);
+            IIdentityAccessPersistenceRepository persistenceRepository = new MockPersistenceRepository(false);
             RegistrationApplicationService registrationApplicationService = new RegistrationApplicationService(persistenceRepository,
                 new PasswordEncryptionService(), new ActivationKeyGenerationService());
 
@@ -80,7 +80,7 @@ namespace CoinExchange.IdentityAccess.Application.Tests
         [Category("Unit")]
         public void PasswordNotProvidedTest_TestsIfNewUserIsNotCreatedWhenPasswordIsNotGiven_ChecksActivationKeyisNotReturnedToConfirm()
         {
-            IPersistRepository persistenceRepository = new MockPersistenceRepository(false);
+            IIdentityAccessPersistenceRepository persistenceRepository = new MockPersistenceRepository(false);
             RegistrationApplicationService registrationApplicationService = new RegistrationApplicationService(persistenceRepository,
                 new PasswordEncryptionService(), new ActivationKeyGenerationService());
 
@@ -96,7 +96,7 @@ namespace CoinExchange.IdentityAccess.Application.Tests
         public void DatabaseMockSaveFailTest_TestsIfUserIsNotSavedInDatabaseExceptionIsRaisedFromTheMockClass_HandlesTheExceptionToConfirm()
         {
             // Provide true to the Mock class  so that it raises exception when SaveUpdate method is called inside it
-            IPersistRepository persistenceRepository = new MockPersistenceRepository(true);
+            IIdentityAccessPersistenceRepository persistenceRepository = new MockPersistenceRepository(true);
             RegistrationApplicationService registrationApplicationService = new RegistrationApplicationService(persistenceRepository,
                 new PasswordEncryptionService(), new ActivationKeyGenerationService());
 

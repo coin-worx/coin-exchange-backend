@@ -9,7 +9,7 @@ using CoinExchange.IdentityAccess.Domain.Model.UserAggregate;
 
 namespace CoinExchange.IdentityAccess.Application.Tests
 {
-    public class MockPersistenceRepository : IPersistRepository
+    public class MockPersistenceRepository : IIdentityAccessPersistenceRepository
     {
         private bool _shouldPretendToSave = false;
         private List<User> usersList = new List<User>();

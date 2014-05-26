@@ -50,6 +50,7 @@
     <Compile Include="SecurityKeysAggregate\PermissionsConstant.cs" />
     <Compile Include="SecurityKeysAggregate\PermissionsList.cs" />
     <Compile Include="SecurityKeysAggregate\SecretKey.cs" />
+    <Compile Include="SecurityKeysAggregate\SecurityKeysPairFactory.cs" />
     <Compile Include="SecurityKeysAggregate\UserValidationEssentials.cs" />
     <Compile Include="UserAggregate\AuthenticationServices\Commands\AuthenticateCommand.cs" />
     <Compile Include="UserAggregate\AuthenticationServices\HashHelper.cs" />
@@ -61,7 +62,7 @@
     <Compile Include="SecurityKeysAggregate\SecurityKeysPermission.cs" />
     <Compile Include="SecurityKeysAggregate\SecurityKeysPair.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repositories\IPersistRepository.cs" />
+    <Compile Include="Repositories\IIdentityAccessPersistenceRepository.cs" />
     <Compile Include="UserAggregate\IPasswordEncryptionService.cs" />
     <Compile Include="UserAggregate\Status.cs" />
     <Compile Include="UserAggregate\Tier.cs" />
