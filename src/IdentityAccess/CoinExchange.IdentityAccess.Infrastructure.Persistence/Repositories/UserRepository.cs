@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CoinExchange.IdentityAccess.Domain.Model.Repositories;
 using CoinExchange.IdentityAccess.Domain.Model.UserAggregate;
+using NHibernate.Criterion;
 using Spring.Stereotype;
 using Spring.Transaction.Interceptor;
 

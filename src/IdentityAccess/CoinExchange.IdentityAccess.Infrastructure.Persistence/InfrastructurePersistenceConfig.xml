@@ -40,7 +40,7 @@
   <!--<object type="Spring.Dao.Attributes.PersistenceExceptionTranslationPostProcessor, Spring.Data"/>-->
 
   <!-- Repositories -->
-  <object id="PersistRepository" type="CoinExchange.IdentityAccess.Infrastructure.Persistence.Repositories.PersistRepository, CoinExchange.IdentityAccess.Infrastructure.Persistence">
+  <object id="IdentityAccessPersistenceRepository" type="CoinExchange.IdentityAccess.Infrastructure.Persistence.Repositories.IdentityAccessPersistenceRepository, CoinExchange.IdentityAccess.Infrastructure.Persistence">
     <property name="SessionFactory" ref="NHibernateSessionFactory"/>
   </object>
 
