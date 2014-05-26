@@ -20,7 +20,8 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         public static SecurityKeysPair SystemGeneratedSecurityKeyPair(string userName,ISecurityKeysGenerationService securityKeysGeneration)
         {
             var keys = securityKeysGeneration.GenerateNewSecurityKeys();
-            return null;
+            SecurityKeysPair securityKeysPair=new SecurityKeysPair(keys.Item1,keys.Item2,DateTime.Now.ToString(),userName,true);
+            return securityKeysPair;
         }
 
         /// <summary>
