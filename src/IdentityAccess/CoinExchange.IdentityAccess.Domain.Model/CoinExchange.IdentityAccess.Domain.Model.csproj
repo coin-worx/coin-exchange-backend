@@ -54,7 +54,7 @@
     <Compile Include="UserAggregate\AuthenticationServices\HashHelper.cs" />
     <Compile Include="UserAggregate\AuthenticationServices\IAuthenticationService.cs" />
     <Compile Include="UserAggregate\AuthenticationServices\Nonce.cs" />
-    <Compile Include="UserAggregate\AuthenticationServices\UserAuthentication.cs" />
+    <Compile Include="UserAggregate\AuthenticationServices\UserAuthenticationService.cs" />
     <Compile Include="UserAggregate\IActivationKeyGenerationService.cs" />
     <Compile Include="SecurityKeysAggregate\Permission.cs" />
     <Compile Include="SecurityKeysAggregate\SecurityKeysPermission.cs" />

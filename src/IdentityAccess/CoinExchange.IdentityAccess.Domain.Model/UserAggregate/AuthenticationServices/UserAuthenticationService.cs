@@ -12,14 +12,16 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate.AuthenticationS
             (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private ISecurityKeysRepository _securityKeysRepository = null;
-
+        private IUserRepository _userRepository = null;
         /// <summary>
         /// Initializes with the Secrutiy Keys Repository
         /// </summary>
+        /// <param name="userRepository"> </param>
         /// <param name="securityKeysRepository"></param>
-        public UserAuthenticationService(ISecurityKeysRepository securityKeysRepository)
+        public UserAuthenticationService(IUserRepository userRepository, ISecurityKeysRepository securityKeysRepository)
         {
             _securityKeysRepository = securityKeysRepository;
+            _userRepository = userRepository;
         }
 
         /// <summary>
@@ -52,7 +54,33 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate.AuthenticationS
 
             if (securityKeysPair != null)
             {
-                
+                User user = null;
+                // ToDo: Get the User by the API Key after Bilal provides the method in the UserRepository
+                //_userRepository.GetUserByUserName()
+
+                if (securityKeysPair.SystemGenerated)
+                {
+                    if (user != null)
+                    {
+                        int activeWindow = securityKeysPair.StartDate.Millisecond + user.AutoLogout.Milliseconds;
+
+                        if (securityKeysPair.StartDate.AddMilliseconds(activeWindow) < DateTime.Now)
+                        {
+                            return true;
+                        }
+                    }
+                }
+                else
+                {
+                    if (securityKeysPair.ExpirationDate < DateTime.Now)
+                    {
+                        foreach (var securityPermission in securityKeysPair.PermissionList)
+                        {
+                            // ToDo: Implement after Master Data is loaded by Bilal for Permissions. Need to verify 
+                            // the request from the URI and then check for the corresponding permission
+                        }
+                    }
+                }
             }
             return false;
         }

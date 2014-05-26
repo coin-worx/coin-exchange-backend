@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Configuration;
 using CoinExchange.Common.Tests;
 using CoinExchange.IdentityAccess.Application.AccessControlServices;
 using NUnit.Framework;
 using Spring.Context;
 using Spring.Context.Support;
 
-namespace CoinExchange.IdentityAccess.Application.Tests
+namespace CoinExchange.IdentityAccess.Application.IntegrationTests
 {
     [TestFixture]
-    public class LoginApplicationServiceTests
+    class LogoutApplicationServicesTests
     {
         private IApplicationContext _applicationContext;
         private DatabaseUtility _databaseUtility;
@@ -36,10 +31,10 @@ namespace CoinExchange.IdentityAccess.Application.Tests
         }
 
         [Test]
-        public void LoginServiceInitializationAndInjectiontest_ChecksIfTheServiceGetsInitializedUsingSpring_FailsIfNot()
+        public void LogoutServiceInitializationAndInjectiontest_ChecksIfTheServiceGetsInitializedUsingSpring_FailsIfNot()
         {
-            ILoginApplicationService loginApplicationService = (ILoginApplicationService)_applicationContext["LoginApplicationService"];
-            Assert.IsNotNull(loginApplicationService);
+            ILogoutApplicationService logoutApplicationService = (ILogoutApplicationService)_applicationContext["LogoutApplicationService"];
+            Assert.IsNotNull(logoutApplicationService);
         }
     }
 }

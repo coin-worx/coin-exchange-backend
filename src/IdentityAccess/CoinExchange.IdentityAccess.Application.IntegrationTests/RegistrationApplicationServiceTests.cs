@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CoinExchange.Common.Tests;
 using CoinExchange.IdentityAccess.Application.RegistrationServices;
 using CoinExchange.IdentityAccess.Application.RegistrationServices.Commands;
@@ -13,7 +9,7 @@ using NUnit.Framework;
 using Spring.Context;
 using Spring.Context.Support;
 
-namespace CoinExchange.IdentityAccess.Application.Tests
+namespace CoinExchange.IdentityAccess.Application.IntegrationTests
 {
     [TestFixture]
     public class RegistrationApplicationServiceTests
@@ -47,6 +43,7 @@ namespace CoinExchange.IdentityAccess.Application.Tests
         }
 
         [Test]
+        [Category("Integration")]
         public void CreateNewAccountTest_ChecksWhetherTheUserIsCreatedAndSavedToPersistence_VerifiesThroughUsingDatabaseresult()
         {
             IRegistrationApplicationService registrationService =
@@ -65,6 +62,22 @@ namespace CoinExchange.IdentityAccess.Application.Tests
             Assert.AreEqual("", receivedUser.PublicKey);
             Assert.AreEqual(TimeZone.CurrentTimeZone.StandardName, receivedUser.TimeZone.StandardName);
             Assert.AreEqual(activationKey, receivedUser.ActivationKey);
+        }
+
+        [Test]
+        [Category("Integration")]
+        public void CreateNewAccountFailTest_CredentialsNotGivenAndDatabaseSaveShouldNotHappen_VerifiesThroughUsingDatabaseResult()
+        {
+            IRegistrationApplicationService registrationService =
+                (IRegistrationApplicationService)_applicationContext["RegistrationApplicationService"];
+            IUserRepository userRepository =
+                (IUserRepository)_applicationContext["UserRepository"];
+            string activationKey = registrationService.CreateAccount(new SignupUserCommand(
+                "", "", "", "Wonderland", TimeZone.CurrentTimeZone, ""));
+
+            Assert.IsNull(activationKey);
+            User receivedUser = userRepository.GetUserByUserName("");
+            Assert.IsNull(receivedUser);
         }
     }
 }

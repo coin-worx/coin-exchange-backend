@@ -191,5 +191,10 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         /// SystemGenerated
         /// </summary>
         public bool SystemGenerated { get; private set; }
+
+        /// <summary>
+        /// List of Permissions granted to this Security Keys Pair
+        /// </summary>
+        public PermissionsList PermissionList { get { return _permissionsList; } private set { _permissionsList = value; } }
     }
 }

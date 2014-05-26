@@ -80,11 +80,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DigitalSignatureServiceTests.cs" />
-    <Compile Include="LoginApplicationServiceTests.cs" />
-    <Compile Include="LogoutApplicationServicesTests.cs" />
+    <Compile Include="MockPersistenceRepository.cs" />
+    <Compile Include="MockUserRepository.cs" />
+    <Compile Include="SecurityKeysApplicationServiceUnitTests.cs" />
+    <Compile Include="LoginApplicationServiceUnitTests.cs" />
+    <Compile Include="LogoutApplicationServicesUnitTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RegistrationApplicationServiceTests.cs" />
+    <Compile Include="RegistrationApplicationServiceUnitTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

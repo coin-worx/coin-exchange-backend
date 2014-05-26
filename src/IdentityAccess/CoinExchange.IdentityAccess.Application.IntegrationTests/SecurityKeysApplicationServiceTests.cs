@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Configuration;
 using CoinExchange.Common.Tests;
 using CoinExchange.IdentityAccess.Application.SecurityKeysServices;
 using CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate;
@@ -11,10 +6,10 @@ using NUnit.Framework;
 using Spring.Context;
 using Spring.Context.Support;
 
-namespace CoinExchange.IdentityAccess.Application.Tests
+namespace CoinExchange.IdentityAccess.Application.IntegrationTests
 {
     [TestFixture]
-    class DigitalSignatureServiceTests
+    class SecurityKeysApplicationServiceTests
     {
         private IApplicationContext _applicationContext;
         private DatabaseUtility _databaseUtility;
@@ -40,7 +35,7 @@ namespace CoinExchange.IdentityAccess.Application.Tests
         public void ServiceStartuptest_TestsIfTheServiceStartsAsExpectedThroughSpring_VerifiesThroughTheStateOfTheObject()
         {
             ISecurityKeysApplicationService registrationService =
-                (ISecurityKeysApplicationService)_applicationContext["DigitalSignatureApplicationService"];
+                (ISecurityKeysApplicationService)_applicationContext["SecurityKeysApplicationService"];
             Assert.IsNotNull(registrationService);
         }
 
@@ -48,7 +43,7 @@ namespace CoinExchange.IdentityAccess.Application.Tests
         public void SecurityKeyGenerationService_TestsIfTheSecurityKeysAreGenerated_VerifiesThroughTheReturnedValues()
         {
             ISecurityKeysApplicationService registrationService =
-                (ISecurityKeysApplicationService)_applicationContext["DigitalSignatureApplicationService"];
+                (ISecurityKeysApplicationService)_applicationContext["SecurityKeysApplicationService"];
 
             SecurityKeysPair securityKeys = registrationService.GetNewKey();
 

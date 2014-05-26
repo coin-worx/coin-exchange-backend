@@ -19,6 +19,7 @@ namespace CoinExchange.IdentityAccess.Application.AccessControlServices
         private IUserRepository _userRepository;
         private IPasswordEncryptionService _passwordEncryptionService;
         private ISecurityKeysGenerationService _securityKeysGenerationService;
+
         /// <summary>
         /// Initializes with the UserRepository and PasswordEncryption service 
         /// </summary>
@@ -46,12 +47,12 @@ namespace CoinExchange.IdentityAccess.Application.AccessControlServices
                 }
                 else
                 {
-                    throw new Exception(string.Format("Password incorrect for username: {0}", loginCommand.Username));
+                    Log.Error(string.Format("Incorrect password for username: {0}", loginCommand.Username));
                 }
             }
             else
             {
-                throw new InstanceNotFoundException(string.Format("No user could be found for the username: {0}", loginCommand.Username));
+                Log.Error(string.Format("Invalid username: {0}", loginCommand.Username));
             }
             return null;
         }
