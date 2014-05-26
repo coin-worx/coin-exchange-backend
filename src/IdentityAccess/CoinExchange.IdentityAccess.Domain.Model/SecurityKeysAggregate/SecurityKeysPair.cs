@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using CoinExchange.Common.Domain.Model;
 
 namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
 {
@@ -13,6 +14,8 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
 
         private ApiKey _apiKey;
         private SecretKey _secretKey;
+        private string _keyDescription;
+        private string _userName;
         private IList<SecurityKeysPermission> _securityKeysPermissions { get; set; }
 
         #endregion Private Fields
@@ -23,6 +26,24 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         public SecurityKeysPair()
         {
             _securityKeysPermissions=new List<SecurityKeysPermission>();
+        }
+
+        /// <summary>
+        /// Constructor for system generated key pair
+        /// </summary>
+        /// <param name="apiKey"></param>
+        /// <param name="secretKey"></param>
+        /// <param name="keyDescription"></param>
+        /// <param name="userName"></param>
+        /// <param name="systemGenerated"></param>
+        public SecurityKeysPair(ApiKey apiKey, SecretKey secretKey, string keyDescription, string userName, bool systemGenerated)
+        {
+            _apiKey = apiKey;
+            _secretKey = secretKey;
+            KeyDescription = keyDescription;
+            UserName = userName;
+            SystemGenerated = systemGenerated;
+            CreationDateTime = DateTime.Now;
         }
 
         /// <summary>
@@ -101,6 +122,8 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
                     }
                 }
             }
+            //update last modified date time.
+            LastModified = DateTime.Now;
             return true;
         }
 
@@ -186,7 +209,12 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         /// </summary>
         public string KeyDescription
         {
-            get; private set;
+            get { return _keyDescription; }
+            private set
+            {
+                AssertionConcern.AssertNullOrEmptyString(value,"Key description cannot be null");
+                _keyDescription = value;
+            }
         }
 
         /// <summary>
@@ -202,7 +230,15 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         /// <summary>
         /// Username
         /// </summary>
-        public string UserName { get; private set; }
+        public string UserName
+        {
+            get { return _userName; }
+            private set
+            {
+                AssertionConcern.AssertNullOrEmptyString(value, "Username cannot be null or empty");
+                _userName = value;
+            }
+        }
 
         /// <summary>
         /// Expiration Date
@@ -222,7 +258,12 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         /// <summary>
         /// LastModified
         /// </summary>
-        public DateTime LastModified { get; set; }
+        public DateTime LastModified { get; private set; }
+
+        /// <summary>
+        /// Creation DateTime
+        /// </summary>
+        public DateTime CreationDateTime { get; private set; }
 
         /// <summary>
         /// SystemGenerated

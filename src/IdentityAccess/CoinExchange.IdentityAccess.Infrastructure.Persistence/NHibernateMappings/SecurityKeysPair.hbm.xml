@@ -10,6 +10,7 @@ assembly="CoinExchange.IdentityAccess.Domain.Model" namespace="CoinExchange.Iden
     <property name="StartDate"  column="StartDate"/>
     <property name="EndDate"  column="EndDate"/>
     <property name="LastModified"  column="LastModified"/>
+    <property name="CreationDateTime"  column="CreationDateTime"/>
     <property name="SystemGenerated" column="SystemGenerated"/>
     <component name="ApiKey">
       <property name="Value" column="ApiKey"/>
