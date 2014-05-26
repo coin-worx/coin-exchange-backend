@@ -21,5 +21,23 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Persistence.Repositories
         {
             return CurrentSession.Get<User>(username);
         }
+
+        [Transaction(ReadOnly = true)]
+        public User GetUserByActivationKey(string activationKey)
+        {
+            return CurrentSession.QueryOver<User>().Where(x => x.ActivationKey == activationKey).SingleOrDefault();
+        }
+
+        [Transaction(ReadOnly = true)]
+        public User GetUserByEmail(string email)
+        {
+            return CurrentSession.QueryOver<User>().Where(x => x.Email == email).SingleOrDefault();
+        }
+
+        [Transaction(ReadOnly = true)]
+        public User GetUserByEmailAndUserName(string username, string email)
+        {
+            return CurrentSession.QueryOver<User>().Where(x => x.Username == username && x.Email==email).SingleOrDefault();
+        }
     }
 }

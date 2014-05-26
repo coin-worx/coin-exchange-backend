@@ -9,14 +9,14 @@ namespace CoinExchange.IdentityAccess.Application.RegistrationServices
     /// </summary>
     public class RegistrationApplicationService : IRegistrationApplicationService
     {
-        private IPersistenceRepository _persistenceRepository;
+        private IPersistRepository _persistenceRepository;
         private IPasswordEncryptionService _passwordEncryptionService;
         private IActivationKeyGenerationService _activationKeyGenerationService;
 
         /// <summary>
         /// Parameterized Constructor
         /// </summary>
-        public RegistrationApplicationService(IPersistenceRepository persistenceRepository, IPasswordEncryptionService passwordEncryptionService, IActivationKeyGenerationService activationKeyGenerationService)
+        public RegistrationApplicationService(IPersistRepository persistenceRepository, IPasswordEncryptionService passwordEncryptionService, IActivationKeyGenerationService activationKeyGenerationService)
         {
             _persistenceRepository = persistenceRepository;
             _passwordEncryptionService = passwordEncryptionService;

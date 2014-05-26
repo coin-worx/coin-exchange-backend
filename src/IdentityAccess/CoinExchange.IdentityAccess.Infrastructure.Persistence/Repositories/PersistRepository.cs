@@ -13,7 +13,7 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Persistence.Repositories
     /// Persistence repository for storing objects
     /// </summary>
     [Repository]
-    public class PersistenceRepository : NHibernateSessionFactory, IPersistenceRepository
+    public class PersistRepository : NHibernateSessionFactory, IPersistRepository
     {
         [Transaction(ReadOnly = false)]
         public void SaveUpdate(object entity)

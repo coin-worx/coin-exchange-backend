@@ -76,7 +76,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\SecurityKeysPairRepository.cs" />
     <Compile Include="Repositories\PermissionRespository.cs" />
-    <Compile Include="Repositories\PersistenceRepository.cs" />
+    <Compile Include="Repositories\PersistRepository.cs" />
     <Compile Include="Repositories\UserRepository.cs" />
   </ItemGroup>
   <ItemGroup>
