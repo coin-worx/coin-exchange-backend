@@ -76,11 +76,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="LoginApplicationServiceTests.cs" />
-    <Compile Include="LogoutApplicationServicesTests.cs" />
+    <Compile Include="LoginApplicationServiceIntegrationTests.cs" />
+    <Compile Include="LogoutApplicationServicesIntegrationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RegistrationApplicationServiceTests.cs" />
-    <Compile Include="SecurityKeysApplicationServiceTests.cs" />
+    <Compile Include="RegistrationApplicationServiceIntegrationTests.cs" />
+    <Compile Include="SecurityKeysApplicationServiceIntegrationTests.cs" />
+    <Compile Include="UserApplicationServiceIntegrationTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -70,9 +70,8 @@ namespace CoinExchange.IdentityAccess.Application.RegistrationServices
             }
             else
             {
-                Log.Error("Email, username and/or Password not provided for reister new user request.");
+                throw new InvalidCredentialException("Email, username and/or Password not provided for reister new user request.");
             }
-            return null;
         }
     }
 }

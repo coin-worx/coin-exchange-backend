@@ -74,12 +74,57 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
         /// <returns></returns>
         public bool ActivateAccount(string activationKey, string username, string password)
         {
-            throw new NotImplementedException();
+            // Make sure all given credentials contain values
+            if (!string.IsNullOrEmpty(activationKey) && !string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
+            {
+                // Get the user tied to this Activation Key
+                User userByActivationKey = _userRepository.GetUserByActivationKey(activationKey);
+                // If activation key is valid, proceed to verify username and password
+                if (userByActivationKey != null)
+                {
+                    if (username == userByActivationKey.Username &&
+                        _passwordEncryptionService.VerifyPassword(password, userByActivationKey.Password))
+                    {
+                        // Make the activation key for this user = null, as this account is now activated
+                        userByActivationKey.ActivationKey = null;
+                        // Save in repository
+                        _persistenceRepository.SaveUpdate(userByActivationKey);
+                        return true;
+                    }
+                }
+            }
+            // If the user did not provide all the credentials, return with failure
+            else
+            {
+                Log.Error("Activation Key, Username and/or Password not provided");
+            }
+            return false;
         }
 
+        /// <summary>
+        /// Cancel the account activation for this user
+        /// </summary>
+        /// <param name="activationKey"></param>
+        /// <returns></returns>
         public bool CancelAccountActivation(string activationKey)
         {
-            throw new NotImplementedException();
+            // Make sure all given credential contains value
+            if (!string.IsNullOrEmpty(activationKey))
+            {
+                // Get the user tied to this Activation Key
+                User userByActivationKey = _userRepository.GetUserByActivationKey(activationKey);
+                // If activation key is valid, proceed to verify username and password
+                if (userByActivationKey != null)
+                {
+                    // ToDo: Soft Delete the 
+                }
+            }
+            // If the user did not provide all the credentials, return with failure
+            else
+            {
+                Log.Error("Activation Key, Username and/or Password not provided");
+            }
+            return false;
         }
 
         public bool ForgotUsername(string email)

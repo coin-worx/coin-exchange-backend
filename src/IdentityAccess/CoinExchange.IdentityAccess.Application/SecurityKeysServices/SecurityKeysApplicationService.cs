@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using CoinExchange.IdentityAccess.Domain.Model.Repositories;
 using CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate;
 
@@ -11,6 +12,7 @@ namespace CoinExchange.IdentityAccess.Application.SecurityKeysServices
     {
         private ISecurityKeysGenerationService _securityKeysGenerationService;
         private IIdentityAccessPersistenceRepository _persistRepository;
+        private int _keyDescriptionCounter = 0;
 
         /// <summary>
         /// Initializes the service for operating operations for the DigitalSignatures
@@ -32,7 +34,7 @@ namespace CoinExchange.IdentityAccess.Application.SecurityKeysServices
             {
                 Tuple<ApiKey, SecretKey> securityKeys = _securityKeysGenerationService.GenerateNewSecurityKeys();
                 SecurityKeysPair securityKeysPair = new SecurityKeysPair(username, securityKeys.Item1,
-                                                                         securityKeys.Item2, true, "123");
+                                securityKeys.Item2, true, (++_keyDescriptionCounter).ToString(CultureInfo.InvariantCulture));
                 
                 _persistRepository.SaveUpdate(securityKeysPair);
                 return securityKeys;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using System.Security.Authentication;
 using CoinExchange.Common.Tests;
 using CoinExchange.IdentityAccess.Application.AccessControlServices;
 using CoinExchange.IdentityAccess.Application.AccessControlServices.Commands;
@@ -77,26 +78,47 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
                 "bob@alice.com", "Bob", "alice", "Wonderland", TimeZone.CurrentTimeZone, ""));
 
             Assert.IsNotNull(activationKey);
+            bool exceptionRaised = false;
+            try
+            {
+                loginApplicationService.Login(new LoginCommand("bobby", "alice"));
+            }
+            catch (InvalidCredentialException e)
+            {
+                exceptionRaised = true;
+            }
 
-            UserValidationEssentials userValidationEssentials = loginApplicationService.Login(new LoginCommand("bobby", "alice"));
-            Assert.IsNull(userValidationEssentials);
+            Assert.IsTrue(exceptionRaised);
         }
 
         [Test]
         [Category("Integration")]
         public void LoginFailTest_TestsifTheLoginisSuccessfulAfterProvidingInvalidPassword_VerifiesThroughTheReturnedResult()
         {
-            ILoginApplicationService loginApplicationService = (ILoginApplicationService)_applicationContext["LoginApplicationService"];
+            ILoginApplicationService loginApplicationService =
+                (ILoginApplicationService) _applicationContext["LoginApplicationService"];
             Assert.IsNotNull(loginApplicationService);
-            IRegistrationApplicationService registrationService = (IRegistrationApplicationService)_applicationContext["RegistrationApplicationService"]; ;
+            IRegistrationApplicationService registrationService =
+                (IRegistrationApplicationService) _applicationContext["RegistrationApplicationService"];
+            ;
 
             string activationKey = registrationService.CreateAccount(new SignupUserCommand(
-                "bob@alice.com", "Bob", "alice", "Wonderland", TimeZone.CurrentTimeZone, ""));
+                                                                         "bob@alice.com", "Bob", "alice", "Wonderland",
+                                                                         TimeZone.CurrentTimeZone, ""));
 
             Assert.IsNotNull(activationKey);
 
-            UserValidationEssentials userValidationEssentials = loginApplicationService.Login(new LoginCommand("Bob", "khaleesi"));
-            Assert.IsNull(userValidationEssentials);
+            bool exceptionRaised = false;
+            try
+            {
+                loginApplicationService.Login(new LoginCommand("Bob", "khaleesi"));
+            }
+            catch (InvalidCredentialException e)
+            {
+                exceptionRaised = true;
+            }
+
+            Assert.IsTrue(exceptionRaised);
         }
     }
 }
