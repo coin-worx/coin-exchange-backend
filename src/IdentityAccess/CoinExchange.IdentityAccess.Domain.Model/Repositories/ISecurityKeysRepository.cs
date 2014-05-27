@@ -13,7 +13,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.Repositories
     /// </summary>
     public interface ISecurityKeysRepository
     {
-        SecurityKeysPair GetByKeyDescription(string keyDescription);
+        SecurityKeysPair GetByKeyDescription(string keyDescription,string userName);
         SecurityKeysPair GetByApiKey(string apiKey);
     }
 }

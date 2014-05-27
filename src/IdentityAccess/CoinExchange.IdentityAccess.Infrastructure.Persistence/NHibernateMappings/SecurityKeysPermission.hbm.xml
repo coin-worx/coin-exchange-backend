@@ -5,8 +5,8 @@ assembly="CoinExchange.IdentityAccess.Domain.Model" namespace="CoinExchange.Iden
     <id name="Id" column="Id">
       <generator class="native" />
     </id>
-    <property name="KeyDescription"  column="KeyDescription"/>
+    <property name="ApiKey"  column="ApiKey"/>
     <property name="IsAllowed"  column="IsAllowed"/>
     <many-to-one name="Permission" column="PermissionId"/>
-  </class>
+   </class>
 </hibernate-mapping>

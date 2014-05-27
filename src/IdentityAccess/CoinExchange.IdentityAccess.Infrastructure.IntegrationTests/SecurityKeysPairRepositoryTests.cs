@@ -37,13 +37,13 @@ namespace CoinExchange.IdentityAccess.Infrastructure.IntegrationTests
         [Category("Integration")]
         public void CreateSecurityKeyPair_PersistAndReadFromDatabaseByDescriptionKey_SavedAndReadInfoShouldBeSame()
         {
-            SecurityKeysPair digitalSignatureInfo=new SecurityKeysPair("1", new ApiKey("123456"), new SecretKey("secretkey"),"user1",DateTime.Today.AddDays(1),DateTime.Today.AddDays(-20),DateTime.Today,DateTime.Now,true,null);
+            SecurityKeysPair digitalSignatureInfo = new SecurityKeysPair("1", "123456", "secretkey", "user1", DateTime.Today.AddDays(1), DateTime.Today.AddDays(-20), DateTime.Today, DateTime.Now, true, null);
             _persistenceRepository.SaveUpdate(digitalSignatureInfo);
-            var readInfo = _securityKeysPairRepository.GetByKeyDescription("1");
+            var readInfo = _securityKeysPairRepository.GetByKeyDescription("1","user1");
             Assert.NotNull(readInfo);
             Assert.AreEqual(readInfo.KeyDescription,"1");
-            Assert.AreEqual(readInfo.ApiKey.Value, "123456");
-            Assert.AreEqual(readInfo.SecretKey.Value, "secretkey");
+            Assert.AreEqual(readInfo.ApiKey, "123456");
+            Assert.AreEqual(readInfo.SecretKey, "secretkey");
             Assert.AreEqual(readInfo.UserName, digitalSignatureInfo.UserName);
             Assert.AreEqual(readInfo.SystemGenerated, digitalSignatureInfo.SystemGenerated);
             Assert.AreEqual(readInfo.ExpirationDate, digitalSignatureInfo.ExpirationDate);
@@ -54,13 +54,13 @@ namespace CoinExchange.IdentityAccess.Infrastructure.IntegrationTests
         [Category("Integration")]
         public void CreateSecurityKeyPair_PersistAndReadFromDatabaseByApiKey_SavedAndReadInfoShouldBeSame()
         {
-            SecurityKeysPair digitalSignatureInfo = new SecurityKeysPair("1", new ApiKey("123456"), new SecretKey("secretkey"), "user1", DateTime.Today.AddDays(1), DateTime.Today.AddDays(-20), DateTime.Today, DateTime.Now, true,null);
+            SecurityKeysPair digitalSignatureInfo = new SecurityKeysPair("1", "123456", "secretkey", "user1", DateTime.Today.AddDays(1), DateTime.Today.AddDays(-20), DateTime.Today, DateTime.Now, true, null);
             _persistenceRepository.SaveUpdate(digitalSignatureInfo);
             var readInfo = _securityKeysPairRepository.GetByApiKey("123456");
             Assert.NotNull(readInfo);
             Assert.AreEqual(readInfo.KeyDescription, "1");
-            Assert.AreEqual(readInfo.ApiKey.Value, "123456");
-            Assert.AreEqual(readInfo.SecretKey.Value, "secretkey");
+            Assert.AreEqual(readInfo.ApiKey, "123456");
+            Assert.AreEqual(readInfo.SecretKey, "secretkey");
             Assert.AreEqual(readInfo.UserName, digitalSignatureInfo.UserName);
             Assert.AreEqual(readInfo.SystemGenerated, digitalSignatureInfo.SystemGenerated);
             Assert.AreEqual(readInfo.ExpirationDate, digitalSignatureInfo.ExpirationDate);
@@ -77,16 +77,16 @@ namespace CoinExchange.IdentityAccess.Infrastructure.IntegrationTests
             IList<SecurityKeysPermission> securityKeysPermissions=new List<SecurityKeysPermission>();
             for (int i = 0; i < 7; i++)
             {
-                SecurityKeysPermission permission = new SecurityKeysPermission("1", permissions[i], true);
+                SecurityKeysPermission permission = new SecurityKeysPermission("123456", permissions[i], true);
                 securityKeysPermissions.Add(permission);
             }
-            SecurityKeysPair securityKeys = new SecurityKeysPair("1", new ApiKey("123456"), new SecretKey("secretkey"), "user1", DateTime.Today.AddDays(1), DateTime.Today.AddDays(-20), DateTime.Today, DateTime.Now, true,securityKeysPermissions);
+            SecurityKeysPair securityKeys = new SecurityKeysPair("1", "123456", "secretkey", "user1", DateTime.Today.AddDays(1), DateTime.Today.AddDays(-20), DateTime.Today, DateTime.Now, true, securityKeysPermissions);
             _persistenceRepository.SaveUpdate(securityKeys);
             var readInfo = _securityKeysPairRepository.GetByApiKey("123456");
             Assert.NotNull(readInfo);
             Assert.AreEqual(readInfo.KeyDescription, "1");
-            Assert.AreEqual(readInfo.ApiKey.Value, "123456");
-            Assert.AreEqual(readInfo.SecretKey.Value, "secretkey");
+            Assert.AreEqual(readInfo.ApiKey, "123456");
+            Assert.AreEqual(readInfo.SecretKey, "secretkey");
             Assert.AreEqual(readInfo.UserName, securityKeys.UserName);
             Assert.AreEqual(readInfo.SystemGenerated, securityKeys.SystemGenerated);
             Assert.AreEqual(readInfo.ExpirationDate, securityKeys.ExpirationDate);
@@ -104,10 +104,10 @@ namespace CoinExchange.IdentityAccess.Infrastructure.IntegrationTests
             IList<SecurityKeysPermission> securityKeysPermissions = new List<SecurityKeysPermission>();
             for (int i = 0; i < 7; i++)
             {
-                SecurityKeysPermission permission = new SecurityKeysPermission("1", permissions[i], true);
+                SecurityKeysPermission permission = new SecurityKeysPermission("123456", permissions[i], true);
                 securityKeysPermissions.Add(permission);
             }
-            SecurityKeysPair securityKeys = new SecurityKeysPair("1", new ApiKey("123456"), new SecretKey("secretkey"), "user1", DateTime.Today.AddDays(1), DateTime.Today.AddDays(-20), DateTime.Today, DateTime.Now, true, securityKeysPermissions);
+            SecurityKeysPair securityKeys = new SecurityKeysPair("1", "123456", "secretkey", "user1", DateTime.Today.AddDays(1), DateTime.Today.AddDays(-20), DateTime.Today, DateTime.Now, true, securityKeysPermissions);
             _persistenceRepository.SaveUpdate(securityKeys);
             //update permissions
             securityKeysPermissions[2].IsAllowed = false;
@@ -120,8 +120,8 @@ namespace CoinExchange.IdentityAccess.Infrastructure.IntegrationTests
             var readInfo = _securityKeysPairRepository.GetByApiKey("123456");
             Assert.NotNull(readInfo);
             Assert.AreEqual(readInfo.KeyDescription, "1");
-            Assert.AreEqual(readInfo.ApiKey.Value, "123456");
-            Assert.AreEqual(readInfo.SecretKey.Value, "secretkey");
+            Assert.AreEqual(readInfo.ApiKey, "123456");
+            Assert.AreEqual(readInfo.SecretKey, "secretkey");
             Assert.AreEqual(readInfo.UserName, securityKeys.UserName);
             Assert.AreEqual(readInfo.SystemGenerated, securityKeys.SystemGenerated);
             Assert.AreEqual(readInfo.ExpirationDate, securityKeys.ExpirationDate);
