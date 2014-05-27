@@ -16,7 +16,7 @@ namespace CoinExchange.Client.Console
             ApiClient client=new ApiClient(baseUrl);
             //Scenario1(client);
             //ScenarioResults(client);
-            System.Console.WriteLine(client.QueryOpenOrdersParams(true,""));
+            System.Console.WriteLine(client.GetTradeHistory("",""));
            System.Console.ReadKey();
         }
 

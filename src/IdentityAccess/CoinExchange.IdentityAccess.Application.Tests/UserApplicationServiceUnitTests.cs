@@ -31,7 +31,7 @@ namespace CoinExchange.IdentityAccess.Application.Tests
 
             // Store the Securiyty Keys with the Username of the User at hand
             (securityKeysRepository as MockSecurityKeysRepository).AddSecurityKeysPair(new SecurityKeysPair(
-                new ApiKey("123456789"), new SecretKey("987654321"), "desc", "linkinpark", true));
+                new ApiKey("123456789").Value, new SecretKey("987654321").Value, "desc", "linkinpark", true));
 
             // We need to encrypt the password in the test case ourselves, as we are not registering the user through 
             // the proper service here
@@ -69,7 +69,7 @@ namespace CoinExchange.IdentityAccess.Application.Tests
 
             // Store the Securiyty Keys with the Username of the User at hand
             (securityKeysRepository as MockSecurityKeysRepository).AddSecurityKeysPair(new SecurityKeysPair(
-                new ApiKey("123456789"), new SecretKey("987654321"), "desc", "linkinpark", true));
+                new ApiKey("123456789").Value, new SecretKey("987654321").Value, "desc", "linkinpark", true));
 
             // We need to encrypt the password in the test case ourselves, as we are not registering the user through 
             // the proper service here
@@ -116,7 +116,7 @@ namespace CoinExchange.IdentityAccess.Application.Tests
 
             // Store the Securiyty Keys with the Username of the User at hand
             (securityKeysRepository as MockSecurityKeysRepository).AddSecurityKeysPair(new SecurityKeysPair(
-                new ApiKey("123456789"), new SecretKey("987654321"), "desc", "linkinpark", true));
+                new ApiKey("123456789").Value, new SecretKey("987654321").Value, "desc", "linkinpark", true));
 
             // We need to encrypt the password in the test case ourselves, as we are not registering the user through 
             // the proper service here

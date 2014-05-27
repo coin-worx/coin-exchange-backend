@@ -2,9 +2,10 @@
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
 assembly="CoinExchange.IdentityAccess.Domain.Model" namespace="CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate">
   <class name="SecurityKeysPair" table="SecurityKeysPair" lazy="false">
-    <id name="KeyDescription" column="KeyDescription">
+    <id name="ApiKey" column="ApiKey">
       <generator class="assigned" />
     </id>
+    <property name="KeyDescription"  column="KeyDescription"/>
     <property name="UserName"  column="UserName"/>
     <property name="ExpirationDate"  column="ExpirationDate"/>
     <property name="StartDate"  column="StartDate"/>
@@ -12,16 +13,13 @@ assembly="CoinExchange.IdentityAccess.Domain.Model" namespace="CoinExchange.Iden
     <property name="LastModified"  column="LastModified"/>
     <property name="CreationDateTime"  column="CreationDateTime"/>
     <property name="SystemGenerated" column="SystemGenerated"/>
-    <component name="ApiKey">
-      <property name="Value" column="ApiKey"/>
-    </component>
-    <component name="SecretKey">
-      <property name="Value" column="SecretKey"/>
-    </component>
-    <bag name="_securityKeysPermissions" table="SecurityKeysPermission" cascade="all" inverse="true" lazy="false">
-      <key column="KeyDescription"/>
-      <one-to-many
-         class="SecurityKeysPermission"/>
+    <property name="EnableExpirationDate" column="EnableExpirationDate"/>
+    <property name="EnableStartDate" column="EnableStartDate"/>
+    <property name="EnableEndDate" column="EnableEndDate"/>
+    <property name="SecretKey" column="SecretKey"/>
+    <bag name="_securityKeysPermissions" table="SecurityKeysPermission" cascade="save-update" inverse="true" lazy="false">
+      <key column="ApiKey"/>
+      <one-to-many class="SecurityKeysPermission"/>
     </bag>
   </class>
 </hibernate-mapping>

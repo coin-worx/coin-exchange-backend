@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CoinExchange.IdentityAccess.Domain.Model.Repositories;
 
 namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
 {
@@ -20,16 +21,38 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         public static SecurityKeysPair SystemGeneratedSecurityKeyPair(string userName,ISecurityKeysGenerationService securityKeysGeneration)
         {
             var keys = securityKeysGeneration.GenerateNewSecurityKeys();
-            SecurityKeysPair securityKeysPair=new SecurityKeysPair(keys.Item1,keys.Item2,DateTime.Now.ToString(),userName,true);
-            return securityKeysPair;
+           // SecurityKeysPair securityKeysPair=new SecurityKeysPair(keys.Item1,keys.Item2,DateTime.Now.ToString(),userName,true);
+            return null;
         }
 
         /// <summary>
         /// Create user generated api key
         /// </summary>
         /// <returns></returns>
-        public static SecurityKeysPair UserGeneratedSecurityPair()
+        public static SecurityKeysPair UserGeneratedSecurityPair(string userName,string keyDescription,bool enableExpirationDate,string expirationDate,bool enableStartDate,string startDate,bool enableEndDate,string endDate,ISecurityKeysGenerationService securityKeysGeneration,ISecurityKeysRepository repository)
         {
+            //check if key description already exist
+            if (repository.GetByKeyDescription(keyDescription,userName) != null)
+            {
+                throw new ArgumentException("The key description already exist");
+            }
+            var keys = securityKeysGeneration.GenerateNewSecurityKeys();
+            //SecurityKeysPair securityKeysPair = new SecurityKeysPair(keys.Item1, keys.Item2, keyDescription, userName, false);
+            //if (enableExpirationDate)
+            //{
+            //    securityKeysPair.ExpirationDate = Convert.ToDateTime(expirationDate);
+            //}
+            //if (enableStartDate)
+            //{
+            //    securityKeysPair.StartDate = Convert.ToDateTime(startDate);
+            //}
+            //if (enableEndDate)
+            //{
+            //    securityKeysPair.EndDate = Convert.ToDateTime(endDate);
+            //}
+            //securityKeysPair.EnableStartDate = enableStartDate;
+            //securityKeysPair.EnableEndDate = enableEndDate;
+            //securityKeysPair.EnableExpirationDate = enableExpirationDate;
             return null;
         }
     }

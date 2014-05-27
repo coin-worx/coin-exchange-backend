@@ -12,8 +12,8 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
     {
         #region Private Fields
 
-        private ApiKey _apiKey;
-        private SecretKey _secretKey;
+        private string _apiKey;
+        private string _secretKey;
         private string _keyDescription;
         private string _userName;
         private IList<SecurityKeysPermission> _securityKeysPermissions { get; set; }
@@ -36,7 +36,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         /// <param name="keyDescription"></param>
         /// <param name="userName"></param>
         /// <param name="systemGenerated"></param>
-        public SecurityKeysPair(ApiKey apiKey, SecretKey secretKey, string keyDescription, string userName, bool systemGenerated)
+        public SecurityKeysPair(string apiKey, string secretKey, string keyDescription, string userName, bool systemGenerated)
         {
             _apiKey = apiKey;
             _secretKey = secretKey;
@@ -49,7 +49,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         /// <summary>
         /// Parameterized Constructor
         /// </summary>
-        public SecurityKeysPair(ApiKey apiKey, SecretKey secretKey)
+        public SecurityKeysPair(string apiKey, string secretKey)
         {
             _apiKey = apiKey;
             _secretKey = secretKey;
@@ -58,7 +58,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         /// <summary>
         /// Parameterized Constructor
         /// </summary>
-        public SecurityKeysPair(string username, ApiKey apiKey, SecretKey secretKey, bool isSystemGenerated, string keyDescription)
+        public SecurityKeysPair(string username, string apiKey, string secretKey, bool isSystemGenerated, string keyDescription)
         {
             this.UserName = username;
             _apiKey = apiKey;
@@ -87,7 +87,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         /// <param name="endDate"></param>
         /// <param name="lastModified"></param>
         /// <param name="systemGenerated"></param>
-        public SecurityKeysPair(string keyDescription, ApiKey apiKey, SecretKey secretKey, string userName, DateTime expirationDate, DateTime startDate, DateTime endDate, DateTime lastModified, bool systemGenerated, IList<SecurityKeysPermission> securityKeysPermissions)
+        public SecurityKeysPair(string keyDescription, string apiKey, string secretKey, string userName, DateTime expirationDate, DateTime startDate, DateTime endDate, DateTime lastModified, bool systemGenerated, IList<SecurityKeysPermission> securityKeysPermissions)
         {
             KeyDescription = keyDescription;
             _apiKey = apiKey;
@@ -149,7 +149,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         /// </summary>
         /// <param name="apiKey"> </param>
         /// <returns></returns>
-        public bool ChangeApiKeyValue(ApiKey apiKey)
+        public bool ChangeApiKeyValue(string apiKey)
         {
             if (IsApiKeyValid(apiKey))
             {
@@ -164,7 +164,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         /// </summary>
         /// <param name="secretKey"> </param>
         /// <returns></returns>
-        public bool ChangeSecretKeyValue(SecretKey secretKey)
+        public bool ChangeSecretKeyValue(string secretKey)
         {
             if (IsSecretKeyValid(secretKey))
             {
@@ -179,9 +179,9 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         /// </summary>
         /// <param name="apiKey"></param>
         /// <returns></returns>
-        private bool IsApiKeyValid(ApiKey apiKey)
+        private bool IsApiKeyValid(string apiKey)
         {
-            if (apiKey != null && !string.IsNullOrEmpty(apiKey.Value))
+            if (apiKey != null && !string.IsNullOrEmpty(apiKey))
             {
                 return true;
             }
@@ -193,9 +193,9 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         /// </summary>
         /// <param name="secretKey"></param>
         /// <returns></returns>
-        private bool IsSecretKeyValid(SecretKey secretKey)
+        private bool IsSecretKeyValid(string secretKey)
         {
-            if (secretKey!= null && !string.IsNullOrEmpty(secretKey.Value))
+            if (secretKey!= null && !string.IsNullOrEmpty(secretKey))
             {
                 return true;
             }
@@ -220,12 +220,12 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         /// <summary>
         /// API Key
         /// </summary>
-        public ApiKey ApiKey { get { return _apiKey; } set { _apiKey = value; } }
+        public string ApiKey { get { return _apiKey; } set { _apiKey = value; } }
 
         /// <summary>
         /// Secret Key
         /// </summary>
-        public SecretKey SecretKey { get { return _secretKey; } set { _secretKey = value; } }
+        public string SecretKey { get { return _secretKey; } set { _secretKey = value; } }
 
         /// <summary>
         /// Username
@@ -243,17 +243,32 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         /// <summary>
         /// Expiration Date
         /// </summary>
-        public DateTime ExpirationDate { get; private set; }
+        public DateTime ExpirationDate { get;  set; }
+
+        /// <summary>
+        /// Enable expiration date
+        /// </summary>
+        public bool EnableExpirationDate { get; set; }
 
         /// <summary>
         /// StartDate
         /// </summary>
-        public DateTime StartDate { get; private set; }
-        
+        public DateTime StartDate { get;  set; }
+
+        /// <summary>
+        /// Enable Start date
+        /// </summary>
+        public bool EnableStartDate { get; set; }
+
         /// <summary>
         /// EndDate
         /// </summary>
-        public DateTime EndDate { get; private set; }
+        public DateTime EndDate { get;  set; }
+
+        /// <summary>
+        /// Enable end date
+        /// </summary>
+        public bool EnableEndDate { get; set; }
 
         /// <summary>
         /// LastModified

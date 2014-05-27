@@ -16,11 +16,13 @@
         <value>CoinExchange.IdentityAccess.Infrastructure.Persistence</value>
       </list>
     </property>
+    
     <property name="HibernateProperties">
       <dictionary>
         <entry key="hibernate.connection.provider" value="NHibernate.Connection.DriverConnectionProvider"/>
         <entry key="dialect" value="NHibernate.Dialect.MySQL5Dialect"/>
         <entry key="connection.driver_class" value="NHibernate.Driver.MySqlDataDriver"/>
+        <entry key="show_sql" value="true"/>
       </dictionary>
     </property>
 

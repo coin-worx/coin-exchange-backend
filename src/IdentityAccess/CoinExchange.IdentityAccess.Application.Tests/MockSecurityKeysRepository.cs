@@ -12,7 +12,7 @@ namespace CoinExchange.IdentityAccess.Application.Tests
     {
         private List<SecurityKeysPair> _securityKeysPairsList = new List<SecurityKeysPair>();
 
-        public SecurityKeysPair GetByKeyDescription(string keyDescription)
+        public SecurityKeysPair GetByKeyDescription(string keyDescription,string userName)
         {
             throw new NotImplementedException();
         }
@@ -21,7 +21,7 @@ namespace CoinExchange.IdentityAccess.Application.Tests
         {
             foreach (var securityKeysPair in _securityKeysPairsList)
             {
-                if (securityKeysPair.ApiKey.Value == apiKey)
+                if (securityKeysPair.ApiKey == apiKey)
                 {
                     return securityKeysPair;
                 }

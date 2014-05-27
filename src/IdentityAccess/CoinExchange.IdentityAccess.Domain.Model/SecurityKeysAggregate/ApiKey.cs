@@ -32,5 +32,24 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         /// Value of the API Key
         /// </summary>
         public string Value { get; private set; }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is ApiKey)
+            {
+                return Value.Equals((obj as ApiKey).Value);
+            }
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return Value;
+        }
     }
 }

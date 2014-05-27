@@ -32,12 +32,11 @@ namespace CoinExchange.IdentityAccess.Application.SecurityKeysServices
         {
             if (!string.IsNullOrEmpty(username))
             {
-                Tuple<ApiKey, SecretKey> securityKeys = _securityKeysGenerationService.GenerateNewSecurityKeys();
-                SecurityKeysPair securityKeysPair = new SecurityKeysPair(username, securityKeys.Item1,
-                                securityKeys.Item2, true, (++_keyDescriptionCounter).ToString(CultureInfo.InvariantCulture));
-                
-                _persistRepository.SaveUpdate(securityKeysPair);
-                return securityKeys;
+//Tuple<ApiKey, SecretKey> securityKeys = _securityKeysGenerationService.GenerateNewSecurityKeys();
+                //SecurityKeysPair securityKeysPair = new SecurityKeysPair(username, securityKeys.Item1,
+                                //securityKeys.Item2, true, (++_keyDescriptionCounter).ToString(CultureInfo.InvariantCulture));
+                //_persistRepository.SaveUpdate(securityKeysPair);
+                return null;
             }
             return null;
         }
