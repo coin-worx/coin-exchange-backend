@@ -8,6 +8,7 @@
     <constructor-arg name="persistenceRepository" ref="IdentityAccessPersistenceRepository"/>
     <constructor-arg name="passwordEncryptionService" ref="PasswordEncryptionService"/>
     <constructor-arg name="activationKeyGenerationService" ref="ActivationKeyGenerationService"/>
+    <constructor-arg name="emailService" ref="EmailService"/>
   </object>
   
 <object id="SecurityKeysApplicationService" type="CoinExchange.IdentityAccess.Application.SecurityKeysServices.SecurityKeysApplicationService, 
@@ -34,6 +35,7 @@
   <constructor-arg name="securityKeysRepository" ref="SecurityKeysPairRepository"/>
   <constructor-arg name="passwordEncryptionService" ref="PasswordEncryptionService"/>
   <constructor-arg name="persistenceRepository" ref="IdentityAccessPersistenceRepository"/>
+  <constructor-arg name="emailService" ref="EmailService"/>
   </object>
   
 </objects>

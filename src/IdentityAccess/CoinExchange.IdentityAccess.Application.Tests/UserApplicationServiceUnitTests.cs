@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Authentication;
 using System.Text;
 using System.Threading.Tasks;
 using CoinExchange.IdentityAccess.Application.UserServices;
@@ -9,6 +10,7 @@ using CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate;
 using CoinExchange.IdentityAccess.Domain.Model.UserAggregate;
 using CoinExchange.IdentityAccess.Infrastructure.Persistence.Repositories;
 using CoinExchange.IdentityAccess.Infrastructure.Services;
+using CoinExchange.IdentityAccess.Infrastructure.Services.Email;
 using NUnit.Framework;
 
 namespace CoinExchange.IdentityAccess.Application.Tests
@@ -25,7 +27,7 @@ namespace CoinExchange.IdentityAccess.Application.Tests
             IPasswordEncryptionService passwordEncryptionService = new PasswordEncryptionService();
             IIdentityAccessPersistenceRepository persistenceRepository = new MockPersistenceRepository(false);
             UserApplicationService userApplicationService = new UserApplicationService(userRepository, securityKeysRepository,
-                passwordEncryptionService, persistenceRepository);
+                passwordEncryptionService, persistenceRepository, new MockEmailService());
 
             // Store the Securiyty Keys with the Username of the User at hand
             (securityKeysRepository as MockSecurityKeysRepository).AddSecurityKeysPair(new SecurityKeysPair(
@@ -63,7 +65,7 @@ namespace CoinExchange.IdentityAccess.Application.Tests
             IPasswordEncryptionService passwordEncryptionService = new PasswordEncryptionService();
             IIdentityAccessPersistenceRepository persistenceRepository = new MockPersistenceRepository(false);
             UserApplicationService userApplicationService = new UserApplicationService(userRepository, securityKeysRepository,
-                passwordEncryptionService, persistenceRepository);
+                passwordEncryptionService, persistenceRepository, new MockEmailService());
 
             // Store the Securiyty Keys with the Username of the User at hand
             (securityKeysRepository as MockSecurityKeysRepository).AddSecurityKeysPair(new SecurityKeysPair(
@@ -81,11 +83,19 @@ namespace CoinExchange.IdentityAccess.Application.Tests
             UserValidationEssentials userValidationEssentials = new UserValidationEssentials(new Tuple<ApiKey, SecretKey>(
                 new ApiKey("123456789"), new SecretKey("987654321")), new TimeSpan(0, 0, 0, 100));
 
-            // Wrong password given
-            bool changeSuccessful = userApplicationService.ChangePassword(userValidationEssentials, "burnitdow",
-                "burnitdowntwice", "burnitdowntwice");
+            bool exceptionRaised = false;
+            try
+            {
+                // Wrong password given
+                userApplicationService.ChangePassword(userValidationEssentials, "burnitdow",
+                                                      "burnitdowntwice", "burnitdowntwice");
+            }
+            catch (InvalidCredentialException e)
+            {
+                exceptionRaised = true;
+            }
 
-            Assert.IsFalse(changeSuccessful);
+            Assert.IsTrue(exceptionRaised);
             User userAfterPasswordChange = userRepository.GetUserByUserName("linkinpark");
             string passwordAfterChange = userAfterPasswordChange.Password;
 
@@ -102,7 +112,7 @@ namespace CoinExchange.IdentityAccess.Application.Tests
             IPasswordEncryptionService passwordEncryptionService = new PasswordEncryptionService();
             IIdentityAccessPersistenceRepository persistenceRepository = new MockPersistenceRepository(false);
             UserApplicationService userApplicationService = new UserApplicationService(userRepository, securityKeysRepository,
-                passwordEncryptionService, persistenceRepository);
+                passwordEncryptionService, persistenceRepository, new MockEmailService());
 
             // Store the Securiyty Keys with the Username of the User at hand
             (securityKeysRepository as MockSecurityKeysRepository).AddSecurityKeysPair(new SecurityKeysPair(
@@ -120,11 +130,18 @@ namespace CoinExchange.IdentityAccess.Application.Tests
             UserValidationEssentials userValidationEssentials = new UserValidationEssentials(new Tuple<ApiKey, SecretKey>(
                 new ApiKey("123456789"), new SecretKey("987654321")), new TimeSpan(0, 0, 0, 100));
 
-            // Wrong password given
-            bool changeSuccessful = userApplicationService.ChangePassword(userValidationEssentials, "burnitdown",
-                "burnitdowntwice", "burnitdowntwice2");
-
-            Assert.IsFalse(changeSuccessful);
+            bool exceptionRaised = false;
+            try
+            {
+                // Wrong password given
+                userApplicationService.ChangePassword(userValidationEssentials, "burnitdown",
+                                                      "burnitdowntwice", "burnitdowntwice2");
+            }
+            catch (InvalidCredentialException e)
+            {
+                exceptionRaised = true;
+            }
+            Assert.IsTrue(exceptionRaised);
             User userAfterPasswordChange = userRepository.GetUserByUserName("linkinpark");
             string passwordAfterChange = userAfterPasswordChange.Password;
 

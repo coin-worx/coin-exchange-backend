@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Security.Authentication;
 using System.Text;
 using System.Threading.Tasks;
 using CoinExchange.Common.Tests;
@@ -80,10 +81,19 @@ namespace CoinExchange.IdentityAccess.Application.Tests
             user.AutoLogout = new TimeSpan(0, 0, 0, 60);
             // Add this user to the MockUserRepository
             (userRepository as MockUserRepository).AddUser(user);
-            UserValidationEssentials userValidationEssentials = loginApplicationService.Login(
-                new LoginCommand("alfred", "whereisthejoker"));
 
-            Assert.IsNull(userValidationEssentials);
+            bool exceptionRaised = false;
+            try
+            {
+                loginApplicationService.Login(
+                    new LoginCommand("alfred", "whereisthejoker"));
+            }
+            catch (InvalidCredentialException e)
+            {
+                exceptionRaised = true;
+            }
+
+            Assert.IsTrue(exceptionRaised);
         }
 
         [Test]
@@ -103,10 +113,18 @@ namespace CoinExchange.IdentityAccess.Application.Tests
             user.AutoLogout = new TimeSpan(0, 0, 0, 60);
             // Add this user to the MockUserRepository
             (userRepository as MockUserRepository).AddUser(user);
-            UserValidationEssentials userValidationEssentials = loginApplicationService.Login(
-                new LoginCommand("brucewayne", "whereisthejoke"));
 
-            Assert.IsNull(userValidationEssentials);
+            bool exceptionRaised = false;
+            try
+            {
+                loginApplicationService.Login(
+                    new LoginCommand("brucewayne", "whereisthejoke"));
+            }
+            catch (InvalidCredentialException e)
+            {
+                exceptionRaised = true;
+            }
+            Assert.IsTrue(exceptionRaised);
         }
     }
 }

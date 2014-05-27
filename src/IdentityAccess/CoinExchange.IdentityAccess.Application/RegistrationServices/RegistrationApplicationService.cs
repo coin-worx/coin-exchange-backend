@@ -4,6 +4,7 @@ using System.Security.Authentication;
 using CoinExchange.IdentityAccess.Application.RegistrationServices.Commands;
 using CoinExchange.IdentityAccess.Domain.Model.Repositories;
 using CoinExchange.IdentityAccess.Domain.Model.UserAggregate;
+using CoinExchange.IdentityAccess.Infrastructure.Services.Email;
 
 namespace CoinExchange.IdentityAccess.Application.RegistrationServices
 {
@@ -18,15 +19,19 @@ namespace CoinExchange.IdentityAccess.Application.RegistrationServices
         (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private IPasswordEncryptionService _passwordEncryptionService;
         private IActivationKeyGenerationService _activationKeyGenerationService;
+        private IEmailService _emailService;
 
         /// <summary>
         /// Parameterized Constructor
         /// </summary>
-        public RegistrationApplicationService(IIdentityAccessPersistenceRepository persistenceRepository, IPasswordEncryptionService passwordEncryptionService, IActivationKeyGenerationService activationKeyGenerationService)
+        public RegistrationApplicationService(IIdentityAccessPersistenceRepository persistenceRepository, 
+        IPasswordEncryptionService passwordEncryptionService, IActivationKeyGenerationService activationKeyGenerationService
+            , IEmailService emailService)
         {
             _persistenceRepository = persistenceRepository;
             _passwordEncryptionService = passwordEncryptionService;
             _activationKeyGenerationService = activationKeyGenerationService;
+            _emailService = emailService;
         }
 
         /// <summary>
@@ -51,6 +56,8 @@ namespace CoinExchange.IdentityAccess.Application.RegistrationServices
                     User user = new User(signupUserCommand.Email, signupUserCommand.Username, hashedPassword,
                                          signupUserCommand.Country, signupUserCommand.TimeZone,
                                          signupUserCommand.PgpPublicKey, activationKey);
+                    _emailService.SendMail(user.Email, EmailContents.ActivationKeySubject,
+                                           EmailContents.GetActivationKeyMessage(activationKey));
                     try
                     {
                         // Save to persistence
