@@ -64,6 +64,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\IIdentityAccessPersistenceRepository.cs" />
     <Compile Include="UserAggregate\IPasswordEncryptionService.cs" />
+    <Compile Include="UserAggregate\IsActivationKeyUsed.cs" />
+    <Compile Include="UserAggregate\IsUserBlocked.cs" />
     <Compile Include="UserAggregate\Status.cs" />
     <Compile Include="UserAggregate\Tier.cs" />
     <Compile Include="UserAggregate\TierStatusList.cs" />

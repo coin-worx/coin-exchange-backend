@@ -195,6 +195,9 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
             set { _phoneNumber = value; }
         }
 
+        /// <summary>
+        /// Activation Key
+        /// </summary>
         public string ActivationKey
         {
             get { return _activationKey; }
@@ -203,6 +206,16 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
                 _activationKey = value;
             }
         }
+
+        /// <summary>
+        /// Has the Activation Key already been used to activate this account
+        /// </summary>
+        public IsActivationKeyUsed IsActivationKeyUsed { get; set; }
+
+        /// <summary>
+        /// Is this User blocked
+        /// </summary>
+        public IsUserBlocked IsUserBlocked { get; set; }
 
         /// <summary>
         /// List of the Tier associated with this user

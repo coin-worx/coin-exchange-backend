@@ -81,13 +81,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MockPersistenceRepository.cs" />
+    <Compile Include="MockSecurityKeysRepository.cs" />
     <Compile Include="MockUserRepository.cs" />
     <Compile Include="SecurityKeysApplicationServiceUnitTests.cs" />
     <Compile Include="LoginApplicationServiceUnitTests.cs" />
     <Compile Include="LogoutApplicationServicesUnitTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegistrationApplicationServiceUnitTests.cs" />
-    <Compile Include="UserApplicationServiceTests.cs" />
+    <Compile Include="UserApplicationServiceUnitTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

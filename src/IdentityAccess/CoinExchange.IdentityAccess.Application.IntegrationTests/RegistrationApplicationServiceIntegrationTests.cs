@@ -12,7 +12,7 @@ using Spring.Context.Support;
 namespace CoinExchange.IdentityAccess.Application.IntegrationTests
 {
     [TestFixture]
-    public class RegistrationApplicationServiceTests
+    public class RegistrationApplicationServiceIntegrationTests
     {
         private IApplicationContext _applicationContext;
         private DatabaseUtility _databaseUtility;
@@ -72,12 +72,21 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
                 (IRegistrationApplicationService)_applicationContext["RegistrationApplicationService"];
             IUserRepository userRepository =
                 (IUserRepository)_applicationContext["UserRepository"];
-            string activationKey = registrationService.CreateAccount(new SignupUserCommand(
-                "", "", "", "Wonderland", TimeZone.CurrentTimeZone, ""));
+            bool exceptionCaught = false;
+            string exceptionName = string.Empty;
+            try
+            {
+                string activationKey = registrationService.CreateAccount(new SignupUserCommand(
+                                                                             "", "", "", "Wonderland", TimeZone.CurrentTimeZone, ""));
+            }
+            catch (Exception e)
+            {
+                exceptionName = e.GetType().Name;                
+                exceptionCaught = true;
+            }
 
-            Assert.IsNull(activationKey);
-            User receivedUser = userRepository.GetUserByUserName("");
-            Assert.IsNull(receivedUser);
+            Assert.IsTrue(exceptionCaught);
+            Assert.AreEqual("InvalidCredentialException", exceptionName);
         }
     }
 }

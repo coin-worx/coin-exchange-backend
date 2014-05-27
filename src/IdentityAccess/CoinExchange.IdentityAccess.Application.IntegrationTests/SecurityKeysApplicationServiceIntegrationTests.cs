@@ -10,7 +10,7 @@ using Spring.Context.Support;
 namespace CoinExchange.IdentityAccess.Application.IntegrationTests
 {
     [TestFixture]
-    class SecurityKeysApplicationServiceTests
+    class SecurityKeysApplicationServiceIntegrationTests
     {
         private IApplicationContext _applicationContext;
         private DatabaseUtility _databaseUtility;

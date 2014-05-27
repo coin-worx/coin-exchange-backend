@@ -8,7 +8,7 @@ using Spring.Context.Support;
 namespace CoinExchange.IdentityAccess.Application.IntegrationTests
 {
     [TestFixture]
-    class LogoutApplicationServicesTests
+    class LogoutApplicationServicesIntegrationTests
     {
         private IApplicationContext _applicationContext;
         private DatabaseUtility _databaseUtility;

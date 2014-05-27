@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Management.Instrumentation;
+using System.Security.Authentication;
 using CoinExchange.IdentityAccess.Application.AccessControlServices.Commands;
 using CoinExchange.IdentityAccess.Application.SecurityKeysServices;
 using CoinExchange.IdentityAccess.Domain.Model.Repositories;
@@ -48,14 +49,13 @@ namespace CoinExchange.IdentityAccess.Application.AccessControlServices
                 }
                 else
                 {
-                    Log.Error(string.Format("Incorrect password for username: {0}", loginCommand.Username));
+                    throw new InvalidCredentialException(string.Format("Incorrect password for username: {0}", loginCommand.Username));
                 }
             }
             else
             {
-                Log.Error(string.Format("Invalid username: {0}", loginCommand.Username));
+                throw new InvalidCredentialException(string.Format("Invalid username: {0}", loginCommand.Username));
             }
-            return null;
         }
     }
 }
