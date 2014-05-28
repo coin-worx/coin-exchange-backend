@@ -36,6 +36,7 @@
   <constructor-arg name="passwordEncryptionService" ref="PasswordEncryptionService"/>
   <constructor-arg name="persistenceRepository" ref="IdentityAccessPersistenceRepository"/>
   <constructor-arg name="emailService" ref="EmailService"/>
+  <constructor-arg name="passwordCodeGenerationService" ref="PasswordCodeGenerationService"/>
   </object>
   
 </objects>

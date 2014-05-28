@@ -12,6 +12,7 @@ using CoinExchange.IdentityAccess.Application.AccessControlServices.Commands;
 using CoinExchange.IdentityAccess.Application.RegistrationServices;
 using CoinExchange.IdentityAccess.Application.RegistrationServices.Commands;
 using CoinExchange.IdentityAccess.Application.UserServices;
+using CoinExchange.IdentityAccess.Application.UserServices.Commands;
 using CoinExchange.IdentityAccess.Domain.Model.Repositories;
 using CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate;
 using CoinExchange.IdentityAccess.Domain.Model.UserAggregate;
@@ -66,8 +67,8 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             User userBeforePasswordChange = userRepository.GetUserByUserName("linkinpark");
             string passwordBeforeChange = userBeforePasswordChange.Password;
 
-            bool changeSuccessful = userApplicationService.ChangePassword(validationEssentials, "burnitdown",
-                "burnitdowntwice", "burnitdowntwice");
+            bool changeSuccessful = userApplicationService.ChangePassword(new ChangePasswordCommand(validationEssentials, "burnitdown",
+                "burnitdowntwice", "burnitdowntwice"));
 
             Assert.IsTrue(changeSuccessful);
             User userAfterPasswordChange = userRepository.GetUserByUserName("linkinpark");
@@ -103,8 +104,8 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
 
             try
             {
-                userApplicationService.ChangePassword(validationEssentials, "burnitdowner",
-                                                      "burnitdowntwice", "burnitdowntwice");
+                userApplicationService.ChangePassword(new ChangePasswordCommand(validationEssentials, "burnitdowner",
+                                                      "burnitdowntwice", "burnitdowntwice"));
             }
             catch (InvalidCredentialException e)
             {
@@ -141,7 +142,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             bool exceptionRaised = false;
             try
             {
-                userApplicationService.ChangePassword(validationEssentials, "burnitdown", "burnitdowntwice", "burnitdowntwice2");
+                userApplicationService.ChangePassword(new ChangePasswordCommand(validationEssentials, "burnitdown", "burnitdowntwice", "burnitdowntwice2"));
             }
             catch (InvalidCredentialException e)
             {
@@ -173,10 +174,10 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             // this operation finishes
             manualResetEvent.WaitOne(6000);
             
-            bool forgotUsernameResponse = userApplicationService.ForgotUsername(email);
+            string returnedUsername = userApplicationService.ForgotUsername(email);
             // Wait for the email to be sent and operation to be completed
             manualResetEvent.WaitOne(5000);
-            Assert.IsTrue(forgotUsernameResponse);
+            Assert.AreEqual(username, returnedUsername);
         }
 
         [Test]
@@ -195,10 +196,10 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             // this operation finishes
             manualResetEvent.WaitOne(5000);
 
-            bool forgotUsernameResponse = userApplicationService.ForgotUsername(email + "1");
+            string returnedUsername = userApplicationService.ForgotUsername(email + "1");
             // Wait for the email to be sent and operation to be completed
             manualResetEvent.WaitOne(5000);
-            Assert.IsFalse(forgotUsernameResponse);
+            Assert.IsNull(returnedUsername);
         }
     }
 }

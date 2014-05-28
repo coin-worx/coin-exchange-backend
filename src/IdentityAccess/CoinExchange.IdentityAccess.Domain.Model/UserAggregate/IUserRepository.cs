@@ -9,6 +9,7 @@
         User GetUserByActivationKey(string activationKey);
         User GetUserByEmail(string email);
         User GetUserByEmailAndUserName(string username,string email);
+        User GetUserByForgotPasswordCode(string forgotPasswordCode);
         bool DeleteUser(User user);
     }
 }

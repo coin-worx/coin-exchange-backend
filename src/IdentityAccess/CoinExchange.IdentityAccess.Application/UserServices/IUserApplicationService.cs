@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CoinExchange.IdentityAccess.Application.UserServices.Commands;
 using CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate;
 
 namespace CoinExchange.IdentityAccess.Application.UserServices
@@ -15,12 +16,9 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
         /// <summary>
         /// Requests the change of password
         /// </summary>
-        /// <param name="userValidationEssentials"> </param>
-        /// <param name="oldPassword"></param>
-        /// <param name="newPassword"></param>
-        /// <param name="newPasswordConfirmation"></param>
+        /// <param name="changePasswordCommand"> </param>
         /// <returns></returns>
-        bool ChangePassword(UserValidationEssentials userValidationEssentials, string oldPassword, string newPassword, string newPasswordConfirmation);
+        bool ChangePassword(ChangePasswordCommand changePasswordCommand);
 
         /// <summary>
         /// Request to activate account for which the user has already signed up
@@ -39,10 +37,10 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
         bool CancelAccountActivation(string activationKey);
 
         /// <summary>
-        /// Request to remind the user
+        /// Request to remind the user of their username. Returns the username to the caller
         /// </summary>
         /// <returns></returns>
-        bool ForgotUsername(string email);
+        string ForgotUsername(string email);
 
         /// <summary>
         /// Forgot Password
@@ -50,7 +48,7 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
         /// <param name="email"></param>
         /// <param name="username"></param>
         /// <returns></returns>
-        bool ForgotPassword(string email, string username);
+        string ForgotPassword(string email, string username);
 
         /// <summary>
         /// Checks if this is a valid reset link code sent to the user for reseting password and also to verify new 
@@ -58,8 +56,7 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
         /// </summary>
         /// <param name="forgotPasswordActivationCode"></param>
         /// <param name="password"></param>
-        /// <param name="confirmNewPassword"></param>
         /// <returns></returns>
-        bool ResetPasswordByEmailLink(string forgotPasswordActivationCode, string password, string confirmNewPassword);
+        bool ResetPasswordByEmailLink(string forgotPasswordActivationCode, string password);
     }
 }

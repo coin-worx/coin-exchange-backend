@@ -63,6 +63,11 @@ namespace CoinExchange.IdentityAccess.Application.Tests
             throw new NotImplementedException();
         }
 
+        public User GetUserByForgotPasswordCode(string forgotPasswordCode)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Adds the User to the User collection only in this Mock implementation
         /// </summary>

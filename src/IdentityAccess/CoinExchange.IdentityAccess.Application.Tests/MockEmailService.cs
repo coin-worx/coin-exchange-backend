@@ -59,6 +59,28 @@ namespace CoinExchange.IdentityAccess.Application.Tests
         }
 
         /// <summary>
+        /// Send Welcome Email
+        /// </summary>
+        /// <param name="to"></param>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        public bool SendWelcomeEmail(string to, string username)
+        {
+            return true;
+        }
+
+        /// <summary>
+        /// Send password changed email
+        /// </summary>
+        /// <param name="to"></param>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        public bool SendPasswordChangedEmail(string to, string username)
+        {
+            return true;
+        }
+
+        /// <summary>
         /// SMTP Client
         /// </summary>
         public SmtpClient SmtpClient { get; private set; }

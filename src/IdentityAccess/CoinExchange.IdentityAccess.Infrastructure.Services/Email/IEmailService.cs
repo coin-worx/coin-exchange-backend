@@ -46,6 +46,22 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Services.Email
         bool SendForgotPasswordEmail(string to, string passwordResetLink);
 
         /// <summary>
+        /// Sends Welcome Email
+        /// </summary>
+        /// <param name="to"></param>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        bool SendWelcomeEmail(string to, string username);
+
+        /// <summary>
+        /// Email the user that they just changed password
+        /// </summary>
+        /// <param name="to"></param>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        bool SendPasswordChangedEmail(string to, string username);
+
+        /// <summary>
         /// Instance of the SMTP Client
         /// </summary>
         SmtpClient SmtpClient { get; }

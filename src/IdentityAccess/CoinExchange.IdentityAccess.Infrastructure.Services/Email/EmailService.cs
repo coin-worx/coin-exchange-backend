@@ -102,6 +102,38 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Services.Email
         }
 
         /// <summary>
+        /// Send Welcome EMail to the specified user
+        /// </summary>
+        /// <param name="to"></param>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        public bool SendWelcomeEmail(string to, string username)
+        {
+            _mailMessage = new MailMessage(_from, to);
+            _mailMessage.Subject = EmailContents.ForgotUsernameSubject;
+            _mailMessage.Body = EmailContents.GetForgotPasswordMessage(username);
+
+            _smtpClient.SendAsync(_mailMessage, null);
+            return true;
+        }
+
+        /// <summary>
+        /// Send email to the user to notify them that they just changed their password
+        /// </summary>
+        /// <param name="to"></param>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        public bool SendPasswordChangedEmail(string to, string username)
+        {
+            _mailMessage = new MailMessage(_from, to);
+            _mailMessage.Subject = EmailContents.ForgotUsernameSubject;
+            _mailMessage.Body = EmailContents.GetPasswordChangedEmail(username);
+
+            _smtpClient.SendAsync(_mailMessage, null);
+            return true;
+        }
+
+        /// <summary>
         /// Handles the callback that is called after the mail sending operation is completed
         /// </summary>
         /// <param name="sender"></param>
