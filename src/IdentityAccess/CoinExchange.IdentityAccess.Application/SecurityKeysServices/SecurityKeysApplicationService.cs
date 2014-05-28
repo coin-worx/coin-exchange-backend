@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Security.Cryptography.X509Certificates;
 using CoinExchange.IdentityAccess.Domain.Model.Repositories;
 using CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate;
 
@@ -30,18 +31,12 @@ namespace CoinExchange.IdentityAccess.Application.SecurityKeysServices
         /// <returns></returns>
         public Tuple<ApiKey, SecretKey> CreateSystemGeneratedKey(string username)
         {
-            if (!string.IsNullOrEmpty(username))
-            {
-//Tuple<ApiKey, SecretKey> securityKeys = _securityKeysGenerationService.GenerateNewSecurityKeys();
-                //SecurityKeysPair securityKeysPair = new SecurityKeysPair(username, securityKeys.Item1,
-                                //securityKeys.Item2, true, (++_keyDescriptionCounter).ToString(CultureInfo.InvariantCulture));
-                //_persistRepository.SaveUpdate(securityKeysPair);
-                return null;
-            }
-            return null;
+            SecurityKeysPair keysPair=SecurityKeysPairFactory.SystemGeneratedSecurityKeyPair(username, _securityKeysGenerationService);
+            _persistRepository.SaveUpdate(keysPair);
+            return new Tuple<ApiKey, SecretKey>(new ApiKey(keysPair.ApiKey),new SecretKey(keysPair.SecretKey) );
         }
 
-        public bool CreateUserGeneratedKey()
+        public Tuple<string,string> CreateUserGeneratedKey()
         {
             throw new NotImplementedException();
         }
