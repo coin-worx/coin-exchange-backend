@@ -11,8 +11,18 @@
           CoinExchange.IdentityAccess.Infrastructure.Services">
   </object>
   
-<object id="SecurityKeysGenerationService" type="CoinExchange.IdentityAccess.Infrastructure.Services.SecurityKeysGenerationService, 
+  <object id="SecurityKeysGenerationService" type="CoinExchange.IdentityAccess.Infrastructure.Services.SecurityKeysGenerationService, 
           CoinExchange.IdentityAccess.Infrastructure.Services">
+  </object>
+  
+<object id="EmailService" type="CoinExchange.IdentityAccess.Infrastructure.Services.Email.EmailService, 
+          CoinExchange.IdentityAccess.Infrastructure.Services">
+  <constructor-arg name="host" value="smtp.gmail.com"/>
+  <constructor-arg name="port" value="587"/>
+  
+  <constructor-arg name="from" value="waqasshah047@gmail.com"/>
+  <constructor-arg name="password" value="fixhub123"/>
+
   </object>
 
 </objects>

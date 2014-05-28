@@ -85,6 +85,7 @@ CREATE TABLE `securitykeyspair` (
   `LastModified` datetime DEFAULT NULL,
   `SystemGenerated` tinyint(1) DEFAULT NULL,
   `UserName` varchar(50) DEFAULT NULL,
+  `CreationDateTime` datetime DEFAULT NULL,
   PRIMARY KEY (`KeyDescription`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 

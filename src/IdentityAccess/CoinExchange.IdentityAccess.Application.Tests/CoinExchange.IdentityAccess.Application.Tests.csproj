@@ -80,6 +80,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MockEmailService.cs" />
     <Compile Include="MockPersistenceRepository.cs" />
     <Compile Include="MockSecurityKeysRepository.cs" />
     <Compile Include="MockUserRepository.cs" />

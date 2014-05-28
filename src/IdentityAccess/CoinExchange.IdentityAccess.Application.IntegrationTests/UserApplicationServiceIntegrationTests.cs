@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Security.Authentication;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using CoinExchange.Common.Tests;
 using CoinExchange.IdentityAccess.Application.AccessControlServices;
@@ -44,7 +46,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
 
         [Test]
         [Category("Integration")]
-        public void ConfirmPasswordSuccessTest_ChecksIfThePasswordIsChangedSuccessfully_VeririesThroughTheReturnedValue()
+        public void ConfirmPasswordSuccessTest_ChecksIfThePasswordIsChangedSuccessfully_VerifiesThroughTheReturnedValue()
         {
             IUserApplicationService userApplicationService = (IUserApplicationService)_applicationContext["UserApplicationService"];
             IRegistrationApplicationService registrationApplicationService =
@@ -77,7 +79,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
 
         [Test]
         [Category("Integration")]
-        public void ConfirmPasswordFailTest_ChecksIfThePasswordIsNotChangedIfOldPasswordisIncorrect_VeririesThroughTheReturnedValue()
+        public void ConfirmPasswordFailTest_ChecksIfThePasswordIsNotChangedIfOldPasswordisIncorrect_VerifiesThroughTheReturnedValue()
         {
             IUserApplicationService userApplicationService = (IUserApplicationService)_applicationContext["UserApplicationService"];
             IRegistrationApplicationService registrationApplicationService =
@@ -97,10 +99,18 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             User userBeforePasswordChange = userRepository.GetUserByUserName("linkinpark");
             string passwordBeforeChange = userBeforePasswordChange.Password;
 
-            bool changeSuccessful = userApplicationService.ChangePassword(validationEssentials, "burnitdowner",
-                "burnitdowntwice", "burnitdowntwice");
+            bool exceptionRaised = false;
 
-            Assert.IsFalse(changeSuccessful);
+            try
+            {
+                userApplicationService.ChangePassword(validationEssentials, "burnitdowner",
+                                                      "burnitdowntwice", "burnitdowntwice");
+            }
+            catch (InvalidCredentialException e)
+            {
+                exceptionRaised = true;
+            }
+            Assert.IsTrue(exceptionRaised);
             User userAfterPasswordChange = userRepository.GetUserByUserName("linkinpark");
             string passwordAfterChange = userAfterPasswordChange.Password;
 
@@ -110,7 +120,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
 
         [Test]
         [Category("Integration")]
-        public void ConfirmPasswordFailTest_ChecksIfThePasswordIsNotChangedIfConfirmPasswordDoesNotMatch_VeririesThroughTheReturnedValue()
+        public void ConfirmPasswordFailTest_ChecksIfThePasswordIsNotChangedIfConfirmPasswordDoesNotMatch_VerifiesThroughTheReturnedValue()
         {
             IUserApplicationService userApplicationService = (IUserApplicationService)_applicationContext["UserApplicationService"];
             IRegistrationApplicationService registrationApplicationService =
@@ -128,15 +138,67 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             User userBeforePasswordChange = userRepository.GetUserByUserName("linkinpark");
             string passwordBeforeChange = userBeforePasswordChange.Password;
 
-            bool changeSuccessful = userApplicationService.ChangePassword(validationEssentials, "burnitdown",
-                "burnitdowntwice", "burnitdowntwice2");
-
-            Assert.IsFalse(changeSuccessful);
+            bool exceptionRaised = false;
+            try
+            {
+                userApplicationService.ChangePassword(validationEssentials, "burnitdown", "burnitdowntwice", "burnitdowntwice2");
+            }
+            catch (InvalidCredentialException e)
+            {
+                exceptionRaised = true;
+            }
+            Assert.IsTrue(exceptionRaised);
             User userAfterPasswordChange = userRepository.GetUserByUserName("linkinpark");
             string passwordAfterChange = userAfterPasswordChange.Password;
 
             // Verify the old and new password do not match
             Assert.AreEqual(passwordBeforeChange, passwordAfterChange);
+        }
+
+        [Test]
+        [Category("Integration")]
+        public void ForgotPasswordRequestSuccessTest_ProvidesAValidEmailIdToSendTheMailTo_VerifiesByTheReturnedBoolean()
+        {
+            IUserApplicationService userApplicationService = (IUserApplicationService)_applicationContext["UserApplicationService"];
+            IRegistrationApplicationService registrationApplicationService =
+                (IRegistrationApplicationService)_applicationContext["RegistrationApplicationService"];
+            ILoginApplicationService loginApplicationService =
+                (ILoginApplicationService)_applicationContext["LoginApplicationService"];
+
+            ManualResetEvent manualResetEvent = new ManualResetEvent(false);
+            string username = "linkinpark";
+            string email = "waqas.syed@hotmail.com";
+            registrationApplicationService.CreateAccount(new SignupUserCommand(email, username, "burnitdown", "USA", TimeZone.CurrentTimeZone, ""));
+            // Wait for the asynchrnous email sending event to be completed otherwise no mre emails can be sent until
+            // this operation finishes
+            manualResetEvent.WaitOne(6000);
+            
+            bool forgotUsernameResponse = userApplicationService.ForgotUsername(email);
+            // Wait for the email to be sent and operation to be completed
+            manualResetEvent.WaitOne(5000);
+            Assert.IsTrue(forgotUsernameResponse);
+        }
+
+        [Test]
+        [Category("Integration")]
+        public void ForgotPasswordRequestFailTest_ProvidesAnInvalidEmailIdToSendTheMailTo_VerifiesByTheReturnedBoolean()
+        {
+            IUserApplicationService userApplicationService = (IUserApplicationService)_applicationContext["UserApplicationService"];
+            IRegistrationApplicationService registrationApplicationService =
+                (IRegistrationApplicationService)_applicationContext["RegistrationApplicationService"];
+
+            ManualResetEvent manualResetEvent = new ManualResetEvent(false);
+            string username = "linkinpark";
+            string email = "waqas.syed@hotmail.com";
+            registrationApplicationService.CreateAccount(new SignupUserCommand(email, username, "burnitdown", "USA", TimeZone.CurrentTimeZone, ""));
+            // Wait for the asynchrnous email sending event to be completed otherwise no mre emails can be sent until
+            // this operation finishes
+            manualResetEvent.WaitOne(5000);
+
+            bool forgotUsernameResponse = userApplicationService.ForgotUsername(email + "1");
+            // Wait for the email to be sent and operation to be completed
+            manualResetEvent.WaitOne(5000);
+            Assert.IsFalse(forgotUsernameResponse);
         }
     }
 }

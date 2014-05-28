@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using System.Threading;
 using CoinExchange.Common.Tests;
 using CoinExchange.IdentityAccess.Application.RegistrationServices;
 using CoinExchange.IdentityAccess.Application.RegistrationServices.Commands;
@@ -52,9 +53,11 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
                 (IUserRepository)_applicationContext["UserRepository"];
             IPasswordEncryptionService passwordEncryption =
                 (IPasswordEncryptionService)_applicationContext["PasswordEncryptionService"];
+            ManualResetEvent manualResetEvent = new ManualResetEvent(false);
             string activationKey = registrationService.CreateAccount(new SignupUserCommand(
-                "dummy@dumdum.com", "Bob", "iamnotalice", "Wonderland", TimeZone.CurrentTimeZone, ""));
-
+                "waqas.syed@hotmail.com", "Bob", "iamnotalice", "Wonderland", TimeZone.CurrentTimeZone, ""));
+            // Wait for the email to be sent
+            manualResetEvent.WaitOne(5000);
             User receivedUser = userRepository.GetUserByUserName("Bob");
             Assert.NotNull(receivedUser);
             Assert.AreEqual("Bob", receivedUser.Username);
