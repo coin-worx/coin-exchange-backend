@@ -18,5 +18,12 @@ assembly="CoinExchange.IdentityAccess.Domain.Model" namespace="CoinExchange.Iden
     <property name="PhoneNumber"  column="PhoneNumber"/>
     <property name="Address1" column="Address1"/>
     <property name="Address2" column="Address2"/>
+    <property name="Deleted" column="Deleted"/>
+    <component name="IsUserBlocked">
+      <property name="Value" column="IsUserBlocked"/>
+    </component>
+    <component name="IsActivationKeyUsed">
+      <property name="Value" column="IsActivationKeyUsed"/>
+    </component>
     </class>
 </hibernate-mapping>

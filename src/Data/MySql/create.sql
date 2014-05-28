@@ -76,9 +76,9 @@ CREATE TABLE `permission` (
 DROP TABLE IF EXISTS `securitykeyspair`;
 
 CREATE TABLE `securitykeyspair` (
-  `KeyDescription` varchar(50) NOT NULL,
-  `ApiKey` varchar(100) DEFAULT NULL,
+  `ApiKey` varchar(100) NOT NULL,
   `SecretKey` varchar(100) DEFAULT NULL,
+  `KeyDescription` varchar(50) DEFAULT NULL,
   `ExpirationDate` datetime DEFAULT NULL,
   `StartDate` datetime DEFAULT NULL,
   `EndDate` datetime DEFAULT NULL,
@@ -86,7 +86,10 @@ CREATE TABLE `securitykeyspair` (
   `SystemGenerated` tinyint(1) DEFAULT NULL,
   `UserName` varchar(50) DEFAULT NULL,
   `CreationDateTime` datetime DEFAULT NULL,
-  PRIMARY KEY (`KeyDescription`)
+  `EnableExpirationDate` tinyint(1) DEFAULT NULL,
+  `EnableStartDate` tinyint(1) DEFAULT NULL,
+  `EnableEndDate` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`ApiKey`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Table structure for table `securitykeyspermission` */
@@ -95,13 +98,13 @@ DROP TABLE IF EXISTS `securitykeyspermission`;
 
 CREATE TABLE `securitykeyspermission` (
   `Id` int(11) NOT NULL AUTO_INCREMENT,
-  `KeyDescription` varchar(100) DEFAULT NULL,
+  `ApiKey` varchar(100) DEFAULT NULL,
   `PermissionId` varchar(10) DEFAULT NULL,
   `IsAllowed` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`Id`),
   KEY `FK_apikeypermission` (`PermissionId`),
   CONSTRAINT `FK_apikeypermission` FOREIGN KEY (`PermissionId`) REFERENCES `permission` (`PermissionId`)
-) ENGINE=InnoDB AUTO_INCREMENT=202 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=169 DEFAULT CHARSET=latin1;
 
 /*Table structure for table `tickerinfo` */
 
@@ -166,6 +169,9 @@ CREATE TABLE `user` (
   `PhoneNumber` varchar(50) DEFAULT NULL,
   `Address1` varchar(100) DEFAULT NULL,
   `Address2` varchar(100) DEFAULT NULL,
+  `IsActivationKeyUsed` tinyint(1) DEFAULT NULL,
+  `IsUserBlocked` tinyint(1) DEFAULT NULL,
+  `Deleted` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`UserName`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 

@@ -226,5 +226,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         /// List of Ueser Docuemnts associated with this User
         /// </summary>
         public UserDocumentsList UserDocumentsList { get; set; }
+
+        public bool Deleted { get; set; }
     }
 }
