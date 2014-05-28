@@ -43,7 +43,7 @@ namespace CoinExchange.IdentityAccess.Application.Tests
             IUserRepository userRepository = new MockUserRepository();
             IIdentityAccessPersistenceRepository persistRepository = new MockPersistenceRepository(false);
             ISecurityKeysApplicationService securityKeysApplicationService = new SecurityKeysApplicationService(new SecurityKeysGenerationService(),
-                persistRepository);
+                persistRepository,null);
             IPasswordEncryptionService passwordEncryptionService = new PasswordEncryptionService();
             ILoginApplicationService loginApplicationService = new LoginApplicationService(userRepository, passwordEncryptionService, 
                 securityKeysApplicationService);
@@ -70,7 +70,7 @@ namespace CoinExchange.IdentityAccess.Application.Tests
             IUserRepository userRepository = new MockUserRepository();
             IIdentityAccessPersistenceRepository persistRepository = new MockPersistenceRepository(false);
             ISecurityKeysApplicationService securityKeysApplicationService = new SecurityKeysApplicationService(new SecurityKeysGenerationService(),
-                persistRepository);
+                persistRepository,null);
             IPasswordEncryptionService passwordEncryptionService = new PasswordEncryptionService();
             ILoginApplicationService loginApplicationService = new LoginApplicationService(userRepository, passwordEncryptionService,
                 securityKeysApplicationService);
@@ -103,7 +103,7 @@ namespace CoinExchange.IdentityAccess.Application.Tests
             IUserRepository userRepository = new MockUserRepository();
             IIdentityAccessPersistenceRepository persistRepository = new MockPersistenceRepository(false);
             ISecurityKeysApplicationService securityKeysApplicationService = new SecurityKeysApplicationService(new SecurityKeysGenerationService(),
-                persistRepository);
+                persistRepository,null);
             IPasswordEncryptionService passwordEncryptionService = new PasswordEncryptionService();
             ILoginApplicationService loginApplicationService = new LoginApplicationService(userRepository, passwordEncryptionService,
                 securityKeysApplicationService);
