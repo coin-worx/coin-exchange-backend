@@ -18,9 +18,32 @@ namespace CoinExchange.IdentityAccess.Infrastructure.IntegrationTests
         {
             IEmailService emailService = (IEmailService)ContextRegistry.GetContext()["EmailService"];
             ManualResetEvent manualResetEvent = new ManualResetEvent(false);
-            emailService.SendMail("waqas.syed@hotmail.com", "BlancRock",
-                                  EmailContents.GetActivationKeyMessage("123456787654"));
+            bool sendMail = emailService.SendMail("waqas.syed@hotmail.com", "BlancRock", EmailContents.GetActivationKeyMessage("123456787654"));
             manualResetEvent.WaitOne(5000);
+
+            Assert.IsTrue(sendMail);
+        }
+
+        [Test]
+        public void PostSignUpEmailSendingTest()
+        {
+            IEmailService emailService = (IEmailService)ContextRegistry.GetContext()["EmailService"];
+            ManualResetEvent manualResetEvent = new ManualResetEvent(false);
+            bool sendPostSignUpEmail = emailService.SendPostSignUpEmail("waqas.syed@hotmail.com", "ActivationKey:BlancRock");
+            manualResetEvent.WaitOne(5000);
+
+            Assert.IsTrue(sendPostSignUpEmail);
+        }
+
+        [Test]
+        public void ForgotUsernameEmailSendingTest()
+        {
+            IEmailService emailService = (IEmailService)ContextRegistry.GetContext()["EmailService"];
+            ManualResetEvent manualResetEvent = new ManualResetEvent(false);
+            bool sendForgotUsernameEmail = emailService.SendForgotUsernameEmail("waqas.syed@hotmail.com", "ActivationKey:BlancRock");
+            manualResetEvent.WaitOne(5000);
+
+            Assert.IsTrue(sendForgotUsernameEmail);
         }
     }
 }

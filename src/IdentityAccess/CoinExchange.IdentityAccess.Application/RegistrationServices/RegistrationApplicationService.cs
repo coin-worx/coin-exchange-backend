@@ -56,8 +56,9 @@ namespace CoinExchange.IdentityAccess.Application.RegistrationServices
                     User user = new User(signupUserCommand.Email, signupUserCommand.Username, hashedPassword,
                                          signupUserCommand.Country, signupUserCommand.TimeZone,
                                          signupUserCommand.PgpPublicKey, activationKey);
-                    _emailService.SendMail(user.Email, EmailContents.ActivationKeySubject,
-                                           EmailContents.GetActivationKeyMessage(activationKey));
+                    // Semd email to the user
+                    _emailService.SendPostSignUpEmail(user.Email, activationKey);
+
                     try
                     {
                         // Save to persistence

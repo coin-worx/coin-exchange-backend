@@ -152,8 +152,7 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
                 // If activation key is valid, proceed to verify username and password
                 if (user != null)
                 {
-                    _emailService.SendMail(email, EmailContents.ForgotUsernameSubject, 
-                                           EmailContents.GetForgotUsernameMessage(user.Username));
+                    _emailService.SendForgotUsernameEmail(email, user.Username);
                     return true;
                 }
             }

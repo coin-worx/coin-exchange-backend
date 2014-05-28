@@ -30,6 +30,7 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Services.Email
             _smtpClient.Host = host;
             _smtpClient.Credentials = new NetworkCredential(from, password);
             _smtpClient.EnableSsl = true;
+            _smtpClient.SendCompleted += SendCompletedCallback;
         }
 
         #region Methods
@@ -52,6 +53,43 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Services.Email
             return true;
         }
 
+        /// <summary>
+        /// Sends the mail that the user should get after signing up for CoinExchange
+        /// </summary>
+        /// <param name="to"></param>
+        /// <param name="activationKey"></param>
+        /// <returns></returns>
+        public bool SendPostSignUpEmail(string to, string activationKey)
+        {
+            _mailMessage = new MailMessage(_from, to);
+            _mailMessage.Subject = EmailContents.ActivationKeySubject;
+            _mailMessage.Body = EmailContents.GetActivationKeyMessage(activationKey);
+
+            _smtpClient.SendAsync(_mailMessage, null);
+            return true;
+        }
+
+        /// <summary>
+        /// Sends the email that the user should get when they request us to remind them of their username
+        /// </summary>
+        /// <param name="to"></param>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        public bool SendForgotUsernameEmail(string to, string username)
+        {
+            _mailMessage = new MailMessage(_from, to);
+            _mailMessage.Subject = EmailContents.ForgotUsernameSubject;
+            _mailMessage.Body = EmailContents.GetForgotUsernameMessage(username);
+
+            _smtpClient.SendAsync(_mailMessage, null);
+            return true;
+        }
+
+        /// <summary>
+        /// Handles the callback that is called after the mail sending operation is completed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SendCompletedCallback(object sender, AsyncCompletedEventArgs e)
         {
             if (e.Cancelled)

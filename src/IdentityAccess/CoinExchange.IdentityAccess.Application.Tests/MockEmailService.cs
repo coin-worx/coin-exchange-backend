@@ -18,6 +18,16 @@ namespace CoinExchange.IdentityAccess.Application.Tests
             return true;
         }
 
+        public bool SendPostSignUpEmail(string to, string activationKey)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool SendForgotUsernameEmail(string to, string username)
+        {
+            throw new NotImplementedException();
+        }
+
         public SmtpClient SmtpClient { get; private set; }
         public string FromAddress { get; private set; }
     }
