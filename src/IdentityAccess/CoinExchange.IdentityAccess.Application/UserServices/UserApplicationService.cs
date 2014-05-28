@@ -126,7 +126,8 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
                 // If activation key is valid, proceed to verify username and password
                 if (userByActivationKey != null)
                 {
-                    // ToDo: Soft Delete the User after Bilal has provided the method
+                    _userRepository.DeleteUser(userByActivationKey);
+                    return true;
                 }
             }
             // If the user did not provide all the credentials, return with failure
@@ -164,9 +165,70 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
             return false;
         }
 
+        /// <summary>
+        /// Request to reset the password in case it is forgotten by the user
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="username"></param>
+        /// <returns></returns>
         public bool ForgotPassword(string email, string username)
         {
-            throw new NotImplementedException();
+            // Make sure all given credential contains value
+            if (!string.IsNullOrEmpty(email) && (!string.IsNullOrEmpty(username)))
+            {
+                // Get the user tied to this Activation Key
+                User user = _userRepository.GetUserByEmail(email);
+                // If activation key is valid, proceed to verify username and password
+                if (user != null)
+                {
+                    if (user.Username.Equals(username))
+                    {
+                        // ToDo: Discuss if the link to the reset password site will be sent by the front end and we will
+                        // append the forgotpassword id to it and send in the email to the user who requested it.
+                        // If yes, create new service for forgotpassword code generation.
+                        //_emailService.SendForgotPasswordEmail(email, )
+                        return true;
+                    }
+                    else
+                    {
+                        throw new InvalidCredentialException("Wrong username.");
+                    }
+                }
+            }
+            // If the user did not provide all the credentials, return with failure
+            else
+            {
+                throw new InvalidCredentialException("Email not provided");
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Checks if this is a valid reset link code sent to the user for reseting password and also to verify new 
+        /// password matches Confirm Password
+        /// </summary>
+        /// <param name="forgotPasswordActivationCode"></param>
+        /// <param name="newPassword"></param>
+        /// <param name="confirmNewPassword"></param>
+        /// <returns></returns>
+        public bool ResetPasswordByEmailLink(string forgotPasswordActivationCode, string newPassword, string confirmNewPassword)
+        {
+            // Make sure all given credential contains value
+            if (!string.IsNullOrEmpty(forgotPasswordActivationCode) && 
+                (!string.IsNullOrEmpty(newPassword)) &&
+                (!string.IsNullOrEmpty(confirmNewPassword)))
+            {
+                // Get the user tied to this ForgotPasswordCode
+                // ToDo: Ask Bilal to provide a method for getting UserByForgotPasswordCode, Confirm user exists,
+                // Check if new andconfirm passwords match, and update the password for the user in the repository
+                
+            }
+            // If the user did not provide all the credentials, return with failure
+            else
+            {
+                throw new InvalidCredentialException("Email not provided");
+            }
+            return false;
         }
     }
 }

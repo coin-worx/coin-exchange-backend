@@ -1,4 +1,5 @@
-﻿using CoinExchange.IdentityAccess.Application.AccessControlServices.Commands;
+﻿using System.Security.Authentication;
+using CoinExchange.IdentityAccess.Application.AccessControlServices.Commands;
 using CoinExchange.IdentityAccess.Domain.Model.Repositories;
 using CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate;
 
@@ -25,10 +26,23 @@ namespace CoinExchange.IdentityAccess.Application.AccessControlServices
         /// <returns></returns>
         public bool Logout(LogoutCommand logoutCommand)
         {
-            SecurityKeysPair securityKeysPair = _securityKeysRepository.GetByApiKey(logoutCommand.ValidationEssentials.ApiKey.Value);
+            if (logoutCommand.ValidationEssentials != null && 
+                logoutCommand.ValidationEssentials.ApiKey != null && 
+                !string.IsNullOrEmpty(logoutCommand.ValidationEssentials.ApiKey.Value) &&
+                logoutCommand.ValidationEssentials.SecretKey != null &&
+                !string.IsNullOrEmpty(logoutCommand.ValidationEssentials.SecretKey.Value))
+            {
+                SecurityKeysPair securityKeysPair =
+                    _securityKeysRepository.GetByApiKey(logoutCommand.ValidationEssentials.ApiKey.Value);
 
-            // ToDO: Soft Delete the digital signature after the feature is implemented by Bilal in the repository
-            return false;
+                // ToDo: Test after Bilal Finishes Implementation ofthis deletion
+                _securityKeysRepository.DeleteSecurityKeysPair(securityKeysPair);
+                return false;
+            }
+            else
+            {
+                throw new InvalidCredentialException("Invalid or Incomplete Logout Credentials");
+            }
         }
     }
 }

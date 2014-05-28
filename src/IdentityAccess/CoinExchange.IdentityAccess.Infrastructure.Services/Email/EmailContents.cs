@@ -27,6 +27,10 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Services.Email
         private static readonly string ForgotUsernameEnd = string.Format("{0} {1} {2}", Environment.NewLine,
             Environment.NewLine, "Enjoy!!!");
 
+        private static readonly string ForgotPasswordStart = string.Format("{0} {1} {2} {3} {4}", Environment.NewLine,
+            Environment.NewLine, "You requested to reset your passwort BlancRock exchange, please click on the given link" +
+                                 "to reset your password", Environment.NewLine, Environment.NewLine);
+
         #endregion Private Fields
 
         #region Pulbic Fields
@@ -60,6 +64,16 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Services.Email
         public static string GetForgotUsernameMessage(string username)
         {
             return string.Format("{0} {1} {2} {3} {4}", Greetings, ForgotUsernameStart, username, ForgotUsernameEnd, Regards);
+        }
+
+        /// <summary>
+        /// Forgot Password
+        /// </summary>
+        /// <param name="passwordResetLink"> </param>
+        /// <returns></returns>
+        public static string GetForgotPasswordMessage(string passwordResetLink)
+        {
+            return string.Format("{0} {1} {2} {3} {4}", Greetings, ForgotPasswordStart, passwordResetLink, Regards);
         }
     }
 }

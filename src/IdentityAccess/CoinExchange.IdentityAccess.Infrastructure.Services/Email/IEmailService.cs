@@ -38,6 +38,14 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Services.Email
         bool SendForgotUsernameEmail(string to, string username);
 
         /// <summary>
+        /// Sends the email that the user should get when they request to reset their password
+        /// </summary>
+        /// <param name="to"></param>
+        /// <param name="passwordResetLink"></param>
+        /// <returns></returns>
+        bool SendForgotPasswordEmail(string to, string passwordResetLink);
+
+        /// <summary>
         /// Instance of the SMTP Client
         /// </summary>
         SmtpClient SmtpClient { get; }

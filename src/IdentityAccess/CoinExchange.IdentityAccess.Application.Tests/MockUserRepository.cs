@@ -32,16 +32,32 @@ namespace CoinExchange.IdentityAccess.Application.Tests
             return null;
         }
 
+        /// <summary>
+        /// Get user by activation key
+        /// </summary>
+        /// <param name="activationKey"></param>
+        /// <returns></returns>
         public User GetUserByActivationKey(string activationKey)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Get by email
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
         public User GetUserByEmail(string email)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Get by email and username
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="email"></param>
+        /// <returns></returns>
         public User GetUserByEmailAndUserName(string username, string email)
         {
             throw new NotImplementedException();
@@ -58,7 +74,11 @@ namespace CoinExchange.IdentityAccess.Application.Tests
             return true;
         }
 
-
+        /// <summary>
+        /// Delete User
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public bool DeleteUser(User user)
         {
             throw new NotImplementedException();

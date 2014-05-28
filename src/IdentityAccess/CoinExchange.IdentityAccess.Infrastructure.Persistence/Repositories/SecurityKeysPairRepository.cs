@@ -33,5 +33,15 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Persistence.Repositories
                     .Where(x => x.ApiKey == apiKey)
                     .SingleOrDefault();
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="securityKeysPair"></param>
+        /// <returns></returns>
+        public bool DeleteSecurityKeysPair(SecurityKeysPair securityKeysPair)
+        {
+            return true;
+        }
     }
 }

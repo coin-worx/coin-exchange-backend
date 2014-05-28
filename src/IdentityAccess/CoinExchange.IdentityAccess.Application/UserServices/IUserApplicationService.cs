@@ -51,5 +51,15 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
         /// <param name="username"></param>
         /// <returns></returns>
         bool ForgotPassword(string email, string username);
+
+        /// <summary>
+        /// Checks if this is a valid reset link code sent to the user for reseting password and also to verify new 
+        /// password matches Confirm Password
+        /// </summary>
+        /// <param name="forgotPasswordActivationCode"></param>
+        /// <param name="password"></param>
+        /// <param name="confirmNewPassword"></param>
+        /// <returns></returns>
+        bool ResetPasswordByEmailLink(string forgotPasswordActivationCode, string password, string confirmNewPassword);
     }
 }
