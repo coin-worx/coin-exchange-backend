@@ -77,9 +77,22 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate.AuthenticationS
                 {
                     if (securityKeysPair.ExpirationDate < DateTime.Now)
                     {
-                        // ToDo: Implement after Master Data is loaded by Bilal for Permissions. Need to verify 
-                        // the request from the URI and then check for the corresponding permission
-                        //authenticateCommand.Uri.Substring()
+                        // ToDo: Implement the functionality to see which operation is requested and check permission for it
+                        if (authenticateCommand.Uri.Contains("/orders/"))
+                        {
+                            if (authenticateCommand.Uri.Contains("cancelorder"))
+                            {
+                                
+                            }
+                            else if (authenticateCommand.Uri.Contains(""))
+                            {
+                                
+                            }
+                        }
+                        else if (authenticateCommand.Uri.Contains("/trades/"))
+                        {
+                            
+                        }
                     }
                 }
             }
