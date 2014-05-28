@@ -21,8 +21,8 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         public static SecurityKeysPair SystemGeneratedSecurityKeyPair(string userName,ISecurityKeysGenerationService securityKeysGeneration)
         {
             var keys = securityKeysGeneration.GenerateNewSecurityKeys();
-           // SecurityKeysPair securityKeysPair=new SecurityKeysPair(keys.Item1,keys.Item2,DateTime.Now.ToString(),userName,true);
-            return null;
+            SecurityKeysPair securityKeysPair=new SecurityKeysPair(keys.Item1,keys.Item2,DateTime.Now.ToString(),userName,true);
+            return securityKeysPair;
         }
 
         /// <summary>
@@ -37,23 +37,25 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
                 throw new ArgumentException("The key description already exist");
             }
             var keys = securityKeysGeneration.GenerateNewSecurityKeys();
-            //SecurityKeysPair securityKeysPair = new SecurityKeysPair(keys.Item1, keys.Item2, keyDescription, userName, false);
-            //if (enableExpirationDate)
-            //{
-            //    securityKeysPair.ExpirationDate = Convert.ToDateTime(expirationDate);
-            //}
-            //if (enableStartDate)
-            //{
-            //    securityKeysPair.StartDate = Convert.ToDateTime(startDate);
-            //}
-            //if (enableEndDate)
-            //{
-            //    securityKeysPair.EndDate = Convert.ToDateTime(endDate);
-            //}
-            //securityKeysPair.EnableStartDate = enableStartDate;
-            //securityKeysPair.EnableEndDate = enableEndDate;
-            //securityKeysPair.EnableExpirationDate = enableExpirationDate;
-            return null;
+            SecurityKeysPair securityKeysPair = new SecurityKeysPair(keys.Item1, keys.Item2, keyDescription, userName, false);
+            if (enableExpirationDate)
+            {
+                securityKeysPair.ExpirationDate = Convert.ToDateTime(expirationDate);
+            }
+            if (enableStartDate)
+            {
+                securityKeysPair.StartDate = Convert.ToDateTime(startDate);
+            }
+            if (enableEndDate)
+            {
+                securityKeysPair.EndDate = Convert.ToDateTime(endDate);
+            }
+            securityKeysPair.EnableStartDate = enableStartDate;
+            securityKeysPair.EnableEndDate = enableEndDate;
+            securityKeysPair.EnableExpirationDate = enableExpirationDate;
+
+            //TODO: assign permissions
+            return securityKeysPair;
         }
     }
 }

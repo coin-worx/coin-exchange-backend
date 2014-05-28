@@ -17,6 +17,6 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         /// Item2 = Secret Key
         /// </summary>
         /// <returns></returns>
-        Tuple<ApiKey, SecretKey> GenerateNewSecurityKeys();
+        Tuple<string, string> GenerateNewSecurityKeys();
     }
 }
