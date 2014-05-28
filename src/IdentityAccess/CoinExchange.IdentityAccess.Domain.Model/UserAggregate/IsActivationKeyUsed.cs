@@ -12,6 +12,13 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
     public class IsActivationKeyUsed
     {
         /// <summary>
+        /// Default Constructor
+        /// </summary>
+        public IsActivationKeyUsed()
+        {
+            
+        }
+        /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="value"></param>

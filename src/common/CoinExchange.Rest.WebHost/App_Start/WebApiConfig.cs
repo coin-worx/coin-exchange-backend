@@ -4,6 +4,8 @@ using System.Web.Http;
 using System.Web.Mvc;
 using CoinExchange.IdentityAccess.Application;
 using CoinExchange.IdentityAccess.Domain.Model.Repositories;
+using CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate;
+using CoinExchange.IdentityAccess.Domain.Model.UserAggregate;
 using CoinExchange.IdentityAccess.Domain.Model.UserAggregate.AuthenticationServices;
 using Common.Logging;
 using Spring.Context.Support;

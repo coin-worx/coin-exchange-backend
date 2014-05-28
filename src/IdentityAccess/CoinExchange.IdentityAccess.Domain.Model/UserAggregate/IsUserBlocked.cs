@@ -12,6 +12,13 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
     public class IsUserBlocked
     {
         /// <summary>
+        /// default constructor
+        /// </summary>
+        public IsUserBlocked()
+        {
+            
+        }
+        /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="value"></param>

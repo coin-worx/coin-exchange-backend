@@ -57,5 +57,11 @@ namespace CoinExchange.IdentityAccess.Application.Tests
             _userList.Add(user);
             return true;
         }
+
+
+        public bool DeleteUser(User user)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

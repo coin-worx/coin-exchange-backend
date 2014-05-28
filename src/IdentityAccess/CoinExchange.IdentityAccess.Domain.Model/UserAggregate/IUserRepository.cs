@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CoinExchange.IdentityAccess.Domain.Model.UserAggregate;
-
-namespace CoinExchange.IdentityAccess.Domain.Model.Repositories
+﻿namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
 {
     /// <summary>
     /// User reading repository
@@ -16,5 +9,6 @@ namespace CoinExchange.IdentityAccess.Domain.Model.Repositories
         User GetUserByActivationKey(string activationKey);
         User GetUserByEmail(string email);
         User GetUserByEmailAndUserName(string username,string email);
+        bool DeleteUser(User user);
     }
 }

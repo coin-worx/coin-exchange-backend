@@ -20,25 +20,33 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Persistence.Repositories
         [Transaction(ReadOnly = true)]
         public User GetUserByUserName(string username)
         {
-            return CurrentSession.Get<User>(username);
+            return CurrentSession.QueryOver<User>().Where(x => x.Username == username && x.Deleted == false).SingleOrDefault();
         }
 
         [Transaction(ReadOnly = true)]
         public User GetUserByActivationKey(string activationKey)
         {
-            return CurrentSession.QueryOver<User>().Where(x => x.ActivationKey == activationKey).SingleOrDefault();
+            return CurrentSession.QueryOver<User>().Where(x => x.ActivationKey == activationKey&&x.Deleted==false).SingleOrDefault();
         }
 
         [Transaction(ReadOnly = true)]
         public User GetUserByEmail(string email)
         {
-            return CurrentSession.QueryOver<User>().Where(x => x.Email == email).SingleOrDefault();
+            return CurrentSession.QueryOver<User>().Where(x => x.Email == email&&x.Deleted==false).SingleOrDefault();
         }
 
         [Transaction(ReadOnly = true)]
         public User GetUserByEmailAndUserName(string username, string email)
         {
-            return CurrentSession.QueryOver<User>().Where(x => x.Username == username && x.Email==email).SingleOrDefault();
+            return CurrentSession.QueryOver<User>().Where(x => x.Username == username && x.Email==email && x.Deleted==false).SingleOrDefault();
+        }
+
+        [Transaction(ReadOnly = false)]
+        public bool DeleteUser(User user)
+        {
+            user.Deleted = true;
+            CurrentSession.SaveOrUpdate(user);
+            return true;
         }
     }
 }

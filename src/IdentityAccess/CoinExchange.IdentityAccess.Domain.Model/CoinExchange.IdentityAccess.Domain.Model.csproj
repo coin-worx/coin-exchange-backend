@@ -42,8 +42,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Repositories\ISecurityKeysRepository.cs" />
-    <Compile Include="Repositories\IUserRepository.cs" />
+    <Compile Include="SecurityKeysAggregate\ISecurityKeysRepository.cs" />
+    <Compile Include="UserAggregate\IUserRepository.cs" />
     <Compile Include="SecurityKeysAggregate\ApiKey.cs" />
     <Compile Include="SecurityKeysAggregate\IPermissionRepository.cs" />
     <Compile Include="SecurityKeysAggregate\ISecurityKeysGenerationService.cs" />
