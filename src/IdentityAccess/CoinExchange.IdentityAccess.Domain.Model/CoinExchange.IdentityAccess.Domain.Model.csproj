@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="SecurityKeysAggregate\ISecurityKeysRepository.cs" />
+    <Compile Include="UserAggregate\IPasswordCodeGenerationService.cs" />
     <Compile Include="UserAggregate\IUserRepository.cs" />
     <Compile Include="SecurityKeysAggregate\ApiKey.cs" />
     <Compile Include="SecurityKeysAggregate\IPermissionRepository.cs" />

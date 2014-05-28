@@ -22,7 +22,10 @@
   
   <constructor-arg name="from" value="waqasshah047@gmail.com"/>
   <constructor-arg name="password" value="fixhub123"/>
+  </object>
 
+  <object id="PasswordCodeGenerationService" type="CoinExchange.IdentityAccess.Infrastructure.Services.PasswordCodeGenerationService, 
+          CoinExchange.IdentityAccess.Infrastructure.Services">
   </object>
 
 </objects>

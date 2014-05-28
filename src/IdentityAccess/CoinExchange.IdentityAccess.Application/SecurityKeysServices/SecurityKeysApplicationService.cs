@@ -35,7 +35,7 @@ namespace CoinExchange.IdentityAccess.Application.SecurityKeysServices
         /// <returns></returns>
         public Tuple<ApiKey, SecretKey> CreateSystemGeneratedKey(string username)
         {
-            SecurityKeysPair keysPair=SecurityKeysPairFactory.SystemGeneratedSecurityKeyPair(username, _securityKeysGenerationService);
+            SecurityKeysPair keysPair = SecurityKeysPairFactory.SystemGeneratedSecurityKeyPair(username, _securityKeysGenerationService);
             _persistRepository.SaveUpdate(keysPair);
             return new Tuple<ApiKey, SecretKey>(new ApiKey(keysPair.ApiKey),new SecretKey(keysPair.SecretKey) );
         }

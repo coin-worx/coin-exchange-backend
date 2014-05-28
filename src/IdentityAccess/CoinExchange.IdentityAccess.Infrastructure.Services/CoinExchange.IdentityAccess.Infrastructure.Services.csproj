@@ -51,6 +51,7 @@
     <Compile Include="Email\EmailContents.cs" />
     <Compile Include="Email\EmailService.cs" />
     <Compile Include="Email\IEmailService.cs" />
+    <Compile Include="PasswordCodeGenerationService.cs" />
     <Compile Include="SecurityKeysGenerationService.cs" />
     <Compile Include="PasswordEncryptionService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

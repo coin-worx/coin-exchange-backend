@@ -27,15 +27,29 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Services.Email
         private static readonly string ForgotUsernameEnd = string.Format("{0} {1} {2}", Environment.NewLine,
             Environment.NewLine, "Enjoy!!!");
 
+        private static readonly string ForgotPasswordStart = string.Format("{0} {1} {2} {3} {4}", Environment.NewLine,
+            Environment.NewLine, "You requested to reset your passwort BlancRock exchange, please click on the given link" +
+                                 "to reset your password", Environment.NewLine, Environment.NewLine);
+
+        private static readonly string WelcomeStart = string.Format("{0} {1} {2} {3} {4}", Environment.NewLine,
+            Environment.NewLine, "You have successfully activated your account at BlancRock. We welcome you to our exchange" +
+                                 " and are excited to serve you. ", Environment.NewLine, Environment.NewLine);
+
+        private static readonly string PasswordChanged = string.Format("{0} {1} {2} {3} {4}", Environment.NewLine,
+            Environment.NewLine, "You have just successfully changed your password. If it wasn't you, please cntact BlancRock" +
+                                 " support as soon as possible. ", Environment.NewLine, Environment.NewLine);
+
         #endregion Private Fields
 
         #region Pulbic Fields
 
-        public static readonly string Greetings = string.Format("{0} {1} {2} ", "Hi,", Environment.NewLine, Environment.NewLine);
+        public static readonly string Greetings = string.Format("{0} {1} {2} ", "Hi", Environment.NewLine, Environment.NewLine);
         
         public static readonly string ActivationKeySubject = "Activate BlancRock account";
 
         public static readonly string ForgotUsernameSubject = "Forgot BlancRock Username";
+
+        public static readonly string WelcomeSubject = "Welcome to BlancRock";
 
         public static readonly string Regards = string.Format("{0} {1} {2}, {3} {4}", System.Environment.NewLine,
             System.Environment.NewLine, "Thanks", System.Environment.NewLine, "BlancRock Team");
@@ -60,6 +74,36 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Services.Email
         public static string GetForgotUsernameMessage(string username)
         {
             return string.Format("{0} {1} {2} {3} {4}", Greetings, ForgotUsernameStart, username, ForgotUsernameEnd, Regards);
+        }
+
+        /// <summary>
+        /// Forgot Password
+        /// </summary>
+        /// <param name="passwordResetLink"> </param>
+        /// <returns></returns>
+        public static string GetForgotPasswordMessage(string passwordResetLink)
+        {
+            return string.Format("{0} {1} {2} {3} {4}", Greetings, ForgotPasswordStart, passwordResetLink, Regards);
+        }
+
+        /// <summary>
+        /// Gets the massage for sending a welcome mail to the user
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        public static string GetWelcomEmailmessage(string username)
+        {
+            return string.Format("{0} {1}, {2} {3}", Greetings, username, WelcomeStart, Regards);
+        }
+
+        /// <summary>
+        /// Gets the message for sending password cahnged email notification to the user
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        public static string GetPasswordChangedEmail(string username)
+        {
+            return string.Format("{0} {1}, {2} {3}", Greetings, username, PasswordChanged, Regards);
         }
     }
 }

@@ -6,6 +6,9 @@ using CoinExchange.IdentityAccess.Domain.Model.UserAggregate.AuthenticationServi
 
 namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate.AuthenticationServices
 {
+    /// <summary>
+    /// User Authentication Service
+    /// </summary>
     public class UserAuthenticationService : IAuthenticationService
     {
         private static readonly log4net.ILog Log = log4net.LogManager.GetLogger
@@ -54,10 +57,8 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate.AuthenticationS
 
             if (securityKeysPair != null)
             {
-                User user = null;
-                // ToDo: Get the User by the API Key after Bilal provides the method in the UserRepository
-                //_userRepository.GetUserByUserName()
-
+                User user = _userRepository.GetUserByUserName(securityKeysPair.UserName);
+                // If the keys are system generated, then we only need to check the session timeout for the user
                 if (securityKeysPair.SystemGenerated)
                 {
                     if (user != null)
@@ -70,12 +71,15 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate.AuthenticationS
                         }
                     }
                 }
+                // Else we need to check the expiration date of the keys, and whetehr the user has permissions for 
+                // commencing with the desired operation
                 else
                 {
                     if (securityKeysPair.ExpirationDate < DateTime.Now)
                     {
                         // ToDo: Implement after Master Data is loaded by Bilal for Permissions. Need to verify 
                         // the request from the URI and then check for the corresponding permission
+                        //authenticateCommand.Uri.Substring()
                     }
                 }
             }

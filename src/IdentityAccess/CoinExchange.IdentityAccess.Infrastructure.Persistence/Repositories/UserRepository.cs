@@ -41,6 +41,13 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Persistence.Repositories
             return CurrentSession.QueryOver<User>().Where(x => x.Username == username && x.Email==email && x.Deleted==false).SingleOrDefault();
         }
 
+        // ToDo For Bilal: Please implement this method and return the user. ALso create the Hibernate mapping for 
+        // User.ForgotPasswordCode
+        public User GetUserByForgotPasswordCode(string forgotPasswordCode)
+        {
+            throw new NotImplementedException();
+        }
+
         [Transaction(ReadOnly = false)]
         public bool DeleteUser(User user)
         {

@@ -5,6 +5,7 @@ using System.Management.Instrumentation;
 using System.Security.Authentication;
 using System.Text;
 using System.Threading.Tasks;
+using CoinExchange.IdentityAccess.Application.UserServices.Commands;
 using CoinExchange.IdentityAccess.Domain.Model.Repositories;
 using CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate;
 using CoinExchange.IdentityAccess.Domain.Model.UserAggregate;
@@ -26,43 +27,43 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
         private IPasswordEncryptionService _passwordEncryptionService = null;
         private IIdentityAccessPersistenceRepository _persistenceRepository = null;
         private IEmailService _emailService = null;
+        private IPasswordCodeGenerationService _passwordCodeGenerationService = null;
 
         /// <summary>
         /// Initializes with the User Repository
         /// </summary>
         public UserApplicationService(IUserRepository userRepository, ISecurityKeysRepository securityKeysRepository,
             IPasswordEncryptionService passwordEncryptionService, IIdentityAccessPersistenceRepository persistenceRepository,
-            IEmailService emailService)
+            IEmailService emailService, IPasswordCodeGenerationService passwordCodeGenerationService)
         {
             _userRepository = userRepository;
             _securityKeysRepository = securityKeysRepository;
             _passwordEncryptionService = passwordEncryptionService;
             _persistenceRepository = persistenceRepository;
             _emailService = emailService;
+            _passwordCodeGenerationService = passwordCodeGenerationService;
         }
 
         /// <summary>
         /// Request to change Password
         /// </summary>
-        /// <param name="userValidationEssentials"></param>
-        /// <param name="oldPassword"></param>
-        /// <param name="newPassword"></param>
-        /// <param name="newPasswordConfirmation"></param>
+        /// <param name="changePasswordCommand"> </param>
         /// <returns></returns>
-        public bool ChangePassword(UserValidationEssentials userValidationEssentials, string oldPassword, string newPassword, string newPasswordConfirmation)
+        public bool ChangePassword(ChangePasswordCommand changePasswordCommand)
         {
             // Get the SecurityKeyspair instance related to this API Key
-            SecurityKeysPair securityKeysPair = _securityKeysRepository.GetByApiKey(userValidationEssentials.ApiKey.Value);
+            SecurityKeysPair securityKeysPair = _securityKeysRepository.GetByApiKey(changePasswordCommand.UserValidationEssentials.ApiKey.Value);
             // Get the Userby specifying the Username in the SecurityKeysPair instance
             User user = _userRepository.GetUserByUserName(securityKeysPair.UserName);
 
-            if (_passwordEncryptionService.VerifyPassword(oldPassword, user.Password))
+            if (_passwordEncryptionService.VerifyPassword(changePasswordCommand.OldPassword, user.Password))
             {
-                if (newPassword.Equals(newPasswordConfirmation))
+                if (changePasswordCommand.NewPassword.Equals(changePasswordCommand.ConfirmNewPassword))
                 {
-                    string newEncryptedPassword = _passwordEncryptionService.EncryptPassword(newPassword);
+                    string newEncryptedPassword = _passwordEncryptionService.EncryptPassword(changePasswordCommand.NewPassword);
                     user.Password = newEncryptedPassword;
                     _persistenceRepository.SaveUpdate(user);
+                    _emailService.SendPasswordChangedEmail(user.Email, user.Username);
                     return true;
                 }
                 throw new InvalidCredentialException(string.Format("New Password and confirmation password do not match."));
@@ -93,8 +94,10 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
                         // Mark that this user is now activated
                         user.IsActivationKeyUsed = new IsActivationKeyUsed(true);
                         user.IsUserBlocked = new IsUserBlocked(false);
+
                         // Update the user instance in repository
                         _persistenceRepository.SaveUpdate(user);
+                        _emailService.SendWelcomeEmail(user.Email, user.Username);
                         return true;
                     }
                 }
@@ -122,19 +125,20 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
             if (!string.IsNullOrEmpty(activationKey))
             {
                 // Get the user tied to this Activation Key
-                User userByActivationKey = _userRepository.GetUserByActivationKey(activationKey);
+                User user = _userRepository.GetUserByActivationKey(activationKey);
                 // If activation key is valid, proceed to verify username and password
-                if (userByActivationKey != null)
+                if (user != null)
                 {
-                    // ToDo: Soft Delete the User after Bilal has provided the method
+                    _userRepository.DeleteUser(user);
+                    return true;
                 }
+                throw new InvalidOperationException(string.Format("{0} {1}", "No user exists against activation key: ", activationKey));
             }
             // If the user did not provide all the credentials, return with failure
             else
             {
                 throw new InvalidCredentialException("Activation Key not provided");
             }
-            return false;
         }
 
         /// <summary>
@@ -142,7 +146,7 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
         /// </summary>
         /// <param name="email"></param>
         /// <returns></returns>
-        public bool ForgotUsername(string email)
+        public string ForgotUsername(string email)
         {
             // Make sure all given credential contains value
             if (!string.IsNullOrEmpty(email))
@@ -152,22 +156,82 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
                 // If activation key is valid, proceed to verify username and password
                 if (user != null)
                 {
-                    _emailService.SendMail(email, EmailContents.ForgotUsernameSubject, 
-                                           EmailContents.GetForgotUsernameMessage(user.Username));
-                    return true;
+                    return user.Username;
                 }
+                throw new InvalidOperationException(string.Format("{0} {1}", "No user exists against email address: ", email));
             }
             // If the user did not provide all the credentials, return with failure
             else
             {
                 throw new InvalidCredentialException("Email not provided");
             }
-            return false;
         }
 
-        public bool ForgotPassword(string email, string username)
+        /// <summary>
+        /// Request to reset the password in case it is forgotten by the user
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        public string ForgotPassword(string email, string username)
         {
-            throw new NotImplementedException();
+            // Make sure all given credential contains value
+            if (!string.IsNullOrEmpty(email) && (!string.IsNullOrEmpty(username)))
+            {
+                // Get the user tied to this Activation Key
+                User user = _userRepository.GetUserByEmail(email);
+                // If activation key is valid, proceed to verify username and password
+                if (user != null)
+                {
+                    if (user.Username.Equals(username))
+                    {
+                        string newForgotPasswordCode = _passwordCodeGenerationService.CreateNewForgotPasswordCode();
+                        user.ForgotPasswordCode = newForgotPasswordCode;
+                        return newForgotPasswordCode;
+                    }
+                    else
+                    {
+                        throw new InvalidCredentialException("Wrong username.");
+                    }
+                }
+                throw new InvalidOperationException(string.Format("{0} {1}", "No user could be found for Email: ", email));
+            }
+            // If the user did not provide all the credentials, return with failure
+            else
+            {
+                throw new InvalidCredentialException("Email not provided");
+            }
+        }
+
+        /// <summary>
+        /// Checks if this is a valid reset link code sent to the user for reseting password and also to verify new 
+        /// password matches Confirm Password
+        /// </summary>
+        /// <param name="forgotPasswordActivationCode"></param>
+        /// <param name="newPassword"></param>
+        /// <returns></returns>
+        public bool ResetPasswordByEmailLink(string forgotPasswordActivationCode, string newPassword)
+        {
+            // Make sure all given credential contains value
+            if (!string.IsNullOrEmpty(forgotPasswordActivationCode) && (!string.IsNullOrEmpty(newPassword)))
+            {
+                // Get the user tied to this ForgotPasswordCode
+                // ToDo: Test after Bilal implements the GetUserByForgotPasswordCode method
+                User user = _userRepository.GetUserByForgotPasswordCode(forgotPasswordActivationCode);
+
+                if (user != null)
+                {
+                    user.Password = _passwordEncryptionService.EncryptPassword(newPassword);
+                    _persistenceRepository.SaveUpdate(user);
+                    return true;
+                }
+                throw new InvalidOperationException(string.Format("{0} {1}", "No user found for the given password code"));
+            }
+                // If the user did not provide all the credentials, return with failure
+            else
+            {
+                throw new InvalidCredentialException("Email not provided");
+            }
         }
     }
 }

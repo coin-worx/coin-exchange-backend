@@ -227,6 +227,14 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         /// </summary>
         public UserDocumentsList UserDocumentsList { get; set; }
 
+        /// <summary>
+        /// Is this user deleted softly from the database
+        /// </summary>
         public bool Deleted { get; set; }
+
+        /// <summary>
+        /// Code generated in case user has forgotten their password
+        /// </summary>
+        public string ForgotPasswordCode { get; set; }
     }
 }

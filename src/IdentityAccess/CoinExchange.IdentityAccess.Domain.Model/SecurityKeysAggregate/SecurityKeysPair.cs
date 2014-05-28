@@ -141,7 +141,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
                     }
                 }
             }
-            //update last modified date time.
+            // Update last modified date time.
             LastModified = DateTime.Now;
             return true;
         }

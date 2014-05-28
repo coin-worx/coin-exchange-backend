@@ -56,6 +56,7 @@
     <Compile Include="RegistrationServices\Commands\SignupUserCommand.cs" />
     <Compile Include="RegistrationServices\IRegistrationApplicationService.cs" />
     <Compile Include="RegistrationServices\RegistrationApplicationService.cs" />
+    <Compile Include="UserServices\Commands\ChangePasswordCommand.cs" />
     <Compile Include="UserServices\IUserApplicationService.cs" />
     <Compile Include="UserServices\UserApplicationService.cs" />
   </ItemGroup>
