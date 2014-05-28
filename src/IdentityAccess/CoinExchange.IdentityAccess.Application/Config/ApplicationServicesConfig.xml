@@ -15,6 +15,7 @@
           CoinExchange.IdentityAccess.Application">
     <constructor-arg name="securityKeysGenerationService" ref="SecurityKeysGenerationService"/>
     <constructor-arg name="persistenceRepository" ref="IdentityAccessPersistenceRepository"/>
+<constructor-arg name="securityKeysRepository" ref="SecurityKeysPairRepository"/>
 </object>
   
 <object id="LoginApplicationService" type="CoinExchange.IdentityAccess.Application.AccessControlServices.LoginApplicationService, 

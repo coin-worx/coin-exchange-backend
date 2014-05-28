@@ -48,6 +48,8 @@
     <Compile Include="AccessControlServices\ILogoutApplicationService.cs" />
     <Compile Include="AccessControlServices\LoginApplicationService.cs" />
     <Compile Include="AccessControlServices\LogoutApplicationService.cs" />
+    <Compile Include="SecurityKeysServices\Commands\CreateUserGeneratedSecurityKeyPair.cs" />
+    <Compile Include="SecurityKeysServices\SecurityKeyPermissionsRepresentation.cs" />
     <Compile Include="SecurityKeysServices\SecurityKeysApplicationService.cs" />
     <Compile Include="SecurityKeysServices\ISecurityKeysApplicationService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

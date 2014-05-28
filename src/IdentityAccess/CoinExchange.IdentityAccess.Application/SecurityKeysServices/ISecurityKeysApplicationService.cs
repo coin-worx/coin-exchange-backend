@@ -1,4 +1,5 @@
 ﻿using System;
+using CoinExchange.IdentityAccess.Application.SecurityKeysServices.Commands;
 using CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate;
 
 namespace CoinExchange.IdentityAccess.Application.SecurityKeysServices
@@ -19,12 +20,17 @@ namespace CoinExchange.IdentityAccess.Application.SecurityKeysServices
         /// Item 2=Secret Key
         /// </summary>
         /// <returns></returns>
-        Tuple<string,string> CreateUserGeneratedKey();
+        Tuple<string,string> CreateUserGeneratedKey(CreateUserGeneratedSecurityKeyPair command);
 
         /// <summary>
-        /// Set new permission
+        /// Update Security Key Pair Info
         /// </summary>
-        void SetPermissions(SecurityKeysPermission[] securityKeysPermissions);
+        void UpdateSecurityKeyPair(SecurityKeysPermission[] securityKeysPermissions);
+
+        /// <summary>
+        /// Delete security key pair
+        /// </summary>
+        void DeleteSecurityKeyPair(string keyDescription);
 
         /// <summary>
         /// Is the API key valid

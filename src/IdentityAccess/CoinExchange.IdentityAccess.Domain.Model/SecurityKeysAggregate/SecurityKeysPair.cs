@@ -29,7 +29,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         }
 
         /// <summary>
-        /// Constructor for system generated key pair
+        /// Constructor for user generated security key pair
         /// </summary>
         /// <param name="apiKey"></param>
         /// <param name="secretKey"></param>
@@ -43,6 +43,25 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
             KeyDescription = keyDescription;
             UserName = userName;
             SystemGenerated = systemGenerated;
+            CreationDateTime = DateTime.Now;
+        }
+
+        /// <summary>
+        /// Constructor for system generated key pair
+        /// </summary>
+        /// <param name="apiKey"></param>
+        /// <param name="secretKey"></param>
+        /// <param name="keyDescription"></param>
+        /// <param name="userName"></param>
+        /// <param name="systemGenerated"></param>
+        public SecurityKeysPair(string apiKey, string secretKey, string keyDescription, string userName, bool systemGenerated,List<SecurityKeysPermission> permissions )
+        {
+            _apiKey = apiKey;
+            _secretKey = secretKey;
+            KeyDescription = keyDescription;
+            UserName = userName;
+            SystemGenerated = systemGenerated;
+            _securityKeysPermissions = permissions;
             CreationDateTime = DateTime.Now;
         }
 

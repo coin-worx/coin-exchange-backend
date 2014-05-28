@@ -29,15 +29,14 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         /// Create user generated api key
         /// </summary>
         /// <returns></returns>
-        public static SecurityKeysPair UserGeneratedSecurityPair(string userName,string keyDescription,bool enableExpirationDate,string expirationDate,bool enableStartDate,string startDate,bool enableEndDate,string endDate,ISecurityKeysGenerationService securityKeysGeneration,ISecurityKeysRepository repository)
+        public static SecurityKeysPair UserGeneratedSecurityPair(string userName,string keyDescription,string apiKey,string secretKey,bool enableExpirationDate,string expirationDate,bool enableStartDate,string startDate,bool enableEndDate,string endDate,List<SecurityKeysPermission> keysPermissions ,ISecurityKeysRepository repository)
         {
             //check if key description already exist
             if (repository.GetByKeyDescription(keyDescription,userName) != null)
             {
                 throw new ArgumentException("The key description already exist");
             }
-            var keys = securityKeysGeneration.GenerateNewSecurityKeys();
-            SecurityKeysPair securityKeysPair = new SecurityKeysPair(keys.Item1, keys.Item2, keyDescription, userName, false);
+            SecurityKeysPair securityKeysPair = new SecurityKeysPair(apiKey, secretKey, keyDescription, userName, false,keysPermissions);
             if (enableExpirationDate)
             {
                 securityKeysPair.ExpirationDate = Convert.ToDateTime(expirationDate);
@@ -53,8 +52,6 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
             securityKeysPair.EnableStartDate = enableStartDate;
             securityKeysPair.EnableEndDate = enableEndDate;
             securityKeysPair.EnableExpirationDate = enableExpirationDate;
-
-            //TODO: assign permissions
             return securityKeysPair;
         }
     }
