@@ -29,5 +29,9 @@ assembly="CoinExchange.IdentityAccess.Domain.Model" namespace="CoinExchange.Iden
       <key column="Username"/>
       <one-to-many class="PasswordCodeRecord"/>
     </bag>
+    <bag name="_tierLevelStatuses" table="UserTierLevelStatus" cascade="all" inverse="true" lazy="false">
+      <key column="Username"/>
+      <one-to-many class="UserTierLevelStatus"/>
+    </bag>
     </class>
 </hibernate-mapping>

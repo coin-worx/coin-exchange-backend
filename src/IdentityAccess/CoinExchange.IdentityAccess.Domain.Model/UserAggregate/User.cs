@@ -22,7 +22,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         private TimeZone _timeZone;
         private TimeSpan _autoLogout;
         private DateTime _lastLogin;
-        private TierStatusList _tierStatusList;
+        private IList<UserTierLevelStatus> _tierLevelStatuses { get; set; } 
         private UserDocumentsList _userDocumentsList;
         private string _phoneNumber;
         private string _country;
@@ -34,6 +34,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         public User()
         {
             _forgottenPasswordCodesList=new List<PasswordCodeRecord>();
+            _tierLevelStatuses=new List<UserTierLevelStatus>();
         }
 
         /// <summary>
@@ -57,7 +58,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
             _timeZone = timeZone;
             _activationKey = activationKey;
 
-            _tierStatusList = new TierStatusList();
+            _tierLevelStatuses=new List<UserTierLevelStatus>();
             _userDocumentsList = new UserDocumentsList();
             _forgottenPasswordCodesList=new List<PasswordCodeRecord>();
         }
@@ -97,7 +98,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
             ActivationKey = activationKey;
 
             _forgottenPasswordCodesList = new List<PasswordCodeRecord>();
-            _tierStatusList = new TierStatusList();
+            _tierLevelStatuses=new List<UserTierLevelStatus>();
             _userDocumentsList = new UserDocumentsList();
         }
 
@@ -106,12 +107,31 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         /// <summary>
         /// Add User Tier Status
         /// </summary>
-        /// <param name="userTierStatus"></param>
         /// <returns></returns>
-        public bool AddTierStatus(UserTierStatus userTierStatus)
+        public bool AddTierStatus(Status status,Tier tier)
         {
-            _tierStatusList.AddTierStatus(userTierStatus);
+            _tierLevelStatuses.Add(new UserTierLevelStatus(Username,tier,status));
             return true;
+        }
+
+
+        /// <summary>
+        /// update user tier level status
+        /// </summary>
+        /// <param name="tierLevel"></param>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        public bool UpdateTierStatus(string tierLevel, Status status)
+        {
+            for (int i = 0; i < _tierLevelStatuses.Count; i++)
+            {
+                if (_tierLevelStatuses[i].Tier.TierLevel.Equals(tierLevel))
+                {
+                    _tierLevelStatuses[i].Status = status;
+                    return true;
+                }
+            }
+            throw new ArgumentException("No tier level found");
         }
 
         /// <summary>
@@ -119,10 +139,25 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         /// </summary>
         /// <param name="userTierStatus"></param>
         /// <returns></returns>
-        public bool RemoveTierStatus(UserTierStatus userTierStatus)
+        public bool RemoveTierStatus(UserTierLevelStatus userTierStatus)
         {
-            _tierStatusList.RemoveTierStatus(userTierStatus);
+            //_tierStatusList.RemoveTierStatus(userTierStatus);
             return true;
+        }
+
+        /// <summary>
+        /// Get user speific tier level status
+        /// </summary>
+        /// <param name="tier"></param>
+        /// <returns></returns>
+        public string GetTierLevelStatus(Tier tier)
+        {
+            for (int i = 0; i < _tierLevelStatuses.Count; i++)
+            {
+                if (tier.TierLevel.Equals(_tierLevelStatuses[i].Tier.TierLevel))
+                    return _tierLevelStatuses[i].Status.ToString();
+            }
+            throw new ArgumentException("Tier does not exist");
         }
 
         /// <summary>
@@ -280,11 +315,6 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         /// Is this User blocked
         /// </summary>
         public IsUserBlocked IsUserBlocked { get; set; }
-
-        /// <summary>
-        /// List of the Tier associated with this user
-        /// </summary>
-        public TierStatusList TierStatusList { get { return _tierStatusList; } private set { _tierStatusList = value; } }
 
         /// <summary>
         /// List of Ueser Docuemnts associated with this User

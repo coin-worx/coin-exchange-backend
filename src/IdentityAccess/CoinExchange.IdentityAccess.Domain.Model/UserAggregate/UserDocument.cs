@@ -11,17 +11,26 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
     /// </summary>
     public class UserDocument
     {
+        //id for database
+        private int _id { get; set; }
+
+        /// <summary>
+        /// default constructor
+        /// </summary>
+        public UserDocument()
+        {
+            
+        }
+
         /// <summary>
         /// Parameterized Constructor
         /// </summary>
         /// <param name="userName"></param>
-        /// <param name="documentId"></param>
         /// <param name="documentType"></param>
         /// <param name="documentPath"></param>
-        public UserDocument(string userName, string documentId, string documentType, string documentPath)
+        public UserDocument(string userName, string documentType, string documentPath)
         {
             UserName = userName;
-            DocumentId = documentId;
             DocumentType = documentType;
             DocumentPath = documentPath;
         }
@@ -30,11 +39,6 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         /// Username
         /// </summary>
         public string UserName { get; set; }
-
-        /// <summary>
-        /// Document ID
-        /// </summary>
-        public string DocumentId { get; private set; }
 
         /// <summary>
         /// Document Type

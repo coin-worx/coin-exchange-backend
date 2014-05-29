@@ -35,9 +35,17 @@ insert  into `permission`(`PermissionId`,`PermissionName`) values ('CO','Cancel 
 
 /*Data for the table `tickerinfo` */
 
+/*Data for the table `tier` */
+
+insert  into `tier`(`TierLevel`,`TierName`) values ('Tier 0','Tier 0'),('Tier 1','Tier 1'),('Tier 2','Tier 2'),('Tier 3','Tier 3'),('Tier 4','Tier 4');
+
 /*Data for the table `trade` */
 
 /*Data for the table `user` */
+
+/*Data for the table `userdocument` */
+
+/*Data for the table `usertierlevelstatus` */
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

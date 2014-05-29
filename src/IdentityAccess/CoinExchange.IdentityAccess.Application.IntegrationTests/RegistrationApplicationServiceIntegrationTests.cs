@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Threading;
 using CoinExchange.Common.Tests;
@@ -90,6 +91,33 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
 
             Assert.IsTrue(exceptionCaught);
             Assert.AreEqual("InvalidCredentialException", exceptionName);
+        }
+
+        [Test]
+        [Category("Integration")]
+        public void CreateAccount_IfAccountIsCreatedSuccessfully_AllTierLevelsShouldBeAssignedAndAreNonVerified()
+        {
+            IRegistrationApplicationService registrationService =
+                (IRegistrationApplicationService)_applicationContext["RegistrationApplicationService"];
+            IUserRepository userRepository =
+                (IUserRepository)_applicationContext["UserRepository"];
+            ITierRepository tierRepository =
+                (ITierRepository)_applicationContext["TierRepository"];
+            IPasswordEncryptionService passwordEncryption =
+                (IPasswordEncryptionService)_applicationContext["PasswordEncryptionService"];
+            ManualResetEvent manualResetEvent = new ManualResetEvent(false);
+            string activationKey = registrationService.CreateAccount(new SignupUserCommand(
+                "waqas.syed@hotmail.com", "Bob", "iamnotalice", "Wonderland", TimeZone.CurrentTimeZone, ""));
+            // Wait for the email to be sent
+            manualResetEvent.WaitOne(5000);
+            User receivedUser = userRepository.GetUserByUserName("Bob");
+            Assert.NotNull(receivedUser);
+            IList<Tier> tiers = tierRepository.GetAllTierLevels();
+            for (int i = 0; i < tiers.Count; i++)
+            {
+                Assert.AreEqual(receivedUser.GetTierLevelStatus(tiers[i]),Status.NonVerified.ToString());
+            }
+
         }
     }
 }

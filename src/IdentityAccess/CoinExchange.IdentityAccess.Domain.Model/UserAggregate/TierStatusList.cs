@@ -10,15 +10,15 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
     /// <summary>
     /// Represents the list of the Tiers for a user
     /// </summary>
-    public class TierStatusList : IEnumerable<UserTierStatus>
+    public class TierStatusList : IEnumerable<UserTierLevelStatus>
     {
-        private List<UserTierStatus> _tierStatusList = new List<UserTierStatus>();
+        private List<UserTierLevelStatus> _tierStatusList = new List<UserTierLevelStatus>();
 
         /// <summary>
         /// Add an element
         /// </summary>
         /// <returns></returns>
-        internal bool AddTierStatus(UserTierStatus userTierStatus)
+        internal bool AddTierStatus(UserTierLevelStatus userTierStatus)
         {
             _tierStatusList.Add(userTierStatus);
             return true;
@@ -29,7 +29,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         /// </summary>
         /// <param name="userTierStatus"></param>
         /// <returns></returns>
-        internal bool RemoveTierStatus(UserTierStatus userTierStatus)
+        internal bool RemoveTierStatus(UserTierLevelStatus userTierStatus)
         {
             _tierStatusList.Remove(userTierStatus);
             return true;
@@ -39,7 +39,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         /// GetEnumerator - Specific
         /// </summary>
         /// <returns></returns>
-        public IEnumerator<UserTierStatus> GetEnumerator()
+        public IEnumerator<UserTierLevelStatus> GetEnumerator()
         {
             foreach (var tiaerStatus in _tierStatusList)
             {

@@ -3,15 +3,23 @@
     /// <summary>
     /// User Tier Level Status
     /// </summary>
-    public class UserTierStatus
+    public class UserTierLevelStatus
     {
+        private int _id { get; set; }
+
+        //default constructor
+        public UserTierLevelStatus()
+        {
+            
+        }
+
         /// <summary>
         /// Parameterized Constructor
         /// </summary>
         /// <param name="username"></param>
         /// <param name="tier"></param>
         /// <param name="status"></param>
-        public UserTierStatus(string username, Tier tier, Status status)
+        public UserTierLevelStatus(string username, Tier tier, Status status)
         {
             Username = username;
             Tier = tier;
@@ -31,6 +39,6 @@
         /// <summary>
         /// Status
         /// </summary>
-        public Status Status { get; private set; }
+        public Status Status { get; set; }
     }
 }

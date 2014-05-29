@@ -9,6 +9,7 @@
     <constructor-arg name="passwordEncryptionService" ref="PasswordEncryptionService"/>
     <constructor-arg name="activationKeyGenerationService" ref="ActivationKeyGenerationService"/>
     <constructor-arg name="emailService" ref="EmailService"/>
+    <constructor-arg name="tierRepository" ref="TierRepository"/>
   </object>
   
 <object id="SecurityKeysApplicationService" type="CoinExchange.IdentityAccess.Application.SecurityKeysServices.SecurityKeysApplicationService, 

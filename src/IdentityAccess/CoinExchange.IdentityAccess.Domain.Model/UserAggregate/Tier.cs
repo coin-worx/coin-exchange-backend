@@ -6,6 +6,14 @@
     public class Tier
     {
         /// <summary>
+        /// Default constructor
+        /// </summary>
+        public Tier()
+        {
+            
+        }
+
+        /// <summary>
         /// Parameterized Constructor
         /// </summary>
         /// <param name="tierName"></param>
