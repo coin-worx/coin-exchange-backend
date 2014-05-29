@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CoinExchange.Common.Domain.Model;
 
 namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
 {
@@ -12,13 +13,29 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
     public class PasswordCodeRecord
     {
         /// <summary>
+        /// For datatabse primary key
+        /// </summary>
+        private int _id { get; set; }
+
+        private string _username;
+
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        public PasswordCodeRecord()
+        {
+            
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="PasswordCodeRecord"/> class.
         /// </summary>
-        public PasswordCodeRecord(string forgotPasswordCode, DateTime expirationDateTime, DateTime creationDateTime)
+        public PasswordCodeRecord(string forgotPasswordCode, DateTime expirationDateTime, DateTime creationDateTime,string userName)
         {
             ForgotPasswordCode = forgotPasswordCode;
             ExpirationDateTime = expirationDateTime;
             CreationDateTime = creationDateTime;
+            Username = userName;
         }
 
         /// <summary>
@@ -48,5 +65,18 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         /// Has this Code been used to reset password before it's expiration?
         /// </summary>
         public bool IsUsed { get; private set; }
+
+        /// <summary>
+        /// UserName of the User
+        /// </summary>
+        public string Username 
+        {
+            get { return _username; }
+            private set
+            {
+                AssertionConcern.AssertNullOrEmptyString(value,"UserName cannot be null or empty");
+                _username = value;
+            } 
+        }
     }
 }

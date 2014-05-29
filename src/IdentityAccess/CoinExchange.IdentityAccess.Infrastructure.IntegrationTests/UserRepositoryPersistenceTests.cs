@@ -160,5 +160,32 @@ namespace CoinExchange.IdentityAccess.Infrastructure.IntegrationTests
             Assert.Null(receivedUser1);
         }
 
+        [Test]
+        [Category("Integration")]
+        public void CreateNewUser_AssignForgotPassword_ReadTheCodeAgain()
+        {
+            User user = new User("NewUser", "asdf", "12345", "xyz", "user88@gmail.com", Language.English, TimeZone.CurrentTimeZone, new TimeSpan(1, 1, 1, 1), DateTime.Now, "Pakistan", "", "2233344", "1234");
+            user.IsActivationKeyUsed = new IsActivationKeyUsed(true);
+            user.IsUserBlocked = new IsUserBlocked(false);
+            user.AddForgotPasswordCode("123456");
+            _persistenceRepository.SaveUpdate(user);
+            User receivedUser = _userRepository.GetUserByUserName("NewUser");
+            Assert.NotNull(receivedUser);
+            Assert.AreEqual(user.Username, receivedUser.Username);
+            Assert.AreEqual(user.Password, receivedUser.Password);
+            Assert.AreEqual(user.PublicKey, receivedUser.PublicKey);
+            Assert.AreEqual(user.Language, receivedUser.Language);
+            Assert.AreEqual(user.AutoLogout, receivedUser.AutoLogout);
+            Assert.AreEqual(user.TimeZone.ToString(), receivedUser.TimeZone.ToString());
+            Assert.AreEqual(user.Country, receivedUser.Country);
+            Assert.AreEqual(user.State, receivedUser.State);
+            Assert.AreEqual(user.PhoneNumber, receivedUser.PhoneNumber);
+            Assert.AreEqual(user.Address1, receivedUser.Address1);
+            Assert.AreEqual(user.ActivationKey, receivedUser.ActivationKey);
+            Assert.AreEqual(user.IsActivationKeyUsed.Value, true);
+            Assert.AreEqual(user.IsUserBlocked.Value, false);
+            Assert.AreEqual(user.ForgottenPasswordCodes.Length,receivedUser.ForgottenPasswordCodes.Length);
+        }
+
     }
 }

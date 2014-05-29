@@ -28,12 +28,12 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         private string _country;
         private string _state;
         private string _activationKey;
-        private List<PasswordCodeRecord> _forgottenPasswordCodesList = new List<PasswordCodeRecord>();
+        private IList<PasswordCodeRecord> _forgottenPasswordCodesList { get; set; }
 
         //default constructor
         public User()
         {
-            
+            _forgottenPasswordCodesList=new List<PasswordCodeRecord>();
         }
 
         /// <summary>
@@ -59,6 +59,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
 
             _tierStatusList = new TierStatusList();
             _userDocumentsList = new UserDocumentsList();
+            _forgottenPasswordCodesList=new List<PasswordCodeRecord>();
         }
 
         /// <summary>
@@ -95,6 +96,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
             State = state;
             ActivationKey = activationKey;
 
+            _forgottenPasswordCodesList = new List<PasswordCodeRecord>();
             _tierStatusList = new TierStatusList();
             _userDocumentsList = new UserDocumentsList();
         }
@@ -139,7 +141,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
                 _forgottenPasswordCodesList.Add(new PasswordCodeRecord(forgotPasswordCode,
                                                                        Convert.ToDateTime(
                                                                            this.ForgotPasswordCodeExpiration),
-                                                                       DateTime.Now));
+                                                                       DateTime.Now, Username));
                 return true;
             }
             throw new InvalidOperationException("Last Forgot PasswordCode request hasn't expired yet.");
