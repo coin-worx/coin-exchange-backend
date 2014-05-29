@@ -46,5 +46,14 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Persistence.Repositories
             CurrentSession.SaveOrUpdate(securityKeysPair);
             return true;
         }
+
+        [Transaction(ReadOnly = false)]
+        public SecurityKeysPair GetByDescriptionAndApiKey(string description, string apiKey)
+        {
+            return
+                CurrentSession.QueryOver<SecurityKeysPair>()
+                    .Where(x => x.KeyDescription == description && x.ApiKey == apiKey && x.Deleted == false)
+                    .SingleOrDefault();
+        }
     }
 }

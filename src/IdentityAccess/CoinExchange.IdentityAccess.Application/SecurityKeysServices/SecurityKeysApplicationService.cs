@@ -45,6 +45,12 @@ namespace CoinExchange.IdentityAccess.Application.SecurityKeysServices
         {
             if (command.Validate())
             {
+                //get security key pair for user name
+                var getSecurityKeyPair = _securityKeysRepository.GetByApiKey(command.SystemGeneratedApiKey);
+                if (getSecurityKeyPair == null)
+                {
+                    throw new ArgumentException("Invalid api key");
+                }
                 var keys = _securityKeysGenerationService.GenerateNewSecurityKeys();
                 List<SecurityKeysPermission> permissions = new List<SecurityKeysPermission>();
                 for (int i = 0; i < command.SecurityKeyPermissions.Length; i++)
@@ -52,7 +58,7 @@ namespace CoinExchange.IdentityAccess.Application.SecurityKeysServices
                     permissions.Add(new SecurityKeysPermission(keys.Item1, command.SecurityKeyPermissions[i].Permission,
                         command.SecurityKeyPermissions[i].Allowed));
                 }
-                var keysPair = SecurityKeysPairFactory.UserGeneratedSecurityPair(command.UserName,
+                var keysPair = SecurityKeysPairFactory.UserGeneratedSecurityPair(getSecurityKeyPair.UserName,
                     command.KeyDescritpion,
                     keys.Item1, keys.Item2, command.EnableExpirationDate, command.ExpirationDateTime,
                     command.EnableStartDate, command.StartDateTime, command.EnableEndDate, command.EndDateTime,
@@ -71,13 +77,19 @@ namespace CoinExchange.IdentityAccess.Application.SecurityKeysServices
         {
             if (updateCommand.Validate())
             {
+                //get security key pair for user name
+                var getSecurityKeyPair = _securityKeysRepository.GetByApiKey(updateCommand.SystemGeneratedApiKey);
+                if (getSecurityKeyPair == null)
+                {
+                    throw new ArgumentException("Invalid api key");
+                }
                 var keyPair = _securityKeysRepository.GetByApiKey(updateCommand.ApiKey);
                 if (keyPair == null)
                 {
                     throw new ArgumentException("Invalid Api Key");
                 }
                 //check if key description already exist
-                if (_securityKeysRepository.GetByKeyDescriptionAndUserName(updateCommand.KeyDescritpion, updateCommand.UserName) != null)
+                if (_securityKeysRepository.GetByDescriptionAndApiKey(updateCommand.KeyDescritpion, updateCommand.ApiKey) != null)
                 {
                     throw new ArgumentException("The key description already exist");
                 }
@@ -117,9 +129,16 @@ namespace CoinExchange.IdentityAccess.Application.SecurityKeysServices
         /// delete security key pair
         /// </summary>
         /// <param name="keyDescription"></param>
-        public void DeleteSecurityKeyPair(string keyDescription,string userName)
+        public void DeleteSecurityKeyPair(string keyDescription,string systemGeneratedApiKey)
         {
-            var keyPair = _securityKeysRepository.GetByKeyDescriptionAndUserName(keyDescription, userName);
+            //get security key pair for user name
+            var getSecurityKeyPair = _securityKeysRepository.GetByApiKey(systemGeneratedApiKey);
+
+            if (getSecurityKeyPair == null)
+            {
+                throw new ArgumentException("Invalid api key");
+            }
+            var keyPair = _securityKeysRepository.GetByKeyDescriptionAndUserName(keyDescription, getSecurityKeyPair.UserName);
             if (keyPair == null)
             {
                 throw new InvalidOperationException("Could not find the security key pair.");

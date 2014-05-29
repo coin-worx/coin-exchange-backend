@@ -12,7 +12,7 @@ namespace CoinExchange.IdentityAccess.Application.SecurityKeysServices.Commands
     public class UpdateUserGeneratedSecurityKeyPair
     {
         public string ApiKey { get; set; }
-        public string UserName { get; private set; }
+        public string SystemGeneratedApiKey { get; private set; }
         public string KeyDescritpion { get; private set; }
         public bool EnableStartDate { get; private set; }
         public bool EnableEndDate { get; private set; }
@@ -26,7 +26,7 @@ namespace CoinExchange.IdentityAccess.Application.SecurityKeysServices.Commands
         /// Default constructor
         /// </summary>
         /// <param name="apiKey"></param>
-        /// <param name="userName"></param>
+        /// <param name="systemGeneratedApiKey"></param>
         /// <param name="keyDescritpion"></param>
         /// <param name="enableStartDate"></param>
         /// <param name="enableEndDate"></param>
@@ -35,10 +35,10 @@ namespace CoinExchange.IdentityAccess.Application.SecurityKeysServices.Commands
         /// <param name="startDateTime"></param>
         /// <param name="securityKeyPermissions"></param>
         /// <param name="expirationDateTime"></param>
-        public UpdateUserGeneratedSecurityKeyPair(string apiKey, string userName, string keyDescritpion, bool enableStartDate, bool enableEndDate, bool enableExpirationDate, string endDateTime, string startDateTime, SecurityKeyPermissionsRepresentation[] securityKeyPermissions, string expirationDateTime)
+        public UpdateUserGeneratedSecurityKeyPair(string apiKey, string systemGeneratedApiKey, string keyDescritpion, bool enableStartDate, bool enableEndDate, bool enableExpirationDate, string endDateTime, string startDateTime, SecurityKeyPermissionsRepresentation[] securityKeyPermissions, string expirationDateTime)
         {
             ApiKey = apiKey;
-            UserName = userName;
+            SystemGeneratedApiKey = systemGeneratedApiKey;
             KeyDescritpion = keyDescritpion;
             EnableStartDate = enableStartDate;
             EnableEndDate = enableEndDate;

@@ -30,7 +30,7 @@ namespace CoinExchange.IdentityAccess.Application.SecurityKeysServices
         /// <summary>
         /// Delete security key pair
         /// </summary>
-        void DeleteSecurityKeyPair(string keyDescription,string userName);
+        void DeleteSecurityKeyPair(string keyDescription, string systemGeneratedApiKey);
 
         /// <summary>
         /// Is the API key valid

@@ -73,5 +73,9 @@ namespace CoinExchange.IdentityAccess.Application.Tests
         {
             return true;
         }
-    }
+        
+        public SecurityKeysPair GetByDescriptionAndApiKey(string description, string apiKey)
+        {
+            throw new NotImplementedException();
+        }    }
 }
