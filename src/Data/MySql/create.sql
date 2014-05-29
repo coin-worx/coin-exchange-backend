@@ -197,6 +197,8 @@ CREATE TABLE `user` (
   `IsActivationKeyUsed` tinyint(1) DEFAULT NULL,
   `IsUserBlocked` tinyint(1) DEFAULT NULL,
   `Deleted` tinyint(1) DEFAULT NULL,
+  `ForgotPasswordCode` varchar(100) DEFAULT NULL,
+  `ForgotPasswordCodeExpiration` datetime DEFAULT NULL,
   PRIMARY KEY (`UserName`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
