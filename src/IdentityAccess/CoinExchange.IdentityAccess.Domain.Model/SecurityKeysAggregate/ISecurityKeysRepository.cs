@@ -5,7 +5,7 @@
     /// </summary>
     public interface ISecurityKeysRepository
     {
-        SecurityKeysPair GetByKeyDescription(string keyDescription,string userName);
+        SecurityKeysPair GetByKeyDescriptionAndUserName(string keyDescription,string userName);
         SecurityKeysPair GetByApiKey(string apiKey);
         bool DeleteSecurityKeysPair(SecurityKeysPair securityKeysPair);
     }

@@ -58,5 +58,21 @@ namespace CoinExchange.IdentityAccess.Application.Tests
         {
             _securityKeysPairsList.Add(securityKeysPair);
         }
+
+        SecurityKeysPair ISecurityKeysRepository.GetByKeyDescriptionAndUserName(string keyDescription, string userName)
+        {
+            throw new NotImplementedException();
+        }
+
+        SecurityKeysPair ISecurityKeysRepository.GetByApiKey(string apiKey)
+        {
+            throw new NotImplementedException();
+        }
+
+        bool ISecurityKeysRepository.DeleteSecurityKeysPair(SecurityKeysPair securityKeysPair)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }

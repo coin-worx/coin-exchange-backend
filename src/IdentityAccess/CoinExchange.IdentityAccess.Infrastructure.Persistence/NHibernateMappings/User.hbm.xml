@@ -25,5 +25,9 @@ assembly="CoinExchange.IdentityAccess.Domain.Model" namespace="CoinExchange.Iden
     <component name="IsActivationKeyUsed">
       <property name="Value" column="IsActivationKeyUsed"/>
     </component>
+    <bag name="_forgottenPasswordCodesList" table="PasswordCodeRecord" cascade="all" inverse="true" lazy="false">
+      <key column="Username"/>
+      <one-to-many class="PasswordCodeRecord"/>
+    </bag>
     </class>
 </hibernate-mapping>

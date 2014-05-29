@@ -32,7 +32,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         public static SecurityKeysPair UserGeneratedSecurityPair(string userName,string keyDescription,string apiKey,string secretKey,bool enableExpirationDate,string expirationDate,bool enableStartDate,string startDate,bool enableEndDate,string endDate,List<SecurityKeysPermission> keysPermissions ,ISecurityKeysRepository repository)
         {
             //check if key description already exist
-            if (repository.GetByKeyDescription(keyDescription,userName) != null)
+            if (repository.GetByKeyDescriptionAndUserName(keyDescription,userName) != null)
             {
                 throw new ArgumentException("The key description already exist");
             }

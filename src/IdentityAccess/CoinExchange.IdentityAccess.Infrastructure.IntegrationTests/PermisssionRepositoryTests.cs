@@ -25,7 +25,7 @@ namespace CoinExchange.IdentityAccess.Infrastructure.IntegrationTests
         {
             IList<Permission> getPermissions = _permissionRepository.GetAllPermissions();
             Assert.NotNull(getPermissions);
-            Assert.AreEqual(7,getPermissions.Count);
+            Assert.AreEqual(8,getPermissions.Count);
             VerifyPermssionValues(getPermissions);
         }
 
@@ -35,7 +35,7 @@ namespace CoinExchange.IdentityAccess.Infrastructure.IntegrationTests
         /// <param name="permissions"></param>
         private void VerifyPermssionValues(IList<Permission> permissions)
         {
-            for (int i = 0; i < 7; i++)
+            for (int i = 0; i < 8; i++)
             {
                 switch (permissions[i].PermissionId)
                 {
@@ -59,6 +59,9 @@ namespace CoinExchange.IdentityAccess.Infrastructure.IntegrationTests
                         break;
                     case "QLT":
                         Assert.AreEqual("Query Ledger Entries", permissions[i].PermissionName);
+                        break;
+                    case "DF":
+                        Assert.AreEqual("Deposit Funds", permissions[i].PermissionName);
                         break;
                     default:
                         Assert.Fail("Does not exist in permissions:",permissions[i].PermissionId,permissions[i].PermissionName);

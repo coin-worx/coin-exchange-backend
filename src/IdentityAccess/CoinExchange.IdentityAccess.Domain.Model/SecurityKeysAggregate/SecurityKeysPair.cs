@@ -29,7 +29,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         }
 
         /// <summary>
-        /// Constructor for user generated security key pair
+        /// Constructor for system generated security key pair
         /// </summary>
         /// <param name="apiKey"></param>
         /// <param name="secretKey"></param>
@@ -47,7 +47,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         }
 
         /// <summary>
-        /// Constructor for system generated key pair
+        /// Constructor for user generated key pair
         /// </summary>
         /// <param name="apiKey"></param>
         /// <param name="secretKey"></param>
@@ -147,6 +147,29 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         }
 
         /// <summary>
+        /// Update security key pair
+        /// </summary>
+        public void UpdateSecuritykeyPair(string keyDescritpion, bool enableStartDate, bool enableEndDate, bool enableExpirationDate, string endDateTime, string startDateTime,string expirationDateTime)
+        {
+            KeyDescription = keyDescritpion;
+            EnableStartDate = enableStartDate;
+            EnableEndDate = enableEndDate;
+            if (EnableExpirationDate)
+            {
+                ExpirationDate = Convert.ToDateTime(expirationDateTime);
+            }
+            if (EnableStartDate)
+            {
+                StartDate = Convert.ToDateTime(startDateTime);
+            }
+            if (EnableEndDate)
+            {
+                EndDate = Convert.ToDateTime(endDateTime);
+            }
+            LastModified = DateTime.Now;
+        }
+
+        /// <summary>
         /// Validate permissions
         /// </summary>
         /// <param name="permissionId"></param>
@@ -229,7 +252,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         public string KeyDescription
         {
             get { return _keyDescription; }
-            private set
+            set
             {
                 AssertionConcern.AssertNullOrEmptyString(value,"Key description cannot be null");
                 _keyDescription = value;
@@ -303,5 +326,10 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         /// SystemGenerated
         /// </summary>
         public bool SystemGenerated { get; private set; }
+
+        /// <summary>
+        /// Soft Delete
+        /// </summary>
+        public bool Deleted { get; set; }
     }
 }

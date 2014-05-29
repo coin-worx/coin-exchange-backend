@@ -61,6 +61,20 @@ CREATE TABLE `order` (
   PRIMARY KEY (`OrderId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+/*Table structure for table `passwordcoderecord` */
+
+DROP TABLE IF EXISTS `passwordcoderecord`;
+
+CREATE TABLE `passwordcoderecord` (
+  `Id` int(11) NOT NULL,
+  `ForgotPasswordCode` varchar(100) DEFAULT NULL,
+  `ExpirationDateTime` datetime DEFAULT NULL,
+  `CreationDateTime` datetime DEFAULT NULL,
+  `IsUsed` tinyint(1) DEFAULT NULL,
+  `UserName` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 /*Table structure for table `permission` */
 
 DROP TABLE IF EXISTS `permission`;
@@ -89,6 +103,7 @@ CREATE TABLE `securitykeyspair` (
   `EnableExpirationDate` tinyint(1) DEFAULT NULL,
   `EnableStartDate` tinyint(1) DEFAULT NULL,
   `EnableEndDate` tinyint(1) DEFAULT NULL,
+  `Deleted` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`ApiKey`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 

@@ -23,9 +23,11 @@ insert  into `currencypair`(`CurrencyPairName`,`BaseCurrency`,`QuoteCurrency`) v
 
 /*Data for the table `order` */
 
+/*Data for the table `passwordcoderecord` */
+
 /*Data for the table `permission` */
 
-insert  into `permission`(`PermissionId`,`PermissionName`) values ('CO','Cancel Order'),('PO','Place Order'),('QCOT','Query Closed Orders and Trades'),('QF','Query Funds'),('QLT','Query Ledger Entries'),('QOOT','Query Open Orders and Trades'),('WF','Withdraw Funds');
+insert  into `permission`(`PermissionId`,`PermissionName`) values ('CO','Cancel Order'),('DF','Deposit Funds'),('PO','Place Order'),('QCOT','Query Closed Orders and Trades'),('QF','Query Funds'),('QLT','Query Ledger Entries'),('QOOT','Query Open Orders and Trades'),('WF','Withdraw Funds');
 
 /*Data for the table `securitykeyspair` */
 

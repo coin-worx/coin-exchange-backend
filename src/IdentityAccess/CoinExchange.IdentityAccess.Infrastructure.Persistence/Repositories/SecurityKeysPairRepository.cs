@@ -17,11 +17,11 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Persistence.Repositories
     public class SecurityKeysPairRepository : NHibernateSessionFactory, ISecurityKeysRepository
     {
         [Transaction(ReadOnly = true)]
-        public SecurityKeysPair GetByKeyDescription(string keyDescription,string userName)
+        public SecurityKeysPair GetByKeyDescriptionAndUserName(string keyDescription,string userName)
         {
             return
                 CurrentSession.QueryOver<SecurityKeysPair>()
-                    .Where(x => x.KeyDescription == keyDescription&& x.UserName==userName)
+                    .Where(x => x.KeyDescription == keyDescription && x.UserName == userName && x.Deleted == false)
                     .SingleOrDefault();
         }
 
@@ -30,17 +30,20 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Persistence.Repositories
         {
             return
                 CurrentSession.QueryOver<SecurityKeysPair>()
-                    .Where(x => x.ApiKey == apiKey)
+                    .Where(x => x.ApiKey == apiKey && x.Deleted == false)
                     .SingleOrDefault();
         }
-
+       
         /// <summary>
-        /// 
+        /// Soft delete security key pair.
         /// </summary>
         /// <param name="securityKeysPair"></param>
         /// <returns></returns>
+        [Transaction(ReadOnly = false)]
         public bool DeleteSecurityKeysPair(SecurityKeysPair securityKeysPair)
         {
+            securityKeysPair.Deleted = true;
+            CurrentSession.SaveOrUpdate(securityKeysPair);
             return true;
         }
     }
