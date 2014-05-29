@@ -5,6 +5,7 @@ using System.Security.Cryptography.X509Certificates;
 using CoinExchange.IdentityAccess.Application.SecurityKeysServices.Commands;
 using CoinExchange.IdentityAccess.Domain.Model.Repositories;
 using CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate;
+using CoinExchange.IdentityAccess.Domain.Model.UserAggregate;
 
 namespace CoinExchange.IdentityAccess.Application.SecurityKeysServices
 {
@@ -66,9 +67,18 @@ namespace CoinExchange.IdentityAccess.Application.SecurityKeysServices
         /// <summary>
         /// Set the permissions
         /// </summary>
-        public void UpdateSecurityKeyPair(SecurityKeysPermission[] securityKeysPermissions)
+        public void UpdateSecurityKeyPair(UpdateUserGeneratedSecurityKeyPair updateCommand)
         {
-            throw new NotImplementedException();
+            if (updateCommand.Validate())
+            {
+                var keyPair = _securityKeysRepository.GetByApiKey(updateCommand.ApiKey);
+                if (keyPair == null)
+                {
+                    throw new ArgumentException("Invalid Api Key");
+                }
+
+            }
+            throw new ArgumentNullException("Please assign atleast one permission.");
         }
 
         /// <summary>
@@ -81,13 +91,19 @@ namespace CoinExchange.IdentityAccess.Application.SecurityKeysServices
             // ToDo: Get the API Key from the database
             throw new NotImplementedException();
         }
+
         /// <summary>
         /// delete security key pair
         /// </summary>
         /// <param name="keyDescription"></param>
-        public void DeleteSecurityKeyPair(string keyDescription)
+        public void DeleteSecurityKeyPair(string keyDescription,string userName)
         {
-            throw new NotImplementedException();
+            var keyPair = _securityKeysRepository.GetByKeyDescriptionAndUserName(keyDescription, userName);
+            if (keyPair == null)
+            {
+                throw new InvalidOperationException("Could not find the security key pair.");
+            }
+            _securityKeysRepository.DeleteSecurityKeysPair(keyPair);
         }
     }
 }

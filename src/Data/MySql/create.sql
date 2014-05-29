@@ -89,6 +89,7 @@ CREATE TABLE `securitykeyspair` (
   `EnableExpirationDate` tinyint(1) DEFAULT NULL,
   `EnableStartDate` tinyint(1) DEFAULT NULL,
   `EnableEndDate` tinyint(1) DEFAULT NULL,
+  `Deleted` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`ApiKey`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 

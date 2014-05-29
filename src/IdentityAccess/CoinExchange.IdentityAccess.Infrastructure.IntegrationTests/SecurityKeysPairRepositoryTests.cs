@@ -39,7 +39,7 @@ namespace CoinExchange.IdentityAccess.Infrastructure.IntegrationTests
         {
             SecurityKeysPair digitalSignatureInfo = new SecurityKeysPair("1", "123456", "secretkey", "user1", DateTime.Today.AddDays(1), DateTime.Today.AddDays(-20), DateTime.Today, DateTime.Now, true, null);
             _persistenceRepository.SaveUpdate(digitalSignatureInfo);
-            var readInfo = _securityKeysPairRepository.GetByKeyDescription("1","user1");
+            var readInfo = _securityKeysPairRepository.GetByKeyDescriptionAndUserName("1","user1");
             Assert.NotNull(readInfo);
             Assert.AreEqual(readInfo.KeyDescription,"1");
             Assert.AreEqual(readInfo.ApiKey, "123456");

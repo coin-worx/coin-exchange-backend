@@ -25,12 +25,12 @@ namespace CoinExchange.IdentityAccess.Application.SecurityKeysServices
         /// <summary>
         /// Update Security Key Pair Info
         /// </summary>
-        void UpdateSecurityKeyPair(SecurityKeysPermission[] securityKeysPermissions);
+        void UpdateSecurityKeyPair(UpdateUserGeneratedSecurityKeyPair updateCommand);
 
         /// <summary>
         /// Delete security key pair
         /// </summary>
-        void DeleteSecurityKeyPair(string keyDescription);
+        void DeleteSecurityKeyPair(string keyDescription,string userName);
 
         /// <summary>
         /// Is the API key valid
