@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Authentication;
 using CoinExchange.Common.Domain.Model;
 using CoinExchange.IdentityAccess.Domain.Model.Repositories;
 using CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate;
@@ -38,16 +39,18 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate.AuthenticationS
         {
             if (Nonce.IsValid(command.Nonce, command.Counter))
             {
-                string computedHash = CalculateHash(command.Apikey, command.Uri, Constants.GetSecretKey(command.Apikey));
+                SecurityKeysPair securityKeysPair = _securityKeysRepository.GetByApiKey(command.Apikey);
+                string computedHash = CalculateHash(command.Apikey, command.Uri, securityKeysPair.SecretKey);
                 if (Log.IsDebugEnabled)
                 {
-                    Log.Debug("Computed Hash:"+computedHash);
+                    Log.Debug("Computed Hash:" + computedHash);
                     Log.Debug("Received Hash:" + command.Response);
                 }
                 if (String.CompareOrdinal(computedHash, command.Response) == 0)
                 {
                     return ApiKeyValidation(command);
                 }
+                throw new InvalidCredentialException("API, URI and Secret Key Hash not found as expected.");
             }
             return false;
         }
@@ -68,47 +71,72 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate.AuthenticationS
                     // If the keys are system generated, then we only need to check the session timeout for the user
                     if (securityKeysPair.SystemGenerated)
                     {
-                        int activeWindow = securityKeysPair.StartDate.Millisecond + user.AutoLogout.Milliseconds;
+                        // Calculate for how much time is allowed in the session timeout for SystemGenerated key, saved in user
+                        //int activeWindow = securityKeysPair.CreationDateTime.AddMinutes(user.AutoLogout.Minutes).Minute;
 
-                        if (securityKeysPair.StartDate.AddMilliseconds(activeWindow) < DateTime.Now)
+                        if (securityKeysPair.CreationDateTime.AddMinutes(user.AutoLogout.Minutes) > DateTime.Now)
                         {
                             return true;
+                        }
+                        else
+                        {
+                            throw new Exception("Session timeout for the API Key.");
                         }
                     }
                     // Else we need to check the expiration date of the keys, and whetehr the user has permissions for 
                     // commencing with the desired operation
                     else
                     {
-                        
-                        if (securityKeysPair.ExpirationDate < DateTime.Now)
+                        if (securityKeysPair.EnableExpirationDate)
                         {
-                            if (authenticateCommand.Uri.Contains("/orders/"))
+                            if (securityKeysPair.ExpirationDate > DateTime.Now)
                             {
-                                if (authenticateCommand.Uri.Contains("cancelorder"))
-                                {
-                                    return securityKeysPair.ValidatePermission(PermissionsConstant.Cancel_Order);
-                                }
-                                else if (authenticateCommand.Uri.Contains("openorders"))
-                                {
-                                    return securityKeysPair.ValidatePermission(PermissionsConstant.Query_Open_Orders);
-                                }
-                                else if (authenticateCommand.Uri.Contains("closedorders"))
-                                {
-                                    return securityKeysPair.ValidatePermission(PermissionsConstant.Query_Closed_Orders);
-                                }
+                                return CheckPermissions(authenticateCommand, securityKeysPair);
                             }
-                            else if (authenticateCommand.Uri.Contains("/trades/"))
-                            {
-                                if (authenticateCommand.Uri.Contains("tradehistory"))
-                                {
-                                    // ToDo: Discuss with Bilal where are Trades permissions
-                                }
-                            }
+                            throw new TimeoutException("Key Expired");
+                        }
+                        else
+                        {
+                            return CheckPermissions(authenticateCommand, securityKeysPair);
                         }
                     }
                 }
+                else
+                {
+                    throw new InvalidOperationException(string.Format("{0} {1}", "No user found against username: ",
+                                                                      securityKeysPair.UserName));
+                }
+            }
+            else
+            {
+                throw new InvalidOperationException(string.Format("{0} {1}",
+                                                                  "No SecurityKeysPair found against the given API Key."));
             }
             return false;
+        }
+
+        /// <summary>
+        /// Checks for permissions for the currently requested operation
+        /// </summary>
+        /// <param name="authenticateCommand"></param>
+        /// <param name="securityKeysPair"></param>
+        /// <returns></returns>
+        private bool CheckPermissions(AuthenticateCommand authenticateCommand, SecurityKeysPair securityKeysPair)
+        {
+            bool permissionGained = false;
+            if (authenticateCommand.Uri.Contains("/orders/cancelorder"))
+            {
+                return securityKeysPair.ValidatePermission(PermissionsConstant.Cancel_Order);
+            }
+            else if (authenticateCommand.Uri.Contains("/orders/openorders"))
+            {
+                return securityKeysPair.ValidatePermission(PermissionsConstant.Query_Open_Orders);
+            }
+            else if (authenticateCommand.Uri.Contains("/orders/closedorders"))
+            {
+                return securityKeysPair.ValidatePermission(PermissionsConstant.Query_Closed_Orders);
+            }
+            throw new InvalidOperationException("Permission not allowed for this operation.");
         }
 
         /// <summary>

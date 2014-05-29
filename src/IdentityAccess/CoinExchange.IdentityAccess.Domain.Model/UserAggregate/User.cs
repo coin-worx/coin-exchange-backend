@@ -56,6 +56,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
             _email = email;
             _timeZone = timeZone;
             _activationKey = activationKey;
+            _autoLogout = new TimeSpan(0,0,10,0);
 
             _tierStatusList = new TierStatusList();
             _userDocumentsList = new UserDocumentsList();

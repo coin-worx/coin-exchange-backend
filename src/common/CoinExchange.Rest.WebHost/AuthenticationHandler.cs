@@ -74,5 +74,4 @@ namespace CoinExchange.Rest.WebHost
             }
         }
     }
-
 }
