@@ -52,10 +52,11 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
         {
             ILoginApplicationService loginApplicationService = (ILoginApplicationService)_applicationContext["LoginApplicationService"];
             Assert.IsNotNull(loginApplicationService);
-            IRegistrationApplicationService registrationService = (IRegistrationApplicationService)_applicationContext["RegistrationApplicationService"];;
-
+            IRegistrationApplicationService registrationService = (IRegistrationApplicationService)_applicationContext["RegistrationApplicationService"];
+            
+            string username = "Bob";
             string activationKey = registrationService.CreateAccount(new SignupUserCommand(
-                "bob@alice.com", "Bob", "alice", "Wonderland", TimeZone.CurrentTimeZone, ""));
+                "bob@alice.com", username, "alice", "Wonderland", TimeZone.CurrentTimeZone, ""));
 
             Assert.IsNotNull(activationKey);
 
@@ -68,7 +69,76 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
 
         [Test]
         [Category("Integration")]
-        public void LoginFailTest_TestsifTheLoginisSuccessfulAfterProvidingInvalidUsername_VerifiesThroughTheReturnedResult()
+        public void LoginSuccessfulTest_TestsifTheLoginisSuccessfulAfterProvidingValidCredentials_VerifiesByGettingUserFromRepositoryAndCheckingCredentials()
+        {
+            ILoginApplicationService loginApplicationService = (ILoginApplicationService)_applicationContext["LoginApplicationService"];
+            Assert.IsNotNull(loginApplicationService);
+            IRegistrationApplicationService registrationService = (IRegistrationApplicationService)_applicationContext["RegistrationApplicationService"];
+            IUserRepository userRepository = (IUserRepository)_applicationContext["UserRepository"];
+            IPasswordEncryptionService passwordEncryptionService = (IPasswordEncryptionService)_applicationContext["PasswordEncryptionService"];
+            string username = "Bob";
+            string email = "bob@alice.com";
+            string password = "alice";
+            string activationKey = registrationService.CreateAccount(new SignupUserCommand(
+                email, username, password, "Wonderland", TimeZone.CurrentTimeZone, ""));
+
+            Assert.IsNotNull(activationKey);
+
+            UserValidationEssentials userValidationEssentials = loginApplicationService.Login(new LoginCommand("Bob", "alice"));
+            Assert.IsNotNull(userValidationEssentials);
+            Assert.IsNotNull(userValidationEssentials.ApiKey);
+            Assert.IsNotNull(userValidationEssentials.SecretKey);
+            Assert.IsNotNull(userValidationEssentials.SessionLogoutTime);
+
+            User user = userRepository.GetUserByUserName(username);
+            Assert.IsNotNull(user);
+            Assert.AreEqual(user.Email, email);
+            Assert.AreEqual(user.ActivationKey, activationKey);
+            Assert.IsTrue(passwordEncryptionService.VerifyPassword(password, user.Password));
+        }
+
+        [Test]
+        [Category("Integration")]
+        public void LoginSuccessfulAndCheckSecurityKeysPairTest_ChecksIfAfterUserLoginSecurityPairsValuesAreAsExpected_ChecksByGettingSecurityKeysFromRepo()
+        {
+            ILoginApplicationService loginApplicationService = (ILoginApplicationService)_applicationContext["LoginApplicationService"];
+            Assert.IsNotNull(loginApplicationService);
+            IRegistrationApplicationService registrationService = (IRegistrationApplicationService)_applicationContext["RegistrationApplicationService"];
+            IUserRepository userRepository = (IUserRepository)_applicationContext["UserRepository"];
+            ISecurityKeysRepository securityKeysRepository = (ISecurityKeysRepository)_applicationContext["SecurityKeysPairRepository"];
+            
+            string username = "Bob";
+            string email = "bob@alice.com";
+            string password = "alice";
+            string activationKey = registrationService.CreateAccount(new SignupUserCommand(
+                email, username, password, "Wonderland", TimeZone.CurrentTimeZone, ""));
+
+            Assert.IsNotNull(activationKey);
+
+            UserValidationEssentials userValidationEssentials = loginApplicationService.Login(new LoginCommand(
+                                                                    username, password));
+            Assert.IsNotNull(userValidationEssentials);
+            Assert.IsNotNull(userValidationEssentials.ApiKey);
+            Assert.IsNotNull(userValidationEssentials.SecretKey);
+            Assert.IsNotNull(userValidationEssentials.SessionLogoutTime);
+
+            User user = userRepository.GetUserByUserName(username);
+            Assert.IsNotNull(user);
+            // Check that the user logged in this same minute and date, as we cannot check the seconds exactly
+            Assert.AreEqual(user.LastLogin.Date, DateTime.Today.Date);
+            Assert.AreEqual(user.LastLogin.Hour, DateTime.Now.Hour);
+            Assert.AreEqual(user.LastLogin.Minute, DateTime.Now.Minute);
+            Assert.AreEqual(userValidationEssentials.SessionLogoutTime, user.AutoLogout);
+
+            SecurityKeysPair securityKeysPair = securityKeysRepository.GetByApiKey(userValidationEssentials.ApiKey.Value);
+            Assert.IsNotNull(securityKeysPair);
+            Assert.AreEqual(userValidationEssentials.SecretKey.Value, securityKeysPair.SecretKey);
+        }
+
+        [Test]
+        [Category("Integration")]
+        [ExpectedException(typeof(InvalidCredentialException))]
+        public void LoginFailTest_TestsifTheLoginFailsAfterProvidingInvalidUsername_VerifiesThroughTheReturnedResult()
         {
             ILoginApplicationService loginApplicationService = (ILoginApplicationService)_applicationContext["LoginApplicationService"];
             Assert.IsNotNull(loginApplicationService);
@@ -78,22 +148,31 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
                 "bob@alice.com", "Bob", "alice", "Wonderland", TimeZone.CurrentTimeZone, ""));
 
             Assert.IsNotNull(activationKey);
-            bool exceptionRaised = false;
-            try
-            {
-                loginApplicationService.Login(new LoginCommand("bobby", "alice"));
-            }
-            catch (InvalidCredentialException e)
-            {
-                exceptionRaised = true;
-            }
-
-            Assert.IsTrue(exceptionRaised);
+            
+            loginApplicationService.Login(new LoginCommand("bobby", "alice"));            
         }
 
         [Test]
         [Category("Integration")]
-        public void LoginFailTest_TestsifTheLoginisSuccessfulAfterProvidingInvalidPassword_VerifiesThroughTheReturnedResult()
+        [ExpectedException(typeof(InvalidCredentialException))]
+        public void LoginFailTest_TestsifTheLoginisFailsAfterProvidingBlankUsername_VerifiesThroughTheReturnedResult()
+        {
+            ILoginApplicationService loginApplicationService = (ILoginApplicationService)_applicationContext["LoginApplicationService"];
+            Assert.IsNotNull(loginApplicationService);
+            IRegistrationApplicationService registrationService = (IRegistrationApplicationService)_applicationContext["RegistrationApplicationService"]; ;
+
+            string activationKey = registrationService.CreateAccount(new SignupUserCommand(
+                "bob@alice.com", "Bob", "alice", "Wonderland", TimeZone.CurrentTimeZone, ""));
+
+            Assert.IsNotNull(activationKey);
+
+            loginApplicationService.Login(new LoginCommand("", "alice"));
+        }
+
+        [Test]
+        [Category("Integration")]
+        [ExpectedException(typeof(InvalidCredentialException))]
+        public void LoginFailTest_TestsifTheLoginFailsAfterProvidingInvalidPassword_VerifiesThroughTheReturnedResult()
         {
             ILoginApplicationService loginApplicationService =
                 (ILoginApplicationService) _applicationContext["LoginApplicationService"];
@@ -107,17 +186,27 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
 
             Assert.IsNotNull(activationKey);
 
-            bool exceptionRaised = false;
-            try
-            {
-                loginApplicationService.Login(new LoginCommand("Bob", "khaleesi"));
-            }
-            catch (InvalidCredentialException e)
-            {
-                exceptionRaised = true;
-            }
+            loginApplicationService.Login(new LoginCommand("Bob", "khaleesi"));
+        }
 
-            Assert.IsTrue(exceptionRaised);
+        [Test]
+        [Category("Integration")]
+        [ExpectedException(typeof(InvalidCredentialException))]
+        public void LoginFailTest_TestsifTheLoginFailsAfterProvidingBlankPassword_VerifiesThroughTheReturnedResult()
+        {
+            ILoginApplicationService loginApplicationService =
+                (ILoginApplicationService)_applicationContext["LoginApplicationService"];
+            Assert.IsNotNull(loginApplicationService);
+            IRegistrationApplicationService registrationService =
+                (IRegistrationApplicationService)_applicationContext["RegistrationApplicationService"];
+
+            string activationKey = registrationService.CreateAccount(new SignupUserCommand(
+                                                                         "bob@alice.com", "Bob", "alice", "Wonderland",
+                                                                         TimeZone.CurrentTimeZone, ""));
+
+            Assert.IsNotNull(activationKey);
+
+            loginApplicationService.Login(new LoginCommand("Bob", ""));
         }
     }
 }

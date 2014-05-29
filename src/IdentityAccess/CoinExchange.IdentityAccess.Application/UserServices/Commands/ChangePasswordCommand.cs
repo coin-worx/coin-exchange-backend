@@ -19,12 +19,12 @@ namespace CoinExchange.IdentityAccess.Application.UserServices.Commands
         /// <param name="oldPassword"></param>
         /// <param name="newPassword"></param>
         /// <param name="confirmNewPassword"></param>
-        public ChangePasswordCommand(UserValidationEssentials userValidationEssentials, string oldPassword, string newPassword, string confirmNewPassword)
+        public ChangePasswordCommand(UserValidationEssentials userValidationEssentials, string oldPassword, 
+            string newPassword)
         {
             UserValidationEssentials = userValidationEssentials;
             OldPassword = oldPassword;
             NewPassword = newPassword;
-            ConfirmNewPassword = confirmNewPassword;
         }
 
         /// <summary>
@@ -41,10 +41,5 @@ namespace CoinExchange.IdentityAccess.Application.UserServices.Commands
         /// New Password
         /// </summary>
         public string NewPassword { get; private set; }
-
-        /// <summary>
-        /// Confirmation of new password
-        /// </summary>
-        public string ConfirmNewPassword { get; private set; }
     }
 }

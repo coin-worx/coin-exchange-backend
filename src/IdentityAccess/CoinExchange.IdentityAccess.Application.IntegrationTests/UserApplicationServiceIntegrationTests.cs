@@ -68,7 +68,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             string passwordBeforeChange = userBeforePasswordChange.Password;
 
             bool changeSuccessful = userApplicationService.ChangePassword(new ChangePasswordCommand(validationEssentials, "burnitdown",
-                "burnitdowntwice", "burnitdowntwice"));
+                "burnitdowntwice"));
 
             Assert.IsTrue(changeSuccessful);
             User userAfterPasswordChange = userRepository.GetUserByUserName("linkinpark");
@@ -105,43 +105,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             try
             {
                 userApplicationService.ChangePassword(new ChangePasswordCommand(validationEssentials, "burnitdowner",
-                                                      "burnitdowntwice", "burnitdowntwice"));
-            }
-            catch (InvalidCredentialException e)
-            {
-                exceptionRaised = true;
-            }
-            Assert.IsTrue(exceptionRaised);
-            User userAfterPasswordChange = userRepository.GetUserByUserName("linkinpark");
-            string passwordAfterChange = userAfterPasswordChange.Password;
-
-            // Verify the old and new password do not match
-            Assert.AreEqual(passwordBeforeChange, passwordAfterChange);
-        }
-
-        [Test]
-        [Category("Integration")]
-        public void ConfirmPasswordFailTest_ChecksIfThePasswordIsNotChangedIfConfirmPasswordDoesNotMatch_VerifiesThroughTheReturnedValue()
-        {
-            IUserApplicationService userApplicationService = (IUserApplicationService)_applicationContext["UserApplicationService"];
-            IRegistrationApplicationService registrationApplicationService =
-                (IRegistrationApplicationService)_applicationContext["RegistrationApplicationService"];
-            ILoginApplicationService loginApplicationService =
-                (ILoginApplicationService)_applicationContext["LoginApplicationService"];
-
-            IUserRepository userRepository = (IUserRepository)_applicationContext["UserRepository"];
-
-            string username = "linkinpark";
-            registrationApplicationService.CreateAccount(new SignupUserCommand("linkinpark@rock.com", "linkinpark", "burnitdown", "USA", TimeZone.CurrentTimeZone, ""));
-            UserValidationEssentials validationEssentials = loginApplicationService.Login(new LoginCommand(username, "burnitdown"));
-
-            User userBeforePasswordChange = userRepository.GetUserByUserName("linkinpark");
-            string passwordBeforeChange = userBeforePasswordChange.Password;
-
-            bool exceptionRaised = false;
-            try
-            {
-                userApplicationService.ChangePassword(new ChangePasswordCommand(validationEssentials, "burnitdown", "burnitdowntwice", "burnitdowntwice2"));
+                                                      "burnitdowntwice"));
             }
             catch (InvalidCredentialException e)
             {

@@ -23,6 +23,7 @@
   <constructor-arg name="userRepository" ref="UserRepository"/>
     <constructor-arg name="passwordEncryptionService" ref="PasswordEncryptionService"/>
   <constructor-arg name="securityKeysApplicationService" ref="SecurityKeysApplicationService"/>
+  <constructor-arg name="persistenceRepository" ref="IdentityAccessPersistenceRepository"/>
   </object>
   
 <object id="LogoutApplicationService" type="CoinExchange.IdentityAccess.Application.AccessControlServices.LogoutApplicationService, 

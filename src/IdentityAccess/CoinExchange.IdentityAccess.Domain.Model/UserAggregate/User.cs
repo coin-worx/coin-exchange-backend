@@ -133,7 +133,9 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         /// <returns></returns>
         public bool AddForgotPasswordCode(string forgotPasswordCode)
         {
-            if (this.ForgotPasswordCode != null && this.ForgotPasswordCodeExpiration > DateTime.Now)
+            // Only assign the ForgotPasswordCode if this is the first time, or if the last ForgotPasswordCode has Expired
+            if ((this.ForgotPasswordCode == null && this.ForgotPasswordCodeExpiration == null) ||
+                this.ForgotPasswordCodeExpiration < DateTime.Now)
             {
                 // Assign the latest code
                 this.ForgotPasswordCode = forgotPasswordCode;
@@ -145,7 +147,10 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
                                                                        DateTime.Now, Username));
                 return true;
             }
-            throw new InvalidOperationException("Last Forgot PasswordCode request hasn't expired yet.");
+            else
+            {
+                throw new InvalidOperationException("Last Forgot PasswordCode request hasn't expired yet.");
+            }
         }
 
         /// <summary>
@@ -156,30 +161,36 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         {
             if (!string.IsNullOrEmpty(this.ForgotPasswordCode))
             {
-                    if (this.ForgotPasswordCodeExpiration > DateTime.Now)
-                    {
-                        // No active ForgotPassword code at the moment
-                        this.ForgotPasswordCode = null;
-                        this.ForgotPasswordCodeExpiration = null;
-
-                        // Iterate to see which Password code has been used
-                        foreach (var passwordCodeRecord in _forgottenPasswordCodesList)
-                        {
-                            if (passwordCodeRecord.ExpirationDateTime.Equals(this.ForgotPasswordCodeExpiration))
-                            {
-                                // Mark that this Password Code has been used to reset the password
-                                passwordCodeRecord.MarkCodeUsage();
-                                break;
-                            }
-                        }
-                        return true;
-                    }
+                if (this.ForgotPasswordCodeExpiration != null && this.ForgotPasswordCodeExpiration > DateTime.Now)
+                {
                     // No active ForgotPassword code at the moment
                     this.ForgotPasswordCode = null;
                     this.ForgotPasswordCodeExpiration = null;
-                throw new TimeoutException("Timeout expired for resetting the password.");
+
+                    // Iterate to see which Password code has been used
+                    foreach (var passwordCodeRecord in _forgottenPasswordCodesList)
+                    {
+                        if (passwordCodeRecord.ExpirationDateTime.Equals(this.ForgotPasswordCodeExpiration))
+                        {
+                            // Mark that this Password Code has been used to reset the password
+                            passwordCodeRecord.MarkCodeUsage();
+                            break;
+                        }
+                    }
+                    return true;
+                }
+                else
+                {
+                    // No active ForgotPassword code at the moment
+                    this.ForgotPasswordCode = null;
+                    this.ForgotPasswordCodeExpiration = null;
+                    throw new TimeoutException("Timeout expired for resetting the password or no request has been made to reset password.");
+                }
             }
-            throw new NullReferenceException("Password Code is null or does not contain any value");
+            else
+            {
+                throw new NullReferenceException("Password Code is null or does not contain any value");
+            }
         }
 
         #endregion Methods

@@ -21,16 +21,18 @@ namespace CoinExchange.IdentityAccess.Application.AccessControlServices
         private IUserRepository _userRepository;
         private IPasswordEncryptionService _passwordEncryptionService;
         private ISecurityKeysApplicationService _securityKeysApplicationService;
+        private IIdentityAccessPersistenceRepository _persistenceRepository;
 
         /// <summary>
         /// Initializes with the UserRepository and PasswordEncryption service 
         /// </summary>
         public LoginApplicationService(IUserRepository userRepository, IPasswordEncryptionService passwordEncryptionService,
-                                       ISecurityKeysApplicationService securityKeysApplicationService)
+        ISecurityKeysApplicationService securityKeysApplicationService, IIdentityAccessPersistenceRepository persistenceRepository)
         {
             _userRepository = userRepository;
             _passwordEncryptionService = passwordEncryptionService;
             _securityKeysApplicationService = securityKeysApplicationService;
+            _persistenceRepository = persistenceRepository;
         }
 
         /// <summary>
@@ -45,6 +47,8 @@ namespace CoinExchange.IdentityAccess.Application.AccessControlServices
                 if(_passwordEncryptionService.VerifyPassword(loginCommand.Password, user.Password))
                 {
                     Tuple<ApiKey, SecretKey> securityKeys = _securityKeysApplicationService.CreateSystemGeneratedKey(loginCommand.Username);
+                    user.LastLogin = DateTime.Now;
+                    _persistenceRepository.SaveUpdate(user);
                     return new UserValidationEssentials(securityKeys, user.AutoLogout);
                 }
                 else
