@@ -10,6 +10,7 @@ using CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate;
 using NUnit.Framework;
 using Spring.Context;
 using Spring.Context.Support;
+using Spring.Data.Support;
 
 namespace CoinExchange.IdentityAccess.Application.IntegrationTests
 {
@@ -162,6 +163,81 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
                    DateTime.Today.AddDays(-1).ToString(), true, true, true, "123", "user1");
             var keys1 = registrationService.CreateUserGeneratedKey(command);
         }
+
+        [Test]
+        [Category("Integration")]
+        public void UpdateUserGeneratedSecurityPair_UpdatePermissionsAndSomeDescription_VerifyKeyPairIsReturnedAndPersistedSuccessfully()
+        {
+            List<SecurityKeyPermissionsRepresentation> securityKeyPermissions = new List<SecurityKeyPermissionsRepresentation>();
+            IList<Permission> permissions = _permissionRepository.GetAllPermissions();
+            for (int i = 0; i < permissions.Count; i++)
+            {
+                securityKeyPermissions.Add(new SecurityKeyPermissionsRepresentation(true, permissions[i]));
+            }
+            CreateUserGeneratedSecurityKeyPair command =
+                new CreateUserGeneratedSecurityKeyPair(securityKeyPermissions.ToArray(),
+                    DateTime.Today.AddDays(1).ToString(), DateTime.Today.AddDays(-2).ToString(),
+                    DateTime.Today.AddDays(-1).ToString(), true, true, true, "123", "user1");
+            ISecurityKeysApplicationService registrationService =
+               (ISecurityKeysApplicationService)_applicationContext["SecurityKeysApplicationService"];
+            var keys = registrationService.CreateUserGeneratedKey(command);
+
+            securityKeyPermissions = new List<SecurityKeyPermissionsRepresentation>();
+            for (int i = 0; i < permissions.Count; i++)
+            {
+                if (i%2 == 0)
+                {
+                    securityKeyPermissions.Add(new SecurityKeyPermissionsRepresentation(false, permissions[i]));
+                }
+                else
+                {
+                    securityKeyPermissions.Add(new SecurityKeyPermissionsRepresentation(true, permissions[i]));
+                }
+            }
+            
+            UpdateUserGeneratedSecurityKeyPair update = new UpdateUserGeneratedSecurityKeyPair(keys.Item1, "user1", "456", false, false, true, "", "", securityKeyPermissions.ToArray(), DateTime.Today.AddDays(3).ToString());
+            registrationService.UpdateSecurityKeyPair(update);
+            Assert.NotNull(keys);
+            Assert.IsNotNullOrEmpty(keys.Item1);
+            Assert.IsNotNullOrEmpty(keys.Item2);
+            SecurityKeysPair persistedKeysPair = _securityKeysRepository.GetByApiKey(keys.Item1);
+            Assert.NotNull(persistedKeysPair);
+            Assert.AreEqual(persistedKeysPair.UserName, "user1");
+            Assert.AreEqual(persistedKeysPair.SystemGenerated, false);
+            Assert.AreEqual(persistedKeysPair.ApiKey, keys.Item1);
+            Assert.AreEqual(persistedKeysPair.SecretKey, keys.Item2);
+            Assert.AreEqual(persistedKeysPair.KeyDescription,"456");
+            Assert.IsNotNullOrEmpty(persistedKeysPair.CreationDateTime.ToString());
+            Assert.AreEqual(persistedKeysPair.EnableStartDate, false);
+            Assert.AreEqual(persistedKeysPair.EnableEndDate, false);
+            Assert.AreEqual(persistedKeysPair.EnableExpirationDate, true);
+            Assert.AreEqual(persistedKeysPair.ExpirationDate, DateTime.Today.AddDays(3));
+            ValidatePermissions(persistedKeysPair, securityKeyPermissions.ToArray());
+        }
+        [Test]
+        [Category("Integration")]
+        public void CreateUserGeneratedSecurityPair_ReadAndDeleteIt_SecurityPairShouldGetDeleted()
+        {
+            List<SecurityKeyPermissionsRepresentation> securityKeyPermissions = new List<SecurityKeyPermissionsRepresentation>();
+            IList<Permission> permissions = _permissionRepository.GetAllPermissions();
+            for (int i = 0; i < permissions.Count; i++)
+            {
+                securityKeyPermissions.Add(new SecurityKeyPermissionsRepresentation(true, permissions[i]));
+            }
+            CreateUserGeneratedSecurityKeyPair command =
+                new CreateUserGeneratedSecurityKeyPair(securityKeyPermissions.ToArray(),
+                    DateTime.Today.AddDays(1).ToString(), DateTime.Today.AddDays(-2).ToString(),
+                    DateTime.Today.AddDays(-1).ToString(), true, true, true, "123", "user1");
+            ISecurityKeysApplicationService registrationService =
+               (ISecurityKeysApplicationService)_applicationContext["SecurityKeysApplicationService"];
+            var keys = registrationService.CreateUserGeneratedKey(command);
+            registrationService.DeleteSecurityKeyPair("123","user1");
+            var getKeyPair = _securityKeysRepository.GetByKeyDescriptionAndUserName("123", "user1");
+            Assert.Null(getKeyPair);
+            var getKeyPair1 = _securityKeysRepository.GetByApiKey(keys.Item1);
+            Assert.Null(getKeyPair1);
+        }
+
         /// <summary>
         /// Validate permissions
         /// </summary>

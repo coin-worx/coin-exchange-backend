@@ -147,6 +147,29 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         }
 
         /// <summary>
+        /// Update security key pair
+        /// </summary>
+        public void UpdateSecuritykeyPair(string keyDescritpion, bool enableStartDate, bool enableEndDate, bool enableExpirationDate, string endDateTime, string startDateTime,string expirationDateTime)
+        {
+            KeyDescription = keyDescritpion;
+            EnableStartDate = enableStartDate;
+            EnableEndDate = enableEndDate;
+            if (EnableExpirationDate)
+            {
+                ExpirationDate = Convert.ToDateTime(expirationDateTime);
+            }
+            if (EnableStartDate)
+            {
+                StartDate = Convert.ToDateTime(startDateTime);
+            }
+            if (EnableEndDate)
+            {
+                EndDate = Convert.ToDateTime(endDateTime);
+            }
+            LastModified = DateTime.Now;
+        }
+
+        /// <summary>
         /// Validate permissions
         /// </summary>
         /// <param name="permissionId"></param>

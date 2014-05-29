@@ -25,7 +25,7 @@ namespace CoinExchange.IdentityAccess.Application.SecurityKeysServices
         /// <summary>
         /// Update Security Key Pair Info
         /// </summary>
-        void UpdateSecurityKeyPair(UpdateUserGeneratedSecurityKeyPair updateCommand);
+        bool UpdateSecurityKeyPair(UpdateUserGeneratedSecurityKeyPair updateCommand);
 
         /// <summary>
         /// Delete security key pair

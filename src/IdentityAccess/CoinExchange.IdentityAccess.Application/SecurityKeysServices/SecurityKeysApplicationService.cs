@@ -67,7 +67,7 @@ namespace CoinExchange.IdentityAccess.Application.SecurityKeysServices
         /// <summary>
         /// Set the permissions
         /// </summary>
-        public void UpdateSecurityKeyPair(UpdateUserGeneratedSecurityKeyPair updateCommand)
+        public bool UpdateSecurityKeyPair(UpdateUserGeneratedSecurityKeyPair updateCommand)
         {
             if (updateCommand.Validate())
             {
@@ -76,7 +76,28 @@ namespace CoinExchange.IdentityAccess.Application.SecurityKeysServices
                 {
                     throw new ArgumentException("Invalid Api Key");
                 }
+                //check if key description already exist
+                if (_securityKeysRepository.GetByKeyDescriptionAndUserName(updateCommand.KeyDescritpion, updateCommand.UserName) != null)
+                {
+                    throw new ArgumentException("The key description already exist");
+                }
+                //update parameters
+                keyPair.UpdateSecuritykeyPair(updateCommand.KeyDescritpion, updateCommand.EnableStartDate,
+                    updateCommand.EnableEndDate, updateCommand.EnableExpirationDate, updateCommand.EndDateTime,
+                    updateCommand.StartDateTime, updateCommand.ExpirationDateTime);
 
+                //update permissions
+                List<SecurityKeysPermission> permissions = new List<SecurityKeysPermission>();
+                for (int i = 0; i < updateCommand.SecurityKeyPermissions.Length; i++)
+                {
+                    permissions.Add(new SecurityKeysPermission(keyPair.ApiKey,
+                        updateCommand.SecurityKeyPermissions[i].Permission,
+                        updateCommand.SecurityKeyPermissions[i].Allowed));
+                }
+                keyPair.UpdatePermissions(permissions.ToArray());
+                //persist
+                _persistRepository.SaveUpdate(keyPair);
+                return true;
             }
             throw new ArgumentNullException("Please assign atleast one permission.");
         }
