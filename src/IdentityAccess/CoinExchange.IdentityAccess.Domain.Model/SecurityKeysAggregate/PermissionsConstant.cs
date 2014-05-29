@@ -19,5 +19,6 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         public const string Query_Ledger_Entries = "QLT";
         public const string Query_Open_Orders = "QOOT";
         public const string Withdraw_Funds = "WF";
+        public const string Deposit_Funds = "DF";
     }
 }
