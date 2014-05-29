@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Authentication;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -27,6 +28,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         private string _country;
         private string _state;
         private string _activationKey;
+        private List<PasswordCodeRecord> _forgottenPasswordCodesList = new List<PasswordCodeRecord>();
 
         //default constructor
         public User()
@@ -97,6 +99,8 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
             _userDocumentsList = new UserDocumentsList();
         }
 
+        #region Methods
+
         /// <summary>
         /// Add User Tier Status
         /// </summary>
@@ -118,6 +122,64 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
             _tierStatusList.RemoveTierStatus(userTierStatus);
             return true;
         }
+
+        /// <summary>
+        /// Adds a new Forgot Password code to this user
+        /// </summary>
+        /// <param name="forgotPasswordCode"></param>
+        /// <returns></returns>
+        public bool AddForgotPasswordCode(string forgotPasswordCode)
+        {
+            if (this.ForgotPasswordCode != null && this.ForgotPasswordCodeExpiration > DateTime.Now)
+            {
+                // Assign the latest code
+                this.ForgotPasswordCode = forgotPasswordCode;
+                this.ForgotPasswordCodeExpiration = DateTime.Now.AddHours(2);
+                // Add this code to the list of the Forgotten Password Codes till date for this user
+                _forgottenPasswordCodesList.Add(new PasswordCodeRecord(forgotPasswordCode,
+                                                                       Convert.ToDateTime(
+                                                                           this.ForgotPasswordCodeExpiration),
+                                                                       DateTime.Now));
+                return true;
+            }
+            throw new InvalidOperationException("Last Forgot PasswordCode request hasn't expired yet.");
+        }
+
+        /// <summary>
+        /// Checks if this user's latest ForgotPasswordCode's validity period still remaining. Returns true if yes
+        /// </summary>
+        /// <returns></returns>
+        public bool IsPasswordCodeValid()
+        {
+            if (!string.IsNullOrEmpty(this.ForgotPasswordCode))
+            {
+                    if (this.ForgotPasswordCodeExpiration > DateTime.Now)
+                    {
+                        // No active ForgotPassword code at the moment
+                        this.ForgotPasswordCode = null;
+                        this.ForgotPasswordCodeExpiration = null;
+
+                        // Iterate to see which Password code has been used
+                        foreach (var passwordCodeRecord in _forgottenPasswordCodesList)
+                        {
+                            if (passwordCodeRecord.ExpirationDateTime.Equals(this.ForgotPasswordCodeExpiration))
+                            {
+                                // Mark that this Password Code has been used to reset the password
+                                passwordCodeRecord.MarkCodeUsage();
+                                break;
+                            }
+                        }
+                        return true;
+                    }
+                    // No active ForgotPassword code at the moment
+                    this.ForgotPasswordCode = null;
+                    this.ForgotPasswordCodeExpiration = null;
+                throw new TimeoutException("Timeout expired for resetting the password.");
+            }
+            throw new NullReferenceException("Password Code is null or does not contain any value");
+        }
+
+        #endregion Methods
 
         /// <summary>
         /// Username (Once set cannot be changed)
@@ -236,5 +298,15 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         /// Code generated in case user has forgotten their password
         /// </summary>
         public string ForgotPasswordCode { get; set; }
+
+        /// <summary>
+        /// Represents an array of the forgotten password codes for this user
+        /// </summary>
+        public PasswordCodeRecord[] ForgottenPasswordCodes { get { return _forgottenPasswordCodesList.ToArray(); } }
+
+        /// <summary>
+        /// Validity Period of the latest ForgotPasswordCode
+        /// </summary>
+        public DateTime? ForgotPasswordCodeExpiration { get; private set; }
     }
 }

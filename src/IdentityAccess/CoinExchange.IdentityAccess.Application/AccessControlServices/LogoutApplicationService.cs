@@ -35,9 +35,8 @@ namespace CoinExchange.IdentityAccess.Application.AccessControlServices
                 SecurityKeysPair securityKeysPair =
                     _securityKeysRepository.GetByApiKey(logoutCommand.ValidationEssentials.ApiKey.Value);
 
-                // ToDo: Test after Bilal Finishes Implementation ofthis deletion
-                _securityKeysRepository.DeleteSecurityKeysPair(securityKeysPair);
-                return false;
+                // ToDo: Test after Bilal Finishes Implementation of this deletion
+                return _securityKeysRepository.DeleteSecurityKeysPair(securityKeysPair);
             }
             else
             {

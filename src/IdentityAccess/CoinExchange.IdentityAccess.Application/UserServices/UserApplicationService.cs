@@ -186,7 +186,7 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
                     if (user.Username.Equals(username))
                     {
                         string newForgotPasswordCode = _passwordCodeGenerationService.CreateNewForgotPasswordCode();
-                        user.ForgotPasswordCode = newForgotPasswordCode;
+                        user.AddForgotPasswordCode(newForgotPasswordCode);
                         return newForgotPasswordCode;
                     }
                     else
@@ -207,27 +207,35 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
         /// Checks if this is a valid reset link code sent to the user for reseting password and also to verify new 
         /// password matches Confirm Password
         /// </summary>
-        /// <param name="forgotPasswordActivationCode"></param>
+        /// <param name="username"> </param>
         /// <param name="newPassword"></param>
         /// <returns></returns>
-        public bool ResetPasswordByEmailLink(string forgotPasswordActivationCode, string newPassword)
+        public bool ResetPasswordByEmailLink(string username, string newPassword)
         {
             // Make sure all given credential contains value
-            if (!string.IsNullOrEmpty(forgotPasswordActivationCode) && (!string.IsNullOrEmpty(newPassword)))
+            if ((!string.IsNullOrEmpty(newPassword)))
             {
-                // Get the user tied to this ForgotPasswordCode
-                // ToDo: Test after Bilal implements the GetUserByForgotPasswordCode method
-                User user = _userRepository.GetUserByForgotPasswordCode(forgotPasswordActivationCode);
+                // Get the user tied to this username
+                User user = _userRepository.GetUserByUserName(username);
 
                 if (user != null)
                 {
-                    user.Password = _passwordEncryptionService.EncryptPassword(newPassword);
-                    _persistenceRepository.SaveUpdate(user);
-                    return true;
+                    // Check if the password code is the same as expected and the validity period for this user's last 
+                    // forgot password code validation has not expired
+                    if (user.IsPasswordCodeValid())
+                    {
+                        // If code validation has not expired, update the password
+                        user.Password = _passwordEncryptionService.EncryptPassword(newPassword);
+                        _persistenceRepository.SaveUpdate(user);
+                        return true;
+                    }
+                    // else, throw an exception
+                    throw new InvalidOperationException(string.Format("{0} {1} {2}", 
+                        "Validity Period to chnge password for user ", user.Username, " has expired."));
                 }
                 throw new InvalidOperationException(string.Format("{0} {1}", "No user found for the given password code"));
             }
-                // If the user did not provide all the credentials, return with failure
+            // If the user did not provide all the credentials, return with failure
             else
             {
                 throw new InvalidCredentialException("Email not provided");

@@ -35,10 +35,11 @@ namespace CoinExchange.Rest.WebHost.App_Start
             config.DependencyResolver = new SpringDependencyResolver(ContextRegistry.GetContext());
             ISecurityKeysRepository securityKeysRepository =
                 (ISecurityKeysRepository)ContextRegistry.GetContext()["SecurityKeysPairRepository"];
-
             IUserRepository userRepository = (IUserRepository)ContextRegistry.GetContext()["UserRepository"];
-            //add authentication handler
-            config.MessageHandlers.Add(new AuthenticationHandler(new UserAuthenticationService(userRepository, securityKeysRepository)));
+            
+            //Add authentication handler
+            config.MessageHandlers.Add(new AuthenticationHandler(new UserAuthenticationService(userRepository, 
+                securityKeysRepository)));
             
             log.Info("Application Initialized.");
         }

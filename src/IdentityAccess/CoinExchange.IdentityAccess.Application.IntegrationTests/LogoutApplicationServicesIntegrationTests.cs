@@ -1,6 +1,12 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Configuration;
 using CoinExchange.Common.Tests;
 using CoinExchange.IdentityAccess.Application.AccessControlServices;
+using CoinExchange.IdentityAccess.Application.AccessControlServices.Commands;
+using CoinExchange.IdentityAccess.Application.RegistrationServices;
+using CoinExchange.IdentityAccess.Application.RegistrationServices.Commands;
+using CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate;
+using CoinExchange.IdentityAccess.Domain.Model.UserAggregate;
 using NUnit.Framework;
 using Spring.Context;
 using Spring.Context.Support;
@@ -31,10 +37,45 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
         }
 
         [Test]
+        [Category("Integration")]
         public void LogoutServiceInitializationAndInjectiontest_ChecksIfTheServiceGetsInitializedUsingSpring_FailsIfNot()
         {
             ILogoutApplicationService logoutApplicationService = (ILogoutApplicationService)_applicationContext["LogoutApplicationService"];
             Assert.IsNotNull(logoutApplicationService);
+        }
+
+        [Test]
+        [Category("Integration")]
+        public void LogoutSuccessTest_TestsIfAUserGetsLogoutAsExpected_FailsIfDoesNot()
+        {
+            ILoginApplicationService loginApplicationService = (ILoginApplicationService)_applicationContext["LoginApplicationService"];
+            Assert.IsNotNull(loginApplicationService);
+            IRegistrationApplicationService registrationService = (IRegistrationApplicationService)_applicationContext["RegistrationApplicationService"]; ;
+            IUserRepository userRepository = (IUserRepository)_applicationContext["UserRepository"];
+
+            string username = "Bob";
+            string password = "alice";
+            string activationKey = registrationService.CreateAccount(new SignupUserCommand(
+                "bob@alice.com", username, password, "Wonderland", TimeZone.CurrentTimeZone, ""));
+
+            Assert.IsNotNull(activationKey);
+
+            UserValidationEssentials userValidationEssentials = loginApplicationService.Login(new LoginCommand("Bob", "alice"));
+            Assert.IsNotNull(userValidationEssentials);
+            Assert.IsNotNull(userValidationEssentials.ApiKey);
+            Assert.IsNotNull(userValidationEssentials.SecretKey);
+            Assert.IsNotNull(userValidationEssentials.SessionLogoutTime);
+
+            ILogoutApplicationService logoutApplicationService = 
+                (ILogoutApplicationService)_applicationContext["LogoutApplicationService"];
+            Assert.IsNotNull(logoutApplicationService);
+
+            bool logout = logoutApplicationService.Logout(new LogoutCommand(userValidationEssentials));
+            Assert.IsTrue(logout);
+
+            ISecurityKeysRepository securityKeysRepository = (ISecurityKeysRepository)_applicationContext["SecurityKeysPairRepository"];
+            SecurityKeysPair securityKeysPair = securityKeysRepository.GetByApiKey(userValidationEssentials.ApiKey.Value);
+            Assert.IsNull(securityKeysPair);
         }
     }
 }

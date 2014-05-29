@@ -129,8 +129,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             ILoginApplicationService loginApplicationService =
                 (ILoginApplicationService)_applicationContext["LoginApplicationService"];
 
-            IUserRepository userRepository =
-                (IUserRepository)_applicationContext["UserRepository"];
+            IUserRepository userRepository = (IUserRepository)_applicationContext["UserRepository"];
 
             string username = "linkinpark";
             registrationApplicationService.CreateAccount(new SignupUserCommand("linkinpark@rock.com", "linkinpark", "burnitdown", "USA", TimeZone.CurrentTimeZone, ""));
@@ -158,19 +157,17 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
 
         [Test]
         [Category("Integration")]
-        public void ForgotPasswordRequestSuccessTest_ProvidesAValidEmailIdToSendTheMailTo_VerifiesByTheReturnedBoolean()
+        public void ForgotUsernameRequestSuccessTest_ProvidesAValidEmailIdToSendTheMailTo_VerifiesByTheReturnedBoolean()
         {
             IUserApplicationService userApplicationService = (IUserApplicationService)_applicationContext["UserApplicationService"];
             IRegistrationApplicationService registrationApplicationService =
                 (IRegistrationApplicationService)_applicationContext["RegistrationApplicationService"];
-            ILoginApplicationService loginApplicationService =
-                (ILoginApplicationService)_applicationContext["LoginApplicationService"];
 
             ManualResetEvent manualResetEvent = new ManualResetEvent(false);
             string username = "linkinpark";
             string email = "waqas.syed@hotmail.com";
             registrationApplicationService.CreateAccount(new SignupUserCommand(email, username, "burnitdown", "USA", TimeZone.CurrentTimeZone, ""));
-            // Wait for the asynchrnous email sending event to be completed otherwise no mre emails can be sent until
+            // Wait for the asynchrnous email sending event to be completed otherwise no more emails can be sent until
             // this operation finishes
             manualResetEvent.WaitOne(6000);
             
@@ -182,7 +179,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
 
         [Test]
         [Category("Integration")]
-        public void ForgotPasswordRequestFailTest_ProvidesAnInvalidEmailIdToSendTheMailTo_VerifiesByTheReturnedBoolean()
+        public void ForgotUsernameRequestFailTest_ProvidesAnInvalidEmailIdToSendTheMailTo_VerifiesByTheReturnedBoolean()
         {
             IUserApplicationService userApplicationService = (IUserApplicationService)_applicationContext["UserApplicationService"];
             IRegistrationApplicationService registrationApplicationService =
@@ -200,6 +197,62 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             // Wait for the email to be sent and operation to be completed
             manualResetEvent.WaitOne(5000);
             Assert.IsNull(returnedUsername);
+        }
+
+        [Test]
+        [Category("Integration")]
+        public void ForgotPasswordSuccessfultest_TestsIfForgotPasswordReqeustIsSentSuccessfullyAndForgotPasswordCodeUpdatedInUserProperly_VerifiesThroughReturnValues()
+        {
+            IUserApplicationService userApplicationService = (IUserApplicationService)_applicationContext["UserApplicationService"];
+            IRegistrationApplicationService registrationApplicationService =
+                (IRegistrationApplicationService)_applicationContext["RegistrationApplicationService"];
+            IUserRepository userRepository = (IUserRepository)_applicationContext["UserRepository"];
+
+            ManualResetEvent manualResetEvent = new ManualResetEvent(false);
+            string username = "linkinpark";
+            string email = "waqas.syed@hotmail.com";
+            registrationApplicationService.CreateAccount(new SignupUserCommand(email, username, "burnitdown", "USA", TimeZone.CurrentTimeZone, ""));
+            // Wait for the asynchrnous email sending event to be completed otherwise no more emails can be sent until
+            // this operation finishes
+            manualResetEvent.WaitOne(6000);
+
+            string returnedPasswordCode = userApplicationService.ForgotPassword(email, username);
+            // Wait for the email to be sent and operation to be completed
+            manualResetEvent.WaitOne(5000);
+            Assert.IsNotNull(returnedPasswordCode);
+
+            User userByUserName = userRepository.GetUserByUserName(username);
+            Assert.IsNotNull(userByUserName);
+            Assert.AreEqual(returnedPasswordCode, userByUserName.ForgotPasswordCode);
+        }
+
+        [Test]
+        [Category("Integration")]
+        public void ResetPasswordSuccessfultest_TestsIfPasswordIsResetProperly_VerifiesThroughReturnValues()
+        {
+            IUserApplicationService userApplicationService = (IUserApplicationService)_applicationContext["UserApplicationService"];
+            IRegistrationApplicationService registrationApplicationService =
+                (IRegistrationApplicationService)_applicationContext["RegistrationApplicationService"];
+            IUserRepository userRepository = (IUserRepository)_applicationContext["UserRepository"];
+            IPasswordEncryptionService passwordEncryption =
+                (IPasswordEncryptionService)_applicationContext["PasswordEncryptionService"];
+
+            ManualResetEvent manualResetEvent = new ManualResetEvent(false);
+            string username = "linkinpark";
+            string email = "waqas.syed@hotmail.com";
+            registrationApplicationService.CreateAccount(new SignupUserCommand(email, username, "burnitdown", "USA", TimeZone.CurrentTimeZone, ""));
+            
+            string returnedPasswordCode = userApplicationService.ForgotPassword(email, username);
+            
+            Assert.IsNotNull(returnedPasswordCode);
+            string newPassword = "newpassword";
+            bool resetPasswordReponse = userApplicationService.ResetPasswordByEmailLink(username, 
+                newPassword);
+            Assert.IsTrue(resetPasswordReponse);
+
+            User userByUserName = userRepository.GetUserByUserName(username);
+            Assert.IsNotNull(userByUserName);
+            Assert.IsTrue(passwordEncryption.VerifyPassword(newPassword, userByUserName.Password));
         }
     }
 }

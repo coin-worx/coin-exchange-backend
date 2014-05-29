@@ -100,8 +100,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             Assert.IsNotNull(loginApplicationService);
             IRegistrationApplicationService registrationService =
                 (IRegistrationApplicationService) _applicationContext["RegistrationApplicationService"];
-            ;
-
+            
             string activationKey = registrationService.CreateAccount(new SignupUserCommand(
                                                                          "bob@alice.com", "Bob", "alice", "Wonderland",
                                                                          TimeZone.CurrentTimeZone, ""));
