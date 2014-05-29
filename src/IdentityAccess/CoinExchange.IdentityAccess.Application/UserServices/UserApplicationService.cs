@@ -102,6 +102,8 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
                         // Mark that this user is now activated
                         user.IsActivationKeyUsed = new IsActivationKeyUsed(true);
                         user.IsUserBlocked = new IsUserBlocked(false);
+                        //update user's tier0 status to verified
+                        user.UpdateTierStatus(TierLevelConstant.Tier0, Status.Verified);
 
                         // Update the user instance in repository
                         _persistenceRepository.SaveUpdate(user);

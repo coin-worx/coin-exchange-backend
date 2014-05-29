@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="SecurityKeysAggregate\ISecurityKeysRepository.cs" />
     <Compile Include="UserAggregate\IPasswordCodeGenerationService.cs" />
+    <Compile Include="UserAggregate\ITierRepository.cs" />
     <Compile Include="UserAggregate\IUserRepository.cs" />
     <Compile Include="SecurityKeysAggregate\ApiKey.cs" />
     <Compile Include="SecurityKeysAggregate\IPermissionRepository.cs" />
@@ -70,10 +71,11 @@
     <Compile Include="UserAggregate\PasswordCodeRecord.cs" />
     <Compile Include="UserAggregate\Status.cs" />
     <Compile Include="UserAggregate\Tier.cs" />
+    <Compile Include="UserAggregate\TierLevelConstant.cs" />
     <Compile Include="UserAggregate\TierStatusList.cs" />
     <Compile Include="UserAggregate\UserDocument.cs" />
     <Compile Include="UserAggregate\UserDocumentsList.cs" />
-    <Compile Include="UserAggregate\UserTierStatus.cs" />
+    <Compile Include="UserAggregate\UserTierLevelStatus.cs" />
     <Compile Include="UserAggregate\Address.cs" />
     <Compile Include="UserAggregate\Language.cs" />
     <Compile Include="UserAggregate\User.cs" />

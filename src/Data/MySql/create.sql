@@ -148,6 +148,16 @@ CREATE TABLE `tickerinfo` (
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
 
+/*Table structure for table `tier` */
+
+DROP TABLE IF EXISTS `tier`;
+
+CREATE TABLE `tier` (
+  `TierLevel` varchar(30) NOT NULL,
+  `TierName` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`TierLevel`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 /*Table structure for table `trade` */
 
 DROP TABLE IF EXISTS `trade`;
@@ -188,6 +198,30 @@ CREATE TABLE `user` (
   `IsUserBlocked` tinyint(1) DEFAULT NULL,
   `Deleted` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`UserName`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Table structure for table `userdocument` */
+
+DROP TABLE IF EXISTS `userdocument`;
+
+CREATE TABLE `userdocument` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `DocumentType` varchar(50) DEFAULT NULL,
+  `DocumentPath` varchar(200) DEFAULT NULL,
+  `UserName` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Table structure for table `usertierlevelstatus` */
+
+DROP TABLE IF EXISTS `usertierlevelstatus`;
+
+CREATE TABLE `usertierlevelstatus` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `TierLevel` varchar(50) DEFAULT NULL,
+  `Status` varchar(50) DEFAULT NULL,
+  `UserName` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

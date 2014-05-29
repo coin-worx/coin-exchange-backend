@@ -83,6 +83,7 @@
     <Compile Include="MockEmailService.cs" />
     <Compile Include="MockPersistenceRepository.cs" />
     <Compile Include="MockSecurityKeysRepository.cs" />
+    <Compile Include="MockTierRepository.cs" />
     <Compile Include="MockUserRepository.cs" />
     <Compile Include="SecurityKeysApplicationServiceUnitTests.cs" />
     <Compile Include="LoginApplicationServiceUnitTests.cs" />

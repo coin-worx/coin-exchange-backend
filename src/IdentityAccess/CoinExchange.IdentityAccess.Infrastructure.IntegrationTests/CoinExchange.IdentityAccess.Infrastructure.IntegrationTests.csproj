@@ -84,6 +84,7 @@
     <Compile Include="SecurityKeysPairRepositoryTests.cs" />
     <Compile Include="PermisssionRepositoryTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TierRepositoryTests.cs" />
     <Compile Include="UserRepositoryPersistenceTests.cs" />
   </ItemGroup>
   <ItemGroup>

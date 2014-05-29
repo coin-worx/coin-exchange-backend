@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 using System.Security.Authentication;
 using CoinExchange.IdentityAccess.Application.RegistrationServices.Commands;
@@ -20,18 +22,19 @@ namespace CoinExchange.IdentityAccess.Application.RegistrationServices
         private IPasswordEncryptionService _passwordEncryptionService;
         private IActivationKeyGenerationService _activationKeyGenerationService;
         private IEmailService _emailService;
-
+        private ITierRepository _tierRepository;
         /// <summary>
         /// Parameterized Constructor
         /// </summary>
         public RegistrationApplicationService(IIdentityAccessPersistenceRepository persistenceRepository, 
         IPasswordEncryptionService passwordEncryptionService, IActivationKeyGenerationService activationKeyGenerationService
-            , IEmailService emailService)
+            , IEmailService emailService,ITierRepository tierRepository)
         {
             _persistenceRepository = persistenceRepository;
             _passwordEncryptionService = passwordEncryptionService;
             _activationKeyGenerationService = activationKeyGenerationService;
             _emailService = emailService;
+            _tierRepository = tierRepository;
         }
 
         /// <summary>
@@ -56,7 +59,11 @@ namespace CoinExchange.IdentityAccess.Application.RegistrationServices
                     User user = new User(signupUserCommand.Email, signupUserCommand.Username, hashedPassword,
                                          signupUserCommand.Country, signupUserCommand.TimeZone,
                                          signupUserCommand.PgpPublicKey, activationKey);
-                    
+                    IList<Tier> tiers = _tierRepository.GetAllTierLevels();
+                    for (int i = 0; i < tiers.Count; i++)
+                    {
+                        user.AddTierStatus(Status.NonVerified, tiers[i]);
+                    }
                     try
                     {
                         // Save to persistence
