@@ -53,29 +53,52 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
         {
             // Get the SecurityKeyspair instance related to this API Key
             SecurityKeysPair securityKeysPair = _securityKeysRepository.GetByApiKey(changePasswordCommand.UserValidationEssentials.ApiKey.Value);
-            if (DateTime.Now.Add(changePasswordCommand.UserValidationEssentials.SessionLogoutTime) > DateTime.Now)
+
+            if (securityKeysPair != null)
             {
                 // Get the User by specifying the Username in the SecurityKeysPair instance
                 User user = _userRepository.GetUserByUserName(securityKeysPair.UserName);
-
-                if (_passwordEncryptionService.VerifyPassword(changePasswordCommand.OldPassword, user.Password))
+                if (user != null)
                 {
-                    string newEncryptedPassword =
-                        _passwordEncryptionService.EncryptPassword(changePasswordCommand.NewPassword);
-                    user.Password = newEncryptedPassword;
-                    _persistenceRepository.SaveUpdate(user);
-                    _emailService.SendPasswordChangedEmail(user.Email, user.Username);
-                    return true;
+                    if (user.AutoLogout == changePasswordCommand.UserValidationEssentials.SessionLogoutTime)
+                    {
+                        if (securityKeysPair.CreationDateTime.Add(changePasswordCommand.UserValidationEssentials.SessionLogoutTime) >
+                            DateTime.Now)
+                        {
+                            if (_passwordEncryptionService.VerifyPassword(changePasswordCommand.OldPassword,
+                                                                          user.Password))
+                            {
+                                string newEncryptedPassword =
+                                    _passwordEncryptionService.EncryptPassword(changePasswordCommand.NewPassword);
+                                user.Password = newEncryptedPassword;
+                                _persistenceRepository.SaveUpdate(user);
+                                _emailService.SendPasswordChangedEmail(user.Email, user.Username);
+                                return true;
+                            }
+                            else
+                            {
+                                throw new InvalidCredentialException(string.Format("Current password incorrect."));
+                            }
+                        }
+                        else
+                        {
+                            _securityKeysRepository.DeleteSecurityKeysPair(securityKeysPair);
+                            throw new Exception("Session Timeout expired for this API Key.");
+                        }
+                    }
+                    else
+                    {
+                        throw new Exception("User's Session Auto Logout and given Session Losout do not match. Operation is aborted");
+                    }
                 }
                 else
                 {
-                    throw new InvalidCredentialException(string.Format("Current password incorrect."));
+                    throw new InstanceNotFoundException("User not found for the given SecurityKeysPair's Username.");
                 }
             }
             else
             {
-                _securityKeysRepository.DeleteSecurityKeysPair(securityKeysPair);
-                throw new Exception("Session Timeout expired for this API Key.");
+                throw new InstanceNotFoundException("SecurityKeysPair not found for the given API Key");
             }
         }
 
