@@ -143,6 +143,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
 
         [Test]
         [Category("Integration")]
+        [ExpectedException(typeof(InvalidOperationException))]
         public void ForgotUsernameRequestFailTest_ProvidesAnInvalidEmailIdToSendTheMailTo_VerifiesByTheReturnedBoolean()
         {
             IUserApplicationService userApplicationService = (IUserApplicationService)_applicationContext["UserApplicationService"];
@@ -157,10 +158,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             // this operation finishes
             manualResetEvent.WaitOne(5000);
 
-            string returnedUsername = userApplicationService.ForgotUsername(email + "1");
-            // Wait for the email to be sent and operation to be completed
-            manualResetEvent.WaitOne(5000);
-            Assert.IsNull(returnedUsername);
+            userApplicationService.ForgotUsername(email + "1");
         }
 
         [Test]
@@ -176,10 +174,8 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             string username = "linkinpark";
             string email = "waqas.syed@hotmail.com";
             registrationApplicationService.CreateAccount(new SignupUserCommand(email, username, "burnitdown", "USA", TimeZone.CurrentTimeZone, ""));
-            // Wait for the asynchrnous email sending event to be completed otherwise no more emails can be sent until
-            // this operation finishes
-            manualResetEvent.WaitOne(6000);
 
+            // ToDo: Test this code after Bilal has created mapping for ForgotPasswordCode
             string returnedPasswordCode = userApplicationService.ForgotPassword(email, username);
             // Wait for the email to be sent and operation to be completed
             manualResetEvent.WaitOne(5000);
@@ -201,7 +197,6 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             IPasswordEncryptionService passwordEncryption =
                 (IPasswordEncryptionService)_applicationContext["PasswordEncryptionService"];
 
-            ManualResetEvent manualResetEvent = new ManualResetEvent(false);
             string username = "linkinpark";
             string email = "waqas.syed@hotmail.com";
             registrationApplicationService.CreateAccount(new SignupUserCommand(email, username, "burnitdown", "USA", TimeZone.CurrentTimeZone, ""));
@@ -210,6 +205,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             
             Assert.IsNotNull(returnedPasswordCode);
             string newPassword = "newpassword";
+            // ToDo: Test this code after Bilal has created mapping for ForgotPasswordCode
             bool resetPasswordReponse = userApplicationService.ResetPasswordByEmailLink(username, 
                 newPassword);
             Assert.IsTrue(resetPasswordReponse);

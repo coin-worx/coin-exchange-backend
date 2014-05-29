@@ -169,7 +169,11 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
                 {
                     return user.Username;
                 }
-                throw new InvalidOperationException(string.Format("{0} {1}", "No user exists against email address: ", email));
+                else
+                {
+                    throw new InvalidOperationException(string.Format("{0} {1}",
+                                                                      "No user exists against email address: ", email));
+                }
             }
             // If the user did not provide all the credentials, return with failure
             else
@@ -198,6 +202,7 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
                     {
                         string newForgotPasswordCode = _passwordCodeGenerationService.CreateNewForgotPasswordCode();
                         user.AddForgotPasswordCode(newForgotPasswordCode);
+                        _persistenceRepository.SaveUpdate(user);
                         return newForgotPasswordCode;
                     }
                     else
