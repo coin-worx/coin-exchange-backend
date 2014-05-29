@@ -65,7 +65,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
         [Category("Integration")]
         public void CreateSystemGeneratedSecurityPair_IfUserNameIsProvided_VerifyKeyPairIsReturnedAndPersistedSuccessfully()
         {
-             ISecurityKeysApplicationService registrationService =
+            ISecurityKeysApplicationService registrationService =
                 (ISecurityKeysApplicationService)_applicationContext["SecurityKeysApplicationService"];
             var keys = registrationService.CreateSystemGeneratedKey("user1");
             Assert.NotNull(keys);

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using CoinExchange.Common.Domain.Model;
 using CoinExchange.IdentityAccess.Domain.Model.Repositories;
 using CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate;
@@ -16,6 +17,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate.AuthenticationS
 
         private ISecurityKeysRepository _securityKeysRepository = null;
         private IUserRepository _userRepository = null;
+
         /// <summary>
         /// Initializes with the Secrutiy Keys Repository
         /// </summary>
@@ -42,7 +44,10 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate.AuthenticationS
                     Log.Debug("Computed Hash:"+computedHash);
                     Log.Debug("Received Hash:" + command.Response);
                 }
-                if (String.CompareOrdinal(computedHash, command.Response) == 0) return true;
+                if (String.CompareOrdinal(computedHash, command.Response) == 0)
+                {
+                    return ApiKeyValidation(command);
+                }
             }
             return false;
         }
@@ -58,10 +63,10 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate.AuthenticationS
             if (securityKeysPair != null)
             {
                 User user = _userRepository.GetUserByUserName(securityKeysPair.UserName);
-                // If the keys are system generated, then we only need to check the session timeout for the user
-                if (securityKeysPair.SystemGenerated)
+                if (user != null)
                 {
-                    if (user != null)
+                    // If the keys are system generated, then we only need to check the session timeout for the user
+                    if (securityKeysPair.SystemGenerated)
                     {
                         int activeWindow = securityKeysPair.StartDate.Millisecond + user.AutoLogout.Milliseconds;
 
@@ -70,28 +75,35 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate.AuthenticationS
                             return true;
                         }
                     }
-                }
-                // Else we need to check the expiration date of the keys, and whetehr the user has permissions for 
-                // commencing with the desired operation
-                else
-                {
-                    if (securityKeysPair.ExpirationDate < DateTime.Now)
+                    // Else we need to check the expiration date of the keys, and whetehr the user has permissions for 
+                    // commencing with the desired operation
+                    else
                     {
-                        // ToDo: Implement the functionality to see which operation is requested and check permission for it
-                        if (authenticateCommand.Uri.Contains("/orders/"))
+                        
+                        if (securityKeysPair.ExpirationDate < DateTime.Now)
                         {
-                            if (authenticateCommand.Uri.Contains("cancelorder"))
+                            if (authenticateCommand.Uri.Contains("/orders/"))
                             {
-                                
+                                if (authenticateCommand.Uri.Contains("cancelorder"))
+                                {
+                                    return securityKeysPair.ValidatePermission(PermissionsConstant.Cancel_Order);
+                                }
+                                else if (authenticateCommand.Uri.Contains("openorders"))
+                                {
+                                    return securityKeysPair.ValidatePermission(PermissionsConstant.Query_Open_Orders);
+                                }
+                                else if (authenticateCommand.Uri.Contains("closedorders"))
+                                {
+                                    return securityKeysPair.ValidatePermission(PermissionsConstant.Query_Closed_Orders);
+                                }
                             }
-                            else if (authenticateCommand.Uri.Contains(""))
+                            else if (authenticateCommand.Uri.Contains("/trades/"))
                             {
-                                
+                                if (authenticateCommand.Uri.Contains("tradehistory"))
+                                {
+                                    // ToDo: Discuss with Bilal where are Trades permissions
+                                }
                             }
-                        }
-                        else if (authenticateCommand.Uri.Contains("/trades/"))
-                        {
-                            
                         }
                     }
                 }
