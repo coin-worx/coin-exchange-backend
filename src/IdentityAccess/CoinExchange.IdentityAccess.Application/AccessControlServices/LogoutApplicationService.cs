@@ -1,4 +1,5 @@
-﻿using System.Security.Authentication;
+﻿using System.Management.Instrumentation;
+using System.Security.Authentication;
 using CoinExchange.IdentityAccess.Application.AccessControlServices.Commands;
 using CoinExchange.IdentityAccess.Domain.Model.Repositories;
 using CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate;
@@ -35,8 +36,14 @@ namespace CoinExchange.IdentityAccess.Application.AccessControlServices
                 SecurityKeysPair securityKeysPair =
                     _securityKeysRepository.GetByApiKey(logoutCommand.ValidationEssentials.ApiKey.Value);
 
-                // ToDo: Test after Bilal Finishes Implementation of this deletion
-                return _securityKeysRepository.DeleteSecurityKeysPair(securityKeysPair);
+                if (securityKeysPair != null)
+                {
+                    return _securityKeysRepository.DeleteSecurityKeysPair(securityKeysPair);
+                }
+                else
+                {
+                    throw new InstanceNotFoundException("No SecurityKeysPair found for hte given API key.");
+                }
             }
             else
             {

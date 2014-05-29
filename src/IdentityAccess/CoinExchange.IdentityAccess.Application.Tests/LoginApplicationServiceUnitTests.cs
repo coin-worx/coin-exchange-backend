@@ -23,9 +23,6 @@ namespace CoinExchange.IdentityAccess.Application.Tests
     [TestFixture]
     public class LoginApplicationServiceUnitTests
     {
-        private IApplicationContext _applicationContext;
-        private DatabaseUtility _databaseUtility;
-
         [SetUp]
         public void Setup()
         {
@@ -46,7 +43,7 @@ namespace CoinExchange.IdentityAccess.Application.Tests
                 persistRepository,null);
             IPasswordEncryptionService passwordEncryptionService = new PasswordEncryptionService();
             ILoginApplicationService loginApplicationService = new LoginApplicationService(userRepository, passwordEncryptionService, 
-                securityKeysApplicationService);
+                securityKeysApplicationService, new MockPersistenceRepository(false));
 
             string enteredPassword = "whereistheJoker";
             User user = new User("batman@gotham.com", "brucewayne", passwordEncryptionService.EncryptPassword(enteredPassword),
@@ -65,6 +62,7 @@ namespace CoinExchange.IdentityAccess.Application.Tests
 
         [Test]
         [Category("Unit")]
+        [ExpectedException(typeof(InvalidCredentialException))]
         public void LoginfailDueToIncorrectUsernameTest_MakesSureLoginFailsInCaseOfWrongUsername_VerifiesTheReturnedNullResultToConfirm()
         {
             IUserRepository userRepository = new MockUserRepository();
@@ -73,7 +71,7 @@ namespace CoinExchange.IdentityAccess.Application.Tests
                 persistRepository,null);
             IPasswordEncryptionService passwordEncryptionService = new PasswordEncryptionService();
             ILoginApplicationService loginApplicationService = new LoginApplicationService(userRepository, passwordEncryptionService,
-                securityKeysApplicationService);
+                securityKeysApplicationService, new MockPersistenceRepository(false));
 
             string enteredPassword = "whereistheJoker";
             User user = new User("batman@gotham.com", "brucewayne", passwordEncryptionService.EncryptPassword(enteredPassword),
@@ -82,22 +80,40 @@ namespace CoinExchange.IdentityAccess.Application.Tests
             // Add this user to the MockUserRepository
             (userRepository as MockUserRepository).AddUser(user);
 
-            bool exceptionRaised = false;
-            try
-            {
-                loginApplicationService.Login(
-                    new LoginCommand("alfred", "whereisthejoker"));
-            }
-            catch (InvalidCredentialException e)
-            {
-                exceptionRaised = true;
-            }
-
-            Assert.IsTrue(exceptionRaised);
+            loginApplicationService.Login(new LoginCommand("alfred", "whereisthejoker"));            
         }
 
         [Test]
         [Category("Unit")]
+        [ExpectedException(typeof(InvalidCredentialException))]
+        public void LoginFailDueToBlankUsernameTest_MakesSureLoginFailsInCaseOfBlankUsername_VerifiesTheReturnedNullResultToConfirm()
+        {
+            IUserRepository userRepository = new MockUserRepository();
+            IIdentityAccessPersistenceRepository persistRepository = new MockPersistenceRepository(false);
+            ISecurityKeysApplicationService securityKeysApplicationService =
+                new SecurityKeysApplicationService(new SecurityKeysGenerationService(),
+                                                   persistRepository, null);
+            IPasswordEncryptionService passwordEncryptionService = new PasswordEncryptionService();
+            ILoginApplicationService loginApplicationService = new LoginApplicationService(userRepository,
+                                                                                           passwordEncryptionService,
+                                                                                           securityKeysApplicationService,
+                                                                                           new MockPersistenceRepository
+                                                                                               (false));
+
+            string enteredPassword = "whereistheJoker";
+            User user = new User("batman@gotham.com", "brucewayne",
+                                 passwordEncryptionService.EncryptPassword(enteredPassword),
+                                 "Ninja County", TimeZone.CurrentTimeZone, "", "");
+            user.AutoLogout = new TimeSpan(0, 0, 0, 60);
+            // Add this user to the MockUserRepository
+            (userRepository as MockUserRepository).AddUser(user);
+
+            loginApplicationService.Login(new LoginCommand("", "whereisthejoker"));
+        }
+
+        [Test]
+        [Category("Unit")]
+        [ExpectedException(typeof(InvalidCredentialException))]
         public void LoginfailDueToIncorrectPasswordTest_MakesSureLoginFailsInCaseOfWrongPassword_VerifiesTheReturnedNullResultToConfirm()
         {
             IUserRepository userRepository = new MockUserRepository();
@@ -106,7 +122,7 @@ namespace CoinExchange.IdentityAccess.Application.Tests
                 persistRepository,null);
             IPasswordEncryptionService passwordEncryptionService = new PasswordEncryptionService();
             ILoginApplicationService loginApplicationService = new LoginApplicationService(userRepository, passwordEncryptionService,
-                securityKeysApplicationService);
+                securityKeysApplicationService, new MockPersistenceRepository(false));
             string enteredPassword = "whereistheJoker";
             User user = new User("batman@gotham.com", "brucewayne", passwordEncryptionService.EncryptPassword(enteredPassword),
                 "Ninja County", TimeZone.CurrentTimeZone, "", "");
@@ -114,17 +130,29 @@ namespace CoinExchange.IdentityAccess.Application.Tests
             // Add this user to the MockUserRepository
             (userRepository as MockUserRepository).AddUser(user);
 
-            bool exceptionRaised = false;
-            try
-            {
-                loginApplicationService.Login(
-                    new LoginCommand("brucewayne", "whereisthejoke"));
-            }
-            catch (InvalidCredentialException e)
-            {
-                exceptionRaised = true;
-            }
-            Assert.IsTrue(exceptionRaised);
+            loginApplicationService.Login(new LoginCommand("brucewayne", "whereisthejoke"));
+        }
+
+        [Test]
+        [Category("Unit")]
+        [ExpectedException(typeof(InvalidCredentialException))]
+        public void LoginFailDueToBlankPasswordTest_MakesSureLoginFailsInCaseOfBlankPassword_VerifiesTheReturnedNullResultToConfirm()
+        {
+            IUserRepository userRepository = new MockUserRepository();
+            IIdentityAccessPersistenceRepository persistRepository = new MockPersistenceRepository(false);
+            ISecurityKeysApplicationService securityKeysApplicationService = new SecurityKeysApplicationService(new SecurityKeysGenerationService(),
+                persistRepository, null);
+            IPasswordEncryptionService passwordEncryptionService = new PasswordEncryptionService();
+            ILoginApplicationService loginApplicationService = new LoginApplicationService(userRepository, passwordEncryptionService,
+                securityKeysApplicationService, new MockPersistenceRepository(false));
+            string enteredPassword = "whereistheJoker";
+            User user = new User("batman@gotham.com", "brucewayne", passwordEncryptionService.EncryptPassword(enteredPassword),
+                "Ninja County", TimeZone.CurrentTimeZone, "", "");
+            user.AutoLogout = new TimeSpan(0, 0, 0, 60);
+            // Add this user to the MockUserRepository
+            (userRepository as MockUserRepository).AddUser(user);
+
+            loginApplicationService.Login(new LoginCommand("brucewayne", ""));
         }
     }
 }

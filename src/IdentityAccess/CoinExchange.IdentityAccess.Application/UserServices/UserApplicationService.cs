@@ -53,22 +53,30 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
         {
             // Get the SecurityKeyspair instance related to this API Key
             SecurityKeysPair securityKeysPair = _securityKeysRepository.GetByApiKey(changePasswordCommand.UserValidationEssentials.ApiKey.Value);
-            // Get the Userby specifying the Username in the SecurityKeysPair instance
-            User user = _userRepository.GetUserByUserName(securityKeysPair.UserName);
-
-            if (_passwordEncryptionService.VerifyPassword(changePasswordCommand.OldPassword, user.Password))
+            if (DateTime.Now.Add(changePasswordCommand.UserValidationEssentials.SessionLogoutTime) > DateTime.Now)
             {
-                if (changePasswordCommand.NewPassword.Equals(changePasswordCommand.ConfirmNewPassword))
+                // Get the User by specifying the Username in the SecurityKeysPair instance
+                User user = _userRepository.GetUserByUserName(securityKeysPair.UserName);
+
+                if (_passwordEncryptionService.VerifyPassword(changePasswordCommand.OldPassword, user.Password))
                 {
-                    string newEncryptedPassword = _passwordEncryptionService.EncryptPassword(changePasswordCommand.NewPassword);
+                    string newEncryptedPassword =
+                        _passwordEncryptionService.EncryptPassword(changePasswordCommand.NewPassword);
                     user.Password = newEncryptedPassword;
                     _persistenceRepository.SaveUpdate(user);
                     _emailService.SendPasswordChangedEmail(user.Email, user.Username);
                     return true;
                 }
-                throw new InvalidCredentialException(string.Format("New Password and confirmation password do not match."));
+                else
+                {
+                    throw new InvalidCredentialException(string.Format("Current password incorrect."));
+                }
             }
-            throw new InvalidCredentialException(string.Format("Current password incorrect."));
+            else
+            {
+                _securityKeysRepository.DeleteSecurityKeysPair(securityKeysPair);
+                throw new Exception("Session Timeout expired for this API Key.");
+            }
         }
 
         /// <summary>
@@ -128,6 +136,7 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
             {
                 // Get the user tied to this Activation Key
                 User user = _userRepository.GetUserByActivationKey(activationKey);
+                // ToDo: Email
                 // If activation key is valid, proceed to verify username and password
                 if (user != null)
                 {
@@ -214,7 +223,7 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
         /// <returns></returns>
         public bool ResetPasswordByEmailLink(string username, string newPassword)
         {
-            // Make sure all given credential contains value
+            // Make sure given credential contains value
             if ((!string.IsNullOrEmpty(newPassword)))
             {
                 // Get the user tied to this username
@@ -231,11 +240,19 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
                         _persistenceRepository.SaveUpdate(user);
                         return true;
                     }
-                    // else, throw an exception
-                    throw new InvalidOperationException(string.Format("{0} {1} {2}", 
-                        "Validity Period to chnge password for user ", user.Username, " has expired."));
+                    else
+                    {
+                        // else, throw an exception
+                        throw new InvalidOperationException(string.Format("{0} {1} {2}",
+                                                                          "Validity Period to chnge password for user ",
+                                                                          user.Username, " has expired."));
+                    }
                 }
-                throw new InvalidOperationException(string.Format("{0} {1}", "No user found for the given password code"));
+                else
+                {
+                    throw new InvalidOperationException(string.Format("{0} {1}",
+                                                                      "No user found for the given password code"));
+                }
             }
             // If the user did not provide all the credentials, return with failure
             else

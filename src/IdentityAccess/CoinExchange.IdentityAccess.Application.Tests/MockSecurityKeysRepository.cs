@@ -66,17 +66,16 @@ namespace CoinExchange.IdentityAccess.Application.Tests
 
         SecurityKeysPair ISecurityKeysRepository.GetByApiKey(string apiKey)
         {
-            throw new NotImplementedException();
+            return _securityKeysPairsList.First();
         }
 
         bool ISecurityKeysRepository.DeleteSecurityKeysPair(SecurityKeysPair securityKeysPair)
         {
-            throw new NotImplementedException();
+            return true;
         }
         
         public SecurityKeysPair GetByDescriptionAndApiKey(string description, string apiKey)
         {
             throw new NotImplementedException();
-        }
-    }
+        }    }
 }
