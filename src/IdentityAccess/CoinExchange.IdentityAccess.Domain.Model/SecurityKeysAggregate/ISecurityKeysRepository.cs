@@ -8,5 +8,6 @@
         SecurityKeysPair GetByKeyDescriptionAndUserName(string keyDescription,string userName);
         SecurityKeysPair GetByApiKey(string apiKey);
         bool DeleteSecurityKeysPair(SecurityKeysPair securityKeysPair);
+        SecurityKeysPair GetByDescriptionAndApiKey(string description, string apiKey);
     }
 }

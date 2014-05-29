@@ -86,6 +86,9 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
         [Category("Integration")]
         public void CreateUserGeneratedSecurityPair_IfAllRequiredParametersAreProvided_VerifyKeyPairIsReturnedAndPersistedSuccessfully()
         {
+            ISecurityKeysApplicationService registrationService =
+                (ISecurityKeysApplicationService)_applicationContext["SecurityKeysApplicationService"];
+            var systemGeneratedKey = registrationService.CreateSystemGeneratedKey("user1");
             List<SecurityKeyPermissionsRepresentation> securityKeyPermissions=new List<SecurityKeyPermissionsRepresentation>();
             IList<Permission> permissions = _permissionRepository.GetAllPermissions();
             for (int i = 0; i < permissions.Count; i++)
@@ -95,9 +98,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             CreateUserGeneratedSecurityKeyPair command =
                 new CreateUserGeneratedSecurityKeyPair(securityKeyPermissions.ToArray(),
                     DateTime.Today.AddDays(1).ToString(), DateTime.Today.AddDays(-2).ToString(),
-                    DateTime.Today.AddDays(-1).ToString(), true, true, true, "123", "user1");
-            ISecurityKeysApplicationService registrationService =
-               (ISecurityKeysApplicationService)_applicationContext["SecurityKeysApplicationService"];
+                    DateTime.Today.AddDays(-1).ToString(), true, true, true, "123", systemGeneratedKey.Item1.Value);
             var keys = registrationService.CreateUserGeneratedKey(command);
             Assert.NotNull(keys);
             Assert.IsNotNullOrEmpty(keys.Item1);
@@ -124,6 +125,9 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
         [ExpectedException(typeof(ArgumentNullException))]
         public void CreateUserGeneratedSecurityPair_IfNoPermissionIsAssigned_ArgumentNullExceptionShouldBeRaised()
         {
+            ISecurityKeysApplicationService registrationService =
+               (ISecurityKeysApplicationService)_applicationContext["SecurityKeysApplicationService"];
+            var systemGeneratedKey = registrationService.CreateSystemGeneratedKey("user1");
             List<SecurityKeyPermissionsRepresentation> securityKeyPermissions = new List<SecurityKeyPermissionsRepresentation>();
             IList<Permission> permissions = _permissionRepository.GetAllPermissions();
             for (int i = 0; i < permissions.Count; i++)
@@ -133,9 +137,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             CreateUserGeneratedSecurityKeyPair command =
                 new CreateUserGeneratedSecurityKeyPair(securityKeyPermissions.ToArray(),
                     DateTime.Today.AddDays(1).ToString(), DateTime.Today.AddDays(-2).ToString(),
-                    DateTime.Today.AddDays(-1).ToString(), true, true, true, "123", "user1");
-            ISecurityKeysApplicationService registrationService =
-               (ISecurityKeysApplicationService)_applicationContext["SecurityKeysApplicationService"];
+                    DateTime.Today.AddDays(-1).ToString(), true, true, true, "123", systemGeneratedKey.Item1.Value);
             var keys = registrationService.CreateUserGeneratedKey(command);
         }
 
@@ -144,6 +146,9 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
         [ExpectedException(typeof(ArgumentException))]
         public void CreateUserGeneratedSecurityPair_IfKeyDescriptionAlreadyExists_ArgumentExceptionShouldBeRaised()
         {
+            ISecurityKeysApplicationService registrationService =
+               (ISecurityKeysApplicationService)_applicationContext["SecurityKeysApplicationService"];
+            var systemGeneratedKey = registrationService.CreateSystemGeneratedKey("user1");
             List<SecurityKeyPermissionsRepresentation> securityKeyPermissions = new List<SecurityKeyPermissionsRepresentation>();
             IList<Permission> permissions = _permissionRepository.GetAllPermissions();
             for (int i = 0; i < permissions.Count; i++)
@@ -153,14 +158,12 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             CreateUserGeneratedSecurityKeyPair command =
                 new CreateUserGeneratedSecurityKeyPair(securityKeyPermissions.ToArray(),
                     DateTime.Today.AddDays(1).ToString(), DateTime.Today.AddDays(-2).ToString(),
-                    DateTime.Today.AddDays(-1).ToString(), true, true, true, "123", "user1");
-            ISecurityKeysApplicationService registrationService =
-               (ISecurityKeysApplicationService)_applicationContext["SecurityKeysApplicationService"];
+                    DateTime.Today.AddDays(-1).ToString(), true, true, true, "123", systemGeneratedKey.Item1.Value);
             var keys = registrationService.CreateUserGeneratedKey(command);
             command=
                new CreateUserGeneratedSecurityKeyPair(securityKeyPermissions.ToArray(),
                    DateTime.Today.AddDays(1).ToString(), DateTime.Today.AddDays(-2).ToString(),
-                   DateTime.Today.AddDays(-1).ToString(), true, true, true, "123", "user1");
+                   DateTime.Today.AddDays(-1).ToString(), true, true, true, "123", systemGeneratedKey.Item1.Value);
             var keys1 = registrationService.CreateUserGeneratedKey(command);
         }
 
@@ -168,6 +171,9 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
         [Category("Integration")]
         public void UpdateUserGeneratedSecurityPair_UpdatePermissionsAndSomeDescription_VerifyKeyPairIsReturnedAndPersistedSuccessfully()
         {
+            ISecurityKeysApplicationService registrationService =
+               (ISecurityKeysApplicationService)_applicationContext["SecurityKeysApplicationService"];
+            var systemGeneratedKey = registrationService.CreateSystemGeneratedKey("user1");
             List<SecurityKeyPermissionsRepresentation> securityKeyPermissions = new List<SecurityKeyPermissionsRepresentation>();
             IList<Permission> permissions = _permissionRepository.GetAllPermissions();
             for (int i = 0; i < permissions.Count; i++)
@@ -177,9 +183,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             CreateUserGeneratedSecurityKeyPair command =
                 new CreateUserGeneratedSecurityKeyPair(securityKeyPermissions.ToArray(),
                     DateTime.Today.AddDays(1).ToString(), DateTime.Today.AddDays(-2).ToString(),
-                    DateTime.Today.AddDays(-1).ToString(), true, true, true, "123", "user1");
-            ISecurityKeysApplicationService registrationService =
-               (ISecurityKeysApplicationService)_applicationContext["SecurityKeysApplicationService"];
+                    DateTime.Today.AddDays(-1).ToString(), true, true, true, "123", systemGeneratedKey.Item1.Value);
             var keys = registrationService.CreateUserGeneratedKey(command);
 
             securityKeyPermissions = new List<SecurityKeyPermissionsRepresentation>();
@@ -194,8 +198,8 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
                     securityKeyPermissions.Add(new SecurityKeyPermissionsRepresentation(true, permissions[i]));
                 }
             }
-            
-            UpdateUserGeneratedSecurityKeyPair update = new UpdateUserGeneratedSecurityKeyPair(keys.Item1, "user1", "456", false, false, true, "", "", securityKeyPermissions.ToArray(), DateTime.Today.AddDays(3).ToString());
+
+            UpdateUserGeneratedSecurityKeyPair update = new UpdateUserGeneratedSecurityKeyPair(keys.Item1, systemGeneratedKey.Item1.Value, "456", false, false, true, "", "", securityKeyPermissions.ToArray(), DateTime.Today.AddDays(3).ToString());
             registrationService.UpdateSecurityKeyPair(update);
             Assert.NotNull(keys);
             Assert.IsNotNullOrEmpty(keys.Item1);
@@ -218,6 +222,9 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
         [Category("Integration")]
         public void CreateUserGeneratedSecurityPair_ReadAndDeleteIt_SecurityPairShouldGetDeleted()
         {
+            ISecurityKeysApplicationService registrationService =
+               (ISecurityKeysApplicationService)_applicationContext["SecurityKeysApplicationService"];
+            var systemGeneratedKey = registrationService.CreateSystemGeneratedKey("user1");
             List<SecurityKeyPermissionsRepresentation> securityKeyPermissions = new List<SecurityKeyPermissionsRepresentation>();
             IList<Permission> permissions = _permissionRepository.GetAllPermissions();
             for (int i = 0; i < permissions.Count; i++)
@@ -227,11 +234,9 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             CreateUserGeneratedSecurityKeyPair command =
                 new CreateUserGeneratedSecurityKeyPair(securityKeyPermissions.ToArray(),
                     DateTime.Today.AddDays(1).ToString(), DateTime.Today.AddDays(-2).ToString(),
-                    DateTime.Today.AddDays(-1).ToString(), true, true, true, "123", "user1");
-            ISecurityKeysApplicationService registrationService =
-               (ISecurityKeysApplicationService)_applicationContext["SecurityKeysApplicationService"];
+                    DateTime.Today.AddDays(-1).ToString(), true, true, true, "123", systemGeneratedKey.Item1.Value);
             var keys = registrationService.CreateUserGeneratedKey(command);
-            registrationService.DeleteSecurityKeyPair("123","user1");
+            registrationService.DeleteSecurityKeyPair("123",systemGeneratedKey.Item1.Value);
             var getKeyPair = _securityKeysRepository.GetByKeyDescriptionAndUserName("123", "user1");
             Assert.Null(getKeyPair);
             var getKeyPair1 = _securityKeysRepository.GetByApiKey(keys.Item1);
