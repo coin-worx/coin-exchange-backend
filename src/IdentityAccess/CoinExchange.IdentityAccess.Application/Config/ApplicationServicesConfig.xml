@@ -10,6 +10,7 @@
     <constructor-arg name="activationKeyGenerationService" ref="ActivationKeyGenerationService"/>
     <constructor-arg name="emailService" ref="EmailService"/>
     <constructor-arg name="tierRepository" ref="TierRepository"/>
+    <constructor-arg name="userRepository" ref="UserRepository"/>
   </object>
   
 <object id="SecurityKeysApplicationService" type="CoinExchange.IdentityAccess.Application.SecurityKeysServices.SecurityKeysApplicationService, 

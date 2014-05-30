@@ -7,21 +7,21 @@ using System.Threading.Tasks;
 namespace CoinExchange.IdentityAccess.Application.UserServices.Commands
 {
     /// <summary>
-    /// Command to request to remind Username
+    /// Command to request the cancellation of an account activation
     /// </summary>
-    public class ForgotUsernameCommand
+    public class CancelActivationCommand
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
-        public ForgotUsernameCommand(string email)
+        public CancelActivationCommand(string activationKey)
         {
-            Email = email;
+            ActivationKey = activationKey;
         }
 
         /// <summary>
-        /// Username
+        /// Activation Key
         /// </summary>
-        public string Email { get; private set; }
+        public string ActivationKey { get; private set; }
     }
 }

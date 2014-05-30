@@ -23,40 +23,36 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
         /// <summary>
         /// Request to activate account for which the user has already signed up
         /// </summary>
-        /// <param name="activationKey"></param>
-        /// <param name="username"></param>
-        /// <param name="password"></param>
+        /// <param name="activationCommand"> </param>
         /// <returns></returns>
-        bool ActivateAccount(string activationKey, string username, string password);
+        bool ActivateAccount(ActivationCommand activationCommand);
 
         /// <summary>
         /// Request to Cancel the Account Activation after the user has signed up for an account but has not activated the account
         /// </summary>
-        /// <param name="activationKey"></param>
+        /// <param name="cancelActivationCommand"> </param>
         /// <returns></returns>
-        bool CancelAccountActivation(string activationKey);
+        bool CancelAccountActivation(CancelActivationCommand cancelActivationCommand);
 
         /// <summary>
         /// Request to remind the user of their username. Returns the username to the caller
         /// </summary>
         /// <returns></returns>
-        string ForgotUsername(string email);
+        string ForgotUsername(ForgotUsernameCommand forgotUsernameCommand);
 
         /// <summary>
         /// Forgot Password
         /// </summary>
-        /// <param name="email"></param>
-        /// <param name="username"></param>
+        /// <param name="forgotPasswordCommand"> </param>
         /// <returns></returns>
-        string ForgotPassword(string email, string username);
+        string ForgotPassword(ForgotPasswordCommand forgotPasswordCommand);
 
         /// <summary>
         /// Checks if this is a valid reset link code sent to the user for reseting password and also to verify new 
         /// password matches Confirm Password
         /// </summary>
-        /// <param name="username"> </param>
-        /// <param name="password"></param>
+        /// <param name="resetPasswordCommand"> </param>
         /// <returns></returns>
-        bool ResetPasswordByEmailLink(string username, string password);
+        bool ResetPasswordByEmailLink(ResetPasswordCommand resetPasswordCommand);
     }
 }
