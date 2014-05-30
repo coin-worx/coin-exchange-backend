@@ -13,7 +13,8 @@ namespace CoinExchange.IdentityAccess.Application.Tests
     /// </summary>
     public class MockUserRepository : IUserRepository
     {
-        private List<User> _userList = new List<User>(); 
+        private List<User> _userList = new List<User>();
+        private int _userCounter = 0;
 
         /// <summary>
         /// Get the User by Username
@@ -56,7 +57,14 @@ namespace CoinExchange.IdentityAccess.Application.Tests
         /// <returns></returns>
         public User GetUserByEmail(string email)
         {
-            throw new NotImplementedException();
+            foreach (var user in _userList)
+            {
+                if (user.Email == email)
+                {
+                    return user;
+                }
+            }
+            return null;
         }
 
         /// <summary>
@@ -82,6 +90,7 @@ namespace CoinExchange.IdentityAccess.Application.Tests
         /// <returns></returns>
         public bool AddUser(User user)
         {
+            ++_userCounter;
             _userList.Add(user);
             return true;
         }
@@ -99,7 +108,14 @@ namespace CoinExchange.IdentityAccess.Application.Tests
 
         public User GetUserById(int id)
         {
-            throw new NotImplementedException();
+            foreach (var user in _userList)
+            {
+                if (user.Id == id)
+                {
+                    return user;
+                }
+            }
+            return null;
         }
     }
 }

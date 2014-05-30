@@ -73,6 +73,8 @@ namespace CoinExchange.IdentityAccess.Application.RegistrationServices
                     User user = new User(signupUserCommand.Email, signupUserCommand.Username, hashedPassword,
                                          signupUserCommand.Country, signupUserCommand.TimeZone,
                                          signupUserCommand.PgpPublicKey, activationKey);
+                    user.IsActivationKeyUsed = new IsActivationKeyUsed(false);
+                    user.IsUserBlocked = new IsUserBlocked(false);
                     //persist so that user will be assigned an ID
                     _persistenceRepository.SaveUpdate(user);
 

@@ -199,7 +199,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
                 // Add this code to the list of the Forgotten Password Codes till date for this user
                 _forgottenPasswordCodesList.Add(new PasswordCodeRecord(forgotPasswordCode,
                                                                        Convert.ToDateTime(
-                                                                           this.ForgotPasswordCodeExpiration),
+                                                                       this.ForgotPasswordCodeExpiration),
                                                                        DateTime.Now, Id));
                 return true;
             }
@@ -219,28 +219,28 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
             {
                 if (this.ForgotPasswordCodeExpiration != null && this.ForgotPasswordCodeExpiration > DateTime.Now)
                 {
-                    // No active ForgotPassword code at the moment
-                    this.ForgotPasswordCode = null;
-                    this.ForgotPasswordCodeExpiration = null;
-
                     // Iterate to see which Password code has been used
                     foreach (var passwordCodeRecord in _forgottenPasswordCodesList)
                     {
-                        if (passwordCodeRecord.ExpirationDateTime.Equals(this.ForgotPasswordCodeExpiration))
+                        if (passwordCodeRecord.ExpirationDateTime.Equals(this.ForgotPasswordCodeExpiration) && 
+                            passwordCodeRecord.ForgotPasswordCode.Equals(this.ForgotPasswordCode))
                         {
+                            // No active ForgotPassword code at the moment
+                            this.ForgotPasswordCode = null;
+                            this.ForgotPasswordCodeExpiration = null;
                             // Mark that this Password Code has been used to reset the password
                             passwordCodeRecord.MarkCodeUsage();
-                            break;
+                            return true;
                         }
                     }
-                    return true;
+                    throw new Exception("ForgotPasswordCode in user does not match any Code in the FOrgottenPasswordCodes List.");
                 }
                 else
                 {
                     // No active ForgotPassword code at the moment
                     this.ForgotPasswordCode = null;
                     this.ForgotPasswordCodeExpiration = null;
-                    throw new TimeoutException("Timeout expired for resetting the password or no request has been made to reset password.");
+                    throw new Exception("Timeout expired for resetting the password or no request has been made to reset password.");
                 }
             }
             else
