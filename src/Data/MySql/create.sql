@@ -204,7 +204,8 @@ CREATE TABLE `user` (
   `ZipCode` int(11) DEFAULT NULL,
   `SocialSecurityNumber` varchar(50) DEFAULT NULL,
   `NationalIdentificationNumber` varchar(50) DEFAULT NULL,
-  PRIMARY KEY (`Id`)
+  PRIMARY KEY (`Id`),
+  UNIQUE KEY `NewIndex1` (`UserName`,`Email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 
 /*Table structure for table `userdocument` */
