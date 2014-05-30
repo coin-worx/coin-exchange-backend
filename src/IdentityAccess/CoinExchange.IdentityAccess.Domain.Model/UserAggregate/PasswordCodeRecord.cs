@@ -17,7 +17,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         /// </summary>
         private int _id { get; set; }
 
-        private string _username;
+        private int _userId;
 
         /// <summary>
         /// Default constructor
@@ -30,12 +30,12 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         /// <summary>
         /// Initializes a new instance of the <see cref="PasswordCodeRecord"/> class.
         /// </summary>
-        public PasswordCodeRecord(string forgotPasswordCode, DateTime expirationDateTime, DateTime creationDateTime,string userName)
+        public PasswordCodeRecord(string forgotPasswordCode, DateTime expirationDateTime, DateTime creationDateTime,int userId)
         {
             ForgotPasswordCode = forgotPasswordCode;
             ExpirationDateTime = expirationDateTime;
             CreationDateTime = creationDateTime;
-            Username = userName;
+            UserId = userId;
         }
 
         /// <summary>
@@ -69,13 +69,12 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         /// <summary>
         /// UserName of the User
         /// </summary>
-        public string Username 
+        public int UserId 
         {
-            get { return _username; }
+            get { return _userId; }
             private set
             {
-                AssertionConcern.AssertNullOrEmptyString(value,"UserName cannot be null or empty");
-                _username = value;
+                _userId = value;
             } 
         }
     }

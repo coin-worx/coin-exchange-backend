@@ -65,7 +65,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate.AuthenticationS
 
             if (securityKeysPair != null)
             {
-                User user = _userRepository.GetUserByUserName(securityKeysPair.UserName);
+                User user = _userRepository.GetUserById(securityKeysPair.UserId);
                 if (user != null)
                 {
                     // If the keys are system generated, then we only need to check the session timeout for the user
@@ -103,8 +103,8 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate.AuthenticationS
                 }
                 else
                 {
-                    throw new InvalidOperationException(string.Format("{0} {1}", "No user found against username: ",
-                                                                      securityKeysPair.UserName));
+                    throw new InvalidOperationException(string.Format("{0} {1}", "No user found against userId: ",
+                                                                      securityKeysPair.UserId));
                 }
             }
             else

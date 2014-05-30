@@ -43,4 +43,12 @@
   <constructor-arg name="passwordCodeGenerationService" ref="PasswordCodeGenerationService"/>
   </object>
   
+  <!--UserTierLevelApplicationService-->
+  <object id="UserTierLevelApplicationService" type="CoinExchange.IdentityAccess.Application.UserServices.UserTierLevelApplicationService, 
+          CoinExchange.IdentityAccess.Application">
+    <constructor-arg name="userRepository" ref="UserRepository"/>
+    <constructor-arg name="securityKeysRepository" ref="SecurityKeysPairRepository"/>
+    <constructor-arg name="persistenceRepository" ref="IdentityAccessPersistenceRepository"/>
+ </object>
+  
 </objects>

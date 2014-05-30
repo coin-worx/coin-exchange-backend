@@ -6,7 +6,7 @@ assembly="CoinExchange.IdentityAccess.Domain.Model" namespace="CoinExchange.Iden
       <generator class="assigned" />
     </id>
     <property name="KeyDescription"  column="KeyDescription"/>
-    <property name="UserName"  column="UserName"/>
+    <property name="UserId"  column="UserId"/>
     <property name="ExpirationDate"  column="ExpirationDate"/>
     <property name="StartDate"  column="StartDate"/>
     <property name="EndDate"  column="EndDate"/>

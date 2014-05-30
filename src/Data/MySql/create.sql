@@ -71,7 +71,7 @@ CREATE TABLE `passwordcoderecord` (
   `ExpirationDateTime` datetime DEFAULT NULL,
   `CreationDateTime` datetime DEFAULT NULL,
   `IsUsed` tinyint(1) DEFAULT NULL,
-  `UserName` varchar(50) DEFAULT NULL,
+  `UserId` int(11) DEFAULT NULL,
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -98,7 +98,7 @@ CREATE TABLE `securitykeyspair` (
   `EndDate` datetime DEFAULT NULL,
   `LastModified` datetime DEFAULT NULL,
   `SystemGenerated` tinyint(1) DEFAULT NULL,
-  `UserName` varchar(50) DEFAULT NULL,
+  `UserId` int(11) DEFAULT NULL,
   `CreationDateTime` datetime DEFAULT NULL,
   `EnableExpirationDate` tinyint(1) DEFAULT NULL,
   `EnableStartDate` tinyint(1) DEFAULT NULL,
@@ -119,7 +119,7 @@ CREATE TABLE `securitykeyspermission` (
   PRIMARY KEY (`Id`),
   KEY `FK_apikeypermission` (`PermissionId`),
   CONSTRAINT `FK_apikeypermission` FOREIGN KEY (`PermissionId`) REFERENCES `permission` (`PermissionId`)
-) ENGINE=InnoDB AUTO_INCREMENT=169 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=183 DEFAULT CHARSET=latin1;
 
 /*Table structure for table `tickerinfo` */
 
@@ -180,7 +180,8 @@ CREATE TABLE `trade` (
 DROP TABLE IF EXISTS `user`;
 
 CREATE TABLE `user` (
-  `UserName` varchar(50) NOT NULL,
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `UserName` varchar(50) DEFAULT NULL,
   `Password` varchar(100) DEFAULT NULL,
   `PublicKey` varchar(100) DEFAULT NULL,
   `Email` varchar(50) DEFAULT NULL,
@@ -199,8 +200,12 @@ CREATE TABLE `user` (
   `Deleted` tinyint(1) DEFAULT NULL,
   `ForgotPasswordCode` varchar(100) DEFAULT NULL,
   `ForgotPasswordCodeExpiration` datetime DEFAULT NULL,
-  PRIMARY KEY (`UserName`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `City` varchar(50) DEFAULT NULL,
+  `ZipCode` int(11) DEFAULT NULL,
+  `SocialSecurityNumber` varchar(50) DEFAULT NULL,
+  `NationalIdentificationNumber` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 
 /*Table structure for table `userdocument` */
 
@@ -210,7 +215,7 @@ CREATE TABLE `userdocument` (
   `Id` int(11) NOT NULL AUTO_INCREMENT,
   `DocumentType` varchar(50) DEFAULT NULL,
   `DocumentPath` varchar(200) DEFAULT NULL,
-  `UserName` varchar(50) DEFAULT NULL,
+  `UserId` int(11) DEFAULT NULL,
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -222,9 +227,9 @@ CREATE TABLE `usertierlevelstatus` (
   `Id` int(11) NOT NULL AUTO_INCREMENT,
   `TierLevel` varchar(50) DEFAULT NULL,
   `Status` varchar(50) DEFAULT NULL,
-  `UserName` varchar(50) DEFAULT NULL,
+  `UserId` int(11) DEFAULT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

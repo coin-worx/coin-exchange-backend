@@ -55,5 +55,16 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Persistence.Repositories
             CurrentSession.SaveOrUpdate(user);
             return true;
         }
+
+        [Transaction(ReadOnly = true)]
+        public User GetUserById(int id)
+        {
+            User user=CurrentSession.Get<User>(id);
+            if (user.Deleted)
+            {
+                throw new ArgumentException("The user doesnot exist or have been deleted");
+            }
+            return user;
+        }
     }
 }

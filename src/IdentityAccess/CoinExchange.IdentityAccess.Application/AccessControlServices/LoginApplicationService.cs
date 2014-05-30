@@ -41,21 +41,12 @@ namespace CoinExchange.IdentityAccess.Application.AccessControlServices
         /// <returns></returns>
         public UserValidationEssentials Login(LoginCommand loginCommand)
         {
-            // Get the user associated with this username
             User user = _userRepository.GetUserByUserName(loginCommand.Username);
-            // Check if such user exists
             if (user != null)
             {
-                // Check if account is activated, throw exception if doesn't
-                if (!user.IsActivationKeyUsed.Value)
-                {
-                    throw new Exception("Account is not activated. Please activate account before logging in.");
-                }
-                // Verify password
                 if(_passwordEncryptionService.VerifyPassword(loginCommand.Password, user.Password))
                 {
-                    // Create a new system generated key and record the last login time
-                    Tuple<ApiKey, SecretKey> securityKeys = _securityKeysApplicationService.CreateSystemGeneratedKey(loginCommand.Username);
+                    Tuple<ApiKey, SecretKey> securityKeys = _securityKeysApplicationService.CreateSystemGeneratedKey(user.Id);
                     user.LastLogin = DateTime.Now;
                     _persistenceRepository.SaveUpdate(user);
                     return new UserValidationEssentials(securityKeys, user.AutoLogout);

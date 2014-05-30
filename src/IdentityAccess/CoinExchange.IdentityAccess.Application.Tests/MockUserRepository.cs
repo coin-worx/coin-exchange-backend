@@ -96,5 +96,10 @@ namespace CoinExchange.IdentityAccess.Application.Tests
             _userList.Remove(user);
             return true;
         }
+
+        public User GetUserById(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

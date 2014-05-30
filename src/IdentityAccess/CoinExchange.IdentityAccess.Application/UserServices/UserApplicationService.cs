@@ -58,7 +58,7 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
             if (securityKeysPair != null)
             {
                 // Get the User by specifying the Username in the SecurityKeysPair instance
-                User user = _userRepository.GetUserByUserName(securityKeysPair.UserName);
+                User user = _userRepository.GetUserById(securityKeysPair.UserId);
                 if (user != null)
                 {
                     // The Session Logout time and the given session logout time must be the same

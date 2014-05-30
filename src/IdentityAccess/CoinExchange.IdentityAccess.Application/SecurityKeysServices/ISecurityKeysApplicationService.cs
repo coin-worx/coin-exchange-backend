@@ -13,7 +13,7 @@ namespace CoinExchange.IdentityAccess.Application.SecurityKeysServices
         /// Generates new key
         /// </summary>
         /// <returns></returns>
-        Tuple<ApiKey, SecretKey> CreateSystemGeneratedKey(string username);
+        Tuple<ApiKey, SecretKey> CreateSystemGeneratedKey(int userId);
 
         /// <summary>
         /// Item 1=Api Key

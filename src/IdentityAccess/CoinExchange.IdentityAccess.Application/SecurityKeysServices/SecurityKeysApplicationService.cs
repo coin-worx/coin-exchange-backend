@@ -34,9 +34,9 @@ namespace CoinExchange.IdentityAccess.Application.SecurityKeysServices
         /// Generates a new API key and Secret Key pair
         /// </summary>
         /// <returns></returns>
-        public Tuple<ApiKey, SecretKey> CreateSystemGeneratedKey(string username)
+        public Tuple<ApiKey, SecretKey> CreateSystemGeneratedKey(int userId)
         {
-            SecurityKeysPair keysPair = SecurityKeysPairFactory.SystemGeneratedSecurityKeyPair(username, _securityKeysGenerationService);
+            SecurityKeysPair keysPair = SecurityKeysPairFactory.SystemGeneratedSecurityKeyPair(userId, _securityKeysGenerationService);
             _persistRepository.SaveUpdate(keysPair);
             return new Tuple<ApiKey, SecretKey>(new ApiKey(keysPair.ApiKey),new SecretKey(keysPair.SecretKey) );
         }
@@ -58,7 +58,7 @@ namespace CoinExchange.IdentityAccess.Application.SecurityKeysServices
                     permissions.Add(new SecurityKeysPermission(keys.Item1, command.SecurityKeyPermissions[i].Permission,
                         command.SecurityKeyPermissions[i].Allowed));
                 }
-                var keysPair = SecurityKeysPairFactory.UserGeneratedSecurityPair(getSecurityKeyPair.UserName,
+                var keysPair = SecurityKeysPairFactory.UserGeneratedSecurityPair(getSecurityKeyPair.UserId,
                     command.KeyDescritpion,
                     keys.Item1, keys.Item2, command.EnableExpirationDate, command.ExpirationDateTime,
                     command.EnableStartDate, command.StartDateTime, command.EnableEndDate, command.EndDateTime,
@@ -138,7 +138,7 @@ namespace CoinExchange.IdentityAccess.Application.SecurityKeysServices
             {
                 throw new ArgumentException("Invalid api key");
             }
-            var keyPair = _securityKeysRepository.GetByKeyDescriptionAndUserName(keyDescription, getSecurityKeyPair.UserName);
+            var keyPair = _securityKeysRepository.GetByKeyDescriptionAndUserId(keyDescription, getSecurityKeyPair.UserId);
             if (keyPair == null)
             {
                 throw new InvalidOperationException("Could not find the security key pair.");

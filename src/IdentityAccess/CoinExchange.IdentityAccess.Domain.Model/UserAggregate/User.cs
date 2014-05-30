@@ -12,6 +12,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
     /// </summary>
     public class User
     {
+        public int Id { get; private set; }
         private string _username;
         private string _password;
         private string _pgpPublicKey;
@@ -118,7 +119,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         /// <returns></returns>
         public bool AddTierStatus(Status status,Tier tier)
         {
-            _tierLevelStatuses.Add(new UserTierLevelStatus(Username,tier,status));
+            _tierLevelStatuses.Add(new UserTierLevelStatus(Id,tier,status));
             return true;
         }
 
@@ -154,6 +155,19 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         }
 
         /// <summary>
+        /// Update tier 1 information
+        /// </summary>
+        public void UpdateTier1Information(string city, string state, string addressLine1, string addressLine2,
+            string zipCode)
+        {
+            City = city;
+            State = state;
+            Address1 = addressLine1;
+            Address2 = addressLine2;
+            ZipCode = int.Parse(zipCode);
+        }
+
+        /// <summary>
         /// Get user speific tier level status
         /// </summary>
         /// <param name="tier"></param>
@@ -186,7 +200,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
                 _forgottenPasswordCodesList.Add(new PasswordCodeRecord(forgotPasswordCode,
                                                                        Convert.ToDateTime(
                                                                            this.ForgotPasswordCodeExpiration),
-                                                                       DateTime.Now, Username));
+                                                                       DateTime.Now, Id));
                 return true;
             }
             else
@@ -359,5 +373,25 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         /// Validity Period of the latest ForgotPasswordCode
         /// </summary>
         public DateTime? ForgotPasswordCodeExpiration { get; private set; }
+
+        /// <summary>
+        /// City
+        /// </summary>
+        public string City { get; private set; }
+
+        /// <summary>
+        /// Zip code
+        /// </summary>
+        public int ZipCode { get; private set; }
+
+        /// <summary>
+        /// SSN for US citizens only
+        /// </summary>
+        public string SocialSecurityNumber { get; private set; }
+
+        /// <summary>
+        /// Government Issued ID number
+        /// </summary>
+        public string NationalIdentificationNumber { get; private set; }
     }
 }

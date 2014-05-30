@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using CoinExchange.Common.Domain.Model;
+using CoinExchange.IdentityAccess.Domain.Model.UserAggregate;
 
 namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
 {
@@ -15,7 +16,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         private string _apiKey;
         private string _secretKey;
         private string _keyDescription;
-        private string _userName;
+        private int _userId;
         private IList<SecurityKeysPermission> _securityKeysPermissions { get; set; }
 
         #endregion Private Fields
@@ -34,14 +35,14 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         /// <param name="apiKey"></param>
         /// <param name="secretKey"></param>
         /// <param name="keyDescription"></param>
-        /// <param name="userName"></param>
+        /// <param name="userId"></param>
         /// <param name="systemGenerated"></param>
-        public SecurityKeysPair(string apiKey, string secretKey, string keyDescription, string userName, bool systemGenerated)
+        public SecurityKeysPair(string apiKey, string secretKey, string keyDescription, int userId, bool systemGenerated)
         {
             _apiKey = apiKey;
             _secretKey = secretKey;
             KeyDescription = keyDescription;
-            UserName = userName;
+            UserId = userId;
             SystemGenerated = systemGenerated;
             CreationDateTime = DateTime.Now;
         }
@@ -54,12 +55,12 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         /// <param name="keyDescription"></param>
         /// <param name="userName"></param>
         /// <param name="systemGenerated"></param>
-        public SecurityKeysPair(string apiKey, string secretKey, string keyDescription, string userName, bool systemGenerated,List<SecurityKeysPermission> permissions )
+        public SecurityKeysPair(string apiKey, string secretKey, string keyDescription, int userId, bool systemGenerated,List<SecurityKeysPermission> permissions )
         {
             _apiKey = apiKey;
             _secretKey = secretKey;
             KeyDescription = keyDescription;
-            UserName = userName;
+            UserId = userId;
             SystemGenerated = systemGenerated;
             _securityKeysPermissions = permissions;
             CreationDateTime = DateTime.Now;
@@ -77,9 +78,9 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         /// <summary>
         /// Parameterized Constructor
         /// </summary>
-        public SecurityKeysPair(string username, string apiKey, string secretKey, bool isSystemGenerated, string keyDescription)
+        public SecurityKeysPair(int userId, string apiKey, string secretKey, bool isSystemGenerated, string keyDescription)
         {
-            this.UserName = username;
+            UserId = userId;
             _apiKey = apiKey;
             _secretKey = secretKey;
             this.KeyDescription = keyDescription;
@@ -106,12 +107,12 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         /// <param name="endDate"></param>
         /// <param name="lastModified"></param>
         /// <param name="systemGenerated"></param>
-        public SecurityKeysPair(string keyDescription, string apiKey, string secretKey, string userName, DateTime expirationDate, DateTime startDate, DateTime endDate, DateTime lastModified, bool systemGenerated, IList<SecurityKeysPermission> securityKeysPermissions)
+        public SecurityKeysPair(string keyDescription, string apiKey, string secretKey, int userId, DateTime expirationDate, DateTime startDate, DateTime endDate, DateTime lastModified, bool systemGenerated, IList<SecurityKeysPermission> securityKeysPermissions)
         {
             KeyDescription = keyDescription;
             _apiKey = apiKey;
             _secretKey = secretKey;
-            UserName = userName;
+            UserId = userId;
             ExpirationDate = expirationDate;
             StartDate = startDate;
             EndDate = endDate;
@@ -272,13 +273,12 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         /// <summary>
         /// Username
         /// </summary>
-        public string UserName
+        public int UserId
         {
-            get { return _userName; }
+            get { return _userId; }
             private set
             {
-                AssertionConcern.AssertNullOrEmptyString(value, "Username cannot be null or empty");
-                _userName = value;
+                _userId = value;
             }
         }
 

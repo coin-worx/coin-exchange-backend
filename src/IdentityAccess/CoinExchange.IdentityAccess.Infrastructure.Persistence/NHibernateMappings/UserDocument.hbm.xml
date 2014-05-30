@@ -5,7 +5,7 @@ assembly="CoinExchange.IdentityAccess.Domain.Model" namespace="CoinExchange.Iden
     <id name="_id" column="Id">
       <generator class="native" />
     </id>
-    <property name="UserName"  column="UserName"/>
+    <property name="UserId"  column="UserId"/>
     <property name="DocumentType"  column="DocumentType"/>
     <property name="DocumentPath"  column="DocumentPath"/>
   </class>

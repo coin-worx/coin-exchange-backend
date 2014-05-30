@@ -82,6 +82,7 @@
     <Compile Include="RegistrationApplicationServiceIntegrationTests.cs" />
     <Compile Include="SecurityKeysApplicationServiceIntegrationTests.cs" />
     <Compile Include="UserApplicationServiceIntegrationTests.cs" />
+    <Compile Include="UserTierLevelApplicationServiceTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
