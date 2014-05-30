@@ -55,7 +55,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             ISecurityKeysApplicationService registrationService =
                 (ISecurityKeysApplicationService)_applicationContext["SecurityKeysApplicationService"];
 
-            Tuple<ApiKey, SecretKey> securityKeys = registrationService.CreateSystemGeneratedKey("Bob");
+            Tuple<ApiKey, SecretKey> securityKeys = registrationService.CreateSystemGeneratedKey(1);
 
             Assert.IsNotNull(securityKeys);
             Assert.IsNotNull(securityKeys.Item1);
@@ -68,13 +68,13 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
         {
             ISecurityKeysApplicationService registrationService =
                 (ISecurityKeysApplicationService)_applicationContext["SecurityKeysApplicationService"];
-            var keys = registrationService.CreateSystemGeneratedKey("user1");
+            var keys = registrationService.CreateSystemGeneratedKey(1);
             Assert.NotNull(keys);
             Assert.IsNotNullOrEmpty(keys.Item1.Value);
             Assert.IsNotNullOrEmpty(keys.Item2.Value);
             SecurityKeysPair persistedKeysPair = _securityKeysRepository.GetByApiKey(keys.Item1.Value);
             Assert.NotNull(persistedKeysPair);
-            Assert.AreEqual(persistedKeysPair.UserName, "user1");
+            Assert.AreEqual(persistedKeysPair.UserId, 1);
             Assert.AreEqual(persistedKeysPair.SystemGenerated, true);
             Assert.AreEqual(persistedKeysPair.ApiKey, keys.Item1.Value);
             Assert.AreEqual(persistedKeysPair.SecretKey,keys.Item2.Value);
@@ -88,7 +88,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
         {
             ISecurityKeysApplicationService registrationService =
                 (ISecurityKeysApplicationService)_applicationContext["SecurityKeysApplicationService"];
-            var systemGeneratedKey = registrationService.CreateSystemGeneratedKey("user1");
+            var systemGeneratedKey = registrationService.CreateSystemGeneratedKey(1);
             List<SecurityKeyPermissionsRepresentation> securityKeyPermissions=new List<SecurityKeyPermissionsRepresentation>();
             IList<Permission> permissions = _permissionRepository.GetAllPermissions();
             for (int i = 0; i < permissions.Count; i++)
@@ -105,7 +105,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             Assert.IsNotNullOrEmpty(keys.Item2);
             SecurityKeysPair persistedKeysPair = _securityKeysRepository.GetByApiKey(keys.Item1);
             Assert.NotNull(persistedKeysPair);
-            Assert.AreEqual(persistedKeysPair.UserName, "user1");
+            Assert.AreEqual(persistedKeysPair.UserId, 1);
             Assert.AreEqual(persistedKeysPair.SystemGenerated, false);
             Assert.AreEqual(persistedKeysPair.ApiKey, keys.Item1);
             Assert.AreEqual(persistedKeysPair.SecretKey, keys.Item2);
@@ -127,7 +127,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
         {
             ISecurityKeysApplicationService registrationService =
                (ISecurityKeysApplicationService)_applicationContext["SecurityKeysApplicationService"];
-            var systemGeneratedKey = registrationService.CreateSystemGeneratedKey("user1");
+            var systemGeneratedKey = registrationService.CreateSystemGeneratedKey(1);
             List<SecurityKeyPermissionsRepresentation> securityKeyPermissions = new List<SecurityKeyPermissionsRepresentation>();
             IList<Permission> permissions = _permissionRepository.GetAllPermissions();
             for (int i = 0; i < permissions.Count; i++)
@@ -148,7 +148,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
         {
             ISecurityKeysApplicationService registrationService =
                (ISecurityKeysApplicationService)_applicationContext["SecurityKeysApplicationService"];
-            var systemGeneratedKey = registrationService.CreateSystemGeneratedKey("user1");
+            var systemGeneratedKey = registrationService.CreateSystemGeneratedKey(1);
             List<SecurityKeyPermissionsRepresentation> securityKeyPermissions = new List<SecurityKeyPermissionsRepresentation>();
             IList<Permission> permissions = _permissionRepository.GetAllPermissions();
             for (int i = 0; i < permissions.Count; i++)
@@ -173,7 +173,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
         {
             ISecurityKeysApplicationService registrationService =
                (ISecurityKeysApplicationService)_applicationContext["SecurityKeysApplicationService"];
-            var systemGeneratedKey = registrationService.CreateSystemGeneratedKey("user1");
+            var systemGeneratedKey = registrationService.CreateSystemGeneratedKey(1);
             List<SecurityKeyPermissionsRepresentation> securityKeyPermissions = new List<SecurityKeyPermissionsRepresentation>();
             IList<Permission> permissions = _permissionRepository.GetAllPermissions();
             for (int i = 0; i < permissions.Count; i++)
@@ -206,7 +206,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             Assert.IsNotNullOrEmpty(keys.Item2);
             SecurityKeysPair persistedKeysPair = _securityKeysRepository.GetByApiKey(keys.Item1);
             Assert.NotNull(persistedKeysPair);
-            Assert.AreEqual(persistedKeysPair.UserName, "user1");
+            Assert.AreEqual(persistedKeysPair.UserId, 1);
             Assert.AreEqual(persistedKeysPair.SystemGenerated, false);
             Assert.AreEqual(persistedKeysPair.ApiKey, keys.Item1);
             Assert.AreEqual(persistedKeysPair.SecretKey, keys.Item2);
@@ -224,7 +224,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
         {
             ISecurityKeysApplicationService registrationService =
                (ISecurityKeysApplicationService)_applicationContext["SecurityKeysApplicationService"];
-            var systemGeneratedKey = registrationService.CreateSystemGeneratedKey("user1");
+            var systemGeneratedKey = registrationService.CreateSystemGeneratedKey(1);
             List<SecurityKeyPermissionsRepresentation> securityKeyPermissions = new List<SecurityKeyPermissionsRepresentation>();
             IList<Permission> permissions = _permissionRepository.GetAllPermissions();
             for (int i = 0; i < permissions.Count; i++)
@@ -237,7 +237,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
                     DateTime.Today.AddDays(-1).ToString(), true, true, true, "123", systemGeneratedKey.Item1.Value);
             var keys = registrationService.CreateUserGeneratedKey(command);
             registrationService.DeleteSecurityKeyPair("123",systemGeneratedKey.Item1.Value);
-            var getKeyPair = _securityKeysRepository.GetByKeyDescriptionAndUserName("123", "user1");
+            var getKeyPair = _securityKeysRepository.GetByKeyDescriptionAndUserId("123", 1);
             Assert.Null(getKeyPair);
             var getKeyPair1 = _securityKeysRepository.GetByApiKey(keys.Item1);
             Assert.Null(getKeyPair1);

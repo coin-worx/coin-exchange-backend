@@ -17,11 +17,11 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Persistence.Repositories
     public class SecurityKeysPairRepository : NHibernateSessionFactory, ISecurityKeysRepository
     {
         [Transaction(ReadOnly = true)]
-        public SecurityKeysPair GetByKeyDescriptionAndUserName(string keyDescription,string userName)
+        public SecurityKeysPair GetByKeyDescriptionAndUserId(string keyDescription, int userId)
         {
             return
                 CurrentSession.QueryOver<SecurityKeysPair>()
-                    .Where(x => x.KeyDescription == keyDescription && x.UserName == userName && x.Deleted == false)
+                    .Where(x => x.KeyDescription == keyDescription && x.UserId == userId && x.Deleted == false)
                     .SingleOrDefault();
         }
 

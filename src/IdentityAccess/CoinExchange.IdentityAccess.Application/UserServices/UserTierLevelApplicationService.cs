@@ -39,7 +39,7 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
         public void ApplyForTier1Verification(VerifyTier1Command command)
         {
             SecurityKeysPair securityKeysPair = _securityKeysRepository.GetByApiKey(command.SystemGeneratedApiKey);
-            User user = _userRepository.GetUserByUserName(securityKeysPair.UserName);
+            User user = _userRepository.GetUserById(securityKeysPair.UserId);
             //add user phone number
             user.PhoneNumber = command.PhoneNumber;
             //update user tier 1 status
@@ -56,7 +56,7 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
             if (command.ValidateCommand())
             {
                 SecurityKeysPair securityKeysPair = _securityKeysRepository.GetByApiKey(command.SystemGeneratedApiKey);
-                User user = _userRepository.GetUserByUserName(securityKeysPair.UserName);
+                User user = _userRepository.GetUserById(securityKeysPair.UserId);
                 //update info
                 user.UpdateTier1Information(command.City,command.State,command.AddressLine1,command.AddressLine2,command.ZipCode);
                 //update tier status

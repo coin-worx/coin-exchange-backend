@@ -88,5 +88,10 @@ namespace CoinExchange.IdentityAccess.Application.Tests
         {
             throw new NotImplementedException();
         }
+
+        public User GetUserById(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

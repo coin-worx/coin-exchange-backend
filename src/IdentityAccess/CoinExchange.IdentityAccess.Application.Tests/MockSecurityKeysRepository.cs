@@ -18,7 +18,7 @@ namespace CoinExchange.IdentityAccess.Application.Tests
         /// <param name="keyDescription"></param>
         /// <param name="userName"></param>
         /// <returns></returns>
-        public SecurityKeysPair GetByKeyDescription(string keyDescription,string userName)
+        public SecurityKeysPair GetByKeyDescriptionAndUserId(string keyDescription, int userId)
         {
             throw new NotImplementedException();
         }
@@ -57,11 +57,6 @@ namespace CoinExchange.IdentityAccess.Application.Tests
         public void AddSecurityKeysPair(SecurityKeysPair securityKeysPair)
         {
             _securityKeysPairsList.Add(securityKeysPair);
-        }
-
-        SecurityKeysPair ISecurityKeysRepository.GetByKeyDescriptionAndUserName(string keyDescription, string userName)
-        {
-            throw new NotImplementedException();
         }
 
         SecurityKeysPair ISecurityKeysRepository.GetByApiKey(string apiKey)

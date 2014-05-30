@@ -46,7 +46,7 @@ namespace CoinExchange.IdentityAccess.Application.AccessControlServices
             {
                 if(_passwordEncryptionService.VerifyPassword(loginCommand.Password, user.Password))
                 {
-                    Tuple<ApiKey, SecretKey> securityKeys = _securityKeysApplicationService.CreateSystemGeneratedKey(loginCommand.Username);
+                    Tuple<ApiKey, SecretKey> securityKeys = _securityKeysApplicationService.CreateSystemGeneratedKey(user.Id);
                     user.LastLogin = DateTime.Now;
                     _persistenceRepository.SaveUpdate(user);
                     return new UserValidationEssentials(securityKeys, user.AutoLogout);

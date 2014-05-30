@@ -16,12 +16,12 @@
         /// <summary>
         /// Parameterized Constructor
         /// </summary>
-        /// <param name="username"></param>
+        /// <param name="userId"></param>
         /// <param name="tier"></param>
         /// <param name="status"></param>
-        public UserTierLevelStatus(string username, Tier tier, Status status)
+        public UserTierLevelStatus(int userId, Tier tier, Status status)
         {
-            Username = username;
+            UserId = userId;
             Tier = tier;
             Status = status;
         }
@@ -29,7 +29,7 @@
         /// <summary>
         /// Username
         /// </summary>
-        public string Username { get; private set; }
+        public int UserId { get; private set; }
 
         /// <summary>
         /// Tier

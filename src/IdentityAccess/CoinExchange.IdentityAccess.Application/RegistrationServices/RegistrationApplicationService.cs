@@ -59,22 +59,19 @@ namespace CoinExchange.IdentityAccess.Application.RegistrationServices
                     User user = new User(signupUserCommand.Email, signupUserCommand.Username, hashedPassword,
                                          signupUserCommand.Country, signupUserCommand.TimeZone,
                                          signupUserCommand.PgpPublicKey, activationKey);
+                    //persist so that user will be assigned an ID
+                    _persistenceRepository.SaveUpdate(user);
+
                     IList<Tier> tiers = _tierRepository.GetAllTierLevels();
                     for (int i = 0; i < tiers.Count; i++)
                     {
                         user.AddTierStatus(Status.NonVerified, tiers[i]);
                     }
-                    try
-                    {
-                        // Save to persistence
-                        _persistenceRepository.SaveUpdate(user);
-                        // return Activation Key
-                        return activationKey;
-                    }
-                    catch (Exception)
-                    {
-                        throw;
-                    }
+
+                     // Save to persistence
+                    _persistenceRepository.SaveUpdate(user);
+                    // return Activation Key
+                    return activationKey;
                 }
                 else
                 {

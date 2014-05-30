@@ -2,9 +2,10 @@
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
 assembly="CoinExchange.IdentityAccess.Domain.Model" namespace="CoinExchange.IdentityAccess.Domain.Model.UserAggregate">
   <class name="User" table="User" lazy="false">
-    <id name="Username" column="UserName">
-      <generator class="assigned" />
+    <id name="Id" column="Id">
+      <generator class="native" />
     </id>
+    <property name="Username"  column="Username"/>
     <property name="Password"  column="Password"/>
     <property name="PublicKey"  column="PublicKey"/>
     <property name="Email"  column="Email"/>
@@ -32,11 +33,11 @@ assembly="CoinExchange.IdentityAccess.Domain.Model" namespace="CoinExchange.Iden
       <property name="Value" column="IsActivationKeyUsed"/>
     </component>
     <bag name="_forgottenPasswordCodesList" table="PasswordCodeRecord" cascade="all" inverse="true" lazy="false">
-      <key column="Username"/>
+      <key column="UserId"/>
       <one-to-many class="PasswordCodeRecord"/>
     </bag>
     <bag name="_tierLevelStatuses" table="UserTierLevelStatus" cascade="all" inverse="true" lazy="false">
-      <key column="Username"/>
+      <key column="UserId"/>
       <one-to-many class="UserTierLevelStatus"/>
     </bag>
     </class>

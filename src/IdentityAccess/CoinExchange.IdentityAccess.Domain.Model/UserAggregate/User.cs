@@ -12,6 +12,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
     /// </summary>
     public class User
     {
+        public int Id { get; private set; }
         private string _username;
         private string _password;
         private string _pgpPublicKey;
@@ -111,7 +112,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         /// <returns></returns>
         public bool AddTierStatus(Status status,Tier tier)
         {
-            _tierLevelStatuses.Add(new UserTierLevelStatus(Username,tier,status));
+            _tierLevelStatuses.Add(new UserTierLevelStatus(Id,tier,status));
             return true;
         }
 
@@ -192,7 +193,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
                 _forgottenPasswordCodesList.Add(new PasswordCodeRecord(forgotPasswordCode,
                                                                        Convert.ToDateTime(
                                                                            this.ForgotPasswordCodeExpiration),
-                                                                       DateTime.Now, Username));
+                                                                       DateTime.Now, Id));
                 return true;
             }
             else

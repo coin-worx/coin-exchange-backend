@@ -5,6 +5,7 @@
     /// </summary>
     public interface IUserRepository
     {
+        User GetUserById(int id);
         User GetUserByUserName(string username);
         User GetUserByActivationKey(string activationKey);
         User GetUserByEmail(string email);

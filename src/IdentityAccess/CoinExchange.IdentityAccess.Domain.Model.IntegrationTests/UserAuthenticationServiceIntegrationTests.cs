@@ -60,7 +60,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.IntegrationTests
             string secretKey = "1234567";
             string username = "linkinpark";
             // Create System generated Keys and store in repo
-            SecurityKeysPair securityKeysPair = new SecurityKeysPair(apiKey, secretKey, "1", username, true);
+            SecurityKeysPair securityKeysPair = new SecurityKeysPair(apiKey, secretKey, "1", 1, true);
             persistenceRepository.SaveUpdate(securityKeysPair);
             // Create a user and store it in database, this is the user for whom we have created the key
             User user = new User("linkpark@rocknroll.com", username, "abc", "Pakistan", TimeZone.CurrentTimeZone, "", "");
@@ -94,7 +94,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.IntegrationTests
             string secretKey = "1234567";
             string username = "linkinpark";
             // Create System generated Keys and store in repo
-            SecurityKeysPair securityKeysPair = new SecurityKeysPair(apiKey, secretKey, "1", username, true);
+            SecurityKeysPair securityKeysPair = new SecurityKeysPair(apiKey, secretKey, "1", 1, true);
             persistenceRepository.SaveUpdate(securityKeysPair);
             // Create a user and store it in database, this is the user for whom we have created the key
             User user = new User("linkpark@rocknroll.com", username, "abc", "Pakistan", TimeZone.CurrentTimeZone, "", "");
@@ -132,7 +132,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.IntegrationTests
             string secretKey = "1234567";
             string username = "linkinpark";
             // Create System generated Keys and store in repo
-            SecurityKeysPair securityKeysPair = new SecurityKeysPair(apiKey, secretKey, "1", username, true);
+            SecurityKeysPair securityKeysPair = new SecurityKeysPair(apiKey, secretKey, "1", 1, true);
             persistenceRepository.SaveUpdate(securityKeysPair);
             // Create a user and store it in database, this is the user for whom we have created the key
             User user = new User("linkpark@rocknroll.com", username, "abc", "Pakistan", TimeZone.CurrentTimeZone, "", "");
@@ -181,7 +181,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.IntegrationTests
             //SecurityKeysPairFactory.UserGeneratedSecurityPair(username, "1", apiKey, secretKey, true, "",
             //    false, DateTime.Now, false, DateTime.Now, permissionslist, securityKeysRepository);
             
-            SecurityKeysPair securityKeysPair = new SecurityKeysPair("1", apiKey, secretKey, username,
+            SecurityKeysPair securityKeysPair = new SecurityKeysPair("1", apiKey, secretKey, 1,
                 DateTime.Now.AddHours(2), DateTime.Now, DateTime.Now, DateTime.Now, false, permissionslist);
             securityKeysPair.EnableExpirationDate = true;
             persistenceRepository.SaveUpdate(securityKeysPair);
@@ -219,7 +219,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.IntegrationTests
             //SecurityKeysPairFactory.UserGeneratedSecurityPair(username, "1", apiKey, secretKey, true, "",
             //    false, DateTime.Now, false, DateTime.Now, permissionslist, securityKeysRepository);
 
-            SecurityKeysPair securityKeysPair = new SecurityKeysPair("1", apiKey, secretKey, username,
+            SecurityKeysPair securityKeysPair = new SecurityKeysPair("1", apiKey, secretKey, 1,
                 DateTime.Now.AddHours(2), DateTime.Now, DateTime.Now, DateTime.Now, false, permissionslist);
             securityKeysPair.EnableExpirationDate = true;
             persistenceRepository.SaveUpdate(securityKeysPair);
@@ -257,7 +257,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.IntegrationTests
             //SecurityKeysPairFactory.UserGeneratedSecurityPair(username, "1", apiKey, secretKey, true, "",
             //    false, DateTime.Now, false, DateTime.Now, permissionslist, securityKeysRepository);
 
-            SecurityKeysPair securityKeysPair = new SecurityKeysPair("1", apiKey, secretKey, username,
+            SecurityKeysPair securityKeysPair = new SecurityKeysPair("1", apiKey, secretKey, 1,
                 DateTime.Now.AddHours(2), DateTime.Now, DateTime.Now, DateTime.Now, false, permissionslist);
             securityKeysPair.EnableExpirationDate = true;
             persistenceRepository.SaveUpdate(securityKeysPair);
@@ -298,7 +298,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.IntegrationTests
             permissionslist.Add(new SecurityKeysPermission(apiKey, new Permission(PermissionsConstant.Query_Open_Orders,
                 "Query Open Orders"), true));
             // Here we provide the expiration date for the current moment, which will expire instantly
-            SecurityKeysPair securityKeysPair = new SecurityKeysPair("1", apiKey, secretKey, username,
+            SecurityKeysPair securityKeysPair = new SecurityKeysPair("1", apiKey, secretKey, 1,
                 DateTime.Now, DateTime.Now, DateTime.Now, DateTime.Now, false, permissionslist);
             securityKeysPair.EnableExpirationDate = true;
             persistenceRepository.SaveUpdate(securityKeysPair);
@@ -342,7 +342,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.IntegrationTests
             permissionslist.Add(new SecurityKeysPermission(apiKey, new Permission(PermissionsConstant.Query_Closed_Orders,
                 "Query Closed Orders"), true));
             // Here we provide the expiration date for the current moment, which will expire instantly
-            SecurityKeysPair securityKeysPair = new SecurityKeysPair("1", apiKey, secretKey, username,
+            SecurityKeysPair securityKeysPair = new SecurityKeysPair("1", apiKey, secretKey, 1,
                 DateTime.Now, DateTime.Now, DateTime.Now, DateTime.Now, false, permissionslist);
             securityKeysPair.EnableExpirationDate = true;
             persistenceRepository.SaveUpdate(securityKeysPair);
@@ -386,7 +386,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.IntegrationTests
             permissionslist.Add(new SecurityKeysPermission(apiKey, new Permission(PermissionsConstant.Cancel_Order,
                 "Cancel Orders"), true));
             // Here we provide the expiration date for the current moment, which will expire instantly
-            SecurityKeysPair securityKeysPair = new SecurityKeysPair("1", apiKey, secretKey, username,
+            SecurityKeysPair securityKeysPair = new SecurityKeysPair("1", apiKey, secretKey, 1,
                 DateTime.Now, DateTime.Now, DateTime.Now, DateTime.Now, false, permissionslist);
             securityKeysPair.EnableExpirationDate = true;
             persistenceRepository.SaveUpdate(securityKeysPair);
@@ -429,7 +429,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.IntegrationTests
             permissionslist.Add(new SecurityKeysPermission(apiKey, new Permission(PermissionsConstant.Query_Open_Orders,
                 "Query Open Orders"), true));
             // Here we provide the expiration date for the current moment, which will expire instantly
-            SecurityKeysPair securityKeysPair = new SecurityKeysPair("1", apiKey, secretKey, username + 1,
+            SecurityKeysPair securityKeysPair = new SecurityKeysPair("1", apiKey, secretKey, 1 + 1,
                 DateTime.Now, DateTime.Now, DateTime.Now, DateTime.Now, false, permissionslist);
             securityKeysPair.EnableExpirationDate = true;
             persistenceRepository.SaveUpdate(securityKeysPair);

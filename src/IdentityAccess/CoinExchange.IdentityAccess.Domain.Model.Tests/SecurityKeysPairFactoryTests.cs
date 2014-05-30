@@ -15,9 +15,9 @@ namespace CoinExchange.IdentityAccess.Domain.Model.Tests
         [Category("Unit")]
         public void CreateSystemGeneratedSecurityKeysPair_IfUserNameIsProvided_TheSecurityPairShouldHaveBeenCreated()
         {
-            SecurityKeysPair pair = SecurityKeysPairFactory.SystemGeneratedSecurityKeyPair("user1",this);
+            SecurityKeysPair pair = SecurityKeysPairFactory.SystemGeneratedSecurityKeyPair(1,this);
             Assert.NotNull(pair);
-            Assert.AreEqual(pair.UserName, "user1");
+            Assert.AreEqual(pair.UserId,1);
             Assert.AreEqual(pair.SystemGenerated, true);
             Assert.IsNotNullOrEmpty(pair.ApiKey);
             Assert.IsNotNullOrEmpty(pair.SecretKey);
@@ -25,23 +25,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.Tests
             Assert.IsNotNullOrEmpty(pair.CreationDateTime.ToString());
         }
 
-        [Test]
-        [Category("Unit")]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void CreateSystemGeneratedSecurityKeysPair_IfUserNameIsEmpty_ArgumentNullExceptionShouldReceived()
-        {
-            SecurityKeysPair pair = SecurityKeysPairFactory.SystemGeneratedSecurityKeyPair("",this);
-        }
-
-        [Test]
-        [Category("Unit")]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void CreateSystemGeneratedSecurityKeysPair_IfUserNameIsNull_ArgumentNullExceptionShouldReceived()
-        {
-            SecurityKeysPair pair = SecurityKeysPairFactory.SystemGeneratedSecurityKeyPair(null,this);
-        }
-
-        /// <summary>
+       /// <summary>
         /// Stub Interface implementation
         /// </summary>
         /// <returns></returns>
