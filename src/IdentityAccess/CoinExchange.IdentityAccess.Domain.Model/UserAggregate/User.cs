@@ -147,6 +147,19 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         }
 
         /// <summary>
+        /// Update tier 1 information
+        /// </summary>
+        public void UpdateTier1Information(string city, string state, string addressLine1, string addressLine2,
+            string zipCode)
+        {
+            City = city;
+            State = state;
+            Address1 = addressLine1;
+            Address2 = addressLine2;
+            ZipCode = int.Parse(zipCode);
+        }
+
+        /// <summary>
         /// Get user speific tier level status
         /// </summary>
         /// <param name="tier"></param>
@@ -352,5 +365,25 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         /// Validity Period of the latest ForgotPasswordCode
         /// </summary>
         public DateTime? ForgotPasswordCodeExpiration { get; private set; }
+
+        /// <summary>
+        /// City
+        /// </summary>
+        public string City { get; private set; }
+
+        /// <summary>
+        /// Zip code
+        /// </summary>
+        public int ZipCode { get; private set; }
+
+        /// <summary>
+        /// SSN for US citizens only
+        /// </summary>
+        public string SocialSecurityNumber { get; private set; }
+
+        /// <summary>
+        /// Government Issued ID number
+        /// </summary>
+        public string NationalIdentificationNumber { get; private set; }
     }
 }

@@ -68,6 +68,7 @@
     <Compile Include="UserServices\IUserApplicationService.cs" />
     <Compile Include="UserServices\IUserTierLevelApplicationService.cs" />
     <Compile Include="UserServices\UserApplicationService.cs" />
+    <Compile Include="UserServices\UserTierLevelApplicationService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Common\CoinExchange.Common\CoinExchange.Common.csproj">

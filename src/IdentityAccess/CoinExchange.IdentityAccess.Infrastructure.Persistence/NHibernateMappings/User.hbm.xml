@@ -21,6 +21,10 @@ assembly="CoinExchange.IdentityAccess.Domain.Model" namespace="CoinExchange.Iden
     <property name="Deleted" column="Deleted"/>
     <property name="ForgotPasswordCode" column="ForgotPasswordCode"/>
     <property name="ForgotPasswordCodeExpiration" column="ForgotPasswordCodeExpiration"/>
+    <property name="City" column="City"/>
+    <property name="ZipCode" column="ZipCode"/>
+    <property name="SocialSecurityNumber" column="SocialSecurityNumber"/>
+    <property name="NationalIdentificationNumber" column="NationalIdentificationNumber"/>
     <component name="IsUserBlocked">
       <property name="Value" column="IsUserBlocked"/>
     </component>

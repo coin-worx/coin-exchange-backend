@@ -199,6 +199,10 @@ CREATE TABLE `user` (
   `Deleted` tinyint(1) DEFAULT NULL,
   `ForgotPasswordCode` varchar(100) DEFAULT NULL,
   `ForgotPasswordCodeExpiration` datetime DEFAULT NULL,
+  `City` varchar(50) DEFAULT NULL,
+  `ZipCode` int(11) DEFAULT NULL,
+  `SocialSecurityNumber` varchar(50) DEFAULT NULL,
+  `NationalIdentificationNumber` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`UserName`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 

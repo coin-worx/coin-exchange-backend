@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CoinExchange.Common.Domain.Model;
 
 namespace CoinExchange.IdentityAccess.Application.UserServices.Commands
 {
@@ -21,6 +22,8 @@ namespace CoinExchange.IdentityAccess.Application.UserServices.Commands
         /// <param name="systemGeneratedApiKey"></param>
         public VerifyTier1Command(string phoneNumber, string systemGeneratedApiKey)
         {
+            AssertionConcern.AssertNullOrEmptyString(systemGeneratedApiKey,"Api key must be provided");
+            AssertionConcern.AssertNullOrEmptyString(phoneNumber, "Phone number cannot be null or empty");
             PhoneNumber = phoneNumber;
             SystemGeneratedApiKey = systemGeneratedApiKey;
         }
