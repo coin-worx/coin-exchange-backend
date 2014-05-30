@@ -53,16 +53,16 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
         public void ChangePasswordSuccessTest_ChecksIfThePasswordIsChangedSuccessfully_VerifiesThroughTheReturnedValue()
         {
             IUserApplicationService userApplicationService = (IUserApplicationService)_applicationContext["UserApplicationService"];
-            IRegistrationApplicationService registrationApplicationService =
-                (IRegistrationApplicationService)_applicationContext["RegistrationApplicationService"];
-            ILoginApplicationService loginApplicationService =
-                (ILoginApplicationService)_applicationContext["LoginApplicationService"];
-
-            IUserRepository userRepository =
-                (IUserRepository)_applicationContext["UserRepository"];
+            IRegistrationApplicationService registrationApplicationService = (IRegistrationApplicationService)_applicationContext["RegistrationApplicationService"];
+            ILoginApplicationService loginApplicationService = (ILoginApplicationService)_applicationContext["LoginApplicationService"];
+           
+            IUserRepository userRepository = (IUserRepository)_applicationContext["UserRepository"];
             
             string username = "linkinpark";
-            registrationApplicationService.CreateAccount(new SignupUserCommand("linkinpark@rock.com", "linkinpark", "burnitdown", "USA", TimeZone.CurrentTimeZone, ""));
+            string activatioNKey = registrationApplicationService.CreateAccount(new SignupUserCommand("linkinpark@rock.com", "linkinpark", "burnitdown", "USA", TimeZone.CurrentTimeZone, ""));
+            ManualResetEvent manualResetEvent = new ManualResetEvent(false);
+            userApplicationService.ActivateAccount(activatioNKey, username, "burnitdown");
+            manualResetEvent.WaitOne(6000);
             UserValidationEssentials validationEssentials = loginApplicationService.Login(new LoginCommand(username, "burnitdown"));
             
             User userBeforePasswordChange = userRepository.GetUserByUserName("linkinpark");
@@ -94,7 +94,10 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
                 (IUserRepository)_applicationContext["UserRepository"];
             
             string username = "linkinpark";
-            registrationApplicationService.CreateAccount(new SignupUserCommand("linkinpark@rock.com", "linkinpark", "burnitdown", "USA", TimeZone.CurrentTimeZone, ""));
+            string activationKey = registrationApplicationService.CreateAccount(new SignupUserCommand("linkinpark@rock.com", "linkinpark", "burnitdown", "USA", TimeZone.CurrentTimeZone, ""));
+            ManualResetEvent manualResetEvent = new ManualResetEvent(false);
+            userApplicationService.ActivateAccount(activationKey, username, "burnitdown");
+            manualResetEvent.WaitOne(6000);
             UserValidationEssentials validationEssentials = loginApplicationService.Login(new LoginCommand(username, "burnitdown"));
 
             User userBeforePasswordChange = userRepository.GetUserByUserName("linkinpark");
@@ -123,7 +126,10 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             IUserRepository userRepository = (IUserRepository)_applicationContext["UserRepository"];
 
             string username = "linkinpark";
-            registrationApplicationService.CreateAccount(new SignupUserCommand("linkinpark@rock.com", "linkinpark", "burnitdown", "USA", TimeZone.CurrentTimeZone, ""));
+            string activationKey = registrationApplicationService.CreateAccount(new SignupUserCommand("linkinpark@rock.com", "linkinpark", "burnitdown", "USA", TimeZone.CurrentTimeZone, ""));
+            ManualResetEvent manualResetEvent = new ManualResetEvent(false);
+            userApplicationService.ActivateAccount(activationKey, username, "burnitdown");
+            manualResetEvent.WaitOne(6000);
             UserValidationEssentials validationEssentials = loginApplicationService.Login(new LoginCommand(username, "burnitdown"));
 
             User userBeforePasswordChange = userRepository.GetUserByUserName("linkinpark");
@@ -157,7 +163,10 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             IUserRepository userRepository = (IUserRepository)_applicationContext["UserRepository"];
 
             string username = "linkinpark";
-            registrationApplicationService.CreateAccount(new SignupUserCommand("linkinpark@rock.com", "linkinpark", "burnitdown", "USA", TimeZone.CurrentTimeZone, ""));
+            string activationKey = registrationApplicationService.CreateAccount(new SignupUserCommand("linkinpark@rock.com", "linkinpark", "burnitdown", "USA", TimeZone.CurrentTimeZone, ""));
+            ManualResetEvent manualResetEvent = new ManualResetEvent(false);
+            userApplicationService.ActivateAccount(activationKey, username, "burnitdown");
+            manualResetEvent.WaitOne(6000);
             UserValidationEssentials validationEssentials = loginApplicationService.Login(new LoginCommand(username, "burnitdown"));
 
             User userBeforePasswordChange = userRepository.GetUserByUserName("linkinpark");
@@ -192,7 +201,10 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             IUserRepository userRepository = (IUserRepository)_applicationContext["UserRepository"];
 
             string username = "linkinpark";
-            registrationApplicationService.CreateAccount(new SignupUserCommand("linkinpark@rock.com", "linkinpark", "burnitdown", "USA", TimeZone.CurrentTimeZone, ""));
+            string activationKey = registrationApplicationService.CreateAccount(new SignupUserCommand("linkinpark@rock.com", "linkinpark", "burnitdown", "USA", TimeZone.CurrentTimeZone, ""));
+            ManualResetEvent manualResetEvent = new ManualResetEvent(false);
+            userApplicationService.ActivateAccount(activationKey, username, "burnitdown");
+            manualResetEvent.WaitOne(6000);
             UserValidationEssentials validationEssentials = loginApplicationService.Login(new LoginCommand(username, "burnitdown"));
 
             User userBeforePasswordChange = userRepository.GetUserByUserName("linkinpark");
@@ -226,19 +238,22 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             IUserRepository userRepository = (IUserRepository)_applicationContext["UserRepository"];
 
             string username = "linkinpark";
-            registrationApplicationService.CreateAccount(new SignupUserCommand("linkinpark@rock.com", "linkinpark", "burnitdown", "USA", TimeZone.CurrentTimeZone, ""));
+            string activationKey = registrationApplicationService.CreateAccount(new SignupUserCommand("linkinpark@rock.com", "linkinpark", "burnitdown", "USA", TimeZone.CurrentTimeZone, ""));
+            ManualResetEvent manualResetEvent = new ManualResetEvent(false);
+            userApplicationService.ActivateAccount(activationKey, username, "burnitdown");
+            manualResetEvent.WaitOne(6000);
             UserValidationEssentials validationEssentials = loginApplicationService.Login(new LoginCommand(username, "burnitdown"));
 
             User userBeforePasswordChange = userRepository.GetUserByUserName("linkinpark");
             string passwordBeforeChange = userBeforePasswordChange.Password;
             UserValidationEssentials validationEssentials2 = new UserValidationEssentials(new Tuple<ApiKey, SecretKey>(
-                validationEssentials.ApiKey, validationEssentials.SecretKey), new TimeSpan(0, 0, 0, 2));
+                validationEssentials.ApiKey, validationEssentials.SecretKey), new TimeSpan(0, 0, 0, 0, 1));
             User userByUserName = userRepository.GetUserByUserName(username);
             // When the User's Logout time and ValidationEssentials Logout time won't match, test will fail
-            userByUserName.AutoLogout = new TimeSpan(0, 0, 0, 2);
+            userByUserName.AutoLogout = new TimeSpan(0, 0, 0, 0, 1);
             persistenceRepository.SaveUpdate(userByUserName);
             // Give the wrong API Key
-            userApplicationService.ChangePassword(new ChangePasswordCommand(validationEssentials2, "burnitdowner",
+            userApplicationService.ChangePassword(new ChangePasswordCommand(validationEssentials2, "burnitdown",
                                                       "burnitdowntwice"));
             User userAfterPasswordChange = userRepository.GetUserByUserName("linkinpark");
             string passwordAfterChange = userAfterPasswordChange.Password;
@@ -260,7 +275,9 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             ManualResetEvent manualResetEvent = new ManualResetEvent(false);
             string username = "linkinpark";
             string email = "waqas.syed@hotmail.com";
-            registrationApplicationService.CreateAccount(new SignupUserCommand(email, username, "burnitdown", "USA", TimeZone.CurrentTimeZone, ""));
+            string activationKey = registrationApplicationService.CreateAccount(new SignupUserCommand(email, username, "burnitdown", "USA", TimeZone.CurrentTimeZone, ""));
+
+            userApplicationService.ActivateAccount(activationKey, username, "burnitdown");
             // Wait for the asynchrnous email sending event to be completed otherwise no more emails can be sent until
             // this operation finishes
             manualResetEvent.WaitOne(6000);
@@ -283,10 +300,9 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             ManualResetEvent manualResetEvent = new ManualResetEvent(false);
             string username = "linkinpark";
             string email = "waqas.syed@hotmail.com";
-            registrationApplicationService.CreateAccount(new SignupUserCommand(email, username, "burnitdown", "USA", TimeZone.CurrentTimeZone, ""));
-            // Wait for the asynchrnous email sending event to be completed otherwise no mre emails can be sent until
-            // this operation finishes
-            manualResetEvent.WaitOne(5000);
+            string activationKey = registrationApplicationService.CreateAccount(new SignupUserCommand(email, username, "burnitdown", "USA", TimeZone.CurrentTimeZone, ""));
+            userApplicationService.ActivateAccount(activationKey, username, "burnitdown");
+            manualResetEvent.WaitOne(6000);
 
             userApplicationService.ForgotUsername(email + "1");
         }

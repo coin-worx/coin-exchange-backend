@@ -54,20 +54,24 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
             // Get the SecurityKeyspair instance related to this API Key
             SecurityKeysPair securityKeysPair = _securityKeysRepository.GetByApiKey(changePasswordCommand.UserValidationEssentials.ApiKey.Value);
 
+            // See if the SecurityKeysPair instance exists for this API Key
             if (securityKeysPair != null)
             {
                 // Get the User by specifying the Username in the SecurityKeysPair instance
                 User user = _userRepository.GetUserByUserName(securityKeysPair.UserName);
                 if (user != null)
                 {
+                    // The Session Logout time and the given session logout time must be the same
                     if (user.AutoLogout == changePasswordCommand.UserValidationEssentials.SessionLogoutTime)
                     {
-                        if (securityKeysPair.CreationDateTime.Add(changePasswordCommand.UserValidationEssentials.SessionLogoutTime) >
-                            DateTime.Now)
+                        // Make sure the session has not expired
+                        if (securityKeysPair.CreationDateTime.Add(user.AutoLogout) > DateTime.Now)
                         {
+                            // Check if the old password is the same as new one
                             if (_passwordEncryptionService.VerifyPassword(changePasswordCommand.OldPassword,
                                                                           user.Password))
                             {
+                                // Create new password and save for the user in the database
                                 string newEncryptedPassword =
                                     _passwordEncryptionService.EncryptPassword(changePasswordCommand.NewPassword);
                                 user.Password = newEncryptedPassword;
@@ -122,16 +126,29 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
                     if (username == user.Username &&
                         _passwordEncryptionService.VerifyPassword(password, user.Password))
                     {
-                        // Mark that this user is now activated
-                        user.IsActivationKeyUsed = new IsActivationKeyUsed(true);
-                        user.IsUserBlocked = new IsUserBlocked(false);
-                        //update user's tier0 status to verified
-                        user.UpdateTierStatus(TierLevelConstant.Tier0, Status.Verified);
+                        // Activate the user only it either the activationKeyUser VO is null, or if the activation key has not been used
+                        if (user.IsActivationKeyUsed == null || (user.IsActivationKeyUsed != null && !user.IsActivationKeyUsed.Value))
+                        {
+                            // Mark that this user is now activated
+                            user.IsActivationKeyUsed = new IsActivationKeyUsed(true);
+                            user.IsUserBlocked = new IsUserBlocked(false);
+                            //update user's tier0 status to verified
+                            user.UpdateTierStatus(TierLevelConstant.Tier0, Status.Verified);
 
-                        // Update the user instance in repository
-                        _persistenceRepository.SaveUpdate(user);
-                        _emailService.SendWelcomeEmail(user.Email, user.Username);
-                        return true;
+                            // Update the user instance in repository
+                            _persistenceRepository.SaveUpdate(user);
+                            _emailService.SendWelcomeEmail(user.Email, user.Username);
+                            return true;
+                        }
+                        else
+                        {
+                            // ToDo: Send email to user that someone tried to re-activated their account.
+                            throw new Exception("The activation key has already been used ");
+                        }
+                    }
+                    else
+                    {
+                        throw new InvalidCredentialException("Invalid Username or Password.");
                     }
                 }
                 else
@@ -190,6 +207,12 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
                 // If activation key is valid, proceed to verify username and password
                 if (user != null)
                 {
+                    if (!user.IsActivationKeyUsed.Value)
+                    {
+                        throw new InvalidOperationException("Account is not activated yet. In case you have forgotten your " +
+                                                            "username, you can cancel your account activation" +
+                                                            " and then sing up for an account again.");
+                    }
                     return user.Username;
                 }
                 else
@@ -221,6 +244,12 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
                 // If activation key is valid, proceed to verify username and password
                 if (user != null)
                 {
+                    if (!user.IsActivationKeyUsed.Value)
+                    {
+                        throw new InvalidOperationException("Account is not activated yet. In case you have forgotten your " +
+                                                            "password, you can cancel your account activation" +
+                                                            " and then sing up for an account again.");
+                    }
                     if (user.Username.Equals(username))
                     {
                         string newForgotPasswordCode = _passwordCodeGenerationService.CreateNewForgotPasswordCode();

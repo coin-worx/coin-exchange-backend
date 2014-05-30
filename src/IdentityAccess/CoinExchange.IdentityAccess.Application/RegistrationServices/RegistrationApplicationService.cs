@@ -23,18 +23,21 @@ namespace CoinExchange.IdentityAccess.Application.RegistrationServices
         private IActivationKeyGenerationService _activationKeyGenerationService;
         private IEmailService _emailService;
         private ITierRepository _tierRepository;
+        private IUserRepository _userRepository;
+
         /// <summary>
         /// Parameterized Constructor
         /// </summary>
         public RegistrationApplicationService(IIdentityAccessPersistenceRepository persistenceRepository, 
         IPasswordEncryptionService passwordEncryptionService, IActivationKeyGenerationService activationKeyGenerationService
-            , IEmailService emailService,ITierRepository tierRepository)
+            , IEmailService emailService, ITierRepository tierRepository, IUserRepository userRepository)
         {
             _persistenceRepository = persistenceRepository;
             _passwordEncryptionService = passwordEncryptionService;
             _activationKeyGenerationService = activationKeyGenerationService;
             _emailService = emailService;
             _tierRepository = tierRepository;
+            _userRepository = userRepository;
         }
 
         /// <summary>
@@ -49,6 +52,17 @@ namespace CoinExchange.IdentityAccess.Application.RegistrationServices
                 !string.IsNullOrEmpty(signupUserCommand.Username) && 
                 !string.IsNullOrEmpty(signupUserCommand.Password))
             {
+                User userByUserName = _userRepository.GetUserByUserName(signupUserCommand.Username);
+                if (userByUserName != null)
+                {
+                    throw new InvalidOperationException("Username already exists. Operation aborted");
+                }
+                User userByEmail = _userRepository.GetUserByEmail(signupUserCommand.Email);
+                if (userByEmail != null)
+                {
+                    throw new InvalidOperationException("Email already exists. Operation aborted.");
+                }
+
                 // Hash the Password
                 string hashedPassword = _passwordEncryptionService.EncryptPassword(signupUserCommand.Password);
                 // Generate new activation key

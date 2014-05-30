@@ -39,7 +39,14 @@ namespace CoinExchange.IdentityAccess.Application.Tests
         /// <returns></returns>
         public User GetUserByActivationKey(string activationKey)
         {
-            throw new NotImplementedException();
+            foreach (var user in _userList)
+            {
+                if (user.ActivationKey == activationKey)
+                {
+                    return user;
+                }
+            }
+            return null;
         }
 
         /// <summary>
@@ -86,7 +93,8 @@ namespace CoinExchange.IdentityAccess.Application.Tests
         /// <returns></returns>
         public bool DeleteUser(User user)
         {
-            throw new NotImplementedException();
+            _userList.Remove(user);
+            return true;
         }
     }
 }

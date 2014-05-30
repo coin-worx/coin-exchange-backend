@@ -33,6 +33,9 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         //default constructor
         public User()
         {
+            IsActivationKeyUsed = new IsActivationKeyUsed(false);
+            IsUserBlocked = new IsUserBlocked(false);
+
             _forgottenPasswordCodesList=new List<PasswordCodeRecord>();
             _tierLevelStatuses=new List<UserTierLevelStatus>();
         }
@@ -58,6 +61,8 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
             _timeZone = timeZone;
             _activationKey = activationKey;
             _autoLogout = new TimeSpan(0,0,10,0);
+            IsActivationKeyUsed = new IsActivationKeyUsed(false);
+            IsUserBlocked = new IsUserBlocked(false);
 
             _tierLevelStatuses=new List<UserTierLevelStatus>();
             _userDocumentsList = new UserDocumentsList();
@@ -97,6 +102,8 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
             PhoneNumber = phoneNumber;
             State = state;
             ActivationKey = activationKey;
+            IsActivationKeyUsed = new IsActivationKeyUsed(false);
+            IsUserBlocked = new IsUserBlocked(false);
 
             _forgottenPasswordCodesList = new List<PasswordCodeRecord>();
             _tierLevelStatuses=new List<UserTierLevelStatus>();

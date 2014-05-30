@@ -38,5 +38,22 @@ namespace CoinExchange.IdentityAccess.Application.Tests
                 usersList.Add(entity as User);
             }
         }
+
+        public User GetUser(string username)
+        {
+            foreach (var user in usersList)
+            {
+                if (user.Username == username)
+                {
+                    return user;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Users
+        /// </summary>
+        public List<User> Users { get; set; }
     }
 }

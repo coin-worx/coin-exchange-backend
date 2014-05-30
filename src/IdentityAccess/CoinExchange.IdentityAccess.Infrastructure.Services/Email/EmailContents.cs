@@ -83,7 +83,7 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Services.Email
         /// <returns></returns>
         public static string GetForgotPasswordMessage(string passwordResetLink)
         {
-            return string.Format("{0} {1} {2} {3} {4}", Greetings, ForgotPasswordStart, passwordResetLink, Regards);
+            return string.Format("{0} {1} {2} {3}", Greetings, ForgotPasswordStart, passwordResetLink, Regards);
         }
 
         /// <summary>

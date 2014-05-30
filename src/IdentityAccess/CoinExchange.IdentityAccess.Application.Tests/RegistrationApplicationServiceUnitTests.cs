@@ -37,7 +37,8 @@ namespace CoinExchange.IdentityAccess.Application.Tests
         {
             IIdentityAccessPersistenceRepository persistenceRepository = new MockPersistenceRepository(false);
             RegistrationApplicationService registrationApplicationService = new RegistrationApplicationService(persistenceRepository, 
-                new PasswordEncryptionService(), new ActivationKeyGenerationService(), new MockEmailService(),new MockTierRepository());
+                new PasswordEncryptionService(), new ActivationKeyGenerationService(), new MockEmailService(),
+                new MockTierRepository(), new MockUserRepository());
 
             string activationKey = registrationApplicationService.CreateAccount(
                 new SignupUserCommand("testdriven@agile.com", "iamnotmartinfowler", "butiamjohnskeet", "ProgrammingNation", 
@@ -53,7 +54,8 @@ namespace CoinExchange.IdentityAccess.Application.Tests
         {
             IIdentityAccessPersistenceRepository persistenceRepository = new MockPersistenceRepository(false);
             RegistrationApplicationService registrationApplicationService = new RegistrationApplicationService(persistenceRepository,
-                new PasswordEncryptionService(), new ActivationKeyGenerationService(), new MockEmailService(),new MockTierRepository());
+                new PasswordEncryptionService(), new ActivationKeyGenerationService(), new MockEmailService(),new MockTierRepository(),
+                new MockUserRepository());
             bool exceptionRaised = false;
             try
             {
@@ -75,7 +77,8 @@ namespace CoinExchange.IdentityAccess.Application.Tests
         {
             IIdentityAccessPersistenceRepository persistenceRepository = new MockPersistenceRepository(false);
             RegistrationApplicationService registrationApplicationService = new RegistrationApplicationService(persistenceRepository,
-                new PasswordEncryptionService(), new ActivationKeyGenerationService(), new MockEmailService(),new MockTierRepository());
+                new PasswordEncryptionService(), new ActivationKeyGenerationService(), new MockEmailService(),
+                new MockTierRepository(), new MockUserRepository());
             registrationApplicationService.CreateAccount(
                 new SignupUserCommand("testdriven@agile.com", null, "iammartinfowler", "ProgrammingNation",
                     TimeZone.CurrentTimeZone, ""));
@@ -87,7 +90,8 @@ namespace CoinExchange.IdentityAccess.Application.Tests
         {
             IIdentityAccessPersistenceRepository persistenceRepository = new MockPersistenceRepository(false);
             RegistrationApplicationService registrationApplicationService = new RegistrationApplicationService(persistenceRepository,
-                new PasswordEncryptionService(), new ActivationKeyGenerationService(), new MockEmailService(),new MockTierRepository());
+                new PasswordEncryptionService(), new ActivationKeyGenerationService(), new MockEmailService(),
+                new MockTierRepository(), new MockUserRepository());
 
             bool exceptionRaised = false;
             try
@@ -110,7 +114,8 @@ namespace CoinExchange.IdentityAccess.Application.Tests
             // Provide true to the Mock class  so that it raises exception when SaveUpdate method is called inside it
             IIdentityAccessPersistenceRepository persistenceRepository = new MockPersistenceRepository(true);
             RegistrationApplicationService registrationApplicationService = new RegistrationApplicationService(persistenceRepository,
-                new PasswordEncryptionService(), new ActivationKeyGenerationService(), new MockEmailService(),new MockTierRepository());
+                new PasswordEncryptionService(), new ActivationKeyGenerationService(), new MockEmailService(),
+                new MockTierRepository(), new MockUserRepository());
 
             bool exceptionRaised = false;
             try
