@@ -5,6 +5,8 @@ using CoinExchange.IdentityAccess.Application.AccessControlServices;
 using CoinExchange.IdentityAccess.Application.AccessControlServices.Commands;
 using CoinExchange.IdentityAccess.Application.RegistrationServices;
 using CoinExchange.IdentityAccess.Application.RegistrationServices.Commands;
+using CoinExchange.IdentityAccess.Application.UserServices;
+using CoinExchange.IdentityAccess.Application.UserServices.Commands;
 using CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate;
 using CoinExchange.IdentityAccess.Domain.Model.UserAggregate;
 using NUnit.Framework;
@@ -51,7 +53,6 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             ILoginApplicationService loginApplicationService = (ILoginApplicationService)_applicationContext["LoginApplicationService"];
             Assert.IsNotNull(loginApplicationService);
             IRegistrationApplicationService registrationService = (IRegistrationApplicationService)_applicationContext["RegistrationApplicationService"]; ;
-            IUserRepository userRepository = (IUserRepository)_applicationContext["UserRepository"];
 
             string username = "Bob";
             string password = "alice";
@@ -59,6 +60,16 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
                 "bob@alice.com", username, password, "Wonderland", TimeZone.CurrentTimeZone, ""));
 
             Assert.IsNotNull(activationKey);
+
+            IUserApplicationService userApplicationService = (IUserApplicationService)_applicationContext["UserApplicationService"];
+            IUserRepository userRepository = (IUserRepository)_applicationContext["UserRepository"];
+
+            bool accountActivated = userApplicationService.ActivateAccount(new ActivationCommand(activationKey, username, password));
+
+            Assert.IsTrue(accountActivated);
+            User userByUserName = userRepository.GetUserByUserName(username);
+            Assert.IsNotNull(userByUserName);
+            Assert.IsTrue(userByUserName.IsActivationKeyUsed.Value);
 
             UserValidationEssentials userValidationEssentials = loginApplicationService.Login(new LoginCommand("Bob", "alice"));
             Assert.IsNotNull(userValidationEssentials);

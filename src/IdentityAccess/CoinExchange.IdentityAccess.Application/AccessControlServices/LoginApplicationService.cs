@@ -41,24 +41,40 @@ namespace CoinExchange.IdentityAccess.Application.AccessControlServices
         /// <returns></returns>
         public UserValidationEssentials Login(LoginCommand loginCommand)
         {
-            User user = _userRepository.GetUserByUserName(loginCommand.Username);
-            if (user != null)
+            if (loginCommand != null && 
+                !string.IsNullOrEmpty(loginCommand.Username) &&
+                !string.IsNullOrEmpty(loginCommand.Password))
             {
-                if(_passwordEncryptionService.VerifyPassword(loginCommand.Password, user.Password))
+                User user = _userRepository.GetUserByUserName(loginCommand.Username);
+                if (user != null)
                 {
-                    Tuple<ApiKey, SecretKey> securityKeys = _securityKeysApplicationService.CreateSystemGeneratedKey(user.Id);
-                    user.LastLogin = DateTime.Now;
-                    _persistenceRepository.SaveUpdate(user);
-                    return new UserValidationEssentials(securityKeys, user.AutoLogout);
+                    if (!user.IsActivationKeyUsed.Value)
+                    {
+                        throw new InvalidOperationException(
+                            "This account is not yet activated. Please activate the account before trying to login.");
+                    }
+                    if (_passwordEncryptionService.VerifyPassword(loginCommand.Password, user.Password))
+                    {
+                        Tuple<ApiKey, SecretKey> securityKeys =
+                            _securityKeysApplicationService.CreateSystemGeneratedKey(user.Id);
+                        user.LastLogin = DateTime.Now;
+                        _persistenceRepository.SaveUpdate(user);
+                        return new UserValidationEssentials(securityKeys, user.AutoLogout);
+                    }
+                    else
+                    {
+                        throw new InvalidCredentialException(string.Format("Incorrect password for username: {0}",
+                                                                           loginCommand.Username));
+                    }
                 }
                 else
                 {
-                    throw new InvalidCredentialException(string.Format("Incorrect password for username: {0}", loginCommand.Username));
+                    throw new InvalidCredentialException(string.Format("Invalid username: {0}", loginCommand.Username));
                 }
             }
             else
             {
-                throw new InvalidCredentialException(string.Format("Invalid username: {0}", loginCommand.Username));
+                throw new InvalidCredentialException("Invalid Username and/or Password.");
             }
         }
     }
