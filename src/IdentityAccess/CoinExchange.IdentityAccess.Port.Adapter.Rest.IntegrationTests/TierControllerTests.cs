@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Results;
@@ -121,6 +122,25 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
         [Category("Integration")]
         public void ApplyForTier3_IfCallIsValid_Tier3StatusWillBeChangedToPreVerified()
         {
+            UserValidationEssentials essentials = AccessControlUtility.RegisterAndLogin("user", "user@user.com", "123", _applicationContext);
+            TierController tierController = _applicationContext["TierController"] as TierController;
+            tierController.Request = new HttpRequestMessage(HttpMethod.Post, "");
+            tierController.Request.Headers.Add("Auth", essentials.ApiKey.Value);
+            tierController.GetVerifyForTier1("667778899");
+            tierController.GetVerifyForTier2(new Tier2Param("asd", "", "", "punjab", "Isb", "123"));
+            var content = new MultipartFormDataContent();
+            content.Add(new StreamContent(new FileStream(@"C:\Logs\Logs.txt", FileMode.Open)));
+            tierController.Request.Content = content;
+            tierController.GetVerifyForTier3(new Tier3Param("asd", "123", "bill", "logs.txt"));
+            ManualResetEvent resetEvent=new ManualResetEvent(false);
+            resetEvent.WaitOne(10000);
+            IHttpActionResult httpActionResult = tierController.GetTierStatuses();
+            OkNegotiatedContentResult<UserTierStatusRepresentation[]> statuses = (OkNegotiatedContentResult<UserTierStatusRepresentation[]>)httpActionResult;
+            Assert.AreEqual(statuses.Content.Length, 5);
+            Assert.AreEqual(statuses.Content[0].Status, Status.Verified.ToString());
+            Assert.AreEqual(statuses.Content[1].Status, Status.Preverified.ToString());
+            Assert.AreEqual(statuses.Content[2].Status, Status.Preverified.ToString());
+            Assert.AreEqual(statuses.Content[3].Status, Status.Preverified.ToString());
         }
     }
 }
