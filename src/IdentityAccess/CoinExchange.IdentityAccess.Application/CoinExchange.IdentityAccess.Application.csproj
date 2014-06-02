@@ -50,7 +50,7 @@
     <Compile Include="AccessControlServices\LogoutApplicationService.cs" />
     <Compile Include="SecurityKeysServices\Commands\CreateUserGeneratedSecurityKeyPair.cs" />
     <Compile Include="SecurityKeysServices\Commands\UpdateUserGeneratedSecurityKeyPair.cs" />
-    <Compile Include="SecurityKeysServices\SecurityKeyPermissionsRepresentation.cs" />
+    <Compile Include="SecurityKeysServices\Representations\SecurityKeyPermissionsRepresentation.cs" />
     <Compile Include="SecurityKeysServices\SecurityKeysApplicationService.cs" />
     <Compile Include="SecurityKeysServices\ISecurityKeysApplicationService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -68,6 +68,7 @@
     <Compile Include="UserServices\Commands\VerifyTier2Command.cs" />
     <Compile Include="UserServices\IUserApplicationService.cs" />
     <Compile Include="UserServices\IUserTierLevelApplicationService.cs" />
+    <Compile Include="UserServices\Representations\UserTierStatusRepresentation.cs" />
     <Compile Include="UserServices\UserApplicationService.cs" />
     <Compile Include="UserServices\UserTierLevelApplicationService.cs" />
   </ItemGroup>

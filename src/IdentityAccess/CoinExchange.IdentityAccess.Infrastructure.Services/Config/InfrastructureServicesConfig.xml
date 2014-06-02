@@ -28,4 +28,8 @@
           CoinExchange.IdentityAccess.Infrastructure.Services">
   </object>
 
+  <object id="DocumentPersistence" type="CoinExchange.IdentityAccess.Infrastructure.Services.DocumentPersistence, 
+          CoinExchange.IdentityAccess.Infrastructure.Services">
+  </object>
+
 </objects>

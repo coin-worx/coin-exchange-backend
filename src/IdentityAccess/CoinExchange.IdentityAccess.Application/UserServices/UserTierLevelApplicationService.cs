@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CoinExchange.Common.Domain.Model;
 using CoinExchange.IdentityAccess.Application.UserServices.Commands;
+using CoinExchange.IdentityAccess.Application.UserServices.Representations;
 using CoinExchange.IdentityAccess.Domain.Model.Repositories;
 using CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate;
 using CoinExchange.IdentityAccess.Domain.Model.UserAggregate;
@@ -18,6 +20,7 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
         private IUserRepository _userRepository;
         private ISecurityKeysRepository _securityKeysRepository;
         private IIdentityAccessPersistenceRepository _persistenceRepository;
+        private IDocumentPersistence _documentPersistence;
 
         /// <summary>
         /// parameterized constructor
@@ -25,11 +28,12 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
         /// <param name="userRepository"></param>
         /// <param name="securityKeysRepository"></param>
         /// <param name="persistenceRepository"></param>
-        public UserTierLevelApplicationService(IUserRepository userRepository, ISecurityKeysRepository securityKeysRepository, IIdentityAccessPersistenceRepository persistenceRepository)
+        public UserTierLevelApplicationService(IUserRepository userRepository, ISecurityKeysRepository securityKeysRepository, IIdentityAccessPersistenceRepository persistenceRepository,IDocumentPersistence documentPersistence)
         {
             _userRepository = userRepository;
             _securityKeysRepository = securityKeysRepository;
             _persistenceRepository = persistenceRepository;
+            _documentPersistence = documentPersistence;
         }
 
         /// <summary>
@@ -58,7 +62,7 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
                 SecurityKeysPair securityKeysPair = _securityKeysRepository.GetByApiKey(command.SystemGeneratedApiKey);
                 User user = _userRepository.GetUserById(securityKeysPair.UserId);
                 //update info
-                user.UpdateTier1Information(command.City,command.State,command.AddressLine1,command.AddressLine2,command.ZipCode);
+                user.UpdateTier2Information(command.City,command.State,command.AddressLine1,command.AddressLine2,command.ZipCode);
                 //update tier status
                 user.UpdateTierStatus(TierLevelConstant.Tier2, Status.Preverified);
                 //update user
@@ -72,7 +76,20 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
         /// <param name="command"></param>
         public void ApplyForTier3Verification(VerifyTier3Command command)
         {
-            throw new NotImplementedException();
+            //if (command.ValidateCommand())
+            {
+                SecurityKeysPair securityKeysPair = _securityKeysRepository.GetByApiKey(command.SystemGeneratedApiKey);
+                User user = _userRepository.GetUserById(securityKeysPair.UserId);
+                //update info
+                user.UpdateTier3Information(command.SocialSecurityNumber,command.Nin);
+                //update tier status
+                user.UpdateTierStatus(TierLevelConstant.Tier3, Status.Preverified);
+                UserDocument document = _documentPersistence.PersistDocument(command.FileName,
+                    Constants.USER_DOCUMENT_PATH, command.DocumentStream, command.DocumentType, user.Id);
+                //update user
+                _persistenceRepository.SaveUpdate(user);
+                _persistenceRepository.SaveUpdate(document);
+            }
         }
 
         /// <summary>
@@ -81,6 +98,28 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
         public void ApplyForTier4Verification()
         {
             throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Get user tier status
+        /// </summary>
+        /// <param name="apiKey"></param>
+        /// <returns></returns>
+        public UserTierStatusRepresentation[] GetTierLevelStatuses(string apiKey)
+        {
+            List<UserTierStatusRepresentation> representations=new List<UserTierStatusRepresentation>();
+            SecurityKeysPair keysPair = _securityKeysRepository.GetByApiKey(apiKey);
+            if (keysPair != null)
+            {
+                User user = _userRepository.GetUserById(keysPair.UserId);
+                UserTierLevelStatus[] getLevelStatuses = user.GetAllTiersStatus();
+                for (int i = 0; i < getLevelStatuses.Length; i++)
+                {
+                    representations.Add(new UserTierStatusRepresentation(getLevelStatuses[i].Status.ToString(),getLevelStatuses[i].Tier));
+                }
+                return representations.ToArray();
+            }
+            throw new InvalidOperationException("Invlaid apiKey");
         }
     }
 }

@@ -49,6 +49,7 @@
     <constructor-arg name="userRepository" ref="UserRepository"/>
     <constructor-arg name="securityKeysRepository" ref="SecurityKeysPairRepository"/>
     <constructor-arg name="persistenceRepository" ref="IdentityAccessPersistenceRepository"/>
+    <constructor-arg name="documentPersistence" ref="DocumentPersistence"/>
  </object>
   
 </objects>

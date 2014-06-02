@@ -6,6 +6,7 @@ using System.Security.Cryptography.X509Certificates;
 using CoinExchange.Common.Tests;
 using CoinExchange.IdentityAccess.Application.SecurityKeysServices;
 using CoinExchange.IdentityAccess.Application.SecurityKeysServices.Commands;
+using CoinExchange.IdentityAccess.Application.SecurityKeysServices.Representations;
 using CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate;
 using NUnit.Framework;
 using Spring.Context;

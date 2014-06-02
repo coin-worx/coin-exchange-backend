@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActivationKeyGenerationService.cs" />
+    <Compile Include="DocumentPersistence.cs" />
     <Compile Include="Email\EmailContents.cs" />
     <Compile Include="Email\EmailService.cs" />
     <Compile Include="Email\IEmailService.cs" />

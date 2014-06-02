@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate;
+﻿using CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate;
 
-namespace CoinExchange.IdentityAccess.Application.SecurityKeysServices
+namespace CoinExchange.IdentityAccess.Application.SecurityKeysServices.Representations
 {
     /// <summary>
     /// VO to get permission info from user

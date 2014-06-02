@@ -155,9 +155,9 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         }
 
         /// <summary>
-        /// Update tier 1 information
+        /// Update tier 2 information
         /// </summary>
-        public void UpdateTier1Information(string city, string state, string addressLine1, string addressLine2,
+        public void UpdateTier2Information(string city, string state, string addressLine1, string addressLine2,
             string zipCode)
         {
             City = city;
@@ -165,6 +165,15 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
             Address1 = addressLine1;
             Address2 = addressLine2;
             ZipCode = int.Parse(zipCode);
+        }
+
+        /// <summary>
+        /// Update tier 2 information
+        /// </summary>
+        public void UpdateTier3Information(string socialSecurityNumber,string nationalIdentificationNumber)
+        {
+            SocialSecurityNumber = socialSecurityNumber;
+            NationalIdentificationNumber = NationalIdentificationNumber;
         }
 
         /// <summary>
@@ -181,6 +190,16 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
             }
             throw new ArgumentException("Tier does not exist");
         }
+
+        /// <summary>
+        /// Get all tiers status of the user
+        /// </summary>
+        /// <returns></returns>
+        public UserTierLevelStatus[] GetAllTiersStatus()
+        {
+            return _tierLevelStatuses.ToArray();
+        }
+
 
         /// <summary>
         /// Adds a new Forgot Password code to this user
