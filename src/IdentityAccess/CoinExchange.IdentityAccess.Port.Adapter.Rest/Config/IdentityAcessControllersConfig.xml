@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<objects xmlns="http://www.springframework.net"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xsi:schemaLocation="http://www.springframework.net http://www.springframework.net/xsd/spring-objects.xsd">
+
+  <!--Registration Controller-->
+  <object id="RegistrationController" type="CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources.RegistrationController, CoinExchange.IdentityAccess.Port.Adapter.Rest" singleton="false">
+    <constructor-arg name="registrationApplicationService" ref="RegistrationApplicationService"/>
+  </object>
+
+  <!--User Controller-->
+  <object id="UserController" type="CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources.UserController, CoinExchange.IdentityAccess.Port.Adapter.Rest" singleton="false">
+    <constructor-arg name="userApplicationService" ref="UserApplicationService"/>
+  </object>
+
+  <!--Login Controller-->
+  <object id="LoginController" type="CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources.LoginController, CoinExchange.IdentityAccess.Port.Adapter.Rest" singleton="false">
+    <constructor-arg name="loginApplicationService" ref="LoginApplicationService"/>
+  </object>
+
+  <!--Tier Controller-->
+  <object id="TierController" type="CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources.TierController, CoinExchange.IdentityAccess.Port.Adapter.Rest" singleton="false">
+    <constructor-arg name="userTierLevelApplicationService" ref="UserTierLevelApplicationService"/>
+  </object>
+</objects>
