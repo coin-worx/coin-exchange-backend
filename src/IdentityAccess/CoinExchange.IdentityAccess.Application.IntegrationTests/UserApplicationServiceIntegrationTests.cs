@@ -479,6 +479,9 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             Assert.IsNotNull(userByUserName);
             Assert.IsTrue(userByUserName.IsActivationKeyUsed.Value);
 
+            // Wait for the asynchronous email operation to complete before commencing
+            ManualResetEvent manualResetEvent = new ManualResetEvent(false);
+            manualResetEvent.WaitOne(6000);
             userApplicationService.ActivateAccount(new ActivationCommand(activationKey, username, password));
         }
 

@@ -28,7 +28,7 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Services.Email
             Environment.NewLine, "Enjoy!!!");
 
         private static readonly string ForgotPasswordStart = string.Format("{0} {1} {2} {3} {4}", Environment.NewLine,
-            Environment.NewLine, "You requested to reset your passwort BlancRock exchange, please click on the given link" +
+            Environment.NewLine, "You requested to reset your password at BlancRock exchange, please click on the given link" +
                                  "to reset your password", Environment.NewLine, Environment.NewLine);
 
         private static readonly string WelcomeStart = string.Format("{0} {1} {2} {3} {4}", Environment.NewLine,
@@ -57,6 +57,8 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Services.Email
         public static readonly string ActivationKeySubject = "Activate BlancRock account";
 
         public static readonly string ForgotUsernameSubject = "Forgot BlancRock Username";
+
+        public static readonly string PasswordChangedSubject = "BlancRock Password Changed";
 
         public static readonly string WelcomeSubject = "Welcome to BlancRock";
 
@@ -97,7 +99,7 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Services.Email
         /// <returns></returns>
         public static string GetForgotPasswordMessage(string passwordResetLink)
         {
-            return string.Format("{0} {1} {2} {3} {4} {5}", Greetings, Environment.NewLine, Environment.NewLine, ForgotPasswordStart, passwordResetLink, Regards);
+            return string.Format("{0} {1} {2} {3}", Greetings, ForgotPasswordStart, passwordResetLink, Regards);
         }
 
         /// <summary>

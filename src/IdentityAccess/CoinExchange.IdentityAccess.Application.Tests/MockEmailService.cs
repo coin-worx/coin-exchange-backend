@@ -49,17 +49,6 @@ namespace CoinExchange.IdentityAccess.Application.Tests
         }
 
         /// <summary>
-        /// Sends the email that the user should get when they request to reset their password
-        /// </summary>
-        /// <param name="to"></param>
-        /// <param name="passwordResetLink"></param>
-        /// <returns></returns>
-        public bool SendForgotPasswordEmail(string to, string passwordResetLink)
-        {
-            return true;
-        }
-
-        /// <summary>
         /// Send Welcome Email
         /// </summary>
         /// <param name="to"></param>

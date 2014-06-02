@@ -87,22 +87,6 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Services.Email
         }
 
         /// <summary>
-        /// Sends the email that the user should get when they request to reset their password
-        /// </summary>
-        /// <param name="to"></param>
-        /// <param name="passwordResetLink"></param>
-        /// <returns></returns>
-        public bool SendForgotPasswordEmail(string to, string passwordResetLink)
-        {
-            _mailMessage = new MailMessage(_from, to);
-            _mailMessage.Subject = EmailContents.ForgotUsernameSubject;
-            _mailMessage.Body = EmailContents.GetForgotPasswordMessage(passwordResetLink);
-
-            _smtpClient.SendAsync(_mailMessage, null);
-            return true;
-        }
-
-        /// <summary>
         /// Send Welcome EMail to the specified user
         /// </summary>
         /// <param name="to"></param>
@@ -111,8 +95,8 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Services.Email
         public bool SendWelcomeEmail(string to, string username)
         {
             _mailMessage = new MailMessage(_from, to);
-            _mailMessage.Subject = EmailContents.ForgotUsernameSubject;
-            _mailMessage.Body = EmailContents.GetForgotPasswordMessage(username);
+            _mailMessage.Subject = EmailContents.WelcomeSubject;
+            _mailMessage.Body = EmailContents.GetWelcomEmailmessage(username);
 
             _smtpClient.SendAsync(_mailMessage, null);
             return true;
@@ -127,7 +111,7 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Services.Email
         public bool SendPasswordChangedEmail(string to, string username)
         {
             _mailMessage = new MailMessage(_from, to);
-            _mailMessage.Subject = EmailContents.ForgotUsernameSubject;
+            _mailMessage.Subject = EmailContents.PasswordChangedSubject;
             _mailMessage.Body = EmailContents.GetPasswordChangedEmail(username);
 
             _smtpClient.SendAsync(_mailMessage, null);

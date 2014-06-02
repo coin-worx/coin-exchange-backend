@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using CoinExchange.IdentityAccess.Application.RegistrationServices.Commands;
 using CoinExchange.IdentityAccess.Application.UserServices;
+using CoinExchange.IdentityAccess.Application.UserServices.Commands;
 using CoinExchange.IdentityAccess.Port.Adapter.Rest.DTO;
 
 namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
@@ -46,7 +47,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
                     log.Debug("ActivateUser Call Recevied, parameters:" + param);
                 }
                 return
-                    Ok(_userApplicationService.ActivateAccount(param.ActivationKey, param.UserName, param.Password));
+                    Ok(_userApplicationService.ActivateAccount(new ActivationCommand(param.ActivationKey, param.UserName, param.Password)));
             }
             catch (InvalidOperationException exception)
             {

@@ -73,7 +73,6 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate.AuthenticationS
                     {
                         // Calculate for how much time is allowed in the session timeout for SystemGenerated key, saved in user
                         //int activeWindow = securityKeysPair.CreationDateTime.AddMinutes(user.AutoLogout.Minutes).Minute;
-
                         if (securityKeysPair.CreationDateTime.AddMinutes(user.AutoLogout.Minutes) > DateTime.Now)
                         {
                             return true;
