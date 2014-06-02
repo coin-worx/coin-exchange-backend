@@ -24,9 +24,13 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Services
         /// <returns></returns>
         public UserDocument PersistDocument(string filename, string path, MemoryStream stream,string documentType,int userId)
         {
-            string fullPath = string.Format(path + "\\{0}-{1}", userId, filename);
-            FileStream fileStream=new FileStream(fullPath,FileMode.OpenOrCreate);
-            stream.CopyTo(fileStream);
+            string fullPath = string.Format(path + "{0}-{1}", userId, filename);
+            using (var fileStream = new FileStream(fullPath, FileMode.CreateNew, FileAccess.ReadWrite))
+            {
+                //update position to 0
+                stream.Position = 0;
+                stream.CopyTo(fileStream);
+            }
             return new UserDocument(userId,documentType,fullPath);
         }
     }

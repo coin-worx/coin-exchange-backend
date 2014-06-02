@@ -24,6 +24,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger
               (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly string ServerUploadFolder = "C:\\Temp";
         private IUserTierLevelApplicationService _userTierLevelApplicationService;
 
         /// <summary>
@@ -147,43 +148,26 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         /// <returns></returns>
         [HttpPost]
         [Route("user/tier3")]
-        public IHttpActionResult GetVerifyForTier3([FromBody]Tier3Param param)
+        public async Task<IHttpActionResult> GetVerifyForTier3([FromBody]Tier3Param param)
         {
-            MemoryStream memoryStream=new MemoryStream();
-            var httpRequest = HttpContext.Current.Request;
-            if (httpRequest.Files.Count > 0)
-            {
-                foreach (string file in httpRequest.Files)
-                {
-                    var postedFile = httpRequest.Files[file];
-                    postedFile.InputStream.CopyTo(memoryStream);
-                }
-            }
-            
-            //var task = this.Request.Content.ReadAsStreamAsync();
-            //task.Wait();
-            //Stream requestStream = task.Result;
-
-            //try
-            //{
-            //    Stream fileStream = File.Create(@"D:\XBTFiles\"+param.FileName);
-            //    requestStream.CopyTo(fileStream);
-            //    fileStream.Close();
-            //    requestStream.Close();
-            //}
-            //catch (IOException)
-            //{
-            //    return InternalServerError();
-            //}
-
-            
             try
             {
+                MemoryStream memoryStream = new MemoryStream();
+                var provider = new MultipartFormDataStreamProvider(ServerUploadFolder);
+                await Request.Content.ReadAsMultipartAsync(provider);
+                foreach (var file in provider.Contents)
+                {
+                    file.CopyToAsync(memoryStream);
+                }
+
+
                 if (log.IsDebugEnabled)
                 {
                     log.Debug("GetVerifyForTier2 Call Recevied, parameters:");
                 }
-                _userTierLevelApplicationService.ApplyForTier3Verification(new VerifyTier3Command(HeaderParamUtility.GetApikey(Request), param.SocialSecurityNumber, param.Nin, param.DocumentType,param.FileName,memoryStream));
+                _userTierLevelApplicationService.ApplyForTier3Verification(
+                    new VerifyTier3Command(HeaderParamUtility.GetApikey(Request), param.SocialSecurityNumber, param.Nin,
+                        param.DocumentType, param.FileName, memoryStream));
                 return Ok();
             }
             catch (InvalidOperationException exception)
