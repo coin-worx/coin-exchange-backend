@@ -142,7 +142,7 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
                         }
                         else
                         {
-                            // ToDo: Send email to user that someone tried to re-activated their account.
+                            _emailService.SendReactivaitonNotificationEmail(user.Email, user.Username);
                             throw new Exception("The activation key has already been used ");
                         }
                     }

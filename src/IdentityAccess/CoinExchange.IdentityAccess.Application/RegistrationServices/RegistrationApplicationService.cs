@@ -48,7 +48,8 @@ namespace CoinExchange.IdentityAccess.Application.RegistrationServices
         public string CreateAccount(SignupUserCommand signupUserCommand)
         {
             // Check the given credential strings
-            if (!string.IsNullOrEmpty(signupUserCommand.Email) &&
+            if (signupUserCommand != null &&
+                !string.IsNullOrEmpty(signupUserCommand.Email) &&
                 !string.IsNullOrEmpty(signupUserCommand.Username) && 
                 !string.IsNullOrEmpty(signupUserCommand.Password))
             {

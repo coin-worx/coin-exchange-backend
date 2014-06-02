@@ -49,6 +49,7 @@ namespace CoinExchange.IdentityAccess.Application.Tests
             User user = new User("batman@gotham.com", "brucewayne", passwordEncryptionService.EncryptPassword(enteredPassword),
                 "Ninja County", TimeZone.CurrentTimeZone, "", "");
             user.AutoLogout = new TimeSpan(0, 0, 0, 60);
+            user.IsActivationKeyUsed = new IsActivationKeyUsed(true);
             // Add this user to the MockUserRepository
             (userRepository as MockUserRepository).AddUser(user);
             UserValidationEssentials userValidationEssentials = loginApplicationService.Login(
@@ -127,6 +128,7 @@ namespace CoinExchange.IdentityAccess.Application.Tests
             User user = new User("batman@gotham.com", "brucewayne", passwordEncryptionService.EncryptPassword(enteredPassword),
                 "Ninja County", TimeZone.CurrentTimeZone, "", "");
             user.AutoLogout = new TimeSpan(0, 0, 0, 60);
+            user.IsActivationKeyUsed = new IsActivationKeyUsed(true);
             // Add this user to the MockUserRepository
             (userRepository as MockUserRepository).AddUser(user);
 

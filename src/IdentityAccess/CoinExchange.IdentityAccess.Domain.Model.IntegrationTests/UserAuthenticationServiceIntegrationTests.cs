@@ -59,12 +59,14 @@ namespace CoinExchange.IdentityAccess.Domain.Model.IntegrationTests
             string uri = "www.blancrock.com/orders/cancelorder";
             string secretKey = "1234567";
             string username = "linkinpark";
-            // Create System generated Keys and store in repo
-            SecurityKeysPair securityKeysPair = new SecurityKeysPair(apiKey, secretKey, "1", 1, true);
-            persistenceRepository.SaveUpdate(securityKeysPair);
+            
             // Create a user and store it in database, this is the user for whom we have created the key
             User user = new User("linkpark@rocknroll.com", username, "abc", "Pakistan", TimeZone.CurrentTimeZone, "", "");
             persistenceRepository.SaveUpdate(user);
+            User userByUserName = userRepository.GetUserByUserName(username);
+            // Create System generated Keys and store in repo.
+            SecurityKeysPair securityKeysPair = new SecurityKeysPair(apiKey, secretKey, "1",  userByUserName.Id, true);
+            persistenceRepository.SaveUpdate(securityKeysPair);
             string response = String.Format("{0}:{1}:{2}", apiKey, uri, secretKey).ToMD5Hash();
             bool authenticate = userAuthenticationService.Authenticate(new AuthenticateCommand("Rtg65s345",
                 nounce, apiKey, uri, response, "1"));
@@ -78,6 +80,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.IntegrationTests
 
         [Test]
         [Category("Integration")]
+        [ExpectedException(typeof(InvalidOperationException))]
         public void SystemGeneratedKeysFailTest_TestsIfTheAuthenticationFailsDueToSessionTimeout_VerifiesThroughTheReturnedValue()
         {
             ISecurityKeysRepository securityKeysRepository =
@@ -102,20 +105,12 @@ namespace CoinExchange.IdentityAccess.Domain.Model.IntegrationTests
             persistenceRepository.SaveUpdate(user);
             string response = String.Format("{0}:{1}:{2}", apiKey, uri, secretKey).ToMD5Hash();
 
-            bool exceptionRaised = false;
-            try
-            {
-                userAuthenticationService.Authenticate(new AuthenticateCommand("Rtg65s345", nounce, apiKey, uri, response, "1"));
-            }
-            catch (Exception e)
-            {
-                exceptionRaised = true;
-            }
-            Assert.IsTrue(exceptionRaised);
+            userAuthenticationService.Authenticate(new AuthenticateCommand("Rtg65s345", nounce, apiKey, uri, response, "1"));
         }
 
         [Test]
         [Category("Integration")]
+        [ExpectedException(typeof(InvalidCredentialException))]
         public void SystemGeneratedKeysFailTest_TestsIfTheAuthenticationFailsDueToInvalidApiKey_VerifiesThroughTheReturnedValue()
         {
             ISecurityKeysRepository securityKeysRepository =
@@ -140,17 +135,8 @@ namespace CoinExchange.IdentityAccess.Domain.Model.IntegrationTests
 
             // Changed the API Key and provide an invalid one
             string response = String.Format("{0}:{1}:{2}", apiKey + "1", uri, secretKey).ToMD5Hash();
-            bool exceptionRaised = false;
-            try
-            {
-                userAuthenticationService.Authenticate(new AuthenticateCommand("Rtg65s345",
+            userAuthenticationService.Authenticate(new AuthenticateCommand("Rtg65s345",
                                                                                nounce, apiKey, uri, response, "1"));
-            }
-            catch (Exception e)
-            {
-                exceptionRaised = true;
-            }
-            Assert.IsTrue(exceptionRaised);
         }
 
         #endregion System Generated Fails
@@ -177,17 +163,16 @@ namespace CoinExchange.IdentityAccess.Domain.Model.IntegrationTests
             List<SecurityKeysPermission> permissionslist = new List<SecurityKeysPermission>();
             permissionslist.Add(new SecurityKeysPermission(apiKey, new Permission(PermissionsConstant.Query_Closed_Orders,
                 "Query Closed Orders"), true));
-            // Create System generated Keys and store in repo
-            //SecurityKeysPairFactory.UserGeneratedSecurityPair(username, "1", apiKey, secretKey, true, "",
-            //    false, DateTime.Now, false, DateTime.Now, permissionslist, securityKeysRepository);
             
-            SecurityKeysPair securityKeysPair = new SecurityKeysPair("1", apiKey, secretKey, 1,
-                DateTime.Now.AddHours(2), DateTime.Now, DateTime.Now, DateTime.Now, false, permissionslist);
-            securityKeysPair.EnableExpirationDate = true;
-            persistenceRepository.SaveUpdate(securityKeysPair);
             // Create a user and store it in database, this is the user for whom we have created the key
             User user = new User("linkpark@rocknroll.com", username, "abc", "Pakistan", TimeZone.CurrentTimeZone, "", "");
             persistenceRepository.SaveUpdate(user);
+            // Get the user from the database, to confirm the user.Id generated by the database
+            User userByUserName = userRepository.GetUserByUserName(username);
+            SecurityKeysPair securityKeysPair = new SecurityKeysPair("1", apiKey, secretKey, userByUserName.Id,
+                DateTime.Now.AddHours(2), DateTime.Now, DateTime.Now, DateTime.Now, false, permissionslist);
+            securityKeysPair.EnableExpirationDate = true;
+            persistenceRepository.SaveUpdate(securityKeysPair);
             string response = String.Format("{0}:{1}:{2}", apiKey, uri, secretKey).ToMD5Hash();
             bool authenticate = userAuthenticationService.Authenticate(new AuthenticateCommand("Rtg65s345",
                 nounce, apiKey, uri, response, "1"));
@@ -215,17 +200,16 @@ namespace CoinExchange.IdentityAccess.Domain.Model.IntegrationTests
             List<SecurityKeysPermission> permissionslist = new List<SecurityKeysPermission>();
             permissionslist.Add(new SecurityKeysPermission(apiKey, new Permission(PermissionsConstant.Query_Open_Orders,
                 "Query Open Orders"), true));
-            // Create System generated Keys and store in repo
-            //SecurityKeysPairFactory.UserGeneratedSecurityPair(username, "1", apiKey, secretKey, true, "",
-            //    false, DateTime.Now, false, DateTime.Now, permissionslist, securityKeysRepository);
-
-            SecurityKeysPair securityKeysPair = new SecurityKeysPair("1", apiKey, secretKey, 1,
-                DateTime.Now.AddHours(2), DateTime.Now, DateTime.Now, DateTime.Now, false, permissionslist);
-            securityKeysPair.EnableExpirationDate = true;
-            persistenceRepository.SaveUpdate(securityKeysPair);
+            
             // Create a user and store it in database, this is the user for whom we have created the key
             User user = new User("linkpark@rocknroll.com", username, "abc", "Pakistan", TimeZone.CurrentTimeZone, "", "");
             persistenceRepository.SaveUpdate(user);
+            User userByUserName = userRepository.GetUserByUserName(username);
+
+            SecurityKeysPair securityKeysPair = new SecurityKeysPair("1", apiKey, secretKey, userByUserName.Id,
+                DateTime.Now.AddHours(2), DateTime.Now, DateTime.Now, DateTime.Now, false, permissionslist);
+            securityKeysPair.EnableExpirationDate = true;
+            persistenceRepository.SaveUpdate(securityKeysPair);
             string response = String.Format("{0}:{1}:{2}", apiKey, uri, secretKey).ToMD5Hash();
             bool authenticate = userAuthenticationService.Authenticate(new AuthenticateCommand("Rtg65s345",
                 nounce, apiKey, uri, response, "1"));
@@ -257,14 +241,16 @@ namespace CoinExchange.IdentityAccess.Domain.Model.IntegrationTests
             //SecurityKeysPairFactory.UserGeneratedSecurityPair(username, "1", apiKey, secretKey, true, "",
             //    false, DateTime.Now, false, DateTime.Now, permissionslist, securityKeysRepository);
 
-            SecurityKeysPair securityKeysPair = new SecurityKeysPair("1", apiKey, secretKey, 1,
-                DateTime.Now.AddHours(2), DateTime.Now, DateTime.Now, DateTime.Now, false, permissionslist);
-            securityKeysPair.EnableExpirationDate = true;
-            persistenceRepository.SaveUpdate(securityKeysPair);
             // Create a user and store it in database, this is the user for whom we have created the key
             User user = new User("linkpark@rocknroll.com", username, "abc", "Pakistan", TimeZone.CurrentTimeZone, "", "");
             user.AutoLogout = new TimeSpan(0,0,10,0);
             persistenceRepository.SaveUpdate(user);
+            // Get the user from the database, to confirm the user.Id generated by the database
+            User userByUserName = userRepository.GetUserByUserName(username);
+            SecurityKeysPair securityKeysPair = new SecurityKeysPair("1", apiKey, secretKey, userByUserName.Id,
+                DateTime.Now.AddHours(2), DateTime.Now, DateTime.Now, DateTime.Now, false, permissionslist);
+            securityKeysPair.EnableExpirationDate = true;
+            persistenceRepository.SaveUpdate(securityKeysPair);
             string response = String.Format("{0}:{1}:{2}", apiKey, uri, secretKey).ToMD5Hash();
             bool authenticate = userAuthenticationService.Authenticate(new AuthenticateCommand("Rtg65s345",
                 nounce, apiKey, uri, response, "1"));
@@ -278,6 +264,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.IntegrationTests
 
         [Test]
         [Category("Integration")]
+        [ExpectedException(typeof(InvalidOperationException))]
         public void UserGeneratedKeysQueryOpenOrdersFailTest_TestsIfTheAuthenticationFailsDueToExpirationDate_VerifiesThroughTheReturnedValue()
         {
             ISecurityKeysRepository securityKeysRepository =
@@ -307,21 +294,13 @@ namespace CoinExchange.IdentityAccess.Domain.Model.IntegrationTests
             persistenceRepository.SaveUpdate(user);
             string response = String.Format("{0}:{1}:{2}", apiKey, uri, secretKey).ToMD5Hash();
 
-            bool exceptionRaised = false;
-            try
-            {
-                userAuthenticationService.Authenticate(new AuthenticateCommand("Rtg65s345",
+            userAuthenticationService.Authenticate(new AuthenticateCommand("Rtg65s345",
                                                                                nounce, apiKey, uri, response, "1"));
-            }
-            catch (Exception e)
-            {
-                exceptionRaised = true;
-            }
-            Assert.IsTrue(exceptionRaised);
         }
 
         [Test]
         [Category("Integration")]
+        [ExpectedException(typeof(InvalidOperationException))]
         public void UserGeneratedKeysQueryClosedOrdersFailTest_TestsIfTheAuthenticationFailsDueToExpirationDate_VerifiesThroughTheReturnedValue()
         {
             ISecurityKeysRepository securityKeysRepository =
@@ -351,21 +330,13 @@ namespace CoinExchange.IdentityAccess.Domain.Model.IntegrationTests
             persistenceRepository.SaveUpdate(user);
             string response = String.Format("{0}:{1}:{2}", apiKey, uri, secretKey).ToMD5Hash();
 
-            bool exceptionRaised = false;
-            try
-            {
-                userAuthenticationService.Authenticate(new AuthenticateCommand("Rtg65s345",
+            userAuthenticationService.Authenticate(new AuthenticateCommand("Rtg65s345",
                                                                                nounce, apiKey, uri, response, "1"));
-            }
-            catch (Exception e)
-            {
-                exceptionRaised = true;
-            }
-            Assert.IsTrue(exceptionRaised);
         }
 
         [Test]
         [Category("Integration")]
+        [ExpectedException(typeof(TimeoutException))]
         public void UserGeneratedKeysCancelOrderFailTest_TestsIfTheAuthenticationFailsDueToExpirationDate_VerifiesThroughTheReturnedValue()
         {
             ISecurityKeysRepository securityKeysRepository =
@@ -385,39 +356,36 @@ namespace CoinExchange.IdentityAccess.Domain.Model.IntegrationTests
             List<SecurityKeysPermission> permissionslist = new List<SecurityKeysPermission>();
             permissionslist.Add(new SecurityKeysPermission(apiKey, new Permission(PermissionsConstant.Cancel_Order,
                 "Cancel Orders"), true));
-            // Here we provide the expiration date for the current moment, which will expire instantly
-            SecurityKeysPair securityKeysPair = new SecurityKeysPair("1", apiKey, secretKey, 1,
-                DateTime.Now, DateTime.Now, DateTime.Now, DateTime.Now, false, permissionslist);
-            securityKeysPair.EnableExpirationDate = true;
-            persistenceRepository.SaveUpdate(securityKeysPair);
+            
             // Create a user and store it in database, this is the user for whom we have created the key
             User user = new User("linkpark@rocknroll.com", username, "abc", "Pakistan", TimeZone.CurrentTimeZone, "", "");
             persistenceRepository.SaveUpdate(user);
+            User userByUserName = userRepository.GetUserByUserName(username);
+            // Here we provide the expiration date for the current moment, which will expire instantly
+            SecurityKeysPair securityKeysPair = new SecurityKeysPair("1", apiKey, secretKey, userByUserName.Id,
+                DateTime.Now, DateTime.Now, DateTime.Now, DateTime.Now, false, permissionslist);
+            securityKeysPair.EnableExpirationDate = true;
+            persistenceRepository.SaveUpdate(securityKeysPair);
             string response = String.Format("{0}:{1}:{2}", apiKey, uri, secretKey).ToMD5Hash();
-            bool exceptionRaised = false;
-            try
-            {
-                userAuthenticationService.Authenticate(new AuthenticateCommand("Rtg65s345",
+            
+            userAuthenticationService.Authenticate(new AuthenticateCommand("Rtg65s345",
                                                                                nounce, apiKey, uri, response, "1"));
-            }
-            catch (Exception e)
-            {
-                exceptionRaised = true;
-            }
-            Assert.IsTrue(exceptionRaised);
         }
 
         [Test]
         [Category("Integration")]
-        public void UserGeneratedKeysFailTest_TestsIfTheAuthenticationFailsDueInvalidUsernameinSecurityKeysPair_VerifiesThroughTheReturnedValue()
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void UserGeneratedKeysFailTest_TestsIfTheAuthenticationFailsDueInvalidUserIdinSecurityKeysPair_VerifiesThroughTheReturnedValue()
         {
             ISecurityKeysRepository securityKeysRepository =
-                (ISecurityKeysRepository)ContextRegistry.GetContext()["SecurityKeysPairRepository"];
-            IUserRepository userRepository = (IUserRepository)ContextRegistry.GetContext()["UserRepository"];
+                (ISecurityKeysRepository) ContextRegistry.GetContext()["SecurityKeysPairRepository"];
+            IUserRepository userRepository = (IUserRepository) ContextRegistry.GetContext()["UserRepository"];
             IIdentityAccessPersistenceRepository persistenceRepository =
-                (IIdentityAccessPersistenceRepository)ContextRegistry.GetContext()["IdentityAccessPersistenceRepository"];
+                (IIdentityAccessPersistenceRepository)
+                ContextRegistry.GetContext()["IdentityAccessPersistenceRepository"];
 
-            UserAuthenticationService userAuthenticationService = new UserAuthenticationService(userRepository, securityKeysRepository);
+            UserAuthenticationService userAuthenticationService = new UserAuthenticationService(userRepository,
+                                                                                                securityKeysRepository);
             string nounce = userAuthenticationService.GenerateNonce();
 
             string apiKey = "123456789";
@@ -427,28 +395,20 @@ namespace CoinExchange.IdentityAccess.Domain.Model.IntegrationTests
             // Provide the permission
             List<SecurityKeysPermission> permissionslist = new List<SecurityKeysPermission>();
             permissionslist.Add(new SecurityKeysPermission(apiKey, new Permission(PermissionsConstant.Query_Open_Orders,
-                "Query Open Orders"), true));
-            // Here we provide the expiration date for the current moment, which will expire instantly
-            SecurityKeysPair securityKeysPair = new SecurityKeysPair("1", apiKey, secretKey, 1 + 1,
-                DateTime.Now, DateTime.Now, DateTime.Now, DateTime.Now, false, permissionslist);
-            securityKeysPair.EnableExpirationDate = true;
-            persistenceRepository.SaveUpdate(securityKeysPair);
+                                                                                  "Query Open Orders"), true));
             // Create a user and store it in database, this is the user for whom we have created the key
             User user = new User("linkpark@rocknroll.com", username, "abc", "Pakistan", TimeZone.CurrentTimeZone, "", "");
             persistenceRepository.SaveUpdate(user);
+            // Give invalid User.ID
+            SecurityKeysPair securityKeysPair = new SecurityKeysPair("1", apiKey, secretKey, 898658947,
+                                                                     DateTime.Now, DateTime.Now, DateTime.Now,
+                                                                     DateTime.Now, false, permissionslist);
+            securityKeysPair.EnableExpirationDate = true;
+            persistenceRepository.SaveUpdate(securityKeysPair);
             string response = String.Format("{0}:{1}:{2}", apiKey, uri, secretKey).ToMD5Hash();
 
-            bool exceptionRaised = false;
-            try
-            {
-                userAuthenticationService.Authenticate(new AuthenticateCommand("Rtg65s345",
-                                                                               nounce, apiKey, uri, response, "1"));
-            }
-            catch (InvalidOperationException e)
-            {
-                exceptionRaised = true;
-            }
-            Assert.IsTrue(exceptionRaised);
+            userAuthenticationService.Authenticate(new AuthenticateCommand("Rtg65s345",
+                                                                           nounce, apiKey, uri, response, "1"));
         }
 
 

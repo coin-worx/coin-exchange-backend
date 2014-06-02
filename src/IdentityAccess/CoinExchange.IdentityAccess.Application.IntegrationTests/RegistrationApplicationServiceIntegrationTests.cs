@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Security.Authentication;
 using System.Threading;
 using CoinExchange.Common.Tests;
 using CoinExchange.IdentityAccess.Application.RegistrationServices;
@@ -61,36 +62,163 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             manualResetEvent.WaitOne(5000);
             User receivedUser = userRepository.GetUserByUserName("Bob");
             Assert.NotNull(receivedUser);
+            Assert.AreEqual("waqas.syed@hotmail.com", receivedUser.Email);
             Assert.AreEqual("Bob", receivedUser.Username);
             Assert.IsTrue(passwordEncryption.VerifyPassword("iamnotalice", receivedUser.Password));
             Assert.AreEqual("", receivedUser.PublicKey);
             Assert.AreEqual(TimeZone.CurrentTimeZone.StandardName, receivedUser.TimeZone.StandardName);
             Assert.AreEqual(activationKey, receivedUser.ActivationKey);
+            Assert.IsFalse(receivedUser.IsActivationKeyUsed.Value);
+            Assert.IsFalse(receivedUser.IsUserBlocked.Value);
         }
 
         [Test]
         [Category("Integration")]
-        public void CreateNewAccountFailTest_CredentialsNotGivenAndDatabaseSaveShouldNotHappen_VerifiesThroughUsingDatabaseResult()
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void RegistrationTwiceFailTest_ChecksThatAccountWithSameUsernameIsNotSavedAgain_VerifiesExpectingException()
         {
             IRegistrationApplicationService registrationService =
                 (IRegistrationApplicationService)_applicationContext["RegistrationApplicationService"];
             IUserRepository userRepository =
                 (IUserRepository)_applicationContext["UserRepository"];
-            bool exceptionCaught = false;
-            string exceptionName = string.Empty;
-            try
-            {
-                string activationKey = registrationService.CreateAccount(new SignupUserCommand(
-                                                                             "", "", "", "Wonderland", TimeZone.CurrentTimeZone, ""));
-            }
-            catch (Exception e)
-            {
-                exceptionName = e.GetType().Name;                
-                exceptionCaught = true;
-            }
+            IPasswordEncryptionService passwordEncryption =
+                (IPasswordEncryptionService)_applicationContext["PasswordEncryptionService"];
+            ManualResetEvent manualResetEvent = new ManualResetEvent(false);
+            string activationKey = registrationService.CreateAccount(new SignupUserCommand(
+                "waqas.syed@hotmail.com", "Bob", "iamnotalice", "Wonderland", TimeZone.CurrentTimeZone, ""));
+            // Wait for the email to be sent
+            manualResetEvent.WaitOne(5000);
+            User receivedUser = userRepository.GetUserByUserName("Bob");
+            Assert.NotNull(receivedUser);
+            Assert.AreEqual("waqas.syed@hotmail.com", receivedUser.Email);
+            Assert.AreEqual("Bob", receivedUser.Username);
+            Assert.IsTrue(passwordEncryption.VerifyPassword("iamnotalice", receivedUser.Password));
+            Assert.AreEqual("", receivedUser.PublicKey);
+            Assert.AreEqual(TimeZone.CurrentTimeZone.StandardName, receivedUser.TimeZone.StandardName);
+            Assert.AreEqual(activationKey, receivedUser.ActivationKey);
 
-            Assert.IsTrue(exceptionCaught);
-            Assert.AreEqual("InvalidCredentialException", exceptionName);
+            registrationService.CreateAccount(new SignupUserCommand(
+                "waqas.syed1@hotmail.com", "Bob", "iamnotalice", "Wonderland", TimeZone.CurrentTimeZone, ""));
+
+            User userByEmail = userRepository.GetUserByEmail("waqas.syed1@hotmail.com");
+            Assert.IsNull(userByEmail);
+        }
+
+        [Test]
+        [Category("Integration")]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void RegistrationTwiceFailTest_ChecksThatAccountWithSameUsernameAndEmailIsNotSavedAgain_VerifiesExpectingException()
+        {
+            IRegistrationApplicationService registrationService =
+                (IRegistrationApplicationService)_applicationContext["RegistrationApplicationService"];
+            IUserRepository userRepository =
+                (IUserRepository)_applicationContext["UserRepository"];
+            IPasswordEncryptionService passwordEncryption =
+                (IPasswordEncryptionService)_applicationContext["PasswordEncryptionService"];
+            ManualResetEvent manualResetEvent = new ManualResetEvent(false);
+            string activationKey = registrationService.CreateAccount(new SignupUserCommand(
+                "waqas.syed@hotmail.com", "Bob", "iamnotalice", "Wonderland", TimeZone.CurrentTimeZone, ""));
+            // Wait for the email to be sent
+            manualResetEvent.WaitOne(5000);
+            User receivedUser = userRepository.GetUserByUserName("Bob");
+            Assert.NotNull(receivedUser);
+            Assert.AreEqual("waqas.syed@hotmail.com", receivedUser.Email);
+            Assert.AreEqual("Bob", receivedUser.Username);
+            Assert.IsTrue(passwordEncryption.VerifyPassword("iamnotalice", receivedUser.Password));
+            Assert.AreEqual("", receivedUser.PublicKey);
+            Assert.AreEqual(TimeZone.CurrentTimeZone.StandardName, receivedUser.TimeZone.StandardName);
+            Assert.AreEqual(activationKey, receivedUser.ActivationKey);
+
+            registrationService.CreateAccount(new SignupUserCommand(
+                "waqas.syed@hotmail.com", "Bob", "iamnotalice", "Wonderland", TimeZone.CurrentTimeZone, ""));
+
+            User userByEmail = userRepository.GetUserByEmail("waqas.syed1@hotmail.com");
+            Assert.IsNull(userByEmail);
+
+            User userByUsername = userRepository.GetUserByUserName("Bob");
+            Assert.IsNull(userByUsername);
+        }
+
+        [Test]
+        [Category("Integration")]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void RegistrationTwiceFailTest_ChecksThatAccountWithSameEmailIsNotSavedAgain_VerifiesExpectingException()
+        {
+            IRegistrationApplicationService registrationService =
+                (IRegistrationApplicationService)_applicationContext["RegistrationApplicationService"];
+            IUserRepository userRepository =
+                (IUserRepository)_applicationContext["UserRepository"];
+            IPasswordEncryptionService passwordEncryption =
+                (IPasswordEncryptionService)_applicationContext["PasswordEncryptionService"];
+            ManualResetEvent manualResetEvent = new ManualResetEvent(false);
+            string activationKey = registrationService.CreateAccount(new SignupUserCommand(
+                "waqas.syed@hotmail.com", "Bob", "iamnotalice", "Wonderland", TimeZone.CurrentTimeZone, ""));
+            // Wait for the email to be sent
+            manualResetEvent.WaitOne(5000);
+            User receivedUser = userRepository.GetUserByUserName("Bob");
+            Assert.NotNull(receivedUser);
+            Assert.AreEqual("waqas.syed@hotmail.com", receivedUser.Email);
+            Assert.AreEqual("Bob", receivedUser.Username);
+            Assert.IsTrue(passwordEncryption.VerifyPassword("iamnotalice", receivedUser.Password));
+            Assert.AreEqual("", receivedUser.PublicKey);
+            Assert.AreEqual(TimeZone.CurrentTimeZone.StandardName, receivedUser.TimeZone.StandardName);
+            Assert.AreEqual(activationKey, receivedUser.ActivationKey);
+
+            registrationService.CreateAccount(new SignupUserCommand(
+                "waqas.syed@hotmail.com", "Boby", "iamnotalice", "Wonderland", TimeZone.CurrentTimeZone, ""));
+
+            User userByUsername = userRepository.GetUserByUserName("Boby");
+            Assert.IsNull(userByUsername);
+        }
+
+        [Test]
+        [Category("Integration")]
+        [ExpectedException(typeof(InvalidCredentialException))]
+        public void RegistrationFailTest_ChecksThatRegistrationFailsWithBlankEmail_VerifiesExpectingException()
+        {
+            IRegistrationApplicationService registrationService =
+                (IRegistrationApplicationService)_applicationContext["RegistrationApplicationService"];
+
+            string activationKey = registrationService.CreateAccount(new SignupUserCommand(
+                "", "Bob", "iamnotalice", "Wonderland", TimeZone.CurrentTimeZone, ""));
+            Assert.IsNull(activationKey);
+        }
+
+        [Test]
+        [Category("Integration")]
+        [ExpectedException(typeof(InvalidCredentialException))]
+        public void RegistrationFailTest_ChecksThatRegistrationFailsWithBlankUsername_VerifiesExpectingException()
+        {
+            IRegistrationApplicationService registrationService =
+                (IRegistrationApplicationService)_applicationContext["RegistrationApplicationService"];
+
+            string activationKey = registrationService.CreateAccount(new SignupUserCommand(
+                "waqas.syed@hotmail.com", "", "iamnotalice", "Wonderland", TimeZone.CurrentTimeZone, ""));
+            Assert.IsNull(activationKey);
+        }
+
+        [Test]
+        [Category("Integration")]
+        [ExpectedException(typeof(InvalidCredentialException))]
+        public void RegistrationFailTest_ChecksThatRegistrationFailsWithBlankPassword_VerifiesExpectingException()
+        {
+            IRegistrationApplicationService registrationService =
+                (IRegistrationApplicationService)_applicationContext["RegistrationApplicationService"];
+
+            string activationKey = registrationService.CreateAccount(new SignupUserCommand(
+                "waqas.syed@hotmail.com", "Bob", "", "Wonderland", TimeZone.CurrentTimeZone, ""));
+            Assert.IsNull(activationKey);
+        }
+
+        [Test]
+        [Category("Integration")]
+        [ExpectedException(typeof(InvalidCredentialException))]
+        public void CreateNewAccountFailTest_CredentialsNotGivenAndDatabaseSaveShouldNotHappen_VerifiesThroughUsingDatabaseResult()
+        {
+            IRegistrationApplicationService registrationService =
+                (IRegistrationApplicationService)_applicationContext["RegistrationApplicationService"];
+            
+            registrationService.CreateAccount(new SignupUserCommand("", "", "", "Wonderland", TimeZone.CurrentTimeZone, ""));
         }
 
         [Test]
@@ -117,7 +245,6 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             {
                 Assert.AreEqual(receivedUser.GetTierLevelStatus(tiers[i]),Status.NonVerified.ToString());
             }
-
         }
     }
 }

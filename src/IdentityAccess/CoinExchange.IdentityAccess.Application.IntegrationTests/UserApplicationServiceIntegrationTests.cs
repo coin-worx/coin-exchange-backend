@@ -406,6 +406,60 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
 
         [Test]
         [Category("Integration")]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void ActivateAccountFailTest_ChecksIfUserCannotLoginUntilAccountIsNotActivated_VerifiesByExpectingException()
+        {
+            IRegistrationApplicationService registrationApplicationService =
+                (IRegistrationApplicationService)_applicationContext["RegistrationApplicationService"];
+
+            ILoginApplicationService loginApplicationService =
+                (ILoginApplicationService) _applicationContext["LoginApplicationService"];
+
+            string username = "linkinpark";
+            string email = "waqas.syed@hotmail.com";
+            string password = "burnitdown";
+            registrationApplicationService.CreateAccount(new SignupUserCommand(email, username, password, "USA", TimeZone.CurrentTimeZone, ""));
+
+            loginApplicationService.Login(new LoginCommand(username, password));
+        }
+
+        [Test]
+        [Category("Integration")]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void ActivateAccountFailThenSeccussfulTest_ChecksIfUserCannotLoginUntilAccountIsNotActivatedAndTriesToActivateAgainAndThenLogsIn_VerifiesByExpectingExceptionAndReturnedValue()
+        {
+            IUserApplicationService userApplicationService = (IUserApplicationService)_applicationContext["UserApplicationService"];
+            IRegistrationApplicationService registrationApplicationService =
+                (IRegistrationApplicationService)_applicationContext["RegistrationApplicationService"];
+            IUserRepository userRepository = (IUserRepository)_applicationContext["UserRepository"];
+
+            ILoginApplicationService loginApplicationService = (ILoginApplicationService)_applicationContext["LoginApplicationService"];
+            ISecurityKeysRepository securityKeysRepository = (ISecurityKeysRepository)_applicationContext["SecurityKeysPairRepository"];
+
+            string username = "linkinpark";
+            string email = "waqas.syed@hotmail.com";
+            string password = "burnitdown";
+            string activationKey = registrationApplicationService.CreateAccount(new SignupUserCommand(email, username, password, "USA", TimeZone.CurrentTimeZone, ""));
+
+            loginApplicationService.Login(new LoginCommand(username, password));
+
+            bool accountActivated = userApplicationService.ActivateAccount(new ActivationCommand(activationKey, username, password));
+
+            Assert.IsTrue(accountActivated);
+            User userByUserName = userRepository.GetUserByUserName(username);
+            Assert.IsNotNull(userByUserName);
+            Assert.IsTrue(userByUserName.IsActivationKeyUsed.Value);
+
+            UserValidationEssentials userValidationEssentials = loginApplicationService.Login(new LoginCommand(username, password));
+            Assert.IsNotNull(userValidationEssentials);
+            SecurityKeysPair securityKeysPair = securityKeysRepository.GetByApiKey(userValidationEssentials.ApiKey.Value);
+            Assert.IsNotNull(securityKeysPair);
+            User receivedUser = userRepository.GetUserByUserName(username);
+            Assert.IsTrue(receivedUser.IsActivationKeyUsed.Value);
+        }
+
+        [Test]
+        [Category("Integration")]
         [ExpectedException(typeof(Exception))]
         public void ActivateAccountFailWhenTriedTwiceTest_ChecksIfTheAccountIsNotActivatedAgainOnceActivated_VerifiesByExpectingException()
         {
@@ -425,6 +479,9 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             Assert.IsNotNull(userByUserName);
             Assert.IsTrue(userByUserName.IsActivationKeyUsed.Value);
 
+            // Wait for the asynchronous email operation to complete before commencing
+            ManualResetEvent manualResetEvent = new ManualResetEvent(false);
+            manualResetEvent.WaitOne(6000);
             userApplicationService.ActivateAccount(new ActivationCommand(activationKey, username, password));
         }
 
@@ -456,7 +513,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             string username = "linkinpark";
             string email = "waqas.syed@hotmail.com";
             string password = "burnitdown";
-            string activationKey = registrationApplicationService.CreateAccount(new SignupUserCommand(email, username, password, "USA", TimeZone.CurrentTimeZone, ""));
+            registrationApplicationService.CreateAccount(new SignupUserCommand(email, username, password, "USA", TimeZone.CurrentTimeZone, ""));
             userApplicationService.ActivateAccount(new ActivationCommand("", username, password));
         }
 

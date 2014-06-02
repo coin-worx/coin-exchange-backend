@@ -6,6 +6,8 @@ using CoinExchange.IdentityAccess.Application.AccessControlServices;
 using CoinExchange.IdentityAccess.Application.AccessControlServices.Commands;
 using CoinExchange.IdentityAccess.Application.RegistrationServices;
 using CoinExchange.IdentityAccess.Application.RegistrationServices.Commands;
+using CoinExchange.IdentityAccess.Application.UserServices;
+using CoinExchange.IdentityAccess.Application.UserServices.Commands;
 using CoinExchange.IdentityAccess.Domain.Model.Repositories;
 using CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate;
 using CoinExchange.IdentityAccess.Domain.Model.UserAggregate;
@@ -57,8 +59,11 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             string username = "Bob";
             string activationKey = registrationService.CreateAccount(new SignupUserCommand(
                 "bob@alice.com", username, "alice", "Wonderland", TimeZone.CurrentTimeZone, ""));
-
             Assert.IsNotNull(activationKey);
+
+            IUserApplicationService userApplicationService = (IUserApplicationService)_applicationContext["UserApplicationService"];
+            bool accountActivated = userApplicationService.ActivateAccount(new ActivationCommand(activationKey, "Bob", "alice"));
+            Assert.IsTrue(accountActivated);
 
             UserValidationEssentials userValidationEssentials = loginApplicationService.Login(new LoginCommand("Bob", "alice"));
             Assert.IsNotNull(userValidationEssentials);
@@ -81,8 +86,11 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             string password = "alice";
             string activationKey = registrationService.CreateAccount(new SignupUserCommand(
                 email, username, password, "Wonderland", TimeZone.CurrentTimeZone, ""));
-
             Assert.IsNotNull(activationKey);
+
+            IUserApplicationService userApplicationService = (IUserApplicationService)_applicationContext["UserApplicationService"];
+            bool accountActivated = userApplicationService.ActivateAccount(new ActivationCommand(activationKey, "Bob", "alice"));
+            Assert.IsTrue(accountActivated);
 
             UserValidationEssentials userValidationEssentials = loginApplicationService.Login(new LoginCommand("Bob", "alice"));
             Assert.IsNotNull(userValidationEssentials);
@@ -94,6 +102,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             Assert.IsNotNull(user);
             Assert.AreEqual(user.Email, email);
             Assert.AreEqual(user.ActivationKey, activationKey);
+            Assert.AreEqual(userValidationEssentials.SessionLogoutTime, user.AutoLogout);
             Assert.IsTrue(passwordEncryptionService.VerifyPassword(password, user.Password));
         }
 
@@ -112,8 +121,11 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             string password = "alice";
             string activationKey = registrationService.CreateAccount(new SignupUserCommand(
                 email, username, password, "Wonderland", TimeZone.CurrentTimeZone, ""));
-
             Assert.IsNotNull(activationKey);
+
+            IUserApplicationService userApplicationService = (IUserApplicationService)_applicationContext["UserApplicationService"];
+            bool accountActivated = userApplicationService.ActivateAccount(new ActivationCommand(activationKey, "Bob", "alice"));
+            Assert.IsTrue(accountActivated);
 
             UserValidationEssentials userValidationEssentials = loginApplicationService.Login(new LoginCommand(
                                                                     username, password));
@@ -137,6 +149,61 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
 
         [Test]
         [Category("Integration")]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void ActivateAccountFailTest_ChecksIfUserCannotLoginUntilAccountIsNotActivated_VerifiesByExpectingException()
+        {
+            IRegistrationApplicationService registrationApplicationService =
+                (IRegistrationApplicationService)_applicationContext["RegistrationApplicationService"];
+
+            ILoginApplicationService loginApplicationService =
+                (ILoginApplicationService)_applicationContext["LoginApplicationService"];
+
+            string username = "linkinpark";
+            string email = "waqas.syed@hotmail.com";
+            string password = "burnitdown";
+            registrationApplicationService.CreateAccount(new SignupUserCommand(email, username, password, "USA", TimeZone.CurrentTimeZone, ""));
+
+            loginApplicationService.Login(new LoginCommand(username, password));
+        }
+
+        [Test]
+        [Category("Integration")]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void ActivateAccountFailThenSeccussfulTest_ChecksIfUserCannotLoginUntilAccountIsNotActivatedAndTriesToActivateAgainAndThenLogsIn_VerifiesByExpectingExceptionAndReturnedValue()
+        {
+            IUserApplicationService userApplicationService = (IUserApplicationService)_applicationContext["UserApplicationService"];
+            IRegistrationApplicationService registrationApplicationService =
+                (IRegistrationApplicationService)_applicationContext["RegistrationApplicationService"];
+            IUserRepository userRepository = (IUserRepository)_applicationContext["UserRepository"];
+
+            ILoginApplicationService loginApplicationService = (ILoginApplicationService)_applicationContext["LoginApplicationService"];
+            ISecurityKeysRepository securityKeysRepository = (ISecurityKeysRepository)_applicationContext["SecurityKeysPairRepository"];
+
+            string username = "linkinpark";
+            string email = "waqas.syed@hotmail.com";
+            string password = "burnitdown";
+            string activationKey = registrationApplicationService.CreateAccount(new SignupUserCommand(email, username, password, "USA", TimeZone.CurrentTimeZone, ""));
+
+            UserValidationEssentials validationEssentials = loginApplicationService.Login(new LoginCommand(username, password));
+            Assert.IsNull(validationEssentials);
+
+            bool accountActivated = userApplicationService.ActivateAccount(new ActivationCommand(activationKey, username, password));
+
+            Assert.IsTrue(accountActivated);
+            User userByUserName = userRepository.GetUserByUserName(username);
+            Assert.IsNotNull(userByUserName);
+            Assert.IsTrue(userByUserName.IsActivationKeyUsed.Value);
+
+            UserValidationEssentials userValidationEssentials = loginApplicationService.Login(new LoginCommand(username, password));
+            Assert.IsNotNull(userValidationEssentials);
+            SecurityKeysPair securityKeysPair = securityKeysRepository.GetByApiKey(userValidationEssentials.ApiKey.Value);
+            Assert.IsNotNull(securityKeysPair);
+            User receivedUser = userRepository.GetUserByUserName(username);
+            Assert.IsTrue(receivedUser.IsActivationKeyUsed.Value);
+        }
+
+        [Test]
+        [Category("Integration")]
         [ExpectedException(typeof(InvalidCredentialException))]
         public void LoginFailTest_TestsifTheLoginFailsAfterProvidingInvalidUsername_VerifiesThroughTheReturnedResult()
         {
@@ -148,6 +215,9 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
                 "bob@alice.com", "Bob", "alice", "Wonderland", TimeZone.CurrentTimeZone, ""));
 
             Assert.IsNotNull(activationKey);
+            IUserApplicationService userApplicationService = (IUserApplicationService)_applicationContext["UserApplicationService"];
+            bool accountActivated = userApplicationService.ActivateAccount(new ActivationCommand(activationKey, "Bob", "alice"));
+            Assert.IsTrue(accountActivated);
             
             loginApplicationService.Login(new LoginCommand("bobby", "alice"));            
         }
@@ -157,6 +227,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
         [ExpectedException(typeof(InvalidCredentialException))]
         public void LoginFailTest_TestsifTheLoginisFailsAfterProvidingBlankUsername_VerifiesThroughTheReturnedResult()
         {
+            IUserApplicationService userApplicationService = (IUserApplicationService)_applicationContext["UserApplicationService"];
             ILoginApplicationService loginApplicationService = (ILoginApplicationService)_applicationContext["LoginApplicationService"];
             Assert.IsNotNull(loginApplicationService);
             IRegistrationApplicationService registrationService = (IRegistrationApplicationService)_applicationContext["RegistrationApplicationService"]; ;
@@ -165,7 +236,9 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
                 "bob@alice.com", "Bob", "alice", "Wonderland", TimeZone.CurrentTimeZone, ""));
 
             Assert.IsNotNull(activationKey);
+            bool accountActivated = userApplicationService.ActivateAccount(new ActivationCommand(activationKey, "Bob", "alice"));
 
+            Assert.IsTrue(accountActivated);
             loginApplicationService.Login(new LoginCommand("", "alice"));
         }
 
@@ -185,6 +258,9 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
                                                                          TimeZone.CurrentTimeZone, ""));
 
             Assert.IsNotNull(activationKey);
+            IUserApplicationService userApplicationService = (IUserApplicationService)_applicationContext["UserApplicationService"];
+            bool accountActivated = userApplicationService.ActivateAccount(new ActivationCommand(activationKey, "Bob", "alice"));
+            Assert.IsTrue(accountActivated);
 
             loginApplicationService.Login(new LoginCommand("Bob", "khaleesi"));
         }
@@ -205,6 +281,9 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
                                                                          TimeZone.CurrentTimeZone, ""));
 
             Assert.IsNotNull(activationKey);
+            IUserApplicationService userApplicationService = (IUserApplicationService)_applicationContext["UserApplicationService"];
+            bool accountActivated = userApplicationService.ActivateAccount(new ActivationCommand(activationKey, "Bob", "alice"));
+            Assert.IsTrue(accountActivated);
 
             loginApplicationService.Login(new LoginCommand("Bob", ""));
         }

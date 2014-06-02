@@ -61,7 +61,14 @@ namespace CoinExchange.IdentityAccess.Application.Tests
 
         SecurityKeysPair ISecurityKeysRepository.GetByApiKey(string apiKey)
         {
-            return _securityKeysPairsList.First();
+            foreach (var securityKeysPair in _securityKeysPairsList)
+            {
+                if (securityKeysPair.ApiKey == apiKey)
+                {
+                    return securityKeysPair;
+                }
+            }
+            return null;
         }
 
         bool ISecurityKeysRepository.DeleteSecurityKeysPair(SecurityKeysPair securityKeysPair)

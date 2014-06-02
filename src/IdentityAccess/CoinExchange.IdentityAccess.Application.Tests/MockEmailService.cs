@@ -29,9 +29,10 @@ namespace CoinExchange.IdentityAccess.Application.Tests
         /// For post sign up email
         /// </summary>
         /// <param name="to"></param>
+        /// <param name="username"> </param>
         /// <param name="activationKey"></param>
         /// <returns></returns>
-        public bool SendPostSignUpEmail(string to, string activationKey)
+        public bool SendPostSignUpEmail(string to, string username, string activationKey)
         {
             return true;
         }
@@ -43,17 +44,6 @@ namespace CoinExchange.IdentityAccess.Application.Tests
         /// <param name="username"></param>
         /// <returns></returns>
         public bool SendForgotUsernameEmail(string to, string username)
-        {
-            return true;
-        }
-
-        /// <summary>
-        /// Sends the email that the user should get when they request to reset their password
-        /// </summary>
-        /// <param name="to"></param>
-        /// <param name="passwordResetLink"></param>
-        /// <returns></returns>
-        public bool SendForgotPasswordEmail(string to, string passwordResetLink)
         {
             return true;
         }
@@ -76,6 +66,28 @@ namespace CoinExchange.IdentityAccess.Application.Tests
         /// <param name="username"></param>
         /// <returns></returns>
         public bool SendPasswordChangedEmail(string to, string username)
+        {
+            return true;
+        }
+
+        /// <summary>
+        /// Sends re-activation notification email
+        /// </summary>
+        /// <param name="to"></param>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        public bool SendReactivaitonNotificationEmail(string to, string username)
+        {
+            return true;
+        }
+
+        /// <summary>
+        /// Sends an email to the potential user that specifies that they have just cancelled their activation
+        /// </summary>
+        /// <param name="to"></param>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        public bool SendCancelActivationEmail(string to, string username)
         {
             return true;
         }

@@ -57,13 +57,14 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Services.Email
         /// Sends the mail that the user should get after signing up for CoinExchange
         /// </summary>
         /// <param name="to"></param>
+        /// <param name="username"> </param>
         /// <param name="activationKey"></param>
         /// <returns></returns>
-        public bool SendPostSignUpEmail(string to, string activationKey)
+        public bool SendPostSignUpEmail(string to, string username, string activationKey)
         {
             _mailMessage = new MailMessage(_from, to);
             _mailMessage.Subject = EmailContents.ActivationKeySubject;
-            _mailMessage.Body = EmailContents.GetActivationKeyMessage(activationKey);
+            _mailMessage.Body = EmailContents.GetActivationKeyMessage(username, activationKey);
 
             _smtpClient.SendAsync(_mailMessage, null);
             return true;
@@ -86,22 +87,6 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Services.Email
         }
 
         /// <summary>
-        /// Sends the email that the user should get when they request to reset their password
-        /// </summary>
-        /// <param name="to"></param>
-        /// <param name="passwordResetLink"></param>
-        /// <returns></returns>
-        public bool SendForgotPasswordEmail(string to, string passwordResetLink)
-        {
-            _mailMessage = new MailMessage(_from, to);
-            _mailMessage.Subject = EmailContents.ForgotUsernameSubject;
-            _mailMessage.Body = EmailContents.GetForgotPasswordMessage(passwordResetLink);
-
-            _smtpClient.SendAsync(_mailMessage, null);
-            return true;
-        }
-
-        /// <summary>
         /// Send Welcome EMail to the specified user
         /// </summary>
         /// <param name="to"></param>
@@ -110,8 +95,8 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Services.Email
         public bool SendWelcomeEmail(string to, string username)
         {
             _mailMessage = new MailMessage(_from, to);
-            _mailMessage.Subject = EmailContents.ForgotUsernameSubject;
-            _mailMessage.Body = EmailContents.GetForgotPasswordMessage(username);
+            _mailMessage.Subject = EmailContents.WelcomeSubject;
+            _mailMessage.Body = EmailContents.GetWelcomEmailmessage(username);
 
             _smtpClient.SendAsync(_mailMessage, null);
             return true;
@@ -126,8 +111,40 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Services.Email
         public bool SendPasswordChangedEmail(string to, string username)
         {
             _mailMessage = new MailMessage(_from, to);
-            _mailMessage.Subject = EmailContents.ForgotUsernameSubject;
+            _mailMessage.Subject = EmailContents.PasswordChangedSubject;
             _mailMessage.Body = EmailContents.GetPasswordChangedEmail(username);
+
+            _smtpClient.SendAsync(_mailMessage, null);
+            return true;
+        }
+
+        /// <summary>
+        /// Sends an email to user specifying that their account was tried to be re-activated
+        /// </summary>
+        /// <param name="to"></param>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        public bool SendReactivaitonNotificationEmail(string to, string username)
+        {
+            _mailMessage = new MailMessage(_from, to);
+            _mailMessage.Subject = EmailContents.ReactivationNotificationSubject;
+            _mailMessage.Body = EmailContents.GetReactivationNotificationEmail(username);
+
+            _smtpClient.SendAsync(_mailMessage, null);
+            return true;
+        }
+
+        /// <summary>
+        /// Sends an email to the potential user that specifies that they have just cancelled their activation
+        /// </summary>
+        /// <param name="to"></param>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        public bool SendCancelActivationEmail(string to, string username)
+        {
+            _mailMessage = new MailMessage(_from, to);
+            _mailMessage.Subject = EmailContents.CancelActivationSubject;
+            _mailMessage.Body = EmailContents.GetCancelActivationEmail(username);
 
             _smtpClient.SendAsync(_mailMessage, null);
             return true;

@@ -47,7 +47,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
                     log.Debug("ActivateUser Call Recevied, parameters:" + param);
                 }
                 return
-                    Ok(_userApplicationService.ActivateAccount(new ActivationCommand(param.ActivationKey,param.UserName,param.Password)));
+                    Ok(_userApplicationService.ActivateAccount(new ActivationCommand(param.ActivationKey, param.UserName, param.Password)));
             }
             catch (InvalidOperationException exception)
             {

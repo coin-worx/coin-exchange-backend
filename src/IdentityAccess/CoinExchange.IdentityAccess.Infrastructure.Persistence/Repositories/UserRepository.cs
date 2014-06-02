@@ -60,11 +60,15 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Persistence.Repositories
         public User GetUserById(int id)
         {
             User user=CurrentSession.Get<User>(id);
-            if (user.Deleted)
+            if (user != null)
             {
-                throw new ArgumentException("The user doesnot exist or have been deleted");
+                if (user.Deleted)
+                {
+                    throw new ArgumentException("The user doesnot exist or have been deleted");
+                }
+                return user;
             }
-            return user;
+            return null;
         }
     }
 }
