@@ -59,6 +59,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DTO\CancelActivationParams.cs" />
+    <Compile Include="DTO\ChangePasswordParams.cs" />
     <Compile Include="DTO\Login.cs" />
     <Compile Include="DTO\SignUpParam.cs" />
     <Compile Include="DTO\Tier2Param.cs" />

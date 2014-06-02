@@ -15,22 +15,28 @@ namespace CoinExchange.IdentityAccess.Application.UserServices.Commands
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="userValidationEssentials"></param>
+        /// <param name="secretKey"> </param>
         /// <param name="oldPassword"></param>
         /// <param name="newPassword"></param>
-        /// <param name="confirmNewPassword"></param>
-        public ChangePasswordCommand(UserValidationEssentials userValidationEssentials, string oldPassword, 
+        /// <param name="apiKey"> </param>
+        public ChangePasswordCommand(string apiKey, string secretKey, string oldPassword, 
             string newPassword)
         {
-            UserValidationEssentials = userValidationEssentials;
+            ApiKey = new ApiKey(apiKey);
+            SecretKey = new SecretKey(secretKey);
             OldPassword = oldPassword;
             NewPassword = newPassword;
         }
 
         /// <summary>
-        /// User Validation Credentials
+        /// API Key
         /// </summary>
-        public UserValidationEssentials UserValidationEssentials { get; private set; }
+        public ApiKey ApiKey { get; private set; }
+
+        /// <summary>
+        /// Secret Key
+        /// </summary>
+        public SecretKey SecretKey { get; private set; }
 
         /// <summary>
         /// Old Password

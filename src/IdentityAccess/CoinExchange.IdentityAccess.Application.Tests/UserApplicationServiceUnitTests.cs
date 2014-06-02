@@ -49,8 +49,8 @@ namespace CoinExchange.IdentityAccess.Application.Tests
             UserValidationEssentials userValidationEssentials = new UserValidationEssentials(new Tuple<ApiKey, SecretKey>(
                 new ApiKey("123456789"), new SecretKey("987654321")), new TimeSpan(0,0,10,0));
 
-            bool changeSuccessful = userApplicationService.ChangePassword(new ChangePasswordCommand(userValidationEssentials, "burnitdown", 
-                "burnitdowntwice"));
+            bool changeSuccessful = userApplicationService.ChangePassword(new ChangePasswordCommand(
+                userValidationEssentials.ApiKey.Value, userValidationEssentials.SecretKey.Value, "burnitdown", "burnitdowntwice"));
 
             Assert.IsTrue(changeSuccessful);
             User userAfterPasswordChange = userRepository.GetUserByUserName("linkinpark");
@@ -62,7 +62,7 @@ namespace CoinExchange.IdentityAccess.Application.Tests
 
         [Test]
         [Category("Unit")]
-        [ExpectedException(typeof(Exception))]
+        [ExpectedException(typeof(InvalidCredentialException))]
         public void ChangePasswordFailTest_ChecksThePasswordDoesNotGetChangedWhenInvalidOldPasswordIsGiven_VeririesThroughTheReturnedValue()
         {
             IUserRepository userRepository = new MockUserRepository();
@@ -89,8 +89,8 @@ namespace CoinExchange.IdentityAccess.Application.Tests
                 new ApiKey("123456789"), new SecretKey("987654321")), new TimeSpan(0, 0, 0, 100));
 
             // Wrong password given
-            userApplicationService.ChangePassword(new ChangePasswordCommand(userValidationEssentials, "burnitdow",
-                                                      "burnitdowntwice"));
+            userApplicationService.ChangePassword(new ChangePasswordCommand(userValidationEssentials.ApiKey.Value, 
+                userValidationEssentials.SecretKey.Value, "burnitdow", "burnitdowntwice"));
 
             User userAfterPasswordChange = userRepository.GetUserByUserName("linkinpark");
             string passwordAfterChange = userAfterPasswordChange.Password;
@@ -131,87 +131,8 @@ namespace CoinExchange.IdentityAccess.Application.Tests
             (userRepository as MockUserRepository).AddUser(user);
 
                 // Wrong password given
-            userApplicationService.ChangePassword(new ChangePasswordCommand(userValidationEssentials, "burnitdown",
+            userApplicationService.ChangePassword(new ChangePasswordCommand(userValidationEssentials.ApiKey.Value, userValidationEssentials.SecretKey.Value, "burnitdown",
                                                       "burnitdowntwice"));           
-            User userAfterPasswordChange = userRepository.GetUserByUserName("linkinpark");
-            string passwordAfterChange = userAfterPasswordChange.Password;
-
-            // Verify the old and new password do not match
-            Assert.AreEqual(passwordBeforeChange, passwordAfterChange);
-        }
-
-        [Test]
-        [Category("Unit")]
-        [ExpectedException(typeof(Exception))]
-        public void ChangePasswordFailDueToUserTimeoutMismatchTest_ChecksThePasswordDoesNotGetChangedWhenTimeoutOfUserDoesNotMatchTheValidatioNEssentialsTime_VerifiesByExpectingException()
-        {
-            IUserRepository userRepository = new MockUserRepository();
-            ISecurityKeysRepository securityKeysRepository = new MockSecurityKeysRepository();
-            IPasswordEncryptionService passwordEncryptionService = new PasswordEncryptionService();
-            IIdentityAccessPersistenceRepository persistenceRepository = new MockPersistenceRepository(false);
-            UserApplicationService userApplicationService = new UserApplicationService(userRepository, securityKeysRepository,
-                passwordEncryptionService, persistenceRepository, new MockEmailService(), new PasswordCodeGenerationService());
-
-            // Store the Securiyty Keys with the Username of the User at hand
-            (securityKeysRepository as MockSecurityKeysRepository).AddSecurityKeysPair(new SecurityKeysPair(
-                new ApiKey("123456789").Value, new SecretKey("987654321").Value, "desc", 0, true));
-
-            var user = new User("linkinpark@rock.com", "linkinpark", passwordEncryptionService.EncryptPassword("burnitdown"), "USA", TimeZone.CurrentTimeZone, "", "");
-            // We need to encrypt the password in the test case ourselves, as we are not registering the user through 
-            // the proper service here
-            (userRepository as MockUserRepository).AddUser(user);
-
-            User userBeforePasswordChange = userRepository.GetUserByUserName("linkinpark");
-            string passwordBeforeChange = userBeforePasswordChange.Password;
-
-            // Give the API key that is already stored in the Security keys repository mentioned with the User Name
-            UserValidationEssentials userValidationEssentials = new UserValidationEssentials(new Tuple<ApiKey, SecretKey>(
-                new ApiKey("123456789"), new SecretKey("987654321")), new TimeSpan(0, 0, 10, 0));
-            (userRepository as MockUserRepository).DeleteUser(user);
-            user.AutoLogout = new TimeSpan(0, 0, 67, 0);
-            (userRepository as MockUserRepository).AddUser(user);
-
-            // Wrong password given
-            userApplicationService.ChangePassword(new ChangePasswordCommand(userValidationEssentials, "burnitdown",
-                                                      "burnitdowntwice"));
-            User userAfterPasswordChange = userRepository.GetUserByUserName("linkinpark");
-            string passwordAfterChange = userAfterPasswordChange.Password;
-
-            // Verify the old and new password do not match
-            Assert.AreEqual(passwordBeforeChange, passwordAfterChange);
-        }
-
-        [Test]
-        [Category("Unit")]
-        [ExpectedException(typeof(Exception))]
-        public void ChangePasswordFailDueToValidationEssentailsMismatchTest_ChecksThePasswordDoesNotGetChangedWhenTimeoutOfValidationEssentialsDoeNotMatchUserLogoutTime_VerifiesByExpectingException()
-        {
-            IUserRepository userRepository = new MockUserRepository();
-            ISecurityKeysRepository securityKeysRepository = new MockSecurityKeysRepository();
-            IPasswordEncryptionService passwordEncryptionService = new PasswordEncryptionService();
-            IIdentityAccessPersistenceRepository persistenceRepository = new MockPersistenceRepository(false);
-            UserApplicationService userApplicationService = new UserApplicationService(userRepository, securityKeysRepository,
-                passwordEncryptionService, persistenceRepository, new MockEmailService(), new PasswordCodeGenerationService());
-
-            // Store the Securiyty Keys with the Username of the User at hand
-            (securityKeysRepository as MockSecurityKeysRepository).AddSecurityKeysPair(new SecurityKeysPair(
-                new ApiKey("123456789").Value, new SecretKey("987654321").Value, "desc", 0, true));
-
-            var user = new User("linkinpark@rock.com", "linkinpark", passwordEncryptionService.EncryptPassword("burnitdown"), "USA", TimeZone.CurrentTimeZone, "", "");
-            // We need to encrypt the password in the test case ourselves, as we are not registering the user through 
-            // the proper service here
-            (userRepository as MockUserRepository).AddUser(user);
-            user.AutoLogout = new TimeSpan(0, 0, 10, 0);
-            User userBeforePasswordChange = userRepository.GetUserByUserName("linkinpark");
-            string passwordBeforeChange = userBeforePasswordChange.Password;
-
-            // Give the API key that is already stored in the Security keys repository mentioned with the User Name
-            UserValidationEssentials userValidationEssentials = new UserValidationEssentials(new Tuple<ApiKey, SecretKey>(
-                new ApiKey("123456789"), new SecretKey("987654321")), new TimeSpan(0, 0, 67, 0));
-
-            // Wrong password given
-            userApplicationService.ChangePassword(new ChangePasswordCommand(userValidationEssentials, "burnitdown",
-                                                      "burnitdowntwice"));
             User userAfterPasswordChange = userRepository.GetUserByUserName("linkinpark");
             string passwordAfterChange = userAfterPasswordChange.Password;
 

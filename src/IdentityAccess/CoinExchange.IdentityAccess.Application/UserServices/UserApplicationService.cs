@@ -52,7 +52,7 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
         public bool ChangePassword(ChangePasswordCommand changePasswordCommand)
         {
             // Get the SecurityKeyspair instance related to this API Key
-            SecurityKeysPair securityKeysPair = _securityKeysRepository.GetByApiKey(changePasswordCommand.UserValidationEssentials.ApiKey.Value);
+            SecurityKeysPair securityKeysPair = _securityKeysRepository.GetByApiKey(changePasswordCommand.ApiKey.Value);
 
             // See if the SecurityKeysPair instance exists for this API Key
             if (securityKeysPair != null)
@@ -61,38 +61,30 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
                 User user = _userRepository.GetUserById(securityKeysPair.UserId);
                 if (user != null)
                 {
-                    // The Session Logout time and the given session logout time must be the same
-                    if (user.AutoLogout == changePasswordCommand.UserValidationEssentials.SessionLogoutTime)
+                    // Make sure the session has not expired
+                    if (securityKeysPair.CreationDateTime.Add(user.AutoLogout) > DateTime.Now)
                     {
-                        // Make sure the session has not expired
-                        if (securityKeysPair.CreationDateTime.Add(user.AutoLogout) > DateTime.Now)
+                        // Check if the old password is the same as new one
+                        if (_passwordEncryptionService.VerifyPassword(changePasswordCommand.OldPassword,
+                                                                      user.Password))
                         {
-                            // Check if the old password is the same as new one
-                            if (_passwordEncryptionService.VerifyPassword(changePasswordCommand.OldPassword,
-                                                                          user.Password))
-                            {
-                                // Create new password and save for the user in the database
-                                string newEncryptedPassword =
-                                    _passwordEncryptionService.EncryptPassword(changePasswordCommand.NewPassword);
-                                user.Password = newEncryptedPassword;
-                                _persistenceRepository.SaveUpdate(user);
-                                _emailService.SendPasswordChangedEmail(user.Email, user.Username);
-                                return true;
-                            }
-                            else
-                            {
-                                throw new InvalidCredentialException(string.Format("Current password incorrect."));
-                            }
+                            // Create new password and save for the user in the database
+                            string newEncryptedPassword =
+                                _passwordEncryptionService.EncryptPassword(changePasswordCommand.NewPassword);
+                            user.Password = newEncryptedPassword;
+                            _persistenceRepository.SaveUpdate(user);
+                            _emailService.SendPasswordChangedEmail(user.Email, user.Username);
+                            return true;
                         }
                         else
                         {
-                            _securityKeysRepository.DeleteSecurityKeysPair(securityKeysPair);
-                            throw new Exception("Session Timeout expired for this API Key.");
+                            throw new InvalidCredentialException(string.Format("Current password incorrect."));
                         }
                     }
                     else
                     {
-                        throw new Exception("User's Session Auto Logout and given Session Losout do not match. Operation is aborted");
+                        _securityKeysRepository.DeleteSecurityKeysPair(securityKeysPair);
+                        throw new Exception("Session Timeout expired for this API Key.");
                     }
                 }
                 else
@@ -176,7 +168,7 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
             {
                 // Get the user tied to this Activation Key
                 User user = _userRepository.GetUserByActivationKey(cancelActivationCommand.ActivationKey);
-                // ToDo: Email
+                
                 // If activation key is valid, proceed to verify username and password
                 if (user != null)
                 {
@@ -184,6 +176,7 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
                     {
                         throw new InvalidOperationException("THis account has already been activated. Operation aborted.");
                     }
+                    _emailService.SendCancelActivationEmail(user.Email, user.Username);
                     _userRepository.DeleteUser(user);
                     return true;
                 }

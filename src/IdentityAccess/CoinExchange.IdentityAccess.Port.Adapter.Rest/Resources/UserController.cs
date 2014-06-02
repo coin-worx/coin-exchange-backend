@@ -82,5 +82,89 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
                 return InternalServerError();
             }
         }
+
+        /// <summary>
+        /// Request to cancel activation for an account
+        /// </summary>
+        /// <param name="cancelActivationParams"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("user/cancelactivation")]
+        public IHttpActionResult CancelUserActivation([FromBody]CancelActivationParams cancelActivationParams)
+        {
+            try
+            {
+                if (log.IsDebugEnabled)
+                {
+                    log.Debug("CanceUserActivation Call Recevied, parameters:" + cancelActivationParams);
+                }
+                return
+                    Ok(_userApplicationService.CancelAccountActivation(new CancelActivationCommand(cancelActivationParams.ActivationKey)));
+            }
+            catch (InvalidOperationException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("CanceUserActivation Call Exception ", exception);
+                }
+                return BadRequest(exception.Message);
+            }
+            catch (InvalidCredentialException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("CanceUserActivation Call Exception ", exception);
+                }
+                return BadRequest(exception.Message);
+            }
+            catch (Exception exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("CanceUserActivation Call Exception ", exception);
+                }
+                return InternalServerError();
+            }
+        }
+
+        [HttpPost]
+        [Route("user/cancelactivation")]
+        public IHttpActionResult ChangePassword([FromBody]ChangePasswordParams changePasswordParams)
+        {
+            try
+            {
+                if (log.IsDebugEnabled)
+                {
+                    log.Debug("ChangePassword Call Recevied, parameters:" + changePasswordParams);
+                }
+                return
+                    Ok(_userApplicationService.ChangePassword(new ChangePasswordCommand(
+                        changePasswordParams.ApiKey,changePasswordParams.SecretKey, changePasswordParams.OldPassword, changePasswordParams.NewPassword)));
+            }
+            catch (InvalidOperationException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("ChangePassword Call Exception ", exception);
+                }
+                return BadRequest(exception.Message);
+            }
+            catch (InvalidCredentialException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("ChangePassword Call Exception ", exception);
+                }
+                return BadRequest(exception.Message);
+            }
+            catch (Exception exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("ActivateUser Call Exception ", exception);
+                }
+                return InternalServerError();
+            }
+        }
     }
 }

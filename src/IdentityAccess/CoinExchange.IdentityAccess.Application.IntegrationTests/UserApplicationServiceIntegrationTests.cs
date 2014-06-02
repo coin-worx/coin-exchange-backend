@@ -68,8 +68,8 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             User userBeforePasswordChange = userRepository.GetUserByUserName("linkinpark");
             string passwordBeforeChange = userBeforePasswordChange.Password;
 
-            bool changeSuccessful = userApplicationService.ChangePassword(new ChangePasswordCommand(validationEssentials, "burnitdown",
-                "burnitdowntwice"));
+            bool changeSuccessful = userApplicationService.ChangePassword(new ChangePasswordCommand(
+                validationEssentials.ApiKey.Value, validationEssentials.SecretKey.Value, "burnitdown", "burnitdowntwice"));
 
             Assert.IsTrue(changeSuccessful);
             User userAfterPasswordChange = userRepository.GetUserByUserName("linkinpark");
@@ -103,8 +103,8 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             User userBeforePasswordChange = userRepository.GetUserByUserName("linkinpark");
             string passwordBeforeChange = userBeforePasswordChange.Password;
 
-            userApplicationService.ChangePassword(new ChangePasswordCommand(validationEssentials, "burnitdowner",
-                                                      "burnitdowntwice"));            
+            userApplicationService.ChangePassword(new ChangePasswordCommand(validationEssentials.ApiKey.Value,
+                validationEssentials.SecretKey.Value, "burnitdowner", "burnitdowntwice"));            
             User userAfterPasswordChange = userRepository.GetUserByUserName("linkinpark");
             string passwordAfterChange = userAfterPasswordChange.Password;
 
@@ -138,89 +138,14 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             UserValidationEssentials validationEssentials2 = new UserValidationEssentials(new Tuple<ApiKey, SecretKey>(
                 new ApiKey(validationEssentials.ApiKey.Value + "1"), validationEssentials.SecretKey), validationEssentials.SessionLogoutTime);
             // Give the wrong API Key
-            userApplicationService.ChangePassword(new ChangePasswordCommand(validationEssentials2, "burnitdowner",
-                                                      "burnitdowntwice"));
+            userApplicationService.ChangePassword(new ChangePasswordCommand(validationEssentials.ApiKey.Value + 1,
+                validationEssentials.SecretKey.Value, "burnitdown", "burnitdowntwice"));
             User userAfterPasswordChange = userRepository.GetUserByUserName("linkinpark");
             string passwordAfterChange = userAfterPasswordChange.Password;
 
             // Verify the old and new password do not match
             Assert.AreEqual(passwordBeforeChange, passwordAfterChange);
         }
-
-        [Test]
-        [Category("Integration")]
-        [ExpectedException(typeof(Exception))]
-        public void ChangePasswordFailDueToUserTimeoutVariableTest_ChecksIfExceptionIsRaisedAfterUsersTimeoutsFoundToBeDifferentThanTheGivenTimeout_VerifiesByExpectingException()
-        {
-            IUserApplicationService userApplicationService = (IUserApplicationService)_applicationContext["UserApplicationService"];
-            IRegistrationApplicationService registrationApplicationService =
-                (IRegistrationApplicationService)_applicationContext["RegistrationApplicationService"];
-            ILoginApplicationService loginApplicationService =
-                (ILoginApplicationService)_applicationContext["LoginApplicationService"];
-            IIdentityAccessPersistenceRepository persistenceRepository =
-                (IIdentityAccessPersistenceRepository)_applicationContext["IdentityAccessPersistenceRepository"];
-
-            IUserRepository userRepository = (IUserRepository)_applicationContext["UserRepository"];
-
-            string username = "linkinpark";
-            string activationKey = registrationApplicationService.CreateAccount(new SignupUserCommand("linkinpark@rock.com", "linkinpark", "burnitdown", "USA", TimeZone.CurrentTimeZone, ""));
-            ManualResetEvent manualResetEvent = new ManualResetEvent(false);
-            userApplicationService.ActivateAccount(new ActivationCommand(activationKey, username, "burnitdown"));
-            manualResetEvent.WaitOne(6000);
-            UserValidationEssentials validationEssentials = loginApplicationService.Login(new LoginCommand(username, "burnitdown"));
-
-            User userBeforePasswordChange = userRepository.GetUserByUserName("linkinpark");
-            string passwordBeforeChange = userBeforePasswordChange.Password;
-            User userByUserName = userRepository.GetUserByUserName(username);
-            // When the User's Logout time and ValidationEssentials Logout time won't match, test will fail
-            userByUserName.AutoLogout = new TimeSpan(0,0,0,67);
-            persistenceRepository.SaveUpdate(userByUserName);
-            // Give the wrong API Key
-            userApplicationService.ChangePassword(new ChangePasswordCommand(validationEssentials, "burnitdowner",
-                                                      "burnitdowntwice"));
-            User userAfterPasswordChange = userRepository.GetUserByUserName("linkinpark");
-            string passwordAfterChange = userAfterPasswordChange.Password;
-
-            // Verify the old and new password do not match
-            Assert.AreEqual(passwordBeforeChange, passwordAfterChange);
-        }
-
-        [Test]
-        [Category("Integration")]
-        [ExpectedException(typeof(Exception))]
-        public void ChangePasswordFailDueToGivenTimeoutMismatchTest_ChecksIfExceptionIsRaisedAfterGivenTimeoutsFoundToBeDifferentThanTheUserTimeout_VerifiesByExpectingException()
-        {
-            IUserApplicationService userApplicationService = (IUserApplicationService)_applicationContext["UserApplicationService"];
-            IRegistrationApplicationService registrationApplicationService =
-                (IRegistrationApplicationService)_applicationContext["RegistrationApplicationService"];
-            ILoginApplicationService loginApplicationService =
-                (ILoginApplicationService)_applicationContext["LoginApplicationService"];
-            IIdentityAccessPersistenceRepository persistenceRepository =
-                (IIdentityAccessPersistenceRepository)_applicationContext["IdentityAccessPersistenceRepository"];
-
-            IUserRepository userRepository = (IUserRepository)_applicationContext["UserRepository"];
-
-            string username = "linkinpark";
-            string activationKey = registrationApplicationService.CreateAccount(new SignupUserCommand("linkinpark@rock.com", "linkinpark", "burnitdown", "USA", TimeZone.CurrentTimeZone, ""));
-            ManualResetEvent manualResetEvent = new ManualResetEvent(false);
-            userApplicationService.ActivateAccount(new ActivationCommand(activationKey, username, "burnitdown"));
-            manualResetEvent.WaitOne(6000);
-            UserValidationEssentials validationEssentials = loginApplicationService.Login(new LoginCommand(username, "burnitdown"));
-
-            User userBeforePasswordChange = userRepository.GetUserByUserName("linkinpark");
-            string passwordBeforeChange = userBeforePasswordChange.Password;
-            UserValidationEssentials validationEssentials2 = new UserValidationEssentials(new Tuple<ApiKey, SecretKey>(
-                validationEssentials.ApiKey, validationEssentials.SecretKey), new TimeSpan(0, 0, 67, 0));
-            // Give the wrong API Key
-            userApplicationService.ChangePassword(new ChangePasswordCommand(validationEssentials2, "burnitdowner",
-                                                      "burnitdowntwice"));
-            User userAfterPasswordChange = userRepository.GetUserByUserName("linkinpark");
-            string passwordAfterChange = userAfterPasswordChange.Password;
-
-            // Verify the old and new password do not match
-            Assert.AreEqual(passwordBeforeChange, passwordAfterChange);
-        }
-
 
         [Test]
         [Category("Integration")]
@@ -246,15 +171,13 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
 
             User userBeforePasswordChange = userRepository.GetUserByUserName("linkinpark");
             string passwordBeforeChange = userBeforePasswordChange.Password;
-            UserValidationEssentials validationEssentials2 = new UserValidationEssentials(new Tuple<ApiKey, SecretKey>(
-                validationEssentials.ApiKey, validationEssentials.SecretKey), new TimeSpan(0, 0, 0, 0, 1));
             User userByUserName = userRepository.GetUserByUserName(username);
             // When the User's Logout time and ValidationEssentials Logout time won't match, test will fail
             userByUserName.AutoLogout = new TimeSpan(0, 0, 0, 0, 1);
             persistenceRepository.SaveUpdate(userByUserName);
             // Give the wrong API Key
-            userApplicationService.ChangePassword(new ChangePasswordCommand(validationEssentials2, "burnitdown",
-                                                      "burnitdowntwice"));
+            userApplicationService.ChangePassword(new ChangePasswordCommand(validationEssentials.ApiKey.Value,
+                validationEssentials.SecretKey.Value, "burnitdown", "burnitdowntwice"));
             User userAfterPasswordChange = userRepository.GetUserByUserName("linkinpark");
             string passwordAfterChange = userAfterPasswordChange.Password;
 
