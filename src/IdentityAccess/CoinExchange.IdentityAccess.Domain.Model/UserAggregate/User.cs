@@ -252,14 +252,14 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
                             return true;
                         }
                     }
-                    throw new Exception("ForgotPasswordCode in user does not match any Code in the FOrgottenPasswordCodes List.");
+                    throw new InvalidOperationException("ForgotPasswordCode in user does not match any Code in the FOrgottenPasswordCodes List.");
                 }
                 else
                 {
                     // No active ForgotPassword code at the moment
                     this.ForgotPasswordCode = null;
                     this.ForgotPasswordCodeExpiration = null;
-                    throw new Exception("Timeout expired for resetting the password or no request has been made to reset password.");
+                    throw new InvalidOperationException("Timeout expired for resetting the password or no request has been made to reset password.");
                 }
             }
             else

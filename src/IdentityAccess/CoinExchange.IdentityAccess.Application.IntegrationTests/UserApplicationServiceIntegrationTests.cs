@@ -649,6 +649,46 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             Assert.IsTrue(userByUserName.ForgottenPasswordCodes[0].IsUsed);
         }
 
+        [Test]
+        [Category("Integration")]
+        [ExpectedException(typeof(NullReferenceException))]
+        public void ResetPasswordFailTest_TestsIfPasswordIsNotChangedIfForgotPasswordReqeusthasNotBeenMade_VerifiesByReturnedValueAndDatabaseQuerying()
+        {
+            IUserApplicationService userApplicationService = (IUserApplicationService)_applicationContext["UserApplicationService"];
+            IRegistrationApplicationService registrationApplicationService =
+                (IRegistrationApplicationService)_applicationContext["RegistrationApplicationService"];
+            IUserRepository userRepository = (IUserRepository)_applicationContext["UserRepository"];
+            IPasswordEncryptionService passwordEncryption =
+                (IPasswordEncryptionService)_applicationContext["PasswordEncryptionService"];
+
+            string username = "linkinpark";
+            string email = "waqas.syed@hotmail.com";
+            string password = "burnitdown";
+            string activationKey = registrationApplicationService.CreateAccount(new SignupUserCommand(email, username, password, "USA", TimeZone.CurrentTimeZone, ""));
+            bool accountActivated = userApplicationService.ActivateAccount(new ActivationCommand(activationKey, username, "burnitdown"));
+            Assert.IsTrue(accountActivated);
+            ManualResetEvent manualResetEvent = new ManualResetEvent(false);
+            manualResetEvent.WaitOne(6000);
+
+            User userByUserName = userRepository.GetUserByUserName(username);
+            Assert.IsNotNull(userByUserName);
+            Assert.IsTrue(passwordEncryption.VerifyPassword(password, userByUserName.Password));
+            Assert.IsNull(userByUserName.ForgotPasswordCode);
+            Assert.IsNull(userByUserName.ForgotPasswordCodeExpiration);
+            Assert.AreEqual(0, userByUserName.ForgottenPasswordCodes.Length);
+            
+            string newPassword = "newpassword";
+            bool resetPasswordReponse = userApplicationService.ResetPasswordByEmailLink(new ResetPasswordCommand(username, newPassword));
+            Assert.IsTrue(resetPasswordReponse);
+
+            userByUserName = userRepository.GetUserByUserName(username);
+            Assert.IsNotNull(userByUserName);
+            Assert.IsTrue(passwordEncryption.VerifyPassword(password, userByUserName.Password));
+            Assert.IsNull(userByUserName.ForgotPasswordCode);
+            Assert.IsNull(userByUserName.ForgotPasswordCodeExpiration);
+            Assert.AreEqual(0, userByUserName.ForgottenPasswordCodes.Length);
+        }
+
         #endregion Reset Password Tests
     }
 }

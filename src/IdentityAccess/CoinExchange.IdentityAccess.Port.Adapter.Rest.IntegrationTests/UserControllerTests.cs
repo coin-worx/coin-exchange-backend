@@ -23,6 +23,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
     {
         private IApplicationContext _applicationContext;
         private DatabaseUtility _databaseUtility;
+
         [SetUp]
         public void Setup()
         {
@@ -75,8 +76,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
 
             UserController userController = _applicationContext["UserController"] as UserController;
             httpActionResult = userController.ActivateUser(new UserActivationParam("user", "123", activationKey));
-            OkNegotiatedContentResult<bool> okResponseMessage1 =
-                (OkNegotiatedContentResult<bool>)httpActionResult;
+            OkNegotiatedContentResult<bool> okResponseMessage1 = (OkNegotiatedContentResult<bool>)httpActionResult;
             Assert.AreEqual(okResponseMessage1.Content, true);
         }
 
@@ -159,6 +159,211 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
 
             IPasswordEncryptionService passwordEncryptionService = (IPasswordEncryptionService)_applicationContext["PasswordEncryptionService"];
             Assert.IsTrue(passwordEncryptionService.VerifyPassword(newPassword, userAfterPasswordChange.Password));
+        }
+
+        [Test]
+        [Category("Integration")]
+        public void ForgotUsernameTest_MakesSureUserIsRemindedOfTheTheirUsernameProperlyAfterActivatingAccount_VerifiesByTheReturnedValue()
+        {
+            // Register an account
+            RegistrationController registrationController = (RegistrationController)_applicationContext["RegistrationController"];
+            string email = "waqasshah047@gmail.com";
+            string username = "Bane";
+            string password = "iwearamask";
+            IHttpActionResult httpActionResult = registrationController.Register(new SignUpParam(email, username,
+                password, "Pakistan", TimeZone.CurrentTimeZone, ""));
+            OkNegotiatedContentResult<string> okResponseMessage = (OkNegotiatedContentResult<string>)httpActionResult;
+            string activationKey = okResponseMessage.Content;
+            Assert.IsNotNullOrEmpty(activationKey);
+
+            // Activate Account
+            UserController userController = (UserController)_applicationContext["UserController"];
+            httpActionResult = userController.ActivateUser(new UserActivationParam(username, password, activationKey));
+            OkNegotiatedContentResult<bool> okResponseMessage1 = (OkNegotiatedContentResult<bool>)httpActionResult;
+            Assert.IsTrue(okResponseMessage1.Content);
+
+            // Reqeust to remind for password
+            IHttpActionResult forgotUsernameResponse = userController.ForgotUsername(new ForgotUsernameParams(email));
+            OkNegotiatedContentResult<string> forgotUsernameOkResponse = (OkNegotiatedContentResult<string>) forgotUsernameResponse;
+            // Check if the username returned is correct
+            Assert.AreEqual(username, forgotUsernameOkResponse.Content);
+        }
+
+        [Test]
+        [Category("Integration")] 
+        public void ForgotUsernameFailTest_MakesSureUserIsNotRemindedOfTheirUsernameUntilTheAccountIsNotActivated_VerifiesByTheReturnedValue()
+        {
+            // Register an account
+            RegistrationController registrationController = (RegistrationController)_applicationContext["RegistrationController"];
+            string email = "waqasshah047@gmail.com";
+            string username = "Bane";
+            string password = "iwearamask";
+            IHttpActionResult httpActionResult = registrationController.Register(new SignUpParam(email, username,
+                password, "Pakistan", TimeZone.CurrentTimeZone, ""));
+            OkNegotiatedContentResult<string> okResponseMessage = (OkNegotiatedContentResult<string>)httpActionResult;
+            string activationKey = okResponseMessage.Content;
+            Assert.IsNotNullOrEmpty(activationKey);
+
+            // Reqeust to remind for password
+            UserController userController = (UserController)_applicationContext["UserController"];
+            IHttpActionResult forgotUsernameResponse = userController.ForgotUsername(new ForgotUsernameParams(email));
+            // The response should be an error message
+            BadRequestErrorMessageResult badRequestErrorMessage = (BadRequestErrorMessageResult)forgotUsernameResponse;
+            // Check if the username returned is correct
+            Assert.IsNotNull(badRequestErrorMessage);
+        }
+
+        [Test]
+        [Category("Integration")]
+        public void ForgotPasswordSuccessfulTest_MakesSureAUniqueCodeIsSentToThem_VerifiesByTheReturnedValue()
+        {
+            // Register an account
+            RegistrationController registrationController = (RegistrationController)_applicationContext["RegistrationController"];
+            string email = "waqasshah047@gmail.com";
+            string username = "Bane";
+            string password = "iwearamask";
+            IHttpActionResult httpActionResult = registrationController.Register(new SignUpParam(email, username,
+                password, "Pakistan", TimeZone.CurrentTimeZone, ""));
+            OkNegotiatedContentResult<string> okResponseMessage = (OkNegotiatedContentResult<string>)httpActionResult;
+            string activationKey = okResponseMessage.Content;
+            Assert.IsNotNullOrEmpty(activationKey);
+
+            // Activate Account
+            UserController userController = (UserController)_applicationContext["UserController"];
+            httpActionResult = userController.ActivateUser(new UserActivationParam(username, password, activationKey));
+            OkNegotiatedContentResult<bool> okResponseMessage1 = (OkNegotiatedContentResult<bool>)httpActionResult;
+            Assert.IsTrue(okResponseMessage1.Content);
+
+            // Confirm that the User has been activated
+            IUserRepository userRepository = (IUserRepository)_applicationContext["UserRepository"];
+            User userByUserName = userRepository.GetUserByUserName(username);
+            Assert.IsNotNull(userByUserName);
+            Assert.IsTrue(userByUserName.IsActivationKeyUsed.Value);
+
+            // Reqeust to remind for password
+            IHttpActionResult forgotPasswordResponse = userController.ForgotPassword(new ForgotPasswordParams(email, username));
+            OkNegotiatedContentResult<string> forgotPasswordOkResponse = (OkNegotiatedContentResult<string>)forgotPasswordResponse;
+            // Check if the username returned is correct
+            Assert.IsNotNull(forgotPasswordOkResponse.Content);
+        }
+
+        [Test]
+        [Category("Integration")]
+        public void ForgotPasswordFailTest_MakesSureUserIsNotRemindedOfTheirPasswordUntilTheAccountIsNotActivated_VerifiesByTheReturnedValue()
+        {
+            // Register an account
+            RegistrationController registrationController = (RegistrationController)_applicationContext["RegistrationController"];
+            string email = "waqasshah047@gmail.com";
+            string username = "Bane";
+            string password = "iwearamask";
+            IHttpActionResult httpActionResult = registrationController.Register(new SignUpParam(email, username,
+                password, "Pakistan", TimeZone.CurrentTimeZone, ""));
+            OkNegotiatedContentResult<string> okResponseMessage = (OkNegotiatedContentResult<string>)httpActionResult;
+            string activationKey = okResponseMessage.Content;
+            Assert.IsNotNullOrEmpty(activationKey);
+
+            // Reqeust to remind for password
+            UserController userController = (UserController)_applicationContext["UserController"];
+            IHttpActionResult forgotUsernameResponse = userController.ForgotPassword(new ForgotPasswordParams(email, username));
+            // The response should be an error message
+            BadRequestErrorMessageResult badRequestErrorMessage = (BadRequestErrorMessageResult)forgotUsernameResponse;
+            // Check if the username returned is correct
+            Assert.IsNotNull(badRequestErrorMessage);
+        }
+
+        [Test]
+        [Category("Integration")]
+        public void ResetPasswordSuccessfulTest_MakesSurePasswordGetsResetIfCredentialsAreValid_VerifiesByTheReturnedValueAndDatabaseQuerying()
+        {
+            // Register an account
+            RegistrationController registrationController = (RegistrationController)_applicationContext["RegistrationController"];
+            string email = "waqasshah047@gmail.com";
+            string username = "Bane";
+            string password = "iwearamask";
+            IHttpActionResult httpActionResult = registrationController.Register(new SignUpParam(email, username,
+                password, "Pakistan", TimeZone.CurrentTimeZone, ""));
+            OkNegotiatedContentResult<string> okResponseMessage = (OkNegotiatedContentResult<string>)httpActionResult;
+            string activationKey = okResponseMessage.Content;
+            Assert.IsNotNullOrEmpty(activationKey);
+
+            // Activate Account
+            UserController userController = (UserController)_applicationContext["UserController"];
+            httpActionResult = userController.ActivateUser(new UserActivationParam(username, password, activationKey));
+            OkNegotiatedContentResult<bool> okResponseMessage1 = (OkNegotiatedContentResult<bool>)httpActionResult;
+            Assert.IsTrue(okResponseMessage1.Content);
+
+            // Reqeust to remind for password
+            IHttpActionResult forgotPasswordResponse = userController.ForgotPassword(new ForgotPasswordParams(email, username));
+            OkNegotiatedContentResult<string> forgotPasswordOkResponse = (OkNegotiatedContentResult<string>)forgotPasswordResponse;
+            // Check if the username returned is correct
+            Assert.IsNotNull(forgotPasswordOkResponse.Content);
+
+            // Confirm that the User has been activated and forgot password code has been generated
+            IUserRepository userRepository = (IUserRepository)_applicationContext["UserRepository"];
+            User userByUserName = userRepository.GetUserByUserName(username);
+            Assert.IsNotNull(userByUserName);
+            Assert.IsTrue(userByUserName.IsActivationKeyUsed.Value);
+            Assert.IsNotNull(userByUserName.ForgotPasswordCode);
+            Assert.IsNotNull(userByUserName.ForgotPasswordCodeExpiration);
+
+            // Reqeust to reset password
+            string newPassword = "iwillwearthemask";
+            IHttpActionResult resetPasswordResponse = userController.ResetPassword(new ResetPasswordParams(username, newPassword));            
+            OkNegotiatedContentResult<bool> resetPasswordOkResponse = (OkNegotiatedContentResult<bool>)resetPasswordResponse;
+            // Check if the username returned is correct
+            Assert.IsTrue(resetPasswordOkResponse.Content);
+
+            User userAfterResetPassword = userRepository.GetUserByUserName(username);
+            Assert.IsNotNull(userAfterResetPassword);
+            IPasswordEncryptionService passwordEncryptionService = (IPasswordEncryptionService)_applicationContext["PasswordEncryptionService"];
+            Assert.IsTrue(passwordEncryptionService.VerifyPassword(newPassword, userAfterResetPassword.Password));
+            Assert.IsNull(userAfterResetPassword.ForgotPasswordCode);
+            Assert.IsNull(userAfterResetPassword.ForgotPasswordCodeExpiration);
+            Assert.AreEqual(1, userAfterResetPassword.ForgottenPasswordCodes.Length);
+        }
+
+        [Test]
+        [Category("Integration")]
+        public void ResetPasswordFailTest_MakesSurePasswordDoesNotGetResetIfNoForgotPasswordRequestIsMade_VerifiesByTheReturnedValueAndDatabaseQuerying()
+        {
+            // Register an account
+            RegistrationController registrationController = (RegistrationController)_applicationContext["RegistrationController"];
+            string email = "waqasshah047@gmail.com";
+            string username = "Bane";
+            string password = "iwearamask";
+            IHttpActionResult httpActionResult = registrationController.Register(new SignUpParam(email, username,
+                password, "Pakistan", TimeZone.CurrentTimeZone, ""));
+            OkNegotiatedContentResult<string> okResponseMessage = (OkNegotiatedContentResult<string>)httpActionResult;
+            string activationKey = okResponseMessage.Content;
+            Assert.IsNotNullOrEmpty(activationKey);
+
+            // Activate Account
+            UserController userController = (UserController)_applicationContext["UserController"];
+            httpActionResult = userController.ActivateUser(new UserActivationParam(username, password, activationKey));
+            OkNegotiatedContentResult<bool> okResponseMessage1 = (OkNegotiatedContentResult<bool>)httpActionResult;
+            Assert.IsTrue(okResponseMessage1.Content);
+
+            // Confirm that the User has been activated and forgot password code has been generated
+            IUserRepository userRepository = (IUserRepository)_applicationContext["UserRepository"];
+            User userByUserName = userRepository.GetUserByUserName(username);
+            Assert.IsNotNull(userByUserName);
+            IPasswordEncryptionService passwordEncryptionService = (IPasswordEncryptionService)_applicationContext["PasswordEncryptionService"];
+            Assert.IsTrue(passwordEncryptionService.VerifyPassword(password, userByUserName.Password));
+            Assert.IsTrue(userByUserName.IsActivationKeyUsed.Value);
+            Assert.IsNull(userByUserName.ForgotPasswordCode);
+            Assert.IsNull(userByUserName.ForgotPasswordCodeExpiration);
+            Assert.AreEqual(0, userByUserName.ForgottenPasswordCodes.Length);
+
+            // Reqeust to reset password
+            string newPassword = "iwillwearthemask";
+            IHttpActionResult resetPasswordResponse = userController.ResetPassword(new ResetPasswordParams(username, newPassword));
+            BadRequestErrorMessageResult resetPasswordOkResponse = (BadRequestErrorMessageResult)resetPasswordResponse;
+            // Check if the username returned is correct
+            Assert.IsNotNull(resetPasswordOkResponse);
+
+            User userAfterResetTry = userRepository.GetUserByUserName(username);
+            Assert.IsNotNull(userAfterResetTry);            
+            Assert.IsTrue(passwordEncryptionService.VerifyPassword(password, userByUserName.Password));
         }
     }
 }

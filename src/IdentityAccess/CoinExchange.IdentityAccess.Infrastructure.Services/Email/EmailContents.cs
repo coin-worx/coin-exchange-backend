@@ -35,8 +35,7 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Services.Email
             Environment.NewLine, "You have successfully activated your account at BlancRock. We welcome you to our exchange" +
                                  " and are excited to serve you. ", Environment.NewLine, Environment.NewLine);
 
-        private static readonly string PasswordChanged = string.Format("{0} {1} {2} {3} {4}", Environment.NewLine,
-            Environment.NewLine, "You have just successfully changed your password. If it wasn't you, please cntact BlancRock" +
+        private static readonly string PasswordChanged = string.Format("{0} {1} {2}", "You have just successfully changed your password. If it wasn't you, please cntact BlancRock" +
                                  " support as soon as possible. ", Environment.NewLine, Environment.NewLine);
 
         private static readonly string ReActivation = string.Format("{0} {1} {2}", Environment.NewLine,

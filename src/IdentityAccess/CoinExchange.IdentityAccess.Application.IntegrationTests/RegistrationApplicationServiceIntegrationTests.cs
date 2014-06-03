@@ -56,6 +56,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             IPasswordEncryptionService passwordEncryption =
                 (IPasswordEncryptionService)_applicationContext["PasswordEncryptionService"];
             ManualResetEvent manualResetEvent = new ManualResetEvent(false);
+            
             string activationKey = registrationService.CreateAccount(new SignupUserCommand(
                 "waqas.syed@hotmail.com", "Bob", "iamnotalice", "Wonderland", TimeZone.CurrentTimeZone, ""));
             // Wait for the email to be sent

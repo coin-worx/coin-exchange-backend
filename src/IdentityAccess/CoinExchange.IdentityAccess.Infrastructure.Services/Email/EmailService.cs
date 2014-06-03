@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Net;
 using System.Net.Mail;
+using System.Threading;
 
 namespace CoinExchange.IdentityAccess.Infrastructure.Services.Email
 {
@@ -17,6 +18,11 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Services.Email
         private SmtpClient _smtpClient = new SmtpClient();
         private string _from;
         private MailMessage _mailMessage = null;
+
+        /// <summary>
+        /// Checks whether a mail sending async operation is in process
+        /// </summary>
+        private bool _sendingInProgress = false;
 
         /// <summary>
         /// Initializes the Email service
@@ -48,8 +54,13 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Services.Email
             _mailMessage.Subject = subject;
             _mailMessage.Body = content;
 
-            _smtpClient.SendCompleted += SendCompletedCallback;
+            // Until the previous email sending operation is in process, wait otherwise exception will be thrown.
+            while (_sendingInProgress)
+            {
+                Thread.Sleep(500);
+            }
             _smtpClient.SendAsync(_mailMessage, null);
+            _sendingInProgress = true;
             return true;
         }
 
@@ -66,7 +77,13 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Services.Email
             _mailMessage.Subject = EmailContents.ActivationKeySubject;
             _mailMessage.Body = EmailContents.GetActivationKeyMessage(username, activationKey);
 
+            // Until the previous email sending operation is in process, wait otherwise exception will be thrown.
+            while (_sendingInProgress)
+            {
+                Thread.Sleep(500);
+            }
             _smtpClient.SendAsync(_mailMessage, null);
+            _sendingInProgress = true;
             return true;
         }
 
@@ -81,8 +98,14 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Services.Email
             _mailMessage = new MailMessage(_from, to);
             _mailMessage.Subject = EmailContents.ForgotUsernameSubject;
             _mailMessage.Body = EmailContents.GetForgotUsernameMessage(username);
-
+            
+            // Until the previous email sending operation is in process, wait otherwise exception will be thrown.
+            while (_sendingInProgress)
+            {
+                Thread.Sleep(500);                
+            }
             _smtpClient.SendAsync(_mailMessage, null);
+            _sendingInProgress = true;
             return true;
         }
 
@@ -98,7 +121,13 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Services.Email
             _mailMessage.Subject = EmailContents.WelcomeSubject;
             _mailMessage.Body = EmailContents.GetWelcomEmailmessage(username);
 
+            // Until the previous email sending operation is in process, wait otherwise exception will be thrown.
+            while (_sendingInProgress)
+            {
+                Thread.Sleep(500);
+            }
             _smtpClient.SendAsync(_mailMessage, null);
+            _sendingInProgress = true;
             return true;
         }
 
@@ -114,7 +143,13 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Services.Email
             _mailMessage.Subject = EmailContents.PasswordChangedSubject;
             _mailMessage.Body = EmailContents.GetPasswordChangedEmail(username);
 
+            // Until the previous email sending operation is in process, wait otherwise exception will be thrown.
+            while (_sendingInProgress)
+            {
+                Thread.Sleep(500);
+            }
             _smtpClient.SendAsync(_mailMessage, null);
+            _sendingInProgress = true;
             return true;
         }
 
@@ -146,7 +181,13 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Services.Email
             _mailMessage.Subject = EmailContents.CancelActivationSubject;
             _mailMessage.Body = EmailContents.GetCancelActivationEmail(username);
 
+            // Until the previous email sending operation is in process, wait otherwise exception will be thrown.
+            while (_sendingInProgress)
+            {
+                Thread.Sleep(500);
+            }
             _smtpClient.SendAsync(_mailMessage, null);
+            _sendingInProgress = true;
             return true;
         }
 
@@ -157,6 +198,7 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Services.Email
         /// <param name="e"></param>
         private void SendCompletedCallback(object sender, AsyncCompletedEventArgs e)
         {
+            _sendingInProgress = false;
             if (e.Cancelled)
             {
                 Log.Info(string.Format("{0} {1}","Email cancelled for: ", _mailMessage.To.ToString()));

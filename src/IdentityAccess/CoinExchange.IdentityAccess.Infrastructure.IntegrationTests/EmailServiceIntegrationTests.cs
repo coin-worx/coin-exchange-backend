@@ -75,5 +75,32 @@ namespace CoinExchange.IdentityAccess.Infrastructure.IntegrationTests
 
             Assert.IsTrue(sendForgotUsernameEmail);
         }
+
+        [Test]
+        [Category("Integration")]
+        public void MultipleEmailAsyncCheckTest_ChecksWhetherTheAsyncOperationsOfSendingEmailsBackToBackDontCauseException_SendsEmailSuccessfully()
+        {
+            IEmailService emailService = (IEmailService)ContextRegistry.GetContext()["EmailService"];
+            bool sendForgotUsernameEmail = emailService.SendForgotUsernameEmail("waqasshah047@gmail.com", "Waqas Shah");
+            Assert.IsTrue(sendForgotUsernameEmail);
+
+            bool sendForgotUsernameEmail2 = emailService.SendForgotUsernameEmail("waqasshah047@gmail.com", "Waqas Shah");
+            Assert.IsTrue(sendForgotUsernameEmail2);
+
+            bool activationEmail = emailService.SendCancelActivationEmail("waqasshah047@gmail.com", "Waqas Shah");
+            Assert.IsTrue(activationEmail);
+
+            bool passwordChangedEmail = emailService.SendPasswordChangedEmail("waqasshah047@gmail.com", "Waqas Shah");
+            Assert.IsTrue(passwordChangedEmail);
+
+            bool welcomeEmail = emailService.SendWelcomeEmail("waqasshah047@gmail.com", "Waqas Shah");
+            Assert.IsTrue(welcomeEmail);
+
+            bool postSignUpEmail = emailService.SendPostSignUpEmail("waqasshah047@gmail.com", "Waqas Shah", "123");
+            Assert.IsTrue(postSignUpEmail);
+
+            ManualResetEvent manualResetEvent = new ManualResetEvent(false);
+            manualResetEvent.WaitOne(6000);
+        }
     }
 }

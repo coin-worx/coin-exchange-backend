@@ -174,7 +174,7 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
                 {
                     if (user.IsActivationKeyUsed.Value)
                     {
-                        throw new InvalidOperationException("THis account has already been activated. Operation aborted.");
+                        throw new InvalidOperationException("This account has already been activated. Operation aborted.");
                     }
                     _emailService.SendCancelActivationEmail(user.Email, user.Username);
                     _userRepository.DeleteUser(user);
@@ -213,7 +213,7 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
                     {
                         throw new InvalidOperationException("Account is not activated yet. In case you have forgotten your " +
                                                             "username, you can cancel your account activation" +
-                                                            " and then sing up for an account again.");
+                                                            " and then sign up for an account again.");
                     }
                     return user.Username;
                 }
@@ -249,7 +249,7 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
                     {
                         throw new InvalidOperationException("Account is not activated yet. In case you have forgotten your " +
                                                             "password, you can cancel your account activation" +
-                                                            " and then sing up for an account again.");
+                                                            " and then sign up for an account again.");
                     }
                     if (user.Username.Equals(forgotPasswordCommand.Username))
                     {
