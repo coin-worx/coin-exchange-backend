@@ -55,7 +55,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             registrationApplicationService.CreateAccount(new SignupUserCommand(email, username, "burnitdown", "USA", TimeZone.CurrentTimeZone, ""));
             IUserTierLevelApplicationService tierLevelApplicationService =
                 _applicationContext["UserTierLevelApplicationService"] as IUserTierLevelApplicationService;
-            tierLevelApplicationService.ApplyForTier1Verification(new VerifyTier1Command("1234","1234"));
+            tierLevelApplicationService.ApplyForTier1Verification(new VerifyTier1Command("1234","123","123",DateTime.Today));
             //TODO: have to modify the test and test case name.
         }
     }

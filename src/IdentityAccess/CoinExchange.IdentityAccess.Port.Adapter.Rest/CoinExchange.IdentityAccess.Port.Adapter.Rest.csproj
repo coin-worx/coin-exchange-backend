@@ -63,6 +63,7 @@
     <Compile Include="DTO\ChangePasswordParams.cs" />
     <Compile Include="DTO\Login.cs" />
     <Compile Include="DTO\SignUpParam.cs" />
+    <Compile Include="DTO\Tier1Param.cs" />
     <Compile Include="DTO\Tier2Param.cs" />
     <Compile Include="DTO\Tier3Param.cs" />
     <Compile Include="DTO\UserActivationParam.cs" />

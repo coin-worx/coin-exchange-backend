@@ -19,5 +19,8 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
         void ApplyForTier3Verification(VerifyTier3Command command);
         void ApplyForTier4Verification();
         UserTierStatusRepresentation[] GetTierLevelStatuses(string apiKey);
+        Tier1Details GetTier1Details(string apiKey);
+        Tier2Details GetTier2Details(string apiKey);
+        Tier3Details GetTier3Details(string apiKey);
     }
 }

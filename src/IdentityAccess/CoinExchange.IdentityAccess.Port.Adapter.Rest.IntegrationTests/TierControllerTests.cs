@@ -90,13 +90,20 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             TierController tierController = _applicationContext["TierController"] as TierController;
             tierController.Request = new HttpRequestMessage(HttpMethod.Post, "");
             tierController.Request.Headers.Add("Auth", essentials.ApiKey.Value);
-            tierController.GetVerifyForTier1("667778899");
+            tierController.GetVerifyForTier1(new Tier1Param("User",DateTime.Today.AddDays(-10).ToShortDateString(),"656667"));
 
             IHttpActionResult httpActionResult = tierController.GetTierStatuses();
             OkNegotiatedContentResult<UserTierStatusRepresentation[]> statuses = (OkNegotiatedContentResult<UserTierStatusRepresentation[]>)httpActionResult;
             Assert.AreEqual(statuses.Content.Length, 5);
             Assert.AreEqual(statuses.Content[0].Status, Status.Verified.ToString());
             Assert.AreEqual(statuses.Content[1].Status, Status.Preverified.ToString());
+
+            httpActionResult = tierController.GetTier1Details();
+            OkNegotiatedContentResult<Tier1Details> detials = (OkNegotiatedContentResult<Tier1Details>)httpActionResult;
+            Assert.AreEqual(detials.Content.Country,"Pakistan");
+            Assert.AreEqual(detials.Content.FullName, "User");
+            Assert.AreEqual(detials.Content.DateOfBirth, DateTime.Today.AddDays(-10));
+            Assert.AreEqual(detials.Content.PhoneNumber, "656667");
         }
 
         [Test]
@@ -107,7 +114,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             TierController tierController = _applicationContext["TierController"] as TierController;
             tierController.Request = new HttpRequestMessage(HttpMethod.Post, "");
             tierController.Request.Headers.Add("Auth", essentials.ApiKey.Value);
-            tierController.GetVerifyForTier1("667778899");
+            tierController.GetVerifyForTier1(new Tier1Param("User", DateTime.Now.AddDays(-10).ToShortDateString(), "656667"));
             tierController.GetVerifyForTier2(new Tier2Param("asd","","","punjab","Isb","123"));
 
             IHttpActionResult httpActionResult = tierController.GetTierStatuses();
@@ -116,6 +123,14 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             Assert.AreEqual(statuses.Content[0].Status, Status.Verified.ToString());
             Assert.AreEqual(statuses.Content[1].Status, Status.Preverified.ToString());
             Assert.AreEqual(statuses.Content[2].Status, Status.Preverified.ToString());
+
+            httpActionResult = tierController.GetTier2Details();
+            OkNegotiatedContentResult<Tier2Details> detials = (OkNegotiatedContentResult<Tier2Details>)httpActionResult;
+            Assert.AreEqual(detials.Content.Country, "Pakistan");
+            Assert.AreEqual(detials.Content.AddressLine1, "asd");
+            Assert.AreEqual(detials.Content.State, "punjab");
+            Assert.AreEqual(detials.Content.City, "Isb");
+            Assert.AreEqual(detials.Content.ZipCode, "123");
         }
 
         [Test]
@@ -126,14 +141,14 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             TierController tierController = _applicationContext["TierController"] as TierController;
             tierController.Request = new HttpRequestMessage(HttpMethod.Post, "");
             tierController.Request.Headers.Add("Auth", essentials.ApiKey.Value);
-            tierController.GetVerifyForTier1("667778899");
+            tierController.GetVerifyForTier1(new Tier1Param("User", DateTime.Now.AddDays(-10).ToShortDateString(), "656667"));
             tierController.GetVerifyForTier2(new Tier2Param("asd", "", "", "punjab", "Isb", "123"));
             var content = new MultipartFormDataContent();
             content.Add(new StreamContent(new FileStream(@"C:\Logs\Logs.txt", FileMode.Open)));
             tierController.Request.Content = content;
             tierController.GetVerifyForTier3(new Tier3Param("asd", "123", "bill", "logs.txt"));
             ManualResetEvent resetEvent=new ManualResetEvent(false);
-            resetEvent.WaitOne(10000);
+            resetEvent.WaitOne(15000);
             IHttpActionResult httpActionResult = tierController.GetTierStatuses();
             OkNegotiatedContentResult<UserTierStatusRepresentation[]> statuses = (OkNegotiatedContentResult<UserTierStatusRepresentation[]>)httpActionResult;
             Assert.AreEqual(statuses.Content.Length, 5);
@@ -141,6 +156,37 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             Assert.AreEqual(statuses.Content[1].Status, Status.Preverified.ToString());
             Assert.AreEqual(statuses.Content[2].Status, Status.Preverified.ToString());
             Assert.AreEqual(statuses.Content[3].Status, Status.Preverified.ToString());
+
+            httpActionResult = tierController.GetTier3Details();
+            OkNegotiatedContentResult<Tier3Details> detials = (OkNegotiatedContentResult<Tier3Details>)httpActionResult;
+            Assert.AreEqual(detials.Content.Nin, "123");
+            Assert.AreEqual(detials.Content.Ssn, "asd");
+        }
+
+        [Test]
+        [Category("Integration")]
+        public void GetTier2Detials_IfTier1IsNotVerified_InvalidOperationExceptionShouldBeThrown()
+        {
+            UserValidationEssentials essentials = AccessControlUtility.RegisterAndLogin("user", "user@user.com", "123", _applicationContext);
+            TierController tierController = _applicationContext["TierController"] as TierController;
+            tierController.Request = new HttpRequestMessage(HttpMethod.Post, "");
+            tierController.Request.Headers.Add("Auth", essentials.ApiKey.Value);
+            IHttpActionResult httpActionResult = tierController.GetTier2Details();
+            BadRequestErrorMessageResult result = httpActionResult as BadRequestErrorMessageResult;
+            Assert.AreEqual(result.Message, "First verify Tier 1");
+        }
+
+        [Test]
+        [Category("Integration")]
+        public void GetTier3Detials_IfTier3IsNotVerified_InvalidOperationExceptionShouldBeThrown()
+        {
+            UserValidationEssentials essentials = AccessControlUtility.RegisterAndLogin("user", "user@user.com", "123", _applicationContext);
+            TierController tierController = _applicationContext["TierController"] as TierController;
+            tierController.Request = new HttpRequestMessage(HttpMethod.Post, "");
+            tierController.Request.Headers.Add("Auth", essentials.ApiKey.Value);
+            IHttpActionResult httpActionResult = tierController.GetTier3Details();
+            BadRequestErrorMessageResult result = httpActionResult as BadRequestErrorMessageResult;
+            Assert.AreEqual(result.Message, "First verify Tier 2");
         }
     }
 }

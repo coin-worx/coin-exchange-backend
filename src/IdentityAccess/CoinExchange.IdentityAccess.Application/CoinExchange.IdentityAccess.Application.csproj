@@ -68,6 +68,9 @@
     <Compile Include="UserServices\Commands\VerifyTier2Command.cs" />
     <Compile Include="UserServices\IUserApplicationService.cs" />
     <Compile Include="UserServices\IUserTierLevelApplicationService.cs" />
+    <Compile Include="UserServices\Representations\Tier1Details.cs" />
+    <Compile Include="UserServices\Representations\Tier2Details.cs" />
+    <Compile Include="UserServices\Representations\Tier3Details.cs" />
     <Compile Include="UserServices\Representations\UserTierStatusRepresentation.cs" />
     <Compile Include="UserServices\UserApplicationService.cs" />
     <Compile Include="UserServices\UserTierLevelApplicationService.cs" />
