@@ -54,5 +54,7 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
         /// <param name="resetPasswordCommand"> </param>
         /// <returns></returns>
         bool ResetPasswordByEmailLink(ResetPasswordCommand resetPasswordCommand);
+
+        bool ChangeSettings(ChangeSettingsCommand changeSettingsCommand);
     }
 }

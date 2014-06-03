@@ -57,7 +57,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             Assert.AreEqual(okResponseMessage1.Content, true);
 
             LoginController loginController = (LoginController)_applicationContext["LoginController"];
-            httpActionResult = loginController.Login(new Login("user", "123"));
+            httpActionResult = loginController.Login(new LoginParams("user", "123"));
             OkNegotiatedContentResult<UserValidationEssentials> keys =
                 (OkNegotiatedContentResult<UserValidationEssentials>) httpActionResult;
             Assert.IsNotNullOrEmpty(keys.Content.ApiKey.Value);
@@ -87,7 +87,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
 
             LoginController loginController = (LoginController)_applicationContext["LoginController"];
             int currentHour = DateTime.Now.Hour;
-            httpActionResult = loginController.Login(new Login(username, "123"));
+            httpActionResult = loginController.Login(new LoginParams(username, "123"));
             OkNegotiatedContentResult<UserValidationEssentials> keys =
                 (OkNegotiatedContentResult<UserValidationEssentials>)httpActionResult;
             Assert.IsNotNullOrEmpty(keys.Content.ApiKey.Value);
@@ -116,7 +116,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
 
             // Login attempt without Activating Account
             LoginController loginController = (LoginController)_applicationContext["LoginController"];
-            httpActionResult = loginController.Login(new Login(username, "123"));
+            httpActionResult = loginController.Login(new LoginParams(username, "123"));
             BadRequestErrorMessageResult badRequest = (BadRequestErrorMessageResult)httpActionResult;
             Assert.IsNotNull(badRequest);
 
@@ -145,7 +145,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             // Login attempt without Activating Account
             LoginController loginController = (LoginController)_applicationContext["LoginController"];
             int currentHour = DateTime.Now.Hour;
-            httpActionResult = loginController.Login(new Login(username, "123"));
+            httpActionResult = loginController.Login(new LoginParams(username, "123"));
             BadRequestErrorMessageResult badRequest = (BadRequestErrorMessageResult)httpActionResult;
             Assert.IsNotNull(badRequest);
 
@@ -157,7 +157,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             Assert.AreEqual(okResponseMessage1.Content, true);
 
             // Login again
-            httpActionResult = loginController.Login(new Login(username, "123"));
+            httpActionResult = loginController.Login(new LoginParams(username, "123"));
             OkNegotiatedContentResult<UserValidationEssentials> okReponse =
                 (OkNegotiatedContentResult<UserValidationEssentials>)httpActionResult;
             Assert.IsNotNullOrEmpty(okReponse.Content.ApiKey.Value);

@@ -34,6 +34,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         //default constructor
         public User()
         {
+            _autoLogout = new TimeSpan(0, 0, 10, 0);
             IsActivationKeyUsed = new IsActivationKeyUsed(false);
             IsUserBlocked = new IsUserBlocked(false);
 
@@ -266,6 +267,42 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
             {
                 throw new NullReferenceException("Password Code is null or does not contain any value");
             }
+        }
+
+        /// <summary>
+        /// Change the settings for this User
+        /// </summary>
+        /// <returns></returns>
+        public bool ChangeSettings(string email, string pgpPublicKey, Language language, TimeZone timeZone, 
+            bool isDefaultAutoLogout, int autoLogoutMinutes)
+        {
+            this._email = email;
+            this._pgpPublicKey = pgpPublicKey;
+            _language = language;
+            _timeZone = timeZone;
+            if (isDefaultAutoLogout)
+            {
+                // If the Auto Logout time is set as default, assign it 10 minutes
+                this.AssignAutoLogoutTime(10);
+                return true;
+            }
+            else
+            {
+                // Else, assign the custom user defined time
+                this.AssignAutoLogoutTime(autoLogoutMinutes);
+                return true;
+            }
+        }
+
+        /// <summary>
+        /// Assigns the Auto Logout Time
+        /// </summary>
+        /// <param name="minutes"></param>
+        /// <returns></returns>
+        private bool AssignAutoLogoutTime(int minutes)
+        {
+            this.AutoLogout = new TimeSpan(0, 0, minutes, 0);
+            return true;
         }
 
         #endregion Methods

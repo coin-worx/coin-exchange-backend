@@ -61,9 +61,10 @@
   <ItemGroup>
     <Compile Include="DTO\CancelActivationParams.cs" />
     <Compile Include="DTO\ChangePasswordParams.cs" />
+    <Compile Include="DTO\ChangeSettingsParams.cs" />
     <Compile Include="DTO\ForgotPasswordParams.cs" />
     <Compile Include="DTO\ForgotUsernameParams.cs" />
-    <Compile Include="DTO\Login.cs" />
+    <Compile Include="DTO\LoginParams.cs" />
     <Compile Include="DTO\ResetPasswordParams.cs" />
     <Compile Include="DTO\SignUpParam.cs" />
     <Compile Include="DTO\Tier2Param.cs" />

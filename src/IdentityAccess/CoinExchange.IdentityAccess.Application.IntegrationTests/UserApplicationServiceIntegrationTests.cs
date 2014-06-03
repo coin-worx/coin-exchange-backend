@@ -690,5 +690,59 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
         }
 
         #endregion Reset Password Tests
+
+        #region Change Settings Tests
+
+        [Test]
+        [Category("Integration")]
+        [ExpectedException(typeof(NullReferenceException))]
+        public void ChangeSettingsSuccessfultTest_ChecksIfTheSettingsForUserChangeSuccessfulyAndValuesInDatabaseChange_VerifiesByReturnedValueAndDatabaseQuerying()
+        {
+            IUserApplicationService userApplicationService = (IUserApplicationService)_applicationContext["UserApplicationService"];
+            IRegistrationApplicationService registrationApplicationService =
+                (IRegistrationApplicationService)_applicationContext["RegistrationApplicationService"];
+            IUserRepository userRepository = (IUserRepository)_applicationContext["UserRepository"];
+            IPasswordEncryptionService passwordEncryption =
+                (IPasswordEncryptionService)_applicationContext["PasswordEncryptionService"];
+
+            string username = "linkinpark";
+            string email = "dummyemail@dumbstatus.com";
+            string password = "burnitdown";
+            string activationKey = registrationApplicationService.CreateAccount(new SignupUserCommand(email, username, password, "USA", TimeZone.CurrentTimeZone, ""));
+            
+            User userByUserName = userRepository.GetUserByUserName(username);
+            Assert.IsNotNull(userByUserName);
+            Assert.AreEqual(email, userByUserName.Email);
+            Assert.IsTrue(passwordEncryption.VerifyPassword(password, userByUserName.Password));
+            Assert.AreEqual(Language.English, userByUserName.Language);
+            Assert.AreEqual(TimeZone.CurrentTimeZone.StandardName, userByUserName.TimeZone.StandardName);
+            Assert.AreEqual(new TimeSpan(0, 0, 10, 0), userByUserName.AutoLogout);
+            Assert.IsNull(userByUserName.ForgotPasswordCode);
+            Assert.IsNull(userByUserName.ForgotPasswordCodeExpiration);
+            Assert.AreEqual(0, userByUserName.ForgottenPasswordCodes.Length);
+
+            bool accountActivated = userApplicationService.ActivateAccount(new ActivationCommand(activationKey, username, "burnitdown"));
+            Assert.IsTrue(accountActivated);
+            ManualResetEvent manualResetEvent = new ManualResetEvent(false);
+            manualResetEvent.WaitOne(6000);
+
+            string newEmail = "newdummyemail@dumbstatus.com";
+            bool resetPasswordReponse = userApplicationService.ChangeSettings(new ChangeSettingsCommand(username, newEmail
+                , "", Language.Arabic, TimeZone.CurrentTimeZone, false, 67));
+            Assert.IsTrue(resetPasswordReponse);
+
+            userByUserName = userRepository.GetUserByUserName(username);
+            Assert.IsNotNull(userByUserName);
+            Assert.AreEqual(newEmail, userByUserName.Email);
+            Assert.IsTrue(passwordEncryption.VerifyPassword(password, userByUserName.Password));
+            Assert.AreEqual(Language.Arabic, userByUserName.Language);
+            Assert.AreEqual(TimeZone.CurrentTimeZone.StandardName, userByUserName.TimeZone.StandardName);
+            Assert.AreEqual(new TimeSpan(0, 0, 67, 0), userByUserName.AutoLogout);
+            Assert.IsNull(userByUserName.ForgotPasswordCode);
+            Assert.IsNull(userByUserName.ForgotPasswordCodeExpiration);
+            Assert.AreEqual(0, userByUserName.ForgottenPasswordCodes.Length);
+        }
+
+        #endregion Change Settings Tests
     }
 }

@@ -60,6 +60,7 @@
     <Compile Include="UserServices\Commands\ActivationCommand.cs" />
     <Compile Include="UserServices\Commands\CancelActivationCommand.cs" />
     <Compile Include="UserServices\Commands\ChangePasswordCommand.cs" />
+    <Compile Include="UserServices\Commands\ChangeSettingsCommand.cs" />
     <Compile Include="UserServices\Commands\ForgotPasswordCommand.cs" />
     <Compile Include="UserServices\Commands\ForgotUsernameCommand.cs" />
     <Compile Include="UserServices\Commands\ResetPasswordCommand.cs" />

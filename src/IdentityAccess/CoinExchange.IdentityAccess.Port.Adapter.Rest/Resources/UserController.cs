@@ -293,5 +293,54 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
                 return InternalServerError();
             }
         }
+
+        [HttpPost]
+        [Route("user/changesettings")]
+        public IHttpActionResult ChangeSettings([FromBody]ChangeSettingsCommand changeSettingsCommand)
+        {
+            try
+            {
+                if (log.IsDebugEnabled)
+                {
+                    log.Debug("ChangeSettings Call Recevied, parameters:" + changeSettingsCommand);
+                }
+                return
+                    Ok(_userApplicationService.ChangeSettings(new ChangeSettingsCommand(changeSettingsCommand.Username,
+                        changeSettingsCommand.Email, changeSettingsCommand.PgpPublicKey, changeSettingsCommand.Language,
+                        changeSettingsCommand.TimeZone, changeSettingsCommand.IsDefaultAutoLogout, changeSettingsCommand.AutoLogoutMinutes)));
+            }
+            catch (InvalidOperationException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("ChangeSettings Call Exception ", exception);
+                }
+                return BadRequest(exception.Message);
+            }
+            catch (InvalidCredentialException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("ChangeSettings Call Exception ", exception);
+                }
+                return BadRequest(exception.Message);
+            }
+            catch (NullReferenceException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("ChangeSettings Call Exception ", exception);
+                }
+                return BadRequest(exception.Message);
+            }
+            catch (Exception exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("ChangeSettings Call Exception ", exception);
+                }
+                return InternalServerError();
+            }
+        }
     }
 }

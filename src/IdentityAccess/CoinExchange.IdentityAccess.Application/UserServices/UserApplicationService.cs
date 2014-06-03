@@ -322,5 +322,46 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
                 throw new InvalidCredentialException("Email not provided");
             }
         }
+
+        /// <summary>
+        /// Cahnges the settigns for a user
+        /// </summary>
+        /// <param name="changeSettingsCommand"></param>
+        /// <returns></returns>
+        public bool ChangeSettings(ChangeSettingsCommand changeSettingsCommand)
+        {
+            if (changeSettingsCommand != null)
+            {
+                if (!string.IsNullOrEmpty(changeSettingsCommand.Username))
+                {
+                    User user = _userRepository.GetUserByUserName(changeSettingsCommand.Username);
+
+                    if (user != null)
+                    {
+                        user.ChangeSettings(changeSettingsCommand.Email, changeSettingsCommand.PgpPublicKey,
+                                                   changeSettingsCommand.Language, changeSettingsCommand.TimeZone,
+                                                   changeSettingsCommand.IsDefaultAutoLogout,
+                                                   changeSettingsCommand.AutoLogoutMinutes);
+
+                        _persistenceRepository.SaveUpdate(user);
+                        return true;
+                    }
+                    else
+                    {
+                        throw new InstanceNotFoundException(string.Format("{0} {1}",
+                                                                          "No User found for the given username: ",
+                                                                          changeSettingsCommand.Username));
+                    }
+                }
+                else
+                {
+                    throw new InvalidCredentialException("Username is null or does not contain any value.");
+                }
+            }
+            else
+            {
+                throw new NullReferenceException("Given ChangeSettingsCommand is null.");
+            }
+        }
     }
 }
