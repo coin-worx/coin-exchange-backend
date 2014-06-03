@@ -22,6 +22,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         private string _email;
         private Language _language;
         private TimeZone _timeZone;
+        private bool _isDefaultAutoLogout;
         private TimeSpan _autoLogout;
         private DateTime _lastLogin;
         private IList<UserTierLevelStatus> _tierLevelStatuses { get; set; } 
@@ -37,6 +38,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         //default constructor
         public User()
         {
+            _autoLogout = new TimeSpan(0, 0, 10, 0);
             IsActivationKeyUsed = new IsActivationKeyUsed(false);
             IsUserBlocked = new IsUserBlocked(false);
 
@@ -265,20 +267,56 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
                             return true;
                         }
                     }
-                    throw new Exception("ForgotPasswordCode in user does not match any Code in the FOrgottenPasswordCodes List.");
+                    throw new InvalidOperationException("ForgotPasswordCode in user does not match any Code in the FOrgottenPasswordCodes List.");
                 }
                 else
                 {
                     // No active ForgotPassword code at the moment
                     this.ForgotPasswordCode = null;
                     this.ForgotPasswordCodeExpiration = null;
-                    throw new Exception("Timeout expired for resetting the password or no request has been made to reset password.");
+                    throw new InvalidOperationException("Timeout expired for resetting the password or no request has been made to reset password.");
                 }
             }
             else
             {
                 throw new NullReferenceException("Password Code is null or does not contain any value");
             }
+        }
+
+        /// <summary>
+        /// Change the settings for this User
+        /// </summary>
+        /// <returns></returns>
+        public bool ChangeSettings(string email, string pgpPublicKey, Language language, TimeZone timeZone, 
+            bool isDefaultAutoLogout, int autoLogoutMinutes)
+        {
+            this._email = email;
+            this._pgpPublicKey = pgpPublicKey;
+            _language = language;
+            _timeZone = timeZone;
+            if (isDefaultAutoLogout)
+            {
+                // If the Auto Logout time is set as default, assign it 10 minutes
+                this.AssignAutoLogoutTime(10);
+                return true;
+            }
+            else
+            {
+                // Else, assign the custom user defined time
+                this.AssignAutoLogoutTime(autoLogoutMinutes);
+                return true;
+            }
+        }
+
+        /// <summary>
+        /// Assigns the Auto Logout Time
+        /// </summary>
+        /// <param name="minutes"></param>
+        /// <returns></returns>
+        private bool AssignAutoLogoutTime(int minutes)
+        {
+            _autoLogout = new TimeSpan(0, 0, minutes, 0);
+            return true;
         }
 
         #endregion Methods
@@ -321,6 +359,25 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         /// TimeZone
         /// </summary>
         public TimeZone TimeZone { get { return _timeZone; } set { _timeZone = value; } }
+
+        /// <summary>
+        /// Specifies whether this user account uses the default logout time of 10 minutes or custom defined by user
+        /// </summary>
+        public bool IsDefaultAutoLogout
+        {
+            get
+            {
+                if (_autoLogout == new TimeSpan(0, 0, 10, 0))
+                {
+                    return true;
+                }
+                return false;
+            }
+            set
+            {
+                _isDefaultAutoLogout = value;
+            }
+        }
 
         /// <summary>
         /// AutoLogout
@@ -449,5 +506,10 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
                 _dateOfBirth = value;
             }
         }
+
+        /// <summary>
+        /// PGP Public Key
+        /// </summary>
+        public string PgpPublicKey { get { return _pgpPublicKey; } private set { _pgpPublicKey = value; } }
     }
 }

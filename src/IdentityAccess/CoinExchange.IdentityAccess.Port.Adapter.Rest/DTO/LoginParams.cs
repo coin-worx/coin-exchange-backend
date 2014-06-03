@@ -9,7 +9,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.DTO
     /// <summary>
     /// Login parameters
     /// </summary>
-    public class Login
+    public class LoginParams
     {
         public string UserName { get; private set; }
         public string Password { get; private set; }
@@ -19,7 +19,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.DTO
         /// </summary>
         /// <param name="userName"></param>
         /// <param name="password"></param>
-        public Login(string userName, string password)
+        public LoginParams(string userName, string password)
         {
             UserName = userName;
             Password = password;

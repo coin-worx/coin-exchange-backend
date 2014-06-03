@@ -10,15 +10,22 @@ namespace CoinExchange.IdentityAccess.Application.AccessControlServices.Commands
         /// <summary>
         /// Parameterized Constructor
         /// </summary>
-        /// <param name="validationEssentials"></param>
-        public LogoutCommand(UserValidationEssentials validationEssentials)
+        /// <param name="apiKey"> </param>
+        /// <param name="secretKey"> </param>
+        public LogoutCommand(string apiKey, string secretKey)
         {
-            ValidationEssentials = validationEssentials;
+            ApiKey = new ApiKey(apiKey);
+            SecretKey = new SecretKey(secretKey);
         }
 
         /// <summary>
-        /// Contains the API and Secret Key given to user after Logging In
+        /// API Key
         /// </summary>
-        public UserValidationEssentials ValidationEssentials { get; private set; }
+        public ApiKey ApiKey { get; private set; }
+
+        /// <summary>
+        /// Secret Key
+        /// </summary>
+        public SecretKey SecretKey { get; private set; }
     }
 }

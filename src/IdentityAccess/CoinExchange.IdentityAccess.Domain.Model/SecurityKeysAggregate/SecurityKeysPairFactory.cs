@@ -15,10 +15,10 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         /// <summary>
         /// Create system generated security key pair
         /// </summary>
-        /// <param name="userName"></param>
+        /// <param name="userId"> </param>
         /// <param name="securityKeysGeneration"></param>
         /// <returns></returns>
-        public static SecurityKeysPair SystemGeneratedSecurityKeyPair(int userId,ISecurityKeysGenerationService securityKeysGeneration)
+        public static SecurityKeysPair SystemGeneratedSecurityKeyPair(int userId, ISecurityKeysGenerationService securityKeysGeneration)
         {
             var keys = securityKeysGeneration.GenerateNewSecurityKeys();
             SecurityKeysPair securityKeysPair=new SecurityKeysPair(keys.Item1,keys.Item2,DateTime.Now.ToString(),userId,true);

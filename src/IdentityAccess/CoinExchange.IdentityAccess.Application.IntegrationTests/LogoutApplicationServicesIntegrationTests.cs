@@ -54,34 +54,36 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             Assert.IsNotNull(loginApplicationService);
             IRegistrationApplicationService registrationService = (IRegistrationApplicationService)_applicationContext["RegistrationApplicationService"]; ;
 
+            // Register
             string username = "Bob";
             string password = "alice";
             string activationKey = registrationService.CreateAccount(new SignupUserCommand(
                 "bob@alice.com", username, password, "Wonderland", TimeZone.CurrentTimeZone, ""));
-
             Assert.IsNotNull(activationKey);
 
             IUserApplicationService userApplicationService = (IUserApplicationService)_applicationContext["UserApplicationService"];
             IUserRepository userRepository = (IUserRepository)_applicationContext["UserRepository"];
 
+            // Activate account
             bool accountActivated = userApplicationService.ActivateAccount(new ActivationCommand(activationKey, username, password));
-
             Assert.IsTrue(accountActivated);
             User userByUserName = userRepository.GetUserByUserName(username);
             Assert.IsNotNull(userByUserName);
             Assert.IsTrue(userByUserName.IsActivationKeyUsed.Value);
 
-            UserValidationEssentials userValidationEssentials = loginApplicationService.Login(new LoginCommand("Bob", "alice"));
+            // Login
+            UserValidationEssentials userValidationEssentials = loginApplicationService.Login(new LoginCommand(username, password));
             Assert.IsNotNull(userValidationEssentials);
             Assert.IsNotNull(userValidationEssentials.ApiKey);
             Assert.IsNotNull(userValidationEssentials.SecretKey);
             Assert.IsNotNull(userValidationEssentials.SessionLogoutTime);
 
+            // Logout
             ILogoutApplicationService logoutApplicationService = 
                 (ILogoutApplicationService)_applicationContext["LogoutApplicationService"];
             Assert.IsNotNull(logoutApplicationService);
-
-            bool logout = logoutApplicationService.Logout(new LogoutCommand(userValidationEssentials));
+            bool logout = logoutApplicationService.Logout(new LogoutCommand(userValidationEssentials.ApiKey.Value,
+                userValidationEssentials.SecretKey.Value));
             Assert.IsTrue(logout);
 
             ISecurityKeysRepository securityKeysRepository = (ISecurityKeysRepository)_applicationContext["SecurityKeysPairRepository"];

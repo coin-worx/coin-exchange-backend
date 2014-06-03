@@ -16,6 +16,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger
               (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private ILoginApplicationService _loginApplicationService;
 
         /// <summary>
@@ -34,7 +35,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         /// <returns></returns>
         [HttpPost]
         [Route("user/login")]
-        public IHttpActionResult Login([FromBody]Login param)
+        public IHttpActionResult Login([FromBody]LoginParams param)
         {
             try
             {

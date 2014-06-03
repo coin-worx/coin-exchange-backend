@@ -45,7 +45,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
                 (OkNegotiatedContentResult<bool>)httpActionResult;
             //login
             LoginController loginController = applicationContext["LoginController"] as LoginController;
-            httpActionResult = loginController.Login(new Login("user", "123"));
+            httpActionResult = loginController.Login(new LoginParams("user", "123"));
             OkNegotiatedContentResult<UserValidationEssentials> keys =
                 (OkNegotiatedContentResult<UserValidationEssentials>)httpActionResult;
             //return keys

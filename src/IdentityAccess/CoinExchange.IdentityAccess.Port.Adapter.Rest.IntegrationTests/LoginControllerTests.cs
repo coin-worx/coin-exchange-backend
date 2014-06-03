@@ -8,6 +8,7 @@ using System.Web.Http;
 using System.Web.Http.Results;
 using CoinExchange.Common.Tests;
 using CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate;
+using CoinExchange.IdentityAccess.Domain.Model.UserAggregate;
 using CoinExchange.IdentityAccess.Port.Adapter.Rest.DTO;
 using CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources;
 using NUnit.Framework;
@@ -39,10 +40,9 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
 
         [Test]
         [Category("Integration")]
-        public void Login_AfterCreatingAndActivatingTheAccount_YouShouldReceiveCredentials()
+        public void LoginSuccessfulTest_MakesSureAccountIsCreated_VerifiesAndAssertsTheReturnedValue()
         {
-            RegistrationController registrationController =
-                _applicationContext["RegistrationController"] as RegistrationController;
+            RegistrationController registrationController = (RegistrationController)_applicationContext["RegistrationController"];
             IHttpActionResult httpActionResult = registrationController.Register(new SignUpParam("user@user.com", "user", "123", "Pakistan",
                 TimeZone.CurrentTimeZone, ""));
             OkNegotiatedContentResult<string> okResponseMessage =
@@ -50,19 +50,125 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             string activationKey = okResponseMessage.Content;
             Assert.IsNotNullOrEmpty(activationKey);
 
-            UserController userController = _applicationContext["UserController"] as UserController;
+            UserController userController = (UserController)_applicationContext["UserController"];
             httpActionResult = userController.ActivateUser(new UserActivationParam("user", "123", activationKey));
             OkNegotiatedContentResult<bool> okResponseMessage1 =
                 (OkNegotiatedContentResult<bool>)httpActionResult;
             Assert.AreEqual(okResponseMessage1.Content, true);
 
-            LoginController loginController = _applicationContext["LoginController"] as LoginController;
-            httpActionResult=loginController.Login(new Login("user", "123"));
+            LoginController loginController = (LoginController)_applicationContext["LoginController"];
+            httpActionResult = loginController.Login(new LoginParams("user", "123"));
             OkNegotiatedContentResult<UserValidationEssentials> keys =
                 (OkNegotiatedContentResult<UserValidationEssentials>) httpActionResult;
             Assert.IsNotNullOrEmpty(keys.Content.ApiKey.Value);
             Assert.IsNotNullOrEmpty(keys.Content.SecretKey.Value);
             Assert.IsNotNullOrEmpty(keys.Content.SessionLogoutTime.ToString());
+        }
+
+        [Test]
+        [Category("Integration")]
+        public void LoginSuccessfulTest_MakesSureAccountIsCreatedAndUserLogsin_VerifiesByReturnedValueAndDatabaseQuerying()
+        {
+            RegistrationController registrationController = (RegistrationController)_applicationContext["RegistrationController"];
+
+            string username = "user";
+            IHttpActionResult httpActionResult = registrationController.Register(new SignUpParam("user@user.com", username, "123", "Pakistan",
+                TimeZone.CurrentTimeZone, ""));
+            OkNegotiatedContentResult<string> okResponseMessage =
+                (OkNegotiatedContentResult<string>)httpActionResult;
+            string activationKey = okResponseMessage.Content;
+            Assert.IsNotNullOrEmpty(activationKey);
+
+            UserController userController = (UserController)_applicationContext["UserController"];
+            httpActionResult = userController.ActivateUser(new UserActivationParam(username, "123", activationKey));
+            OkNegotiatedContentResult<bool> okResponseMessage1 =
+                (OkNegotiatedContentResult<bool>)httpActionResult;
+            Assert.AreEqual(okResponseMessage1.Content, true);
+
+            LoginController loginController = (LoginController)_applicationContext["LoginController"];
+            int currentHour = DateTime.Now.Hour;
+            httpActionResult = loginController.Login(new LoginParams(username, "123"));
+            OkNegotiatedContentResult<UserValidationEssentials> keys =
+                (OkNegotiatedContentResult<UserValidationEssentials>)httpActionResult;
+            Assert.IsNotNullOrEmpty(keys.Content.ApiKey.Value);
+            Assert.IsNotNullOrEmpty(keys.Content.SecretKey.Value);
+            Assert.IsNotNullOrEmpty(keys.Content.SessionLogoutTime.ToString());
+
+            IUserRepository userRepository = (IUserRepository)_applicationContext["UserRepository"];
+            User userByUserName = userRepository.GetUserByUserName(username);
+            Assert.IsNotNull(userByUserName);
+            Assert.AreEqual(currentHour, userByUserName.LastLogin.Hour);
+        }
+
+        [Test]
+        [Category("Integration")]
+        public void LoginFailTest_ChecksThatUserCannotLoginBeforeActivatingAccount_VerifiesByReturnedValueAndDatabaseQuerying()
+        {
+            RegistrationController registrationController = (RegistrationController)_applicationContext["RegistrationController"];
+
+            string username = "user";
+            IHttpActionResult httpActionResult = registrationController.Register(new SignUpParam("user@user.com", username, "123", "Pakistan",
+                TimeZone.CurrentTimeZone, ""));
+            OkNegotiatedContentResult<string> okResponseMessage =
+                (OkNegotiatedContentResult<string>)httpActionResult;
+            string activationKey = okResponseMessage.Content;
+            Assert.IsNotNullOrEmpty(activationKey);
+
+            // Login attempt without Activating Account
+            LoginController loginController = (LoginController)_applicationContext["LoginController"];
+            httpActionResult = loginController.Login(new LoginParams(username, "123"));
+            BadRequestErrorMessageResult badRequest = (BadRequestErrorMessageResult)httpActionResult;
+            Assert.IsNotNull(badRequest);
+
+            IUserRepository userRepository = (IUserRepository)_applicationContext["UserRepository"];
+            User userByUserName = userRepository.GetUserByUserName(username);
+            Assert.IsNotNull(userByUserName);
+            // Not logged in yet
+            Assert.AreEqual(DateTime.MinValue, userByUserName.LastLogin);
+            Assert.IsFalse(userByUserName.IsActivationKeyUsed.Value);
+        }
+
+        [Test]
+        [Category("Integration")]
+        public void LoginFailThenSuccessfulTest_ChecksThatUserCannotLoginBeforeActivatingAccountAndThenAllowsLoginAfterActivation_VerifiesByReturnedValueAndDatabaseQuerying()
+        {
+            RegistrationController registrationController = (RegistrationController)_applicationContext["RegistrationController"];
+
+            string username = "user";
+            IHttpActionResult httpActionResult = registrationController.Register(new SignUpParam("user@user.com", username, "123", "Pakistan",
+                TimeZone.CurrentTimeZone, ""));
+            OkNegotiatedContentResult<string> okResponseMessage =
+                (OkNegotiatedContentResult<string>)httpActionResult;
+            string activationKey = okResponseMessage.Content;
+            Assert.IsNotNullOrEmpty(activationKey);
+
+            // Login attempt without Activating Account
+            LoginController loginController = (LoginController)_applicationContext["LoginController"];
+            int currentHour = DateTime.Now.Hour;
+            httpActionResult = loginController.Login(new LoginParams(username, "123"));
+            BadRequestErrorMessageResult badRequest = (BadRequestErrorMessageResult)httpActionResult;
+            Assert.IsNotNull(badRequest);
+
+            // Activate Account
+            UserController userController = (UserController)_applicationContext["UserController"];
+            httpActionResult = userController.ActivateUser(new UserActivationParam(username, "123", activationKey));
+            OkNegotiatedContentResult<bool> okResponseMessage1 =
+                (OkNegotiatedContentResult<bool>)httpActionResult;
+            Assert.AreEqual(okResponseMessage1.Content, true);
+
+            // Login again
+            httpActionResult = loginController.Login(new LoginParams(username, "123"));
+            OkNegotiatedContentResult<UserValidationEssentials> okReponse =
+                (OkNegotiatedContentResult<UserValidationEssentials>)httpActionResult;
+            Assert.IsNotNullOrEmpty(okReponse.Content.ApiKey.Value);
+            Assert.IsNotNullOrEmpty(okReponse.Content.SecretKey.Value);
+            Assert.IsNotNullOrEmpty(okReponse.Content.SessionLogoutTime.ToString());
+
+            IUserRepository userRepository = (IUserRepository)_applicationContext["UserRepository"];
+            User userByUserName = userRepository.GetUserByUserName(username);
+            Assert.IsNotNull(userByUserName);
+            Assert.AreEqual(currentHour, userByUserName.LastLogin.Hour);
+            Assert.IsTrue(userByUserName.IsActivationKeyUsed.Value);
         }
     }
 }

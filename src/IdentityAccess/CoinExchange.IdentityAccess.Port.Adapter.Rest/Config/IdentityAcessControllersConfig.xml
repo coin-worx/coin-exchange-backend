@@ -18,6 +18,11 @@
     <constructor-arg name="loginApplicationService" ref="LoginApplicationService"/>
   </object>
 
+  <!--Logout Controller-->
+  <object id="LogoutController" type="CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources.LogoutController, CoinExchange.IdentityAccess.Port.Adapter.Rest" singleton="false">
+    <constructor-arg name="logoutApplicationService" ref="LogoutApplicationService"/>
+  </object>
+
   <!--Tier Controller-->
   <object id="TierController" type="CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources.TierController, CoinExchange.IdentityAccess.Port.Adapter.Rest" singleton="false">
     <constructor-arg name="userTierLevelApplicationService" ref="UserTierLevelApplicationService"/>

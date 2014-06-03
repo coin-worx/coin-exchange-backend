@@ -27,14 +27,13 @@ namespace CoinExchange.IdentityAccess.Application.AccessControlServices
         /// <returns></returns>
         public bool Logout(LogoutCommand logoutCommand)
         {
-            if (logoutCommand.ValidationEssentials != null && 
-                logoutCommand.ValidationEssentials.ApiKey != null && 
-                !string.IsNullOrEmpty(logoutCommand.ValidationEssentials.ApiKey.Value) &&
-                logoutCommand.ValidationEssentials.SecretKey != null &&
-                !string.IsNullOrEmpty(logoutCommand.ValidationEssentials.SecretKey.Value))
+            if (logoutCommand.ApiKey != null && 
+                !string.IsNullOrEmpty(logoutCommand.ApiKey.Value) &&
+                logoutCommand.SecretKey != null &&
+                !string.IsNullOrEmpty(logoutCommand.SecretKey.Value))
             {
                 SecurityKeysPair securityKeysPair =
-                    _securityKeysRepository.GetByApiKey(logoutCommand.ValidationEssentials.ApiKey.Value);
+                    _securityKeysRepository.GetByApiKey(logoutCommand.ApiKey.Value);
 
                 if (securityKeysPair != null)
                 {
@@ -42,7 +41,7 @@ namespace CoinExchange.IdentityAccess.Application.AccessControlServices
                 }
                 else
                 {
-                    throw new InstanceNotFoundException("No SecurityKeysPair found for hte given API key.");
+                    throw new InstanceNotFoundException("No SecurityKeysPair found for the given API key.");
                 }
             }
             else

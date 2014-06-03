@@ -14,23 +14,11 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.DTO
         /// <summary>
         /// Initializes a new instance of the <see cref="ChangePasswordParams"/> class.
         /// </summary>
-        public ChangePasswordParams(string apiKey, string secretKey, string oldPassword, string newPassword)
+        public ChangePasswordParams(string oldPassword, string newPassword)
         {
-            ApiKey = apiKey;
-            SecretKey = secretKey;
             OldPassword = oldPassword;
             NewPassword = newPassword;
         }
-
-        /// <summary>
-        /// API Key
-        /// </summary>
-        public string ApiKey { get; set; }
-
-        /// <summary>
-        /// Secret Key
-        /// </summary>
-        public string SecretKey { get; set; }
 
         /// <summary>
         /// Old Password

@@ -66,7 +66,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             Assert.AreEqual(okResponseMessage1.Content, true);
 
             LoginController loginController = _applicationContext["LoginController"] as LoginController;
-            httpActionResult = loginController.Login(new Login("user", "123"));
+            httpActionResult = loginController.Login(new LoginParams("user", "123"));
             OkNegotiatedContentResult<UserValidationEssentials> keys =
                 (OkNegotiatedContentResult<UserValidationEssentials>)httpActionResult;
             Assert.IsNotNullOrEmpty(keys.Content.ApiKey.Value);

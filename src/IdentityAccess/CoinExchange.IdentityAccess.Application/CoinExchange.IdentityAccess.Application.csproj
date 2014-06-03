@@ -61,6 +61,7 @@
     <Compile Include="UserServices\Commands\ActivationCommand.cs" />
     <Compile Include="UserServices\Commands\CancelActivationCommand.cs" />
     <Compile Include="UserServices\Commands\ChangePasswordCommand.cs" />
+    <Compile Include="UserServices\Commands\ChangeSettingsCommand.cs" />
     <Compile Include="UserServices\Commands\ForgotPasswordCommand.cs" />
     <Compile Include="UserServices\Commands\ForgotUsernameCommand.cs" />
     <Compile Include="UserServices\Commands\ResetPasswordCommand.cs" />
@@ -69,6 +70,7 @@
     <Compile Include="UserServices\Commands\VerifyTier2Command.cs" />
     <Compile Include="UserServices\IUserApplicationService.cs" />
     <Compile Include="UserServices\IUserTierLevelApplicationService.cs" />
+    <Compile Include="UserServices\Representations\AccountSettingsRepresentation.cs" />
     <Compile Include="UserServices\Representations\Tier1Details.cs" />
     <Compile Include="UserServices\Representations\Tier2Details.cs" />
     <Compile Include="UserServices\Representations\Tier3Details.cs" />

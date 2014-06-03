@@ -98,6 +98,7 @@
   <ItemGroup>
     <Compile Include="AccessControlUtility.cs" />
     <Compile Include="LoginControllerTests.cs" />
+    <Compile Include="LogoutControllerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegistrationControllerTests.cs" />
     <Compile Include="SecurityKeysControllerTests.cs" />
