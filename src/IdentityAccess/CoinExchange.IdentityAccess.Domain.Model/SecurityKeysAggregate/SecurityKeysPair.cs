@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using CoinExchange.Common.Domain.Model;
 using CoinExchange.IdentityAccess.Domain.Model.UserAggregate;
 
@@ -159,13 +160,25 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
             {
                 ExpirationDate = Convert.ToDateTime(expirationDateTime);
             }
+            else
+            {
+                ExpirationDate = null;
+            }
             if (EnableStartDate)
             {
                 StartDate = Convert.ToDateTime(startDateTime);
             }
+            else
+            {
+                StartDate = null;
+            }
             if (EnableEndDate)
             {
                 EndDate = Convert.ToDateTime(endDateTime);
+            }
+            else
+            {
+                EndDate = null;
             }
             LastModified = DateTime.Now;
         }
@@ -245,6 +258,20 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
             return false;
         }
 
+        /// <summary>
+        /// Get All permissions
+        /// </summary>
+        /// <returns></returns>
+        public SecurityKeysPermission[] GetAllPermissions()
+        {
+            IList<SecurityKeysPermission> permissions=new List<SecurityKeysPermission>();
+            for (int i = 0; i < _securityKeysPermissions.Count; i++)
+            {
+                permissions.Add(_securityKeysPermissions[i].Clone() as SecurityKeysPermission);
+            }
+            return permissions.ToArray();
+        }
+
         #endregion Methods
 
         /// <summary>
@@ -285,7 +312,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         /// <summary>
         /// Expiration Date
         /// </summary>
-        public DateTime ExpirationDate { get;  set; }
+        public DateTime? ExpirationDate { get;  set; }
 
         /// <summary>
         /// Enable expiration date
@@ -295,7 +322,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         /// <summary>
         /// StartDate
         /// </summary>
-        public DateTime StartDate { get;  set; }
+        public DateTime? StartDate { get;  set; }
 
         /// <summary>
         /// Enable Start date
@@ -305,7 +332,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         /// <summary>
         /// EndDate
         /// </summary>
-        public DateTime EndDate { get;  set; }
+        public DateTime? EndDate { get;  set; }
 
         /// <summary>
         /// Enable end date

@@ -5,6 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using CoinExchange.IdentityAccess.Domain.Model.Repositories;
 using CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate;
+using CoinExchange.IdentityAccess.Domain.Model.UserAggregate;
+using CoinExchange.IdentityAccess.Infrastructure.Persistence.Projection;
+using NHibernate;
+using NHibernate.Criterion;
+using NHibernate.Transform;
 using Spring.Stereotype;
 using Spring.Transaction.Interceptor;
 
@@ -47,13 +52,28 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Persistence.Repositories
             return true;
         }
 
-        [Transaction(ReadOnly = false)]
+        [Transaction(ReadOnly = true)]
         public SecurityKeysPair GetByDescriptionAndApiKey(string description, string apiKey)
         {
             return
                 CurrentSession.QueryOver<SecurityKeysPair>()
                     .Where(x => x.KeyDescription == description && x.ApiKey == apiKey && x.Deleted == false)
                     .SingleOrDefault();
+        }
+
+        [Transaction(ReadOnly = true)]
+        public object GetByUserId(int userId)
+        {
+            ICriteria crit = CurrentSession.CreateCriteria<SecurityKeysPair>().Add(Restrictions.Eq("UserId", userId)).Add(Restrictions.Eq("SystemGenerated", false)).Add(Restrictions.Eq("Deleted", false))
+                        .SetProjection(Projections.ProjectionList()
+                            .Add(Projections.Property("KeyDescription"), "KeyDescription")
+                            .Add(Projections.Property("ExpirationDate"), "ExpirationDate")
+                            .Add(Projections.Property("LastModified"), "LastModified")
+                            .Add(Projections.Property("CreationDateTime"), "CreationDateTime")).SetResultTransformer(Transformers.AliasToBean<SecurityKeyPairList>());
+            IList<SecurityKeyPairList> results = crit.List<SecurityKeyPairList>();
+            return results;
+            //return CurrentSession.QueryOver<SecurityKeysPair>().Select(t=>t.KeyDescription,t=>t.ExpirationDate,t=>t.CreationDateTime,t=>t.LastModified).Where(t=>t.UserId==userId && t.Deleted==false && t.SystemGenerated==false)
+            //   .List<SecurityKeyPairList>();
         }
     }
 }

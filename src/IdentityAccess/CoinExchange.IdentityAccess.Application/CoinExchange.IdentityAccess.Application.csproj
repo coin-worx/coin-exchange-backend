@@ -51,6 +51,7 @@
     <Compile Include="SecurityKeysServices\Commands\CreateUserGeneratedSecurityKeyPair.cs" />
     <Compile Include="SecurityKeysServices\Commands\UpdateUserGeneratedSecurityKeyPair.cs" />
     <Compile Include="SecurityKeysServices\Representations\SecurityKeyPermissionsRepresentation.cs" />
+    <Compile Include="SecurityKeysServices\Representations\SecurityKeyRepresentation.cs" />
     <Compile Include="SecurityKeysServices\SecurityKeysApplicationService.cs" />
     <Compile Include="SecurityKeysServices\ISecurityKeysApplicationService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

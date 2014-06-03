@@ -99,8 +99,8 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             CreateUserGeneratedSecurityKeyPair command =
                 new CreateUserGeneratedSecurityKeyPair(securityKeyPermissions.ToArray(),
                     DateTime.Today.AddDays(1).ToString(), DateTime.Today.AddDays(-2).ToString(),
-                    DateTime.Today.AddDays(-1).ToString(), true, true, true, "123", systemGeneratedKey.Item1.Value);
-            var keys = registrationService.CreateUserGeneratedKey(command);
+                    DateTime.Today.AddDays(-1).ToString(), true, true, true, "123");
+            var keys = registrationService.CreateUserGeneratedKey(command, systemGeneratedKey.Item1.Value);
             Assert.NotNull(keys);
             Assert.IsNotNullOrEmpty(keys.Item1);
             Assert.IsNotNullOrEmpty(keys.Item2);
@@ -138,8 +138,8 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             CreateUserGeneratedSecurityKeyPair command =
                 new CreateUserGeneratedSecurityKeyPair(securityKeyPermissions.ToArray(),
                     DateTime.Today.AddDays(1).ToString(), DateTime.Today.AddDays(-2).ToString(),
-                    DateTime.Today.AddDays(-1).ToString(), true, true, true, "123", systemGeneratedKey.Item1.Value);
-            var keys = registrationService.CreateUserGeneratedKey(command);
+                    DateTime.Today.AddDays(-1).ToString(), true, true, true, "123");
+            var keys = registrationService.CreateUserGeneratedKey(command, systemGeneratedKey.Item1.Value);
         }
 
         [Test]
@@ -159,13 +159,13 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             CreateUserGeneratedSecurityKeyPair command =
                 new CreateUserGeneratedSecurityKeyPair(securityKeyPermissions.ToArray(),
                     DateTime.Today.AddDays(1).ToString(), DateTime.Today.AddDays(-2).ToString(),
-                    DateTime.Today.AddDays(-1).ToString(), true, true, true, "123", systemGeneratedKey.Item1.Value);
-            var keys = registrationService.CreateUserGeneratedKey(command);
+                    DateTime.Today.AddDays(-1).ToString(), true, true, true, "123");
+            var keys = registrationService.CreateUserGeneratedKey(command, systemGeneratedKey.Item1.Value);
             command=
                new CreateUserGeneratedSecurityKeyPair(securityKeyPermissions.ToArray(),
                    DateTime.Today.AddDays(1).ToString(), DateTime.Today.AddDays(-2).ToString(),
-                   DateTime.Today.AddDays(-1).ToString(), true, true, true, "123", systemGeneratedKey.Item1.Value);
-            var keys1 = registrationService.CreateUserGeneratedKey(command);
+                   DateTime.Today.AddDays(-1).ToString(), true, true, true, "123");
+            var keys1 = registrationService.CreateUserGeneratedKey(command, systemGeneratedKey.Item1.Value);
         }
 
         [Test]
@@ -184,8 +184,8 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             CreateUserGeneratedSecurityKeyPair command =
                 new CreateUserGeneratedSecurityKeyPair(securityKeyPermissions.ToArray(),
                     DateTime.Today.AddDays(1).ToString(), DateTime.Today.AddDays(-2).ToString(),
-                    DateTime.Today.AddDays(-1).ToString(), true, true, true, "123", systemGeneratedKey.Item1.Value);
-            var keys = registrationService.CreateUserGeneratedKey(command);
+                    DateTime.Today.AddDays(-1).ToString(), true, true, true, "123");
+            var keys = registrationService.CreateUserGeneratedKey(command, systemGeneratedKey.Item1.Value);
 
             securityKeyPermissions = new List<SecurityKeyPermissionsRepresentation>();
             for (int i = 0; i < permissions.Count; i++)
@@ -200,8 +200,8 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
                 }
             }
 
-            UpdateUserGeneratedSecurityKeyPair update = new UpdateUserGeneratedSecurityKeyPair(keys.Item1, systemGeneratedKey.Item1.Value, "456", false, false, true, "", "", securityKeyPermissions.ToArray(), DateTime.Today.AddDays(3).ToString());
-            registrationService.UpdateSecurityKeyPair(update);
+            UpdateUserGeneratedSecurityKeyPair update = new UpdateUserGeneratedSecurityKeyPair(keys.Item1, "456", false, false, true, "", "", securityKeyPermissions.ToArray(), DateTime.Today.AddDays(3).ToString());
+            registrationService.UpdateSecurityKeyPair(update,keys.Item1);
             Assert.NotNull(keys);
             Assert.IsNotNullOrEmpty(keys.Item1);
             Assert.IsNotNullOrEmpty(keys.Item2);
@@ -235,8 +235,8 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             CreateUserGeneratedSecurityKeyPair command =
                 new CreateUserGeneratedSecurityKeyPair(securityKeyPermissions.ToArray(),
                     DateTime.Today.AddDays(1).ToString(), DateTime.Today.AddDays(-2).ToString(),
-                    DateTime.Today.AddDays(-1).ToString(), true, true, true, "123", systemGeneratedKey.Item1.Value);
-            var keys = registrationService.CreateUserGeneratedKey(command);
+                    DateTime.Today.AddDays(-1).ToString(), true, true, true, "123");
+            var keys = registrationService.CreateUserGeneratedKey(command, systemGeneratedKey.Item1.Value);
             registrationService.DeleteSecurityKeyPair("123",systemGeneratedKey.Item1.Value);
             var getKeyPair = _securityKeysRepository.GetByKeyDescriptionAndUserId("123", 1);
             Assert.Null(getKeyPair);

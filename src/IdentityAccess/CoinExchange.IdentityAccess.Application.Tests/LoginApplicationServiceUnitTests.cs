@@ -40,7 +40,7 @@ namespace CoinExchange.IdentityAccess.Application.Tests
             IUserRepository userRepository = new MockUserRepository();
             IIdentityAccessPersistenceRepository persistRepository = new MockPersistenceRepository(false);
             ISecurityKeysApplicationService securityKeysApplicationService = new SecurityKeysApplicationService(new SecurityKeysGenerationService(),
-                persistRepository,null);
+                persistRepository,null,null);
             IPasswordEncryptionService passwordEncryptionService = new PasswordEncryptionService();
             ILoginApplicationService loginApplicationService = new LoginApplicationService(userRepository, passwordEncryptionService, 
                 securityKeysApplicationService, new MockPersistenceRepository(false));
@@ -69,7 +69,7 @@ namespace CoinExchange.IdentityAccess.Application.Tests
             IUserRepository userRepository = new MockUserRepository();
             IIdentityAccessPersistenceRepository persistRepository = new MockPersistenceRepository(false);
             ISecurityKeysApplicationService securityKeysApplicationService = new SecurityKeysApplicationService(new SecurityKeysGenerationService(),
-                persistRepository,null);
+                persistRepository,null,null);
             IPasswordEncryptionService passwordEncryptionService = new PasswordEncryptionService();
             ILoginApplicationService loginApplicationService = new LoginApplicationService(userRepository, passwordEncryptionService,
                 securityKeysApplicationService, new MockPersistenceRepository(false));
@@ -93,7 +93,7 @@ namespace CoinExchange.IdentityAccess.Application.Tests
             IIdentityAccessPersistenceRepository persistRepository = new MockPersistenceRepository(false);
             ISecurityKeysApplicationService securityKeysApplicationService =
                 new SecurityKeysApplicationService(new SecurityKeysGenerationService(),
-                                                   persistRepository, null);
+                                                   persistRepository, null,null);
             IPasswordEncryptionService passwordEncryptionService = new PasswordEncryptionService();
             ILoginApplicationService loginApplicationService = new LoginApplicationService(userRepository,
                                                                                            passwordEncryptionService,
@@ -120,7 +120,7 @@ namespace CoinExchange.IdentityAccess.Application.Tests
             IUserRepository userRepository = new MockUserRepository();
             IIdentityAccessPersistenceRepository persistRepository = new MockPersistenceRepository(false);
             ISecurityKeysApplicationService securityKeysApplicationService = new SecurityKeysApplicationService(new SecurityKeysGenerationService(),
-                persistRepository,null);
+                persistRepository,null,null);
             IPasswordEncryptionService passwordEncryptionService = new PasswordEncryptionService();
             ILoginApplicationService loginApplicationService = new LoginApplicationService(userRepository, passwordEncryptionService,
                 securityKeysApplicationService, new MockPersistenceRepository(false));
@@ -143,7 +143,7 @@ namespace CoinExchange.IdentityAccess.Application.Tests
             IUserRepository userRepository = new MockUserRepository();
             IIdentityAccessPersistenceRepository persistRepository = new MockPersistenceRepository(false);
             ISecurityKeysApplicationService securityKeysApplicationService = new SecurityKeysApplicationService(new SecurityKeysGenerationService(),
-                persistRepository, null);
+                persistRepository, null,null);
             IPasswordEncryptionService passwordEncryptionService = new PasswordEncryptionService();
             ILoginApplicationService loginApplicationService = new LoginApplicationService(userRepository, passwordEncryptionService,
                 securityKeysApplicationService, new MockPersistenceRepository(false));

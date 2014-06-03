@@ -14,9 +14,9 @@ namespace CoinExchange.Client.Console
             string baseUrl = "http://rockblanc.cloudapp.net/dev";
             //baseUrl = "http://localhost:51780";
             ApiClient client=new ApiClient(baseUrl);
-            //Scenario1(client);
+            Scenario1(client);
             //ScenarioResults(client);
-            System.Console.WriteLine(client.GetTradeHistory("",""));
+            //System.Console.WriteLine(client.GetTradeHistory("",""));
            System.Console.ReadKey();
         }
 

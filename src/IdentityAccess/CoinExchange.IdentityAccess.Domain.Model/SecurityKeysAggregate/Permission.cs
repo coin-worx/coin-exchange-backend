@@ -9,6 +9,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
     /// <summary>
     /// Permission
     /// </summary>
+    [Serializable]
     public class Permission
     {
         /// <summary>

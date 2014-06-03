@@ -61,6 +61,7 @@
   <ItemGroup>
     <Compile Include="DTO\CancelActivationParams.cs" />
     <Compile Include="DTO\ChangePasswordParams.cs" />
+    <Compile Include="DTO\CreateSecurityKeyParam.cs" />
     <Compile Include="DTO\Login.cs" />
     <Compile Include="DTO\SignUpParam.cs" />
     <Compile Include="DTO\Tier1Param.cs" />
@@ -72,6 +73,7 @@
     <Compile Include="Resources\RegistrationController.cs" />
     <Compile Include="Resources\TierController.cs" />
     <Compile Include="Resources\UserController.cs" />
+    <Compile Include="Resources\SecurityKeyPairController.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
+using CoinExchange.Common.Utility;
 
 namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
 {
     /// <summary>
     /// Represents the Permissions for a pair of API Key <-> SecretKey
     /// </summary>
-    public class SecurityKeysPermission
+    [Serializable]
+    public class SecurityKeysPermission:ICloneable
     {
         public int Id { get; private set; }
         /// <summary>
@@ -46,5 +50,21 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         /// IsAllowed
         /// </summary>
         public bool IsAllowed { get; set; }
+
+        /// <summary>
+        /// Deep copy
+        /// </summary>
+        /// <returns></returns>
+        public object Clone()
+        {
+           // using (MemoryStream stream = new MemoryStream())
+            //{
+                if (this.GetType().IsSerializable)
+                {
+                    return StreamConversion.ByteArrayToObject(StreamConversion.ObjectToByteArray(this));
+                }
+                return null;
+           // }
+        }
     }
 }
