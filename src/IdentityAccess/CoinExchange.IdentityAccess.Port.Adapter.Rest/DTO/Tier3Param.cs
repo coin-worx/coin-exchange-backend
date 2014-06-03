@@ -11,7 +11,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.DTO
     /// </summary>
     public class Tier3Param
     {
-        public string SocialSecurityNumber { get; private set; }
+        public string Ssn { get; private set; }
         public string Nin { get; private set; }
         public string DocumentType { get; private set; }
         public string FileName { get; private set; }
@@ -19,16 +19,25 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.DTO
         /// <summary>
         /// Parameterized constructor
         /// </summary>
-        /// <param name="socialSecurityNumber"></param>
+        /// <param name="ssn"></param>
         /// <param name="nin"></param>
         /// <param name="documentType"></param>
-        /// <param name="documentExtension"></param>
-        public Tier3Param(string socialSecurityNumber, string nin, string documentType, string filename)
+        public Tier3Param(string ssn, string nin, string documentType, string filename)
         {
-            SocialSecurityNumber = socialSecurityNumber;
+            Ssn = ssn;
             Nin = nin;
             DocumentType = documentType;
             FileName = filename;
+        }
+
+        /// <summary>
+        /// Custom to string method
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return string.Format("SSN:{0}, Nin:{1}, DocumentType:{2}, FileName:{3}", Ssn, Nin,
+                DocumentType, FileName);
         }
     }
 }

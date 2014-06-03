@@ -204,9 +204,11 @@ CREATE TABLE `user` (
   `ZipCode` int(11) DEFAULT NULL,
   `SocialSecurityNumber` varchar(50) DEFAULT NULL,
   `NationalIdentificationNumber` varchar(50) DEFAULT NULL,
+  `FullName` varchar(50) DEFAULT NULL,
+  `DateOfBirth` date DEFAULT NULL,
   PRIMARY KEY (`Id`),
   UNIQUE KEY `NewIndex1` (`UserName`,`Email`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 
 /*Table structure for table `userdocument` */
 
@@ -218,7 +220,7 @@ CREATE TABLE `userdocument` (
   `DocumentPath` varchar(200) DEFAULT NULL,
   `UserId` int(11) DEFAULT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
 /*Table structure for table `usertierlevelstatus` */
 
@@ -230,7 +232,7 @@ CREATE TABLE `usertierlevelstatus` (
   `Status` varchar(50) DEFAULT NULL,
   `UserId` int(11) DEFAULT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

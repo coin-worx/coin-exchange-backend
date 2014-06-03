@@ -43,16 +43,16 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         /// <returns></returns>
         [HttpPost]
         [Route("user/tier1")]
-        public IHttpActionResult GetVerifyForTier1([FromBody]string phoneNumber)
+        public IHttpActionResult GetVerifyForTier1([FromBody]Tier1Param param)
         {
             try
             {
                 if (log.IsDebugEnabled)
                 {
-                    log.Debug("GetVerifyForTier1 Call Recevied, parameters:" + phoneNumber);
+                    log.Debug("GetVerifyForTier1 Call Recevied, parameters:" + param);
                 }
-                _userTierLevelApplicationService.ApplyForTier1Verification(new VerifyTier1Command(phoneNumber,
-                    HeaderParamUtility.GetApikey(Request)));
+                _userTierLevelApplicationService.ApplyForTier1Verification(new VerifyTier1Command(param.PhoneNumber,
+                    HeaderParamUtility.GetApikey(Request),param.FullName,Convert.ToDateTime(param.DateOfBirth)));
                 return Ok();
             }
             catch (InvalidOperationException exception)
@@ -101,7 +101,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
             {
                 if (log.IsDebugEnabled)
                 {
-                    log.Debug("GetVerifyForTier2 Call Recevied, parameters:");
+                    log.Debug("GetVerifyForTier2 Call Recevied, parameters:"+param);
                 }
                 _userTierLevelApplicationService.ApplyForTier2Verification(
                     new VerifyTier2Command(HeaderParamUtility.GetApikey(Request), param.AddressLine1, param.AddressLine2,
@@ -152,21 +152,23 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         {
             try
             {
+                if (log.IsDebugEnabled)
+                {
+                    log.Debug("GetVerifyForTier2 Call Recevied, parameters:"+param);
+                }
                 MemoryStream memoryStream = new MemoryStream();
                 var provider = new MultipartFormDataStreamProvider(ServerUploadFolder);
                 await Request.Content.ReadAsMultipartAsync(provider);
                 foreach (var file in provider.Contents)
                 {
                     file.CopyToAsync(memoryStream);
-                }
-
-
-                if (log.IsDebugEnabled)
-                {
-                    log.Debug("GetVerifyForTier2 Call Recevied, parameters:");
+                    if (log.IsDebugEnabled)
+                    {
+                        log.Debug("GetVerifyForTier2 File Recevied");
+                    }
                 }
                 _userTierLevelApplicationService.ApplyForTier3Verification(
-                    new VerifyTier3Command(HeaderParamUtility.GetApikey(Request), param.SocialSecurityNumber, param.Nin,
+                    new VerifyTier3Command(HeaderParamUtility.GetApikey(Request), param.Ssn, param.Nin,
                         param.DocumentType, param.FileName, memoryStream));
                 return Ok();
             }
@@ -249,6 +251,156 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
                 if (log.IsErrorEnabled)
                 {
                     log.Error("GetTierStatuses Call Exception ", exception);
+                }
+                return InternalServerError();
+            }
+        }
+
+        /// <summary>
+        /// get users tier1 details
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("user/tier1")]
+        public IHttpActionResult GetTier1Details()
+        {
+            try
+            {
+                if (log.IsDebugEnabled)
+                {
+                    log.Debug("GetTier1Details Call Recevied");
+                }
+                return Ok(_userTierLevelApplicationService.GetTier1Details(HeaderParamUtility.GetApikey(Request)));
+            }
+            catch (InvalidOperationException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("GetTier1Details Call Exception ", exception);
+                }
+                return BadRequest(exception.Message);
+            }
+            catch (InvalidCredentialException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("GetTier1Details Call Exception ", exception);
+                }
+                return BadRequest(exception.Message);
+            }
+            catch (InvalidDataException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("GetTier1Details Call Exception ", exception);
+                }
+                return BadRequest(exception.Message);
+            }
+            catch (Exception exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("GetTier1Details Call Exception ", exception);
+                }
+                return InternalServerError();
+            }
+        }
+
+        /// <summary>
+        /// get users tier 2 details
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("user/tier2")]
+        public IHttpActionResult GetTier2Details()
+        {
+            try
+            {
+                if (log.IsDebugEnabled)
+                {
+                    log.Debug("GetTier2Details Call Recevied");
+                }
+                return Ok(_userTierLevelApplicationService.GetTier2Details(HeaderParamUtility.GetApikey(Request)));
+            }
+            catch (InvalidOperationException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("GetTier2Details Call Exception ", exception);
+                }
+                return BadRequest(exception.Message);
+            }
+            catch (InvalidCredentialException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("GetTier2Details Call Exception ", exception);
+                }
+                return BadRequest(exception.Message);
+            }
+            catch (InvalidDataException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("GetTier2Details Call Exception ", exception);
+                }
+                return BadRequest(exception.Message);
+            }
+            catch (Exception exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("GetTier2Details Call Exception ", exception);
+                }
+                return InternalServerError();
+            }
+        }
+
+        /// <summary>
+        /// get users tier 3 details
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("user/tier2")]
+        public IHttpActionResult GetTier3Details()
+        {
+            try
+            {
+                if (log.IsDebugEnabled)
+                {
+                    log.Debug("GetTier2Details Call Recevied");
+                }
+                return Ok(_userTierLevelApplicationService.GetTier3Details(HeaderParamUtility.GetApikey(Request)));
+            }
+            catch (InvalidOperationException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("GetTier2Details Call Exception ", exception);
+                }
+                return BadRequest(exception.Message);
+            }
+            catch (InvalidCredentialException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("GetTier2Details Call Exception ", exception);
+                }
+                return BadRequest(exception.Message);
+            }
+            catch (InvalidDataException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("GetTier2Details Call Exception ", exception);
+                }
+                return BadRequest(exception.Message);
+            }
+            catch (Exception exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("GetTier2Details Call Exception ", exception);
                 }
                 return InternalServerError();
             }

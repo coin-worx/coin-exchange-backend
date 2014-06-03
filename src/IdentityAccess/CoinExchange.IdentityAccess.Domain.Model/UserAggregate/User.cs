@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Authentication;
 using System.Text;
 using System.Threading.Tasks;
+using CoinExchange.Common.Domain.Model;
 
 namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
 {
@@ -29,6 +30,8 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         private string _country;
         private string _state;
         private string _activationKey;
+        private string _fullName;
+        private DateTime _dateOfBirth;
         private IList<PasswordCodeRecord> _forgottenPasswordCodesList { get; set; }
 
         //default constructor
@@ -156,6 +159,16 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         }
 
         /// <summary>
+        /// Update tier 1 information
+        /// </summary>
+        public void UpdateTier1Information(string fullName,DateTime dateOfBirth,string phoneNumber)
+        {
+            FullName = fullName;
+            DateOfBirth = dateOfBirth;
+            PhoneNumber = phoneNumber;
+        }
+
+        /// <summary>
         /// Update tier 2 information
         /// </summary>
         public void UpdateTier2Information(string city, string state, string addressLine1, string addressLine2,
@@ -174,7 +187,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         public void UpdateTier3Information(string socialSecurityNumber,string nationalIdentificationNumber)
         {
             SocialSecurityNumber = socialSecurityNumber;
-            NationalIdentificationNumber = NationalIdentificationNumber;
+            NationalIdentificationNumber = nationalIdentificationNumber;
         }
 
         /// <summary>
@@ -449,5 +462,29 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         /// Government Issued ID number
         /// </summary>
         public string NationalIdentificationNumber { get; private set; }
+
+        /// <summary>
+        /// Full Name of the User
+        /// </summary>
+        public string FullName
+        {
+            get
+            {
+                return _fullName;
+            }
+            set
+            {
+                _fullName = value;
+            }
+        }
+
+        public DateTime DateOfBirth
+        {
+            get { return _dateOfBirth; }
+            set
+            {
+                _dateOfBirth = value;
+            }
+        }
     }
 }

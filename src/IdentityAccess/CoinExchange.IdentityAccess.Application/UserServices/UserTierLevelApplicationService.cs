@@ -45,7 +45,7 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
             SecurityKeysPair securityKeysPair = _securityKeysRepository.GetByApiKey(command.SystemGeneratedApiKey);
             User user = _userRepository.GetUserById(securityKeysPair.UserId);
             //add user phone number
-            user.PhoneNumber = command.PhoneNumber;
+            user.UpdateTier1Information(command.FullName,command.DateOfBirth,command.PhoneNumber);
             //update user tier 1 status
             user.UpdateTierStatus(TierLevelConstant.Tier1, Status.Preverified);
             _persistenceRepository.SaveUpdate(user);
@@ -120,6 +120,67 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
                 return representations.ToArray();
             }
             throw new InvalidOperationException("Invlaid apiKey");
+        }
+
+        /// <summary>
+        /// Get Tier1 details of the user
+        /// </summary>
+        /// <param name="apiKey"></param>
+        /// <returns></returns>
+        public Tier1Details GetTier1Details(string apiKey)
+        {
+            SecurityKeysPair keysPair = _securityKeysRepository.GetByApiKey(apiKey);
+            if (keysPair != null)
+            {
+                User user = _userRepository.GetUserById(keysPair.UserId);
+                if (user.GetTierLevelStatus(new Tier(TierLevelConstant.Tier0, TierLevelConstant.Tier0)) == Status.Verified.ToString())
+                {
+                    return new Tier1Details(user.PhoneNumber, user.FullName, user.DateOfBirth, user.Country);
+                }
+                throw new InvalidOperationException("First verify Tier 0");
+            }
+            throw new InvalidOperationException("key doesnot exist");
+        }
+
+        /// <summary>
+        /// get tier2 details of the user
+        /// </summary>
+        /// <param name="apiKey"></param>
+        /// <returns></returns>
+        public Tier2Details GetTier2Details(string apiKey)
+        {
+            SecurityKeysPair keysPair = _securityKeysRepository.GetByApiKey(apiKey);
+            if (keysPair != null)
+            {
+                User user = _userRepository.GetUserById(keysPair.UserId);
+                if (user.GetTierLevelStatus(new Tier(TierLevelConstant.Tier1, TierLevelConstant.Tier1)) != Status.NonVerified.ToString())
+                {
+                    return new Tier2Details(user.Country, user.Address1, user.Address2, "", user.State, user.City,
+                        user.ZipCode.ToString());
+                }
+                throw new InvalidOperationException("First verify Tier 1");
+            }
+            throw new InvalidOperationException("key doesnot exist");
+        }
+
+        /// <summary>
+        /// Get tier 3 details of the user
+        /// </summary>
+        /// <param name="apiKey"></param>
+        /// <returns></returns>
+        public Tier3Details GetTier3Details(string apiKey)
+        {
+            SecurityKeysPair keysPair = _securityKeysRepository.GetByApiKey(apiKey);
+            if (keysPair != null)
+            {
+                User user = _userRepository.GetUserById(keysPair.UserId);
+                if (user.GetTierLevelStatus(new Tier(TierLevelConstant.Tier2, TierLevelConstant.Tier2)) != Status.NonVerified.ToString())
+                {
+                    return new Tier3Details(user.SocialSecurityNumber, user.NationalIdentificationNumber);
+                }
+                throw new InvalidOperationException("First verify Tier 2");
+            }
+            throw new InvalidOperationException("key doesnot exist");
         }
     }
 }
