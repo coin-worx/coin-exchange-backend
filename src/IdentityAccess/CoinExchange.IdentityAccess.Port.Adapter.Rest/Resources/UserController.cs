@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Management.Instrumentation;
 using System.Security.Authentication;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
+using CoinExchange.Common.Utility;
 using CoinExchange.IdentityAccess.Application.RegistrationServices.Commands;
 using CoinExchange.IdentityAccess.Application.UserServices;
 using CoinExchange.IdentityAccess.Application.UserServices.Commands;
@@ -139,7 +141,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
                 }
                 return
                     Ok(_userApplicationService.ChangePassword(new ChangePasswordCommand(
-                        changePasswordParams.ApiKey,changePasswordParams.SecretKey, changePasswordParams.OldPassword, changePasswordParams.NewPassword)));
+                        HeaderParamUtility.GetApikey(Request), changePasswordParams.OldPassword, changePasswordParams.NewPassword)));
             }
             catch (InvalidOperationException exception)
             {
@@ -296,20 +298,20 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
 
         [HttpPost]
         [Route("user/changesettings")]
-        public IHttpActionResult ChangeSettings([FromBody]ChangeSettingsCommand changeSettingsCommand)
+        public IHttpActionResult ChangeSettings([FromBody]ChangeSettingsParams changeSettingsParams)
         {
             try
             {
                 if (log.IsDebugEnabled)
                 {
-                    log.Debug("ChangeSettings Call Recevied, parameters:" + changeSettingsCommand);
+                    log.Debug("ChangeSettings Call Recevied, parameters:" + changeSettingsParams);
                 }
                 return
-                    Ok(_userApplicationService.ChangeSettings(new ChangeSettingsCommand(changeSettingsCommand.Username,
-                        changeSettingsCommand.Email, changeSettingsCommand.PgpPublicKey, changeSettingsCommand.Language,
-                        changeSettingsCommand.TimeZone, changeSettingsCommand.IsDefaultAutoLogout, changeSettingsCommand.AutoLogoutMinutes)));
+                    Ok(_userApplicationService.ChangeSettings(new ChangeSettingsCommand(HeaderParamUtility.GetApikey(Request),
+                        changeSettingsParams.Email, changeSettingsParams.PgpPublicKey, changeSettingsParams.Language,
+                        changeSettingsParams.TimeZone, changeSettingsParams.IsDefaultAutoLogout, changeSettingsParams.AutoLogoutMinutes)));
             }
-            catch (InvalidOperationException exception)
+            catch (InstanceNotFoundException exception)
             {
                 if (log.IsErrorEnabled)
                 {
@@ -317,7 +319,37 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
                 }
                 return BadRequest(exception.Message);
             }
-            catch (InvalidCredentialException exception)
+            catch (NullReferenceException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("ChangeSettings Call Exception ", exception);
+                }
+                return BadRequest(exception.Message);
+            }
+            catch (Exception exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("ChangeSettings Call Exception ", exception);
+                }
+                return InternalServerError();
+            }
+        }
+
+        [HttpGet]
+        [Route("user/accountsettings")]
+        public IHttpActionResult GetAccountSettings()
+        {
+            try
+            {
+                if (log.IsDebugEnabled)
+                {
+                    log.Debug("GetAccountSettings Call Recevied.");
+                }
+                return Ok(_userApplicationService.GetAccountSettings(HeaderParamUtility.GetApikey(Request)));
+            }
+            catch (InstanceNotFoundException exception)
             {
                 if (log.IsErrorEnabled)
                 {

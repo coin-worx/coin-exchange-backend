@@ -39,7 +39,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         /// <summary>
         /// apply for tier 1 verification
         /// </summary>
-        /// <param name="phoneNumber"></param>
+        /// <param name="param"> </param>
         /// <returns></returns>
         [HttpPost]
         [Route("user/tier1")]

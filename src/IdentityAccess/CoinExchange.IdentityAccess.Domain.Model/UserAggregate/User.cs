@@ -22,6 +22,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         private string _email;
         private Language _language;
         private TimeZone _timeZone;
+        private bool _isDefaultAutoLogout;
         private TimeSpan _autoLogout;
         private DateTime _lastLogin;
         private IList<UserTierLevelStatus> _tierLevelStatuses { get; set; } 
@@ -314,7 +315,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         /// <returns></returns>
         private bool AssignAutoLogoutTime(int minutes)
         {
-            this.AutoLogout = new TimeSpan(0, 0, minutes, 0);
+            _autoLogout = new TimeSpan(0, 0, minutes, 0);
             return true;
         }
 
@@ -358,6 +359,25 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         /// TimeZone
         /// </summary>
         public TimeZone TimeZone { get { return _timeZone; } set { _timeZone = value; } }
+
+        /// <summary>
+        /// Specifies whether this user account uses the default logout time of 10 minutes or custom defined by user
+        /// </summary>
+        public bool IsDefaultAutoLogout
+        {
+            get
+            {
+                if (_autoLogout == new TimeSpan(0, 0, 10, 0))
+                {
+                    return true;
+                }
+                return false;
+            }
+            set
+            {
+                _isDefaultAutoLogout = value;
+            }
+        }
 
         /// <summary>
         /// AutoLogout
@@ -486,5 +506,10 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
                 _dateOfBirth = value;
             }
         }
+
+        /// <summary>
+        /// PGP Public Key
+        /// </summary>
+        public string PgpPublicKey { get { return _pgpPublicKey; } private set { _pgpPublicKey = value; } }
     }
 }

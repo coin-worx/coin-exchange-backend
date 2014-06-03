@@ -15,15 +15,12 @@ namespace CoinExchange.IdentityAccess.Application.UserServices.Commands
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="secretKey"> </param>
+        /// <param name="apiKey"> </param>
         /// <param name="oldPassword"></param>
         /// <param name="newPassword"></param>
-        /// <param name="apiKey"> </param>
-        public ChangePasswordCommand(string apiKey, string secretKey, string oldPassword, 
-            string newPassword)
+        public ChangePasswordCommand(string apiKey, string oldPassword, string newPassword)
         {
             ApiKey = new ApiKey(apiKey);
-            SecretKey = new SecretKey(secretKey);
             OldPassword = oldPassword;
             NewPassword = newPassword;
         }

@@ -24,7 +24,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.DTO
             IsDefaultAutoLogout = isDefaultAutoLogout;
             AutoLogoutMinutes = autoLogoutMinutes;
         }
-
+        
         /// <summary>
         /// Email
         /// </summary>

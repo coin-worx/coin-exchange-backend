@@ -16,6 +16,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger
               (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private ILoginApplicationService _loginApplicationService;
 
         /// <summary>

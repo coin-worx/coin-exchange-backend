@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CoinExchange.IdentityAccess.Application.UserServices.Commands;
+using CoinExchange.IdentityAccess.Application.UserServices.Representations;
 using CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate;
 
 namespace CoinExchange.IdentityAccess.Application.UserServices
@@ -55,6 +56,18 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
         /// <returns></returns>
         bool ResetPasswordByEmailLink(ResetPasswordCommand resetPasswordCommand);
 
+        /// <summary>
+        /// Change Settings for the account
+        /// </summary>
+        /// <param name="changeSettingsCommand"></param>
+        /// <returns></returns>
         bool ChangeSettings(ChangeSettingsCommand changeSettingsCommand);
+
+        /// <summary>
+        /// Get settings for an account
+        /// </summary>
+        /// <param name="apiKey"></param>
+        /// <returns></returns>
+        AccountSettingsRepresentation GetAccountSettings(string apiKey);
     }
 }

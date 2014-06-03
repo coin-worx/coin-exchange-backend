@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ using System.Web.Http;
 using System.Web.Http.Results;
 using CoinExchange.Common.Tests;
 using CoinExchange.IdentityAccess.Application.UserServices.Commands;
+using CoinExchange.IdentityAccess.Application.UserServices.Representations;
 using CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate;
 using CoinExchange.IdentityAccess.Domain.Model.UserAggregate;
 using CoinExchange.IdentityAccess.Port.Adapter.Rest.DTO;
@@ -135,7 +137,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             Assert.IsTrue(userByUserName.IsActivationKeyUsed.Value);
 
             // Login
-            LoginController loginController = (LoginController)_applicationContext["LoginController"];
+            LoginController loginController = (LoginController)_applicationContext["LoginController"];            
             IHttpActionResult loginResult = loginController.Login(new LoginParams(username, password));
             OkNegotiatedContentResult<UserValidationEssentials> loginOkResult = (OkNegotiatedContentResult<UserValidationEssentials>)loginResult;
             UserValidationEssentials userValidationEssentials = loginOkResult.Content;
@@ -150,8 +152,10 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             manualResetEvent.WaitOne(6000);
             string newPassword = password + "123";
             // Change Password
+            userController.Request = new HttpRequestMessage(HttpMethod.Post, "");
+            userController.Request.Headers.Add("Auth", userValidationEssentials.ApiKey.Value);
             IHttpActionResult changePasswordResult = userController.ChangePassword(new ChangePasswordParams(
-             userValidationEssentials.ApiKey.Value, userValidationEssentials.SecretKey.Value, password, newPassword));
+             password, newPassword));
             OkNegotiatedContentResult<bool> changePasswordOkResult = (OkNegotiatedContentResult<bool>)changePasswordResult;
             Assert.IsTrue(changePasswordOkResult.Content);
 
@@ -388,7 +392,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             OkNegotiatedContentResult<bool> okResponseMessage1 = (OkNegotiatedContentResult<bool>)httpActionResult;
             Assert.IsTrue(okResponseMessage1.Content);
 
-            // Confirm the ucrrent user settings
+            // Confirm the current user settings
             IUserRepository userRepository = (IUserRepository)_applicationContext["UserRepository"];
             User userByUserName = userRepository.GetUserByUserName(username);
             Assert.IsNotNull(userByUserName);
@@ -402,17 +406,28 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             Assert.IsNull(userByUserName.ForgotPasswordCodeExpiration);
             Assert.AreEqual(0, userByUserName.ForgottenPasswordCodes.Length);
 
-            // Reqeust to reset password
+            // Login
+            LoginController loginController = (LoginController)_applicationContext["LoginController"];
+            httpActionResult = loginController.Login(new LoginParams(username, password));
+            OkNegotiatedContentResult<UserValidationEssentials> keys =
+                (OkNegotiatedContentResult<UserValidationEssentials>)httpActionResult;
+            Assert.IsNotNullOrEmpty(keys.Content.ApiKey.Value);
+            Assert.IsNotNullOrEmpty(keys.Content.SecretKey.Value);
+            Assert.IsNotNullOrEmpty(keys.Content.SessionLogoutTime.ToString());
+
+            // Reqeust to change settings
             string newEMail = "iwillwearthemask@banegotham.sf";
-            IHttpActionResult changeSettingsResponse = userController.ChangeSettings(new ChangeSettingsCommand(username,
+            userController.Request = new HttpRequestMessage(HttpMethod.Post, "");
+            userController.Request.Headers.Add("Auth", keys.Content.ApiKey.Value);
+            IHttpActionResult changeSettingsResponse = userController.ChangeSettings(new ChangeSettingsParams(
                 newEMail, "", Language.French, TimeZone.CurrentTimeZone, false, 66));
-            OkNegotiatedContentResult<bool> resetPasswordOkResponse = (OkNegotiatedContentResult<bool>)changeSettingsResponse;
+            OkNegotiatedContentResult<bool> changePasswordOkResponse = (OkNegotiatedContentResult<bool>)changeSettingsResponse;
             // Check if the username returned is correct
-            Assert.IsTrue(resetPasswordOkResponse.Content);
+            Assert.IsTrue(changePasswordOkResponse.Content);
 
             userByUserName = userRepository.GetUserByUserName(username);
             Assert.IsNotNull(userByUserName);
-            Assert.AreEqual(email, userByUserName.Email);
+            Assert.AreEqual(newEMail, userByUserName.Email);
             Assert.IsTrue(passwordEncryptionService.VerifyPassword(password, userByUserName.Password));
             Assert.AreEqual(Language.French, userByUserName.Language);
             Assert.AreEqual(TimeZone.CurrentTimeZone.StandardName, userByUserName.TimeZone.StandardName);
@@ -420,6 +435,192 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             Assert.IsNull(userByUserName.ForgotPasswordCode);
             Assert.IsNull(userByUserName.ForgotPasswordCodeExpiration);
             Assert.AreEqual(0, userByUserName.ForgottenPasswordCodes.Length);
+        }
+
+        [Test]
+        [Category("Integration")]
+        public void ChangeSettingsFailTest_ChecksThatUserLogsInThenLogsOutAndThenTriesToChangeSettingsAgainUsingTheSameApiKeyThenExceptionShouldBeThrown_VerifiesAndAssertsTheReturnedValueAndQueriesDatabase()
+        {
+            string username = "user";
+            string password = "123";
+            string email = "user@user123.com";
+            // Register User
+            RegistrationController registrationController = (RegistrationController)_applicationContext["RegistrationController"];
+            IHttpActionResult httpActionResult = registrationController.Register(new SignUpParam(email, username, password, "Pakistan",
+                TimeZone.CurrentTimeZone, ""));
+            OkNegotiatedContentResult<string> okResponseMessage =
+                (OkNegotiatedContentResult<string>)httpActionResult;
+            string activationKey = okResponseMessage.Content;
+            Assert.IsNotNullOrEmpty(activationKey);
+
+            
+            // Activate Account
+            UserController userController = (UserController)_applicationContext["UserController"];
+            httpActionResult = userController.ActivateUser(new UserActivationParam(username, password, activationKey));
+            OkNegotiatedContentResult<bool> okResponseMessage1 = (OkNegotiatedContentResult<bool>)httpActionResult;
+            Assert.AreEqual(okResponseMessage1.Content, true);
+
+            // Login
+            LoginController loginController = (LoginController)_applicationContext["LoginController"];
+            httpActionResult = loginController.Login(new LoginParams(username, password));
+            OkNegotiatedContentResult<UserValidationEssentials> keys =
+                (OkNegotiatedContentResult<UserValidationEssentials>)httpActionResult;
+            Assert.IsNotNullOrEmpty(keys.Content.ApiKey.Value);
+            Assert.IsNotNullOrEmpty(keys.Content.SecretKey.Value);
+            Assert.IsNotNullOrEmpty(keys.Content.SessionLogoutTime.ToString());
+
+            // Verify that Security Keys are in the database
+            ISecurityKeysRepository securityKeysRepository = (ISecurityKeysRepository)_applicationContext["SecurityKeysPairRepository"];
+            SecurityKeysPair securityKeysPair = securityKeysRepository.GetByApiKey(keys.Content.ApiKey.Value);
+            Assert.IsNotNull(securityKeysPair);
+            Assert.AreEqual(keys.Content.SecretKey.Value, securityKeysPair.SecretKey);
+            Assert.IsTrue(securityKeysPair.SystemGenerated);
+
+            // Reqeust to change settings
+            string newEMail = "iwillwearthemask@banegotham.sf";
+            userController.Request = new HttpRequestMessage(HttpMethod.Post, "");
+            userController.Request.Headers.Add("Auth", keys.Content.ApiKey.Value);
+            IHttpActionResult changeSettingsResponse = userController.ChangeSettings(new ChangeSettingsParams(
+                newEMail, "", Language.French, TimeZone.CurrentTimeZone, false, 66));
+            OkNegotiatedContentResult<bool> changePasswordOkResponse = (OkNegotiatedContentResult<bool>)changeSettingsResponse;
+            // Check if the username returned is correct
+            Assert.IsTrue(changePasswordOkResponse.Content);
+
+            IUserRepository userRepository = (IUserRepository)_applicationContext["UserRepository"];
+            IPasswordEncryptionService passwordEncryptionService = (IPasswordEncryptionService)_applicationContext["PasswordEncryptionService"];
+            User userByUserName = userRepository.GetUserByUserName(username);
+            Assert.IsNotNull(userByUserName);
+            Assert.AreEqual(newEMail, userByUserName.Email);
+            Assert.IsTrue(passwordEncryptionService.VerifyPassword(password, userByUserName.Password));
+            Assert.AreEqual(Language.French, userByUserName.Language);
+            Assert.AreEqual(TimeZone.CurrentTimeZone.StandardName, userByUserName.TimeZone.StandardName);
+            Assert.AreEqual(new TimeSpan(0, 0, 66, 0), userByUserName.AutoLogout);
+            Assert.IsNull(userByUserName.ForgotPasswordCode);
+            Assert.IsNull(userByUserName.ForgotPasswordCodeExpiration);
+            Assert.AreEqual(0, userByUserName.ForgottenPasswordCodes.Length);
+
+            // Logout
+            LogoutController logoutController = (LogoutController)_applicationContext["LogoutController"];
+            IHttpActionResult logoutResult = logoutController.Logout(new LogoutParams(keys.Content.ApiKey.Value, keys.Content.SecretKey.Value));
+            OkNegotiatedContentResult<bool> logoutOkResponse = (OkNegotiatedContentResult<bool>)logoutResult;
+            Assert.IsNotNull(logoutOkResponse);
+            Assert.IsTrue(logoutOkResponse.Content);
+
+            // Verify that the Security Keys are not in the database
+            securityKeysPair = securityKeysRepository.GetByApiKey(keys.Content.ApiKey.Value);
+            Assert.IsNull(securityKeysPair);
+
+            string lastInvalidEmail = "errre@user123.com";
+            // Invalid attempt to change settings
+            userController.Request = new HttpRequestMessage(HttpMethod.Post, "");
+            userController.Request.Headers.Add("Auth", keys.Content.ApiKey.Value);
+            changeSettingsResponse = userController.ChangeSettings(new ChangeSettingsParams(
+                lastInvalidEmail, "", Language.German, TimeZone.CurrentTimeZone, false, 97));
+
+            BadRequestErrorMessageResult badRequestErrorMessage = (BadRequestErrorMessageResult) changeSettingsResponse;
+            Assert.IsNotNull(badRequestErrorMessage);
+
+            userByUserName = userRepository.GetUserByUserName(username);
+            Assert.IsNotNull(userByUserName);
+            Assert.AreEqual(newEMail, userByUserName.Email);
+            Assert.IsTrue(passwordEncryptionService.VerifyPassword(password, userByUserName.Password));
+            Assert.AreEqual(Language.French, userByUserName.Language);
+            Assert.AreEqual(TimeZone.CurrentTimeZone.StandardName, userByUserName.TimeZone.StandardName);
+            Assert.AreEqual(new TimeSpan(0, 0, 66, 0), userByUserName.AutoLogout);
+            Assert.IsNull(userByUserName.ForgotPasswordCode);
+            Assert.IsNull(userByUserName.ForgotPasswordCodeExpiration);
+            Assert.AreEqual(0, userByUserName.ForgottenPasswordCodes.Length);
+        }
+
+        [Test]
+        [Category("Integration")]
+        public void GetAccountSettingSuccessfulTest_ChecksThatTheAccountSettingsAreReceivedAsExpected_ChecksThroughDatabaseQuerying()
+        {
+            // Register an account
+            RegistrationController registrationController = (RegistrationController)_applicationContext["RegistrationController"];
+            string email = "waqasshah047@gmail.com";
+            string username = "Bane";
+            string password = "iwearamask";
+            IHttpActionResult httpActionResult = registrationController.Register(new SignUpParam(email, username,
+                password, "Pakistan", TimeZone.CurrentTimeZone, ""));
+            OkNegotiatedContentResult<string> okResponseMessage = (OkNegotiatedContentResult<string>)httpActionResult;
+            string activationKey = okResponseMessage.Content;
+            Assert.IsNotNullOrEmpty(activationKey);
+
+            // Activate Account
+            UserController userController = (UserController)_applicationContext["UserController"];
+            httpActionResult = userController.ActivateUser(new UserActivationParam(username, password, activationKey));
+            OkNegotiatedContentResult<bool> okResponseMessage1 = (OkNegotiatedContentResult<bool>)httpActionResult;
+            Assert.IsTrue(okResponseMessage1.Content);
+
+            // Confirm the current user settings
+            IUserRepository userRepository = (IUserRepository)_applicationContext["UserRepository"];
+            User userByUserName = userRepository.GetUserByUserName(username);
+            Assert.IsNotNull(userByUserName);
+            IPasswordEncryptionService passwordEncryptionService = (IPasswordEncryptionService)_applicationContext["PasswordEncryptionService"];
+            Assert.AreEqual(email, userByUserName.Email);
+            Assert.IsTrue(passwordEncryptionService.VerifyPassword(password, userByUserName.Password));
+            Assert.AreEqual(Language.English, userByUserName.Language);
+            Assert.AreEqual(TimeZone.CurrentTimeZone.StandardName, userByUserName.TimeZone.StandardName);
+            Assert.AreEqual(new TimeSpan(0, 0, 10, 0), userByUserName.AutoLogout);
+            Assert.IsNull(userByUserName.ForgotPasswordCode);
+            Assert.IsNull(userByUserName.ForgotPasswordCodeExpiration);
+            Assert.AreEqual(0, userByUserName.ForgottenPasswordCodes.Length);
+
+            // Login
+            LoginController loginController = (LoginController)_applicationContext["LoginController"];
+            httpActionResult = loginController.Login(new LoginParams(username, password));
+            OkNegotiatedContentResult<UserValidationEssentials> keys =
+                (OkNegotiatedContentResult<UserValidationEssentials>)httpActionResult;
+            Assert.IsNotNullOrEmpty(keys.Content.ApiKey.Value);
+            Assert.IsNotNullOrEmpty(keys.Content.SecretKey.Value);
+            Assert.IsNotNullOrEmpty(keys.Content.SessionLogoutTime.ToString());
+
+            // Get the Account Settings
+            userController.Request = new HttpRequestMessage(HttpMethod.Post, "");
+            userController.Request.Headers.Add("Auth", keys.Content.ApiKey.Value);
+            IHttpActionResult accountSettingsResponse = userController.GetAccountSettings();
+            OkNegotiatedContentResult<AccountSettingsRepresentation> accountSettingsOkResponse =
+                (OkNegotiatedContentResult<AccountSettingsRepresentation>) accountSettingsResponse;
+            Assert.AreEqual(userByUserName.Email, accountSettingsOkResponse.Content.Email);
+            Assert.AreEqual(userByUserName.Username, accountSettingsOkResponse.Content.Username);
+            Assert.AreEqual(userByUserName.TimeZone.StandardName, accountSettingsOkResponse.Content.TimeZone.StandardName);
+            Assert.AreEqual(userByUserName.Language, accountSettingsOkResponse.Content.Language);
+            Assert.AreEqual(userByUserName.AutoLogout.Minutes, accountSettingsOkResponse.Content.AutoLogoutMinutes);
+            Assert.IsTrue(accountSettingsOkResponse.Content.IsDefaultAutoLogout);
+
+            // Reqeust to change settings
+            string newEMail = "iwillwearthemask@banegotham.sf";
+            userController.Request = new HttpRequestMessage(HttpMethod.Post, "");
+            userController.Request.Headers.Add("Auth", keys.Content.ApiKey.Value);
+            IHttpActionResult changeSettingsResponse = userController.ChangeSettings(new ChangeSettingsParams(
+                newEMail, "", Language.French, TimeZone.CurrentTimeZone, false, 66));
+            OkNegotiatedContentResult<bool> changePasswordOkResponse = (OkNegotiatedContentResult<bool>)changeSettingsResponse;
+            // Check if the username returned is correct
+            Assert.IsTrue(changePasswordOkResponse.Content);
+
+            userByUserName = userRepository.GetUserByUserName(username);
+            Assert.IsNotNull(userByUserName);
+            Assert.AreEqual(newEMail, userByUserName.Email);
+            Assert.IsTrue(passwordEncryptionService.VerifyPassword(password, userByUserName.Password));
+            Assert.AreEqual(Language.French, userByUserName.Language);
+            Assert.AreEqual(TimeZone.CurrentTimeZone.StandardName, userByUserName.TimeZone.StandardName);
+            Assert.AreEqual(new TimeSpan(0, 0, 66, 0), userByUserName.AutoLogout);
+            Assert.IsNull(userByUserName.ForgotPasswordCode);
+            Assert.IsNull(userByUserName.ForgotPasswordCodeExpiration);
+            Assert.AreEqual(0, userByUserName.ForgottenPasswordCodes.Length);
+
+            // Get the Account Settings again
+            userController.Request = new HttpRequestMessage(HttpMethod.Post, "");
+            userController.Request.Headers.Add("Auth", keys.Content.ApiKey.Value);
+            accountSettingsResponse = userController.GetAccountSettings();
+            accountSettingsOkResponse = (OkNegotiatedContentResult<AccountSettingsRepresentation>)accountSettingsResponse;
+            Assert.AreEqual(userByUserName.Email, accountSettingsOkResponse.Content.Email);
+            Assert.AreEqual(userByUserName.Username, accountSettingsOkResponse.Content.Username);
+            Assert.AreEqual(userByUserName.TimeZone.StandardName, accountSettingsOkResponse.Content.TimeZone.StandardName);
+            Assert.AreEqual(userByUserName.Language, accountSettingsOkResponse.Content.Language);
+            Assert.AreEqual(userByUserName.AutoLogout.Minutes, accountSettingsOkResponse.Content.AutoLogoutMinutes);
+            Assert.IsFalse(accountSettingsOkResponse.Content.IsDefaultAutoLogout);
         }
     }
 }

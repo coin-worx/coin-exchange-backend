@@ -1,23 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CoinExchange.IdentityAccess.Domain.Model.UserAggregate;
 
-namespace CoinExchange.IdentityAccess.Application.UserServices.Commands
+namespace CoinExchange.IdentityAccess.Application.UserServices.Representations
 {
     /// <summary>
-    /// Command to change the account Settings for a user
+    /// Response for hte Account Settings for a user
     /// </summary>
-    public class ChangeSettingsCommand
+    public class AccountSettingsRepresentation
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ChangeSettingsCommand"/> class.
+        /// Initializes a new instance of the <see cref="AccountSettingsRepresentation"/> class.
         /// </summary>
-        public ChangeSettingsCommand(string apiKey, string email, string pgpPublicKey, Language language, TimeZone timeZone, bool isDefaultAutoLogout, int autoLogoutMinutes)
+        public AccountSettingsRepresentation(string username, string email, string pgpPublicKey, Language language, TimeZone timeZone, bool isDefaultAutoLogout, int autoLogoutMinutes)
         {
-            ApiKey = apiKey;
+            Username = username;
             Email = email;
             PgpPublicKey = pgpPublicKey;
             Language = language;
@@ -27,9 +23,9 @@ namespace CoinExchange.IdentityAccess.Application.UserServices.Commands
         }
 
         /// <summary>
-        /// API Key
+        /// Username
         /// </summary>
-        public string ApiKey { get; private set; }
+        public string Username { get; private set; }
 
         /// <summary>
         /// Email

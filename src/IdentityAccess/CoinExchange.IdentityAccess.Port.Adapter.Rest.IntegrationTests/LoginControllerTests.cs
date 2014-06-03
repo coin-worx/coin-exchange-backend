@@ -40,7 +40,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
 
         [Test]
         [Category("Integration")]
-        public void LoginSuccessfulTest_MakesSureAccountIsCreated_VerifiesByReturnedValue()
+        public void LoginSuccessfulTest_MakesSureAccountIsCreated_VerifiesAndAssertsTheReturnedValue()
         {
             RegistrationController registrationController = (RegistrationController)_applicationContext["RegistrationController"];
             IHttpActionResult httpActionResult = registrationController.Register(new SignUpParam("user@user.com", "user", "123", "Pakistan",

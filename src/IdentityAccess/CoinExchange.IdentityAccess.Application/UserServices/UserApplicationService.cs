@@ -6,6 +6,7 @@ using System.Security.Authentication;
 using System.Text;
 using System.Threading.Tasks;
 using CoinExchange.IdentityAccess.Application.UserServices.Commands;
+using CoinExchange.IdentityAccess.Application.UserServices.Representations;
 using CoinExchange.IdentityAccess.Domain.Model.Repositories;
 using CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate;
 using CoinExchange.IdentityAccess.Domain.Model.UserAggregate;
@@ -332,16 +333,17 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
         {
             if (changeSettingsCommand != null)
             {
-                if (!string.IsNullOrEmpty(changeSettingsCommand.Username))
+                SecurityKeysPair securityKeysPair = _securityKeysRepository.GetByApiKey(changeSettingsCommand.ApiKey);
+                if (securityKeysPair != null)
                 {
-                    User user = _userRepository.GetUserByUserName(changeSettingsCommand.Username);
+                    User user = _userRepository.GetUserById(securityKeysPair.UserId);
 
                     if (user != null)
                     {
                         user.ChangeSettings(changeSettingsCommand.Email, changeSettingsCommand.PgpPublicKey,
-                                                   changeSettingsCommand.Language, changeSettingsCommand.TimeZone,
-                                                   changeSettingsCommand.IsDefaultAutoLogout,
-                                                   changeSettingsCommand.AutoLogoutMinutes);
+                                            changeSettingsCommand.Language, changeSettingsCommand.TimeZone,
+                                            changeSettingsCommand.IsDefaultAutoLogout,
+                                            changeSettingsCommand.AutoLogoutMinutes);
 
                         _persistenceRepository.SaveUpdate(user);
                         return true;
@@ -349,18 +351,43 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
                     else
                     {
                         throw new InstanceNotFoundException(string.Format("{0} {1}",
-                                                                          "No User found for the given username: ",
-                                                                          changeSettingsCommand.Username));
+                                                                          "No User found for the given SecurityKeysPair: ",
+                                                                          changeSettingsCommand.ApiKey));
                     }
                 }
                 else
                 {
-                    throw new InvalidCredentialException("Username is null or does not contain any value.");
+                    throw new InstanceNotFoundException("No SecurityKeysPair instance found for the given API key");
                 }
             }
             else
             {
                 throw new NullReferenceException("Given ChangeSettingsCommand is null.");
+            }
+        }
+
+        /// <summary>
+        /// Gets the account settings for the user
+        /// </summary>
+        public AccountSettingsRepresentation GetAccountSettings(string apiKey)
+        {
+            SecurityKeysPair securityKeysPair = _securityKeysRepository.GetByApiKey(apiKey);
+            if (securityKeysPair != null)
+            {
+                User user = _userRepository.GetUserById(securityKeysPair.UserId);
+                if (user != null)
+                {
+                    return new AccountSettingsRepresentation(user.Username, user.Email, user.PgpPublicKey, user.Language,
+                        user.TimeZone, user.IsDefaultAutoLogout, user.AutoLogout.Minutes);
+                }
+                else
+                {
+                    throw new InstanceNotFoundException("No User instance found for the UserId associated with SecurityKeysPair");
+                }
+            }
+            else
+            {
+                throw new InstanceNotFoundException("No SecurityKeysPair instance found for the given API key");
             }
         }
     }
