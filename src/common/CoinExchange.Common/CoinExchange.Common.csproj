@@ -42,6 +42,7 @@
     <Compile Include="Domain.Model\Identity.cs" />
     <Compile Include="Domain.Model\IIdentity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\IApiKeyInfoAccess.cs" />
     <Compile Include="Specifications\ISpecification.cs" />
     <Compile Include="Utility\HeaderParamUtility.cs" />
     <Compile Include="Utility\StreamConversion.cs" />

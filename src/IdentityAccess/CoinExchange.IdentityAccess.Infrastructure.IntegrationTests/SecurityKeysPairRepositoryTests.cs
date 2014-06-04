@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CoinExchange.Common.Services;
 using CoinExchange.Common.Tests;
 using CoinExchange.IdentityAccess.Domain.Model.Repositories;
 using CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate;
@@ -18,6 +19,7 @@ namespace CoinExchange.IdentityAccess.Infrastructure.IntegrationTests
         private IIdentityAccessPersistenceRepository _persistenceRepository;
         private ISecurityKeysRepository _securityKeysPairRepository;
         private IPermissionRepository _permissionRepository;
+        private IApiKeyInfoAccess _apiKeyInfoAccess;
 
         //properties will be injected based on type
         public IIdentityAccessPersistenceRepository PersistenceRepository
@@ -33,6 +35,11 @@ namespace CoinExchange.IdentityAccess.Infrastructure.IntegrationTests
         public IPermissionRepository PermissionRepository
         {
             set { _permissionRepository = value; }
+        }
+
+        public IApiKeyInfoAccess ApiKeyInfoAccess
+        {
+            set { _apiKeyInfoAccess = value; }
         }
 
         private DatabaseUtility _databaseUtility;
@@ -141,6 +148,15 @@ namespace CoinExchange.IdentityAccess.Infrastructure.IntegrationTests
             Assert.AreEqual(readInfo.StartDate, securityKeys.StartDate);
             Assert.AreEqual(readInfo.EndDate, securityKeys.EndDate);
             ValidatePermissions(readInfo,securityKeysPermissions.ToArray());
+        }
+
+        [Test]
+        [Category("Integration")]
+        public void GetUserIDFromApiKey_IfKeyPairExists_UserIdWillBeReturned()
+        {
+            SecurityKeysPair digitalSignatureInfo = new SecurityKeysPair("1", "123456", "secretkey", 1, DateTime.Today.AddDays(1), DateTime.Today.AddDays(-20), DateTime.Today, DateTime.Now, true, null);
+            _persistenceRepository.SaveUpdate(digitalSignatureInfo);
+            Assert.AreEqual(_apiKeyInfoAccess.GetUserIdFromApiKey("123456"), 1);
         }
 
         /// <summary>

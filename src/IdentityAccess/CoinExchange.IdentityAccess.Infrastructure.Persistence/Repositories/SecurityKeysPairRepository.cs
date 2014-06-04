@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CoinExchange.Common.Services;
 using CoinExchange.IdentityAccess.Domain.Model.Repositories;
 using CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate;
 using CoinExchange.IdentityAccess.Domain.Model.UserAggregate;
@@ -19,7 +20,7 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Persistence.Repositories
     /// Repository for DigitalSignatureInfo
     /// </summary>
     [Repository]
-    public class SecurityKeysPairRepository : NHibernateSessionFactory, ISecurityKeysRepository
+    public class SecurityKeysPairRepository : NHibernateSessionFactory, ISecurityKeysRepository,IApiKeyInfoAccess
     {
         [Transaction(ReadOnly = true)]
         public SecurityKeysPair GetByKeyDescriptionAndUserId(string keyDescription, int userId)
@@ -74,6 +75,19 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Persistence.Repositories
             return results;
             //return CurrentSession.QueryOver<SecurityKeysPair>().Select(t=>t.KeyDescription,t=>t.ExpirationDate,t=>t.CreationDateTime,t=>t.LastModified).Where(t=>t.UserId==userId && t.Deleted==false && t.SystemGenerated==false)
             //   .List<SecurityKeyPairList>();
+        }
+
+        /// <summary>
+        /// GetUserId from apikey
+        /// </summary>
+        /// <param name="apiKey"></param>
+        [Transaction(ReadOnly = true)]
+        public int GetUserIdFromApiKey(string apiKey)
+        {
+            return
+                CurrentSession.QueryOver<SecurityKeysPair>()
+                    .Where(x=>x.ApiKey == apiKey && x.Deleted == false)
+                    .SingleOrDefault().UserId;
         }
     }
 }

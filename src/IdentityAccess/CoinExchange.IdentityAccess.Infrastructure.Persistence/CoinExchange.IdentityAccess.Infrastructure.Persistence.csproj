@@ -88,6 +88,10 @@
     <EmbeddedResource Include="NHibernateMappings\User.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Common\CoinExchange.Common\CoinExchange.Common.csproj">
+      <Project>{d61dbd04-95dc-4eb1-ad54-1ff929ac2814}</Project>
+      <Name>CoinExchange.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CoinExchange.IdentityAccess.Domain.Model\CoinExchange.IdentityAccess.Domain.Model.csproj">
       <Project>{cb2cca81-c266-49a4-9fa0-40416ec2318e}</Project>
       <Name>CoinExchange.IdentityAccess.Domain.Model</Name>
