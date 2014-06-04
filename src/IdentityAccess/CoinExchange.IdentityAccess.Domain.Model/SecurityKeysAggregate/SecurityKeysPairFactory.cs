@@ -41,13 +41,25 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
             {
                 securityKeysPair.ExpirationDate = Convert.ToDateTime(expirationDate);
             }
+            else
+            {
+                securityKeysPair.ExpirationDate = null;
+            }
             if (enableStartDate)
             {
                 securityKeysPair.StartDate = Convert.ToDateTime(startDate);
             }
+            else
+            {
+                securityKeysPair.StartDate = null;
+            }
             if (enableEndDate)
             {
                 securityKeysPair.EndDate = Convert.ToDateTime(endDate);
+            }
+            else
+            {
+                securityKeysPair.EndDate = null;
             }
             securityKeysPair.EnableStartDate = enableStartDate;
             securityKeysPair.EnableEndDate = enableEndDate;

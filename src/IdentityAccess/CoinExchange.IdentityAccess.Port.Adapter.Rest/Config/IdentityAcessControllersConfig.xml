@@ -27,4 +27,9 @@
   <object id="TierController" type="CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources.TierController, CoinExchange.IdentityAccess.Port.Adapter.Rest" singleton="false">
     <constructor-arg name="userTierLevelApplicationService" ref="UserTierLevelApplicationService"/>
   </object>
+  
+  <!--Security Key Pair Controller-->
+  <object id="SecurityKeyPairController" type="CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources.SecurityKeyPairController, CoinExchange.IdentityAccess.Port.Adapter.Rest" singleton="false">
+    <constructor-arg name="securityKeysApplicationService" ref="SecurityKeysApplicationService"/>
+  </object>
 </objects>

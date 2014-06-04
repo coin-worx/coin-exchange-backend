@@ -101,6 +101,7 @@
     <Compile Include="LogoutControllerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegistrationControllerTests.cs" />
+    <Compile Include="SecurityKeysControllerTests.cs" />
     <Compile Include="TierControllerTests.cs" />
     <Compile Include="UserControllerTests.cs" />
   </ItemGroup>

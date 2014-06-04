@@ -13,7 +13,7 @@ namespace CoinExchange.IdentityAccess.Application.SecurityKeysServices.Commands
     /// </summary>
     public class CreateUserGeneratedSecurityKeyPair
     {
-        public string SystemGeneratedApiKey { get; private set; }
+//        public string SystemGeneratedApiKey { get; private set; }
         public string KeyDescritpion { get; private set; }
         public bool EnableStartDate { get; private set; }
         public bool EnableEndDate { get; private set; }
@@ -34,8 +34,7 @@ namespace CoinExchange.IdentityAccess.Application.SecurityKeysServices.Commands
         /// <param name="enableEndDate"></param>
         /// <param name="enableStartDate"></param>
         /// <param name="keyDescritpion"></param>
-        /// <param name="systemgeneratedApiKey"></param>
-        public CreateUserGeneratedSecurityKeyPair(SecurityKeyPermissionsRepresentation[] securityKeyPermissions, string expirationDateTime, string startDateTime, string endDateTime, bool enableExpirationDate, bool enableEndDate, bool enableStartDate, string keyDescritpion, string systemgeneratedApiKey)
+        public CreateUserGeneratedSecurityKeyPair(SecurityKeyPermissionsRepresentation[] securityKeyPermissions, string expirationDateTime, string startDateTime, string endDateTime, bool enableExpirationDate, bool enableEndDate, bool enableStartDate, string keyDescritpion)
         {
             SecurityKeyPermissions = securityKeyPermissions;
             ExpirationDateTime = expirationDateTime;
@@ -45,7 +44,7 @@ namespace CoinExchange.IdentityAccess.Application.SecurityKeysServices.Commands
             EnableEndDate = enableEndDate;
             EnableStartDate = enableStartDate;
             KeyDescritpion = keyDescritpion;
-            SystemGeneratedApiKey = systemgeneratedApiKey;
+           // SystemGeneratedApiKey = systemgeneratedApiKey;
         }
 
         /// <summary>

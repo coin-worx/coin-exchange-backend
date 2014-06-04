@@ -1,4 +1,6 @@
-﻿namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
+﻿using System.Collections.Generic;
+
+namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
 {
     /// <summary>
     /// Digital signature info repository
@@ -9,5 +11,6 @@
         SecurityKeysPair GetByApiKey(string apiKey);
         bool DeleteSecurityKeysPair(SecurityKeysPair securityKeysPair);
         SecurityKeysPair GetByDescriptionAndApiKey(string description, string apiKey);
+        object GetByUserId(int userId);
     }
 }
