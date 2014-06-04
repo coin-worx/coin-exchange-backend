@@ -141,6 +141,55 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
 
         }
 
+        [Test]
+        [Category("Integration")]
+        public void UpdateUsergeneratedSystemKey_IfNoPermissionIsAssigned_InvalidOperationExceptionWillBeThrown()
+        {
+            UserValidationEssentials essentials = AccessControlUtility.RegisterAndLogin("user", "user@user.com", "123", _applicationContext);
+            SecurityKeyPairController securityKeyPairController =
+                _applicationContext["SecurityKeyPairController"] as SecurityKeyPairController;
+            IPermissionRepository permissionRepository = _applicationContext["PermissionRespository"] as IPermissionRepository;
+            IList<Permission> permissions = permissionRepository.GetAllPermissions();
+            List<SecurityKeyPermissionsRepresentation> securityKeyPermissions = new List<SecurityKeyPermissionsRepresentation>();
+            for (int i = 0; i < permissions.Count; i++)
+            {
+                securityKeyPermissions.Add(new SecurityKeyPermissionsRepresentation(true, permissions[i]));
+            }
+            securityKeyPairController.Request = new HttpRequestMessage(HttpMethod.Post, "");
+            securityKeyPairController.Request.Headers.Add("Auth", essentials.ApiKey.Value);
+            CreateUserGeneratedSecurityKeyPair command = new CreateUserGeneratedSecurityKeyPair(securityKeyPermissions.ToArray(), "", "", "", false, false, false, "#1");
+            IHttpActionResult httpActionResult = securityKeyPairController.CreateSecurityKey(command);
+            OkNegotiatedContentResult<Tuple<string, string>> result = (OkNegotiatedContentResult<Tuple<string, string>>)httpActionResult;
+            Assert.IsNotNullOrEmpty(result.Content.Item1);
+            Assert.IsNotNullOrEmpty(result.Content.Item2);
+
+            httpActionResult = securityKeyPairController.GetUserSecurityKeys();
+            OkNegotiatedContentResult<object> result1 = (OkNegotiatedContentResult<object>)httpActionResult;
+            IList<SecurityKeyPairList> pairs = result1.Content as IList<SecurityKeyPairList>;
+            Assert.AreEqual(pairs.Count, 1);
+            Assert.AreEqual(pairs[0].KeyDescription, "#1");
+            Assert.IsNull(pairs[0].ExpirationDate);
+
+            httpActionResult = securityKeyPairController.GetSecurityKeyDetail("#1");
+            OkNegotiatedContentResult<SecurityKeyRepresentation> securityKey = (OkNegotiatedContentResult<SecurityKeyRepresentation>)httpActionResult;
+            Assert.AreEqual(securityKey.Content.KeyDescritpion, "#1");
+            Assert.AreEqual(securityKey.Content.EnableEndDate, false);
+            Assert.AreEqual(securityKey.Content.EnableExpirationDate, false);
+            Assert.AreEqual(securityKey.Content.EnableStartDate, false);
+
+            for (int i = 0; i < securityKeyPermissions.Count; i++)
+            {
+                securityKeyPermissions[i] = new SecurityKeyPermissionsRepresentation(false, securityKeyPermissions[i].Permission);
+
+            }
+            UpdateUserGeneratedSecurityKeyPair updateKeyPair =
+                new UpdateUserGeneratedSecurityKeyPair(securityKey.Content.ApiKey, "#2", true, false, false, "",
+                    DateTime.Today.AddDays(-2).ToString(), securityKeyPermissions.ToArray(), "");
+            httpActionResult = securityKeyPairController.UpdateSecurityKey(updateKeyPair);
+            BadRequestErrorMessageResult errorMessage = (BadRequestErrorMessageResult) httpActionResult;
+            Assert.AreEqual(errorMessage.Message,"Please assign atleast one permission.");
+        }
+
         /// <summary>
         /// validate permissions
         /// </summary>

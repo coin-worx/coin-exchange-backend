@@ -114,7 +114,7 @@ namespace CoinExchange.IdentityAccess.Application.SecurityKeysServices
                 _persistRepository.SaveUpdate(keyPair);
                 return true;
             }
-            throw new ArgumentNullException("Please assign atleast one permission.");
+            throw new InvalidOperationException("Please assign atleast one permission.");
         }
 
         /// <summary>
