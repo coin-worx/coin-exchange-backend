@@ -198,7 +198,7 @@ namespace CoinExchange.IdentityAccess.Application.SecurityKeysServices
             string expirationDate = getApiKey.EnableExpirationDate ? getApiKey.ExpirationDate.ToString() : "";
             string startDate = getApiKey.EnableStartDate ? getApiKey.StartDate.ToString() : "";
             string endDate = getApiKey.EnableEndDate ? getApiKey.EndDate.ToString() : "";
-            return new SecurityKeyRepresentation(getApiKey.KeyDescription, getApiKey.EnableStartDate,
+            return new SecurityKeyRepresentation(getApiKey.KeyDescription,getApiKey.ApiKey,getApiKey.SecretKey, getApiKey.EnableStartDate,
                 getApiKey.EnableEndDate, getApiKey.EnableExpirationDate, endDate,
                 startDate, expirationDate, representations.ToArray());
         }

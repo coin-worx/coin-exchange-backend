@@ -12,6 +12,8 @@ namespace CoinExchange.IdentityAccess.Application.SecurityKeysServices.Represent
     public class SecurityKeyRepresentation
     {
         public string KeyDescritpion { get; private set; }
+        public string ApiKey { get; private set; }
+        public string SecretKey { get; private set; }
         public bool EnableStartDate { get; private set; }
         public bool EnableEndDate { get; private set; }
         public bool EnableExpirationDate { get; private set; }
@@ -31,9 +33,11 @@ namespace CoinExchange.IdentityAccess.Application.SecurityKeysServices.Represent
         /// <param name="startDateTime"></param>
         /// <param name="expirationDateTime"></param>
         /// <param name="securityKeyPermissions"></param>
-        public SecurityKeyRepresentation(string keyDescritpion, bool enableStartDate, bool enableEndDate, bool enableExpirationDate, string endDateTime, string startDateTime, string expirationDateTime, SecurityKeyPermissionsRepresentation[] securityKeyPermissions)
+        public SecurityKeyRepresentation(string keyDescritpion,string apikey,string secretKey, bool enableStartDate, bool enableEndDate, bool enableExpirationDate, string endDateTime, string startDateTime, string expirationDateTime, SecurityKeyPermissionsRepresentation[] securityKeyPermissions)
         {
             KeyDescritpion = keyDescritpion;
+            ApiKey = apikey;
+            SecretKey = secretKey;
             EnableStartDate = enableStartDate;
             EnableEndDate = enableEndDate;
             EnableExpirationDate = enableExpirationDate;

@@ -72,6 +72,51 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
             }
         }
 
+        [HttpPost]
+        [Route("user/api/update")]
+        public IHttpActionResult UpdateSecurityKey(UpdateUserGeneratedSecurityKeyPair command)
+        {
+            try
+            {
+                if (log.IsDebugEnabled)
+                {
+                    log.Debug("CreateSecurityKey Call Recevied, parameters:");
+                }
+                return Ok(_securityKeysApplicationService.UpdateSecurityKeyPair(command, HeaderParamUtility.GetApikey(Request)));
+            }
+            catch (InvalidOperationException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("CreateSecurityKey Call Exception ", exception);
+                }
+                return BadRequest(exception.Message);
+            }
+            catch (InvalidCredentialException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("CreateSecurityKey Call Exception ", exception);
+                }
+                return BadRequest(exception.Message);
+            }
+            catch (InvalidDataException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("CreateSecurityKey Call Exception ", exception);
+                }
+                return BadRequest(exception.Message);
+            }
+            catch (Exception exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("CreateSecurityKey Call Exception ", exception);
+                }
+                return InternalServerError();
+            }
+        }
         /// <summary>
         /// Get available permissions
         /// </summary>
