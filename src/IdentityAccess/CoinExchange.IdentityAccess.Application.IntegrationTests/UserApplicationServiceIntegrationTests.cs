@@ -196,7 +196,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
 
             ManualResetEvent manualResetEvent = new ManualResetEvent(false);
             string username = "linkinpark";
-            string email = "waqas.syed@hotmail.com";
+            string email = "waqasshah047@gmail.com";
             string activationKey = registrationApplicationService.CreateAccount(new SignupUserCommand(email, username, "burnitdown", "USA", TimeZone.CurrentTimeZone, ""));
 
             userApplicationService.ActivateAccount(new ActivationCommand(activationKey, username, "burnitdown"));
@@ -221,7 +221,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
 
             ManualResetEvent manualResetEvent = new ManualResetEvent(false);
             string username = "linkinpark";
-            string email = "waqas.syed@hotmail.com";
+            string email = "waqasshah047@gmail.com";
             string activationKey = registrationApplicationService.CreateAccount(new SignupUserCommand(email, username, "burnitdown", "USA", TimeZone.CurrentTimeZone, ""));
             userApplicationService.ActivateAccount(new ActivationCommand(activationKey, username, "burnitdown"));
             manualResetEvent.WaitOne(6000);
@@ -244,7 +244,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             
             ManualResetEvent manualResetEvent = new ManualResetEvent(false);
             string username = "linkinpark";
-            string email = "waqas.syed@hotmail.com";
+            string email = "waqasshah047@gmail.com";
             string activationKey = registrationApplicationService.CreateAccount(new SignupUserCommand(email, username, "burnitdown", "USA", TimeZone.CurrentTimeZone, ""));
             userApplicationService.ActivateAccount(new ActivationCommand(activationKey, username, "burnitdown"));
             manualResetEvent.WaitOne(6000);
@@ -272,7 +272,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             
             ManualResetEvent manualResetEvent = new ManualResetEvent(false);
             string username = "linkinpark";
-            string email = "waqas.syed@hotmail.com";
+            string email = "waqasshah047@gmail.com";
             string activationKey = registrationApplicationService.CreateAccount(new SignupUserCommand(email, username, "burnitdown", "USA", TimeZone.CurrentTimeZone, ""));
             userApplicationService.ActivateAccount(new ActivationCommand(activationKey, username, "burnitdown"));
             manualResetEvent.WaitOne(6000);
@@ -291,7 +291,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
 
             ManualResetEvent manualResetEvent = new ManualResetEvent(false);
             string username = "linkinpark";
-            string email = "waqas.syed@hotmail.com";
+            string email = "waqasshah047@gmail.com";
             string activationKey = registrationApplicationService.CreateAccount(new SignupUserCommand(email, username, "burnitdown", "USA", TimeZone.CurrentTimeZone, ""));
             userApplicationService.ActivateAccount(new ActivationCommand(activationKey, username, "burnitdown"));
             manualResetEvent.WaitOne(6000);
@@ -313,7 +313,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             IUserRepository userRepository = (IUserRepository)_applicationContext["UserRepository"];
 
             string username = "linkinpark";
-            string email = "waqas.syed@hotmail.com";
+            string email = "waqasshah047@gmail.com";
             string password = "burnitdown";
             string activationKey = registrationApplicationService.CreateAccount(new SignupUserCommand(email, username, password, "USA", TimeZone.CurrentTimeZone, ""));
             bool accountActivated = userApplicationService.ActivateAccount(new ActivationCommand(activationKey, username, password));
@@ -336,7 +336,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
                 (ILoginApplicationService) _applicationContext["LoginApplicationService"];
 
             string username = "linkinpark";
-            string email = "waqas.syed@hotmail.com";
+            string email = "waqasshah047@gmail.com";
             string password = "burnitdown";
             registrationApplicationService.CreateAccount(new SignupUserCommand(email, username, password, "USA", TimeZone.CurrentTimeZone, ""));
 
@@ -357,7 +357,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             ISecurityKeysRepository securityKeysRepository = (ISecurityKeysRepository)_applicationContext["SecurityKeysPairRepository"];
 
             string username = "linkinpark";
-            string email = "waqas.syed@hotmail.com";
+            string email = "waqasshah047@gmail.com";
             string password = "burnitdown";
             string activationKey = registrationApplicationService.CreateAccount(new SignupUserCommand(email, username, password, "USA", TimeZone.CurrentTimeZone, ""));
 
@@ -389,7 +389,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             IUserRepository userRepository = (IUserRepository)_applicationContext["UserRepository"];
 
             string username = "linkinpark";
-            string email = "waqas.syed@hotmail.com";
+            string email = "waqasshah047@gmail.com";
             string password = "burnitdown";
             string activationKey = registrationApplicationService.CreateAccount(new SignupUserCommand(email, username, password, "USA", TimeZone.CurrentTimeZone, ""));
             bool accountActivated = userApplicationService.ActivateAccount(new ActivationCommand(activationKey, username, password));
@@ -415,7 +415,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
                 (IRegistrationApplicationService)_applicationContext["RegistrationApplicationService"];
 
             string username = "linkinpark";
-            string email = "waqas.syed@hotmail.com";
+            string email = "waqasshah047@gmail.com";
             string password = "burnitdown";
             string activationKey = registrationApplicationService.CreateAccount(new SignupUserCommand(email, username, password, "USA", TimeZone.CurrentTimeZone, ""));
             userApplicationService.ActivateAccount(new ActivationCommand(activationKey + "activate", username, password));
@@ -431,7 +431,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
                 (IRegistrationApplicationService)_applicationContext["RegistrationApplicationService"];
 
             string username = "linkinpark";
-            string email = "waqas.syed@hotmail.com";
+            string email = "waqasshah047@gmail.com";
             string password = "burnitdown";
             registrationApplicationService.CreateAccount(new SignupUserCommand(email, username, password, "USA", TimeZone.CurrentTimeZone, ""));
             userApplicationService.ActivateAccount(new ActivationCommand("", username, password));
@@ -447,7 +447,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
                 (IRegistrationApplicationService)_applicationContext["RegistrationApplicationService"];
 
             string username = "linkinpark";
-            string email = "waqas.syed@hotmail.com";
+            string email = "waqasshah047@gmail.com";
             string password = "burnitdown";
             string activationKey = registrationApplicationService.CreateAccount(new SignupUserCommand(email, username, password, "USA", TimeZone.CurrentTimeZone, ""));
             userApplicationService.ActivateAccount(new ActivationCommand(activationKey, username + "user", password));
@@ -463,7 +463,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
                 (IRegistrationApplicationService)_applicationContext["RegistrationApplicationService"];
 
             string username = "linkinpark";
-            string email = "waqas.syed@hotmail.com";
+            string email = "waqasshah047@gmail.com";
             string password = "burnitdown";
             string activationKey = registrationApplicationService.CreateAccount(new SignupUserCommand(email, username, password, "USA", TimeZone.CurrentTimeZone, ""));
             userApplicationService.ActivateAccount(new ActivationCommand(activationKey, "", password));
@@ -479,7 +479,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
                 (IRegistrationApplicationService)_applicationContext["RegistrationApplicationService"];
 
             string username = "linkinpark";
-            string email = "waqas.syed@hotmail.com";
+            string email = "waqasshah047@gmail.com";
             string password = "burnitdown";
             string activationKey = registrationApplicationService.CreateAccount(new SignupUserCommand(email, username, password, "USA", TimeZone.CurrentTimeZone, ""));
             userApplicationService.ActivateAccount(new ActivationCommand(activationKey, username, password+"pass"));
@@ -495,7 +495,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
                 (IRegistrationApplicationService)_applicationContext["RegistrationApplicationService"];
 
             string username = "linkinpark";
-            string email = "waqas.syed@hotmail.com";
+            string email = "waqasshah047@gmail.com";
             string password = "burnitdown";
             string activationKey = registrationApplicationService.CreateAccount(new SignupUserCommand(email, username, password, "USA", TimeZone.CurrentTimeZone, ""));
             userApplicationService.ActivateAccount(new ActivationCommand(activationKey, username, ""));
@@ -515,7 +515,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
                 (IRegistrationApplicationService)_applicationContext["RegistrationApplicationService"];
 
             string username = "linkinpark";
-            string email = "waqas.syed@hotmail.com";
+            string email = "waqasshah047@gmail.com";
             string password = "burnitdown";
             string activationKey = registrationApplicationService.CreateAccount(new SignupUserCommand(email, username, password, "USA", TimeZone.CurrentTimeZone, ""));
             userApplicationService.CancelAccountActivation(new CancelActivationCommand(activationKey + "1"));
@@ -541,7 +541,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             IUserRepository userRepository = (IUserRepository)_applicationContext["UserRepository"];
 
             string username = "linkinpark";
-            string email = "waqas.syed@hotmail.com";
+            string email = "waqasshah047@gmail.com";
             string password = "burnitdown";
             string activationKey = registrationApplicationService.CreateAccount(new SignupUserCommand(email, username, password, "USA", TimeZone.CurrentTimeZone, ""));
             bool accountActivated = userApplicationService.ActivateAccount(new ActivationCommand(activationKey, username, password));
@@ -566,7 +566,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             IUserRepository userRepository = (IUserRepository)_applicationContext["UserRepository"];
 
             string username = "linkinpark";
-            string email = "waqas.syed@hotmail.com";
+            string email = "waqasshah047@gmail.com";
             string password = "burnitdown";
             string activationKey = registrationApplicationService.CreateAccount(new SignupUserCommand(email, username, password, "USA", TimeZone.CurrentTimeZone, ""));
             bool cancelAccountActivation = userApplicationService.CancelAccountActivation(new CancelActivationCommand(activationKey));
@@ -592,7 +592,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
                 (IPasswordEncryptionService)_applicationContext["PasswordEncryptionService"];
 
             string username = "linkinpark";
-            string email = "waqas.syed@hotmail.com";
+            string email = "waqasshah047@gmail.com";
             string activationKey = registrationApplicationService.CreateAccount(new SignupUserCommand(email, username, "burnitdown", "USA", TimeZone.CurrentTimeZone, ""));
             bool accountActivated = userApplicationService.ActivateAccount(new ActivationCommand(activationKey, username, "burnitdown"));
             Assert.IsTrue(accountActivated);
@@ -623,7 +623,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
                 (IPasswordEncryptionService)_applicationContext["PasswordEncryptionService"];
 
             string username = "linkinpark";
-            string email = "waqas.syed@hotmail.com";
+            string email = "waqasshah047@gmail.com";
             string activationKey = registrationApplicationService.CreateAccount(new SignupUserCommand(email, username, "burnitdown", "USA", TimeZone.CurrentTimeZone, ""));
             bool accountActivated = userApplicationService.ActivateAccount(new ActivationCommand(activationKey, username, "burnitdown"));
             Assert.IsTrue(accountActivated);
@@ -659,7 +659,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
                 (IPasswordEncryptionService)_applicationContext["PasswordEncryptionService"];
 
             string username = "linkinpark";
-            string email = "waqas.syed@hotmail.com";
+            string email = "waqasshah047@gmail.com";
             string password = "burnitdown";
             string activationKey = registrationApplicationService.CreateAccount(new SignupUserCommand(email, username, password, "USA", TimeZone.CurrentTimeZone, ""));
             bool accountActivated = userApplicationService.ActivateAccount(new ActivationCommand(activationKey, username, "burnitdown"));

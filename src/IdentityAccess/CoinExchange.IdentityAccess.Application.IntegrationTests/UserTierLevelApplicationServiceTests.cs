@@ -51,7 +51,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
                 (IPasswordEncryptionService)_applicationContext["PasswordEncryptionService"];
 
             string username = "linkinpark";
-            string email = "waqas.syed@hotmail.com";
+            string email = "waqasshah047@gmail.com";
             registrationApplicationService.CreateAccount(new SignupUserCommand(email, username, "burnitdown", "USA", TimeZone.CurrentTimeZone, ""));
             IUserTierLevelApplicationService tierLevelApplicationService =
                 _applicationContext["UserTierLevelApplicationService"] as IUserTierLevelApplicationService;

@@ -58,12 +58,12 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             ManualResetEvent manualResetEvent = new ManualResetEvent(false);
             
             string activationKey = registrationService.CreateAccount(new SignupUserCommand(
-                "waqas.syed@hotmail.com", "Bob", "iamnotalice", "Wonderland", TimeZone.CurrentTimeZone, ""));
+                "waqasshah047@gmail.com", "Bob", "iamnotalice", "Wonderland", TimeZone.CurrentTimeZone, ""));
             // Wait for the email to be sent
             manualResetEvent.WaitOne(5000);
             User receivedUser = userRepository.GetUserByUserName("Bob");
             Assert.NotNull(receivedUser);
-            Assert.AreEqual("waqas.syed@hotmail.com", receivedUser.Email);
+            Assert.AreEqual("waqasshah047@gmail.com", receivedUser.Email);
             Assert.AreEqual("Bob", receivedUser.Username);
             Assert.IsTrue(passwordEncryption.VerifyPassword("iamnotalice", receivedUser.Password));
             Assert.AreEqual("", receivedUser.PublicKey);
@@ -86,12 +86,12 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
                 (IPasswordEncryptionService)_applicationContext["PasswordEncryptionService"];
             ManualResetEvent manualResetEvent = new ManualResetEvent(false);
             string activationKey = registrationService.CreateAccount(new SignupUserCommand(
-                "waqas.syed@hotmail.com", "Bob", "iamnotalice", "Wonderland", TimeZone.CurrentTimeZone, ""));
+                "waqasshah047@gmail.com", "Bob", "iamnotalice", "Wonderland", TimeZone.CurrentTimeZone, ""));
             // Wait for the email to be sent
             manualResetEvent.WaitOne(5000);
             User receivedUser = userRepository.GetUserByUserName("Bob");
             Assert.NotNull(receivedUser);
-            Assert.AreEqual("waqas.syed@hotmail.com", receivedUser.Email);
+            Assert.AreEqual("waqasshah047@gmail.com", receivedUser.Email);
             Assert.AreEqual("Bob", receivedUser.Username);
             Assert.IsTrue(passwordEncryption.VerifyPassword("iamnotalice", receivedUser.Password));
             Assert.AreEqual("", receivedUser.PublicKey);
@@ -99,9 +99,9 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             Assert.AreEqual(activationKey, receivedUser.ActivationKey);
 
             registrationService.CreateAccount(new SignupUserCommand(
-                "waqas.syed1@hotmail.com", "Bob", "iamnotalice", "Wonderland", TimeZone.CurrentTimeZone, ""));
+                "waqas.syed1@abcdefg.com", "Bob", "iamnotalice", "Wonderland", TimeZone.CurrentTimeZone, ""));
 
-            User userByEmail = userRepository.GetUserByEmail("waqas.syed1@hotmail.com");
+            User userByEmail = userRepository.GetUserByEmail("waqas.syed1@abcdefg.com");
             Assert.IsNull(userByEmail);
         }
 
@@ -118,12 +118,12 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
                 (IPasswordEncryptionService)_applicationContext["PasswordEncryptionService"];
             ManualResetEvent manualResetEvent = new ManualResetEvent(false);
             string activationKey = registrationService.CreateAccount(new SignupUserCommand(
-                "waqas.syed@hotmail.com", "Bob", "iamnotalice", "Wonderland", TimeZone.CurrentTimeZone, ""));
+                "waqasshah047@gmail.com", "Bob", "iamnotalice", "Wonderland", TimeZone.CurrentTimeZone, ""));
             // Wait for the email to be sent
             manualResetEvent.WaitOne(5000);
             User receivedUser = userRepository.GetUserByUserName("Bob");
             Assert.NotNull(receivedUser);
-            Assert.AreEqual("waqas.syed@hotmail.com", receivedUser.Email);
+            Assert.AreEqual("waqasshah047@gmail.com", receivedUser.Email);
             Assert.AreEqual("Bob", receivedUser.Username);
             Assert.IsTrue(passwordEncryption.VerifyPassword("iamnotalice", receivedUser.Password));
             Assert.AreEqual("", receivedUser.PublicKey);
@@ -131,10 +131,11 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             Assert.AreEqual(activationKey, receivedUser.ActivationKey);
 
             registrationService.CreateAccount(new SignupUserCommand(
-                "waqas.syed@hotmail.com", "Bob", "iamnotalice", "Wonderland", TimeZone.CurrentTimeZone, ""));
+                "waqasshah047@gmail.com", "Bob", "iamnotalice", "Wonderland", TimeZone.CurrentTimeZone, ""));
 
-            User userByEmail = userRepository.GetUserByEmail("waqas.syed1@hotmail.com");
-            Assert.IsNull(userByEmail);
+            User userByEmail = userRepository.GetUserByEmail("waqasshah047@gmail.com");
+            Assert.IsNotNull(userByEmail);
+            Assert.AreEqual("Bob", userByEmail.Username);
 
             User userByUsername = userRepository.GetUserByUserName("Bob");
             Assert.IsNull(userByUsername);
@@ -153,12 +154,12 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
                 (IPasswordEncryptionService)_applicationContext["PasswordEncryptionService"];
             ManualResetEvent manualResetEvent = new ManualResetEvent(false);
             string activationKey = registrationService.CreateAccount(new SignupUserCommand(
-                "waqas.syed@hotmail.com", "Bob", "iamnotalice", "Wonderland", TimeZone.CurrentTimeZone, ""));
+                "waqasshah047@gmail.com", "Bob", "iamnotalice", "Wonderland", TimeZone.CurrentTimeZone, ""));
             // Wait for the email to be sent
             manualResetEvent.WaitOne(5000);
             User receivedUser = userRepository.GetUserByUserName("Bob");
             Assert.NotNull(receivedUser);
-            Assert.AreEqual("waqas.syed@hotmail.com", receivedUser.Email);
+            Assert.AreEqual("waqasshah047@gmail.com", receivedUser.Email);
             Assert.AreEqual("Bob", receivedUser.Username);
             Assert.IsTrue(passwordEncryption.VerifyPassword("iamnotalice", receivedUser.Password));
             Assert.AreEqual("", receivedUser.PublicKey);
@@ -166,10 +167,14 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             Assert.AreEqual(activationKey, receivedUser.ActivationKey);
 
             registrationService.CreateAccount(new SignupUserCommand(
-                "waqas.syed@hotmail.com", "Boby", "iamnotalice", "Wonderland", TimeZone.CurrentTimeZone, ""));
+                "waqasshah047@gmail.com", "Boby", "iamnotalice", "Wonderland", TimeZone.CurrentTimeZone, ""));
 
             User userByUsername = userRepository.GetUserByUserName("Boby");
             Assert.IsNull(userByUsername);
+
+            User userByEmail = userRepository.GetUserByEmail("waqasshah047@gmail.com");
+            Assert.IsNotNull(userByEmail);
+            Assert.AreEqual("Bob", userByEmail.Username);
         }
 
         [Test]
@@ -194,7 +199,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
                 (IRegistrationApplicationService)_applicationContext["RegistrationApplicationService"];
 
             string activationKey = registrationService.CreateAccount(new SignupUserCommand(
-                "waqas.syed@hotmail.com", "", "iamnotalice", "Wonderland", TimeZone.CurrentTimeZone, ""));
+                "waqasshah047@gmail.com", "", "iamnotalice", "Wonderland", TimeZone.CurrentTimeZone, ""));
             Assert.IsNull(activationKey);
         }
 
@@ -207,7 +212,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
                 (IRegistrationApplicationService)_applicationContext["RegistrationApplicationService"];
 
             string activationKey = registrationService.CreateAccount(new SignupUserCommand(
-                "waqas.syed@hotmail.com", "Bob", "", "Wonderland", TimeZone.CurrentTimeZone, ""));
+                "waqasshah047@gmail.com", "Bob", "", "Wonderland", TimeZone.CurrentTimeZone, ""));
             Assert.IsNull(activationKey);
         }
 
@@ -232,11 +237,9 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
                 (IUserRepository)_applicationContext["UserRepository"];
             ITierRepository tierRepository =
                 (ITierRepository)_applicationContext["TierRepository"];
-            IPasswordEncryptionService passwordEncryption =
-                (IPasswordEncryptionService)_applicationContext["PasswordEncryptionService"];
             ManualResetEvent manualResetEvent = new ManualResetEvent(false);
             string activationKey = registrationService.CreateAccount(new SignupUserCommand(
-                "waqas.syed@hotmail.com", "Bob", "iamnotalice", "Wonderland", TimeZone.CurrentTimeZone, ""));
+                "waqasshah047@gmail.com", "Bob", "iamnotalice", "Wonderland", TimeZone.CurrentTimeZone, ""));
             // Wait for the email to be sent
             manualResetEvent.WaitOne(5000);
             User receivedUser = userRepository.GetUserByUserName("Bob");
