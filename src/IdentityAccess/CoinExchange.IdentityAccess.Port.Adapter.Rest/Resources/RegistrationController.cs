@@ -31,7 +31,8 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         }
 
         [HttpPost]
-        [Route("user/register")]
+        [Route("admin/signup")]
+        [FilterIP]
         public IHttpActionResult Register([FromBody]SignUpParam param)
         {
             try

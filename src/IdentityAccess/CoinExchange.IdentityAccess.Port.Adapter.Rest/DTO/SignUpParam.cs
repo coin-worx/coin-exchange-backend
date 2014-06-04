@@ -11,6 +11,11 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.DTO
     /// </summary>
     public class SignUpParam
     {
+        //default constructor
+        public SignUpParam()
+        {
+            
+        }
         /// <summary>
         /// Parameterized constructor
         /// </summary>
@@ -33,32 +38,32 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.DTO
         /// <summary>
         /// Email
         /// </summary>       
-        public string Email { get; private set; }
+        public string Email { get;  set; }
 
         /// <summary>
         /// Username
         /// </summary>       
-        public string Username { get; private set; }
+        public string Username { get;  set; }
 
         /// <summary>
         /// Password
         /// </summary>       
-        public string Password { get; private set; }
+        public string Password { get;  set; }
 
         /// <summary>
         /// Country
         /// </summary>  
-        public string Country { get; private set; }
+        public string Country { get;  set; }
 
         /// <summary>
         /// TimeZone
         /// </summary>       
-        public TimeZone TimeZone { get; private set; }
+        public TimeZone TimeZone { get;  set; }
 
         /// <summary>
         /// PGPPublicKey
         /// </summary>       
-        public string PgpPublicKey { get; private set; }
+        public string PgpPublicKey { get;  set; }
 
         public override string ToString()
         {

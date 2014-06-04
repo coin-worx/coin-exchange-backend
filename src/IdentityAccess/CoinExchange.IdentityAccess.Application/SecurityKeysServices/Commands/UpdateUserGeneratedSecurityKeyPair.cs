@@ -12,16 +12,20 @@ namespace CoinExchange.IdentityAccess.Application.SecurityKeysServices.Commands
     /// </summary>
     public class UpdateUserGeneratedSecurityKeyPair
     {
+        public UpdateUserGeneratedSecurityKeyPair()
+        {
+            
+        }
+
         public string ApiKey { get; set; }
-//        public string SystemGeneratedApiKey { get; private set; }
-        public string KeyDescritpion { get; private set; }
-        public bool EnableStartDate { get; private set; }
-        public bool EnableEndDate { get; private set; }
-        public bool EnableExpirationDate { get; private set; }
-        public string EndDateTime { get; private set; }
-        public string StartDateTime { get; private set; }
-        public string ExpirationDateTime { get; private set; }
-        public SecurityKeyPermissionsRepresentation[] SecurityKeyPermissions { get; private set; }
+        public string KeyDescritpion { get; set; }
+        public bool EnableStartDate { get; set; }
+        public bool EnableEndDate { get; set; }
+        public bool EnableExpirationDate { get; set; }
+        public string EndDateTime { get; set; }
+        public string StartDateTime { get; set; }
+        public string ExpirationDateTime { get; set; }
+        public SecurityKeyPermissionsRepresentation[] SecurityKeyPermissions { get; set; }
 
         /// <summary>
         /// Default constructor

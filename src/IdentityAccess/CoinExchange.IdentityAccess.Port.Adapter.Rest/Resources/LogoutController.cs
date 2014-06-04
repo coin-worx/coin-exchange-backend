@@ -35,7 +35,8 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         /// <param name="param"></param>
         /// <returns></returns>
         [HttpPost]
-        [Route("user/logout")]
+        [Route("admin/logout")]
+        [FilterIP]
         public IHttpActionResult Logout([FromBody]LogoutParams param)
         {
             try

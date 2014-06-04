@@ -11,6 +11,11 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.DTO
     /// </summary>
     public class CancelActivationParams
     {
+        public CancelActivationParams()
+        {
+            
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="CancelActivationParams"/> class.
         /// </summary>
@@ -22,6 +27,6 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.DTO
         /// <summary>
         /// Activation Key
         /// </summary>
-        public string ActivationKey { get; private set; }
+        public string ActivationKey { get; set; }
     }
 }

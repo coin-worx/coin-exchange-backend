@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Threading;
+using CoinExchange.Client.Tests;
 using CoinExchange.Common.Tests;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -12,12 +14,14 @@ namespace CoinExchange.Client.Console
         static void Main(string[] args)
         {
             string baseUrl = "http://rockblanc.cloudapp.net/dev";
-            //baseUrl = "http://localhost:51780";
-            ApiClient client=new ApiClient(baseUrl);
-            Scenario1(client);
+            baseUrl = "http://localhost:51780";
+            //ApiClient client=new ApiClient(baseUrl);
+           // Scenario1(client);
             //ScenarioResults(client);
             //System.Console.WriteLine(client.GetTradeHistory("",""));
-           System.Console.ReadKey();
+           IdentityAccessClient client=new IdentityAccessClient(baseUrl);
+            System.Console.WriteLine(client.SignUp("mbilal@aurorasolutions.org","mbilal","123","Pakistan",TimeZone.CurrentTimeZone, ""));
+            System.Console.ReadKey();
         }
 
         /// <summary>

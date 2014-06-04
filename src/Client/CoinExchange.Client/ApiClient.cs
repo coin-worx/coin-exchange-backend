@@ -14,7 +14,7 @@ namespace CoinExchange.Client
         private string nonce = "";
         private string cnounce = "asdfgh";
         private int counter = 0;
-        private string _baseUrl = "";
+        protected string _baseUrl = "";
 
         public ApiClient(string baseUrl)
         {
@@ -194,7 +194,7 @@ namespace CoinExchange.Client
         /// <param name="param"></param>
         /// <param name="url"></param>
         /// <returns></returns>
-        private string HttpPostRequest(object param, string url)
+        protected string HttpPostRequest(object param, string url)
         {
             string message = "";
             for (int i = 0; i < 2; i++)

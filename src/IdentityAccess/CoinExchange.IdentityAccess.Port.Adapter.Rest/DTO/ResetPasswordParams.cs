@@ -11,6 +11,11 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.DTO
     /// </summary>
     public class ResetPasswordParams
     {
+        public ResetPasswordParams()
+        {
+            
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ResetPasswordParams"/> class.
         /// </summary>
@@ -23,11 +28,11 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.DTO
         /// <summary>
         /// Username
         /// </summary>
-        public string Username { get; private set; }
+        public string Username { get; set; }
 
         /// <summary>
         /// Password
         /// </summary>
-        public string Password { get; private set; }
+        public string Password { get; set; }
     }
 }

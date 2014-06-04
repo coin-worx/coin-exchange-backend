@@ -11,10 +11,15 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.DTO
     /// </summary>
     public class Tier3Param
     {
-        public string Ssn { get; private set; }
-        public string Nin { get; private set; }
-        public string DocumentType { get; private set; }
-        public string FileName { get; private set; }
+        public Tier3Param()
+        {
+            
+        }
+
+        public string Ssn { get; set; }
+        public string Nin { get; set; }
+        public string DocumentType { get; set; }
+        public string FileName { get; set; }
 
         /// <summary>
         /// Parameterized constructor

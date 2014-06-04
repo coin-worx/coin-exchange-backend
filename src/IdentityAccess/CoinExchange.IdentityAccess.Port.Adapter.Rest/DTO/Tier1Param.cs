@@ -11,9 +11,14 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.DTO
     /// </summary>
     public class Tier1Param
     {
-        public string FullName { get; private set; }
-        public string DateOfBirth { get; private set; }
-        public string PhoneNumber { get; private set; }
+        public Tier1Param()
+        {
+            
+        }
+
+        public string FullName { get; set; }
+        public string DateOfBirth { get; set; }
+        public string PhoneNumber { get; set; }
 
         /// <summary>
         /// parameterized constructor

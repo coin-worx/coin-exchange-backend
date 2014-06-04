@@ -11,6 +11,11 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.DTO
     /// </summary>
     public class LogoutParams
     {
+        public LogoutParams()
+        {
+            
+        }
+
         /// <summary>
         /// Parameterized Constructor
         /// </summary>
@@ -25,11 +30,11 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.DTO
         /// <summary>
         /// API Key
         /// </summary>
-        public string ApiKey { get; private set; }
+        public string ApiKey { get; set; }
 
         /// <summary>
         /// Secret Key
         /// </summary>
-        public string SecretKey { get; private set; }
+        public string SecretKey { get; set; }
     }
 }

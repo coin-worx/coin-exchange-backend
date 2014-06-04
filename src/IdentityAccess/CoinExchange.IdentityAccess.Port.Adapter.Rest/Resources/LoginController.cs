@@ -34,7 +34,8 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         /// <param name="param"></param>
         /// <returns></returns>
         [HttpPost]
-        [Route("user/login")]
+        [Route("admin/login")]
+        [FilterIP]
         public IHttpActionResult Login([FromBody]LoginParams param)
         {
             try

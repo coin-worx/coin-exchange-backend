@@ -39,7 +39,8 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         /// <param name="param"></param>
         /// <returns></returns>
         [HttpPost]
-        [Route("user/activate")]
+        [Route("private/user/activate")]
+        [FilterIP]
         public IHttpActionResult ActivateUser([FromBody]UserActivationParam param)
         {
             try
@@ -91,7 +92,9 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         /// <param name="cancelActivationParams"></param>
         /// <returns></returns>
         [HttpPost]
-        [Route("user/cancelactivation")]
+        [Route("private/user/cancelactivation")]
+        [FilterIP]
+        [Authorize]
         public IHttpActionResult CancelUserActivation([FromBody]CancelActivationParams cancelActivationParams)
         {
             try
@@ -130,7 +133,9 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         }
 
         [HttpPost]
-        [Route("user/changepassword")]
+        [Route("private/user/changepassword")]
+        [FilterIP]
+        [Authorize]
         public IHttpActionResult ChangePassword([FromBody]ChangePasswordParams changePasswordParams)
         {
             try
@@ -170,7 +175,8 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         }
 
         [HttpPost]
-        [Route("user/forgotusername")]
+        [Route("private/user/forgotusername")]
+        [FilterIP]
         public IHttpActionResult ForgotUsername([FromBody]ForgotUsernameParams forgotUsernameParams)
         {
             try
@@ -209,7 +215,8 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         }
 
         [HttpPost]
-        [Route("user/forgotpassword")]
+        [Route("private/user/forgotpassword")]
+        [FilterIP]
         public IHttpActionResult ForgotPassword([FromBody]ForgotPasswordParams forgotPasswordParams)
         {
             try
@@ -249,7 +256,8 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         }
 
         [HttpPost]
-        [Route("user/resetpassword")]
+        [Route("private/user/resetpassword")]
+        [FilterIP]
         public IHttpActionResult ResetPassword([FromBody]ResetPasswordParams resetPasswordParams)
         {
             try
@@ -297,7 +305,9 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         }
 
         [HttpPost]
-        [Route("user/changesettings")]
+        [Route("private/user/changesettings")]
+        [FilterIP]
+        [Authorize]
         public IHttpActionResult ChangeSettings([FromBody]ChangeSettingsParams changeSettingsParams)
         {
             try
@@ -338,7 +348,9 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         }
 
         [HttpGet]
-        [Route("user/accountsettings")]
+        [Route("private/user/accountsettings")]
+        [FilterIP]
+        [Authorize]
         public IHttpActionResult GetAccountSettings()
         {
             try

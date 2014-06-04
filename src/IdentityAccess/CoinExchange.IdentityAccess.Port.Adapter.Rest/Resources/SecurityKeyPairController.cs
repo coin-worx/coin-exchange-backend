@@ -27,7 +27,9 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         }
         
         [HttpPost]
-        [Route("user/api")]
+        [Route("private/user/api/create")]
+        [FilterIP]
+        [Authorize]
         public IHttpActionResult CreateSecurityKey(CreateUserGeneratedSecurityKeyPair command)
         {
             try
@@ -73,7 +75,9 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         }
 
         [HttpPost]
-        [Route("user/api/update")]
+        [FilterIP]
+        [Route("private/user/api/update")]
+        [Authorize]
         public IHttpActionResult UpdateSecurityKey(UpdateUserGeneratedSecurityKeyPair command)
         {
             try
@@ -122,7 +126,9 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [Route("user/api")]
+        [Route("private/user/api/permissions")]
+        [FilterIP]
+        [Authorize]
         public IHttpActionResult GetAvailablePermissions()
         {
             try
@@ -172,7 +178,9 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [Route("user/apilist")]
+        [Route("private/user/api/details")]
+        [FilterIP]
+        [Authorize]
         public IHttpActionResult GetUserSecurityKeys()
         {
             try
@@ -222,7 +230,9 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [Route("user/apilist")]
+        [Route("private/user/api/keydetail")]
+        [FilterIP]
+        [Authorize]
         public IHttpActionResult GetSecurityKeyDetail(string keyDescription)
         {
             try

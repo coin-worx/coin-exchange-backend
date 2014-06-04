@@ -11,9 +11,14 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.DTO
     /// </summary>
     public class UserActivationParam
     {
-        public string UserName { get; private set; }
-        public string Password { get; private set; }
-        public string ActivationKey { get; private set; }
+        public UserActivationParam()
+        {
+            
+        }
+
+        public string UserName { get;  set; }
+        public string Password { get;  set; }
+        public string ActivationKey { get; set; }
 
         /// <summary>
         /// parameterized constructor

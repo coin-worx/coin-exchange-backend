@@ -10,13 +10,18 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.DTO
     /// paramters to be taken for tier 2 verification
     /// </summary>
     public class Tier2Param
-    { 
-        public string AddressLine1 {get; private set;}
-        public string AddressLine2 { get; private set; }
-        public string AddressLine3 { get; private set; }
-        public string State { get; private set; }
-        public string City { get; private set; }
-        public string ZipCode { get; private set; }
+    {
+        public Tier2Param()
+        {
+            
+        }
+
+        public string AddressLine1 {get; set;}
+        public string AddressLine2 { get; set; }
+        public string AddressLine3 { get; set; }
+        public string State { get; set; }
+        public string City { get; set; }
+        public string ZipCode { get; set; }
 
         /// <summary>
         /// parameterized constructor
