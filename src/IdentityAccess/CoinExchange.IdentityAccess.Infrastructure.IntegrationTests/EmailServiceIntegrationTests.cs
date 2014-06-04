@@ -18,7 +18,7 @@ namespace CoinExchange.IdentityAccess.Infrastructure.IntegrationTests
         {
             IEmailService emailService = (IEmailService)ContextRegistry.GetContext()["EmailService"];
             ManualResetEvent manualResetEvent = new ManualResetEvent(false);
-            bool sendMail = emailService.SendMail("waqas.syed@hotmail.com", "BlancRock", EmailContents.GetActivationKeyMessage(
+            bool sendMail = emailService.SendMail("waqasshah047@gmail.com", "BlancRock", EmailContents.GetActivationKeyMessage(
                 "Bruce Wayne", "123456787654"));
             manualResetEvent.WaitOne(5000);
 
@@ -31,7 +31,7 @@ namespace CoinExchange.IdentityAccess.Infrastructure.IntegrationTests
         {
             IEmailService emailService = (IEmailService)ContextRegistry.GetContext()["EmailService"];
             ManualResetEvent manualResetEvent = new ManualResetEvent(false);
-            bool sendPostSignUpEmail = emailService.SendPostSignUpEmail("waqas.syed@hotmail.com", "Bruce Wayne", "123456789");
+            bool sendPostSignUpEmail = emailService.SendPostSignUpEmail("waqasshah047@gmail.com", "Bruce Wayne", "123456789");
             manualResetEvent.WaitOne(6000);
 
             Assert.IsTrue(sendPostSignUpEmail);
@@ -43,7 +43,7 @@ namespace CoinExchange.IdentityAccess.Infrastructure.IntegrationTests
         {
             IEmailService emailService = (IEmailService)ContextRegistry.GetContext()["EmailService"];
             ManualResetEvent manualResetEvent = new ManualResetEvent(false);
-            bool sendForgotUsernameEmail = emailService.SendForgotUsernameEmail("waqas.syed@hotmail.com",
+            bool sendForgotUsernameEmail = emailService.SendForgotUsernameEmail("waqasshah047@gmail.com",
                 "Bruce Wayne");
             manualResetEvent.WaitOne(5000);
 
@@ -56,7 +56,7 @@ namespace CoinExchange.IdentityAccess.Infrastructure.IntegrationTests
         {
             IEmailService emailService = (IEmailService)ContextRegistry.GetContext()["EmailService"];
             ManualResetEvent manualResetEvent = new ManualResetEvent(false);
-            bool sendForgotUsernameEmail = emailService.SendReactivaitonNotificationEmail("waqas.syed@hotmail.com", 
+            bool sendForgotUsernameEmail = emailService.SendReactivaitonNotificationEmail("waqasshah047@gmail.com", 
                 "Tony Stark");
             manualResetEvent.WaitOne(6000);
 
@@ -69,7 +69,7 @@ namespace CoinExchange.IdentityAccess.Infrastructure.IntegrationTests
         {
             IEmailService emailService = (IEmailService)ContextRegistry.GetContext()["EmailService"];
             ManualResetEvent manualResetEvent = new ManualResetEvent(false);
-            bool sendForgotUsernameEmail = emailService.SendCancelActivationEmail("waqas.syed@hotmail.com",
+            bool sendForgotUsernameEmail = emailService.SendCancelActivationEmail("waqasshah047@gmail.com",
                 "Peter Parker");
             manualResetEvent.WaitOne(6000);
 

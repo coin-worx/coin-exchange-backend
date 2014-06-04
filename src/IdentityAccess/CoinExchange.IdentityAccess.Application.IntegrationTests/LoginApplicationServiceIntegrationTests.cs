@@ -159,7 +159,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
                 (ILoginApplicationService)_applicationContext["LoginApplicationService"];
 
             string username = "linkinpark";
-            string email = "waqas.syed@hotmail.com";
+            string email = "waqasshah047@gmail.com";
             string password = "burnitdown";
             registrationApplicationService.CreateAccount(new SignupUserCommand(email, username, password, "USA", TimeZone.CurrentTimeZone, ""));
 
@@ -180,7 +180,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             ISecurityKeysRepository securityKeysRepository = (ISecurityKeysRepository)_applicationContext["SecurityKeysPairRepository"];
 
             string username = "linkinpark";
-            string email = "waqas.syed@hotmail.com";
+            string email = "waqasshah047@gmail.com";
             string password = "burnitdown";
             string activationKey = registrationApplicationService.CreateAccount(new SignupUserCommand(email, username, password, "USA", TimeZone.CurrentTimeZone, ""));
 

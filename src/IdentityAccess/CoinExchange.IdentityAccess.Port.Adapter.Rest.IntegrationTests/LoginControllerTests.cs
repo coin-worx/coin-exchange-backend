@@ -43,7 +43,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
         public void LoginSuccessfulTest_MakesSureAccountIsCreated_VerifiesAndAssertsTheReturnedValue()
         {
             RegistrationController registrationController = (RegistrationController)_applicationContext["RegistrationController"];
-            IHttpActionResult httpActionResult = registrationController.Register(new SignUpParam("user@user.com", "user", "123", "Pakistan",
+            IHttpActionResult httpActionResult = registrationController.Register(new SignUpParam("waqasshah047@gmail.com", "user", "123", "Pakistan",
                 TimeZone.CurrentTimeZone, ""));
             OkNegotiatedContentResult<string> okResponseMessage =
                 (OkNegotiatedContentResult<string>)httpActionResult;
@@ -72,7 +72,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             RegistrationController registrationController = (RegistrationController)_applicationContext["RegistrationController"];
 
             string username = "user";
-            IHttpActionResult httpActionResult = registrationController.Register(new SignUpParam("user@user.com", username, "123", "Pakistan",
+            IHttpActionResult httpActionResult = registrationController.Register(new SignUpParam("waqasshah047@gmail.com", username, "123", "Pakistan",
                 TimeZone.CurrentTimeZone, ""));
             OkNegotiatedContentResult<string> okResponseMessage =
                 (OkNegotiatedContentResult<string>)httpActionResult;
@@ -107,7 +107,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             RegistrationController registrationController = (RegistrationController)_applicationContext["RegistrationController"];
 
             string username = "user";
-            IHttpActionResult httpActionResult = registrationController.Register(new SignUpParam("user@user.com", username, "123", "Pakistan",
+            IHttpActionResult httpActionResult = registrationController.Register(new SignUpParam("waqasshah047@gmail.com", username, "123", "Pakistan",
                 TimeZone.CurrentTimeZone, ""));
             OkNegotiatedContentResult<string> okResponseMessage =
                 (OkNegotiatedContentResult<string>)httpActionResult;
@@ -135,7 +135,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             RegistrationController registrationController = (RegistrationController)_applicationContext["RegistrationController"];
 
             string username = "user";
-            IHttpActionResult httpActionResult = registrationController.Register(new SignUpParam("user@user.com", username, "123", "Pakistan",
+            IHttpActionResult httpActionResult = registrationController.Register(new SignUpParam("waqasshah047@gmail.com", username, "123", "Pakistan",
                 TimeZone.CurrentTimeZone, ""));
             OkNegotiatedContentResult<string> okResponseMessage =
                 (OkNegotiatedContentResult<string>)httpActionResult;
