@@ -36,10 +36,12 @@ namespace CoinExchange.Rest.WebHost.App_Start
             ISecurityKeysRepository securityKeysRepository =
                 (ISecurityKeysRepository)ContextRegistry.GetContext()["SecurityKeysPairRepository"];
             IUserRepository userRepository = (IUserRepository)ContextRegistry.GetContext()["UserRepository"];
-            
+            IIdentityAccessPersistenceRepository _persistenceRepository =
+                (IIdentityAccessPersistenceRepository)
+                    ContextRegistry.GetContext()["IdentityAccessPersistenceRepository"];
             //Add authentication handler
             config.MessageHandlers.Add(new AuthenticationHandler(new UserAuthenticationService(userRepository, 
-                securityKeysRepository)));
+                securityKeysRepository,_persistenceRepository)));
             
             log.Info("Application Initialized.");
         }

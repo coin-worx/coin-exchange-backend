@@ -28,6 +28,15 @@ namespace CoinExchange.Client.Tests
             string url = _baseUrl + "/admin/signup";
             return HttpPostRequest(jsonObject, url);
         }
+
+        public string Login(string username, string password)
+        {
+            JObject jsonObject = new JObject();
+            jsonObject.Add("Username", username);
+            jsonObject.Add("Password", password);
+            string url = _baseUrl + "/admin/login";
+            return HttpPostRequest(jsonObject, url);
+        }
         
     }
 }

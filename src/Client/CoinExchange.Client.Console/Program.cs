@@ -14,13 +14,13 @@ namespace CoinExchange.Client.Console
         static void Main(string[] args)
         {
             string baseUrl = "http://rockblanc.cloudapp.net/dev";
-            baseUrl = "http://localhost:51780";
-            //ApiClient client=new ApiClient(baseUrl);
-           // Scenario1(client);
+            //baseUrl = "http://localhost:51780";
+            ApiClient client = new ApiClient(baseUrl);
+            OrderBookGenerator(client);
             //ScenarioResults(client);
             //System.Console.WriteLine(client.GetTradeHistory("",""));
-           IdentityAccessClient client=new IdentityAccessClient(baseUrl);
-            System.Console.WriteLine(client.SignUp("mbilal@aurorasolutions.org","mbilal","123","Pakistan",TimeZone.CurrentTimeZone, ""));
+           //IdentityAccessClient client=new IdentityAccessClient(baseUrl);
+            //System.Console.WriteLine(client.SignUp("mbilal@aurorasolutions.org","mbilal","123","Pakistan",TimeZone.CurrentTimeZone, ""));
             System.Console.ReadKey();
         }
 
@@ -106,6 +106,20 @@ namespace CoinExchange.Client.Console
             System.Console.WriteLine(client.QueryClosedOrdersParams(true, "", ""));
             System.Console.WriteLine("------TRADES------");
             System.Console.WriteLine(client.GetTradeHistory("", ""));
+        }
+
+        private static void OrderBookGenerator(ApiClient client)
+        {
+            string currencyPair = "XBTUSD";
+            //Create orders
+            System.Console.WriteLine(client.CreateOrder(currencyPair, "limit", "buy", 10, 250));
+            System.Console.WriteLine(client.CreateOrder(currencyPair, "limit", "sell", 5, 252));
+            System.Console.WriteLine(client.CreateOrder(currencyPair, "limit", "buy", 3,250));
+            System.Console.WriteLine(client.CreateOrder(currencyPair, "limit", "sell", 2, 253));
+            System.Console.WriteLine(client.CreateOrder(currencyPair, "limit", "sell", 5,254));
+            System.Console.WriteLine(client.CreateOrder(currencyPair, "limit", "buy", 2, 249));
+            Thread.Sleep(5000);
+            ScenarioResults(client);
         }
     }
 }

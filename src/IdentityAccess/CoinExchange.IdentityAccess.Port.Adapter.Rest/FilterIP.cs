@@ -54,6 +54,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest
         /// <returns></returns>
         private bool IsIpAllowed(string ipaddress)
         {
+            //read all allowed ipaddresses from web.config file
             string allowedAddresses =Convert.ToString(ConfigurationManager.AppSettings["AuthorizeIPAddresses"]);
             string[] validIpAddresses = allowedAddresses.Trim().Split(',');
             foreach (var validIpAddress in validIpAddresses)

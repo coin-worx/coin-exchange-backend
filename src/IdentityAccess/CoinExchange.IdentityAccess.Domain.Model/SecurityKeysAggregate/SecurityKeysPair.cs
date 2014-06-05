@@ -46,6 +46,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
             UserId = userId;
             SystemGenerated = systemGenerated;
             CreationDateTime = DateTime.Now;
+            LastModified = DateTime.Now;
         }
 
         /// <summary>
@@ -342,7 +343,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         /// <summary>
         /// LastModified
         /// </summary>
-        public DateTime LastModified { get; private set; }
+        public DateTime LastModified { get; set; }
 
         /// <summary>
         /// Creation DateTime

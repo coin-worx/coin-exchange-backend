@@ -51,8 +51,8 @@ namespace CoinExchange.IdentityAccess.Domain.Model.IntegrationTests
             IUserRepository userRepository = (IUserRepository)ContextRegistry.GetContext()["UserRepository"];
             IIdentityAccessPersistenceRepository persistenceRepository = 
                 (IIdentityAccessPersistenceRepository)ContextRegistry.GetContext()["IdentityAccessPersistenceRepository"];
-            
-            UserAuthenticationService userAuthenticationService = new UserAuthenticationService(userRepository, securityKeysRepository);
+
+            UserAuthenticationService userAuthenticationService = new UserAuthenticationService(userRepository, securityKeysRepository, persistenceRepository);
             string nounce = userAuthenticationService.GenerateNonce();
 
             string apiKey = "123456789";
@@ -89,7 +89,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.IntegrationTests
             IIdentityAccessPersistenceRepository persistenceRepository =
                 (IIdentityAccessPersistenceRepository)ContextRegistry.GetContext()["IdentityAccessPersistenceRepository"];
 
-            UserAuthenticationService userAuthenticationService = new UserAuthenticationService(userRepository, securityKeysRepository);
+            UserAuthenticationService userAuthenticationService = new UserAuthenticationService(userRepository, securityKeysRepository,persistenceRepository);
             string nounce = userAuthenticationService.GenerateNonce();
 
             string apiKey = "123456789";
@@ -119,7 +119,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.IntegrationTests
             IIdentityAccessPersistenceRepository persistenceRepository =
                 (IIdentityAccessPersistenceRepository)ContextRegistry.GetContext()["IdentityAccessPersistenceRepository"];
 
-            UserAuthenticationService userAuthenticationService = new UserAuthenticationService(userRepository, securityKeysRepository);
+            UserAuthenticationService userAuthenticationService = new UserAuthenticationService(userRepository, securityKeysRepository,persistenceRepository);
             string nounce = userAuthenticationService.GenerateNonce();
 
             string apiKey = "123456789";
@@ -153,7 +153,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.IntegrationTests
             IIdentityAccessPersistenceRepository persistenceRepository =
                 (IIdentityAccessPersistenceRepository)ContextRegistry.GetContext()["IdentityAccessPersistenceRepository"];
 
-            UserAuthenticationService userAuthenticationService = new UserAuthenticationService(userRepository, securityKeysRepository);
+            UserAuthenticationService userAuthenticationService = new UserAuthenticationService(userRepository, securityKeysRepository,persistenceRepository);
             string nounce = userAuthenticationService.GenerateNonce();
 
             string apiKey = "123456789";
@@ -190,7 +190,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.IntegrationTests
             IIdentityAccessPersistenceRepository persistenceRepository =
                 (IIdentityAccessPersistenceRepository)ContextRegistry.GetContext()["IdentityAccessPersistenceRepository"];
 
-            UserAuthenticationService userAuthenticationService = new UserAuthenticationService(userRepository, securityKeysRepository);
+            UserAuthenticationService userAuthenticationService = new UserAuthenticationService(userRepository, securityKeysRepository,persistenceRepository);
             string nounce = userAuthenticationService.GenerateNonce();
 
             string apiKey = "123456789";
@@ -227,7 +227,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.IntegrationTests
             IIdentityAccessPersistenceRepository persistenceRepository =
                 (IIdentityAccessPersistenceRepository)ContextRegistry.GetContext()["IdentityAccessPersistenceRepository"];
 
-            UserAuthenticationService userAuthenticationService = new UserAuthenticationService(userRepository, securityKeysRepository);
+            UserAuthenticationService userAuthenticationService = new UserAuthenticationService(userRepository, securityKeysRepository,persistenceRepository);
             string nounce = userAuthenticationService.GenerateNonce();
 
             string apiKey = "123456789";
@@ -273,7 +273,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.IntegrationTests
             IIdentityAccessPersistenceRepository persistenceRepository =
                 (IIdentityAccessPersistenceRepository)ContextRegistry.GetContext()["IdentityAccessPersistenceRepository"];
 
-            UserAuthenticationService userAuthenticationService = new UserAuthenticationService(userRepository, securityKeysRepository);
+            UserAuthenticationService userAuthenticationService = new UserAuthenticationService(userRepository, securityKeysRepository,persistenceRepository);
             string nounce = userAuthenticationService.GenerateNonce();
 
             string apiKey = "123456789";
@@ -309,7 +309,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.IntegrationTests
             IIdentityAccessPersistenceRepository persistenceRepository =
                 (IIdentityAccessPersistenceRepository)ContextRegistry.GetContext()["IdentityAccessPersistenceRepository"];
 
-            UserAuthenticationService userAuthenticationService = new UserAuthenticationService(userRepository, securityKeysRepository);
+            UserAuthenticationService userAuthenticationService = new UserAuthenticationService(userRepository, securityKeysRepository,persistenceRepository);
             string nounce = userAuthenticationService.GenerateNonce();
 
             string apiKey = "123456789";
@@ -345,7 +345,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.IntegrationTests
             IIdentityAccessPersistenceRepository persistenceRepository =
                 (IIdentityAccessPersistenceRepository)ContextRegistry.GetContext()["IdentityAccessPersistenceRepository"];
 
-            UserAuthenticationService userAuthenticationService = new UserAuthenticationService(userRepository, securityKeysRepository);
+            UserAuthenticationService userAuthenticationService = new UserAuthenticationService(userRepository, securityKeysRepository,persistenceRepository);
             string nounce = userAuthenticationService.GenerateNonce();
 
             string apiKey = "123456789";
@@ -385,7 +385,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.IntegrationTests
                 ContextRegistry.GetContext()["IdentityAccessPersistenceRepository"];
 
             UserAuthenticationService userAuthenticationService = new UserAuthenticationService(userRepository,
-                                                                                                securityKeysRepository);
+                                                                                                securityKeysRepository,persistenceRepository);
             string nounce = userAuthenticationService.GenerateNonce();
 
             string apiKey = "123456789";

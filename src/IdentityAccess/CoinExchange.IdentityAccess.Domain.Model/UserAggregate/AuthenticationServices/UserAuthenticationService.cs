@@ -18,16 +18,18 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate.AuthenticationS
 
         private ISecurityKeysRepository _securityKeysRepository = null;
         private IUserRepository _userRepository = null;
+        private IIdentityAccessPersistenceRepository _persistenceRepository;
 
         /// <summary>
         /// Initializes with the Secrutiy Keys Repository
         /// </summary>
         /// <param name="userRepository"> </param>
         /// <param name="securityKeysRepository"></param>
-        public UserAuthenticationService(IUserRepository userRepository, ISecurityKeysRepository securityKeysRepository)
+        public UserAuthenticationService(IUserRepository userRepository, ISecurityKeysRepository securityKeysRepository,IIdentityAccessPersistenceRepository persistenceRepository)
         {
             _securityKeysRepository = securityKeysRepository;
             _userRepository = userRepository;
+            _persistenceRepository = persistenceRepository;
         }
 
         /// <summary>
@@ -73,13 +75,16 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate.AuthenticationS
                     {
                         // Calculate for how much time is allowed in the session timeout for SystemGenerated key, saved in user
                         //int activeWindow = securityKeysPair.CreationDateTime.AddMinutes(user.AutoLogout.Minutes).Minute;
-                        if (securityKeysPair.CreationDateTime.AddMinutes(user.AutoLogout.Minutes) > DateTime.Now)
+                        if (securityKeysPair.LastModified.AddMinutes(user.AutoLogout.Minutes) > DateTime.Now)
                         {
+                            //update activity time
+                            securityKeysPair.LastModified = DateTime.Now;
+                            _persistenceRepository.SaveUpdate(securityKeysPair);
                             return true;
                         }
                         else
                         {
-                            throw new Exception("Session timeout for the API Key.");
+                            throw new InvalidOperationException("Session timeout for the API Key.");
                         }
                     }
                     // Else we need to check the expiration date of the keys, and whetehr the user has permissions for 
@@ -92,7 +97,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate.AuthenticationS
                             {
                                 return CheckPermissions(authenticateCommand, securityKeysPair);
                             }
-                            throw new TimeoutException("Key Expired");
+                            throw new InvalidOperationException("Key Expired");
                         }
                         else
                         {
@@ -134,6 +139,10 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate.AuthenticationS
             else if (authenticateCommand.Uri.Contains("/orders/closedorders"))
             {
                 return securityKeysPair.ValidatePermission(PermissionsConstant.Query_Closed_Orders);
+            }
+            else if (authenticateCommand.Uri.Contains("/orders/createorder"))
+            {
+                return securityKeysPair.ValidatePermission(PermissionsConstant.Place_Order);
             }
             throw new InvalidOperationException("Permission not allowed for this operation.");
         }
