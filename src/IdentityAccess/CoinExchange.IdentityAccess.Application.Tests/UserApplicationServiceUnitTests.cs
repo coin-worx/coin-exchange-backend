@@ -50,7 +50,7 @@ namespace CoinExchange.IdentityAccess.Application.Tests
                 new ApiKey("123456789"), new SecretKey("987654321")), new TimeSpan(0,0,10,0));
 
             bool changeSuccessful = userApplicationService.ChangePassword(new ChangePasswordCommand(
-                userValidationEssentials.ApiKey.Value, "burnitdown", "burnitdowntwice"));
+                userValidationEssentials.ApiKey, "burnitdown", "burnitdowntwice"));
 
             Assert.IsTrue(changeSuccessful);
             User userAfterPasswordChange = userRepository.GetUserByUserName("linkinpark");
@@ -89,7 +89,7 @@ namespace CoinExchange.IdentityAccess.Application.Tests
                 new ApiKey("123456789"), new SecretKey("987654321")), new TimeSpan(0, 0, 0, 100));
 
             // Wrong password given
-            userApplicationService.ChangePassword(new ChangePasswordCommand(userValidationEssentials.ApiKey.Value, "burnitdow", "burnitdowntwice"));
+            userApplicationService.ChangePassword(new ChangePasswordCommand(userValidationEssentials.ApiKey, "burnitdow", "burnitdowntwice"));
 
             User userAfterPasswordChange = userRepository.GetUserByUserName("linkinpark");
             string passwordAfterChange = userAfterPasswordChange.Password;
@@ -130,7 +130,7 @@ namespace CoinExchange.IdentityAccess.Application.Tests
             (userRepository as MockUserRepository).AddUser(user);
 
                 // Wrong password given
-            userApplicationService.ChangePassword(new ChangePasswordCommand(userValidationEssentials.ApiKey.Value, "burnitdown",
+            userApplicationService.ChangePassword(new ChangePasswordCommand(userValidationEssentials.ApiKey, "burnitdown",
                                                       "burnitdowntwice"));           
             User userAfterPasswordChange = userRepository.GetUserByUserName("linkinpark");
             string passwordAfterChange = userAfterPasswordChange.Password;

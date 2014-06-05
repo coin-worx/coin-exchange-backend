@@ -16,7 +16,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.DTO
             
         }
 
-        public string UserName { get;  set; }
+        public string Username { get;  set; }
         public string Password { get;  set; }
         public string ActivationKey { get; set; }
 
@@ -28,7 +28,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.DTO
         /// <param name="activationKey"></param>
         public UserActivationParam(string userName, string password, string activationKey)
         {
-            UserName = userName;
+            Username = userName;
             Password = password;
             ActivationKey = activationKey;
         }
@@ -39,7 +39,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.DTO
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("UserName:{0},Password:{1},ActivationKey{2}", UserName, Password.GetHashCode(),
+            return string.Format("UserName:{0},Password:{1},ActivationKey{2}", Username, Password.GetHashCode(),
                 ActivationKey);
         }
     }

@@ -14,13 +14,11 @@ namespace CoinExchange.Client.Console
         static void Main(string[] args)
         {
             string baseUrl = "http://rockblanc.cloudapp.net/dev";
-            //baseUrl = "http://localhost:51780";
-            ApiClient client = new ApiClient(baseUrl);
-            OrderBookGenerator(client);
+            baseUrl = "http://localhost:51780";
+            //ApiClient client = new ApiClient(baseUrl);
             //ScenarioResults(client);
             //System.Console.WriteLine(client.GetTradeHistory("",""));
-           //IdentityAccessClient client=new IdentityAccessClient(baseUrl);
-            //System.Console.WriteLine(client.SignUp("mbilal@aurorasolutions.org","mbilal","123","Pakistan",TimeZone.CurrentTimeZone, ""));
+            Login(baseUrl);
             System.Console.ReadKey();
         }
 
@@ -120,6 +118,13 @@ namespace CoinExchange.Client.Console
             System.Console.WriteLine(client.CreateOrder(currencyPair, "limit", "buy", 2, 249));
             Thread.Sleep(5000);
             ScenarioResults(client);
+        }
+
+        private static void Login(string baseUrl)
+        {
+            IdentityAccessClient client=new IdentityAccessClient(baseUrl);
+            AccessControl control=new AccessControl(client,"123","bilal");
+            control.Login();
         }
     }
 }

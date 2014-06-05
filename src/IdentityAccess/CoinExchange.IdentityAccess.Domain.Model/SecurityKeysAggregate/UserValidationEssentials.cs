@@ -19,20 +19,20 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         /// <param name="sessionLogoutTime"></param>
         public UserValidationEssentials(Tuple<ApiKey, SecretKey> securityKeys, TimeSpan sessionLogoutTime)
         {
-            ApiKey = securityKeys.Item1;
-            SecretKey = securityKeys.Item2;
+            ApiKey = securityKeys.Item1.Value;
+            SecretKey = securityKeys.Item2.Value;
             SessionLogoutTime = sessionLogoutTime;
         }
 
         /// <summary>
         /// API Key
         /// </summary>
-        public ApiKey ApiKey { get; private set; }
+        public string ApiKey { get; private set; }
 
         /// <summary>
         /// Secret Key
         /// </summary>
-        public SecretKey SecretKey { get; private set; }
+        public string SecretKey { get; private set; }
 
         /// <summary>
         /// Logout time mentioned by the user for which these keys are applicable after login

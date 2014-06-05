@@ -14,10 +14,11 @@ namespace CoinExchange.IdentityAccess.Application.UserServices.Commands
         /// <summary>
         /// Initializes a new instance of the <see cref="ResetPasswordCommand"/> class.
         /// </summary>
-        public ResetPasswordCommand(string username, string password)
+        public ResetPasswordCommand(string username, string password,string resetPasswordCode)
         {
             Username = username;
             Password = password;
+            ResetPasswordCode = resetPasswordCode;
         }
 
         /// <summary>
@@ -29,5 +30,10 @@ namespace CoinExchange.IdentityAccess.Application.UserServices.Commands
         /// Password
         /// </summary>
         public string Password { get; private set; }
+
+        /// <summary>
+        /// Reset password code.
+        /// </summary>
+        public string ResetPasswordCode { get; private set; }
     }
 }

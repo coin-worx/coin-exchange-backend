@@ -84,6 +84,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate.AuthenticationS
                         }
                         else
                         {
+                            _securityKeysRepository.DeleteSecurityKeysPair(securityKeysPair);
                             throw new InvalidOperationException("Session timeout for the API Key.");
                         }
                     }

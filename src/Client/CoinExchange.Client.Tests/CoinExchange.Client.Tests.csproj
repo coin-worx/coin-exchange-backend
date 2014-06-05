@@ -78,6 +78,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AccessControl.cs" />
     <Compile Include="IdentityAccessClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

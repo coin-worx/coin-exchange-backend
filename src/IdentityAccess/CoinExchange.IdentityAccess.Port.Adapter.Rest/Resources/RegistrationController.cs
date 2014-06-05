@@ -62,14 +62,6 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
                 }
                 return BadRequest(exception.Message);
             }
-            catch (InvalidDataException exception)
-            {
-                if (log.IsErrorEnabled)
-                {
-                    log.Error("Register Call Exception ", exception);
-                }
-                return BadRequest(exception.Message);
-            }
             catch (Exception exception)
             {
                 if (log.IsErrorEnabled)

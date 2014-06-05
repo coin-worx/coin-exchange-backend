@@ -60,8 +60,8 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             httpActionResult = loginController.Login(new LoginParams("user", "123"));
             OkNegotiatedContentResult<UserValidationEssentials> keys =
                 (OkNegotiatedContentResult<UserValidationEssentials>) httpActionResult;
-            Assert.IsNotNullOrEmpty(keys.Content.ApiKey.Value);
-            Assert.IsNotNullOrEmpty(keys.Content.SecretKey.Value);
+            Assert.IsNotNullOrEmpty(keys.Content.ApiKey);
+            Assert.IsNotNullOrEmpty(keys.Content.SecretKey);
             Assert.IsNotNullOrEmpty(keys.Content.SessionLogoutTime.ToString());
         }
 
@@ -90,8 +90,8 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             httpActionResult = loginController.Login(new LoginParams(username, "123"));
             OkNegotiatedContentResult<UserValidationEssentials> keys =
                 (OkNegotiatedContentResult<UserValidationEssentials>)httpActionResult;
-            Assert.IsNotNullOrEmpty(keys.Content.ApiKey.Value);
-            Assert.IsNotNullOrEmpty(keys.Content.SecretKey.Value);
+            Assert.IsNotNullOrEmpty(keys.Content.ApiKey);
+            Assert.IsNotNullOrEmpty(keys.Content.SecretKey);
             Assert.IsNotNullOrEmpty(keys.Content.SessionLogoutTime.ToString());
 
             IUserRepository userRepository = (IUserRepository)_applicationContext["UserRepository"];
@@ -160,8 +160,8 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             httpActionResult = loginController.Login(new LoginParams(username, "123"));
             OkNegotiatedContentResult<UserValidationEssentials> okReponse =
                 (OkNegotiatedContentResult<UserValidationEssentials>)httpActionResult;
-            Assert.IsNotNullOrEmpty(okReponse.Content.ApiKey.Value);
-            Assert.IsNotNullOrEmpty(okReponse.Content.SecretKey.Value);
+            Assert.IsNotNullOrEmpty(okReponse.Content.ApiKey);
+            Assert.IsNotNullOrEmpty(okReponse.Content.SecretKey);
             Assert.IsNotNullOrEmpty(okReponse.Content.SessionLogoutTime.ToString());
 
             IUserRepository userRepository = (IUserRepository)_applicationContext["UserRepository"];

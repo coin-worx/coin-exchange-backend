@@ -62,9 +62,9 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
                 User user = _userRepository.GetUserById(securityKeysPair.UserId);
                 if (user != null)
                 {
-                    // Make sure the session has not expired
-                    if (securityKeysPair.CreationDateTime.Add(user.AutoLogout) > DateTime.Now)
-                    {
+                    //// Make sure the session has not expired
+                    //if (securityKeysPair.CreationDateTime.Add(user.AutoLogout) > DateTime.Now)
+                    //{
                         // Check if the old password is the same as new one
                         if (_passwordEncryptionService.VerifyPassword(changePasswordCommand.OldPassword,
                                                                       user.Password))
@@ -81,12 +81,12 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
                         {
                             throw new InvalidCredentialException(string.Format("Current password incorrect."));
                         }
-                    }
-                    else
-                    {
-                        _securityKeysRepository.DeleteSecurityKeysPair(securityKeysPair);
-                        throw new Exception("Session Timeout expired for this API Key.");
-                    }
+                    //}
+                    //else
+                    //{
+                    //    _securityKeysRepository.DeleteSecurityKeysPair(securityKeysPair);
+                    //    throw new InvalidOperationException("Session Timeout expired for this API Key.");
+                    //}
                 }
                 else
                 {
@@ -136,7 +136,7 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
                         else
                         {
                             _emailService.SendReactivaitonNotificationEmail(user.Email, user.Username);
-                            throw new Exception("The activation key has already been used ");
+                            throw new InvalidOperationException("The activation key has already been used ");
                         }
                     }
                     else
@@ -146,7 +146,7 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
                 }
                 else
                 {
-                    throw new InstanceNotFoundException("No user instance found for the given activation key.");
+                    throw new InvalidOperationException("No user instance found for the given activation key.");
                 }
             }
             // If the user did not provide all the credentials, return with failure
@@ -287,7 +287,7 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
             // Make sure given credential contains value
             if (resetPasswordCommand != null &&
                 (!string.IsNullOrEmpty(resetPasswordCommand.Username))&&
-                (!string.IsNullOrEmpty(resetPasswordCommand.Password)))
+                (!string.IsNullOrEmpty(resetPasswordCommand.Password))&&(!string.IsNullOrEmpty(resetPasswordCommand.ResetPasswordCode)))
             {
                 // Get the user tied to this username
                 User user = _userRepository.GetUserByUserName(resetPasswordCommand.Username);
@@ -296,7 +296,7 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
                 {
                     // Check if the password code is the same as expected and the validity period for this user's last 
                     // forgot password code validation has not expired
-                    if (user.IsPasswordCodeValid())
+                    if (user.IsPasswordCodeValid(resetPasswordCommand.ResetPasswordCode))
                     {
                         // If code validation has not expired, update the password
                         user.Password = _passwordEncryptionService.EncryptPassword(resetPasswordCommand.Password);
@@ -307,7 +307,7 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
                     {
                         // else, throw an exception
                         throw new InvalidOperationException(string.Format("{0} {1} {2}",
-                                                                          "Validity Period to chnge password for user ",
+                                                                          "Validity Period to change password for user ",
                                                                           user.Username, " has expired."));
                     }
                 }
@@ -320,7 +320,7 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
             // If the user did not provide all the credentials, return with failure
             else
             {
-                throw new InvalidCredentialException("Email not provided");
+                throw new InvalidCredentialException("Missing paramters");
             }
         }
 

@@ -63,25 +63,25 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             httpActionResult = loginController.Login(new LoginParams("user", "123"));
             OkNegotiatedContentResult<UserValidationEssentials> keys =
                 (OkNegotiatedContentResult<UserValidationEssentials>)httpActionResult;
-            Assert.IsNotNullOrEmpty(keys.Content.ApiKey.Value);
-            Assert.IsNotNullOrEmpty(keys.Content.SecretKey.Value);
+            Assert.IsNotNullOrEmpty(keys.Content.ApiKey);
+            Assert.IsNotNullOrEmpty(keys.Content.SecretKey);
             Assert.IsNotNullOrEmpty(keys.Content.SessionLogoutTime.ToString());
 
             // Verify that Security Keys are in the database
             ISecurityKeysRepository securityKeysRepository = (ISecurityKeysRepository)_applicationContext["SecurityKeysPairRepository"];
-            SecurityKeysPair securityKeysPair = securityKeysRepository.GetByApiKey(keys.Content.ApiKey.Value);
+            SecurityKeysPair securityKeysPair = securityKeysRepository.GetByApiKey(keys.Content.ApiKey);
             Assert.IsNotNull(securityKeysPair);
-            Assert.AreEqual(keys.Content.SecretKey.Value, securityKeysPair.SecretKey);
+            Assert.AreEqual(keys.Content.SecretKey, securityKeysPair.SecretKey);
             Assert.IsTrue(securityKeysPair.SystemGenerated);
 
             LogoutController logoutController = (LogoutController)_applicationContext["LogoutController"];
-            IHttpActionResult logoutResult = logoutController.Logout(new LogoutParams(keys.Content.ApiKey.Value, keys.Content.SecretKey.Value));
+            IHttpActionResult logoutResult = logoutController.Logout(new LogoutParams(keys.Content.ApiKey, keys.Content.SecretKey));
             OkNegotiatedContentResult<bool> logoutOkResponse = (OkNegotiatedContentResult<bool>) logoutResult;
             Assert.IsNotNull(logoutOkResponse);
             Assert.IsTrue(logoutOkResponse.Content);
 
             // Verify that the Security Keys are not in the database
-            securityKeysPair = securityKeysRepository.GetByApiKey(keys.Content.ApiKey.Value);
+            securityKeysPair = securityKeysRepository.GetByApiKey(keys.Content.ApiKey);
             Assert.IsNull(securityKeysPair);
         }
 
@@ -110,26 +110,26 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             httpActionResult = loginController.Login(new LoginParams("user", "123"));
             OkNegotiatedContentResult<UserValidationEssentials> keys =
                 (OkNegotiatedContentResult<UserValidationEssentials>)httpActionResult;
-            Assert.IsNotNullOrEmpty(keys.Content.ApiKey.Value);
-            Assert.IsNotNullOrEmpty(keys.Content.SecretKey.Value);
+            Assert.IsNotNullOrEmpty(keys.Content.ApiKey);
+            Assert.IsNotNullOrEmpty(keys.Content.SecretKey);
             Assert.IsNotNullOrEmpty(keys.Content.SessionLogoutTime.ToString());
 
             // Verify that Security Keys are in the database
             ISecurityKeysRepository securityKeysRepository = (ISecurityKeysRepository)_applicationContext["SecurityKeysPairRepository"];
-            SecurityKeysPair securityKeysPair = securityKeysRepository.GetByApiKey(keys.Content.ApiKey.Value);
+            SecurityKeysPair securityKeysPair = securityKeysRepository.GetByApiKey(keys.Content.ApiKey);
             Assert.IsNotNull(securityKeysPair);
-            Assert.AreEqual(keys.Content.SecretKey.Value, securityKeysPair.SecretKey);
+            Assert.AreEqual(keys.Content.SecretKey, securityKeysPair.SecretKey);
             Assert.IsTrue(securityKeysPair.SystemGenerated);
 
             LogoutController logoutController = (LogoutController)_applicationContext["LogoutController"];
-            IHttpActionResult logoutResult = logoutController.Logout(new LogoutParams(keys.Content.ApiKey.Value + "1", keys.Content.SecretKey.Value));
+            IHttpActionResult logoutResult = logoutController.Logout(new LogoutParams(keys.Content.ApiKey + "1", keys.Content.SecretKey));
             BadRequestErrorMessageResult logoutOkResponse = (BadRequestErrorMessageResult)logoutResult;
             Assert.IsNotNull(logoutOkResponse);
 
             // Verify that the Security Keys are not in the database
-            securityKeysPair = securityKeysRepository.GetByApiKey(keys.Content.ApiKey.Value);
+            securityKeysPair = securityKeysRepository.GetByApiKey(keys.Content.ApiKey);
             Assert.IsNotNull(securityKeysPair);
-            Assert.AreEqual(keys.Content.SecretKey.Value, securityKeysPair.SecretKey);
+            Assert.AreEqual(keys.Content.SecretKey, securityKeysPair.SecretKey);
             Assert.IsTrue(securityKeysPair.SystemGenerated);
         }
 
@@ -158,35 +158,35 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             httpActionResult = loginController.Login(new LoginParams("user", "123"));
             OkNegotiatedContentResult<UserValidationEssentials> keys =
                 (OkNegotiatedContentResult<UserValidationEssentials>)httpActionResult;
-            Assert.IsNotNullOrEmpty(keys.Content.ApiKey.Value);
-            Assert.IsNotNullOrEmpty(keys.Content.SecretKey.Value);
+            Assert.IsNotNullOrEmpty(keys.Content.ApiKey);
+            Assert.IsNotNullOrEmpty(keys.Content.SecretKey);
             Assert.IsNotNullOrEmpty(keys.Content.SessionLogoutTime.ToString());
 
             // Verify that Security Keys are in the database
             ISecurityKeysRepository securityKeysRepository = (ISecurityKeysRepository)_applicationContext["SecurityKeysPairRepository"];
-            SecurityKeysPair securityKeysPair = securityKeysRepository.GetByApiKey(keys.Content.ApiKey.Value);
+            SecurityKeysPair securityKeysPair = securityKeysRepository.GetByApiKey(keys.Content.ApiKey);
             Assert.IsNotNull(securityKeysPair);
-            Assert.AreEqual(keys.Content.SecretKey.Value, securityKeysPair.SecretKey);
+            Assert.AreEqual(keys.Content.SecretKey, securityKeysPair.SecretKey);
             Assert.IsTrue(securityKeysPair.SystemGenerated);
 
             // Logout
             LogoutController logoutController = (LogoutController)_applicationContext["LogoutController"];
-            IHttpActionResult logoutResult = logoutController.Logout(new LogoutParams(keys.Content.ApiKey.Value, keys.Content.SecretKey.Value));
+            IHttpActionResult logoutResult = logoutController.Logout(new LogoutParams(keys.Content.ApiKey, keys.Content.SecretKey));
             OkNegotiatedContentResult<bool> logoutOkResponse = (OkNegotiatedContentResult<bool>)logoutResult;
             Assert.IsNotNull(logoutOkResponse);
             Assert.IsTrue(logoutOkResponse.Content);
 
             // Verify that the Security Keys are not in the database
-            securityKeysPair = securityKeysRepository.GetByApiKey(keys.Content.ApiKey.Value);
+            securityKeysPair = securityKeysRepository.GetByApiKey(keys.Content.ApiKey);
             Assert.IsNull(securityKeysPair);
 
             // Invalid Logout as the user has logged out already
-            logoutResult = logoutController.Logout(new LogoutParams(keys.Content.ApiKey.Value, keys.Content.SecretKey.Value));
+            logoutResult = logoutController.Logout(new LogoutParams(keys.Content.ApiKey, keys.Content.SecretKey));
             BadRequestErrorMessageResult logoutBadResponse = (BadRequestErrorMessageResult)logoutResult;
             Assert.IsNotNull(logoutBadResponse);
 
             // Verify that the Security Keys are not in the database
-            securityKeysPair = securityKeysRepository.GetByApiKey(keys.Content.ApiKey.Value);
+            securityKeysPair = securityKeysRepository.GetByApiKey(keys.Content.ApiKey);
             Assert.IsNull(securityKeysPair);
         }
     }

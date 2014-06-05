@@ -153,7 +153,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             string newPassword = password + "123";
             // Change Password
             userController.Request = new HttpRequestMessage(HttpMethod.Post, "");
-            userController.Request.Headers.Add("Auth", userValidationEssentials.ApiKey.Value);
+            userController.Request.Headers.Add("Auth", userValidationEssentials.ApiKey);
             IHttpActionResult changePasswordResult = userController.ChangePassword(new ChangePasswordParams(
              password, newPassword));
             OkNegotiatedContentResult<bool> changePasswordOkResult = (OkNegotiatedContentResult<bool>)changePasswordResult;
@@ -313,7 +313,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
 
             // Reqeust to reset password
             string newPassword = "iwillwearthemask";
-            IHttpActionResult resetPasswordResponse = userController.ResetPassword(new ResetPasswordParams(username, newPassword));            
+            IHttpActionResult resetPasswordResponse = userController.ResetPassword(new ResetPasswordParams(username, newPassword, forgotPasswordOkResponse.Content));            
             OkNegotiatedContentResult<bool> resetPasswordOkResponse = (OkNegotiatedContentResult<bool>)resetPasswordResponse;
             // Check if the username returned is correct
             Assert.IsTrue(resetPasswordOkResponse.Content);
@@ -361,7 +361,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
 
             // Reqeust to reset password
             string newPassword = "iwillwearthemask";
-            IHttpActionResult resetPasswordResponse = userController.ResetPassword(new ResetPasswordParams(username, newPassword));
+            IHttpActionResult resetPasswordResponse = userController.ResetPassword(new ResetPasswordParams(username, newPassword,""));
             BadRequestErrorMessageResult resetPasswordOkResponse = (BadRequestErrorMessageResult)resetPasswordResponse;
             // Check if the username returned is correct
             Assert.IsNotNull(resetPasswordOkResponse);
@@ -411,14 +411,14 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             httpActionResult = loginController.Login(new LoginParams(username, password));
             OkNegotiatedContentResult<UserValidationEssentials> keys =
                 (OkNegotiatedContentResult<UserValidationEssentials>)httpActionResult;
-            Assert.IsNotNullOrEmpty(keys.Content.ApiKey.Value);
-            Assert.IsNotNullOrEmpty(keys.Content.SecretKey.Value);
+            Assert.IsNotNullOrEmpty(keys.Content.ApiKey);
+            Assert.IsNotNullOrEmpty(keys.Content.SecretKey);
             Assert.IsNotNullOrEmpty(keys.Content.SessionLogoutTime.ToString());
 
             // Reqeust to change settings
             string newEMail = "iwillwearthemask@banegotham.sf";
             userController.Request = new HttpRequestMessage(HttpMethod.Post, "");
-            userController.Request.Headers.Add("Auth", keys.Content.ApiKey.Value);
+            userController.Request.Headers.Add("Auth", keys.Content.ApiKey);
             IHttpActionResult changeSettingsResponse = userController.ChangeSettings(new ChangeSettingsParams(
                 newEMail, "", Language.French, TimeZone.CurrentTimeZone, false, 66));
             OkNegotiatedContentResult<bool> changePasswordOkResponse = (OkNegotiatedContentResult<bool>)changeSettingsResponse;
@@ -465,21 +465,21 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             httpActionResult = loginController.Login(new LoginParams(username, password));
             OkNegotiatedContentResult<UserValidationEssentials> keys =
                 (OkNegotiatedContentResult<UserValidationEssentials>)httpActionResult;
-            Assert.IsNotNullOrEmpty(keys.Content.ApiKey.Value);
-            Assert.IsNotNullOrEmpty(keys.Content.SecretKey.Value);
+            Assert.IsNotNullOrEmpty(keys.Content.ApiKey);
+            Assert.IsNotNullOrEmpty(keys.Content.SecretKey);
             Assert.IsNotNullOrEmpty(keys.Content.SessionLogoutTime.ToString());
 
             // Verify that Security Keys are in the database
             ISecurityKeysRepository securityKeysRepository = (ISecurityKeysRepository)_applicationContext["SecurityKeysPairRepository"];
-            SecurityKeysPair securityKeysPair = securityKeysRepository.GetByApiKey(keys.Content.ApiKey.Value);
+            SecurityKeysPair securityKeysPair = securityKeysRepository.GetByApiKey(keys.Content.ApiKey);
             Assert.IsNotNull(securityKeysPair);
-            Assert.AreEqual(keys.Content.SecretKey.Value, securityKeysPair.SecretKey);
+            Assert.AreEqual(keys.Content.SecretKey, securityKeysPair.SecretKey);
             Assert.IsTrue(securityKeysPair.SystemGenerated);
 
             // Reqeust to change settings
             string newEMail = "iwillwearthemask@banegotham.sf";
             userController.Request = new HttpRequestMessage(HttpMethod.Post, "");
-            userController.Request.Headers.Add("Auth", keys.Content.ApiKey.Value);
+            userController.Request.Headers.Add("Auth", keys.Content.ApiKey);
             IHttpActionResult changeSettingsResponse = userController.ChangeSettings(new ChangeSettingsParams(
                 newEMail, "", Language.French, TimeZone.CurrentTimeZone, false, 66));
             OkNegotiatedContentResult<bool> changePasswordOkResponse = (OkNegotiatedContentResult<bool>)changeSettingsResponse;
@@ -501,19 +501,19 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
 
             // Logout
             LogoutController logoutController = (LogoutController)_applicationContext["LogoutController"];
-            IHttpActionResult logoutResult = logoutController.Logout(new LogoutParams(keys.Content.ApiKey.Value, keys.Content.SecretKey.Value));
+            IHttpActionResult logoutResult = logoutController.Logout(new LogoutParams(keys.Content.ApiKey, keys.Content.SecretKey));
             OkNegotiatedContentResult<bool> logoutOkResponse = (OkNegotiatedContentResult<bool>)logoutResult;
             Assert.IsNotNull(logoutOkResponse);
             Assert.IsTrue(logoutOkResponse.Content);
 
             // Verify that the Security Keys are not in the database
-            securityKeysPair = securityKeysRepository.GetByApiKey(keys.Content.ApiKey.Value);
+            securityKeysPair = securityKeysRepository.GetByApiKey(keys.Content.ApiKey);
             Assert.IsNull(securityKeysPair);
 
             string lastInvalidEmail = "errre@user123.com";
             // Invalid attempt to change settings
             userController.Request = new HttpRequestMessage(HttpMethod.Post, "");
-            userController.Request.Headers.Add("Auth", keys.Content.ApiKey.Value);
+            userController.Request.Headers.Add("Auth", keys.Content.ApiKey);
             changeSettingsResponse = userController.ChangeSettings(new ChangeSettingsParams(
                 lastInvalidEmail, "", Language.German, TimeZone.CurrentTimeZone, false, 97));
 
@@ -572,13 +572,13 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             httpActionResult = loginController.Login(new LoginParams(username, password));
             OkNegotiatedContentResult<UserValidationEssentials> keys =
                 (OkNegotiatedContentResult<UserValidationEssentials>)httpActionResult;
-            Assert.IsNotNullOrEmpty(keys.Content.ApiKey.Value);
-            Assert.IsNotNullOrEmpty(keys.Content.SecretKey.Value);
+            Assert.IsNotNullOrEmpty(keys.Content.ApiKey);
+            Assert.IsNotNullOrEmpty(keys.Content.SecretKey);
             Assert.IsNotNullOrEmpty(keys.Content.SessionLogoutTime.ToString());
 
             // Get the Account Settings
             userController.Request = new HttpRequestMessage(HttpMethod.Post, "");
-            userController.Request.Headers.Add("Auth", keys.Content.ApiKey.Value);
+            userController.Request.Headers.Add("Auth", keys.Content.ApiKey);
             IHttpActionResult accountSettingsResponse = userController.GetAccountSettings();
             OkNegotiatedContentResult<AccountSettingsRepresentation> accountSettingsOkResponse =
                 (OkNegotiatedContentResult<AccountSettingsRepresentation>) accountSettingsResponse;
@@ -592,7 +592,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             // Reqeust to change settings
             string newEMail = "iwillwearthemask@banegotham.sf";
             userController.Request = new HttpRequestMessage(HttpMethod.Post, "");
-            userController.Request.Headers.Add("Auth", keys.Content.ApiKey.Value);
+            userController.Request.Headers.Add("Auth", keys.Content.ApiKey);
             IHttpActionResult changeSettingsResponse = userController.ChangeSettings(new ChangeSettingsParams(
                 newEMail, "", Language.French, TimeZone.CurrentTimeZone, false, 66));
             OkNegotiatedContentResult<bool> changePasswordOkResponse = (OkNegotiatedContentResult<bool>)changeSettingsResponse;
@@ -612,7 +612,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
 
             // Get the Account Settings again
             userController.Request = new HttpRequestMessage(HttpMethod.Post, "");
-            userController.Request.Headers.Add("Auth", keys.Content.ApiKey.Value);
+            userController.Request.Headers.Add("Auth", keys.Content.ApiKey);
             accountSettingsResponse = userController.GetAccountSettings();
             accountSettingsOkResponse = (OkNegotiatedContentResult<AccountSettingsRepresentation>)accountSettingsResponse;
             Assert.AreEqual(userByUserName.Email, accountSettingsOkResponse.Content.Email);

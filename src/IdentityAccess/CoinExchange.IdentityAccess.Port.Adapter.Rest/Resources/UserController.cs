@@ -39,7 +39,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         /// <param name="param"></param>
         /// <returns></returns>
         [HttpPost]
-        [Route("private/user/activate")]
+        [Route("admin/user/activate")]
         [FilterIP]
         public IHttpActionResult ActivateUser([FromBody]UserActivationParam param)
         {
@@ -49,8 +49,10 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
                 {
                     log.Debug("ActivateUser Call Recevied, parameters:" + param);
                 }
+                _userApplicationService.ActivateAccount(new ActivationCommand(param.ActivationKey, param.Username,
+                    param.Password));
                 return
-                    Ok(_userApplicationService.ActivateAccount(new ActivationCommand(param.ActivationKey, param.UserName, param.Password)));
+                    Ok("activated");
             }
             catch (InvalidOperationException exception)
             {
@@ -92,9 +94,8 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         /// <param name="cancelActivationParams"></param>
         /// <returns></returns>
         [HttpPost]
-        [Route("private/user/cancelactivation")]
+        [Route("admin/user/cancelactivation")]
         [FilterIP]
-        [Authorize]
         public IHttpActionResult CancelUserActivation([FromBody]CancelActivationParams cancelActivationParams)
         {
             try
@@ -103,8 +104,10 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
                 {
                     log.Debug("CanceUserActivation Call Recevied, parameters:" + cancelActivationParams);
                 }
+                _userApplicationService.CancelAccountActivation(
+                    new CancelActivationCommand(cancelActivationParams.ActivationKey));
                 return
-                    Ok(_userApplicationService.CancelAccountActivation(new CancelActivationCommand(cancelActivationParams.ActivationKey)));
+                    Ok("cancelled");
             }
             catch (InvalidOperationException exception)
             {
@@ -144,9 +147,10 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
                 {
                     log.Debug("ChangePassword Call Recevied, parameters:" + changePasswordParams);
                 }
-                return
-                    Ok(_userApplicationService.ChangePassword(new ChangePasswordCommand(
-                        HeaderParamUtility.GetApikey(Request), changePasswordParams.OldPassword, changePasswordParams.NewPassword)));
+                _userApplicationService.ChangePassword(new ChangePasswordCommand(
+                    HeaderParamUtility.GetApikey(Request), changePasswordParams.OldPassword,
+                    changePasswordParams.NewPassword));
+                return Ok("changed");
             }
             catch (InvalidOperationException exception)
             {
@@ -157,6 +161,14 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
                 return BadRequest(exception.Message);
             }
             catch (InvalidCredentialException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("ChangePassword Call Exception ", exception);
+                }
+                return BadRequest(exception.Message);
+            }
+            catch (ArgumentNullException exception)
             {
                 if (log.IsErrorEnabled)
                 {
@@ -175,7 +187,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         }
 
         [HttpPost]
-        [Route("private/user/forgotusername")]
+        [Route("admin/user/forgotusername")]
         [FilterIP]
         public IHttpActionResult ForgotUsername([FromBody]ForgotUsernameParams forgotUsernameParams)
         {
@@ -215,7 +227,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         }
 
         [HttpPost]
-        [Route("private/user/forgotpassword")]
+        [Route("admin/user/forgotpassword")]
         [FilterIP]
         public IHttpActionResult ForgotPassword([FromBody]ForgotPasswordParams forgotPasswordParams)
         {
@@ -256,7 +268,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         }
 
         [HttpPost]
-        [Route("private/user/resetpassword")]
+        [Route("admin/user/resetpassword")]
         [FilterIP]
         public IHttpActionResult ResetPassword([FromBody]ResetPasswordParams resetPasswordParams)
         {
@@ -266,9 +278,10 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
                 {
                     log.Debug("ResetPassword Call Recevied, parameters:" + resetPasswordParams);
                 }
+                _userApplicationService.ResetPasswordByEmailLink(new ResetPasswordCommand(resetPasswordParams.Username,
+                    resetPasswordParams.Password, resetPasswordParams.ResetPasswordCode));
                 return
-                    Ok(_userApplicationService.ResetPasswordByEmailLink(new ResetPasswordCommand(resetPasswordParams.Username,
-                        resetPasswordParams.Password)));
+                    Ok("changed");
             }
             catch (InvalidOperationException exception)
             {

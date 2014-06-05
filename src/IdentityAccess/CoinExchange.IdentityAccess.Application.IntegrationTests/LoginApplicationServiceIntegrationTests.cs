@@ -142,9 +142,9 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             Assert.AreEqual(user.LastLogin.Minute, DateTime.Now.Minute);
             Assert.AreEqual(userValidationEssentials.SessionLogoutTime, user.AutoLogout);
 
-            SecurityKeysPair securityKeysPair = securityKeysRepository.GetByApiKey(userValidationEssentials.ApiKey.Value);
+            SecurityKeysPair securityKeysPair = securityKeysRepository.GetByApiKey(userValidationEssentials.ApiKey);
             Assert.IsNotNull(securityKeysPair);
-            Assert.AreEqual(userValidationEssentials.SecretKey.Value, securityKeysPair.SecretKey);
+            Assert.AreEqual(userValidationEssentials.SecretKey, securityKeysPair.SecretKey);
         }
 
         [Test]
@@ -196,7 +196,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
 
             UserValidationEssentials userValidationEssentials = loginApplicationService.Login(new LoginCommand(username, password));
             Assert.IsNotNull(userValidationEssentials);
-            SecurityKeysPair securityKeysPair = securityKeysRepository.GetByApiKey(userValidationEssentials.ApiKey.Value);
+            SecurityKeysPair securityKeysPair = securityKeysRepository.GetByApiKey(userValidationEssentials.ApiKey);
             Assert.IsNotNull(securityKeysPair);
             User receivedUser = userRepository.GetUserByUserName(username);
             Assert.IsTrue(receivedUser.IsActivationKeyUsed.Value);

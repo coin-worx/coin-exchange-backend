@@ -247,7 +247,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         /// Checks if this user's latest ForgotPasswordCode's validity period still remaining. Returns true if yes
         /// </summary>
         /// <returns></returns>
-        public bool IsPasswordCodeValid()
+        public bool IsPasswordCodeValid(string resetPasswordCode)
         {
             if (!string.IsNullOrEmpty(this.ForgotPasswordCode))
             {
@@ -257,7 +257,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
                     foreach (var passwordCodeRecord in _forgottenPasswordCodesList)
                     {
                         if (passwordCodeRecord.ExpirationDateTime.Equals(this.ForgotPasswordCodeExpiration) && 
-                            passwordCodeRecord.ForgotPasswordCode.Equals(this.ForgotPasswordCode))
+                            passwordCodeRecord.ForgotPasswordCode.Equals(this.ForgotPasswordCode)&&ForgotPasswordCode.Equals(resetPasswordCode))
                         {
                             // No active ForgotPassword code at the moment
                             this.ForgotPasswordCode = null;

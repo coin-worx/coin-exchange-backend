@@ -56,7 +56,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
                 securityKeyPermissions.Add(new SecurityKeyPermissionsRepresentation(true,permissions[i]));
             }
             securityKeyPairController.Request = new HttpRequestMessage(HttpMethod.Post, "");
-            securityKeyPairController.Request.Headers.Add("Auth", essentials.ApiKey.Value);
+            securityKeyPairController.Request.Headers.Add("Auth", essentials.ApiKey);
             CreateUserGeneratedSecurityKeyPair command=new CreateUserGeneratedSecurityKeyPair(securityKeyPermissions.ToArray(),"","","",false,false,false,"#1");
             IHttpActionResult httpActionResult=securityKeyPairController.CreateSecurityKey(command);
             OkNegotiatedContentResult<Tuple<string, string>> result = (OkNegotiatedContentResult<Tuple<string,string>>)httpActionResult;
@@ -93,7 +93,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
                 securityKeyPermissions.Add(new SecurityKeyPermissionsRepresentation(true, permissions[i]));
             }
             securityKeyPairController.Request = new HttpRequestMessage(HttpMethod.Post, "");
-            securityKeyPairController.Request.Headers.Add("Auth", essentials.ApiKey.Value);
+            securityKeyPairController.Request.Headers.Add("Auth", essentials.ApiKey);
             CreateUserGeneratedSecurityKeyPair command = new CreateUserGeneratedSecurityKeyPair(securityKeyPermissions.ToArray(), "", "", "", false, false, false, "#1");
             IHttpActionResult httpActionResult = securityKeyPairController.CreateSecurityKey(command);
             OkNegotiatedContentResult<Tuple<string, string>> result = (OkNegotiatedContentResult<Tuple<string, string>>)httpActionResult;
@@ -156,7 +156,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
                 securityKeyPermissions.Add(new SecurityKeyPermissionsRepresentation(true, permissions[i]));
             }
             securityKeyPairController.Request = new HttpRequestMessage(HttpMethod.Post, "");
-            securityKeyPairController.Request.Headers.Add("Auth", essentials.ApiKey.Value);
+            securityKeyPairController.Request.Headers.Add("Auth", essentials.ApiKey);
             CreateUserGeneratedSecurityKeyPair command = new CreateUserGeneratedSecurityKeyPair(securityKeyPermissions.ToArray(), "", "", "", false, false, false, "#1");
             IHttpActionResult httpActionResult = securityKeyPairController.CreateSecurityKey(command);
             OkNegotiatedContentResult<Tuple<string, string>> result = (OkNegotiatedContentResult<Tuple<string, string>>)httpActionResult;

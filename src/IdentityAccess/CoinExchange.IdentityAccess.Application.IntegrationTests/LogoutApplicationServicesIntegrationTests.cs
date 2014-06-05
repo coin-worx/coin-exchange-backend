@@ -82,12 +82,12 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             ILogoutApplicationService logoutApplicationService = 
                 (ILogoutApplicationService)_applicationContext["LogoutApplicationService"];
             Assert.IsNotNull(logoutApplicationService);
-            bool logout = logoutApplicationService.Logout(new LogoutCommand(userValidationEssentials.ApiKey.Value,
-                userValidationEssentials.SecretKey.Value));
+            bool logout = logoutApplicationService.Logout(new LogoutCommand(userValidationEssentials.ApiKey,
+                userValidationEssentials.SecretKey));
             Assert.IsTrue(logout);
 
             ISecurityKeysRepository securityKeysRepository = (ISecurityKeysRepository)_applicationContext["SecurityKeysPairRepository"];
-            SecurityKeysPair securityKeysPair = securityKeysRepository.GetByApiKey(userValidationEssentials.ApiKey.Value);
+            SecurityKeysPair securityKeysPair = securityKeysRepository.GetByApiKey(userValidationEssentials.ApiKey);
             Assert.IsNull(securityKeysPair);
         }
     }

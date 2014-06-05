@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CoinExchange.Common.Domain.Model;
 using CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate;
 
 namespace CoinExchange.IdentityAccess.Application.UserServices.Commands
@@ -20,6 +21,7 @@ namespace CoinExchange.IdentityAccess.Application.UserServices.Commands
         /// <param name="newPassword"></param>
         public ChangePasswordCommand(string apiKey, string oldPassword, string newPassword)
         {
+            AssertionConcern.AssertNullOrEmptyString(newPassword,"New password cannot be empty");
             ApiKey = new ApiKey(apiKey);
             OldPassword = oldPassword;
             NewPassword = newPassword;

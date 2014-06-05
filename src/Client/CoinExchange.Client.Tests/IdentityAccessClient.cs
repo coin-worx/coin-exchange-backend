@@ -29,6 +29,16 @@ namespace CoinExchange.Client.Tests
             return HttpPostRequest(jsonObject, url);
         }
 
+        public string ActivateUser(string username, string password,string activationKey)
+        {
+            JObject jsonObject = new JObject();
+            jsonObject.Add("Username", username);
+            jsonObject.Add("Password", password);
+            jsonObject.Add("ActivationKey", activationKey);
+            string url = _baseUrl + "/admin/user/activate";
+            return HttpPostRequest(jsonObject, url);
+        }
+
         public string Login(string username, string password)
         {
             JObject jsonObject = new JObject();

@@ -69,7 +69,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             string passwordBeforeChange = userBeforePasswordChange.Password;
 
             bool changeSuccessful = userApplicationService.ChangePassword(new ChangePasswordCommand(
-                validationEssentials.ApiKey.Value, "burnitdown", "burnitdowntwice"));
+                validationEssentials.ApiKey, "burnitdown", "burnitdowntwice"));
 
             Assert.IsTrue(changeSuccessful);
             User userAfterPasswordChange = userRepository.GetUserByUserName("linkinpark");
@@ -103,7 +103,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             User userBeforePasswordChange = userRepository.GetUserByUserName("linkinpark");
             string passwordBeforeChange = userBeforePasswordChange.Password;
 
-            userApplicationService.ChangePassword(new ChangePasswordCommand(validationEssentials.ApiKey.Value, "burnitdowner", "burnitdowntwice"));            
+            userApplicationService.ChangePassword(new ChangePasswordCommand(validationEssentials.ApiKey, "burnitdowner", "burnitdowntwice"));            
             User userAfterPasswordChange = userRepository.GetUserByUserName("linkinpark");
             string passwordAfterChange = userAfterPasswordChange.Password;
 
@@ -135,9 +135,9 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             string passwordBeforeChange = userBeforePasswordChange.Password;
 
             UserValidationEssentials validationEssentials2 = new UserValidationEssentials(new Tuple<ApiKey, SecretKey>(
-                new ApiKey(validationEssentials.ApiKey.Value + "1"), validationEssentials.SecretKey), validationEssentials.SessionLogoutTime);
+                new ApiKey(validationEssentials.ApiKey + "1"), new SecretKey(validationEssentials.SecretKey)), validationEssentials.SessionLogoutTime);
             // Give the wrong API Key
-            userApplicationService.ChangePassword(new ChangePasswordCommand(validationEssentials.ApiKey.Value + 1, "burnitdown", "burnitdowntwice"));
+            userApplicationService.ChangePassword(new ChangePasswordCommand(validationEssentials.ApiKey + 1, "burnitdown", "burnitdowntwice"));
             User userAfterPasswordChange = userRepository.GetUserByUserName("linkinpark");
             string passwordAfterChange = userAfterPasswordChange.Password;
 
@@ -147,8 +147,8 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
 
         [Test]
         [Category("Integration")]
-        [ExpectedException(typeof(Exception))]
-        public void ChangePasswordFailDueToSessionTimeoutTest_ChecksIfExceptionIsRaisedAfterSessionTimeout_VerifiesByExpectingException()
+        [ExpectedException(typeof(InvalidCredentialException))]
+        public void ChangePasswordFailDueWrongOldPassword_ChecksIfExceptionIsRaisedAfterCheckingOldPassword_VerifiesByExpectingException()
         {
             IUserApplicationService userApplicationService = (IUserApplicationService)_applicationContext["UserApplicationService"];
             IRegistrationApplicationService registrationApplicationService =
@@ -174,12 +174,12 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             userByUserName.AutoLogout = new TimeSpan(0, 0, 0, 0, 1);
             persistenceRepository.SaveUpdate(userByUserName);
             // Give the wrong API Key
-            userApplicationService.ChangePassword(new ChangePasswordCommand(validationEssentials.ApiKey.Value, "burnitdown", "burnitdowntwice"));
+            userApplicationService.ChangePassword(new ChangePasswordCommand(validationEssentials.ApiKey, "123", "burnitdowntwice"));
             User userAfterPasswordChange = userRepository.GetUserByUserName("linkinpark");
             string passwordAfterChange = userAfterPasswordChange.Password;
 
             // Verify the old and new password do not match
-            Assert.AreEqual(passwordBeforeChange, passwordAfterChange);
+           // Assert.AreEqual(passwordBeforeChange, passwordAfterChange);
         }
 
         #endregion Change Passwords Tests
@@ -372,7 +372,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
 
             UserValidationEssentials userValidationEssentials = loginApplicationService.Login(new LoginCommand(username, password));
             Assert.IsNotNull(userValidationEssentials);
-            SecurityKeysPair securityKeysPair = securityKeysRepository.GetByApiKey(userValidationEssentials.ApiKey.Value);
+            SecurityKeysPair securityKeysPair = securityKeysRepository.GetByApiKey(userValidationEssentials.ApiKey);
             Assert.IsNotNull(securityKeysPair);
             User receivedUser = userRepository.GetUserByUserName(username);
             Assert.IsTrue(receivedUser.IsActivationKeyUsed.Value);
@@ -380,7 +380,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
 
         [Test]
         [Category("Integration")]
-        [ExpectedException(typeof(Exception))]
+        [ExpectedException(typeof(InvalidOperationException))]
         public void ActivateAccountFailWhenTriedTwiceTest_ChecksIfTheAccountIsNotActivatedAgainOnceActivated_VerifiesByExpectingException()
         {
             IUserApplicationService userApplicationService = (IUserApplicationService)_applicationContext["UserApplicationService"];
@@ -407,7 +407,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
 
         [Test]
         [Category("Integration")]
-        [ExpectedException(typeof(InstanceNotFoundException))]
+        [ExpectedException(typeof(InvalidOperationException))]
         public void ActivateAccountFailDueToInvalidActivationTest_ChecksIfTheAccountActivationFails_VerifiesByExpectingException()
         {
             IUserApplicationService userApplicationService = (IUserApplicationService)_applicationContext["UserApplicationService"];
@@ -603,7 +603,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             Assert.IsNotNull(returnedPasswordCode);
             string newPassword = "newpassword";
 
-            bool resetPasswordReponse = userApplicationService.ResetPasswordByEmailLink(new ResetPasswordCommand(username, newPassword));
+            bool resetPasswordReponse = userApplicationService.ResetPasswordByEmailLink(new ResetPasswordCommand(username, newPassword, returnedPasswordCode));
             Assert.IsTrue(resetPasswordReponse);
 
             User userByUserName = userRepository.GetUserByUserName(username);
@@ -634,7 +634,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             Assert.IsNotNull(returnedPasswordCode);
             string newPassword = "newpassword";
 
-            bool resetPasswordReponse = userApplicationService.ResetPasswordByEmailLink(new ResetPasswordCommand(username, newPassword));
+            bool resetPasswordReponse = userApplicationService.ResetPasswordByEmailLink(new ResetPasswordCommand(username, newPassword, returnedPasswordCode));
             Assert.IsTrue(resetPasswordReponse);
 
             User userByUserName = userRepository.GetUserByUserName(username);
@@ -648,7 +648,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
 
         [Test]
         [Category("Integration")]
-        [ExpectedException(typeof(NullReferenceException))]
+        [ExpectedException(typeof(InvalidCredentialException))]
         public void ResetPasswordFailTest_TestsIfPasswordIsNotChangedIfForgotPasswordReqeusthasNotBeenMade_VerifiesByReturnedValueAndDatabaseQuerying()
         {
             IUserApplicationService userApplicationService = (IUserApplicationService)_applicationContext["UserApplicationService"];
@@ -675,7 +675,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             Assert.AreEqual(0, userByUserName.ForgottenPasswordCodes.Length);
             
             string newPassword = "newpassword";
-            bool resetPasswordReponse = userApplicationService.ResetPasswordByEmailLink(new ResetPasswordCommand(username, newPassword));
+            bool resetPasswordReponse = userApplicationService.ResetPasswordByEmailLink(new ResetPasswordCommand(username, newPassword,""));
             Assert.IsTrue(resetPasswordReponse);
 
             userByUserName = userRepository.GetUserByUserName(username);
@@ -731,7 +731,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
 
             string newEmail = "newdummyemail@dumbstatus.com";
             bool resetPasswordReponse = userApplicationService.ChangeSettings(new ChangeSettingsCommand(
-                userValidationEssentials.ApiKey.Value, newEmail, "", Language.Arabic, TimeZone.CurrentTimeZone, false, 67));
+                userValidationEssentials.ApiKey, newEmail, "", Language.Arabic, TimeZone.CurrentTimeZone, false, 67));
             Assert.IsTrue(resetPasswordReponse);
 
             userByUserName = userRepository.GetUserByUserName(username);

@@ -69,13 +69,13 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             httpActionResult = loginController.Login(new LoginParams("user", "123"));
             OkNegotiatedContentResult<UserValidationEssentials> keys =
                 (OkNegotiatedContentResult<UserValidationEssentials>)httpActionResult;
-            Assert.IsNotNullOrEmpty(keys.Content.ApiKey.Value);
-            Assert.IsNotNullOrEmpty(keys.Content.SecretKey.Value);
+            Assert.IsNotNullOrEmpty(keys.Content.ApiKey);
+            Assert.IsNotNullOrEmpty(keys.Content.SecretKey);
             Assert.IsNotNullOrEmpty(keys.Content.SessionLogoutTime.ToString());
 
             TierController tierController = _applicationContext["TierController"] as TierController;
             tierController.Request = new HttpRequestMessage(HttpMethod.Get, "");
-            tierController.Request.Headers.Add("Auth", keys.Content.ApiKey.Value);
+            tierController.Request.Headers.Add("Auth", keys.Content.ApiKey);
             httpActionResult = tierController.GetTierStatuses();
             OkNegotiatedContentResult<UserTierStatusRepresentation[]> statuses = (OkNegotiatedContentResult<UserTierStatusRepresentation[]>)httpActionResult;
             Assert.AreEqual(statuses.Content.Length,5);
@@ -89,7 +89,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             UserValidationEssentials essentials = AccessControlUtility.RegisterAndLogin("user", "user@user.com", "123",_applicationContext);
             TierController tierController = _applicationContext["TierController"] as TierController;
             tierController.Request = new HttpRequestMessage(HttpMethod.Post, "");
-            tierController.Request.Headers.Add("Auth", essentials.ApiKey.Value);
+            tierController.Request.Headers.Add("Auth", essentials.ApiKey);
             tierController.GetVerifyForTier1(new Tier1Param("User",DateTime.Today.AddDays(-10).ToShortDateString(),"656667"));
 
             IHttpActionResult httpActionResult = tierController.GetTierStatuses();
@@ -113,7 +113,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             UserValidationEssentials essentials = AccessControlUtility.RegisterAndLogin("user", "user@user.com", "123", _applicationContext);
             TierController tierController = _applicationContext["TierController"] as TierController;
             tierController.Request = new HttpRequestMessage(HttpMethod.Post, "");
-            tierController.Request.Headers.Add("Auth", essentials.ApiKey.Value);
+            tierController.Request.Headers.Add("Auth", essentials.ApiKey);
             tierController.GetVerifyForTier1(new Tier1Param("User", DateTime.Now.AddDays(-10).ToShortDateString(), "656667"));
             tierController.GetVerifyForTier2(new Tier2Param("asd","","","punjab","Isb","123"));
 
@@ -140,7 +140,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             UserValidationEssentials essentials = AccessControlUtility.RegisterAndLogin("user", "user@user.com", "123", _applicationContext);
             TierController tierController = _applicationContext["TierController"] as TierController;
             tierController.Request = new HttpRequestMessage(HttpMethod.Post, "");
-            tierController.Request.Headers.Add("Auth", essentials.ApiKey.Value);
+            tierController.Request.Headers.Add("Auth", essentials.ApiKey);
             tierController.GetVerifyForTier1(new Tier1Param("User", DateTime.Now.AddDays(-10).ToShortDateString(), "656667"));
             tierController.GetVerifyForTier2(new Tier2Param("asd", "", "", "punjab", "Isb", "123"));
             var content = new MultipartFormDataContent();
@@ -170,7 +170,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             UserValidationEssentials essentials = AccessControlUtility.RegisterAndLogin("user", "user@user.com", "123", _applicationContext);
             TierController tierController = _applicationContext["TierController"] as TierController;
             tierController.Request = new HttpRequestMessage(HttpMethod.Post, "");
-            tierController.Request.Headers.Add("Auth", essentials.ApiKey.Value);
+            tierController.Request.Headers.Add("Auth", essentials.ApiKey);
             IHttpActionResult httpActionResult = tierController.GetTier2Details();
             BadRequestErrorMessageResult result = httpActionResult as BadRequestErrorMessageResult;
             Assert.AreEqual(result.Message, "First verify Tier 1");
@@ -183,7 +183,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             UserValidationEssentials essentials = AccessControlUtility.RegisterAndLogin("user", "user@user.com", "123", _applicationContext);
             TierController tierController = _applicationContext["TierController"] as TierController;
             tierController.Request = new HttpRequestMessage(HttpMethod.Post, "");
-            tierController.Request.Headers.Add("Auth", essentials.ApiKey.Value);
+            tierController.Request.Headers.Add("Auth", essentials.ApiKey);
             IHttpActionResult httpActionResult = tierController.GetTier3Details();
             BadRequestErrorMessageResult result = httpActionResult as BadRequestErrorMessageResult;
             Assert.AreEqual(result.Message, "First verify Tier 2");
