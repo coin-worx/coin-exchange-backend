@@ -12,10 +12,10 @@ namespace CoinExchange.IdentityAccess.Application.AccessControlServices.Commands
         /// </summary>
         /// <param name="apiKey"> </param>
         /// <param name="secretKey"> </param>
-        public LogoutCommand(string apiKey, string secretKey)
+        public LogoutCommand(string apiKey)
         {
             ApiKey = new ApiKey(apiKey);
-            SecretKey = new SecretKey(secretKey);
+            //SecretKey = new SecretKey(secretKey);
         }
 
         /// <summary>
@@ -26,6 +26,6 @@ namespace CoinExchange.IdentityAccess.Application.AccessControlServices.Commands
         /// <summary>
         /// Secret Key
         /// </summary>
-        public SecretKey SecretKey { get; private set; }
+       // public SecretKey SecretKey { get; private set; }
     }
 }

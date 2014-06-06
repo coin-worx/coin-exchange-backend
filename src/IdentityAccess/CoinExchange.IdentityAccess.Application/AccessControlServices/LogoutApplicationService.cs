@@ -28,9 +28,7 @@ namespace CoinExchange.IdentityAccess.Application.AccessControlServices
         public bool Logout(LogoutCommand logoutCommand)
         {
             if (logoutCommand.ApiKey != null && 
-                !string.IsNullOrEmpty(logoutCommand.ApiKey.Value) &&
-                logoutCommand.SecretKey != null &&
-                !string.IsNullOrEmpty(logoutCommand.SecretKey.Value))
+                !string.IsNullOrEmpty(logoutCommand.ApiKey.Value))
             {
                 SecurityKeysPair securityKeysPair =
                     _securityKeysRepository.GetByApiKey(logoutCommand.ApiKey.Value);

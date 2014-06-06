@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Security.Authentication;
 using System.Web.Http;
+using CoinExchange.Common.Utility;
 using CoinExchange.IdentityAccess.Application.AccessControlServices;
 using CoinExchange.IdentityAccess.Application.AccessControlServices.Commands;
 using CoinExchange.IdentityAccess.Port.Adapter.Rest.DTO;
@@ -34,19 +35,20 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         /// </summary>
         /// <param name="param"></param>
         /// <returns></returns>
-        [HttpPost]
-        [Route("admin/logout")]
+        [HttpGet]
+        [Route("private/admin/logout")]
         [FilterIP]
-        public IHttpActionResult Logout([FromBody]LogoutParams param)
+        [Authorize]
+        public IHttpActionResult Logout()
         {
             try
             {
                 if (Log.IsDebugEnabled)
                 {
-                    Log.Debug("Logout Call Recevied, parameters:" + param);
+                    Log.Debug("Logout Call Recevied");
                 }
                 return
-                    Ok(_logoutApplicationService.Logout(new LogoutCommand(param.ApiKey, param.SecretKey)));
+                    Ok(_logoutApplicationService.Logout(new LogoutCommand(HeaderParamUtility.GetApikey(Request))));
             }
             catch (InstanceNotFoundException exception)
             {

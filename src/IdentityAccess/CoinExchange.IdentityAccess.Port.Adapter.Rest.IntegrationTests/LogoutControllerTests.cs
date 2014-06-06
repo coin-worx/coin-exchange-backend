@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -54,9 +55,9 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             // Activate Account
             UserController userController = (UserController)_applicationContext["UserController"];
             httpActionResult = userController.ActivateUser(new UserActivationParam("user", "123", activationKey));
-            OkNegotiatedContentResult<bool> okResponseMessage1 =
-                (OkNegotiatedContentResult<bool>)httpActionResult;
-            Assert.AreEqual(okResponseMessage1.Content, true);
+            OkNegotiatedContentResult<string> okResponseMessage1 =
+                (OkNegotiatedContentResult<string>)httpActionResult;
+            Assert.AreEqual(okResponseMessage1.Content, "activated");
 
             // Login
             LoginController loginController = (LoginController)_applicationContext["LoginController"];
@@ -75,7 +76,9 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             Assert.IsTrue(securityKeysPair.SystemGenerated);
 
             LogoutController logoutController = (LogoutController)_applicationContext["LogoutController"];
-            IHttpActionResult logoutResult = logoutController.Logout(new LogoutParams(keys.Content.ApiKey, keys.Content.SecretKey));
+            logoutController.Request = new HttpRequestMessage(HttpMethod.Post, "");
+            logoutController.Request.Headers.Add("Auth", keys.Content.ApiKey);
+            IHttpActionResult logoutResult = logoutController.Logout();
             OkNegotiatedContentResult<bool> logoutOkResponse = (OkNegotiatedContentResult<bool>) logoutResult;
             Assert.IsNotNull(logoutOkResponse);
             Assert.IsTrue(logoutOkResponse.Content);
@@ -101,9 +104,9 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             // Activate Account
             UserController userController = (UserController)_applicationContext["UserController"];
             httpActionResult = userController.ActivateUser(new UserActivationParam("user", "123", activationKey));
-            OkNegotiatedContentResult<bool> okResponseMessage1 =
-                (OkNegotiatedContentResult<bool>)httpActionResult;
-            Assert.AreEqual(okResponseMessage1.Content, true);
+            OkNegotiatedContentResult<string> okResponseMessage1 =
+                (OkNegotiatedContentResult<string>)httpActionResult;
+            Assert.AreEqual(okResponseMessage1.Content, "activated");
 
             // Login
             LoginController loginController = (LoginController)_applicationContext["LoginController"];
@@ -122,7 +125,9 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             Assert.IsTrue(securityKeysPair.SystemGenerated);
 
             LogoutController logoutController = (LogoutController)_applicationContext["LogoutController"];
-            IHttpActionResult logoutResult = logoutController.Logout(new LogoutParams(keys.Content.ApiKey + "1", keys.Content.SecretKey));
+            logoutController.Request = new HttpRequestMessage(HttpMethod.Get, "");
+            logoutController.Request.Headers.Add("Auth", "123");
+            IHttpActionResult logoutResult = logoutController.Logout();
             BadRequestErrorMessageResult logoutOkResponse = (BadRequestErrorMessageResult)logoutResult;
             Assert.IsNotNull(logoutOkResponse);
 
@@ -149,9 +154,9 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             // Activate Account
             UserController userController = (UserController)_applicationContext["UserController"];
             httpActionResult = userController.ActivateUser(new UserActivationParam("user", "123", activationKey));
-            OkNegotiatedContentResult<bool> okResponseMessage1 =
-                (OkNegotiatedContentResult<bool>)httpActionResult;
-            Assert.AreEqual(okResponseMessage1.Content, true);
+            OkNegotiatedContentResult<string> okResponseMessage1 =
+                (OkNegotiatedContentResult<string>)httpActionResult;
+            Assert.AreEqual(okResponseMessage1.Content, "activated");
 
             // Login
             LoginController loginController = (LoginController)_applicationContext["LoginController"];
@@ -171,7 +176,9 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
 
             // Logout
             LogoutController logoutController = (LogoutController)_applicationContext["LogoutController"];
-            IHttpActionResult logoutResult = logoutController.Logout(new LogoutParams(keys.Content.ApiKey, keys.Content.SecretKey));
+            logoutController.Request = new HttpRequestMessage(HttpMethod.Post, "");
+            logoutController.Request.Headers.Add("Auth", keys.Content.ApiKey);
+            IHttpActionResult logoutResult = logoutController.Logout();
             OkNegotiatedContentResult<bool> logoutOkResponse = (OkNegotiatedContentResult<bool>)logoutResult;
             Assert.IsNotNull(logoutOkResponse);
             Assert.IsTrue(logoutOkResponse.Content);
@@ -179,9 +186,10 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             // Verify that the Security Keys are not in the database
             securityKeysPair = securityKeysRepository.GetByApiKey(keys.Content.ApiKey);
             Assert.IsNull(securityKeysPair);
-
+            logoutController.Request = new HttpRequestMessage(HttpMethod.Post, "");
+            logoutController.Request.Headers.Add("Auth", keys.Content.ApiKey);
             // Invalid Logout as the user has logged out already
-            logoutResult = logoutController.Logout(new LogoutParams(keys.Content.ApiKey, keys.Content.SecretKey));
+            logoutResult = logoutController.Logout();
             BadRequestErrorMessageResult logoutBadResponse = (BadRequestErrorMessageResult)logoutResult;
             Assert.IsNotNull(logoutBadResponse);
 

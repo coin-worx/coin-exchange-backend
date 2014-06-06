@@ -59,9 +59,9 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
 
            UserController userController = _applicationContext["UserController"] as UserController;
            httpActionResult = userController.ActivateUser(new UserActivationParam("user", "123", activationKey));
-           OkNegotiatedContentResult<bool> okResponseMessage1 =
-               (OkNegotiatedContentResult<bool>)httpActionResult;
-            Assert.AreEqual(okResponseMessage1.Content,true);
+           OkNegotiatedContentResult<string> okResponseMessage1 =
+               (OkNegotiatedContentResult<string>)httpActionResult;
+            Assert.AreEqual(okResponseMessage1.Content,"activated");
         }
 
         [Test]
@@ -79,8 +79,8 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
 
             UserController userController = _applicationContext["UserController"] as UserController;
             httpActionResult = userController.ActivateUser(new UserActivationParam("user", "123", activationKey));
-            OkNegotiatedContentResult<bool> okResponseMessage1 = (OkNegotiatedContentResult<bool>)httpActionResult;
-            Assert.AreEqual(okResponseMessage1.Content, true);
+            OkNegotiatedContentResult<string> okResponseMessage1 = (OkNegotiatedContentResult<string>)httpActionResult;
+            Assert.AreEqual(okResponseMessage1.Content, "activated");
         }
 
         [Test]
@@ -100,8 +100,8 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
 
             UserController userController = (UserController)_applicationContext["UserController"];
             httpActionResult = userController.CancelUserActivation(new CancelActivationParams(activationKey));
-            OkNegotiatedContentResult<bool> okResponseMessage1 = (OkNegotiatedContentResult<bool>)httpActionResult;
-            Assert.IsTrue(okResponseMessage1.Content);
+            OkNegotiatedContentResult<string> okResponseMessage1 = (OkNegotiatedContentResult<string>)httpActionResult;
+            Assert.AreEqual(okResponseMessage1.Content, "cancelled");
 
             // Confirm that the User account has been deleted
             IUserRepository userRepository = (IUserRepository)_applicationContext["UserRepository"];
@@ -127,8 +127,8 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             // Activate Account
             UserController userController = (UserController)_applicationContext["UserController"];
             httpActionResult = userController.ActivateUser(new UserActivationParam(username, password, activationKey));
-            OkNegotiatedContentResult<bool> okResponseMessage1 = (OkNegotiatedContentResult<bool>)httpActionResult;
-            Assert.IsTrue(okResponseMessage1.Content);
+            OkNegotiatedContentResult<string> okResponseMessage1 = (OkNegotiatedContentResult<string>)httpActionResult;
+            Assert.AreEqual(okResponseMessage1.Content,"activated");
 
             // Confirm that the User has been activated
             IUserRepository userRepository = (IUserRepository)_applicationContext["UserRepository"];
@@ -156,8 +156,8 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             userController.Request.Headers.Add("Auth", userValidationEssentials.ApiKey);
             IHttpActionResult changePasswordResult = userController.ChangePassword(new ChangePasswordParams(
              password, newPassword));
-            OkNegotiatedContentResult<bool> changePasswordOkResult = (OkNegotiatedContentResult<bool>)changePasswordResult;
-            Assert.IsTrue(changePasswordOkResult.Content);
+            OkNegotiatedContentResult<string> changePasswordOkResult = (OkNegotiatedContentResult<string>)changePasswordResult;
+            Assert.AreEqual(changePasswordOkResult.Content,"changed");
 
             User userAfterPasswordChange = userRepository.GetUserByUserName(username);
             Assert.AreNotEqual(userAfterLogin.Password, userAfterPasswordChange.Password);
@@ -184,8 +184,8 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             // Activate Account
             UserController userController = (UserController)_applicationContext["UserController"];
             httpActionResult = userController.ActivateUser(new UserActivationParam(username, password, activationKey));
-            OkNegotiatedContentResult<bool> okResponseMessage1 = (OkNegotiatedContentResult<bool>)httpActionResult;
-            Assert.IsTrue(okResponseMessage1.Content);
+            OkNegotiatedContentResult<string> okResponseMessage1 = (OkNegotiatedContentResult<string>)httpActionResult;
+            Assert.AreEqual(okResponseMessage1.Content,"activated");
 
             // Reqeust to remind for password
             IHttpActionResult forgotUsernameResponse = userController.ForgotUsername(new ForgotUsernameParams(email));
@@ -236,8 +236,8 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             // Activate Account
             UserController userController = (UserController)_applicationContext["UserController"];
             httpActionResult = userController.ActivateUser(new UserActivationParam(username, password, activationKey));
-            OkNegotiatedContentResult<bool> okResponseMessage1 = (OkNegotiatedContentResult<bool>)httpActionResult;
-            Assert.IsTrue(okResponseMessage1.Content);
+            OkNegotiatedContentResult<string> okResponseMessage1 = (OkNegotiatedContentResult<string>)httpActionResult;
+            Assert.AreEqual(okResponseMessage1.Content,"activated");
 
             // Confirm that the User has been activated
             IUserRepository userRepository = (IUserRepository)_applicationContext["UserRepository"];
@@ -294,8 +294,8 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             // Activate Account
             UserController userController = (UserController)_applicationContext["UserController"];
             httpActionResult = userController.ActivateUser(new UserActivationParam(username, password, activationKey));
-            OkNegotiatedContentResult<bool> okResponseMessage1 = (OkNegotiatedContentResult<bool>)httpActionResult;
-            Assert.IsTrue(okResponseMessage1.Content);
+            OkNegotiatedContentResult<string> okResponseMessage1 = (OkNegotiatedContentResult<string>)httpActionResult;
+            Assert.AreEqual(okResponseMessage1.Content,"activated");
 
             // Reqeust to remind for password
             IHttpActionResult forgotPasswordResponse = userController.ForgotPassword(new ForgotPasswordParams(email, username));
@@ -314,9 +314,9 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             // Reqeust to reset password
             string newPassword = "iwillwearthemask";
             IHttpActionResult resetPasswordResponse = userController.ResetPassword(new ResetPasswordParams(username, newPassword, forgotPasswordOkResponse.Content));            
-            OkNegotiatedContentResult<bool> resetPasswordOkResponse = (OkNegotiatedContentResult<bool>)resetPasswordResponse;
+            OkNegotiatedContentResult<string> resetPasswordOkResponse = (OkNegotiatedContentResult<string>)resetPasswordResponse;
             // Check if the username returned is correct
-            Assert.IsTrue(resetPasswordOkResponse.Content);
+            Assert.AreEqual(resetPasswordOkResponse.Content,"changed");
 
             User userAfterResetPassword = userRepository.GetUserByUserName(username);
             Assert.IsNotNull(userAfterResetPassword);
@@ -345,8 +345,8 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             // Activate Account
             UserController userController = (UserController)_applicationContext["UserController"];
             httpActionResult = userController.ActivateUser(new UserActivationParam(username, password, activationKey));
-            OkNegotiatedContentResult<bool> okResponseMessage1 = (OkNegotiatedContentResult<bool>)httpActionResult;
-            Assert.IsTrue(okResponseMessage1.Content);
+            OkNegotiatedContentResult<string> okResponseMessage1 = (OkNegotiatedContentResult<string>)httpActionResult;
+            Assert.AreEqual(okResponseMessage1.Content,"activated");
 
             // Confirm that the User has been activated and forgot password code has been generated
             IUserRepository userRepository = (IUserRepository)_applicationContext["UserRepository"];
@@ -389,8 +389,8 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             // Activate Account
             UserController userController = (UserController)_applicationContext["UserController"];
             httpActionResult = userController.ActivateUser(new UserActivationParam(username, password, activationKey));
-            OkNegotiatedContentResult<bool> okResponseMessage1 = (OkNegotiatedContentResult<bool>)httpActionResult;
-            Assert.IsTrue(okResponseMessage1.Content);
+            OkNegotiatedContentResult<string> okResponseMessage1 = (OkNegotiatedContentResult<string>)httpActionResult;
+            Assert.AreEqual(okResponseMessage1.Content,"activated");
 
             // Confirm the current user settings
             IUserRepository userRepository = (IUserRepository)_applicationContext["UserRepository"];
@@ -421,9 +421,9 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             userController.Request.Headers.Add("Auth", keys.Content.ApiKey);
             IHttpActionResult changeSettingsResponse = userController.ChangeSettings(new ChangeSettingsParams(
                 newEMail, "", Language.French, TimeZone.CurrentTimeZone, false, 66));
-            OkNegotiatedContentResult<bool> changePasswordOkResponse = (OkNegotiatedContentResult<bool>)changeSettingsResponse;
+            OkNegotiatedContentResult<string> changePasswordOkResponse = (OkNegotiatedContentResult<string>)changeSettingsResponse;
             // Check if the username returned is correct
-            Assert.IsTrue(changePasswordOkResponse.Content);
+            Assert.AreEqual(changePasswordOkResponse.Content,"changed");
 
             userByUserName = userRepository.GetUserByUserName(username);
             Assert.IsNotNull(userByUserName);
@@ -457,8 +457,8 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             // Activate Account
             UserController userController = (UserController)_applicationContext["UserController"];
             httpActionResult = userController.ActivateUser(new UserActivationParam(username, password, activationKey));
-            OkNegotiatedContentResult<bool> okResponseMessage1 = (OkNegotiatedContentResult<bool>)httpActionResult;
-            Assert.AreEqual(okResponseMessage1.Content, true);
+            OkNegotiatedContentResult<string> okResponseMessage1 = (OkNegotiatedContentResult<string>)httpActionResult;
+            Assert.AreEqual(okResponseMessage1.Content, "activated");
 
             // Login
             LoginController loginController = (LoginController)_applicationContext["LoginController"];
@@ -482,9 +482,9 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             userController.Request.Headers.Add("Auth", keys.Content.ApiKey);
             IHttpActionResult changeSettingsResponse = userController.ChangeSettings(new ChangeSettingsParams(
                 newEMail, "", Language.French, TimeZone.CurrentTimeZone, false, 66));
-            OkNegotiatedContentResult<bool> changePasswordOkResponse = (OkNegotiatedContentResult<bool>)changeSettingsResponse;
+            OkNegotiatedContentResult<string> changePasswordOkResponse = (OkNegotiatedContentResult<string>)changeSettingsResponse;
             // Check if the username returned is correct
-            Assert.IsTrue(changePasswordOkResponse.Content);
+            Assert.AreEqual(changePasswordOkResponse.Content,"changed");
 
             IUserRepository userRepository = (IUserRepository)_applicationContext["UserRepository"];
             IPasswordEncryptionService passwordEncryptionService = (IPasswordEncryptionService)_applicationContext["PasswordEncryptionService"];
@@ -501,7 +501,9 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
 
             // Logout
             LogoutController logoutController = (LogoutController)_applicationContext["LogoutController"];
-            IHttpActionResult logoutResult = logoutController.Logout(new LogoutParams(keys.Content.ApiKey, keys.Content.SecretKey));
+            logoutController.Request = new HttpRequestMessage(HttpMethod.Post, "");
+            logoutController.Request.Headers.Add("Auth", keys.Content.ApiKey);
+            IHttpActionResult logoutResult = logoutController.Logout();
             OkNegotiatedContentResult<bool> logoutOkResponse = (OkNegotiatedContentResult<bool>)logoutResult;
             Assert.IsNotNull(logoutOkResponse);
             Assert.IsTrue(logoutOkResponse.Content);
@@ -550,8 +552,8 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             // Activate Account
             UserController userController = (UserController)_applicationContext["UserController"];
             httpActionResult = userController.ActivateUser(new UserActivationParam(username, password, activationKey));
-            OkNegotiatedContentResult<bool> okResponseMessage1 = (OkNegotiatedContentResult<bool>)httpActionResult;
-            Assert.IsTrue(okResponseMessage1.Content);
+            OkNegotiatedContentResult<string> okResponseMessage1 = (OkNegotiatedContentResult<string>)httpActionResult;
+            Assert.AreEqual(okResponseMessage1.Content,"activated");
 
             // Confirm the current user settings
             IUserRepository userRepository = (IUserRepository)_applicationContext["UserRepository"];
@@ -595,9 +597,9 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             userController.Request.Headers.Add("Auth", keys.Content.ApiKey);
             IHttpActionResult changeSettingsResponse = userController.ChangeSettings(new ChangeSettingsParams(
                 newEMail, "", Language.French, TimeZone.CurrentTimeZone, false, 66));
-            OkNegotiatedContentResult<bool> changePasswordOkResponse = (OkNegotiatedContentResult<bool>)changeSettingsResponse;
+            OkNegotiatedContentResult<string> changePasswordOkResponse = (OkNegotiatedContentResult<string>)changeSettingsResponse;
             // Check if the username returned is correct
-            Assert.IsTrue(changePasswordOkResponse.Content);
+            Assert.AreEqual(changePasswordOkResponse.Content,"changed");
 
             userByUserName = userRepository.GetUserByUserName(username);
             Assert.IsNotNull(userByUserName);

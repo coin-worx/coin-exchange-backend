@@ -82,8 +82,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             ILogoutApplicationService logoutApplicationService = 
                 (ILogoutApplicationService)_applicationContext["LogoutApplicationService"];
             Assert.IsNotNull(logoutApplicationService);
-            bool logout = logoutApplicationService.Logout(new LogoutCommand(userValidationEssentials.ApiKey,
-                userValidationEssentials.SecretKey));
+            bool logout = logoutApplicationService.Logout(new LogoutCommand(userValidationEssentials.ApiKey));
             Assert.IsTrue(logout);
 
             ISecurityKeysRepository securityKeysRepository = (ISecurityKeysRepository)_applicationContext["SecurityKeysPairRepository"];

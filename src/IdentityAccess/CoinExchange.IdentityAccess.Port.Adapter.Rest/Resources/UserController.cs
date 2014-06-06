@@ -329,10 +329,12 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
                 {
                     log.Debug("ChangeSettings Call Recevied, parameters:" + changeSettingsParams);
                 }
+                _userApplicationService.ChangeSettings(new ChangeSettingsCommand(HeaderParamUtility.GetApikey(Request),
+                    changeSettingsParams.Email, changeSettingsParams.PgpPublicKey, changeSettingsParams.Language,
+                    changeSettingsParams.TimeZone, changeSettingsParams.IsDefaultAutoLogout,
+                    changeSettingsParams.AutoLogoutMinutes));
                 return
-                    Ok(_userApplicationService.ChangeSettings(new ChangeSettingsCommand(HeaderParamUtility.GetApikey(Request),
-                        changeSettingsParams.Email, changeSettingsParams.PgpPublicKey, changeSettingsParams.Language,
-                        changeSettingsParams.TimeZone, changeSettingsParams.IsDefaultAutoLogout, changeSettingsParams.AutoLogoutMinutes)));
+                    Ok("changed");
             }
             catch (InstanceNotFoundException exception)
             {
