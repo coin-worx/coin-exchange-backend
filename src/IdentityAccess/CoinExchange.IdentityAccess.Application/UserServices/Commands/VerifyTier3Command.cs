@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CoinExchange.Common.Domain.Model;
 
 namespace CoinExchange.IdentityAccess.Application.UserServices.Commands
 {
@@ -28,6 +29,7 @@ namespace CoinExchange.IdentityAccess.Application.UserServices.Commands
         /// <param name="documentType"></param>
         public VerifyTier3Command(string systemGeneratedApiKey, string socialSecurityNumber, string nin, string documentType, string fileName,MemoryStream documentStream)
         {
+            AssertionConcern.AssertNullOrEmptyString(FileName,"FileName not specified");
             SystemGeneratedApiKey = systemGeneratedApiKey;
             SocialSecurityNumber = socialSecurityNumber;
             Nin = nin;

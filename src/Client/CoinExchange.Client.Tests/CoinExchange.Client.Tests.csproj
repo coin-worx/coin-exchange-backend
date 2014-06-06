@@ -94,10 +94,6 @@
       <Project>{d61dbd04-95dc-4eb1-ad54-1ff929ac2814}</Project>
       <Name>CoinExchange.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Common\CoinExchange.Rest.WebHost\CoinExchange.Rest.WebHost.csproj">
-      <Project>{583a125d-9199-4122-b8ba-fd520068f083}</Project>
-      <Name>CoinExchange.Rest.WebHost</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Trades\CoinExchange.Trades.Domain.Model\CoinExchange.Trades.Domain.Model.csproj">
       <Project>{32ac3710-adf8-4522-8f06-1f9c7a45e6e7}</Project>
       <Name>CoinExchange.Trades.Domain.Model</Name>

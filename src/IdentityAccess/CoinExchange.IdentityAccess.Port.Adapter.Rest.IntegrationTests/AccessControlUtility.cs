@@ -41,8 +41,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             //activate account
             UserController userController = applicationContext["UserController"] as UserController;
             httpActionResult = userController.ActivateUser(new UserActivationParam(userName, password, activationKey));
-            OkNegotiatedContentResult<bool> okResponseMessage1 =
-                (OkNegotiatedContentResult<bool>)httpActionResult;
+            
             //login
             LoginController loginController = applicationContext["LoginController"] as LoginController;
             httpActionResult = loginController.Login(new LoginParams("user", "123"));

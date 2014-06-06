@@ -133,6 +133,11 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
             if (keysPair != null)
             {
                 User user = _userRepository.GetUserById(keysPair.UserId);
+                if (user.GetTierLevelStatus(new Tier(TierLevelConstant.Tier1, TierLevelConstant.Tier1)) ==
+                    Status.NonVerified.ToString())
+                {
+                    throw new InvalidOperationException("Tier 1 details are not submitted yet.");
+                }
                 if (user.GetTierLevelStatus(new Tier(TierLevelConstant.Tier0, TierLevelConstant.Tier0)) == Status.Verified.ToString())
                 {
                     return new Tier1Details(user.PhoneNumber, user.FullName, user.DateOfBirth, user.Country);
@@ -153,6 +158,11 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
             if (keysPair != null)
             {
                 User user = _userRepository.GetUserById(keysPair.UserId);
+                if (user.GetTierLevelStatus(new Tier(TierLevelConstant.Tier2, TierLevelConstant.Tier2)) ==
+                    Status.NonVerified.ToString())
+                {
+                    throw new InvalidOperationException("Tier 2 details are not submitted yet.");
+                }
                 if (user.GetTierLevelStatus(new Tier(TierLevelConstant.Tier1, TierLevelConstant.Tier1)) != Status.NonVerified.ToString())
                 {
                     return new Tier2Details(user.Country, user.Address1, user.Address2, "", user.State, user.City,
@@ -174,6 +184,11 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
             if (keysPair != null)
             {
                 User user = _userRepository.GetUserById(keysPair.UserId);
+                if (user.GetTierLevelStatus(new Tier(TierLevelConstant.Tier3, TierLevelConstant.Tier3)) ==
+                    Status.NonVerified.ToString())
+                {
+                    throw new InvalidOperationException("Tier 3 details are not submitted yet.");
+                }
                 if (user.GetTierLevelStatus(new Tier(TierLevelConstant.Tier2, TierLevelConstant.Tier2)) != Status.NonVerified.ToString())
                 {
                     return new Tier3Details(user.SocialSecurityNumber, user.NationalIdentificationNumber);

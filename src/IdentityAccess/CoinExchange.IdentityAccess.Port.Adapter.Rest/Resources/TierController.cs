@@ -73,7 +73,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
                 }
                 return BadRequest(exception.Message);
             }
-            catch (InvalidDataException exception)
+            catch (ArgumentNullException exception)
             {
                 if (log.IsErrorEnabled)
                 {
@@ -128,7 +128,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
                 }
                 return BadRequest(exception.Message);
             }
-            catch (InvalidDataException exception)
+            catch (ArgumentNullException exception)
             {
                 if (log.IsErrorEnabled)
                 {
@@ -194,7 +194,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
                 }
                 return BadRequest(exception.Message);
             }
-            catch (InvalidDataException exception)
+            catch (ArgumentNullException exception)
             {
                 if (log.IsErrorEnabled)
                 {
@@ -246,7 +246,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
                 }
                 return BadRequest(exception.Message);
             }
-            catch (InvalidDataException exception)
+            catch (ArgumentNullException exception)
             {
                 if (log.IsErrorEnabled)
                 {
@@ -298,7 +298,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
                 }
                 return BadRequest(exception.Message);
             }
-            catch (InvalidDataException exception)
+            catch (ArgumentNullException exception)
             {
                 if (log.IsErrorEnabled)
                 {
@@ -350,7 +350,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
                 }
                 return BadRequest(exception.Message);
             }
-            catch (InvalidDataException exception)
+            catch (ArgumentNullException exception)
             {
                 if (log.IsErrorEnabled)
                 {
@@ -402,7 +402,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
                 }
                 return BadRequest(exception.Message);
             }
-            catch (InvalidDataException exception)
+            catch (ArgumentNullException exception)
             {
                 if (log.IsErrorEnabled)
                 {
