@@ -44,7 +44,7 @@ namespace CoinExchange.IdentityAccess.Application.SecurityKeysServices
             return new Tuple<ApiKey, SecretKey>(new ApiKey(keysPair.ApiKey),new SecretKey(keysPair.SecretKey) );
         }
 
-        public Tuple<string,string> CreateUserGeneratedKey(CreateUserGeneratedSecurityKeyPair command,string apiKey)
+        public SecurityKeyPair CreateUserGeneratedKey(CreateUserGeneratedSecurityKeyPair command,string apiKey)
         {
             if (command.Validate())
             {
@@ -68,9 +68,9 @@ namespace CoinExchange.IdentityAccess.Application.SecurityKeysServices
                     permissions,
                     _securityKeysRepository);
                 _persistRepository.SaveUpdate(keysPair);
-                return keys;
+                return new SecurityKeyPair(keys.Item1,keys.Item2);
             }
-            throw new ArgumentNullException("Please assign atleast one permission.");
+            throw new InvalidOperationException("Please assign atleast one permission.");
         }
 
         /// <summary>
@@ -89,12 +89,17 @@ namespace CoinExchange.IdentityAccess.Application.SecurityKeysServices
                 var keyPair = _securityKeysRepository.GetByApiKey(updateCommand.ApiKey);
                 if (keyPair == null)
                 {
-                    throw new ArgumentException("Invalid Api Key");
+                    throw new InvalidOperationException("Invalid Api Key");
                 }
+                var getKeyPair = _securityKeysRepository.GetByKeyDescriptionAndUserId(updateCommand.KeyDescritpion,
+                    getSecurityKeyPair.UserId);
                 //check if key description already exist
-                if (_securityKeysRepository.GetByDescriptionAndApiKey(updateCommand.KeyDescritpion, updateCommand.ApiKey) != null)
+                if (getKeyPair!=null)
                 {
-                    throw new ArgumentException("The key description already exist");
+                    if (!getKeyPair.ApiKey.Equals(updateCommand.ApiKey))
+                    {
+                        throw new InvalidOperationException("The key description already exist");
+                    }
                 }
                 //update parameters
                 keyPair.UpdateSecuritykeyPair(updateCommand.KeyDescritpion, updateCommand.EnableStartDate,
@@ -189,18 +194,26 @@ namespace CoinExchange.IdentityAccess.Application.SecurityKeysServices
             var getSecurityKeyPair = _securityKeysRepository.GetByApiKey(apiKey);
             var getApiKey = _securityKeysRepository.GetByKeyDescriptionAndUserId(keyDescription,
                 getSecurityKeyPair.UserId);
-            List<SecurityKeyPermissionsRepresentation> representations=new List<SecurityKeyPermissionsRepresentation>();
-            SecurityKeysPermission[] permissions = getApiKey.GetAllPermissions();
-            for (int i = 0; i < permissions.Length; i++)
+            if (getApiKey != null)
             {
-                representations.Add(new SecurityKeyPermissionsRepresentation(permissions[i].IsAllowed,permissions[i].Permission));
+                List<SecurityKeyPermissionsRepresentation> representations =
+                    new List<SecurityKeyPermissionsRepresentation>();
+                SecurityKeysPermission[] permissions = getApiKey.GetAllPermissions();
+                for (int i = 0; i < permissions.Length; i++)
+                {
+                    representations.Add(new SecurityKeyPermissionsRepresentation(permissions[i].IsAllowed,
+                        permissions[i].Permission));
+                }
+                string expirationDate = getApiKey.EnableExpirationDate ? getApiKey.ExpirationDate.ToString() : "";
+                string startDate = getApiKey.EnableStartDate ? getApiKey.StartDate.ToString() : "";
+                string endDate = getApiKey.EnableEndDate ? getApiKey.EndDate.ToString() : "";
+                return new SecurityKeyRepresentation(getApiKey.KeyDescription, getApiKey.ApiKey, getApiKey.SecretKey,
+                    getApiKey.EnableStartDate,
+                    getApiKey.EnableEndDate, getApiKey.EnableExpirationDate, endDate,
+                    startDate, expirationDate, representations.ToArray());
             }
-            string expirationDate = getApiKey.EnableExpirationDate ? getApiKey.ExpirationDate.ToString() : "";
-            string startDate = getApiKey.EnableStartDate ? getApiKey.StartDate.ToString() : "";
-            string endDate = getApiKey.EnableEndDate ? getApiKey.EndDate.ToString() : "";
-            return new SecurityKeyRepresentation(getApiKey.KeyDescription,getApiKey.ApiKey,getApiKey.SecretKey, getApiKey.EnableStartDate,
-                getApiKey.EnableEndDate, getApiKey.EnableExpirationDate, endDate,
-                startDate, expirationDate, representations.ToArray());
+            throw new InvalidOperationException("Invalid key description");
         }
+        
     }
 }

@@ -21,7 +21,7 @@ namespace CoinExchange.IdentityAccess.Application.SecurityKeysServices
         /// Item 2=Secret Key
         /// </summary>
         /// <returns></returns>
-        Tuple<string,string> CreateUserGeneratedKey(CreateUserGeneratedSecurityKeyPair command,string apiKey);
+       SecurityKeyPair CreateUserGeneratedKey(CreateUserGeneratedSecurityKeyPair command,string apiKey);
 
         /// <summary>
         /// Update Security Key Pair Info
@@ -60,5 +60,6 @@ namespace CoinExchange.IdentityAccess.Application.SecurityKeysServices
         /// <param name="apiKey"></param>
         /// <returns></returns>
         SecurityKeyRepresentation GetKeyDetails(string keyDescription, string apiKey);
+
     }
 }

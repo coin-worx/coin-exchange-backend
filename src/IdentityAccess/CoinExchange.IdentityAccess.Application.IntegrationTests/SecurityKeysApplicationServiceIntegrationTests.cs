@@ -102,14 +102,14 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
                     DateTime.Today.AddDays(-1).ToString(), true, true, true, "123");
             var keys = registrationService.CreateUserGeneratedKey(command, systemGeneratedKey.Item1.Value);
             Assert.NotNull(keys);
-            Assert.IsNotNullOrEmpty(keys.Item1);
-            Assert.IsNotNullOrEmpty(keys.Item2);
-            SecurityKeysPair persistedKeysPair = _securityKeysRepository.GetByApiKey(keys.Item1);
+            Assert.IsNotNullOrEmpty(keys.ApiKey);
+            Assert.IsNotNullOrEmpty(keys.SecretKey);
+            SecurityKeysPair persistedKeysPair = _securityKeysRepository.GetByApiKey(keys.ApiKey);
             Assert.NotNull(persistedKeysPair);
             Assert.AreEqual(persistedKeysPair.UserId, 1);
             Assert.AreEqual(persistedKeysPair.SystemGenerated, false);
-            Assert.AreEqual(persistedKeysPair.ApiKey, keys.Item1);
-            Assert.AreEqual(persistedKeysPair.SecretKey, keys.Item2);
+            Assert.AreEqual(persistedKeysPair.ApiKey, keys.ApiKey);
+            Assert.AreEqual(persistedKeysPair.SecretKey, keys.SecretKey);
             Assert.IsNotNullOrEmpty(persistedKeysPair.KeyDescription);
             Assert.IsNotNullOrEmpty(persistedKeysPair.CreationDateTime.ToString());
             Assert.AreEqual(persistedKeysPair.EnableStartDate,true);
@@ -123,7 +123,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
 
         [Test]
         [Category("Integration")]
-        [ExpectedException(typeof(ArgumentNullException))]
+        [ExpectedException(typeof(InvalidOperationException))]
         public void CreateUserGeneratedSecurityPair_IfNoPermissionIsAssigned_ArgumentNullExceptionShouldBeRaised()
         {
             ISecurityKeysApplicationService registrationService =
@@ -186,7 +186,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
                     DateTime.Today.AddDays(1).ToString(), DateTime.Today.AddDays(-2).ToString(),
                     DateTime.Today.AddDays(-1).ToString(), true, true, true, "123");
             var keys = registrationService.CreateUserGeneratedKey(command, systemGeneratedKey.Item1.Value);
-
+            
             securityKeyPermissions = new List<SecurityKeyPermissionsRepresentation>();
             for (int i = 0; i < permissions.Count; i++)
             {
@@ -200,17 +200,17 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
                 }
             }
 
-            UpdateUserGeneratedSecurityKeyPair update = new UpdateUserGeneratedSecurityKeyPair(keys.Item1, "456", false, false, true, "", "", securityKeyPermissions.ToArray(), DateTime.Today.AddDays(3).ToString());
-            registrationService.UpdateSecurityKeyPair(update,keys.Item1);
+            UpdateUserGeneratedSecurityKeyPair update = new UpdateUserGeneratedSecurityKeyPair(keys.ApiKey, "456", false, false, true, "", "", securityKeyPermissions.ToArray(), DateTime.Today.AddDays(3).ToString());
+            registrationService.UpdateSecurityKeyPair(update,keys.ApiKey);
             Assert.NotNull(keys);
-            Assert.IsNotNullOrEmpty(keys.Item1);
-            Assert.IsNotNullOrEmpty(keys.Item2);
-            SecurityKeysPair persistedKeysPair = _securityKeysRepository.GetByApiKey(keys.Item1);
+            Assert.IsNotNullOrEmpty(keys.ApiKey);
+            Assert.IsNotNullOrEmpty(keys.SecretKey);
+            SecurityKeysPair persistedKeysPair = _securityKeysRepository.GetByApiKey(keys.ApiKey);
             Assert.NotNull(persistedKeysPair);
             Assert.AreEqual(persistedKeysPair.UserId, 1);
             Assert.AreEqual(persistedKeysPair.SystemGenerated, false);
-            Assert.AreEqual(persistedKeysPair.ApiKey, keys.Item1);
-            Assert.AreEqual(persistedKeysPair.SecretKey, keys.Item2);
+            Assert.AreEqual(persistedKeysPair.ApiKey, keys.ApiKey);
+            Assert.AreEqual(persistedKeysPair.SecretKey, keys.SecretKey);
             Assert.AreEqual(persistedKeysPair.KeyDescription,"456");
             Assert.IsNotNullOrEmpty(persistedKeysPair.CreationDateTime.ToString());
             Assert.AreEqual(persistedKeysPair.EnableStartDate, false);
@@ -240,7 +240,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             registrationService.DeleteSecurityKeyPair("123",systemGeneratedKey.Item1.Value);
             var getKeyPair = _securityKeysRepository.GetByKeyDescriptionAndUserId("123", 1);
             Assert.Null(getKeyPair);
-            var getKeyPair1 = _securityKeysRepository.GetByApiKey(keys.Item1);
+            var getKeyPair1 = _securityKeysRepository.GetByApiKey(keys.ApiKey);
             Assert.Null(getKeyPair1);
         }
 

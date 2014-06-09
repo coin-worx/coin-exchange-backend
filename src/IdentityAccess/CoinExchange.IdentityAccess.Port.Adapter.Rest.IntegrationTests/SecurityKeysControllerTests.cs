@@ -59,9 +59,9 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             securityKeyPairController.Request.Headers.Add("Auth", essentials.ApiKey);
             CreateUserGeneratedSecurityKeyPair command=new CreateUserGeneratedSecurityKeyPair(securityKeyPermissions.ToArray(),"","","",false,false,false,"#1");
             IHttpActionResult httpActionResult=securityKeyPairController.CreateSecurityKey(command);
-            OkNegotiatedContentResult<Tuple<string, string>> result = (OkNegotiatedContentResult<Tuple<string,string>>)httpActionResult;
-            Assert.IsNotNullOrEmpty(result.Content.Item1);
-            Assert.IsNotNullOrEmpty(result.Content.Item2);
+            OkNegotiatedContentResult<SecurityKeyPair> result = (OkNegotiatedContentResult<SecurityKeyPair>)httpActionResult;
+            Assert.IsNotNullOrEmpty(result.Content.ApiKey);
+            Assert.IsNotNullOrEmpty(result.Content.SecretKey);
 
             httpActionResult = securityKeyPairController.GetUserSecurityKeys();
             OkNegotiatedContentResult<object> result1 = (OkNegotiatedContentResult<object>)httpActionResult;
@@ -96,9 +96,9 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             securityKeyPairController.Request.Headers.Add("Auth", essentials.ApiKey);
             CreateUserGeneratedSecurityKeyPair command = new CreateUserGeneratedSecurityKeyPair(securityKeyPermissions.ToArray(), "", "", "", false, false, false, "#1");
             IHttpActionResult httpActionResult = securityKeyPairController.CreateSecurityKey(command);
-            OkNegotiatedContentResult<Tuple<string, string>> result = (OkNegotiatedContentResult<Tuple<string, string>>)httpActionResult;
-            Assert.IsNotNullOrEmpty(result.Content.Item1);
-            Assert.IsNotNullOrEmpty(result.Content.Item2);
+            OkNegotiatedContentResult<SecurityKeyPair> result = (OkNegotiatedContentResult<SecurityKeyPair>)httpActionResult;
+            Assert.IsNotNullOrEmpty(result.Content.ApiKey);
+            Assert.IsNotNullOrEmpty(result.Content.SecretKey);
 
             httpActionResult = securityKeyPairController.GetUserSecurityKeys();
             OkNegotiatedContentResult<object> result1 = (OkNegotiatedContentResult<object>)httpActionResult;
@@ -159,9 +159,9 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             securityKeyPairController.Request.Headers.Add("Auth", essentials.ApiKey);
             CreateUserGeneratedSecurityKeyPair command = new CreateUserGeneratedSecurityKeyPair(securityKeyPermissions.ToArray(), "", "", "", false, false, false, "#1");
             IHttpActionResult httpActionResult = securityKeyPairController.CreateSecurityKey(command);
-            OkNegotiatedContentResult<Tuple<string, string>> result = (OkNegotiatedContentResult<Tuple<string, string>>)httpActionResult;
-            Assert.IsNotNullOrEmpty(result.Content.Item1);
-            Assert.IsNotNullOrEmpty(result.Content.Item2);
+            OkNegotiatedContentResult<SecurityKeyPair> result = (OkNegotiatedContentResult<SecurityKeyPair>)httpActionResult;
+            Assert.IsNotNullOrEmpty(result.Content.ApiKey);
+            Assert.IsNotNullOrEmpty(result.Content.SecretKey);
 
             httpActionResult = securityKeyPairController.GetUserSecurityKeys();
             OkNegotiatedContentResult<object> result1 = (OkNegotiatedContentResult<object>)httpActionResult;

@@ -75,8 +75,8 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         }
 
         [HttpPost]
-        [FilterIP]
         [Route("private/user/api/update")]
+        [FilterIP]
         [Authorize]
         public IHttpActionResult UpdateSecurityKey(UpdateUserGeneratedSecurityKeyPair command)
         {
@@ -178,7 +178,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [Route("private/user/api/details")]
+        [Route("private/user/api/list")]
         [FilterIP]
         [Authorize]
         public IHttpActionResult GetUserSecurityKeys()
@@ -272,6 +272,60 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
                 if (log.IsErrorEnabled)
                 {
                     log.Error("GetUserSecurityKeys Call Exception ", exception);
+                }
+                return InternalServerError();
+            }
+        }
+
+        /// <summary>
+        /// Get available permissions
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("private/user/api/delete")]
+        [FilterIP]
+        [Authorize]
+        public IHttpActionResult DeleteSecurityKeyPair(string keyDescription)
+        {
+            try
+            {
+                if (log.IsDebugEnabled)
+                {
+                    log.Debug("DeleteSecurityKeyPair Call Recevied, keyDescription:"+keyDescription);
+                }
+                _securityKeysApplicationService.DeleteSecurityKeyPair(keyDescription,
+                    HeaderParamUtility.GetApikey(Request));
+                return Ok();
+            }
+            catch (InvalidOperationException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("DeleteSecurityKeyPair Call Exception ", exception);
+                }
+                return BadRequest(exception.Message);
+            }
+            catch (InvalidCredentialException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("DeleteSecurityKeyPair Call Exception ", exception);
+                }
+                return BadRequest(exception.Message);
+            }
+            catch (InvalidDataException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("DeleteSecurityKeyPair Call Exception ", exception);
+                }
+                return BadRequest(exception.Message);
+            }
+            catch (Exception exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("DeleteSecurityKeyPair Call Exception ", exception);
                 }
                 return InternalServerError();
             }

@@ -50,6 +50,7 @@
     <Compile Include="AccessControlServices\LogoutApplicationService.cs" />
     <Compile Include="SecurityKeysServices\Commands\CreateUserGeneratedSecurityKeyPair.cs" />
     <Compile Include="SecurityKeysServices\Commands\UpdateUserGeneratedSecurityKeyPair.cs" />
+    <Compile Include="SecurityKeysServices\Representations\SecurityKeyPair.cs" />
     <Compile Include="SecurityKeysServices\Representations\SecurityKeyPermissionsRepresentation.cs" />
     <Compile Include="SecurityKeysServices\Representations\SecurityKeyRepresentation.cs" />
     <Compile Include="SecurityKeysServices\SecurityKeysApplicationService.cs" />
