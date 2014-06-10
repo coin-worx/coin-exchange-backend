@@ -125,6 +125,10 @@ namespace CoinExchange.Client.Console
             IdentityAccessClient client=new IdentityAccessClient(baseUrl);
             AccessControl control=new AccessControl(client,"123","bilal");
             control.Login();
+            System.Console.WriteLine(control.GetSecurityPairs());
+            PermissionRepresentation[] rep = control.ListPermissions();
+            rep[0].Allowed = true;
+            System.Console.WriteLine(control.CreateSecurityKeyPair("#1",rep));
         }
     }
 }

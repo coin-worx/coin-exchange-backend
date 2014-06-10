@@ -7,8 +7,13 @@ namespace CoinExchange.IdentityAccess.Application.SecurityKeysServices.Represent
     /// </summary>
     public class SecurityKeyPermissionsRepresentation
     {
-        public Permission Permission { get; private set; }
-        public bool Allowed { get; private set; }
+        public Permission Permission { get;  set; }
+        public bool Allowed { get;  set; }
+
+        public SecurityKeyPermissionsRepresentation()
+        {
+            
+        }
 
         /// <summary>
         /// Default constructor

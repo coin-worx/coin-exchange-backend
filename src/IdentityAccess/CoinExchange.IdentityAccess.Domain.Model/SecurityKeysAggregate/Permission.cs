@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,6 +11,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
     /// Permission
     /// </summary>
     [Serializable]
+    [DataContract]
     public class Permission
     {
         /// <summary>
@@ -34,11 +36,13 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         /// <summary>
         /// Permission ID
         /// </summary>
+        [DataMember]
         public string PermissionId { get; set; }
 
         /// <summary>
         /// Permission Name
         /// </summary>
+        [DataMember]
         public string PermissionName { get; set; }
     }
 }

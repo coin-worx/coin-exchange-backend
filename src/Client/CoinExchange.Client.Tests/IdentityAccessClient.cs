@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace CoinExchange.Client.Tests
@@ -47,6 +48,24 @@ namespace CoinExchange.Client.Tests
             string url = _baseUrl + "/admin/login";
             return HttpPostRequest(jsonObject, url);
         }
-        
+
+        public string KeyPairList()
+        {
+            string url = _baseUrl + "/private/user/api/list";
+            return HttpGetRequest(url);
+        }
+
+        public string ListPermissions()
+        {
+            string url = _baseUrl + "/private/user/api/permissions";
+            return HttpGetRequest(url);
+        }
+
+        public string CreateKey(string keyDescription, PermissionRepresentation[] permissions)
+        {
+            SecuritykeysPersmission persmission=new SecuritykeysPersmission("","","",false,false,false,keyDescription,permissions);
+            string url = _baseUrl + "/private/user/api/create";
+            return HttpPostRequest(persmission, url);
+        }
     }
 }
