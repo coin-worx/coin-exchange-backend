@@ -48,6 +48,11 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate.AuthenticationS
                         // incremented. Does not look like replay.
                         return true;
                     }
+                    else
+                    {
+                        Tuple<int, DateTime> tuple;
+                        nonces.TryRemove(nonce, out tuple);
+                    }
                 }
             }
 
