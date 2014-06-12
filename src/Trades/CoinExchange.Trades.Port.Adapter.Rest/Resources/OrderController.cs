@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Web.Http;
 using CoinExchange.Common.Domain.Model;
@@ -41,22 +40,11 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         [Route("orders/cancelorder")]
         [Authorize]
         [HttpPost]
-        public IHttpActionResult CancelOrder([FromBody]int intOrderId)
+        public IHttpActionResult CancelOrder([FromBody]string orderId)
         {
-            string orderId = string.Empty;
             if (log.IsDebugEnabled)
             {
-                log.Debug("Received integer OrderId: " + intOrderId);
-                try
-                {
-                    orderId = intOrderId.ToString(CultureInfo.InvariantCulture);
-                }
-                catch (Exception exception)
-                {
-                    return InternalServerError(exception);
-                }
-
-                log.Debug("Cancel Order Call: OrderId=" + orderId);
+                log.Debug("Cancel Order Call: OrderId="+orderId);
             }
             try
             {
