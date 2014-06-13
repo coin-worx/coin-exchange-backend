@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web.Http;
 using CoinExchange.Common.Domain.Model;
@@ -45,6 +46,64 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
             if (log.IsDebugEnabled)
             {
                 log.Debug("Cancel Order Call: OrderId="+orderId);
+            }
+            try
+            {
+                //get api key from header
+                var headers = Request.Headers;
+                string apikey = "";
+                IEnumerable<string> headerParams;
+                if (headers.TryGetValues("Auth", out headerParams))
+                {
+                    string[] auth = headerParams.ToList()[0].Split(',');
+                    apikey = auth[0];
+                }
+                if (log.IsDebugEnabled)
+                {
+                    log.Debug("Cancel Order Call: apikey=" + apikey);
+                }
+                if (orderId != string.Empty)
+                {
+                    return Ok(_orderApplicationService.CancelOrder(
+                        new CancelOrderCommand(new OrderId(orderId), new TraderId(Constants.GetTraderId(apikey)))));
+
+                }
+                return BadRequest();
+            }
+            catch (Exception exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Cancel Order Call Error", exception);
+                }
+                return InternalServerError(exception);
+            }
+        }
+
+        /// <summary>
+        /// Private call to cancel user orders
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        [Route("orders/cancelorderint")]
+        [Authorize]
+        [HttpPost]
+        public IHttpActionResult CancelOrderInt([FromBody]int orderIdInt)
+        {
+            string orderId = string.Empty;
+            if (log.IsDebugEnabled)
+            {
+                log.Debug("Integer OrderId Received: OrderIdInt = " + orderIdInt);
+                try
+                {
+                    orderId = orderIdInt.ToString(CultureInfo.InvariantCulture);
+                }
+                catch (Exception exception)
+                {
+                    return InternalServerError(exception);
+                }
+
+                log.Debug("Cancel Order Call: OrderId=" + orderId);
             }
             try
             {
