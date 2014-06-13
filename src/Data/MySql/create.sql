@@ -40,7 +40,7 @@ CREATE TABLE `ohlc` (
   `Volume` decimal(10,5) DEFAULT NULL,
   `CurrencyPair` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
 /*Table structure for table `order` */
 
@@ -119,7 +119,7 @@ CREATE TABLE `securitykeyspermission` (
   PRIMARY KEY (`Id`),
   KEY `FK_apikeypermission` (`PermissionId`),
   CONSTRAINT `FK_apikeypermission` FOREIGN KEY (`PermissionId`) REFERENCES `permission` (`PermissionId`)
-) ENGINE=InnoDB AUTO_INCREMENT=183 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=191 DEFAULT CHARSET=latin1;
 
 /*Table structure for table `tickerinfo` */
 
@@ -146,7 +146,7 @@ CREATE TABLE `tickerinfo` (
   `Last24HourVolume` decimal(10,5) DEFAULT NULL,
   `CurrencyPair` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
 
 /*Table structure for table `tier` */
 
@@ -164,8 +164,8 @@ DROP TABLE IF EXISTS `trade`;
 
 CREATE TABLE `trade` (
   `TradeId` varchar(100) NOT NULL,
-  `Price` decimal(10,0) DEFAULT NULL,
-  `Volume` decimal(10,0) DEFAULT NULL,
+  `Price` decimal(10,5) DEFAULT NULL,
+  `Volume` decimal(10,5) DEFAULT NULL,
   `ExecutionDateTime` datetime DEFAULT NULL,
   `CurrencyPair` varchar(50) DEFAULT NULL,
   `BuyOrderId` varchar(100) DEFAULT NULL,
@@ -208,7 +208,7 @@ CREATE TABLE `user` (
   `DateOfBirth` date DEFAULT NULL,
   PRIMARY KEY (`Id`),
   UNIQUE KEY `NewIndex1` (`UserName`,`Email`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 
 /*Table structure for table `userdocument` */
 
@@ -232,7 +232,7 @@ CREATE TABLE `usertierlevelstatus` (
   `Status` varchar(50) DEFAULT NULL,
   `UserId` int(11) DEFAULT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

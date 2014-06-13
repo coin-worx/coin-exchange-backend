@@ -14,6 +14,7 @@
     <property name="MappingAssemblies">
       <list>
         <value>CoinExchange.IdentityAccess.Infrastructure.Persistence</value>
+        <value>CoinExchange.Trades.ReadModel.Persistence</value>
       </list>
     </property>
     

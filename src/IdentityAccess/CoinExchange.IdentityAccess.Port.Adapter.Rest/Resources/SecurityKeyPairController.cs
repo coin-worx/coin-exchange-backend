@@ -11,6 +11,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
     /// <summary>
     /// Controller for dealing with all the security keys services
     /// </summary>
+    [RoutePrefix("v1")]
     public class SecurityKeyPairController:ApiController
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger

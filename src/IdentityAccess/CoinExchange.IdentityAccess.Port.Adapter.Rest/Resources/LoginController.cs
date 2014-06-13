@@ -12,6 +12,7 @@ using CoinExchange.IdentityAccess.Port.Adapter.Rest.DTO;
 
 namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
 {
+    [RoutePrefix("v1")]
     public class LoginController:ApiController
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger

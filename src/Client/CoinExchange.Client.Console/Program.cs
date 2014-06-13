@@ -14,9 +14,10 @@ namespace CoinExchange.Client.Console
         static void Main(string[] args)
         {
             string baseUrl = "http://rockblanc.cloudapp.net/dev";
-            //baseUrl = "http://localhost:51780";
+            //baseUrl = "http://localhost:51780/v1";
             ApiClient client = new ApiClient(baseUrl);
-            System.Console.WriteLine(client.QueryOrderInfo("44a12160-afd5-48ce-8440-454528c21151"));
+            //System.Console.WriteLine(client.QueryTrades("6e8b5195-0e7f-402f-87e7-80eb92a96c85"));
+            Scenario1(client);
             //ScenarioResults(client);
             //System.Console.WriteLine(client.GetTradeHistory("",""));
            // Login(baseUrl);
@@ -126,10 +127,10 @@ namespace CoinExchange.Client.Console
             IdentityAccessClient client=new IdentityAccessClient(baseUrl);
             AccessControl control=new AccessControl(client,"123","bilal");
             control.Login();
-            System.Console.WriteLine(control.GetSecurityPairs());
-            PermissionRepresentation[] rep = control.ListPermissions();
-            rep[0].Allowed = true;
-            System.Console.WriteLine(control.CreateSecurityKeyPair("#1",rep));
+            //System.Console.WriteLine(control.GetSecurityPairs());
+            //PermissionRepresentation[] rep = control.ListPermissions();
+            //rep[0].Allowed = true;
+            //System.Console.WriteLine(control.CreateSecurityKeyPair("#1",rep));
         }
     }
 }

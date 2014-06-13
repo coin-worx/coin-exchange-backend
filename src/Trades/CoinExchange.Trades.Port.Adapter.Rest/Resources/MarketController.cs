@@ -9,6 +9,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
     /// <summary>
     /// Market Data Service class rest expose
     /// </summary>
+    [RoutePrefix("v1")]
     public class MarketController : ApiController
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger

@@ -20,6 +20,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
     /// <summary>
     /// Deals with user tier levels status fucntionality
     /// </summary>
+    [RoutePrefix("v1")]
     public class TierController:ApiController
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger

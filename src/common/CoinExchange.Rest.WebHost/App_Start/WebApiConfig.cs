@@ -29,8 +29,11 @@ namespace CoinExchange.Rest.WebHost.App_Start
             );
 
             //return Json format
-            var appXmlType = config.Formatters.XmlFormatter.SupportedMediaTypes.FirstOrDefault(t => t.MediaType == "application/json");
-            config.Formatters.XmlFormatter.SupportedMediaTypes.Remove(appXmlType);
+            //var appXmlType = config.Formatters.XmlFormatter.SupportedMediaTypes.FirstOrDefault(t => t.MediaType == "application/json");
+            //config.Formatters.XmlFormatter.SupportedMediaTypes.Remove(appXmlType);
+            var json = config.Formatters.JsonFormatter;
+            json.SerializerSettings.PreserveReferencesHandling = Newtonsoft.Json.PreserveReferencesHandling.None;
+            config.Formatters.Remove(config.Formatters.XmlFormatter);
 
             config.DependencyResolver = new SpringDependencyResolver(ContextRegistry.GetContext());
             ISecurityKeysRepository securityKeysRepository =
@@ -40,8 +43,8 @@ namespace CoinExchange.Rest.WebHost.App_Start
                 (IIdentityAccessPersistenceRepository)
                     ContextRegistry.GetContext()["IdentityAccessPersistenceRepository"];
             //Add authentication handler
-            config.MessageHandlers.Add(new AuthenticationHandler(new UserAuthenticationService(userRepository, 
-                securityKeysRepository,_persistenceRepository)));
+            config.MessageHandlers.Add(new AuthenticationHandler(new UserAuthenticationService(userRepository,
+                securityKeysRepository, _persistenceRepository)));
             
             log.Info("Application Initialized.");
         }

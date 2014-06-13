@@ -145,6 +145,10 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate.AuthenticationS
             {
                 return securityKeysPair.ValidatePermission(PermissionsConstant.Place_Order);
             }
+            else if (authenticateCommand.Uri.Contains("trades/tradehistory") || authenticateCommand.Uri.Contains("trades/querytrades") || authenticateCommand.Uri.Contains("orders/queryorders"))
+            {
+                return securityKeysPair.ValidatePermission(PermissionsConstant.Query_Open_Orders) || securityKeysPair.ValidatePermission(PermissionsConstant.Query_Closed_Orders);
+            }
             throw new InvalidOperationException("Permission not allowed for this operation.");
         }
 

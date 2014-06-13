@@ -15,6 +15,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
     /// <summary>
     /// Deals with regitration and account creation(sign up)
     /// </summary>
+    [RoutePrefix("v1")]
     public class RegistrationController:ApiController
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger

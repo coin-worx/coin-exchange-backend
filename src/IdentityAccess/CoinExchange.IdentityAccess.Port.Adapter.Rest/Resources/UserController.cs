@@ -18,6 +18,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
     /// <summary>
     /// Deals with all services needed for user functionality
     /// </summary>
+    [RoutePrefix("v1")]
     public class UserController:ApiController
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger

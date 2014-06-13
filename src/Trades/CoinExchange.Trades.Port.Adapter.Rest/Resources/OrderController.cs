@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 using CoinExchange.Common.Domain.Model;
+using CoinExchange.Common.Services;
 using CoinExchange.Trades.Application.OrderServices;
 using CoinExchange.Trades.Application.OrderServices.Commands;
 using CoinExchange.Trades.Application.OrderServices.Representation;
@@ -16,20 +17,23 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
     /// <summary>
     /// Handles HTTP requests related to Orders
     /// </summary>
+    [RoutePrefix("v1")]
     public class OrderController : ApiController
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger
         (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private IOrderApplicationService _orderApplicationService;
         private IOrderQueryService _orderQueryService;
+        private IApiKeyInfoAccess _apiKeyInfoAccess;
 
         /// <summary>
         /// Default Constructor
         /// </summary>
-        public OrderController(IOrderApplicationService orderApplicationService, IOrderQueryService orderQueryService)
+        public OrderController(IOrderApplicationService orderApplicationService, IOrderQueryService orderQueryService,IApiKeyInfoAccess apiKeyInfoAccess)
         {
             _orderApplicationService = orderApplicationService;
             _orderQueryService = orderQueryService;
+            _apiKeyInfoAccess = apiKeyInfoAccess;
         }
 
         /// <summary>
@@ -63,8 +67,9 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                 }
                 if (orderId != string.Empty)
                 {
+                    TraderId traderId=new TraderId(_apiKeyInfoAccess.GetUserIdFromApiKey(apikey).ToString());
                     return Ok(_orderApplicationService.CancelOrder(
-                        new CancelOrderCommand(new OrderId(orderId), new TraderId(Constants.GetTraderId(apikey)))));
+                        new CancelOrderCommand(new OrderId(orderId), traderId)));
 
                 }
                 return BadRequest();
@@ -110,11 +115,12 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                     {
                         log.Debug("Createl Order Call: ApiKey=" + apikey);
                     }
+                    TraderId traderId = new TraderId(_apiKeyInfoAccess.GetUserIdFromApiKey(apikey).ToString());
                     return
                         Ok(
                             _orderApplicationService.CreateOrder(new CreateOrderCommand(order.Price, order.Type,
                                 // ToDo: Need to perform check on the API key and then provide the corresponding TraderId
-                                order.Side, order.Pair,order.Volume, Constants.GetTraderId(apikey))));
+                                order.Side, order.Pair,order.Volume,traderId.Id)));
                 }
                 return BadRequest();
             }
@@ -160,7 +166,8 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                 {
                     log.Debug("Query Open Orders Call: ApiKey=" + apikey);
                 }
-                object value = _orderQueryService.GetOpenOrders(new TraderId(Constants.GetTraderId(apikey)),
+                TraderId traderId = new TraderId(_apiKeyInfoAccess.GetUserIdFromApiKey(apikey).ToString());
+                object value = _orderQueryService.GetOpenOrders(traderId,
                     Convert.ToBoolean(includeTrades));
 
                 if (value is List<OrderRepresentation>)
@@ -217,7 +224,8 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                 {
                     log.Debug("Query Closed Orders Call: ApiKey=" + apikey);
                 }
-                object orders = _orderQueryService.GetClosedOrders(new TraderId(Constants.GetTraderId(apikey)),
+                TraderId traderId = new TraderId(_apiKeyInfoAccess.GetUserIdFromApiKey(apikey).ToString());
+                object orders = _orderQueryService.GetClosedOrders(traderId,
                     closedOrdersParams.IncludeTrades,closedOrdersParams.StartTime,
                     closedOrdersParams.EndTime);
 
@@ -267,7 +275,8 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                 {
                     log.Debug("Query Orders Call: ApiKey=" + apikey);
                 }
-                object orders = _orderQueryService.GetOrderById(new TraderId(Constants.GetTraderId(apikey)),new OrderId(orderId) );
+                TraderId traderId = new TraderId(_apiKeyInfoAccess.GetUserIdFromApiKey(apikey).ToString());
+                object orders = _orderQueryService.GetOrderById(traderId,new OrderId(orderId) );
                 return Ok(orders);
             }
             catch (Exception exception)
