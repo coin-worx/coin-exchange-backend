@@ -12,11 +12,12 @@ namespace CoinExchange.Client.Console
         static void Main(string[] args)
         {
             string baseUrl = "http://rockblanc.cloudapp.net/dev";
-            baseUrl = "http://localhost:51780";
+            //baseUrl = "http://localhost:51780";
             ApiClient client=new ApiClient(baseUrl);
             //Scenario1(client);
             //ScenarioResults(client);
-            System.Console.WriteLine(client.CancelOrder("d2134ee4-0bfd-46db-aeda-76c725187909"));
+            //System.Console.WriteLine(client.CancelOrder("d2134ee4-0bfd-46db-aeda-76c725187909"));
+            System.Console.WriteLine(client.CreateOrder("XBTUSD", "limit", "buy", 0, 250));
            System.Console.ReadKey();
         }
 

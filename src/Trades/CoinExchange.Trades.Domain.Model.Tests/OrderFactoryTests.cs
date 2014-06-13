@@ -87,6 +87,18 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         }
 
         /// <summary>
+        /// To verify sell side limit order created
+        /// </summary>
+        [Test]
+        [Category("Unit")]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void CreateLimitOrder_IfPriceIs0_InvalidOperationExceptionWillBeThrown()
+        {
+            Order order = OrderFactory.CreateOrder("1234", "XBTUSD", "limit", "sell", 5, 0,
+                new StubbedOrderIdGenerator());
+        }
+
+        /// <summary>
         /// To verify order volume is greater than 0
         /// </summary>
         [Test]

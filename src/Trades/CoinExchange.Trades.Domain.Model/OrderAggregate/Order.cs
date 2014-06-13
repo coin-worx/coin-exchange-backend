@@ -78,6 +78,10 @@ namespace CoinExchange.Trades.Domain.Model.OrderAggregate
         {
             OrderId = orderId;
             CurrencyPair = pair;
+            if (orderType == OrderType.Limit)
+            {
+                AssertionConcern.AssertGreaterThanZero(price.Value,"Limit order price must be greater than 0");
+            }
             Price = price;
             OrderSide = orderSide;
             OrderType = orderType;

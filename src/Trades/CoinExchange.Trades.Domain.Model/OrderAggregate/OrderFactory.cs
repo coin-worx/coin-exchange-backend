@@ -19,13 +19,13 @@ namespace CoinExchange.Trades.Domain.Model.OrderAggregate
             if (side.Equals(Constants.ORDER_SIDE_BUY, StringComparison.CurrentCultureIgnoreCase) &&
                 type.Equals(Constants.ORDER_TYPE_MARKET, StringComparison.CurrentCultureIgnoreCase))
             {
-                Price price = new Price(limitPrice);
+                Price price = new Price(0);
                 order = BuyMarketOrder(orderId, currencyPair, OrderType.Market, orderVolume, price, id);                
             }
             else if (side.Equals(Constants.ORDER_SIDE_SELL, StringComparison.CurrentCultureIgnoreCase) &&
                      type.Equals(Constants.ORDER_TYPE_MARKET, StringComparison.CurrentCultureIgnoreCase))
             {
-                Price price = new Price(limitPrice);
+                Price price = new Price(0);
                 order = SellMarketOrder(orderId, currencyPair, OrderType.Market, orderVolume, price, id);               
             }
             else if (side.Equals(Constants.ORDER_SIDE_BUY, StringComparison.CurrentCultureIgnoreCase) &&
