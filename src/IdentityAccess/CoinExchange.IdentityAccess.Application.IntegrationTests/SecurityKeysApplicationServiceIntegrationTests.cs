@@ -56,11 +56,12 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             ISecurityKeysApplicationService registrationService =
                 (ISecurityKeysApplicationService)_applicationContext["SecurityKeysApplicationService"];
 
-            Tuple<ApiKey, SecretKey> securityKeys = registrationService.CreateSystemGeneratedKey(1);
+            Tuple<ApiKey, SecretKey,DateTime> securityKeys = registrationService.CreateSystemGeneratedKey(1);
 
             Assert.IsNotNull(securityKeys);
             Assert.IsNotNull(securityKeys.Item1);
             Assert.IsNotNull(securityKeys.Item2);
+            Assert.IsNotNull(securityKeys.Item3);
         }
 
         [Test]

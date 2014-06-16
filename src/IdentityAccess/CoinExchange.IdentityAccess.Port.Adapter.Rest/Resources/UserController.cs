@@ -187,6 +187,54 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
             }
         }
 
+        [HttpGet]
+        [Route("private/user/lastlogin")]
+        [FilterIP]
+        [Authorize]
+        public IHttpActionResult LastLogin()
+        {
+            try
+            {
+                if (log.IsDebugEnabled)
+                {
+                    log.Debug("LastLogin Call Recevied");
+                }
+               return Ok( _userApplicationService.LastLogin(HeaderParamUtility.GetApikey(Request)));
+            }
+            catch (InvalidOperationException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("LastLogin Call Exception ", exception);
+                }
+                return BadRequest(exception.Message);
+            }
+            catch (InvalidCredentialException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("LastLogin Call Exception ", exception);
+                }
+                return BadRequest(exception.Message);
+            }
+            catch (ArgumentNullException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("LastLogin Call Exception ", exception);
+                }
+                return BadRequest(exception.Message);
+            }
+            catch (Exception exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("LastLogin Call Exception ", exception);
+                }
+                return InternalServerError();
+            }
+        }
+
         [HttpPost]
         [Route("admin/user/forgotusername")]
         [FilterIP]

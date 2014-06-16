@@ -439,6 +439,57 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
 
         [Test]
         [Category("Integration")]
+        public void GetLastLoginOfTheUser_IfTheCallGetsAuthenticated_LastLoginWillBeReturned()
+        {
+            // Register an account
+            RegistrationController registrationController = (RegistrationController)_applicationContext["RegistrationController"];
+            string email = "waqasshah047@gmail.com";
+            string username = "Bane";
+            string password = "iwearamask";
+            IHttpActionResult httpActionResult = registrationController.Register(new SignUpParam(email, username,
+                password, "Pakistan", TimeZone.CurrentTimeZone, ""));
+            OkNegotiatedContentResult<string> okResponseMessage = (OkNegotiatedContentResult<string>)httpActionResult;
+            string activationKey = okResponseMessage.Content;
+            Assert.IsNotNullOrEmpty(activationKey);
+
+            // Activate Account
+            UserController userController = (UserController)_applicationContext["UserController"];
+            httpActionResult = userController.ActivateUser(new UserActivationParam(username, password, activationKey));
+            OkNegotiatedContentResult<string> okResponseMessage1 = (OkNegotiatedContentResult<string>)httpActionResult;
+            Assert.AreEqual(okResponseMessage1.Content, "activated");
+
+            // Confirm the current user settings
+            IUserRepository userRepository = (IUserRepository)_applicationContext["UserRepository"];
+            User userByUserName = userRepository.GetUserByUserName(username);
+            Assert.IsNotNull(userByUserName);
+            IPasswordEncryptionService passwordEncryptionService = (IPasswordEncryptionService)_applicationContext["PasswordEncryptionService"];
+            Assert.AreEqual(email, userByUserName.Email);
+            Assert.IsTrue(passwordEncryptionService.VerifyPassword(password, userByUserName.Password));
+            Assert.AreEqual(Language.English, userByUserName.Language);
+            Assert.AreEqual(TimeZone.CurrentTimeZone.StandardName, userByUserName.TimeZone.StandardName);
+            Assert.AreEqual(new TimeSpan(0, 0, 10, 0), userByUserName.AutoLogout);
+            Assert.IsNull(userByUserName.ForgotPasswordCode);
+            Assert.IsNull(userByUserName.ForgotPasswordCodeExpiration);
+            Assert.AreEqual(0, userByUserName.ForgottenPasswordCodes.Length);
+
+            // Login
+            LoginController loginController = (LoginController)_applicationContext["LoginController"];
+            httpActionResult = loginController.Login(new LoginParams(username, password));
+            OkNegotiatedContentResult<UserValidationEssentials> keys =
+                (OkNegotiatedContentResult<UserValidationEssentials>)httpActionResult;
+            Assert.IsNotNullOrEmpty(keys.Content.ApiKey);
+            Assert.IsNotNullOrEmpty(keys.Content.SecretKey);
+            Assert.IsNotNullOrEmpty(keys.Content.SessionLogoutTime.ToString());
+            userController.Request = new HttpRequestMessage(HttpMethod.Post, "");
+            userController.Request.Headers.Add("Auth", keys.Content.ApiKey);
+            httpActionResult = userController.LastLogin();
+            OkNegotiatedContentResult<DateTime> lastLogin = (OkNegotiatedContentResult<DateTime>) httpActionResult;
+            Assert.AreEqual(keys.Content.LastLogin.ToString(),lastLogin.Content.ToString());
+
+        }
+
+        [Test]
+        [Category("Integration")]
         public void ChangeSettingsFailTest_ChecksThatUserLogsInThenLogsOutAndThenTriesToChangeSettingsAgainUsingTheSameApiKeyThenExceptionShouldBeThrown_VerifiesAndAssertsTheReturnedValueAndQueriesDatabase()
         {
             string username = "user";

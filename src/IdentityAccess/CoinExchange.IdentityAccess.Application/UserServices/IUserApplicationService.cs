@@ -69,5 +69,12 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
         /// <param name="apiKey"></param>
         /// <returns></returns>
         AccountSettingsRepresentation GetAccountSettings(string apiKey);
+
+        /// <summary>
+        /// Get last login of user
+        /// </summary>
+        /// <param name="apiKey"></param>
+        /// <returns></returns>
+        DateTime LastLogin(string apiKey);
     }
 }

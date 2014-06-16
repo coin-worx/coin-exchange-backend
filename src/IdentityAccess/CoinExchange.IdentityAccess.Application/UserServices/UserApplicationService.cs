@@ -390,5 +390,15 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
                 throw new InstanceNotFoundException("No SecurityKeysPair instance found for the given API key");
             }
         }
+
+        /// <summary>
+        /// Return last login of user.
+        /// </summary>
+        /// <param name="apiKey"></param>
+        /// <returns></returns>
+        public DateTime LastLogin(string apiKey)
+        {
+            return _securityKeysRepository.GetByApiKey(apiKey).CreationDateTime;
+        }
     }
 }

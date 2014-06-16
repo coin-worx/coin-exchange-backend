@@ -14,7 +14,7 @@ namespace CoinExchange.IdentityAccess.Application.SecurityKeysServices
         /// Generates new key
         /// </summary>
         /// <returns></returns>
-        Tuple<ApiKey, SecretKey> CreateSystemGeneratedKey(int userId);
+        Tuple<ApiKey, SecretKey, DateTime> CreateSystemGeneratedKey(int userId);
 
         /// <summary>
         /// Item 1=Api Key

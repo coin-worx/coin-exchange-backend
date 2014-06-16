@@ -81,6 +81,27 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
 
         [Test]
         [Category("Integration")]
+        public void GetLastLogin_IfTheApiKeyIsValid_LastLoginWillBeReturned()
+        {
+            IUserApplicationService userApplicationService = (IUserApplicationService)_applicationContext["UserApplicationService"];
+            IRegistrationApplicationService registrationApplicationService = (IRegistrationApplicationService)_applicationContext["RegistrationApplicationService"];
+            ILoginApplicationService loginApplicationService = (ILoginApplicationService)_applicationContext["LoginApplicationService"];
+
+            IUserRepository userRepository = (IUserRepository)_applicationContext["UserRepository"];
+
+            string username = "linkinpark";
+            string activatioNKey = registrationApplicationService.CreateAccount(new SignupUserCommand("linkinpark@rock.com", "linkinpark", "burnitdown", "USA", TimeZone.CurrentTimeZone, ""));
+            ManualResetEvent manualResetEvent = new ManualResetEvent(false);
+            userApplicationService.ActivateAccount(new ActivationCommand(activatioNKey, username, "burnitdown"));
+            manualResetEvent.WaitOne(6000);
+            UserValidationEssentials validationEssentials = loginApplicationService.Login(new LoginCommand(username, "burnitdown"));
+
+            DateTime LastLogin = userApplicationService.LastLogin(validationEssentials.ApiKey);
+            Assert.AreEqual(LastLogin.ToString(),validationEssentials.LastLogin.ToString());
+        }
+
+        [Test]
+        [Category("Integration")]
         [ExpectedException(typeof(InvalidCredentialException))]
         public void ChangePasswordFailTest_ChecksIfThePasswordIsNotChangedIfOldPasswordisIncorrect_VerifiesThroughTheReturnedValue()
         {
@@ -134,8 +155,8 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             User userBeforePasswordChange = userRepository.GetUserByUserName("linkinpark");
             string passwordBeforeChange = userBeforePasswordChange.Password;
 
-            UserValidationEssentials validationEssentials2 = new UserValidationEssentials(new Tuple<ApiKey, SecretKey>(
-                new ApiKey(validationEssentials.ApiKey + "1"), new SecretKey(validationEssentials.SecretKey)), validationEssentials.SessionLogoutTime);
+            UserValidationEssentials validationEssentials2 = new UserValidationEssentials(new Tuple<ApiKey, SecretKey,DateTime>(
+                new ApiKey(validationEssentials.ApiKey + "1"), new SecretKey(validationEssentials.SecretKey),DateTime.Now), validationEssentials.SessionLogoutTime);
             // Give the wrong API Key
             userApplicationService.ChangePassword(new ChangePasswordCommand(validationEssentials.ApiKey + 1, "burnitdown", "burnitdowntwice"));
             User userAfterPasswordChange = userRepository.GetUserByUserName("linkinpark");
