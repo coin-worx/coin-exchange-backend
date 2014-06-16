@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Remoting;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using CoinExchange.Trades.Domain.Model.OrderAggregate;
 using CoinExchange.Trades.Domain.Model.TradeAggregate;
@@ -73,6 +74,40 @@ namespace CoinExchange.Trades.ReadModel.Persistence.Tests
         }
 
         [Test]
+        public void GetRecentTrades_IfRecentTradesRequestArrives_TradesShouldBeSortedbyDateTimeDesc()
+        {
+            Order buyOrder = OrderFactory.CreateOrder("1234", "XBTUSD", "market", "buy", 5, 0,
+               new StubbedOrderIdGenerator());
+            Order sellOrder = OrderFactory.CreateOrder("1234", "XBTUSD", "market", "sell", 5, 0,
+               new StubbedOrderIdGenerator());
+            ManualResetEvent resetEvent=new ManualResetEvent(false);
+            //Trade trade=new Trade("XBTUSD",new Price(100),new Volume(10),DateTime.Now,buyOrder,sellOrder);
+            Trade trade = TradeFactory.GenerateTrade("XBTUSD", new Price(100), new Volume(10), buyOrder, sellOrder);
+            resetEvent.WaitOne(2000);
+            resetEvent.Reset();
+            Trade trade1 = TradeFactory.GenerateTrade("XBTUSD", new Price(100), new Volume(10), buyOrder, sellOrder);
+            resetEvent.WaitOne(2000);
+            resetEvent.Reset();
+            Trade trade2 = TradeFactory.GenerateTrade("XBTUSD", new Price(100), new Volume(10), buyOrder, sellOrder);
+            resetEvent.WaitOne(2000);
+            resetEvent.Reset();
+            TradeReadModel model = ReadModelAdapter.GetTradeReadModel(trade);
+            _persistanceRepository.SaveOrUpdate(model);
+            TradeReadModel model1 = ReadModelAdapter.GetTradeReadModel(trade1);
+            _persistanceRepository.SaveOrUpdate(model1);
+            TradeReadModel model2 = ReadModelAdapter.GetTradeReadModel(trade2);
+            _persistanceRepository.SaveOrUpdate(model2);
+            IList<object> getTrades = _tradeRepository.GetRecentTrades("", "XBTUSD");
+            Assert.NotNull(getTrades);
+            Assert.AreEqual(getTrades.Count, 3);
+            object[] received = getTrades[0] as object[];
+            object[] received1 = getTrades[1] as object[];
+            object[] received2 = getTrades[2] as object[];
+            Assert.True(Convert.ToDateTime(received[0])> Convert.ToDateTime(received1[0]));
+            Assert.True(Convert.ToDateTime(received1[0]) > Convert.ToDateTime(received2[0]));
+        }
+
+        [Test]
         public void GetTradesOfTrader_IfTraderIdIsProvided_AllTradesOfTraderShouldReturn()
         {
             Order buyOrder = OrderFactory.CreateOrder("1234", "XBTUSD", "market", "buy", 5, 0,
@@ -93,6 +128,39 @@ namespace CoinExchange.Trades.ReadModel.Persistence.Tests
             Assert.AreEqual(received[4],"XBTUSD");
         }
 
+        [Test]
+        public void GetTradesOfTrader_IfTraderIdIsProvided_AllTradesOfTraderShouldBeDateTimeSortedDesc()
+        {
+            Order buyOrder = OrderFactory.CreateOrder("1234", "XBTUSD", "market", "buy", 5, 0,
+                new StubbedOrderIdGenerator());
+            Order sellOrder = OrderFactory.CreateOrder("1234", "XBTUSD", "market", "sell", 5, 0,
+               new StubbedOrderIdGenerator());
+            ManualResetEvent resetEvent = new ManualResetEvent(false);
+            //Trade trade=new Trade("XBTUSD",new Price(100),new Volume(10),DateTime.Now,buyOrder,sellOrder);
+            Trade trade = TradeFactory.GenerateTrade("XBTUSD", new Price(100), new Volume(10), buyOrder, sellOrder);
+            resetEvent.WaitOne(2000);
+            resetEvent.Reset();
+            Trade trade1 = TradeFactory.GenerateTrade("XBTUSD", new Price(100), new Volume(10), buyOrder, sellOrder);
+            resetEvent.WaitOne(2000);
+            resetEvent.Reset();
+            Trade trade2 = TradeFactory.GenerateTrade("XBTUSD", new Price(100), new Volume(10), buyOrder, sellOrder);
+            resetEvent.WaitOne(2000);
+            resetEvent.Reset();
+            TradeReadModel model = ReadModelAdapter.GetTradeReadModel(trade);
+            _persistanceRepository.SaveOrUpdate(model);
+            TradeReadModel model1 = ReadModelAdapter.GetTradeReadModel(trade1);
+            _persistanceRepository.SaveOrUpdate(model1);
+            TradeReadModel model2 = ReadModelAdapter.GetTradeReadModel(trade2);
+            _persistanceRepository.SaveOrUpdate(model2);
+            IList<object> getTrades = _tradeRepository.GetTraderTradeHistory("1234");
+            Assert.NotNull(getTrades);
+            Assert.AreEqual(getTrades.Count, 3);
+            object[] received = getTrades[0] as object[];
+            object[] received1 = getTrades[1] as object[];
+            object[] received2 = getTrades[2] as object[];
+            Assert.True(Convert.ToDateTime(received[1]) > Convert.ToDateTime(received1[1]));
+            Assert.True(Convert.ToDateTime(received1[1]) > Convert.ToDateTime(received2[1]));
+        }
         private void AssertAreEqual(TradeReadModel expected, TradeReadModel actual)
         {
             Assert.AreEqual(expected.TradeId, actual.TradeId);

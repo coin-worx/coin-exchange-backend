@@ -18,7 +18,7 @@ namespace CoinExchange.Trades.ReadModel.Persistence.NHibernate
         [Transaction(ReadOnly = true)]
         public IList<object> GetRecentTrades(string lastId, string pair)
         {
-            return CurrentSession.QueryOver<TradeReadModel>().Select(t => t.ExecutionDateTime, t => t.Price, t => t.Volume).OrderBy(x=>x.ExecutionDateTime).Asc.List<object>();
+            return CurrentSession.QueryOver<TradeReadModel>().Select(t => t.ExecutionDateTime, t => t.Price, t => t.Volume).OrderBy(x=>x.ExecutionDateTime).Desc.List<object>();
         }
 
         //[Transaction(ReadOnly = true)]
@@ -38,7 +38,7 @@ namespace CoinExchange.Trades.ReadModel.Persistence.NHibernate
                                                                   t => t.Volume, t => t.CurrencyPair)
                     .Where(trade => trade.BuyTraderId == traderId || trade.SellTraderId == traderId)
                     .OrderBy(x => x.ExecutionDateTime)
-                    .Asc
+                    .Desc
                     .List<object>();
         }
 

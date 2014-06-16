@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using CoinExchange.Trades.Domain.Model.OrderAggregate;
 using CoinExchange.Trades.Infrastructure.Services;
@@ -68,6 +69,35 @@ namespace CoinExchange.Trades.ReadModel.Persistence.Tests
         }
 
         [Test]
+        public void GetOpenOrders_IfTraderIdIsProvided_RetrievedOrdersShouldBeDateTimeSortedAsDescending()
+        {
+            ManualResetEvent resetEvent=new ManualResetEvent(false);
+            Order order = OrderFactory.CreateOrder("100", "XBTUSD", "limit", "buy", 5, 10,
+               new StubbedOrderIdGenerator());
+            resetEvent.WaitOne(2000);
+            resetEvent.Reset();
+            Order order1 = OrderFactory.CreateOrder("100", "XBTUSD", "limit", "buy", 5, 10,
+               new StubbedOrderIdGenerator());
+            resetEvent.WaitOne(2000);
+            resetEvent.Reset();
+            Order order2 = OrderFactory.CreateOrder("100", "XBTUSD", "limit", "buy", 5, 10,
+               new StubbedOrderIdGenerator());
+            resetEvent.WaitOne(2000);
+            resetEvent.Reset();
+            OrderReadModel model = ReadModelAdapter.GetOrderReadModel(order);
+            _persistanceRepository.SaveOrUpdate(model);
+            OrderReadModel model1 = ReadModelAdapter.GetOrderReadModel(order1);
+            _persistanceRepository.SaveOrUpdate(model1);
+            OrderReadModel model2 = ReadModelAdapter.GetOrderReadModel(order2);
+            _persistanceRepository.SaveOrUpdate(model2);
+            IList<OrderReadModel> getReadModel = _orderRepository.GetOpenOrders("100");
+            Assert.NotNull(getReadModel);
+            Assert.AreEqual(getReadModel.Count, 3);
+            Assert.True(getReadModel[0].DateTime>getReadModel[1].DateTime);
+            Assert.True(getReadModel[1].DateTime > getReadModel[2].DateTime);
+        }
+
+        [Test]
         public void GetClosedOrders_IfTraderIdIsProvided_ItShouldRetireveAllClosedOrdersOfTrader()
         {
             Order order = OrderFactory.CreateOrder("999", "XBTUSD", "limit", "buy", 5, 10,
@@ -81,6 +111,39 @@ namespace CoinExchange.Trades.ReadModel.Persistence.Tests
             Assert.AreEqual(getReadModel.Count, 1);
             AssertAreEqual(getReadModel[0], model);
         }
+
+        [Test]
+        public void GetClosedOrders_IfTraderIdIsProvided_RetrievedOrdersShouldBeDateTimeSortedAsDescending()
+        {
+            ManualResetEvent resetEvent = new ManualResetEvent(false);
+            Order order = OrderFactory.CreateOrder("100", "XBTUSD", "limit", "buy", 5, 10,
+               new StubbedOrderIdGenerator());
+            order.OrderState=OrderState.Complete;
+            resetEvent.WaitOne(2000);
+            resetEvent.Reset();
+            Order order1 = OrderFactory.CreateOrder("100", "XBTUSD", "limit", "buy", 5, 10,
+               new StubbedOrderIdGenerator());
+            order1.OrderState = OrderState.Complete;
+            resetEvent.WaitOne(2000);
+            resetEvent.Reset();
+            Order order2 = OrderFactory.CreateOrder("100", "XBTUSD", "limit", "buy", 5, 10,
+               new StubbedOrderIdGenerator());
+            order2.OrderState = OrderState.Complete;
+            resetEvent.WaitOne(2000);
+            resetEvent.Reset();
+            OrderReadModel model = ReadModelAdapter.GetOrderReadModel(order);
+            _persistanceRepository.SaveOrUpdate(model);
+            OrderReadModel model1 = ReadModelAdapter.GetOrderReadModel(order1);
+            _persistanceRepository.SaveOrUpdate(model1);
+            OrderReadModel model2 = ReadModelAdapter.GetOrderReadModel(order2);
+            _persistanceRepository.SaveOrUpdate(model2);
+            IList<OrderReadModel> getReadModel = _orderRepository.GetClosedOrders("100");
+            Assert.NotNull(getReadModel);
+            Assert.AreEqual(getReadModel.Count, 3);
+            Assert.True(getReadModel[0].DateTime > getReadModel[1].DateTime);
+            Assert.True(getReadModel[1].DateTime > getReadModel[2].DateTime);
+        }
+
 
         private void AssertAreEqual(OrderReadModel expected, OrderReadModel actual)
         {
