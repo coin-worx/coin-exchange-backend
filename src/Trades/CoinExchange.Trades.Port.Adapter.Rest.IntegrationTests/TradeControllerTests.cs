@@ -144,14 +144,14 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
                 newObjectsList.Add(objects);
             }
 
-            Assert.AreEqual(493, newObjectsList[0][1]);
-            Assert.AreEqual(1000, newObjectsList[0][2]);
+            Assert.AreEqual(493, newObjectsList[2][1]);
+            Assert.AreEqual(1000, newObjectsList[2][2]);
 
             Assert.AreEqual(492, newObjectsList[1][1]);
             Assert.AreEqual(300, newObjectsList[1][2]);
 
-            Assert.AreEqual(491, newObjectsList[2][1]);
-            Assert.AreEqual(100, newObjectsList[2][2]);
+            Assert.AreEqual(491, newObjectsList[0][1]);
+            Assert.AreEqual(100, newObjectsList[0][2]);
 
             InputDisruptorPublisher.Shutdown();
             OutputDisruptor.ShutDown();
@@ -264,14 +264,14 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
                 newObjectsList.Add(objects);
             }
 
-            Assert.AreEqual(493, newObjectsList[0][2]);
-            Assert.AreEqual(1000, newObjectsList[0][3]);
+            Assert.AreEqual(493, newObjectsList[2][2]);
+            Assert.AreEqual(1000, newObjectsList[2][3]);
 
             Assert.AreEqual(492, newObjectsList[1][2]);
             Assert.AreEqual(300, newObjectsList[1][3]);
 
-            Assert.AreEqual(491, newObjectsList[2][2]);
-            Assert.AreEqual(100, newObjectsList[2][3]);
+            Assert.AreEqual(491, newObjectsList[0][2]);
+            Assert.AreEqual(100, newObjectsList[0][3]);
 
             InputDisruptorPublisher.Shutdown();
             OutputDisruptor.ShutDown();

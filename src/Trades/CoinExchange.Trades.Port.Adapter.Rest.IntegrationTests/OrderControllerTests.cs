@@ -631,30 +631,30 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
 
             List<OrderReadModel> orderlist = reponseMessage.Content;
 
-            Assert.AreEqual(491, orderlist[0].Price);
-            Assert.AreEqual("BTCUSD", orderlist[0].CurrencyPair);
-            Assert.AreEqual("Buy", orderlist[0].Side);
-            Assert.AreEqual(100, orderlist[0].Volume);
-            Assert.AreEqual(492, orderlist[1].Price);
-            Assert.AreEqual("BTCUSD", orderlist[1].CurrencyPair);
-            Assert.AreEqual("Buy", orderlist[1].Side);
-            Assert.AreEqual(300, orderlist[1].Volume);
-            Assert.AreEqual(493, orderlist[2].Price);
-            Assert.AreEqual("BTCUSD", orderlist[2].CurrencyPair);
-            Assert.AreEqual("Buy", orderlist[2].Side);
-            Assert.AreEqual(1000, orderlist[2].Volume);
-            Assert.AreEqual(499, orderlist[3].Price);
-            Assert.AreEqual("BTCUSD", orderlist[3].CurrencyPair);
-            Assert.AreEqual("Sell", orderlist[3].Side);
-            Assert.AreEqual(900, orderlist[3].Volume);
-            Assert.AreEqual(498, orderlist[4].Price);
-            Assert.AreEqual("BTCUSD", orderlist[4].CurrencyPair);
-            Assert.AreEqual("Sell", orderlist[4].Side);
-            Assert.AreEqual(800, orderlist[4].Volume);
-            Assert.AreEqual(497, orderlist[5].Price);
+            Assert.AreEqual(491, orderlist[5].Price);
             Assert.AreEqual("BTCUSD", orderlist[5].CurrencyPair);
-            Assert.AreEqual("Sell", orderlist[5].Side);
-            Assert.AreEqual(700, orderlist[5].Volume);
+            Assert.AreEqual("Buy", orderlist[5].Side);
+            Assert.AreEqual(100, orderlist[5].Volume);
+            Assert.AreEqual(492, orderlist[4].Price);
+            Assert.AreEqual("BTCUSD", orderlist[4].CurrencyPair);
+            Assert.AreEqual("Buy", orderlist[4].Side);
+            Assert.AreEqual(300, orderlist[4].Volume);
+            Assert.AreEqual(493, orderlist[3].Price);
+            Assert.AreEqual("BTCUSD", orderlist[3].CurrencyPair);
+            Assert.AreEqual("Buy", orderlist[3].Side);
+            Assert.AreEqual(1000, orderlist[3].Volume);
+            Assert.AreEqual(499, orderlist[2].Price);
+            Assert.AreEqual("BTCUSD", orderlist[2].CurrencyPair);
+            Assert.AreEqual("Sell", orderlist[2].Side);
+            Assert.AreEqual(900, orderlist[2].Volume);
+            Assert.AreEqual(498, orderlist[1].Price);
+            Assert.AreEqual("BTCUSD", orderlist[1].CurrencyPair);
+            Assert.AreEqual("Sell", orderlist[1].Side);
+            Assert.AreEqual(800, orderlist[1].Volume);
+            Assert.AreEqual(497, orderlist[0].Price);
+            Assert.AreEqual("BTCUSD", orderlist[0].CurrencyPair);
+            Assert.AreEqual("Sell", orderlist[0].Side);
+            Assert.AreEqual(700, orderlist[0].Volume);
 
             InputDisruptorPublisher.Shutdown();
             OutputDisruptor.ShutDown();
@@ -751,14 +751,15 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
 
             List<OrderReadModel> orderlist = reponseMessage.Content;
 
-            Assert.AreEqual(491, orderlist[0].Price);
-            Assert.AreEqual("BTCUSD", orderlist[0].CurrencyPair);
-            Assert.AreEqual("Buy", orderlist[0].Side);
-            Assert.AreEqual(100, orderlist[0].Volume);
-            Assert.AreEqual(492, orderlist[1].Price);
-            Assert.AreEqual("BTCUSD", orderlist[1].CurrencyPair);
-            Assert.AreEqual("Buy", orderlist[1].Side);
-            Assert.AreEqual(300, orderlist[1].Volume);
+            // Order List comes in descending order, so asserts are placed that way too
+            Assert.AreEqual(491, orderlist[4].Price);
+            Assert.AreEqual("BTCUSD", orderlist[4].CurrencyPair);
+            Assert.AreEqual("Buy", orderlist[4].Side);
+            Assert.AreEqual(100, orderlist[4].Volume);
+            Assert.AreEqual(492, orderlist[3].Price);
+            Assert.AreEqual("BTCUSD", orderlist[3].CurrencyPair);
+            Assert.AreEqual("Buy", orderlist[3].Side);
+            Assert.AreEqual(300, orderlist[3].Volume);
             Assert.AreEqual(493, orderlist[2].Price);
             Assert.AreEqual("BTCUSD", orderlist[2].CurrencyPair);
             Assert.AreEqual("Buy", orderlist[2].Side);
@@ -781,14 +782,14 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             Assert.AreEqual(100, tradesList[0][3]);
             Assert.AreEqual("BTCUSD", tradesList[0][4]);
 
-            Assert.AreEqual(497, orderlist[3].Price);
-            Assert.AreEqual("BTCUSD", orderlist[3].CurrencyPair);
-            Assert.AreEqual("Sell", orderlist[3].Side);
-            Assert.AreEqual(1000, orderlist[3].Volume);
-            Assert.AreEqual(498, orderlist[4].Price);
-            Assert.AreEqual("BTCUSD", orderlist[4].CurrencyPair);
-            Assert.AreEqual("Sell", orderlist[4].Side);
-            Assert.AreEqual(300, orderlist[4].Volume);
+            Assert.AreEqual(497, orderlist[1].Price);
+            Assert.AreEqual("BTCUSD", orderlist[1].CurrencyPair);
+            Assert.AreEqual("Sell", orderlist[1].Side);
+            Assert.AreEqual(1000, orderlist[1].Volume);
+            Assert.AreEqual(498, orderlist[0].Price);
+            Assert.AreEqual("BTCUSD", orderlist[0].CurrencyPair);
+            Assert.AreEqual("Sell", orderlist[0].Side);
+            Assert.AreEqual(300, orderlist[0].Volume);
 
             InputDisruptorPublisher.Shutdown();
             OutputDisruptor.ShutDown();
@@ -909,9 +910,10 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
 
             List<OrderReadModel> orderlist = reponseMessage.Content;
 
-            Assert.AreEqual(493, orderlist[0].Price);
-            Assert.AreEqual("BTCUSD", orderlist[0].CurrencyPair);
-            Assert.AreEqual("Buy", orderlist[0].Side);
+            // Order List comes in descending order, so asserts are placed that way too
+            Assert.AreEqual(493, orderlist[1].Price);
+            Assert.AreEqual("BTCUSD", orderlist[1].CurrencyPair);
+            Assert.AreEqual("Buy", orderlist[1].Side);
 
             // List of Trades associated with this order, coming in as a list of object[] in each, where object[] contains
             // TraderId, ExecutionDateTime, Price, Volume, Currencypair respectively.
@@ -928,9 +930,10 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             Assert.AreEqual(1000, buyTradesList[0][3]);
             Assert.AreEqual("BTCUSD", buyTradesList[0][4]);
 
-            Assert.AreEqual(493, orderlist[1].Price);
-            Assert.AreEqual("BTCUSD", orderlist[1].CurrencyPair);
-            Assert.AreEqual("Sell", orderlist[1].Side);
+            // Order List comes in descending order, so asserts are placed that way too
+            Assert.AreEqual(493, orderlist[0].Price);
+            Assert.AreEqual("BTCUSD", orderlist[0].CurrencyPair);
+            Assert.AreEqual("Sell", orderlist[0].Side);
 
             // List of Trades associated with this order, coming in as a list of object[] in each, where object[] contains
             // TraderId, ExecutionDateTime, Price, Volume, Currencypair respectively.
@@ -1073,15 +1076,16 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
 
             List<OrderReadModel> orderlist = reponseMessage.Content;
 
+            // Order List comes in descending order, so asserts are placed that way too
             Assert.AreEqual(2, orderlist.Count);
-            Assert.AreEqual(491, orderlist[0].Price);
-            Assert.AreEqual("BTCUSD", orderlist[0].CurrencyPair);
-            Assert.AreEqual("Buy", orderlist[0].Side);
-            Assert.AreEqual(100, orderlist[0].Volume);
-            Assert.AreEqual(497, orderlist[1].Price);
+            Assert.AreEqual(491, orderlist[1].Price);
             Assert.AreEqual("BTCUSD", orderlist[1].CurrencyPair);
-            Assert.AreEqual("Sell", orderlist[1].Side);
-            Assert.AreEqual(700, orderlist[1].Volume);
+            Assert.AreEqual("Buy", orderlist[1].Side);
+            Assert.AreEqual(100, orderlist[1].Volume);
+            Assert.AreEqual(497, orderlist[0].Price);
+            Assert.AreEqual("BTCUSD", orderlist[0].CurrencyPair);
+            Assert.AreEqual("Sell", orderlist[0].Side);
+            Assert.AreEqual(700, orderlist[0].Volume);
 
             InputDisruptorPublisher.Shutdown();
             OutputDisruptor.ShutDown();
