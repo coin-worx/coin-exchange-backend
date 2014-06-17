@@ -1068,11 +1068,11 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             manualResetEvent.Reset();
             manualResetEvent.WaitOne(4000);
 
-            IHttpActionResult queryOpenOrders = orderController.QueryClosedOrders(new QueryClosedOrdersParams(false,"", ""));
+            IHttpActionResult queryClosedOrders = orderController.QueryClosedOrders(new QueryClosedOrdersParams(false,"", ""));
 
-            Assert.IsNotNull(queryOpenOrders);
+            Assert.IsNotNull(queryClosedOrders);
             OkNegotiatedContentResult<List<OrderReadModel>> reponseMessage =
-                                                        (OkNegotiatedContentResult<List<OrderReadModel>>)queryOpenOrders;
+                                                        (OkNegotiatedContentResult<List<OrderReadModel>>)queryClosedOrders;
 
             List<OrderReadModel> orderlist = reponseMessage.Content;
 
@@ -1090,6 +1090,182 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             InputDisruptorPublisher.Shutdown();
             OutputDisruptor.ShutDown();
 
+            orderRepository.RollBack();
+        }
+
+        [Test]
+        [Category("Integration")]
+        public void SellMarketOrderPartialFillTest_ChecksIfPartialOrderGetsRejectedAfterBeingPOartiallyFilledWhenNoMoreLimitOrdersAreOnBook_VerifiesByCheckingOrderBookAndOrders()
+        {
+            // Get the context
+            IApplicationContext applicationContext = ContextRegistry.GetContext();
+            
+            // Get the instance through Spring configuration
+            OrderController orderController = (OrderController)applicationContext["OrderController"];
+            orderController.Request = new HttpRequestMessage(HttpMethod.Post, "");
+            orderController.Request.Headers.Add("Auth", "123456789");
+            IOrderRepository orderRepository = (IOrderRepository)applicationContext["OrderRepository"];
+
+            ManualResetEvent manualResetEvent = new ManualResetEvent(false);
+            IHttpActionResult orderHttpResult = orderController.CreateOrder(new CreateOrderParam()
+            {
+                Pair = "BTCUSD",
+                Price = 491,
+                Volume = 300,
+                Side = "buy",
+                Type = "limit"
+            });
+
+            OkNegotiatedContentResult<NewOrderRepresentation> order1RepresentationContent = (OkNegotiatedContentResult<NewOrderRepresentation>)orderHttpResult;
+            Assert.IsNotNull(order1RepresentationContent.Content);
+
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(2000);
+
+            orderController.CreateOrder(new CreateOrderParam()
+            {
+                Pair = "BTCUSD",
+                Price = 0,
+                Volume = 320,
+                Side = "sell",
+                Type = "market"
+            });
+
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(3000);
+
+            MarketController marketController = (MarketController)applicationContext["MarketController"];
+            IHttpActionResult marketDataHttpResult = marketController.GetOrderBook("BTCUSD");
+
+            OkNegotiatedContentResult<object> okResponseMessage =
+                (OkNegotiatedContentResult<object>)marketDataHttpResult;
+            OrderBookRepresentation representation = okResponseMessage.Content as OrderBookRepresentation;
+
+            System.Tuple<OrderRepresentationList, OrderRepresentationList> orderBooks = new System.Tuple<OrderRepresentationList, OrderRepresentationList>(representation.Bids, representation.Asks);
+            Assert.AreEqual(0, orderBooks.Item1.Count()); // Count of the orders in the Bid Order book
+            Assert.AreEqual(0, orderBooks.Item2.Count());// Count of the orders in the Ask Order book
+
+            IHttpActionResult queryOpenOrders = orderController.QueryOpenOrders(true.ToString());
+
+            Assert.IsNotNull(queryOpenOrders);
+            OkNegotiatedContentResult<List<OrderReadModel>> openOrderReponseMessage =
+                                                        (OkNegotiatedContentResult<List<OrderReadModel>>)queryOpenOrders;
+
+            List<OrderReadModel> openOrderList = openOrderReponseMessage.Content;
+            Assert.AreEqual(0, openOrderList.Count);
+
+            // Get closed orders
+            IHttpActionResult queryClosedOrders = orderController.QueryClosedOrders(new QueryClosedOrdersParams(false, "", ""));
+
+            Assert.IsNotNull(queryClosedOrders);
+            OkNegotiatedContentResult<List<OrderReadModel>> closedOrderReponseMessage =
+                                                        (OkNegotiatedContentResult<List<OrderReadModel>>)queryClosedOrders;
+
+            List<OrderReadModel> closedOrderlist = closedOrderReponseMessage.Content;
+
+            // Order List comes in descending order, so asserts are placed that way too
+            Assert.AreEqual(2, closedOrderlist.Count);
+            Assert.AreEqual(491, closedOrderlist[1].Price);
+            Assert.AreEqual("BTCUSD", closedOrderlist[1].CurrencyPair);
+            Assert.AreEqual("Buy", closedOrderlist[1].Side);
+            Assert.AreEqual(300, closedOrderlist[1].Volume);
+            Assert.AreEqual(0, closedOrderlist[1].OpenQuantity);
+            Assert.AreEqual(0, closedOrderlist[0].Price);
+            Assert.AreEqual("BTCUSD", closedOrderlist[0].CurrencyPair);
+            Assert.AreEqual("Sell", closedOrderlist[0].Side);
+            Assert.AreEqual(320, closedOrderlist[0].Volume);
+            Assert.AreEqual(20, closedOrderlist[0].OpenQuantity);
+
+            InputDisruptorPublisher.Shutdown();
+            OutputDisruptor.ShutDown();
+            orderRepository.RollBack();
+        }
+
+        [Test]
+        [Category("Integration")]
+        public void BuyMarketOrderPartialFillTest_ChecksIfPartialOrderGetsRejectedAfterBeingPOartiallyFilledWhenNoMoreLimitOrdersAreOnBook_VerifiesByCheckingOrderBookAndOrders()
+        {
+            // Get the context
+            IApplicationContext applicationContext = ContextRegistry.GetContext();
+
+            // Get the instance through Spring configuration
+            OrderController orderController = (OrderController)applicationContext["OrderController"];
+            orderController.Request = new HttpRequestMessage(HttpMethod.Post, "");
+            orderController.Request.Headers.Add("Auth", "123456789");
+            IOrderRepository orderRepository = (IOrderRepository)applicationContext["OrderRepository"];
+
+            ManualResetEvent manualResetEvent = new ManualResetEvent(false);
+            IHttpActionResult orderHttpResult = orderController.CreateOrder(new CreateOrderParam()
+            {
+                Pair = "BTCUSD",
+                Price = 491,
+                Volume = 300,
+                Side = "sell",
+                Type = "limit"
+            });
+
+            OkNegotiatedContentResult<NewOrderRepresentation> order1RepresentationContent = (OkNegotiatedContentResult<NewOrderRepresentation>)orderHttpResult;
+            Assert.IsNotNull(order1RepresentationContent.Content);
+
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(2000);
+
+            orderController.CreateOrder(new CreateOrderParam()
+            {
+                Pair = "BTCUSD",
+                Price = 0,
+                Volume = 320,
+                Side = "buy",
+                Type = "market"
+            });
+
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(3000);
+
+            MarketController marketController = (MarketController)applicationContext["MarketController"];
+            IHttpActionResult marketDataHttpResult = marketController.GetOrderBook("BTCUSD");
+
+            OkNegotiatedContentResult<object> okResponseMessage =
+                (OkNegotiatedContentResult<object>)marketDataHttpResult;
+            OrderBookRepresentation representation = okResponseMessage.Content as OrderBookRepresentation;
+
+            System.Tuple<OrderRepresentationList, OrderRepresentationList> orderBooks = new System.Tuple<OrderRepresentationList, OrderRepresentationList>(representation.Bids, representation.Asks);
+            Assert.AreEqual(0, orderBooks.Item1.Count()); // Count of the orders in the Bid Order book
+            Assert.AreEqual(0, orderBooks.Item2.Count());// Count of the orders in the Ask Order book
+
+            IHttpActionResult queryOpenOrders = orderController.QueryOpenOrders(true.ToString());
+
+            Assert.IsNotNull(queryOpenOrders);
+            OkNegotiatedContentResult<List<OrderReadModel>> openOrderReponseMessage =
+                                                        (OkNegotiatedContentResult<List<OrderReadModel>>)queryOpenOrders;
+
+            List<OrderReadModel> openOrderList = openOrderReponseMessage.Content;
+            Assert.AreEqual(0, openOrderList.Count);
+
+            // Get closed orders
+            IHttpActionResult queryClosedOrders = orderController.QueryClosedOrders(new QueryClosedOrdersParams(false, "", ""));
+
+            Assert.IsNotNull(queryClosedOrders);
+            OkNegotiatedContentResult<List<OrderReadModel>> closedOrderReponseMessage =
+                                                        (OkNegotiatedContentResult<List<OrderReadModel>>)queryClosedOrders;
+
+            List<OrderReadModel> closedOrderlist = closedOrderReponseMessage.Content;
+
+            // Order List comes in descending order, so asserts are placed that way too
+            Assert.AreEqual(2, closedOrderlist.Count);
+            Assert.AreEqual(491, closedOrderlist[1].Price);
+            Assert.AreEqual("BTCUSD", closedOrderlist[1].CurrencyPair);
+            Assert.AreEqual("Sell", closedOrderlist[1].Side);
+            Assert.AreEqual(300, closedOrderlist[1].Volume);
+            Assert.AreEqual(0, closedOrderlist[1].OpenQuantity);
+            Assert.AreEqual(0, closedOrderlist[0].Price);
+            Assert.AreEqual("BTCUSD", closedOrderlist[0].CurrencyPair);
+            Assert.AreEqual("Buy", closedOrderlist[0].Side);
+            Assert.AreEqual(320, closedOrderlist[0].Volume);
+            Assert.AreEqual(20, closedOrderlist[0].OpenQuantity);
+
+            InputDisruptorPublisher.Shutdown();
+            OutputDisruptor.ShutDown();
             orderRepository.RollBack();
         }
     }
