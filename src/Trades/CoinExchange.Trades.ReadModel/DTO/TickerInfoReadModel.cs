@@ -37,6 +37,14 @@ namespace CoinExchange.Trades.ReadModel.DTO
             
         }
 
+        public TickerInfoReadModel(string currencyPair, decimal price, decimal volume)
+        {
+            CurrencyPair = currencyPair;
+            OpeningPrice = TodaysHigh = TodaysLow = Last24HoursHigh = Last24HoursLow = TradePrice = price;
+            TradeVolume = TodaysVolume = Last24HourVolume = TodaysVolumeWeight = Last24HourVolumeWeight = volume;
+            TodaysTrades = Last24HourTrades = 1;
+        }
+
         /// <summary>
         /// Update ticker info from trades
         /// </summary>

@@ -36,8 +36,8 @@ namespace CoinExchange.Trades.ReadModel.Services
             var tickerReadModel = _tickerInfoRepository.GetTickerInfoByCurrencyPair(trade.CurrencyPair);
             if (tickerReadModel == null)
             {
-                TickerInfoReadModel model=new TickerInfoReadModel();
-                model.CurrencyPair = trade.CurrencyPair;
+                TickerInfoReadModel model=new TickerInfoReadModel(trade.CurrencyPair,trade.ExecutionPrice.Value,trade.ExecutedVolume.Value);
+                //model.CurrencyPair = trade.CurrencyPair;
                 _persistanceRepository.SaveOrUpdate(model);
             }
             else
