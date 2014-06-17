@@ -227,12 +227,25 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             // If there is still quantity left to be filled in this order, add it to it's side's order book
             if (order.OpenQuantity.Value > 0)
             {
-                if (sendOrderAcceptedEvent)
+                // If the order is market order, then reject it
+                if (order.OrderType != OrderType.Market)
                 {
-                    RaiseOrderAcceptedEvent(order, 0, 0);
+                    order.Rejected();
+                    if (OrderChanged != null)
+                    {
+                        OrderChanged(order);
+                    }
                 }
-                inboundSideList.Add(order);
-                orderBookChanged = true;
+                // If order is limit, then place it on order book
+                else
+                {
+                    if (sendOrderAcceptedEvent)
+                    {
+                        RaiseOrderAcceptedEvent(order, 0, 0);
+                    }
+                    inboundSideList.Add(order);
+                    orderBookChanged = true;
+                }
             }
             if (orderBookChanged)
             {
