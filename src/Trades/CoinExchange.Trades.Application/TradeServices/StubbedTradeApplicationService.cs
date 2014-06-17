@@ -198,5 +198,11 @@ namespace CoinExchange.Trades.Application.TradeServices
             pairs.Add(new CurrencyPair("BTC/USD","BTC","USD"));
             return pairs;
         }
+
+
+        public TradeDetailsRepresentation GetTradeDetails(string traderId, string tradeId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

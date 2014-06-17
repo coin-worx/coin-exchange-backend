@@ -38,6 +38,13 @@ namespace CoinExchange.Trades.ReadModel.Repositories
         TradeReadModel GetById(string tradeId);
 
         /// <summary>
+        /// Get by Trade Id and traderId
+        /// </summary>
+        /// <param name="tradeId"></param>
+        /// <returns></returns>
+        TradeReadModel GetByIdAndTraderId(string traderId,string tradeId);
+
+        /// <summary>
         /// Get trades between dates
         /// </summary>
         /// <param name="end"></param>

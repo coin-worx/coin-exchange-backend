@@ -76,6 +76,7 @@
     <Compile Include="OrderServices\StubbedOrderQueryService.cs" />
     <Compile Include="OrderServices\Representation\NewOrderRepresentation.cs" />
     <Compile Include="TradeServices\ITradeApplicationService.cs" />
+    <Compile Include="TradeServices\Representation\TradeDetailsRepresentation.cs" />
     <Compile Include="TradeServices\Representation\TradeFeeRepresentation.cs" />
     <Compile Include="TradeServices\Representation\TradeListRepresentation.cs" />
     <Compile Include="TradeServices\Representation\TradeVolumeRepresentation.cs" />

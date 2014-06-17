@@ -53,6 +53,7 @@ namespace CoinExchange.Trades.ReadModel.Persistence.NHibernate
                     .Asc
                     .List<object>();
         }
+
         [Transaction(ReadOnly = true)]
         public TradeReadModel GetById(string tradeId)
         {
@@ -92,6 +93,15 @@ namespace CoinExchange.Trades.ReadModel.Persistence.NHibernate
             CurrentSession.CreateSQLQuery(sqlQuery).ExecuteUpdate();
         }
 
-        
+        [Transaction(ReadOnly = true)]
+        public TradeReadModel GetByIdAndTraderId(string traderId, string tradeId)
+        {
+            TradeReadModel model=CurrentSession.Get<TradeReadModel>(tradeId);
+            if (model.BuyTraderId == traderId || model.SellTraderId == traderId)
+            {
+                return model;
+            }
+            throw new InvalidOperationException("Not Authorized");
+        }
     }
 }

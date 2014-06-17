@@ -118,6 +118,46 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         }
 
         /// <summary>
+        /// Private call that returns orders of the user that have been filled/executed
+        /// QueryTradeParams.TxId: Comma separated list of txIds(Optional)
+        /// QueryTradeParams.IncludeTrades: Whether or not to include the trades(Optional)
+        /// </summary>
+        /// <returns></returns>
+        [Route("trades/tradedetails")]
+        [Authorize]
+        [HttpPost]
+        public IHttpActionResult TradeDetails([FromBody]string tradeId)
+        {
+            try
+            {
+                //get api key from header
+                var headers = Request.Headers;
+                string apikey = "";
+                IEnumerable<string> headerParams;
+                if (headers.TryGetValues("Auth", out headerParams))
+                {
+                    string[] auth = headerParams.ToList()[0].Split(',');
+                    apikey = auth[0];
+                }
+                var trades = _tradeApplicationService.GetTradeDetails(Constants.GetTraderId(apikey), tradeId);
+
+                if (trades != null)
+                {
+                    return Ok(trades);
+                }
+                return BadRequest();
+            }
+            catch (Exception exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Trade Details Call Error", exception);
+                }
+                return InternalServerError(exception);
+            }
+        }
+
+        /// <summary>
         /// Public call to get recent trades
         /// </summary>
         /// <param name="currencyPair"> </param>
