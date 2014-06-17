@@ -17,5 +17,6 @@ namespace CoinExchange.Trades.Application.TradeServices
         IList<object> GetRecentTrades(string pair, string since);
         TradeVolumeRepresentation TradeVolume(string pair);
         IList<CurrencyPair> GetTradeableCurrencyPairs();
+        TradeDetailsRepresentation GetTradeDetails(string traderId, string tradeId);
     }
 }
