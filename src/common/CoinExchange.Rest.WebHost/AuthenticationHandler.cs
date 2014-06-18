@@ -20,6 +20,8 @@ namespace CoinExchange.Rest.WebHost
     public class AuthenticationHandler : DelegatingHandler
     {
         private IAuthenticationService _authenticationService;
+        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger
+            (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
         /// Constructor
@@ -54,6 +56,11 @@ namespace CoinExchange.Rest.WebHost
 
                         if (HttpContext.Current != null)
                             HttpContext.Current.User = principal;
+                        if (Log.IsDebugEnabled)
+                        {
+                            Log.Debug("Authenticated for call: URL="+request.RequestUri);
+                        }
+
                     }
                 }
 
@@ -66,8 +73,12 @@ namespace CoinExchange.Rest.WebHost
 
                 return response;
             }
-            catch (Exception)
+            catch (Exception exception)
             {
+                if (Log.IsErrorEnabled)
+                {
+                    Log.Error("Authentication Exception",exception);
+                }
                 var response = request.CreateResponse(HttpStatusCode.Unauthorized);
                 response.Headers.Add("Nounce", _authenticationService.GenerateNonce());
                 return response;
