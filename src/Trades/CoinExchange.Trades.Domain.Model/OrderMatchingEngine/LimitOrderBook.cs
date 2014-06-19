@@ -205,13 +205,13 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
                         break;
                     }
                 }
-                if (order.OrderSide == OrderSide.Buy && matchingOrder.Price.Value > order.Price.Value)
+                if (order.OrderType == OrderType.Limit && order.OrderSide == OrderSide.Buy && matchingOrder.Price.Value > order.Price.Value)
                 {
                     break;
                 }
                 // If the first bid on the book does not satisfy the price, then termintate the loop as it won't be beneficial
                 // looking for a match ahead
-                else if (order.OrderSide == OrderSide.Sell && matchingOrder.Price.Value < order.Price.Value)
+                else if (order.OrderType == OrderType.Limit && order.OrderSide == OrderSide.Sell && matchingOrder.Price.Value < order.Price.Value)
                 {
                     break;
                 }
