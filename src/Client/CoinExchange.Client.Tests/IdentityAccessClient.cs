@@ -67,5 +67,11 @@ namespace CoinExchange.Client.Tests
             string url = _baseUrl + "/private/user/api/create";
             return HttpPostRequest(persmission, url);
         }
+
+        public string Logout()
+        {
+            string url = _baseUrl + "/private/admin/logout";
+            return HttpGetRequest(url);
+        }
     }
 }

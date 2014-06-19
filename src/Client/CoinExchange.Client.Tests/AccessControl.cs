@@ -22,10 +22,10 @@ namespace CoinExchange.Client.Tests
 
         public string Login()
         {
-            string activationcode = _client.SignUp("user@user.com", userName, password, "pakistan",
-                TimeZone.CurrentTimeZone, "");
-            string code = JsonConvert.DeserializeObject<string>(activationcode);
-            Console.WriteLine(_client.ActivateUser(userName, password, code));
+            //string activationcode = _client.SignUp("user@user.com", userName, password, "pakistan",
+            //    TimeZone.CurrentTimeZone, "");
+            //string code = JsonConvert.DeserializeObject<string>(activationcode);
+            //Console.WriteLine(_client.ActivateUser(userName, password, code));
             string login = _client.Login(userName, password);
             Console.WriteLine(login);
             dynamic keys = JsonConvert.DeserializeObject<dynamic>(login);
