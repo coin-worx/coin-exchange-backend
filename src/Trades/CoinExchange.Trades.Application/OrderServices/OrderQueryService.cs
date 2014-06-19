@@ -45,6 +45,7 @@ namespace CoinExchange.Trades.Application.OrderServices
                 for (int i = 0; i < orders.Count;i++)
                 {
                     orders[i].Trades = _tradeRepository.GetTradesByorderId(orders[i].OrderId);
+                    orders[i].AveragePrice = CalculateAveragePrice(orders[i].Trades);
                 }
             }
             return orders;
@@ -75,6 +76,7 @@ namespace CoinExchange.Trades.Application.OrderServices
                 for (int i = 0; i < orders.Count; i++)
                 {
                     orders[i].Trades = _tradeRepository.GetTradesByorderId(orders[i].OrderId);
+                    orders[i].AveragePrice = CalculateAveragePrice(orders[i].Trades);
                 }
             }
             return orders;
@@ -84,7 +86,31 @@ namespace CoinExchange.Trades.Application.OrderServices
         
         public object GetOrderById(TraderId traderId,OrderId orderId)
         {
-            return _orderRepository.GetOrderById(traderId,orderId);
+            OrderReadModel order = _orderRepository.GetOrderById(traderId, orderId);
+            order.AveragePrice = CalculateAveragePrice(_tradeRepository.GetTradesByorderId(orderId.Id));
+            return order;
+        }
+
+        /// <summary>
+        /// Calculate avergae price from trades.
+        /// </summary>
+        /// <returns></returns>
+        private decimal CalculateAveragePrice(IList<object> trades)
+        {
+            decimal price = 0;
+            if (trades != null)
+            {
+                if (trades.Count > 0)
+                {
+                    for (int i = 0; i < trades.Count; i++)
+                    {
+                        object[] trade = trades[i] as object[];
+                        price = price + (decimal) trade[2];
+                    }
+                    price = price/trades.Count;
+                }
+            }
+            return price;
         }
     }
 }

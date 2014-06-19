@@ -25,6 +25,8 @@ namespace CoinExchange.Trades.ReadModel.DTO
         public string TraderId { get; private set; }
         public string CurrencyPair { get; private set; }
         public DateTime DateTime { get; private set; }
+        public DateTime? ClosingDateTime { get; private set; }
+        public decimal AveragePrice { get;  set; }
         public IList<object> Trades { get; set; }
 
         #endregion
@@ -37,7 +39,7 @@ namespace CoinExchange.Trades.ReadModel.DTO
             
         }
 
-        public OrderReadModel(string orderId, string orderType, string orderSide, decimal price, decimal volumeExecuted, string traderId, string status, string currencyPair,DateTime dateTime,decimal volume,decimal openQuantity)
+        public OrderReadModel(string orderId, string orderType, string orderSide, decimal price, decimal volumeExecuted, string traderId, string status, string currencyPair,DateTime dateTime,decimal volume,decimal openQuantity, DateTime? closingDateTime)
         {
             OrderId = orderId;
             Type = orderType;
@@ -50,6 +52,7 @@ namespace CoinExchange.Trades.ReadModel.DTO
             DateTime = dateTime;
             Volume = volume;
             OpenQuantity = openQuantity;
+            ClosingDateTime = closingDateTime;
         }
         
     }

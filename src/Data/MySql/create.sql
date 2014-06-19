@@ -40,7 +40,7 @@ CREATE TABLE `ohlc` (
   `Volume` decimal(10,5) DEFAULT NULL,
   `CurrencyPair` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 /*Table structure for table `order` */
 
@@ -58,6 +58,8 @@ CREATE TABLE `order` (
   `OrderDateTime` datetime DEFAULT NULL,
   `Volume` decimal(10,5) DEFAULT NULL,
   `OpenQuantity` decimal(10,5) DEFAULT NULL,
+  `AveragePrice` decimal(10,5) DEFAULT NULL,
+  `ClosingDateTime` datetime DEFAULT NULL,
   PRIMARY KEY (`OrderId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -146,7 +148,7 @@ CREATE TABLE `tickerinfo` (
   `Last24HourVolume` decimal(10,5) DEFAULT NULL,
   `CurrencyPair` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
 
 /*Table structure for table `tier` */
 
@@ -208,7 +210,7 @@ CREATE TABLE `user` (
   `DateOfBirth` date DEFAULT NULL,
   PRIMARY KEY (`Id`),
   UNIQUE KEY `NewIndex1` (`UserName`,`Email`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
 
 /*Table structure for table `userdocument` */
 
@@ -232,7 +234,7 @@ CREATE TABLE `usertierlevelstatus` (
   `Status` varchar(50) DEFAULT NULL,
   `UserId` int(11) DEFAULT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=latin1;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

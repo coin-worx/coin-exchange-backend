@@ -15,5 +15,7 @@ assembly="CoinExchange.Trades.ReadModel" namespace="CoinExchange.Trades.ReadMode
     <property name="Status"  column="Status"/>
     <property name="TraderId"  column="TraderId"/>
     <property name="CurrencyPair"  column="CurrencyPair"/>
+    <property name="ClosingDateTime"  column="ClosingDateTime"/>
+    <property name="AveragePrice"  column="AveragePrice"/>
     </class>
 </hibernate-mapping>
