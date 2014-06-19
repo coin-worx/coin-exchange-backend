@@ -9,14 +9,24 @@ using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
-using CoinExchange.IdentityAccess.Application.Authentication;
-using CoinExchange.IdentityAccess.Application.Authentication.Commands;
+using CoinExchange.IdentityAccess.Domain.Model.UserAggregate.AuthenticationServices;
+using CoinExchange.IdentityAccess.Domain.Model.UserAggregate.AuthenticationServices.Commands;
 
 namespace CoinExchange.Rest.WebHost
 {
+    /// <summary>
+    /// Authenticates every Http Request
+    /// </summary>
     public class AuthenticationHandler : DelegatingHandler
     {
         private IAuthenticationService _authenticationService;
+        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger
+            (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="service"></param>
         public AuthenticationHandler(IAuthenticationService service)
         {
             _authenticationService = service;
@@ -46,6 +56,11 @@ namespace CoinExchange.Rest.WebHost
 
                         if (HttpContext.Current != null)
                             HttpContext.Current.User = principal;
+                        if (Log.IsDebugEnabled)
+                        {
+                            Log.Debug("Authenticated for call: URL="+request.RequestUri);
+                        }
+
                     }
                 }
 
@@ -58,13 +73,16 @@ namespace CoinExchange.Rest.WebHost
 
                 return response;
             }
-            catch (Exception)
+            catch (Exception exception)
             {
+                if (Log.IsErrorEnabled)
+                {
+                    Log.Error("Authentication Exception",exception);
+                }
                 var response = request.CreateResponse(HttpStatusCode.Unauthorized);
                 response.Headers.Add("Nounce", _authenticationService.GenerateNonce());
                 return response;
             }
         }
     }
-
 }

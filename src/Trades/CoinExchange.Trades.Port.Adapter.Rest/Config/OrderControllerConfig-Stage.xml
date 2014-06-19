@@ -6,6 +6,7 @@
   <object id="OrderController" type="CoinExchange.Trades.Port.Adapter.Rest.Resources.OrderController, CoinExchange.Trades.Port.Adapter.Rest" singleton="false">
     <constructor-arg name="orderApplicationService" ref="OrderApplicationService"/>
     <constructor-arg name="orderQueryService" ref="OrderQueryService"/>
+    <constructor-arg name="apiKeyInfoAccess" ref="SecurityKeysPairRepository"/>
   </object>
 
   <!--<object id="OrderApplicationService" type="CoinExchange.Trades.Application.OrderServices.OrderApplicationService, CoinExchange.Trades.Application">

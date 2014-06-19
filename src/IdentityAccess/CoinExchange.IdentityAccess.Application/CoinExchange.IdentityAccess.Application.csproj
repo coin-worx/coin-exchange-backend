@@ -42,22 +42,67 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Authentication\Commands\AuthenticateCommand.cs" />
-    <Compile Include="Authentication\IAuthenticationService.cs" />
-    <Compile Include="Authentication\Nonce.cs" />
-    <Compile Include="Authentication\HashHelper.cs" />
+    <Compile Include="AccessControlServices\Commands\LoginCommand.cs" />
+    <Compile Include="AccessControlServices\Commands\LogoutCommand.cs" />
+    <Compile Include="AccessControlServices\ILoginApplicationService.cs" />
+    <Compile Include="AccessControlServices\ILogoutApplicationService.cs" />
+    <Compile Include="AccessControlServices\LoginApplicationService.cs" />
+    <Compile Include="AccessControlServices\LogoutApplicationService.cs" />
+    <Compile Include="SecurityKeysServices\Commands\CreateUserGeneratedSecurityKeyPair.cs" />
+    <Compile Include="SecurityKeysServices\Commands\UpdateUserGeneratedSecurityKeyPair.cs" />
+    <Compile Include="SecurityKeysServices\Representations\SecurityKeyPair.cs" />
+    <Compile Include="SecurityKeysServices\Representations\SecurityKeyPermissionsRepresentation.cs" />
+    <Compile Include="SecurityKeysServices\Representations\SecurityKeyRepresentation.cs" />
+    <Compile Include="SecurityKeysServices\SecurityKeysApplicationService.cs" />
+    <Compile Include="SecurityKeysServices\ISecurityKeysApplicationService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UserAuthentication.cs" />
+    <Compile Include="RegistrationServices\Commands\SignupUserCommand.cs" />
+    <Compile Include="RegistrationServices\IRegistrationApplicationService.cs" />
+    <Compile Include="RegistrationServices\RegistrationApplicationService.cs" />
+    <Compile Include="UserServices\Commands\ActivationCommand.cs" />
+    <Compile Include="UserServices\Commands\CancelActivationCommand.cs" />
+    <Compile Include="UserServices\Commands\ChangePasswordCommand.cs" />
+    <Compile Include="UserServices\Commands\ChangeSettingsCommand.cs" />
+    <Compile Include="UserServices\Commands\ForgotPasswordCommand.cs" />
+    <Compile Include="UserServices\Commands\ForgotUsernameCommand.cs" />
+    <Compile Include="UserServices\Commands\ResetPasswordCommand.cs" />
+    <Compile Include="UserServices\Commands\VerifyTier3Command.cs" />
+    <Compile Include="UserServices\Commands\VerifyTier1Command.cs" />
+    <Compile Include="UserServices\Commands\VerifyTier2Command.cs" />
+    <Compile Include="UserServices\IUserApplicationService.cs" />
+    <Compile Include="UserServices\IUserTierLevelApplicationService.cs" />
+    <Compile Include="UserServices\Representations\AccountSettingsRepresentation.cs" />
+    <Compile Include="UserServices\Representations\Tier1Details.cs" />
+    <Compile Include="UserServices\Representations\Tier2Details.cs" />
+    <Compile Include="UserServices\Representations\Tier3Details.cs" />
+    <Compile Include="UserServices\Representations\UserTierStatusRepresentation.cs" />
+    <Compile Include="UserServices\UserApplicationService.cs" />
+    <Compile Include="UserServices\UserTierLevelApplicationService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Common\CoinExchange.Common\CoinExchange.Common.csproj">
       <Project>{d61dbd04-95dc-4eb1-ad54-1ff929ac2814}</Project>
       <Name>CoinExchange.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CoinExchange.IdentityAccess.Domain.Model\CoinExchange.IdentityAccess.Domain.Model.csproj">
+      <Project>{cb2cca81-c266-49a4-9fa0-40416ec2318e}</Project>
+      <Name>CoinExchange.IdentityAccess.Domain.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CoinExchange.IdentityAccess.Infrastructure.Services\CoinExchange.IdentityAccess.Infrastructure.Services.csproj">
+      <Project>{4921a0e0-8197-4d15-932b-06d667bf9275}</Project>
+      <Name>CoinExchange.IdentityAccess.Infrastructure.Services</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Config\ApplicationServicesConfig.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

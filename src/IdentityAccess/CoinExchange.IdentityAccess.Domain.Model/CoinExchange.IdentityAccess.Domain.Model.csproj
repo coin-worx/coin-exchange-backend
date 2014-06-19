@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{CB2CCA81-C266-49A4-9FA0-40416EC2318E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CoinExchange.IdentityAccess.Domain.Model</RootNamespace>
+    <AssemblyName>CoinExchange.IdentityAccess.Domain.Model</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="log4net">
+      <HintPath>..\..\packages\log4net.1.2.10\lib\2.0\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="SecurityKeysAggregate\ISecurityKeysRepository.cs" />
+    <Compile Include="UserAggregate\IDocumentPersistence.cs" />
+    <Compile Include="UserAggregate\IPasswordCodeGenerationService.cs" />
+    <Compile Include="UserAggregate\ITierRepository.cs" />
+    <Compile Include="UserAggregate\IUserRepository.cs" />
+    <Compile Include="SecurityKeysAggregate\ApiKey.cs" />
+    <Compile Include="SecurityKeysAggregate\IPermissionRepository.cs" />
+    <Compile Include="SecurityKeysAggregate\ISecurityKeysGenerationService.cs" />
+    <Compile Include="SecurityKeysAggregate\PermissionsConstant.cs" />
+    <Compile Include="SecurityKeysAggregate\PermissionsList.cs" />
+    <Compile Include="SecurityKeysAggregate\SecretKey.cs" />
+    <Compile Include="SecurityKeysAggregate\SecurityKeysPairFactory.cs" />
+    <Compile Include="SecurityKeysAggregate\UserValidationEssentials.cs" />
+    <Compile Include="UserAggregate\AuthenticationServices\Commands\AuthenticateCommand.cs" />
+    <Compile Include="UserAggregate\AuthenticationServices\HashHelper.cs" />
+    <Compile Include="UserAggregate\AuthenticationServices\IAuthenticationService.cs" />
+    <Compile Include="UserAggregate\AuthenticationServices\Nonce.cs" />
+    <Compile Include="UserAggregate\AuthenticationServices\UserAuthenticationService.cs" />
+    <Compile Include="UserAggregate\IActivationKeyGenerationService.cs" />
+    <Compile Include="SecurityKeysAggregate\Permission.cs" />
+    <Compile Include="SecurityKeysAggregate\SecurityKeysPermission.cs" />
+    <Compile Include="SecurityKeysAggregate\SecurityKeysPair.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\IIdentityAccessPersistenceRepository.cs" />
+    <Compile Include="UserAggregate\IPasswordEncryptionService.cs" />
+    <Compile Include="UserAggregate\IsActivationKeyUsed.cs" />
+    <Compile Include="UserAggregate\IsUserBlocked.cs" />
+    <Compile Include="UserAggregate\PasswordCodeRecord.cs" />
+    <Compile Include="UserAggregate\Status.cs" />
+    <Compile Include="UserAggregate\Tier.cs" />
+    <Compile Include="UserAggregate\TierLevelConstant.cs" />
+    <Compile Include="UserAggregate\TierStatusList.cs" />
+    <Compile Include="UserAggregate\UserDocument.cs" />
+    <Compile Include="UserAggregate\UserDocumentsList.cs" />
+    <Compile Include="UserAggregate\UserTierLevelStatus.cs" />
+    <Compile Include="UserAggregate\Address.cs" />
+    <Compile Include="UserAggregate\Language.cs" />
+    <Compile Include="UserAggregate\User.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\CoinExchange.Common\CoinExchange.Common.csproj">
+      <Project>{d61dbd04-95dc-4eb1-ad54-1ff929ac2814}</Project>
+      <Name>CoinExchange.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

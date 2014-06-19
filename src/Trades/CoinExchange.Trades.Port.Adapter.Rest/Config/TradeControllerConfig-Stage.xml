@@ -5,6 +5,7 @@
 
   <object id="TradeController" type="CoinExchange.Trades.Port.Adapter.Rest.Resources.TradeController, CoinExchange.Trades.Port.Adapter.Rest" singleton="false">
     <constructor-arg name="tradeApplicationService" ref="TradeApplicationService"/>
+    <constructor-arg name="apiKeyInfoAccess" ref="SecurityKeysPairRepository"/>
   </object>
 
 </objects>

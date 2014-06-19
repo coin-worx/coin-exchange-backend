@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<objects xmlns="http://www.springframework.net"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xsi:schemaLocation="http://www.springframework.net http://www.springframework.net/xsd/spring-objects.xsd">
+
+  <object id="RegistrationApplicationService" type="CoinExchange.IdentityAccess.Application.RegistrationServices.RegistrationApplicationService, 
+          CoinExchange.IdentityAccess.Application">
+    <constructor-arg name="persistenceRepository" ref="IdentityAccessPersistenceRepository"/>
+    <constructor-arg name="passwordEncryptionService" ref="PasswordEncryptionService"/>
+    <constructor-arg name="activationKeyGenerationService" ref="ActivationKeyGenerationService"/>
+    <constructor-arg name="emailService" ref="EmailService"/>
+    <constructor-arg name="tierRepository" ref="TierRepository"/>
+    <constructor-arg name="userRepository" ref="UserRepository"/>
+  </object>
+  
+<object id="SecurityKeysApplicationService" type="CoinExchange.IdentityAccess.Application.SecurityKeysServices.SecurityKeysApplicationService, 
+          CoinExchange.IdentityAccess.Application">
+    <constructor-arg name="securityKeysGenerationService" ref="SecurityKeysGenerationService"/>
+    <constructor-arg name="persistenceRepository" ref="IdentityAccessPersistenceRepository"/>
+<constructor-arg name="securityKeysRepository" ref="SecurityKeysPairRepository"/>
+  <constructor-arg name="permissionRepository" ref="PermissionRespository"/>
+</object>
+  
+<object id="LoginApplicationService" type="CoinExchange.IdentityAccess.Application.AccessControlServices.LoginApplicationService, 
+          CoinExchange.IdentityAccess.Application">
+  <constructor-arg name="userRepository" ref="UserRepository"/>
+    <constructor-arg name="passwordEncryptionService" ref="PasswordEncryptionService"/>
+  <constructor-arg name="securityKeysApplicationService" ref="SecurityKeysApplicationService"/>
+  <constructor-arg name="persistenceRepository" ref="IdentityAccessPersistenceRepository"/>
+  </object>
+  
+<object id="LogoutApplicationService" type="CoinExchange.IdentityAccess.Application.AccessControlServices.LogoutApplicationService, 
+          CoinExchange.IdentityAccess.Application">
+  <constructor-arg name="securityKeysRepository" ref="SecurityKeysPairRepository"/>
+  </object>
+  
+<object id="UserApplicationService" type="CoinExchange.IdentityAccess.Application.UserServices.UserApplicationService, 
+          CoinExchange.IdentityAccess.Application">
+  <constructor-arg name="userRepository" ref="UserRepository"/>
+  <constructor-arg name="securityKeysRepository" ref="SecurityKeysPairRepository"/>
+  <constructor-arg name="passwordEncryptionService" ref="PasswordEncryptionService"/>
+  <constructor-arg name="persistenceRepository" ref="IdentityAccessPersistenceRepository"/>
+  <constructor-arg name="emailService" ref="EmailService"/>
+  <constructor-arg name="passwordCodeGenerationService" ref="PasswordCodeGenerationService"/>
+  </object>
+  
+  <!--UserTierLevelApplicationService-->
+  <object id="UserTierLevelApplicationService" type="CoinExchange.IdentityAccess.Application.UserServices.UserTierLevelApplicationService, 
+          CoinExchange.IdentityAccess.Application">
+    <constructor-arg name="userRepository" ref="UserRepository"/>
+    <constructor-arg name="securityKeysRepository" ref="SecurityKeysPairRepository"/>
+    <constructor-arg name="persistenceRepository" ref="IdentityAccessPersistenceRepository"/>
+    <constructor-arg name="documentPersistence" ref="DocumentPersistence"/>
+ </object>
+  
+</objects>

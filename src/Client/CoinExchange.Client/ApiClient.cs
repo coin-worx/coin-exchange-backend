@@ -9,12 +9,12 @@ namespace CoinExchange.Client
 {
     public class ApiClient
     {
-        private string key = "55555";
-        private string secretkey = "s3cr3t";
+        public string key = "55555";
+        public string secretkey = "s3cr3t";
         private string nonce = "";
         private string cnounce = "asdfgh";
         private int counter = 0;
-        private string _baseUrl = "";
+        protected string _baseUrl = "";
 
         public ApiClient(string baseUrl)
         {
@@ -31,6 +31,9 @@ namespace CoinExchange.Client
                     HttpWebRequest request = (HttpWebRequest) WebRequest.Create(url);
                     request.Method = "GET";
                     request.ContentType = "application/json; charset=utf-8";
+                    string hash = String.Format("{0}:{1}:{2}", key, url, secretkey).ToMD5Hash();
+                    string split = String.Format("{0},{1},{2},{3},{4}", key, nonce, cnounce, ++counter, hash);
+                    request.Headers.Add("Auth", split);
                     HttpWebResponse response = (HttpWebResponse) request.GetResponse();
 
                     // Get the stream associated with the response.
@@ -194,7 +197,7 @@ namespace CoinExchange.Client
         /// <param name="param"></param>
         /// <param name="url"></param>
         /// <returns></returns>
-        private string HttpPostRequest(object param, string url)
+        protected string HttpPostRequest(object param, string url)
         {
             string message = "";
             for (int i = 0; i < 2; i++)

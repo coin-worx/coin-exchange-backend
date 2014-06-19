@@ -1,0 +1,128 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{54938884-179C-46F9-ABA4-2C4CED45B175}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CoinExchange.IdentityAccess.Port.Adapter.Rest</RootNamespace>
+    <AssemblyName>CoinExchange.IdentityAccess.Port.Adapter.Rest</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="log4net">
+      <HintPath>..\..\packages\log4net.1.2.10\lib\2.0\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.Client.5.1.2\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Http, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.Core.5.1.2\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.WebHost.5.1.1\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DTO\CancelActivationParams.cs" />
+    <Compile Include="DTO\ChangePasswordParams.cs" />
+    <Compile Include="DTO\ChangeSettingsParams.cs" />
+    <Compile Include="DTO\ForgotPasswordParams.cs" />
+    <Compile Include="DTO\ForgotUsernameParams.cs" />
+    <Compile Include="DTO\LoginParams.cs" />
+    <Compile Include="DTO\LogoutParams.cs" />
+    <Compile Include="DTO\ResetPasswordParams.cs" />
+    <Compile Include="DTO\SignUpParam.cs" />
+    <Compile Include="DTO\Tier1Param.cs" />
+    <Compile Include="DTO\Tier2Param.cs" />
+    <Compile Include="DTO\Tier3Param.cs" />
+    <Compile Include="DTO\UserActivationParam.cs" />
+    <Compile Include="FilterIP.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\LoginController.cs" />
+    <Compile Include="Resources\LogoutController.cs" />
+    <Compile Include="Resources\RegistrationController.cs" />
+    <Compile Include="Resources\TierController.cs" />
+    <Compile Include="Resources\UserController.cs" />
+    <Compile Include="Resources\SecurityKeyPairController.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\CoinExchange.Common\CoinExchange.Common.csproj">
+      <Project>{d61dbd04-95dc-4eb1-ad54-1ff929ac2814}</Project>
+      <Name>CoinExchange.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CoinExchange.IdentityAccess.Application\CoinExchange.IdentityAccess.Application.csproj">
+      <Project>{523daca3-bec6-45e9-90d4-8f6f8a1266d7}</Project>
+      <Name>CoinExchange.IdentityAccess.Application</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CoinExchange.IdentityAccess.Domain.Model\CoinExchange.IdentityAccess.Domain.Model.csproj">
+      <Project>{cb2cca81-c266-49a4-9fa0-40416ec2318e}</Project>
+      <Name>CoinExchange.IdentityAccess.Domain.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CoinExchange.IdentityAccess.Infrastructure.Persistence\CoinExchange.IdentityAccess.Infrastructure.Persistence.csproj">
+      <Project>{41ec439d-9e31-4911-b1a6-e5f0a8c01637}</Project>
+      <Name>CoinExchange.IdentityAccess.Infrastructure.Persistence</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CoinExchange.IdentityAccess.Infrastructure.Services\CoinExchange.IdentityAccess.Infrastructure.Services.csproj">
+      <Project>{4921a0e0-8197-4d15-932b-06d667bf9275}</Project>
+      <Name>CoinExchange.IdentityAccess.Infrastructure.Services</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CoinExchange.IdentityAccess.Infrastructure\CoinExchange.IdentityAccess.Infrastructure.csproj">
+      <Project>{d1f70751-534e-461e-999d-42813ac2cae8}</Project>
+      <Name>CoinExchange.IdentityAccess.Infrastructure</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Config\IdentityAcessControllersConfig.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

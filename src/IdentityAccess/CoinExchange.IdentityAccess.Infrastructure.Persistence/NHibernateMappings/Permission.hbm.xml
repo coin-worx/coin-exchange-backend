@@ -1,0 +1,10 @@
+﻿<?xml version="1.0"?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+assembly="CoinExchange.IdentityAccess.Domain.Model" namespace="CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate">
+  <class name="Permission" table="Permission" lazy="false">
+    <id name="PermissionId" column="PermissionId">
+      <generator class="assigned" />
+    </id>
+    <property name="PermissionName"  column="PermissionName"/>
+   </class>
+</hibernate-mapping>

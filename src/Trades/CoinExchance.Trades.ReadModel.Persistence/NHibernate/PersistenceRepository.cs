@@ -12,7 +12,14 @@ namespace CoinExchange.Trades.ReadModel.Persistence.NHibernate
         [Transaction(TransactionPropagation.Required,ReadOnly = false)]
         public void SaveOrUpdate(object readModelObject)
         {
-            CurrentSession.SaveOrUpdate(readModelObject);
+            try
+            {
+                CurrentSession.SaveOrUpdate(readModelObject);
+            }
+            catch (Exception exception)
+            {
+                
+            }
         }
     }
 }

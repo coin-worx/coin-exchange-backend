@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Threading;
+using CoinExchange.Client.Tests;
 using CoinExchange.Common.Tests;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -11,14 +13,15 @@ namespace CoinExchange.Client.Console
     {
         static void Main(string[] args)
         {
-            string baseUrl = "http://rockblanc.cloudapp.net/dev";
-            //baseUrl = "http://localhost:51780";
-            ApiClient client=new ApiClient(baseUrl);
+            string baseUrl = "http://rockblanc.cloudapp.net/login/v1";
+            //baseUrl = "http://localhost:51780/v1";
+            //ApiClient client = new ApiClient(baseUrl);
+            //System.Console.WriteLine(client.QueryTrades("6e8b5195-0e7f-402f-87e7-80eb92a96c85"));
             //Scenario1(client);
             //ScenarioResults(client);
-            //System.Console.WriteLine(client.CancelOrder("d2134ee4-0bfd-46db-aeda-76c725187909"));
-            System.Console.WriteLine(client.CreateOrder("XBTUSD", "limit", "buy", 0, 250));
-           System.Console.ReadKey();
+            //System.Console.WriteLine(client.GetTradeHistory("",""));
+            Login(baseUrl);
+            System.Console.ReadKey();
         }
 
         /// <summary>
@@ -103,6 +106,32 @@ namespace CoinExchange.Client.Console
             System.Console.WriteLine(client.QueryClosedOrdersParams(true, "", ""));
             System.Console.WriteLine("------TRADES------");
             System.Console.WriteLine(client.GetTradeHistory("", ""));
+        }
+
+        private static void OrderBookGenerator(ApiClient client)
+        {
+            string currencyPair = "XBTUSD";
+            //Create orders
+            System.Console.WriteLine(client.CreateOrder(currencyPair, "limit", "buy", 10, 250));
+            System.Console.WriteLine(client.CreateOrder(currencyPair, "limit", "sell", 5, 252));
+            System.Console.WriteLine(client.CreateOrder(currencyPair, "limit", "buy", 3,250));
+            System.Console.WriteLine(client.CreateOrder(currencyPair, "limit", "sell", 2, 253));
+            System.Console.WriteLine(client.CreateOrder(currencyPair, "limit", "sell", 5,254));
+            System.Console.WriteLine(client.CreateOrder(currencyPair, "limit", "buy", 2, 249));
+            Thread.Sleep(5000);
+            ScenarioResults(client);
+        }
+
+        private static void Login(string baseUrl)
+        {
+            IdentityAccessClient client=new IdentityAccessClient(baseUrl);
+            AccessControl control=new AccessControl(client,"123","user1");
+            control.Login();
+            client.Logout();
+            //System.Console.WriteLine(control.GetSecurityPairs());
+            //PermissionRepresentation[] rep = control.ListPermissions();
+            //rep[0].Allowed = true;
+            //System.Console.WriteLine(control.CreateSecurityKeyPair("#1",rep));
         }
     }
 }

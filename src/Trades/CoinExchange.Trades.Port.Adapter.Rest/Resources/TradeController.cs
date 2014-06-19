@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 using CoinExchange.Common.Domain.Model;
+using CoinExchange.Common.Services;
 using CoinExchange.Trades.Application.OrderServices.Representation;
 using CoinExchange.Trades.Application.TradeServices;
 using CoinExchange.Trades.Application.TradeServices.Representation;
@@ -18,15 +19,18 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
     /// <summary>
     /// Rest service for serving requests related to Trades
     /// </summary>
+    [RoutePrefix("v1")]
     public class TradeController : ApiController
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger
      (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private ITradeApplicationService _tradeApplicationService;
+        private IApiKeyInfoAccess _apiKeyInfoAccess;
 
-        public TradeController(ITradeApplicationService tradeApplicationService)
+        public TradeController(ITradeApplicationService tradeApplicationService,IApiKeyInfoAccess apiKeyInfoAccess)
         {
             _tradeApplicationService = tradeApplicationService;
+            _apiKeyInfoAccess = apiKeyInfoAccess;
         }
 
         /// <summary>
@@ -59,7 +63,8 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                     apikey = auth[0];
                 }
                 log.Debug("Api Key:" + apikey);
-                var closedOrders = _tradeApplicationService.GetTradesHistory(new TraderId(Constants.GetTraderId(apikey)),tradeHistoryParams.Start, tradeHistoryParams.End);
+                TraderId traderId = new TraderId(_apiKeyInfoAccess.GetUserIdFromApiKey(apikey).ToString());
+                var closedOrders = _tradeApplicationService.GetTradesHistory(traderId,tradeHistoryParams.Start, tradeHistoryParams.End);
 
                 if (closedOrders != null)
                 {

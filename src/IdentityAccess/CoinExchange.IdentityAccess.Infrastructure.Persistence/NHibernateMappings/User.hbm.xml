@@ -1,0 +1,46 @@
+﻿<?xml version="1.0"?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+assembly="CoinExchange.IdentityAccess.Domain.Model" namespace="CoinExchange.IdentityAccess.Domain.Model.UserAggregate">
+  <class name="User" table="User" lazy="false">
+    <id name="Id" column="Id">
+      <generator class="native" />
+    </id>
+    <property name="Username"  column="Username"/>
+    <property name="Password"  column="Password"/>
+    <property name="PublicKey"  column="PublicKey"/>
+    <property name="Email"  column="Email"/>
+    <property name="Language"  column="Language"/>
+    <property name="TimeZone"  column="TimeZone"/>
+    <property name="AutoLogout" type="TimeSpan" column="AutoLogout"/>
+    <property name="LastLogin"  column="LastLogin"/>
+    <property name="State"  column="State"/>
+    <property name="Country"  column="Country"/>
+    <property name="ActivationKey"  column="ActivationKey"/>
+    <property name="PhoneNumber"  column="PhoneNumber"/>
+    <property name="Address1" column="Address1"/>
+    <property name="Address2" column="Address2"/>
+    <property name="Deleted" column="Deleted"/>
+    <property name="ForgotPasswordCode" column="ForgotPasswordCode"/>
+    <property name="ForgotPasswordCodeExpiration" column="ForgotPasswordCodeExpiration"/>
+    <property name="City" column="City"/>
+    <property name="ZipCode" column="ZipCode"/>
+    <property name="SocialSecurityNumber" column="SocialSecurityNumber"/>
+    <property name="NationalIdentificationNumber" column="NationalIdentificationNumber"/>
+    <property name="FullName" column="FullName"/>
+    <property name="DateOfBirth" column="DateOfBirth"/>
+    <component name="IsUserBlocked">
+      <property name="Value" column="IsUserBlocked"/>
+    </component>
+    <component name="IsActivationKeyUsed">
+      <property name="Value" column="IsActivationKeyUsed"/>
+    </component>
+    <bag name="_forgottenPasswordCodesList" table="PasswordCodeRecord" cascade="all" inverse="true" lazy="false">
+      <key column="UserId"/>
+      <one-to-many class="PasswordCodeRecord"/>
+    </bag>
+    <bag name="_tierLevelStatuses" table="UserTierLevelStatus" cascade="all" inverse="true" lazy="false">
+      <key column="UserId"/>
+      <one-to-many class="UserTierLevelStatus"/>
+    </bag>
+    </class>
+</hibernate-mapping>
