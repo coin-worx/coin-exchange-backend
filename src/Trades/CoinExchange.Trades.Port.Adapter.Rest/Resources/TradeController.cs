@@ -144,7 +144,8 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                     string[] auth = headerParams.ToList()[0].Split(',');
                     apikey = auth[0];
                 }
-                var trades = _tradeApplicationService.GetTradeDetails(Constants.GetTraderId(apikey), tradeId);
+                TraderId traderId = new TraderId(_apiKeyInfoAccess.GetUserIdFromApiKey(apikey).ToString());
+                var trades = _tradeApplicationService.GetTradeDetails(traderId.Id, tradeId);
 
                 if (trades != null)
                 {
