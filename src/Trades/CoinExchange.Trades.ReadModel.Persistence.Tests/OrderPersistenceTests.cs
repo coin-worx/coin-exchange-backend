@@ -44,11 +44,28 @@ namespace CoinExchange.Trades.ReadModel.Persistence.Tests
             Order order = OrderFactory.CreateOrder("1234", "XBTUSD", "limit", "buy", 5, 10,
                new StubbedOrderIdGenerator());
             string id = DateTime.Now.ToString();
+            order.OrderState=OrderState.Complete;
             OrderReadModel model = ReadModelAdapter.GetOrderReadModel(order);
             _persistanceRepository.SaveOrUpdate(model);
             OrderReadModel getReadModel = _orderRepository.GetOrderById(order.OrderId.Id.ToString());
             Assert.NotNull(getReadModel);
             AssertAreEqual(getReadModel, model);
+            Assert.NotNull(getReadModel.ClosingDateTime);
+        }
+
+        [Test]
+        public void SaveOrderReadModel_IfStateIsAccepted_ClosingTimeShouldBeNull()
+        {
+            Order order = OrderFactory.CreateOrder("1234", "XBTUSD", "limit", "buy", 5, 10,
+               new StubbedOrderIdGenerator());
+            string id = DateTime.Now.ToString();
+            order.OrderState = OrderState.Accepted;
+            OrderReadModel model = ReadModelAdapter.GetOrderReadModel(order);
+            _persistanceRepository.SaveOrUpdate(model);
+            OrderReadModel getReadModel = _orderRepository.GetOrderById(order.OrderId.Id.ToString());
+            Assert.NotNull(getReadModel);
+            AssertAreEqual(getReadModel, model);
+            Assert.Null(getReadModel.ClosingDateTime);
         }
         [Test]
         public void GetOpenOrders_IfTraderIdIsProvided_ItShouldRetireveAllOpenOrdersOfTrader()

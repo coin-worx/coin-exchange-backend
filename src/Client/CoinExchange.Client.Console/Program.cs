@@ -127,8 +127,8 @@ namespace CoinExchange.Client.Console
             IdentityAccessClient client=new IdentityAccessClient(baseUrl);
             AccessControl control=new AccessControl(client,"123","user1");
             control.Login("user1","123");
-            Scenario1(client);
-            //ScenarioResults(client);
+            //Scenario1(client);
+            ScenarioResults(client);
             //System.Console.WriteLine(control.GetSecurityPairs());
             //PermissionRepresentation[] rep = control.ListPermissions();
             //rep[0].Allowed = true;

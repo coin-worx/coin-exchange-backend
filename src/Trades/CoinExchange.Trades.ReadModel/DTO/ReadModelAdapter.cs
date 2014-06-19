@@ -12,9 +12,16 @@ namespace CoinExchange.Trades.ReadModel.DTO
     {
         public static OrderReadModel GetOrderReadModel(Order order)
         {
+            DateTime? closingTime = null;
+            if (order.OrderState == OrderState.Cancelled || order.OrderState == OrderState.Complete ||
+                order.OrderState == OrderState.Rejected)
+            {
+                //update closing time if order is closed
+                closingTime = DateTime.Now;
+            }
             OrderReadModel model = new OrderReadModel(order.OrderId.Id.ToString(), order.OrderType.ToString(),
                 order.OrderSide.ToString(), order.Price.Value, order.FilledQuantity.Value, order.TraderId.Id.ToString(),
-                order.OrderState.ToString(), order.CurrencyPair,order.DateTime,order.Volume.Value,order.OpenQuantity.Value);
+                order.OrderState.ToString(), order.CurrencyPair,order.DateTime,order.Volume.Value,order.OpenQuantity.Value,closingTime);
             return model;
         }
 

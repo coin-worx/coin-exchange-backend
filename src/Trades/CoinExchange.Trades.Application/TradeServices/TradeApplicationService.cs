@@ -68,6 +68,11 @@ namespace CoinExchange.Trades.Application.TradeServices
             TradeReadModel model = _tradeRepository.GetByIdAndTraderId(traderId,tradeId);
             OrderReadModel buyOrder = _orderRepository.GetOrderById(model.BuyOrderId);
             OrderReadModel sellOrder = _orderRepository.GetOrderById(model.SellOrderId);
+            if (buyOrder.TraderId == traderId && sellOrder.TraderId == traderId)
+            {
+                OrderReadModel fillingOrder = buyOrder.DateTime > sellOrder.DateTime ? buyOrder : sellOrder;
+                return new TradeDetailsRepresentation(fillingOrder, model.ExecutionDateTime, model.Price, model.Volume, model.TradeId);
+            }
             if (buyOrder.TraderId == traderId)
             {
                 return new TradeDetailsRepresentation(buyOrder,model.ExecutionDateTime,model.Price,model.Volume,model.TradeId);

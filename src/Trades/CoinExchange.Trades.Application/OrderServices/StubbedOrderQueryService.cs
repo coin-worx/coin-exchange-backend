@@ -142,7 +142,7 @@ namespace CoinExchange.Trades.Application.OrderServices
 
         public object GetOrderById(TraderId traderId,OrderId orderId)
         {
-            return new OrderReadModel(orderId.Id, "market", "buy", 0, 10, traderId.Id, "Closed", "XBTUSD", DateTime.Now, 10, 0);
+            return new OrderReadModel(orderId.Id, "market", "buy", 0, 10, traderId.Id, "Closed", "XBTUSD", DateTime.Now, 10, 0,DateTime.Now);
         }
     }
 }
