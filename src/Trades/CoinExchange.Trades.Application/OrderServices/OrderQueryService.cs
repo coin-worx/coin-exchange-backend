@@ -40,12 +40,13 @@ namespace CoinExchange.Trades.Application.OrderServices
         public object GetOpenOrders(TraderId traderId, bool includeTrades = false)
         {
             List<OrderReadModel> orders = _orderRepository.GetOpenOrders(traderId.Id.ToString(CultureInfo.InvariantCulture));
-            if (includeTrades)
+            for (int i = 0; i < orders.Count; i++)
             {
-                for (int i = 0; i < orders.Count;i++)
+                IList<object> trades = _tradeRepository.GetTradesByorderId(orders[i].OrderId);
+                orders[i].AveragePrice = CalculateAveragePrice(trades);
+                if (includeTrades)
                 {
-                    orders[i].Trades = _tradeRepository.GetTradesByorderId(orders[i].OrderId);
-                    orders[i].AveragePrice = CalculateAveragePrice(orders[i].Trades);
+                    orders[i].Trades = trades;
                 }
             }
             return orders;
@@ -71,12 +72,13 @@ namespace CoinExchange.Trades.Application.OrderServices
                 orders = _orderRepository.GetClosedOrders(traderId.Id.ToString(), Convert.ToDateTime(startTime),
                     Convert.ToDateTime(endTime));
             }
-            if (includeTrades)
+            for (int i = 0; i < orders.Count; i++)
             {
-                for (int i = 0; i < orders.Count; i++)
+                IList<object> trades = _tradeRepository.GetTradesByorderId(orders[i].OrderId);
+                orders[i].AveragePrice = CalculateAveragePrice(trades);
+                if (includeTrades)
                 {
-                    orders[i].Trades = _tradeRepository.GetTradesByorderId(orders[i].OrderId);
-                    orders[i].AveragePrice = CalculateAveragePrice(orders[i].Trades);
+                    orders[i].Trades = trades;
                 }
             }
             return orders;
