@@ -52,9 +52,9 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
 
             UserController userController = (UserController)_applicationContext["UserController"];
             httpActionResult = userController.ActivateUser(new UserActivationParam("user", "123", activationKey));
-            OkNegotiatedContentResult<bool> okResponseMessage1 =
-                (OkNegotiatedContentResult<bool>)httpActionResult;
-            Assert.AreEqual(okResponseMessage1.Content, true);
+            OkNegotiatedContentResult<string> okResponseMessage1 =
+                (OkNegotiatedContentResult<string>)httpActionResult;
+            Assert.AreEqual(okResponseMessage1.Content, "activated");
 
             LoginController loginController = (LoginController)_applicationContext["LoginController"];
             httpActionResult = loginController.Login(new LoginParams("user", "123"));
@@ -81,9 +81,9 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
 
             UserController userController = (UserController)_applicationContext["UserController"];
             httpActionResult = userController.ActivateUser(new UserActivationParam(username, "123", activationKey));
-            OkNegotiatedContentResult<bool> okResponseMessage1 =
-                (OkNegotiatedContentResult<bool>)httpActionResult;
-            Assert.AreEqual(okResponseMessage1.Content, true);
+            OkNegotiatedContentResult<string> okResponseMessage1 =
+                (OkNegotiatedContentResult<string>)httpActionResult;
+            Assert.AreEqual(okResponseMessage1.Content, "activated");
 
             LoginController loginController = (LoginController)_applicationContext["LoginController"];
             int currentHour = DateTime.Now.Hour;
@@ -152,9 +152,9 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             // Activate Account
             UserController userController = (UserController)_applicationContext["UserController"];
             httpActionResult = userController.ActivateUser(new UserActivationParam(username, "123", activationKey));
-            OkNegotiatedContentResult<bool> okResponseMessage1 =
-                (OkNegotiatedContentResult<bool>)httpActionResult;
-            Assert.AreEqual(okResponseMessage1.Content, true);
+            OkNegotiatedContentResult<string> okResponseMessage1 =
+                (OkNegotiatedContentResult<string>)httpActionResult;
+            Assert.AreEqual(okResponseMessage1.Content, "activated");
 
             // Login again
             httpActionResult = loginController.Login(new LoginParams(username, "123"));

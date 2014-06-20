@@ -20,7 +20,7 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Persistence.Repositories
     /// Repository for DigitalSignatureInfo
     /// </summary>
     [Repository]
-    public class SecurityKeysPairRepository : NHibernateSessionFactory, ISecurityKeysRepository,IApiKeyInfoAccess
+    public class SecurityKeysPairRepository : NHibernateSessionFactory, ISecurityKeysRepository, IApiKeyInfoAccess
     {
         [Transaction(ReadOnly = true)]
         public SecurityKeysPair GetByKeyDescriptionAndUserId(string keyDescription, int userId)

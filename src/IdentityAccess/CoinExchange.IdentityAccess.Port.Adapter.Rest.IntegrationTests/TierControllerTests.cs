@@ -61,9 +61,9 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
 
             UserController userController = _applicationContext["UserController"] as UserController;
             httpActionResult = userController.ActivateUser(new UserActivationParam("user", "123", activationKey));
-            OkNegotiatedContentResult<bool> okResponseMessage1 =
-                (OkNegotiatedContentResult<bool>)httpActionResult;
-            Assert.AreEqual(okResponseMessage1.Content, true);
+            OkNegotiatedContentResult<string> okResponseMessage1 =
+                (OkNegotiatedContentResult<string>)httpActionResult;
+            Assert.AreEqual(okResponseMessage1.Content, "activated");
 
             LoginController loginController = _applicationContext["LoginController"] as LoginController;
             httpActionResult = loginController.Login(new LoginParams("user", "123"));
@@ -173,7 +173,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             tierController.Request.Headers.Add("Auth", essentials.ApiKey);
             IHttpActionResult httpActionResult = tierController.GetTier2Details();
             BadRequestErrorMessageResult result = httpActionResult as BadRequestErrorMessageResult;
-            Assert.AreEqual(result.Message, "First verify Tier 1");
+            Assert.AreEqual(result.Message, "Tier 2 details are not submitted yet.");
         }
 
         [Test]
@@ -186,7 +186,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             tierController.Request.Headers.Add("Auth", essentials.ApiKey);
             IHttpActionResult httpActionResult = tierController.GetTier3Details();
             BadRequestErrorMessageResult result = httpActionResult as BadRequestErrorMessageResult;
-            Assert.AreEqual(result.Message, "First verify Tier 2");
+            Assert.AreEqual(result.Message, "Tier 3 details are not submitted yet.");
         }
     }
 }

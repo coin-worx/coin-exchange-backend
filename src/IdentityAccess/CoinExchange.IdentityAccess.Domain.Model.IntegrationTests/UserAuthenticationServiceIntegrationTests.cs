@@ -336,7 +336,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.IntegrationTests
 
         [Test]
         [Category("Integration")]
-        [ExpectedException(typeof(TimeoutException))]
+        [ExpectedException(typeof(InvalidOperationException))]
         public void UserGeneratedKeysCancelOrderFailTest_TestsIfTheAuthenticationFailsDueToExpirationDate_VerifiesThroughTheReturnedValue()
         {
             ISecurityKeysRepository securityKeysRepository =

@@ -13,7 +13,7 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Persistence.Repositories
     /// Implementation of permission repository
     /// </summary>
     [Repository]
-    public class PermissionRespository:NHibernateSessionFactory,IPermissionRepository
+    public class PermissionRespository : NHibernateSessionFactory, IPermissionRepository
     {
         [Transaction(ReadOnly = true)]
         public IList<Permission> GetAllPermissions()

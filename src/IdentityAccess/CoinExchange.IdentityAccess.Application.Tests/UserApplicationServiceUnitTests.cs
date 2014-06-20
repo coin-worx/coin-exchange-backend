@@ -100,7 +100,7 @@ namespace CoinExchange.IdentityAccess.Application.Tests
 
         [Test]
         [Category("Unit")]
-        [ExpectedException(typeof(Exception))]
+        //[ExpectedException(typeof(Exception))]
         public void ChangePasswordFailDueToSessionTimeoutTest_ChecksThePasswordDoesNotGetChangedWhenSessionTimeoutHasExpired_VerifiesByExpectingException()
         {
             IUserRepository userRepository = new MockUserRepository();
@@ -136,7 +136,7 @@ namespace CoinExchange.IdentityAccess.Application.Tests
             string passwordAfterChange = userAfterPasswordChange.Password;
 
             // Verify the old and new password do not match
-            Assert.AreEqual(passwordBeforeChange, passwordAfterChange);
+            Assert.AreNotEqual(passwordBeforeChange, passwordAfterChange);
         }
 
         #endregion Change Password Tests
@@ -180,7 +180,7 @@ namespace CoinExchange.IdentityAccess.Application.Tests
 
         [Test]
         [Category("Unit")]
-        [ExpectedException(typeof(Exception))]
+        [ExpectedException(typeof(InvalidOperationException))]
         public void ActivateAccountTwiceFailTest_ChecksIfTheAccountIsNotActivatedTwice_VeririesThroughTheReturnedValue()
         {
             IUserRepository userRepository = new MockUserRepository();
@@ -218,7 +218,7 @@ namespace CoinExchange.IdentityAccess.Application.Tests
 
         [Test]
         [Category("Unit")]
-        [ExpectedException(typeof(InstanceNotFoundException))]
+        [ExpectedException(typeof(InvalidOperationException))]
         public void ActivateAccountFailDueToInvalidActivationKeyTest_MakesSureThatTheAccountIsNotActivatedWhenInvalidActivationKeyIsGiven_VeririesThroughTheReturnedValue()
         {
             IUserRepository userRepository = new MockUserRepository();

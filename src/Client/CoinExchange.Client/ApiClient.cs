@@ -230,7 +230,13 @@ namespace CoinExchange.Client
                 catch (WebException exe)
                 {
                     nonce = exe.Response.Headers["Nounce"];
-                    message = exe.Response.ToString();
+                    Stream receiveStream = exe.Response.GetResponseStream();
+
+                    // Pipes the stream to a higher level stream reader with the required encoding format. 
+                    StreamReader readStream = new StreamReader(receiveStream, Encoding.UTF8);
+                    message = readStream.ReadToEnd();
+                    exe.Response.Close();
+                    readStream.Close();
                 }
             }
             return message;

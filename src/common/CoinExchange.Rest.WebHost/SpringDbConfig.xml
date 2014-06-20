@@ -14,7 +14,7 @@
     <property name="MappingAssemblies">
       <list>
         <value>CoinExchange.IdentityAccess.Infrastructure.Persistence</value>
-        <!--<value>CoinExchange.Trades.ReadModel.Persistence</value>-->
+        <value>CoinExchange.Trades.ReadModel.Persistence</value>
       </list>
     </property>
     
@@ -42,7 +42,7 @@
   <!-- Exception translation object post processor -->
   <!--<object type="Spring.Dao.Attributes.PersistenceExceptionTranslationPostProcessor, Spring.Data"/>-->
 
-  <!-- Repositories -->
+  <!-- Identity & Access BC Repositories -->
   <object id="IdentityAccessPersistenceRepository" type="CoinExchange.IdentityAccess.Infrastructure.Persistence.Repositories.IdentityAccessPersistenceRepository, CoinExchange.IdentityAccess.Infrastructure.Persistence">
     <property name="SessionFactory" ref="NHibernateSessionFactory"/>
   </object>
@@ -57,6 +57,28 @@
     <property name="SessionFactory" ref="NHibernateSessionFactory"/>
   </object>
   <object id="TierRepository" type="CoinExchange.IdentityAccess.Infrastructure.Persistence.Repositories.TierRepository, CoinExchange.IdentityAccess.Infrastructure.Persistence">
+    <property name="SessionFactory" ref="NHibernateSessionFactory"/>
+  </object>
+  
+  <!-- Trade BC Repositories -->
+  <object id="PersistenceRepository" type="CoinExchange.Trades.ReadModel.Persistence.NHibernate.PersistenceRepository, CoinExchange.Trades.ReadModel.Persistence">
+    <property name="SessionFactory" ref="NHibernateSessionFactory"/>
+  </object>
+
+  <object id="OrderRepository" type="CoinExchange.Trades.ReadModel.Persistence.NHibernate.OrderRepository, CoinExchange.Trades.ReadModel.Persistence">
+    <property name="SessionFactory" ref="NHibernateSessionFactory"/>
+  </object>
+
+  <object id="TradeRepository" type="CoinExchange.Trades.ReadModel.Persistence.NHibernate.TradeRepository, CoinExchange.Trades.ReadModel.Persistence">
+    <property name="SessionFactory" ref="NHibernateSessionFactory"/>
+  </object>
+  <object id="OhlcRepository" type="CoinExchange.Trades.ReadModel.Persistence.NHibernate.OhlcRepository, CoinExchange.Trades.ReadModel.Persistence">
+    <property name="SessionFactory" ref="NHibernateSessionFactory"/>
+  </object>
+  <object id="TickerInfoRepository" type="CoinExchange.Trades.ReadModel.Persistence.NHibernate.TickerInfoRepository, CoinExchange.Trades.ReadModel.Persistence">
+    <property name="SessionFactory" ref="NHibernateSessionFactory"/>
+  </object>
+  <object id="CurrencyPairRepository" type="CoinExchange.Trades.ReadModel.Persistence.NHibernate.CurrencyPairRepository, CoinExchange.Trades.ReadModel.Persistence">
     <property name="SessionFactory" ref="NHibernateSessionFactory"/>
   </object>
   <tx:attribute-driven/>

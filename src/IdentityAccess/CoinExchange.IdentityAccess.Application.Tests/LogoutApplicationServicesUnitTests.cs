@@ -62,7 +62,7 @@ namespace CoinExchange.IdentityAccess.Application.Tests
                 "123456789", "987654321", "1", 0, true));
             //UserValidationEssentials userValidationEssentials = new UserValidationEssentials(new Tuple<ApiKey, SecretKey>(
             //    new ApiKey("12345678910"), new SecretKey("987654321")), new TimeSpan(0, 0, 0, 10));
-            logoutApplicationService.Logout(new LogoutCommand("123456789"));
+            logoutApplicationService.Logout(new LogoutCommand("12345678910"));
         }
 
         [Test]
@@ -77,7 +77,7 @@ namespace CoinExchange.IdentityAccess.Application.Tests
                 "123456789", "987654321", "1", 0, true));
             //UserValidationEssentials userValidationEssentials = new UserValidationEssentials(new Tuple<ApiKey, SecretKey>(
             //    new ApiKey(""), new SecretKey("987654321")), new TimeSpan(0, 0, 0, 10));
-            logoutApplicationService.Logout(new LogoutCommand("123456789"));
+            logoutApplicationService.Logout(new LogoutCommand(""));
         }
 
         [Test]
@@ -92,7 +92,7 @@ namespace CoinExchange.IdentityAccess.Application.Tests
                 "123456789", "987654321", "1", 0, true));
             //UserValidationEssentials userValidationEssentials = new UserValidationEssentials(new Tuple<ApiKey, SecretKey>(
             //    new ApiKey("12345"), new SecretKey("987654321")), new TimeSpan(0, 0, 0, 10));
-            logoutApplicationService.Logout(new LogoutCommand("123456789"));
+            logoutApplicationService.Logout(new LogoutCommand("12345678129"));
         }
 
         [Test]
@@ -107,7 +107,7 @@ namespace CoinExchange.IdentityAccess.Application.Tests
                 "123456789", "987654321", "1", 0, true));
             //UserValidationEssentials userValidationEssentials = new UserValidationEssentials(new Tuple<ApiKey, SecretKey>(
             //    new ApiKey("123456789"), new SecretKey("")), new TimeSpan(0, 0, 0, 10));
-            logoutApplicationService.Logout(new LogoutCommand("123456789"));
+            logoutApplicationService.Logout(new LogoutCommand(""));
         }
     }
 }

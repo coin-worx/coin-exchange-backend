@@ -13,7 +13,7 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Persistence.Repositories
     /// Implementation of Tier repository
     /// </summary>
     [Repository]
-    public class TierRepository:NHibernateSessionFactory,ITierRepository
+    public class TierRepository : NHibernateSessionFactory, ITierRepository
     {
         /// <summary>
         /// Get list of all tiers.
