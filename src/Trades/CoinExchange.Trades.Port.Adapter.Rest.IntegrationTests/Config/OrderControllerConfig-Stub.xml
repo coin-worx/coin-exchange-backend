@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<objects xmlns="http://www.springframework.net"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xsi:schemaLocation="http://www.springframework.net http://www.springframework.net/xsd/spring-objects.xsd">
+
+  <object id="OrderController" type="CoinExchange.Trades.Port.Adapter.Rest.Resources.OrderController, CoinExchange.Trades.Port.Adapter.Rest" singleton="false">
+    <constructor-arg name="orderApplicationService" ref="OrderApplicationService"/>
+    <constructor-arg name="orderQueryService" ref="OrderQueryService"/>
+    <constructor-arg name="apiKeyInfoAccess" ref="StubApiKeyService"/>
+  </object>
+  <object id="StubApiKeyService" type="CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests.StubApiKeyService, CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests" singleton="false">
+  </object>
+  <!--<object id="OrderApplicationService" type="CoinExchange.Trades.Application.OrderServices.OrderApplicationService, CoinExchange.Trades.Application">
+    <constructor-arg name="cancelOrderCommandValidation" ref="CancelOrderCommandValidation"/>
+  </object>
+  
+  <object id="CancelOrderCommandValidation" type="CoinExchange.Trades.Application.OrderServices.CancelOrderCommandValidation, CoinExchange.Trades.Application">
+    <constructor-arg name="orderRepository" ref="OrderRepository"/>
+  </object>
+
+  <object id="OrderRepository" type="CoinExchange.Trades.ReadModel.Persistence.NHibernate.OrderRepository, CoinExchange.Trades.ReadModel.Persistence">
+  </object>
+
+  <object id="OrderQueryService" type="CoinExchange.Trades.Application.OrderServices.StubbedOrderQueryService, CoinExchange.Trades.Application"/>
+  
+<object id="OrderIdGenerator" type="CoinExchange.Trades.Infrastructure.Services.StubbedOrderIdGenerator, CoinExchange.Trades.Infrastructure.Services"/>
+-->
+</objects>

@@ -139,6 +139,7 @@
     <Compile Include="MarketDataControllerTests.cs" />
     <Compile Include="OrderControllerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StubApiKeyService.cs" />
     <Compile Include="TradeControllerTests.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -182,6 +183,16 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Config\OrderControllerConfig-Stub.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Config\TradeControllerConfig-Stub.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

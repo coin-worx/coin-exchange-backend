@@ -114,7 +114,7 @@ namespace CoinExchange.Trades.ReadModel.Persistence.Tests
             Assert.AreEqual(model.TodaysTrades, 4);
             Assert.AreEqual(model.Last24HourTrades, 5);
             Assert.AreEqual(model.TodaysVolumeWeight, 11.875m);
-            Assert.AreEqual(model.Last24HourVolumeWeight, 10.8889m);
+            Assert.AreEqual(model.Last24HourVolumeWeight, 10.88889m);
         }
 
         protected virtual void BeforeSetup()
