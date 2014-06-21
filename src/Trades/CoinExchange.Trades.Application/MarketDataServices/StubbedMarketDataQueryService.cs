@@ -53,13 +53,13 @@ namespace CoinExchange.Trades.Application.MarketDataServices
         public object GetOrderBook(string symbol, int count)
         {
             OrderRepresentationList bidList = new OrderRepresentationList(symbol, OrderSide.Buy);
-            bidList.UpdateAtIndex(0, 1000, 491.34M);
-            bidList.UpdateAtIndex(1, 900, 491.11M);
-            bidList.UpdateAtIndex(1, 2300, 489.11M);
+            bidList.UpdateAtIndex(0, 1000, 491.34M,DateTime.Now);
+            bidList.UpdateAtIndex(1, 900, 491.11M,DateTime.Now);
+            bidList.UpdateAtIndex(1, 2300, 489.11M,DateTime.Now);
             OrderRepresentationList askList = new OrderRepresentationList(symbol, OrderSide.Sell);
-            askList.UpdateAtIndex(1, 900, 499.11M);
-            askList.UpdateAtIndex(1, 300, 493.11M);
-            askList.UpdateAtIndex(1, 2200, 492.11M);
+            askList.UpdateAtIndex(1, 900, 499.11M,DateTime.Now);
+            askList.UpdateAtIndex(1, 300, 493.11M,DateTime.Now);
+            askList.UpdateAtIndex(1, 2200, 492.11M,DateTime.Now);
 
             return new Tuple<OrderRepresentationList, OrderRepresentationList>(bidList, askList);
             // ToDo: Remove the below commented out code when this request works perfectly on UI
@@ -104,6 +104,12 @@ namespace CoinExchange.Trades.Application.MarketDataServices
             ratesList.AddRate("LTC/USD", 496.34M, 499.65M);
 
             return ratesList;
+        }
+
+
+        public object GetSpread(string currencyPair)
+        {
+            throw new NotImplementedException();
         }
     }
 }

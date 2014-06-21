@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using CoinExchange.Trades.Application.MarketDataServices.Representation;
 using CoinExchange.Trades.Domain.Model.OrderAggregate;
@@ -178,11 +179,11 @@ namespace CoinExchange.Trades.Application.MarketDataServices
                 {
                     if (i < originalBidBook.Count())
                     {
-                        bidBook.AddRecord(originalBidBook.ToList()[i].Volume, originalBidBook.ToList()[i].Price);
+                        bidBook.AddRecord(originalBidBook.ToList()[i].Volume, originalBidBook.ToList()[i].Price, originalBidBook.ToList()[i].DateTime);
                     }
                     if (i < originalAskBook.Count())
                     {
-                        askBook.AddRecord(originalAskBook.ToList()[i].Volume, originalAskBook.ToList()[i].Price);
+                        askBook.AddRecord(originalAskBook.ToList()[i].Volume, originalAskBook.ToList()[i].Price, originalAskBook.ToList()[i].DateTime);
                     }
                 }
                 return new OrderBookRepresentation(bidBook,askBook);
@@ -210,5 +211,77 @@ namespace CoinExchange.Trades.Application.MarketDataServices
         }
 
         #endregion
+
+        /// <summary>
+        /// Get spread of bid and ask
+        /// </summary>
+        /// <param name="currencyPair"></param>
+        /// <returns></returns>
+        public object GetSpread(string currencyPair)
+        {
+            List<OrderRecord> bidsRecord;
+            List<OrderRecord> asksRecord;
+            OrderRepresentationList originalBidBook = this.GetBidBook(currencyPair);
+            OrderRepresentationList originalAskBook = this.GetAskBook(currencyPair);
+            asksRecord = originalAskBook.OrderBy(x => x.DateTime).ToList();
+            bidsRecord = originalBidBook.OrderBy(x => x.DateTime).ToList();
+            List<Spread> spread;
+            OrderRecord lastBid;
+            OrderRecord lastAsk;
+            if (asksRecord.Count > 0 && bidsRecord.Count > 0)
+            {
+                spread=new List<Spread>();
+                if (asksRecord[0].DateTime >= bidsRecord[0].DateTime)
+                {
+                    spread.Add(new Spread(asksRecord[0].Price,bidsRecord[0].Price,asksRecord[0].DateTime));
+                }
+                if (asksRecord[0].DateTime < bidsRecord[0].DateTime)
+                {
+                    spread.Add(new Spread(asksRecord[0].Price, bidsRecord[0].Price, bidsRecord[0].DateTime));
+                }
+                lastAsk = asksRecord[0];
+                lastBid = bidsRecord[0];
+                
+                if (bidsRecord.Count >= asksRecord.Count)
+                {
+                    //traverse according to bids
+                    for (int i = 1; i < bidsRecord.Count; i++)
+                    {
+                        for (int j = 1; j < asksRecord.Count; j++)
+                        {
+                            if (bidsRecord[i].DateTime <= asksRecord[j].DateTime)
+                            {
+                               //lastAsk = asksRecord[j];
+                               spread.Add(new Spread(lastAsk.Price, bidsRecord[i].Price, bidsRecord[i].DateTime));
+                            }
+                            else
+                            {
+                                lastAsk = asksRecord[j];
+                                spread.Add(new Spread(lastAsk.Price, bidsRecord[i].Price, lastAsk.DateTime));
+                            }
+                        }
+                        //spread.Add(new Spread(lastAsk.Price,bidsRecord[i].Price,bidsRecord[i].DateTime));
+                    }
+                }
+                else
+                {
+                    //traverse according to asks
+                    for (int i = 1; i < asksRecord.Count; i++)
+                    {
+                        for (int j = 1; j < bidsRecord.Count; j++)
+                        {
+                            if (asksRecord[i].DateTime <= bidsRecord[j].DateTime)
+                            {
+                                lastBid = bidsRecord[j];
+                            }
+                        }
+                        spread.Add(new Spread(asksRecord[i].Price, lastBid.Price, asksRecord[i].DateTime));
+                    }
+                }
+                
+                return spread;
+            }
+           return null;
+        }
     }
 }

@@ -121,7 +121,7 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
             // Add each order(Bid or Ask) in the correponding order list (Bids list or Asks list)
             foreach (Order order in orderList)
             {
-                orderRepresentationList.AddRecord(order.OpenQuantity.Value, order.Price.Value);
+                orderRepresentationList.AddRecord(order.OpenQuantity.Value, order.Price.Value,order.DateTime);
                 Log.Debug("Order Representation added to Currency Pair : " + order.CurrencyPair + 
                           ". OpenQuantity: " + order.OpenQuantity.Value + " | Price: " + order.Price.Value);   
             }

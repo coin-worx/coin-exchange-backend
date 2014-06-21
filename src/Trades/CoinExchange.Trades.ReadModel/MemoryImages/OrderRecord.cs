@@ -17,13 +17,15 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
         /// </summary>
         /// <param name="price"></param>
         /// <param name="volume"></param>
-        public OrderRecord(decimal price, decimal volume)
+        public OrderRecord(decimal price, decimal volume,DateTime dateTime)
         {
             Price = price;
             Volume = volume;
+            DateTime = dateTime;
         }
         public decimal Volume { get; private set; }
         public decimal Price { get; private set; }
+        public DateTime DateTime { get; private set; }
 
     }
 }

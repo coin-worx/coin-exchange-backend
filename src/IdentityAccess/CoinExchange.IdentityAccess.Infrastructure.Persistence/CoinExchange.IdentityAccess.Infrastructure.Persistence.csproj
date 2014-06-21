@@ -100,6 +100,7 @@
   <ItemGroup>
     <EmbeddedResource Include="InfrastructurePersistenceConfig.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

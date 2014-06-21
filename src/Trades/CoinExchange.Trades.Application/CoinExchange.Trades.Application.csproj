@@ -58,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MarketDataServices\IMarketDataQueryService.cs" />
+    <Compile Include="MarketDataServices\Representation\Spread.cs" />
     <Compile Include="MarketDataServices\StubbedMarketDataQueryService.cs" />
     <Compile Include="MarketDataServices\Representation\OhlcRepresentation.cs" />
     <Compile Include="MarketDataServices\Representation\TickerRepresentation.cs" />

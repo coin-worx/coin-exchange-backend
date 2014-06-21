@@ -174,6 +174,39 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         }
 
         /// <summary>
+        /// get bids asks spread.
+        /// </summary>
+        /// <param name="currencyPair"></param>
+        /// <returns></returns>
+        [Route("marketdata/spread")]
+        [HttpGet]
+        public IHttpActionResult GetSpread(string currencyPair)
+        {
+            if (log.IsDebugEnabled)
+            {
+                log.Debug("Get Order Book Call: Currency Pair=" + currencyPair);
+            }
+            try
+            {
+                var list = _marketDataService.GetSpread(currencyPair);
+
+                if (list != null)
+                {
+                    return Ok(list);
+                }
+                return BadRequest();
+            }
+            catch (Exception exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Get Order Book Call Error", exception);
+                }
+                return InternalServerError(exception);
+            }
+        }
+
+        /// <summary>
         /// Returns the Depth in IHttpActionresult as a Tuple where 
         /// Item1 = BidDepth,
         /// Item2 = AskDepth

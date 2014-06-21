@@ -13,7 +13,7 @@ namespace CoinExchange.Client.Console
     {
         static void Main(string[] args)
         {
-            string baseUrl = "http://rockblanc.cloudapp.net/login/v1";
+            string baseUrl = "http://rockblanc.cloudapp.net/dev/v1";
             baseUrl = "http://localhost:51780/v1";
             //ApiClient client = new ApiClient(baseUrl);
             //System.Console.WriteLine(client.QueryTrades("6e8b5195-0e7f-402f-87e7-80eb92a96c85"));
@@ -113,10 +113,15 @@ namespace CoinExchange.Client.Console
             string currencyPair = "XBTUSD";
             //Create orders
             System.Console.WriteLine(client.CreateOrder(currencyPair, "limit", "buy", 10, 250));
+            Thread.Sleep(2000);
             System.Console.WriteLine(client.CreateOrder(currencyPair, "limit", "sell", 5, 252));
+            Thread.Sleep(2000);
             System.Console.WriteLine(client.CreateOrder(currencyPair, "limit", "buy", 3,250));
+            Thread.Sleep(2000);
             System.Console.WriteLine(client.CreateOrder(currencyPair, "limit", "sell", 2, 253));
+            Thread.Sleep(2000);
             System.Console.WriteLine(client.CreateOrder(currencyPair, "limit", "sell", 5,254));
+            Thread.Sleep(2000);
             System.Console.WriteLine(client.CreateOrder(currencyPair, "limit", "buy", 2, 249));
             Thread.Sleep(5000);
             ScenarioResults(client);
@@ -126,15 +131,18 @@ namespace CoinExchange.Client.Console
         {
             IdentityAccessClient client=new IdentityAccessClient(baseUrl);
             AccessControl control=new AccessControl(client,"123","user1");
-            //control.CreateAndActivateUser("user1", "123", "user@user.com");
+            //control.CreateAndActivateUser("user1", "123", "user@aurora.com");
             control.Login("user1", "123");
             //Scenario1(client);
-            ScenarioResults(client);
+            OrderBookGenerator(client);
+            //ScenarioResults(client);
             //System.Console.WriteLine(control.GetSecurityPairs());
             //PermissionRepresentation[] rep = control.ListPermissions();
             //rep[0].Allowed = true;
             //System.Console.WriteLine(control.CreateSecurityKeyPair("#1",rep));
             client.Logout();
         }
+
+        
     }
 }

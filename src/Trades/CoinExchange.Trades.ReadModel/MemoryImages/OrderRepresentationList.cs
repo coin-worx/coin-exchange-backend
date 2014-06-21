@@ -46,11 +46,11 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
         /// Add an Order to the List
         /// </summary>
         /// <returns></returns>
-        public bool AddRecord(/*string currencyPair, OrderSide orderSide, */decimal volume, decimal price)
+        public bool AddRecord(/*string currencyPair, OrderSide orderSide, */decimal volume, decimal price,DateTime dateTime)
         {
             /*if (volume != 0 && currencyPair == _currencyPair && orderSide == _orderSide)
             {*/
-                _orderRecordList.Add(new OrderRecord(price,volume));
+                _orderRecordList.Add(new OrderRecord(price,volume,dateTime));
 
                 Log.Debug("New Order record added: CurrencyPair = " + _currencyPair + " | Volume = " + volume + " | " +
                           "Price = " + price);
@@ -69,11 +69,11 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
         /// <param name="volume"></param>
         /// <param name="price"></param>
         /// <returns></returns>
-        public bool UpdateAtIndex(int index, decimal volume, decimal price)
+        public bool UpdateAtIndex(int index, decimal volume, decimal price,DateTime dateTime)
         {
             if (index < _orderRecordList.Count)
             {
-                _orderRecordList[index] = new OrderRecord(price, volume);
+                _orderRecordList[index] = new OrderRecord(price, volume,dateTime);
                 return true;
             }
             else
