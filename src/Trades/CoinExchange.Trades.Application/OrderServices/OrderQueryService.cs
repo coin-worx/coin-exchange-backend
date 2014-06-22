@@ -43,7 +43,12 @@ namespace CoinExchange.Trades.Application.OrderServices
             for (int i = 0; i < orders.Count; i++)
             {
                 IList<object> trades = _tradeRepository.GetTradesByorderId(orders[i].OrderId);
-                orders[i].AveragePrice = CalculateAveragePrice(trades);
+                Tuple<decimal, DateTime?> data = CalculateAveragePrice(trades);
+                orders[i].AveragePrice = data.Item1;
+                if (orders[i].Status == OrderState.Complete.ToString())
+                {
+                    orders[i].ClosingDateTime = data.Item2;
+                }
                 if (includeTrades)
                 {
                     orders[i].Trades = trades;
@@ -75,7 +80,12 @@ namespace CoinExchange.Trades.Application.OrderServices
             for (int i = 0; i < orders.Count; i++)
             {
                 IList<object> trades = _tradeRepository.GetTradesByorderId(orders[i].OrderId);
-                orders[i].AveragePrice = CalculateAveragePrice(trades);
+                Tuple<decimal, DateTime?> data = CalculateAveragePrice(trades);
+                orders[i].AveragePrice = data.Item1;
+                if (orders[i].Status == OrderState.Complete.ToString())
+                {
+                    orders[i].ClosingDateTime = data.Item2;
+                }
                 if (includeTrades)
                 {
                     orders[i].Trades = trades;
@@ -89,7 +99,12 @@ namespace CoinExchange.Trades.Application.OrderServices
         public object GetOrderById(TraderId traderId,OrderId orderId)
         {
             OrderReadModel order = _orderRepository.GetOrderById(traderId, orderId);
-            order.AveragePrice = CalculateAveragePrice(_tradeRepository.GetTradesByorderId(orderId.Id));
+            Tuple<decimal, DateTime?> data = CalculateAveragePrice(_tradeRepository.GetTradesByorderId(orderId.Id));
+            order.AveragePrice = data.Item1;
+            if (order.Status == OrderState.Complete.ToString())
+            {
+                order.ClosingDateTime = data.Item2;
+            }
             return order;
         }
 
@@ -97,9 +112,10 @@ namespace CoinExchange.Trades.Application.OrderServices
         /// Calculate avergae price from trades.
         /// </summary>
         /// <returns></returns>
-        private decimal CalculateAveragePrice(IList<object> trades)
+        private Tuple<decimal,DateTime?> CalculateAveragePrice(IList<object> trades)
         {
             decimal price = 0;
+            DateTime? closingDateTime=null;
             if (trades != null)
             {
                 if (trades.Count > 0)
@@ -108,11 +124,22 @@ namespace CoinExchange.Trades.Application.OrderServices
                     {
                         object[] trade = trades[i] as object[];
                         price = price + (decimal) trade[2];
+                        if (i == 0)
+                        {
+                            closingDateTime = (DateTime) trade[1];
+                        }
+                        else
+                        {
+                            if ((DateTime) trade[1] >= closingDateTime)
+                            {
+                                closingDateTime = (DateTime) trade[1];
+                            }
+                        }
                     }
                     price = price/trades.Count;
                 }
             }
-            return price;
+            return new Tuple<decimal, DateTime?>(price,closingDateTime);
         }
     }
 }

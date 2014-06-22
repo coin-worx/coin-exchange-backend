@@ -25,7 +25,7 @@ namespace CoinExchange.Trades.ReadModel.DTO
         public string TraderId { get; private set; }
         public string CurrencyPair { get; private set; }
         public DateTime DateTime { get; private set; }
-        public DateTime? ClosingDateTime { get; private set; }
+        public DateTime? ClosingDateTime { get;  set; }
         public decimal AveragePrice { get;  set; }
         public IList<object> Trades { get; set; }
 
