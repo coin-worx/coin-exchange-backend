@@ -183,6 +183,126 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
 
         [Test]
         [Category("Integration")]
+        public void SubmitOrders_IfOrderAreSuccessfullySubmittedToOrderBook_GetSpreadAndVerifyCalculation()
+        {
+            // Get the context
+            //IApplicationContext applicationContext = ContextRegistry.GetContext();
+
+            // Get the instance through Spring configuration
+            OrderController orderController = (OrderController)_applicationContext["OrderController"];
+            orderController.Request = new HttpRequestMessage(HttpMethod.Post, "");
+            orderController.Request.Headers.Add("Auth", "123456789");
+
+            ManualResetEvent manualResetEvent = new ManualResetEvent(false);
+            IHttpActionResult orderHttpResult = orderController.CreateOrder(new CreateOrderParam()
+            {
+                Pair = "BTCUSD",
+                Price = 491,
+                Volume = 100,
+                Side = "buy",
+                Type = "limit"
+            });
+
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(2000);
+            orderController.CreateOrder(new CreateOrderParam()
+            {
+                Pair = "BTCUSD",
+                Price = 500,
+                Volume = 300,
+                Side = "sell",
+                Type = "limit"
+            });
+
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(2000);
+
+            orderController.CreateOrder(new CreateOrderParam()
+            {
+                Pair = "BTCUSD",
+                Price = 493,
+                Volume = 1000,
+                Side = "buy",
+                Type = "limit"
+            });
+
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(2000);
+
+            orderController.CreateOrder(new CreateOrderParam()
+            {
+                Pair = "BTCUSD",
+                Price = 499,
+                Volume = 900,
+                Side = "sell",
+                Type = "limit"
+            });
+
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(2000);
+
+            orderController.CreateOrder(new CreateOrderParam()
+            {
+                Pair = "BTCUSD",
+                Price = 498,
+                Volume = 800,
+                Side = "sell",
+                Type = "limit"
+            });
+
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(2000);
+
+            orderController.CreateOrder(new CreateOrderParam()
+            {
+                Pair = "BTCUSD",
+                Price = 490,
+                Volume = 700,
+                Side = "buy",
+                Type = "limit"
+            });
+
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(4000);
+            MarketController marketController = (MarketController)_applicationContext["MarketController"];
+            IHttpActionResult marketDataHttpResult = marketController.GetSpread("BTCUSD");
+
+            OkNegotiatedContentResult<object> okResponseMessage =
+                (OkNegotiatedContentResult<object>)marketDataHttpResult;
+            List<Spread> spreads = okResponseMessage.Content as List<Spread>;
+            Assert.AreEqual(5,spreads.Count);
+
+            //verify at 0 index
+            Assert.AreEqual(500,spreads[0].Ask);
+            Assert.AreEqual(491, spreads[0].Bid);
+            Assert.AreEqual(9, spreads[0].Difference);
+
+            //verify at 1 index
+            Assert.AreEqual(500, spreads[1].Ask);
+            Assert.AreEqual(493, spreads[1].Bid);
+            Assert.AreEqual(7, spreads[1].Difference);
+
+            //verify at 2 index
+            Assert.AreEqual(499, spreads[2].Ask);
+            Assert.AreEqual(493, spreads[2].Bid);
+            Assert.AreEqual(6, spreads[2].Difference);
+
+            //verify at 3 index
+            Assert.AreEqual(498, spreads[3].Ask);
+            Assert.AreEqual(493, spreads[3].Bid);
+            Assert.AreEqual(5, spreads[3].Difference);
+
+            //verify at 4 index
+            Assert.AreEqual(498, spreads[4].Ask);
+            Assert.AreEqual(490, spreads[4].Bid);
+            Assert.AreEqual(8, spreads[4].Difference);
+            
+            manualResetEvent.Reset();
+            manualResetEvent.WaitOne(8000);
+        }
+
+        [Test]
+        [Category("Integration")]
         public void SubmitOrdersAndGetDepthTest_SubmitsAnOrderAndGetsTheDepthAsTheResult_VerifiesIfDepthIsAsExpected()
         {
             // Get the instance through Spring configuration

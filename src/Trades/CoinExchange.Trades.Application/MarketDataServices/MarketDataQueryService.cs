@@ -239,11 +239,15 @@ namespace CoinExchange.Trades.Application.MarketDataServices
                 {
                     spread.Add(new Spread(asksRecord[0].Price, bidsRecord[0].Price, bidsRecord[0].DateTime));
                 }
+                //save first record
                 lastAsk = asksRecord[0];
                 lastBid = bidsRecord[0];
+                //delete first record from the list
                 bidsRecord.RemoveAt(0);
                 asksRecord.RemoveAt(0);
+                //merge both list
                 var merge = bidsRecord.Concat(asksRecord);
+                //sort the list on date time
                 var sorted = merge.OrderBy(x => x.DateTime).ToList();
                 if (sorted.Count>0)
                 {
@@ -265,7 +269,7 @@ namespace CoinExchange.Trades.Application.MarketDataServices
         }
 
         /// <summary>
-        /// Get Last record on the basis of date time
+        /// Get Last record on the basis of date time from list
         /// </summary>
         /// <param name="dateTime"></param>
         /// <returns></returns>
