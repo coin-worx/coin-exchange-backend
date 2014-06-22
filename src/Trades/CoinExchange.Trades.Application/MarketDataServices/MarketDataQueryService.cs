@@ -226,25 +226,25 @@ namespace CoinExchange.Trades.Application.MarketDataServices
             asksRecord = originalAskBook.OrderBy(x => x.DateTime).ToList();
             bidsRecord = originalBidBook.OrderBy(x => x.DateTime).ToList();
             List<Spread> spread;
-            OrderRecord lastBid;
-            OrderRecord lastAsk;
+            OrderRecord lastBid=new OrderRecord(0,0,DateTime.Now);
+            OrderRecord lastAsk=new OrderRecord(0,0,DateTime.Now);
             if (asksRecord.Count > 0 && bidsRecord.Count > 0)
             {
-                spread=new List<Spread>();
-                if (asksRecord[0].DateTime >= bidsRecord[0].DateTime)
-                {
-                    spread.Add(new Spread(asksRecord[0].Price,bidsRecord[0].Price,asksRecord[0].DateTime));
-                }
-                if (asksRecord[0].DateTime < bidsRecord[0].DateTime)
-                {
-                    spread.Add(new Spread(asksRecord[0].Price, bidsRecord[0].Price, bidsRecord[0].DateTime));
-                }
-                //save first record
-                lastAsk = asksRecord[0];
-                lastBid = bidsRecord[0];
-                //delete first record from the list
-                bidsRecord.RemoveAt(0);
-                asksRecord.RemoveAt(0);
+                spread = new List<Spread>();
+                //if (asksRecord[0].DateTime >= bidsRecord[0].DateTime)
+                //{
+                //    spread.Add(new Spread(asksRecord[0].Price,bidsRecord[0].Price,asksRecord[0].DateTime));
+                //}
+                //if (asksRecord[0].DateTime < bidsRecord[0].DateTime)
+                //{
+                //    spread.Add(new Spread(asksRecord[0].Price, bidsRecord[0].Price, bidsRecord[0].DateTime));
+                //}
+                ////save first record
+                //lastAsk = asksRecord[0];
+                //lastBid = bidsRecord[0];
+                ////delete first record from the list
+                //bidsRecord.RemoveAt(0);
+                //asksRecord.RemoveAt(0);
                 //merge both list
                 var merge = bidsRecord.Concat(asksRecord);
                 //sort the list on date time
@@ -256,13 +256,21 @@ namespace CoinExchange.Trades.Application.MarketDataServices
                         OrderRecord bid = GetLastRecord(orderRecord.DateTime, bidsRecord);
                         OrderRecord ask = GetLastRecord(orderRecord.DateTime, asksRecord);
                         if (bid != null)
+                        {
                             lastBid = bid;
+                        }
                         if (ask != null)
+                        {
                             lastAsk = ask;
-                        spread.Add(new Spread(lastAsk.Price,lastBid.Price,orderRecord.DateTime));
+                        }
+
+                        if (lastAsk.Price != 0 && lastBid.Price != 0)
+                        {
+                            spread.Add(new Spread(lastAsk.Price, lastBid.Price, orderRecord.DateTime));
+                        }
                     }
-                    
                 }
+                
                 return spread;
             }
            return null;
