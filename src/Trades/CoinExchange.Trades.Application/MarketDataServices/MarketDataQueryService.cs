@@ -241,47 +241,43 @@ namespace CoinExchange.Trades.Application.MarketDataServices
                 }
                 lastAsk = asksRecord[0];
                 lastBid = bidsRecord[0];
-                
-                if (bidsRecord.Count >= asksRecord.Count)
+                bidsRecord.RemoveAt(0);
+                asksRecord.RemoveAt(0);
+                var merge = bidsRecord.Concat(asksRecord);
+                var sorted = merge.OrderBy(x => x.DateTime).ToList();
+                if (sorted.Count>0)
                 {
-                    //traverse according to bids
-                    for (int i = 1; i < bidsRecord.Count; i++)
+                    foreach (var orderRecord in sorted)
                     {
-                        for (int j = 1; j < asksRecord.Count; j++)
-                        {
-                            if (bidsRecord[i].DateTime <= asksRecord[j].DateTime)
-                            {
-                               //lastAsk = asksRecord[j];
-                               spread.Add(new Spread(lastAsk.Price, bidsRecord[i].Price, bidsRecord[i].DateTime));
-                            }
-                            else
-                            {
-                                lastAsk = asksRecord[j];
-                                spread.Add(new Spread(lastAsk.Price, bidsRecord[i].Price, lastAsk.DateTime));
-                            }
-                        }
-                        //spread.Add(new Spread(lastAsk.Price,bidsRecord[i].Price,bidsRecord[i].DateTime));
+                        OrderRecord bid = GetLastRecord(orderRecord.DateTime, bidsRecord);
+                        OrderRecord ask = GetLastRecord(orderRecord.DateTime, asksRecord);
+                        if (bid != null)
+                            lastBid = bid;
+                        if (ask != null)
+                            lastAsk = ask;
+                        spread.Add(new Spread(lastAsk.Price,lastBid.Price,orderRecord.DateTime));
                     }
+                    
                 }
-                else
-                {
-                    //traverse according to asks
-                    for (int i = 1; i < asksRecord.Count; i++)
-                    {
-                        for (int j = 1; j < bidsRecord.Count; j++)
-                        {
-                            if (asksRecord[i].DateTime <= bidsRecord[j].DateTime)
-                            {
-                                lastBid = bidsRecord[j];
-                            }
-                        }
-                        spread.Add(new Spread(asksRecord[i].Price, lastBid.Price, asksRecord[i].DateTime));
-                    }
-                }
-                
                 return spread;
             }
            return null;
+        }
+
+        /// <summary>
+        /// Get Last record on the basis of date time
+        /// </summary>
+        /// <param name="dateTime"></param>
+        /// <returns></returns>
+        private OrderRecord GetLastRecord(DateTime dateTime,List<OrderRecord> records )
+        {
+            OrderRecord record = null;
+            foreach (var orderRecord in records)
+            {
+                if (orderRecord.DateTime <= dateTime)
+                    record = orderRecord;
+            }
+            return record;
         }
     }
 }

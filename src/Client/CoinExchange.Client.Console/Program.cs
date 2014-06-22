@@ -122,8 +122,8 @@ namespace CoinExchange.Client.Console
             Thread.Sleep(2000);
             System.Console.WriteLine(client.CreateOrder(currencyPair, "limit", "sell", 5,254));
             Thread.Sleep(2000);
-            System.Console.WriteLine(client.CreateOrder(currencyPair, "limit", "buy", 2, 249));
-            Thread.Sleep(5000);
+           // System.Console.WriteLine(client.CreateOrder(currencyPair, "limit", "buy", 2, 249));
+           // Thread.Sleep(5000);
             ScenarioResults(client);
         }
 
@@ -131,7 +131,7 @@ namespace CoinExchange.Client.Console
         {
             IdentityAccessClient client=new IdentityAccessClient(baseUrl);
             AccessControl control=new AccessControl(client,"123","user1");
-            //control.CreateAndActivateUser("user1", "123", "user@aurora.com");
+            //control.CreateAndActivateUser("bilal", "123456", "bilal@aurora.com");
             control.Login("user1", "123");
             //Scenario1(client);
             OrderBookGenerator(client);

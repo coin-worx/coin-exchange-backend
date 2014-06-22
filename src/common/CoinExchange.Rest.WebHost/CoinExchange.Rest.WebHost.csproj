@@ -134,6 +134,7 @@
     <Content Include="Global.asax" />
     <EmbeddedResource Include="SpringDbConfig.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <Content Include="Web.config">
       <SubType>Designer</SubType>
