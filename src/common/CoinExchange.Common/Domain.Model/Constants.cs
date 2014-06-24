@@ -24,8 +24,8 @@ namespace CoinExchange.Common.Domain.Model
         public const string RAVEN_DB_DATABASE_NAME = "EventStore";
         public const string RAVEN_DB_CONNECTIONSTRING_NAME = "EventStore";
         public const int OUTPUT_DISRUPTOR_BYTE_ARRAY_SIZE = 200000;
-        public const string INPUT_EVENT_STORE = "InputEventStore";
-        public const string OUTPUT_EVENT_STORE = "OutputEventStore";
+        public const string INPUT_EVENT_STORE = "InputEventStoreDev";
+        public const string OUTPUT_EVENT_STORE = "OutputEventStoreDev";
         public const string USER_DOCUMENT_PATH = @"D:\CoinExchangeFiles\";
 
         static Constants()

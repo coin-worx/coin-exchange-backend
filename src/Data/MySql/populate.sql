@@ -11,13 +11,13 @@ MySQL - 5.6.14 : Database - coinexchange
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
-create database if not exists `coinexchange`;
+create database if not exists `coinexchangedev`;
 
-USE `coinexchange`;
+USE `coinexchangedev`;
 
 /*Data for the table `currencypair` */
 
-insert  into `currencypair`(`CurrencyPairName`,`BaseCurrency`,`QuoteCurrency`) values ('BTC/USD','BTC','USD');
+insert  into `currencypair`(`CurrencyPairName`,`BaseCurrency`,`QuoteCurrency`) values ('XBTUSD','USD','XBT');
 
 /*Data for the table `ohlc` */
 
