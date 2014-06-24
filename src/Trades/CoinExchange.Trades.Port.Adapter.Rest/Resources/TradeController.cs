@@ -78,7 +78,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                 {
                     log.Error("Trade History Call Error", exception);
                 }
-                return InternalServerError(exception);
+                return InternalServerError();
             }
         }
 
@@ -104,6 +104,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                     string[] auth = headerParams.ToList()[0].Split(',');
                     apikey = auth[0];
                 }
+                AssertionConcern.AssertNullOrEmptyString(orderId, "OrderId cannot be null or empty");
                 var trades = _tradeApplicationService.QueryTrades(orderId);
 
                 if (trades != null)
@@ -112,13 +113,21 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                 }
                 return BadRequest();
             }
+            catch (ArgumentNullException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Query Trades Call Error", exception);
+                }
+                return BadRequest(exception.Message);
+            }
             catch (Exception exception)
             {
                 if (log.IsErrorEnabled)
                 {
                     log.Error("Query Trades Call Error", exception);
                 }
-                return InternalServerError(exception);
+                return InternalServerError();
             }
         }
 
@@ -144,6 +153,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                     string[] auth = headerParams.ToList()[0].Split(',');
                     apikey = auth[0];
                 }
+                AssertionConcern.AssertNullOrEmptyString(tradeId, "TradeId cannot be null or empty");
                 TraderId traderId = new TraderId(_apiKeyInfoAccess.GetUserIdFromApiKey(apikey).ToString());
                 var trades = _tradeApplicationService.GetTradeDetails(traderId.Id, tradeId);
 
@@ -153,13 +163,21 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                 }
                 return BadRequest();
             }
+            catch (ArgumentNullException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Trade Details Call Error", exception);
+                }
+                return BadRequest(exception.Message);
+            }
             catch (Exception exception)
             {
                 if (log.IsErrorEnabled)
                 {
                     log.Error("Trade Details Call Error", exception);
                 }
-                return InternalServerError(exception);
+                return InternalServerError();
             }
         }
 
@@ -179,6 +197,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
             }
             try
             {
+                AssertionConcern.AssertNullOrEmptyString(currencyPair, "CurrencyPair cannot be null or empty");
                 var trades = _tradeApplicationService.GetRecentTrades(currencyPair, since);
 
                 if (trades != null)
@@ -186,6 +205,14 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                     return Ok(trades);
                 }
                 return BadRequest();
+            }
+            catch (ArgumentNullException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Recent Trades Call Error", exception);
+                }
+                return BadRequest(exception.Message);
             }
             catch (Exception exception)
             {
@@ -217,7 +244,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
             }
             catch (Exception ex)
             {
-                return InternalServerError(ex);
+                return InternalServerError();
             }
         }
 
@@ -243,7 +270,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                 {
                     log.Error("Recent Trades Call Error", exception);
                 }
-                return InternalServerError(exception);
+                return InternalServerError();
             }
         }
   
