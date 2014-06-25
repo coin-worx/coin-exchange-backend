@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="Trade Simulator" default="SetParameters">
+	<target name="build.Project">
+<delete dir="C:/results" />
+		<exec program="C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe">
+			<arg value="C:\WorkingDir\Repo\src\CoinExchange.sln" />
+			<arg value="/t:Rebuild" />
+			<arg value="/p:Configuration=Release" />
+		</exec>
+</target>
+
+<target name="CreatePackage" depends="build.Project">
+    <exec program="C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe">
+      <arg value="C:\WorkingDir\Repo\src\common\CoinExchange.Rest.WebHost\CoinExchange.Rest.WebHost.csproj" />
+      <arg value="/P:Configuration=Release;PackageLocation=D:\WebdeployTest\Package.zip" />
+      <arg value="/t:Package" />
+    </exec>
+  </target> 
+  
+  <target name ="SetParameters" depends="CreatePackage">
+    <xmlpoke
+         file="D:\WebDeployTest\Package.SetParameters.xml"
+         xpath="/parameters/setParameter[@name = 'IIS Web Application Name']/@value"
+         value="Default Web Site/test" />
+	 <exec program="D:\WebDeployTest\Package.deploy.cmd">
+      <arg value="/Y" />
+    </exec>	 
+		 
+  </target> 
+  
+ 
+  
+</project>

@@ -159,6 +159,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinExchange.IdentityAccess
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinExchange.IdentityAccess.Infrastructure.Persistence", "IdentityAccess\CoinExchange.IdentityAccess.Infrastructure.Persistence\CoinExchange.IdentityAccess.Infrastructure.Persistence.csproj", "{41EC439D-9E31-4911-B1A6-E5F0A8C01637}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{0C03CFAF-D95A-4107-8C98-FDBF821A4BA2}"
+	ProjectSection(SolutionItems) = preProject
+		Build\ccnet.config = Build\ccnet.config
+		Build\CoinExchange.build = Build\CoinExchange.build
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
