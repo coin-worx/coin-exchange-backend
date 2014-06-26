@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using CoinExchange.Common.Domain.Model;
 using CoinExchange.Trades.Domain.Model.OrderAggregate;
+using CoinExchange.Trades.Domain.Model.OrderMatchingEngine;
 using CoinExchange.Trades.Domain.Model.Services;
 using CoinExchange.Trades.Domain.Model.TradeAggregate;
 using NEventStore;
@@ -80,13 +82,17 @@ namespace CoinExchange.Trades.Infrastructure.Persistence.RavenDb
         /// <param name="event"></param>
         private void OpenOrCreateStream(object @event)
         {
-            _stream.Add(new EventMessage {Body = @event});
-            _stream.CommitChanges(Guid.NewGuid());
-            if (@event is Order)
-            {
-                Log.Debug("New order stored in Event Store. ID: " + (@event as Order).OrderId.Id + " | Order state: "
-                          + (@event as Order).OrderState);
-            }
+            //if (!ReplayService.ReplayMode)
+            //{
+                _stream.Add(new EventMessage {Body = @event});
+                _stream.CommitChanges(Guid.NewGuid());
+                if (@event is Order)
+                {
+                    Log.Debug("New order stored in Event Store. ID: " + (@event as Order).OrderId.Id +
+                              " | Order state: "
+                              + (@event as Order).OrderState);
+                }
+            //}
         }
 
         /// <summary>
@@ -156,12 +162,13 @@ namespace CoinExchange.Trades.Infrastructure.Persistence.RavenDb
         {
             List<Order> orders = new List<Order>();
             List<EventMessage> collection;
-            collection = _stream.CommittedEvents.ToList();
-            for (int i = 0; i < collection.Count; i++)
+            //collection = _stream.CommittedEvents.ToList();
+            var events = _store.Advanced.GetFrom(DateTime.Today).ToList();
+            for (int i = 0; i < events.Count; i++)
             {
-                if (collection[i].Body is Order)
+                if (events[i].Events[0].Body is Order)
                 {
-                    Order order = collection[i].Body as Order;
+                    Order order = events[i].Events[0].Body as Order;
                     if (order.CurrencyPair == currencyPair)
                     {
                         orders.Add(order);
@@ -205,14 +212,20 @@ namespace CoinExchange.Trades.Infrastructure.Persistence.RavenDb
         
         public IList<object> GetAllEvents()
         {
-            List<object> events=new List<object>();
-            List<EventMessage> collection;
-            collection = _stream.CommittedEvents.ToList();
-            for (int i = 0; i < collection.Count; i++)
+            List<object> readEvents=new List<object>();
+            var events = _store.Advanced.GetFrom(DateTime.MinValue).ToList();
+            for (int i = 0; i < events.Count; i++)
             {
-                events.Add(collection[i].Body);
+                readEvents.Add(events[i].Events[0].Body);
             }
-            return events;
+            return readEvents;
+        }
+
+
+        public void ShutDown()
+        {
+            _stream.Dispose();
+            _store.Dispose();
         }
     }
 }

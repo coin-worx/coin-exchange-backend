@@ -136,9 +136,11 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// </summary>
         public void TurnReplayModeOn()
         {
+            ReplayService.TurnReplayModeOn(this);
             // Unsubscribe each order listener from each LimitOrderBook while replaying is in order
             foreach (ExchangeEssentials exchangeEssentials in ExchangeEssentials)
             {
+                exchangeEssentials.LimitOrderBook.TradeExecuted -= exchangeEssentials.TradeListener.OnTrade;
                 exchangeEssentials.LimitOrderBook.OrderChanged -= exchangeEssentials.DepthOrderBook.OnOrderChanged;
                 exchangeEssentials.LimitOrderBook.OrderChanged -= exchangeEssentials.OrderListener.OnOrderChanged;
             }
@@ -149,8 +151,10 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// </summary>
         public void TurnReplayModeOff()
         {
+            ReplayService.TurnReplayModeOff(this);
             foreach (ExchangeEssentials exchangeEssentials in ExchangeEssentials)
             {
+                exchangeEssentials.LimitOrderBook.TradeExecuted -= exchangeEssentials.TradeListener.OnTrade;
                 exchangeEssentials.LimitOrderBook.OrderChanged += exchangeEssentials.DepthOrderBook.OnOrderChanged;
                 exchangeEssentials.LimitOrderBook.OrderChanged += exchangeEssentials.OrderListener.OnOrderChanged;
             }

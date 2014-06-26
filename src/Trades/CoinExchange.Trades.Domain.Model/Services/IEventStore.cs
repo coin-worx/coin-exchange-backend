@@ -20,5 +20,6 @@ namespace CoinExchange.Trades.Domain.Model.Services
         List<Order> GetOrdersByCurrencyPair(string currencyPair);
         IList<Trade> GetTradeEventsFromOrderId(string id);
         IList<object> GetAllEvents();
+        void ShutDown();
     }
 }

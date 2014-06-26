@@ -103,5 +103,11 @@ namespace CoinExchange.Trades.ReadModel.Persistence.NHibernate
             }
             throw new InvalidOperationException("Not Authorized");
         }
+
+        [Transaction(ReadOnly = true)]
+        public IList<TradeReadModel> GetAll()
+        {
+            return CurrentSession.QueryOver<TradeReadModel>().List<TradeReadModel>();
+        }
     }
 }
