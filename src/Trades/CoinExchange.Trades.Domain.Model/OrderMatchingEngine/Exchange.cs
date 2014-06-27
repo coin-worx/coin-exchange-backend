@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Timers;
 using System.Threading.Tasks;
 using CoinExchange.Trades.Domain.Model.OrderAggregate;
 using CoinExchange.Trades.Domain.Model.Services;
@@ -23,6 +24,8 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         private string XbtUsd = "XBTUSD";
         List<string> _currencyPairs = new List<string>();
         private ExchangeEssentialsList _exchangeEssentialsList = new ExchangeEssentialsList();
+        [NonSerialized]
+        private Timer _snaphotTimer;
 
         /// <summary>
         /// Default Constructor
@@ -79,6 +82,53 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
 
                 _exchangeEssentialsList.AddEssentials(new ExchangeEssentials(orderBook, depthOrderBook, tradeListener,
                     orderListener, depthListener, bboListener));
+            }
+        }
+
+        /// <summary>
+        /// parameterized constructor
+        /// </summary>
+        public Exchange(ExchangeEssentialsList exchangeEssentialsList)
+        {
+            _currencyPairs.Add(BitCoinUsd);
+            _currencyPairs.Add(XbtUsd);
+            _currencyPairs.Add("BTC/USD");
+            _currencyPairs.Add("XBT/USD");
+            _exchangeEssentialsList = exchangeEssentialsList;
+            foreach (var exchangeEssential in exchangeEssentialsList)
+            {
+                exchangeEssential.LimitOrderBook.OrderAccepted -= OnAccept;
+                exchangeEssential.LimitOrderBook.OrderAccepted -= exchangeEssential.DepthOrderBook.OnOrderAccepted;
+
+                exchangeEssential.LimitOrderBook.OrderAccepted += OnAccept;
+                exchangeEssential.LimitOrderBook.OrderAccepted += exchangeEssential.DepthOrderBook.OnOrderAccepted;
+
+                exchangeEssential.LimitOrderBook.OrderCancelled -= exchangeEssential.DepthOrderBook.OnOrderCancelled;
+                exchangeEssential.LimitOrderBook.OrderCancelled += exchangeEssential.DepthOrderBook.OnOrderCancelled;
+
+                exchangeEssential.LimitOrderBook.OrderBookChanged -= exchangeEssential.DepthOrderBook.OnOrderBookChanged;
+                exchangeEssential.LimitOrderBook.OrderBookChanged -= exchangeEssential.LimitOrderBook.OrderBookListener.OnOrderBookChanged;
+
+                exchangeEssential.LimitOrderBook.OrderBookChanged += exchangeEssential.DepthOrderBook.OnOrderBookChanged;
+                exchangeEssential.LimitOrderBook.OrderBookChanged += exchangeEssential.LimitOrderBook.OrderBookListener.OnOrderBookChanged;
+
+                exchangeEssential.LimitOrderBook.OrderChanged -= exchangeEssential.DepthOrderBook.OnOrderChanged;
+                exchangeEssential.LimitOrderBook.OrderChanged -= exchangeEssential.OrderListener.OnOrderChanged;
+
+                exchangeEssential.LimitOrderBook.OrderChanged += exchangeEssential.DepthOrderBook.OnOrderChanged;
+                exchangeEssential.LimitOrderBook.OrderChanged += exchangeEssential.OrderListener.OnOrderChanged;
+
+                exchangeEssential.LimitOrderBook.OrderFilled -= exchangeEssential.DepthOrderBook.OnOrderFilled;
+                exchangeEssential.LimitOrderBook.OrderFilled += exchangeEssential.DepthOrderBook.OnOrderFilled;
+
+                exchangeEssential.LimitOrderBook.TradeExecuted -= exchangeEssential.TradeListener.OnTrade;
+                exchangeEssential.LimitOrderBook.TradeExecuted += exchangeEssential.TradeListener.OnTrade;
+
+                exchangeEssential.DepthOrderBook.BboChanged -= exchangeEssential.BBOListener.OnBBOChange;
+                exchangeEssential.DepthOrderBook.DepthChanged -= exchangeEssential.DepthListener.OnDepthChanged;
+
+                exchangeEssential.DepthOrderBook.BboChanged += exchangeEssential.BBOListener.OnBBOChange;
+                exchangeEssential.DepthOrderBook.DepthChanged += exchangeEssential.DepthListener.OnDepthChanged;
             }
         }
 
@@ -192,5 +242,41 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
                 CancelOrder(cancellation);
             }
         }
+
+        #region Exchange Snapshot
+
+        /// <summary>
+        /// Enable snapshots
+        /// </summary>
+        /// <param name="interval"></param>
+        public void EnableSnaphots(double interval)
+        {
+            if (_snaphotTimer == null)
+            {
+                _snaphotTimer = new Timer(interval);
+                _snaphotTimer.Elapsed += SnaphotTimer_Elapsed;
+                _snaphotTimer.Enabled = true;
+            }
+        }
+
+        /// <summary>
+        /// Save snapshot
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void SnaphotTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            ExchangeEssentialsSnapshortEvent.Raise(_exchangeEssentialsList);
+        }
+
+        public void StopTimer()
+        {
+            if (_snaphotTimer != null)
+            {
+                _snaphotTimer.Enabled = false;
+                _snaphotTimer.Dispose();
+            }
+        }
+        #endregion
     }
 }

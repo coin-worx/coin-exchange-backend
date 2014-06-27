@@ -24,7 +24,9 @@ namespace CoinExchange.Trades.Infrastructure.Persistence.RavenDb
         private  Guid _streamId;
         private  IStoreEvents _store;
         private  IEventStream _stream;
-
+        private int _snaphost = 0;
+        private Snapshot _lastSnaphot=null;
+        
         /// <summary>
         /// Default Constructor
         /// </summary>
@@ -161,17 +163,37 @@ namespace CoinExchange.Trades.Infrastructure.Persistence.RavenDb
         public List<Order> GetOrdersByCurrencyPair(string currencyPair)
         {
             List<Order> orders = new List<Order>();
-            List<EventMessage> collection;
-            //collection = _stream.CommittedEvents.ToList();
-            var events = _store.Advanced.GetFrom(DateTime.Today).ToList();
-            for (int i = 0; i < events.Count; i++)
+            if (_lastSnaphot == null)
             {
-                if (events[i].Events[0].Body is Order)
+                List<EventMessage> collection;
+                //collection = _stream.CommittedEvents.ToList();
+                var events = _store.Advanced.GetFrom(DateTime.Today).ToList();
+                for (int i = 0; i < events.Count; i++)
                 {
-                    Order order = events[i].Events[0].Body as Order;
-                    if (order.CurrencyPair == currencyPair)
+                    if (events[i].Events[0].Body is Order)
                     {
-                        orders.Add(order);
+                        Order order = events[i].Events[0].Body as Order;
+                        if (order.CurrencyPair == currencyPair)
+                        {
+                            orders.Add(order);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                var events = _store.OpenStream(_lastSnaphot, int.MaxValue);
+                List<EventMessage> collection;
+                collection = events.CommittedEvents.ToList();
+                for (int i = 0; i < collection.Count;i++)
+                {
+                    if (collection[i].Body is Order)
+                    {
+                        Order order = collection[i].Body as Order;
+                        if (order.CurrencyPair == currencyPair)
+                        {
+                            orders.Add(order);
+                        }
                     }
                 }
             }
@@ -226,6 +248,35 @@ namespace CoinExchange.Trades.Infrastructure.Persistence.RavenDb
         {
             _stream.Dispose();
             _store.Dispose();
+        }
+
+        /// <summary>
+        /// Save Exchange snapshot
+        /// </summary>
+        /// <param name="exchangeEssentials"></param>
+        public void SaveSnapshot(ExchangeEssentialsList exchangeEssentials)
+        {
+            _store.Advanced.AddSnapshot(new Snapshot(_streamId, _snaphost++, exchangeEssentials));
+        }
+
+        /// <summary>
+        /// Load last snaphost
+        /// </summary>
+        /// <returns></returns>
+        public ExchangeEssentialsList LoadLastSnapshot()
+        {
+            Snapshot snapshot=null;
+            var initialize=_store.Advanced.GetFrom(Constants.LastSnapshotSearch).ToList();
+            for (int i = 0; i < initialize.Count; i++)
+            {
+                snapshot = _store.Advanced.GetSnapshot(initialize[i].StreamId, int.MaxValue);
+            }
+            _lastSnaphot = snapshot;
+            if (snapshot != null)
+            {
+                return snapshot.Payload as ExchangeEssentialsList;
+            }
+            return null;
         }
     }
 }

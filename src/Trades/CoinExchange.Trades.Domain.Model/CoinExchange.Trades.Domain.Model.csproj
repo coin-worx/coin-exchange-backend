@@ -80,6 +80,7 @@
     <Compile Include="OrderMatchingEngine\BBOEvent.cs" />
     <Compile Include="OrderMatchingEngine\DepthEvent.cs" />
     <Compile Include="OrderMatchingEngine\ExchangeEssentials.cs" />
+    <Compile Include="OrderMatchingEngine\ExchangeEssentialsSnapshortEvent.cs" />
     <Compile Include="OrderMatchingEngine\LimitOrderBookEvent.cs" />
     <Compile Include="OrderAggregate\OrderEvent.cs" />
     <Compile Include="OrderMatchingEngine\ExchangeEssentialsList.cs" />

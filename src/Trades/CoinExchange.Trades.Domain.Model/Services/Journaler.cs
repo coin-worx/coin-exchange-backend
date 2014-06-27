@@ -25,6 +25,12 @@ namespace CoinExchange.Trades.Domain.Model.Services
         public Journaler(IEventStore eventStore)
         {
             _eventStore = eventStore;
+            ExchangeEssentialsSnapshortEvent.ExchangeSnapshot += SnapshotArrived;
+        }
+
+        void SnapshotArrived(ExchangeEssentialsList exchangeEssentials)
+        {
+            _eventStore.SaveSnapshot(exchangeEssentials);
         }
 
         /// <summary>

@@ -27,6 +27,8 @@ namespace CoinExchange.Common.Domain.Model
         public const string INPUT_EVENT_STORE = "InputEventStoreDev";
         public const string OUTPUT_EVENT_STORE = "OutputEventStoreDev";
         public const string USER_DOCUMENT_PATH = @"D:\CoinExchangeFiles\";
+        public static DateTime LastSnapshotSearch = DateTime.Today.AddDays(-4);
+        public const double SnaphsortInterval = 3600000;//hourly
 
         static Constants()
         {
