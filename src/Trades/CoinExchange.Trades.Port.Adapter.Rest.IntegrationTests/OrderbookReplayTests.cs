@@ -144,6 +144,10 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             ITradeRepository tradeRepository = (ITradeRepository)_applicationContext["TradeRepository"];
             IList<TradeReadModel> beforeReplayTrades = tradeRepository.GetAll();
             IList<object> beforeReplayEvents = outputEventStore.GetAllEvents();
+
+            marketDataHttpResult = marketController.GetBbo("XBTUSD");
+            OkNegotiatedContentResult<BBORepresentation> okResponseMessageBboBefore = (OkNegotiatedContentResult<BBORepresentation>)marketDataHttpResult;
+            
             //down the exchange, make new exchange and reply
             CrashAndInitializeAgainWithSnapshot();
 
@@ -173,6 +177,10 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             okResponseMessageDepth = (OkNegotiatedContentResult<object>)marketDataHttpResult;
             DepthTupleRepresentation afterReplayDepth = okResponseMessageDepth.Content as DepthTupleRepresentation;
             VerifyDepthBeforeAndAfterReplay(beforeReplayDepth, afterReplayDepth);
+
+            marketDataHttpResult = marketController.GetBbo("XBTUSD");
+            OkNegotiatedContentResult<BBORepresentation> okResponseMessageBboAfter = (OkNegotiatedContentResult<BBORepresentation>)marketDataHttpResult;
+            VerifyBboAfterReplay(okResponseMessageBboBefore.Content,okResponseMessageBboAfter.Content);
         }
 
         private void CrashAndInitializeAgain()
@@ -346,6 +354,16 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             }
         }
 
+        private void VerifyBboAfterReplay(BBORepresentation beforeReplay,BBORepresentation afterReplay)
+        {
+            Assert.AreEqual(beforeReplay.BestAskOrderCount, afterReplay.BestAskOrderCount);
+            Assert.AreEqual(beforeReplay.BestAskPrice, afterReplay.BestAskPrice);
+            Assert.AreEqual(beforeReplay.BestAskVolume, afterReplay.BestAskVolume);
+            Assert.AreEqual(beforeReplay.BestBidOrderCount, afterReplay.BestBidOrderCount);
+            Assert.AreEqual(beforeReplay.BestBidPrice, afterReplay.BestBidPrice);
+            Assert.AreEqual(beforeReplay.BestBidVolume, afterReplay.BestBidVolume);
+            Assert.AreEqual(beforeReplay.CurrencyPair, afterReplay.CurrencyPair);
+        }
         private void Scenario1()
         {
             string currencyPair = "XBTUSD";

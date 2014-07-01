@@ -34,12 +34,14 @@ namespace CoinExchange.Trades.Infrastructure.Persistence.RavenDb
         private int _snaphost = 0;
         private Snapshot _lastSnaphot=null;
         private DateTime _loadFrom = Constants.LoadEventsFrom;
+        private string _eventStore;
         
         /// <summary>
         /// Default Constructor
         /// </summary>
         public RavenNEventStore(string eventStore)
         {
+            _eventStore = eventStore;
             _streamId=Guid.NewGuid();
             _store = GetInitializedEventStore(new ReceiveCommit(),eventStore);
             _stream = _store.OpenStream(_streamId, 0, int.MaxValue);
@@ -265,7 +267,11 @@ namespace CoinExchange.Trades.Infrastructure.Persistence.RavenDb
         /// <param name="exchangeEssentials"></param>
         public void SaveSnapshot(ExchangeEssentialsList exchangeEssentials)
         {
-            _store.Advanced.AddSnapshot(new Snapshot(_streamId, _snaphost++, StreamConversion.ObjectToByteArray(exchangeEssentials)));
+            if (_eventStore == Constants.OUTPUT_EVENT_STORE)
+            {
+                _store.Advanced.AddSnapshot(new Snapshot(_streamId, _snaphost++,
+                    StreamConversion.ObjectToByteArray(exchangeEssentials)));
+            }
         }
 
         /// <summary>

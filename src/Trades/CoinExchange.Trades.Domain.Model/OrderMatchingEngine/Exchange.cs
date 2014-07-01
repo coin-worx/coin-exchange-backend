@@ -182,6 +182,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
                 exchangeEssential.DepthOrderBook.BboChanged += bboListener.OnBBOChange;
                 exchangeEssential.DepthOrderBook.DepthChanged += depthListener.OnDepthChanged;
                 exchangeEssential.LimitOrderBook.PublishOrderBookState();
+                exchangeEssential.DepthOrderBook.PublishDepth();
             }
         }
 
