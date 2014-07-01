@@ -203,7 +203,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         {
             if (log.IsDebugEnabled)
             {
-                log.Debug("Get Order Book Call: Currency Pair=" + currencyPair);
+                log.Debug("Get Spread Call: Currency Pair=" + currencyPair);
             }
             try
             {
@@ -220,7 +220,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
             {
                 if (log.IsErrorEnabled)
                 {
-                    log.Error("Get Order Book Call Error", exception);
+                    log.Error("Get Spread Call Error", exception);
                 }
                 return BadRequest(exception.Message);
             }
@@ -228,7 +228,49 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
             {
                 if (log.IsErrorEnabled)
                 {
-                    log.Error("Get Order Book Call Error", exception);
+                    log.Error("Get Spread Call Error", exception);
+                }
+                return InternalServerError();
+            }
+        }
+
+        /// <summary>
+        /// get bids asks spread.
+        /// </summary>
+        /// <param name="currencyPair"></param>
+        /// <returns></returns>
+        [Route("marketdata/bbo")]
+        [HttpGet]
+        public IHttpActionResult GetBbo(string currencyPair)
+        {
+            if (log.IsDebugEnabled)
+            {
+                log.Debug("Get Bbo Call: Currency Pair=" + currencyPair);
+            }
+            try
+            {
+                AssertionConcern.AssertNullOrEmptyString(currencyPair, "CurrencyPair cannot be null or empty.");
+                var list = _marketDataService.GetBBO(currencyPair);
+
+                if (list != null)
+                {
+                    return Ok(list);
+                }
+                return BadRequest();
+            }
+            catch (ArgumentNullException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Get Bbo Call Error", exception);
+                }
+                return BadRequest(exception.Message);
+            }
+            catch (Exception exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Get Bbo Call Error", exception);
                 }
                 return InternalServerError();
             }

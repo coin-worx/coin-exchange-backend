@@ -111,5 +111,11 @@ namespace CoinExchange.Trades.Application.MarketDataServices
         {
             throw new NotImplementedException();
         }
+
+
+        public BBORepresentation GetBBO(string currencyPair)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

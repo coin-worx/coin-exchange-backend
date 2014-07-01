@@ -16,5 +16,6 @@ namespace CoinExchange.Trades.Application.MarketDataServices
         Rate GetRate(string currencyPair);
         RatesList GetAllRates();
         object GetSpread(string currencyPair);
+        BBORepresentation GetBBO(string currencyPair);
     }
 }
