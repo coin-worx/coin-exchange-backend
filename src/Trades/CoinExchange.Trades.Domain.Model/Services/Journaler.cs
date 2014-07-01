@@ -148,5 +148,10 @@ namespace CoinExchange.Trades.Domain.Model.Services
         {
             return _eventStore.GetAllOrders();
         }
+
+        public void ShutDown()
+        {
+            ExchangeEssentialsSnapshortEvent.ExchangeSnapshot -= SnapshotArrived;
+        }
     }
 }

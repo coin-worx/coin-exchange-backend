@@ -13,6 +13,10 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
     [Serializable]
     public class ExchangeEssentials
     {
+        public ExchangeEssentials()
+        {
+            
+        }
         /// <summary>
         /// Default Constructor
         /// </summary>

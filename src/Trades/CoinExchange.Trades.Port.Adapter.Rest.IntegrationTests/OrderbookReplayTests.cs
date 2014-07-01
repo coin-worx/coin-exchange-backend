@@ -55,6 +55,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
         [TearDown]
         public void TearDown()
         {
+            _exchange.StopTimer();
             _databaseUtility.Create();
             InputDisruptorPublisher.Shutdown();
             OutputDisruptor.ShutDown();
@@ -67,7 +68,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
         public void ReplayOrderBook_IfScenario1IsExecuted_VerifyTheWholeSystemState()
         {
             _applicationContext = ContextRegistry.GetContext();
-            Scenario1();
+            Scenario2();
             MarketController marketController = (MarketController)_applicationContext["MarketController"];
             IHttpActionResult marketDataHttpResult = marketController.GetOrderBook("XBTUSD");
 
@@ -181,6 +182,8 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             OutputDisruptor.ShutDown();
             inputEventStore.ShutDown();
             outputEventStore.ShutDown();
+            inputJournaler.ShutDown();
+            outputJournaler.ShutDown();
             ContextRegistry.Clear();
 
             //initialize
@@ -203,9 +206,11 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             //crash
             InputDisruptorPublisher.Shutdown();
             OutputDisruptor.ShutDown();
+            _exchange.StopTimer();
             inputEventStore.ShutDown();
             outputEventStore.ShutDown();
-            _exchange.StopTimer();
+            inputJournaler.ShutDown();
+            outputJournaler.ShutDown();
             ContextRegistry.Clear();
 
             //initialize
@@ -213,13 +218,14 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             outputEventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
             inputJournaler = new Journaler(inputEventStore);
             outputJournaler = new Journaler(outputEventStore);
+            _applicationContext = ContextRegistry.GetContext();
             _exchange = new Exchange(outputEventStore.LoadLastSnapshot());
-            _exchange.EnableSnaphots(5000);
             InputDisruptorPublisher.InitializeDisruptor(new IEventHandler<InputPayload>[] { _exchange, inputJournaler });
             OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { outputJournaler });
-            _applicationContext = ContextRegistry.GetContext();
+            _exchange.InitializeExchange();
             LimitOrderBookReplayService service = new LimitOrderBookReplayService();
             service.ReplayOrderBooks(_exchange, outputJournaler);
+            _exchange.EnableSnaphots(5000);
             ManualResetEvent resetEvent = new ManualResetEvent(false);
             resetEvent.WaitOne(20000);
         }
@@ -382,37 +388,53 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             string currencyPair = "XBTUSD";
             Order order1 = OrderFactory.CreateOrder("5555", currencyPair, "limit", "buy", 100, 400, new StubbedOrderIdGenerator());
             InputDisruptorPublisher.Publish(InputPayload.CreatePayload(order1));
+            ManualResetEvent resetEvent=new ManualResetEvent(false);
+            resetEvent.WaitOne(2000);
             Order order2 = OrderFactory.CreateOrder("5555", currencyPair, "limit", "buy", 101, 401, new StubbedOrderIdGenerator());
             InputDisruptorPublisher.Publish(InputPayload.CreatePayload(order2));
+            resetEvent.WaitOne(2000);
             Order order3 = OrderFactory.CreateOrder("5555", currencyPair, "limit", "buy", 102, 402, new StubbedOrderIdGenerator());
             InputDisruptorPublisher.Publish(InputPayload.CreatePayload(order3));
+            resetEvent.WaitOne(2000);
             Order order4 = OrderFactory.CreateOrder("5555", currencyPair, "limit", "buy", 103, 403, new StubbedOrderIdGenerator());
             InputDisruptorPublisher.Publish(InputPayload.CreatePayload(order4));
+            resetEvent.WaitOne(2000);
             Order order5 = OrderFactory.CreateOrder("5555", currencyPair, "limit", "buy", 104, 404, new StubbedOrderIdGenerator());
             InputDisruptorPublisher.Publish(InputPayload.CreatePayload(order5));
+            resetEvent.WaitOne(2000);
             Order order6 = OrderFactory.CreateOrder("5555", currencyPair, "limit", "buy", 105, 405, new StubbedOrderIdGenerator());
             InputDisruptorPublisher.Publish(InputPayload.CreatePayload(order6));
+            resetEvent.WaitOne(2000);
             Order order7 = OrderFactory.CreateOrder("5555", currencyPair, "limit", "buy", 106, 406, new StubbedOrderIdGenerator());
             InputDisruptorPublisher.Publish(InputPayload.CreatePayload(order7));
+            resetEvent.WaitOne(2000);
             Order order8 = OrderFactory.CreateOrder("4444", currencyPair, "limit", "sell", 100, 410, new StubbedOrderIdGenerator());
             InputDisruptorPublisher.Publish(InputPayload.CreatePayload(new OrderCancellation(order6.OrderId,order6.TraderId,currencyPair)));
+            resetEvent.WaitOne(2000);
             InputDisruptorPublisher.Publish(InputPayload.CreatePayload(order8));
+            resetEvent.WaitOne(2000);
             Order order9 = OrderFactory.CreateOrder("4444", currencyPair, "limit", "sell", 101, 409, new StubbedOrderIdGenerator());
             InputDisruptorPublisher.Publish(InputPayload.CreatePayload(order9));
+            resetEvent.WaitOne(2000);
             Order order10 = OrderFactory.CreateOrder("4444", currencyPair, "limit", "sell", 102, 407, new StubbedOrderIdGenerator());
             InputDisruptorPublisher.Publish(InputPayload.CreatePayload(order10));
+            resetEvent.WaitOne(2000);
             Order order11 = OrderFactory.CreateOrder("4444", currencyPair, "limit", "sell", 103, 406, new StubbedOrderIdGenerator());
             InputDisruptorPublisher.Publish(InputPayload.CreatePayload(order11));
+            resetEvent.WaitOne(2000);
             Order order12 = OrderFactory.CreateOrder("4444", currencyPair, "limit", "sell", 104, 405, new StubbedOrderIdGenerator());
             InputDisruptorPublisher.Publish(InputPayload.CreatePayload(order12));
+            resetEvent.WaitOne(2000);
             Order order13 = OrderFactory.CreateOrder("4444", currencyPair, "limit", "sell", 105, 411, new StubbedOrderIdGenerator());
             InputDisruptorPublisher.Publish(InputPayload.CreatePayload(order13));
+            resetEvent.WaitOne(2000);
             Order order14 = OrderFactory.CreateOrder("4444", currencyPair, "limit", "sell", 106, 412, new StubbedOrderIdGenerator());
             InputDisruptorPublisher.Publish(InputPayload.CreatePayload(order14));
+            resetEvent.WaitOne(2000);
             Order order15 = OrderFactory.CreateOrder("5555", currencyPair, "limit", "buy", 107, 400, new StubbedOrderIdGenerator());
             InputDisruptorPublisher.Publish(InputPayload.CreatePayload(order15));
+            resetEvent.WaitOne(2000);
             InputDisruptorPublisher.Publish(InputPayload.CreatePayload(new OrderCancellation(order14.OrderId, order14.TraderId, currencyPair)));
-            ManualResetEvent resetEvent = new ManualResetEvent(false);
             resetEvent.WaitOne(20000);
         }
     }

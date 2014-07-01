@@ -15,6 +15,10 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
     [Serializable]
     public class LimitOrderBook
     {
+        public LimitOrderBook()
+        {
+            
+        }
         // Get the Current Logger
         private static readonly log4net.ILog Log = log4net.LogManager.GetLogger
         (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -623,5 +627,16 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         public DateTime LastSnapshotTaken { get; set; }
 
         #endregion Properties
+
+        /// <summary>
+        /// publishing orderbook after reload
+        /// </summary>
+        public void PublishOrderBookState()
+        {
+            if (OrderBookChanged != null)
+            {
+                OrderBookChanged(this);
+            }
+        }
     }
 }

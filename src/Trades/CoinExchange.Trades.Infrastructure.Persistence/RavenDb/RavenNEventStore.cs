@@ -4,12 +4,19 @@ using System.Globalization;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using CoinExchange.Common.Domain.Model;
+using CoinExchange.Common.Utility;
 using CoinExchange.Trades.Domain.Model.OrderAggregate;
 using CoinExchange.Trades.Domain.Model.OrderMatchingEngine;
 using CoinExchange.Trades.Domain.Model.Services;
 using CoinExchange.Trades.Domain.Model.TradeAggregate;
 using NEventStore;
 using NEventStore.Dispatcher;
+//using NEventStore.Persistence.RavenPersistence;
+//using Raven.Abstractions.Linq;
+//using Raven.Imports.Newtonsoft.Json;
+//using Raven.Imports.Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Linq;
+
 
 namespace CoinExchange.Trades.Infrastructure.Persistence.RavenDb
 {
@@ -26,6 +33,7 @@ namespace CoinExchange.Trades.Infrastructure.Persistence.RavenDb
         private  IEventStream _stream;
         private int _snaphost = 0;
         private Snapshot _lastSnaphot=null;
+        private DateTime _loadFrom = Constants.LoadEventsFrom;
         
         /// <summary>
         /// Default Constructor
@@ -162,12 +170,13 @@ namespace CoinExchange.Trades.Infrastructure.Persistence.RavenDb
         /// <returns></returns>
         public List<Order> GetOrdersByCurrencyPair(string currencyPair)
         {
+            
             List<Order> orders = new List<Order>();
-            if (_lastSnaphot == null)
-            {
+            //if (_lastSnaphot == null)
+            //{
                 List<EventMessage> collection;
                 //collection = _stream.CommittedEvents.ToList();
-                var events = _store.Advanced.GetFrom(DateTime.Today).ToList();
+                var events = _store.Advanced.GetFrom(_loadFrom).ToList();
                 for (int i = 0; i < events.Count; i++)
                 {
                     if (events[i].Events[0].Body is Order)
@@ -179,24 +188,24 @@ namespace CoinExchange.Trades.Infrastructure.Persistence.RavenDb
                         }
                     }
                 }
-            }
-            else
-            {
-                var events = _store.OpenStream(_lastSnaphot, int.MaxValue);
-                List<EventMessage> collection;
-                collection = events.CommittedEvents.ToList();
-                for (int i = 0; i < collection.Count;i++)
-                {
-                    if (collection[i].Body is Order)
-                    {
-                        Order order = collection[i].Body as Order;
-                        if (order.CurrencyPair == currencyPair)
-                        {
-                            orders.Add(order);
-                        }
-                    }
-                }
-            }
+            //}
+            //else
+            //{
+            //    var events = _store.OpenStream(_lastSnaphot, int.MaxValue);
+            //    List<EventMessage> collection;
+            //    collection = events.UncommittedEvents.ToList();
+            //    for (int i = 0; i < collection.Count;i++)
+            //    {
+            //        if (collection[i].Body is Order)
+            //        {
+            //            Order order = collection[i].Body as Order;
+            //            if (order.CurrencyPair == currencyPair)
+            //            {
+            //                orders.Add(order);
+            //            }
+            //        }
+            //    }
+            //}
             Log.Debug("Number of orders fetched from Event Store: " + orders.Count);
             if (!orders.Any())
             {
@@ -256,7 +265,7 @@ namespace CoinExchange.Trades.Infrastructure.Persistence.RavenDb
         /// <param name="exchangeEssentials"></param>
         public void SaveSnapshot(ExchangeEssentialsList exchangeEssentials)
         {
-            _store.Advanced.AddSnapshot(new Snapshot(_streamId, _snaphost++, exchangeEssentials));
+            _store.Advanced.AddSnapshot(new Snapshot(_streamId, _snaphost++, StreamConversion.ObjectToByteArray(exchangeEssentials)));
         }
 
         /// <summary>
@@ -274,7 +283,12 @@ namespace CoinExchange.Trades.Infrastructure.Persistence.RavenDb
             _lastSnaphot = snapshot;
             if (snapshot != null)
             {
-                return snapshot.Payload as ExchangeEssentialsList;
+                JObject jObject = JObject.Parse(snapshot.Payload.ToString());
+                byte[] array= jObject["$value"].ToObject<byte[]>();
+                object list = StreamConversion.ByteArrayToObject(array);
+                ExchangeEssentialsList exchangeEssentialsList = list as ExchangeEssentialsList;
+                _loadFrom = exchangeEssentialsList.LastSnapshotDateTime;
+                return exchangeEssentialsList;
             }
             return null;
         }
