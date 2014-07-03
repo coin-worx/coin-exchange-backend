@@ -104,6 +104,9 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         {
             foreach (var exchangeEssential in _exchangeEssentialsList)
             {
+                //TradeListener tradeListener = new TradeListener();
+                //exchangeEssential.LimitOrderBook.TradeExecuted -= exchangeEssential.LimitOrderBook.TradeListener.OnTrade;
+                //exchangeEssential.LimitOrderBook.TradeExecuted += exchangeEssential.LimitOrderBook.TradeListener.OnTrade;
                 exchangeEssential.LimitOrderBook.PublishOrderBookState();
                 exchangeEssential.DepthOrderBook.PublishDepth();
             }
@@ -181,7 +184,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             ReplayService.TurnReplayModeOff(this);
             foreach (ExchangeEssentials exchangeEssentials in ExchangeEssentials)
             {
-                exchangeEssentials.LimitOrderBook.TradeExecuted -= exchangeEssentials.TradeListener.OnTrade;
+                exchangeEssentials.LimitOrderBook.TradeExecuted += exchangeEssentials.TradeListener.OnTrade;
                 exchangeEssentials.LimitOrderBook.OrderChanged += exchangeEssentials.DepthOrderBook.OnOrderChanged;
                 exchangeEssentials.LimitOrderBook.OrderChanged += exchangeEssentials.OrderListener.OnOrderChanged;
             }
