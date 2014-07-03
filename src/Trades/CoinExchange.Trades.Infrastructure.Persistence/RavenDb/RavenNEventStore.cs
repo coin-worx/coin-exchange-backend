@@ -172,11 +172,8 @@ namespace CoinExchange.Trades.Infrastructure.Persistence.RavenDb
         /// <returns></returns>
         public List<Order> GetOrdersByCurrencyPair(string currencyPair)
         {
-            
             List<Order> orders = new List<Order>();
-            //if (_lastSnaphot == null)
-            //{
-                List<EventMessage> collection;
+            List<EventMessage> collection;
                 //collection = _stream.CommittedEvents.ToList();
                 var events = _store.Advanced.GetFrom(_loadFrom).ToList();
                 for (int i = 0; i < events.Count; i++)
@@ -190,24 +187,6 @@ namespace CoinExchange.Trades.Infrastructure.Persistence.RavenDb
                         }
                     }
                 }
-            //}
-            //else
-            //{
-            //    var events = _store.OpenStream(_lastSnaphot, int.MaxValue);
-            //    List<EventMessage> collection;
-            //    collection = events.UncommittedEvents.ToList();
-            //    for (int i = 0; i < collection.Count;i++)
-            //    {
-            //        if (collection[i].Body is Order)
-            //        {
-            //            Order order = collection[i].Body as Order;
-            //            if (order.CurrencyPair == currencyPair)
-            //            {
-            //                orders.Add(order);
-            //            }
-            //        }
-            //    }
-            //}
             Log.Debug("Number of orders fetched from Event Store: " + orders.Count);
             if (!orders.Any())
             {
@@ -281,7 +260,7 @@ namespace CoinExchange.Trades.Infrastructure.Persistence.RavenDb
         public ExchangeEssentialsList LoadLastSnapshot()
         {
             Snapshot snapshot=null;
-            var initialize=_store.Advanced.GetFrom(Constants.LastSnapshotSearch).ToList();
+            var initialize = _store.Advanced.GetFrom(Constants.LastSnapshotSearch).GroupBy(i => i.StreamId).Select(g => g.First()).ToList();
             for (int i = 0; i < initialize.Count; i++)
             {
                 snapshot = _store.Advanced.GetSnapshot(initialize[i].StreamId, int.MaxValue);

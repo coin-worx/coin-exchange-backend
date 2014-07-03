@@ -55,13 +55,35 @@ namespace CoinExchange.Rest.WebHost
         /// </summary>
         private void InitiliazeApplication()
         {
-            Exchange exchange = new Exchange();
+
             IEventStore inputEventStore = new RavenNEventStore(Constants.INPUT_EVENT_STORE);
             IEventStore outputEventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
             Journaler inputJournaler = new Journaler(inputEventStore);
             Journaler outputJournaler = new Journaler(outputEventStore);
-            InputDisruptorPublisher.InitializeDisruptor(new IEventHandler<InputPayload>[] { exchange, inputJournaler });
-            OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { outputJournaler });
+            ExchangeEssentialsList exchangeEssentialsList=outputEventStore.LoadLastSnapshot();
+            Exchange exchange;
+            if (exchangeEssentialsList != null)
+            {
+                //means snapshot found so initialize the exchange
+                exchange = new Exchange(exchangeEssentialsList);
+                InputDisruptorPublisher.InitializeDisruptor(new IEventHandler<InputPayload>[] {exchange, inputJournaler});
+                OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] {outputJournaler});
+                exchange.InitializeExchangeAfterSnaphot();
+                LimitOrderBookReplayService service = new LimitOrderBookReplayService();
+                service.ReplayOrderBooks(exchange, outputJournaler);
+                exchange.EnableSnaphots(Constants.SnaphsortInterval);
+            }
+            else
+            {
+                //no snapshot found
+                exchange = new Exchange();
+                InputDisruptorPublisher.InitializeDisruptor(new IEventHandler<InputPayload>[] { exchange, inputJournaler });
+                OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { outputJournaler });
+                //check if there are events to replay
+                LimitOrderBookReplayService service = new LimitOrderBookReplayService();
+                service.ReplayOrderBooks(exchange, outputJournaler);
+                exchange.EnableSnaphots(Constants.SnaphsortInterval);
+            }
         }
     }
 }

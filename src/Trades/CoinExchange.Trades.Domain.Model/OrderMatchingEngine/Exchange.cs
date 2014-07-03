@@ -24,7 +24,8 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         private string XbtUsd = "XBTUSD";
         private List<string> _currencyPairs = new List<string>();
         private ExchangeEssentialsList _exchangeEssentialsList = new ExchangeEssentialsList();
-        [NonSerialized] private Timer _snaphotTimer;
+        [NonSerialized] 
+        private Timer _snaphotTimer;
 
         /// <summary>
         /// Default Constructor
@@ -94,93 +95,15 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             _currencyPairs.Add("BTC/USD");
             _currencyPairs.Add("XBT/USD");
             _exchangeEssentialsList = exchangeEssentialsList;
-            //foreach (var exchangeEssential in exchangeEssentialsList)
-            //{
-            //    //exchangeEssential.LimitOrderBook.OrderAccepted -= OnAccept;
-            //    //exchangeEssential.LimitOrderBook.OrderAccepted -= exchangeEssential.DepthOrderBook.OnOrderAccepted;
-            //    TradeListener tradeListener = new TradeListener();
-            //    IOrderListener orderListener = new OrderListener();
-            //    IOrderBookListener orderBookListener = new OrderBookListener();
-            //    IBBOListener bboListener = new BBOListener();
-            //    IDepthListener depthListener = new DepthListener();
-
-            //    exchangeEssential.LimitOrderBook.OrderAccepted += OnAccept;
-            //    exchangeEssential.LimitOrderBook.OrderAccepted += exchangeEssential.DepthOrderBook.OnOrderAccepted;
-
-            //    //exchangeEssential.LimitOrderBook.OrderCancelled -= exchangeEssential.DepthOrderBook.OnOrderCancelled;
-            //    exchangeEssential.LimitOrderBook.OrderCancelled += exchangeEssential.DepthOrderBook.OnOrderCancelled;
-
-            //    //exchangeEssential.LimitOrderBook.OrderBookChanged -= exchangeEssential.DepthOrderBook.OnOrderBookChanged;
-            //    //exchangeEssential.LimitOrderBook.OrderBookChanged -= exchangeEssential.LimitOrderBook.OrderBookListener.OnOrderBookChanged;
-
-            //    exchangeEssential.LimitOrderBook.OrderBookChanged += exchangeEssential.DepthOrderBook.OnOrderBookChanged;
-            //    exchangeEssential.LimitOrderBook.OrderBookChanged += orderBookListener.OnOrderBookChanged;
-
-            //    //exchangeEssential.LimitOrderBook.OrderChanged -= exchangeEssential.DepthOrderBook.OnOrderChanged;
-            //    //exchangeEssential.LimitOrderBook.OrderChanged -= exchangeEssential.OrderListener.OnOrderChanged;
-
-            //    exchangeEssential.LimitOrderBook.OrderChanged += exchangeEssential.DepthOrderBook.OnOrderChanged;
-            //    exchangeEssential.LimitOrderBook.OrderChanged += orderListener.OnOrderChanged;
-
-            //    //exchangeEssential.LimitOrderBook.OrderFilled -= exchangeEssential.DepthOrderBook.OnOrderFilled;
-            //    exchangeEssential.LimitOrderBook.OrderFilled += exchangeEssential.DepthOrderBook.OnOrderFilled;
-
-            //    //exchangeEssential.LimitOrderBook.TradeExecuted -= exchangeEssential.TradeListener.OnTrade;
-            //    exchangeEssential.LimitOrderBook.TradeExecuted += tradeListener.OnTrade;
-
-            //    //exchangeEssential.DepthOrderBook.BboChanged -= exchangeEssential.BBOListener.OnBBOChange;
-            //    //exchangeEssential.DepthOrderBook.DepthChanged -= exchangeEssential.DepthListener.OnDepthChanged;
-
-            //    exchangeEssential.DepthOrderBook.BboChanged += bboListener.OnBBOChange;
-            //    exchangeEssential.DepthOrderBook.DepthChanged += depthListener.OnDepthChanged;
-            //    exchangeEssential.LimitOrderBook.PublishOrderBookState();
-            //}
         }
 
         /// <summary>
-        /// initialize exchange
+        /// initialize exchange after snaphot
         /// </summary>
-        public void InitializeExchange()
+        public void InitializeExchangeAfterSnaphot()
         {
             foreach (var exchangeEssential in _exchangeEssentialsList)
             {
-                //exchangeEssential.LimitOrderBook.OrderAccepted -= OnAccept;
-                //exchangeEssential.LimitOrderBook.OrderAccepted -= exchangeEssential.DepthOrderBook.OnOrderAccepted;
-                TradeListener tradeListener = new TradeListener();
-                IOrderListener orderListener = new OrderListener();
-                IOrderBookListener orderBookListener = new OrderBookListener();
-                IBBOListener bboListener = new BBOListener();
-                IDepthListener depthListener = new DepthListener();
-
-                exchangeEssential.LimitOrderBook.OrderAccepted += OnAccept;
-                exchangeEssential.LimitOrderBook.OrderAccepted += exchangeEssential.DepthOrderBook.OnOrderAccepted;
-
-                //exchangeEssential.LimitOrderBook.OrderCancelled -= exchangeEssential.DepthOrderBook.OnOrderCancelled;
-                exchangeEssential.LimitOrderBook.OrderCancelled += exchangeEssential.DepthOrderBook.OnOrderCancelled;
-
-                //exchangeEssential.LimitOrderBook.OrderBookChanged -= exchangeEssential.DepthOrderBook.OnOrderBookChanged;
-                //exchangeEssential.LimitOrderBook.OrderBookChanged -= exchangeEssential.LimitOrderBook.OrderBookListener.OnOrderBookChanged;
-
-                exchangeEssential.LimitOrderBook.OrderBookChanged += exchangeEssential.DepthOrderBook.OnOrderBookChanged;
-                exchangeEssential.LimitOrderBook.OrderBookChanged += orderBookListener.OnOrderBookChanged;
-
-                //exchangeEssential.LimitOrderBook.OrderChanged -= exchangeEssential.DepthOrderBook.OnOrderChanged;
-                //exchangeEssential.LimitOrderBook.OrderChanged -= exchangeEssential.OrderListener.OnOrderChanged;
-
-                exchangeEssential.LimitOrderBook.OrderChanged += exchangeEssential.DepthOrderBook.OnOrderChanged;
-                exchangeEssential.LimitOrderBook.OrderChanged += orderListener.OnOrderChanged;
-
-                //exchangeEssential.LimitOrderBook.OrderFilled -= exchangeEssential.DepthOrderBook.OnOrderFilled;
-                exchangeEssential.LimitOrderBook.OrderFilled += exchangeEssential.DepthOrderBook.OnOrderFilled;
-
-                //exchangeEssential.LimitOrderBook.TradeExecuted -= exchangeEssential.TradeListener.OnTrade;
-                exchangeEssential.LimitOrderBook.TradeExecuted += tradeListener.OnTrade;
-
-                //exchangeEssential.DepthOrderBook.BboChanged -= exchangeEssential.BBOListener.OnBBOChange;
-                //exchangeEssential.DepthOrderBook.DepthChanged -= exchangeEssential.DepthListener.OnDepthChanged;
-
-                exchangeEssential.DepthOrderBook.BboChanged += bboListener.OnBBOChange;
-                exchangeEssential.DepthOrderBook.DepthChanged += depthListener.OnDepthChanged;
                 exchangeEssential.LimitOrderBook.PublishOrderBookState();
                 exchangeEssential.DepthOrderBook.PublishDepth();
             }
@@ -328,6 +251,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         {
             if (_snaphotTimer != null)
             {
+                _snaphotTimer.Stop();
                 _snaphotTimer.Enabled = false;
                 _snaphotTimer.Dispose();
             }

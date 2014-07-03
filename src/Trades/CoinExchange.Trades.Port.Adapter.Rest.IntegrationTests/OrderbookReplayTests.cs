@@ -68,7 +68,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
         public void ReplayOrderBook_IfScenario1IsExecuted_VerifyTheWholeSystemState()
         {
             _applicationContext = ContextRegistry.GetContext();
-            Scenario2();
+            Scenario1();
             MarketController marketController = (MarketController)_applicationContext["MarketController"];
             IHttpActionResult marketDataHttpResult = marketController.GetOrderBook("XBTUSD");
 
@@ -88,8 +88,10 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             ITradeRepository tradeRepository = (ITradeRepository)_applicationContext["TradeRepository"];
             IList<TradeReadModel> beforeReplayTrades = tradeRepository.GetAll();
             IList<object> beforeReplayEvents = outputEventStore.GetAllEvents();
+            marketDataHttpResult = marketController.GetBbo("XBTUSD");
+            OkNegotiatedContentResult<BBORepresentation> okResponseMessageBboBefore = (OkNegotiatedContentResult<BBORepresentation>)marketDataHttpResult;
             //down the exchange, make new exchange and reply
-            CrashAndInitializeAgain();
+            CrashAndInitializeAgainWithSnapshot();
             
             marketController = (MarketController)_applicationContext["MarketController"];
             marketDataHttpResult = marketController.GetOrderBook("XBTUSD");
@@ -117,6 +119,28 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             okResponseMessageDepth = (OkNegotiatedContentResult<object>)marketDataHttpResult;
             DepthTupleRepresentation afterReplayDepth = okResponseMessageDepth.Content as DepthTupleRepresentation;
             VerifyDepthBeforeAndAfterReplay(beforeReplayDepth,afterReplayDepth);
+            marketDataHttpResult = marketController.GetBbo("XBTUSD");
+            OkNegotiatedContentResult<BBORepresentation> okResponseMessageBboAfter = (OkNegotiatedContentResult<BBORepresentation>)marketDataHttpResult;
+            VerifyBboAfterReplay(okResponseMessageBboBefore.Content, okResponseMessageBboAfter.Content);
+
+            //publish new orders after replay
+            PublishOrdersAfterReplay();
+            marketController = (MarketController)_applicationContext["MarketController"];
+            marketDataHttpResult = marketController.GetOrderBook("XBTUSD");
+
+            okResponseMessage =
+                (OkNegotiatedContentResult<object>)marketDataHttpResult;
+            representation = okResponseMessage.Content as OrderBookRepresentation;
+            Tuple<OrderRepresentationList, OrderRepresentationList> newOrderBook = new Tuple<OrderRepresentationList, OrderRepresentationList>(representation.Bids, representation.Asks);
+
+            marketDataHttpResult = marketController.GetDepth("XBTUSD");
+            okResponseMessageDepth = (OkNegotiatedContentResult<object>)marketDataHttpResult;
+            DepthTupleRepresentation newDepth = okResponseMessageDepth.Content as DepthTupleRepresentation;
+            VerifyDepthWhenOrdersPublishedAfterReplayForScenario1(newDepth);
+
+            marketDataHttpResult = marketController.GetBbo("XBTUSD");
+            OkNegotiatedContentResult<BBORepresentation> newBboResponse = (OkNegotiatedContentResult<BBORepresentation>)marketDataHttpResult;
+            VerifyBboWhenOrdersPublishedAfterReplayForScenario1(newBboResponse.Content);
         }
 
         [Test]
@@ -230,7 +254,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             _exchange = new Exchange(outputEventStore.LoadLastSnapshot());
             InputDisruptorPublisher.InitializeDisruptor(new IEventHandler<InputPayload>[] { _exchange, inputJournaler });
             OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { outputJournaler });
-            _exchange.InitializeExchange();
+            _exchange.InitializeExchangeAfterSnaphot();
             LimitOrderBookReplayService service = new LimitOrderBookReplayService();
             service.ReplayOrderBooks(_exchange, outputJournaler);
             _exchange.EnableSnaphots(5000);
@@ -454,6 +478,84 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             resetEvent.WaitOne(2000);
             InputDisruptorPublisher.Publish(InputPayload.CreatePayload(new OrderCancellation(order14.OrderId, order14.TraderId, currencyPair)));
             resetEvent.WaitOne(20000);
+        }
+
+        private void PublishOrdersAfterReplay()
+        {
+            string currencyPair = "XBTUSD";
+            Order order1 = OrderFactory.CreateOrder("5555", currencyPair, "limit", "buy", 100, 406, new StubbedOrderIdGenerator());
+            InputDisruptorPublisher.Publish(InputPayload.CreatePayload(order1));
+            Order order2 = OrderFactory.CreateOrder("5555", currencyPair, "limit", "buy", 101, 406, new StubbedOrderIdGenerator());
+            InputDisruptorPublisher.Publish(InputPayload.CreatePayload(order2));
+            Order order3 = OrderFactory.CreateOrder("5555", currencyPair, "limit", "buy", 102, 405, new StubbedOrderIdGenerator());
+            InputDisruptorPublisher.Publish(InputPayload.CreatePayload(order3));
+            Order order4 = OrderFactory.CreateOrder("5555", currencyPair, "limit", "sell", 100, 407, new StubbedOrderIdGenerator());
+            InputDisruptorPublisher.Publish(InputPayload.CreatePayload(order4));
+            Order order5 = OrderFactory.CreateOrder("5555", currencyPair, "limit", "sell", 104, 409, new StubbedOrderIdGenerator());
+            InputDisruptorPublisher.Publish(InputPayload.CreatePayload(order5));
+            Order order6 = OrderFactory.CreateOrder("5555", currencyPair, "limit", "sell", 104, 413, new StubbedOrderIdGenerator());
+            InputDisruptorPublisher.Publish(InputPayload.CreatePayload(order6));
+            ManualResetEvent resetEvent=new ManualResetEvent(false);
+            resetEvent.WaitOne(10000);
+        }
+
+        private void VerifyDepthWhenOrdersPublishedAfterReplayForScenario1(DepthTupleRepresentation representation)
+        {
+            //0 index
+            Assert.AreEqual(representation.BidDepth[0].Price, 406);
+            Assert.AreEqual(representation.BidDepth[0].Volume, 201);
+            Assert.AreEqual(representation.BidDepth[0].OrderCount, 2);
+
+            Assert.AreEqual(representation.AskDepth[0].Price, 407);
+            Assert.AreEqual(representation.AskDepth[0].Volume, 202);
+            Assert.AreEqual(representation.AskDepth[0].OrderCount, 2);
+
+            //1 index
+            Assert.AreEqual(representation.BidDepth[1].Price, 405);
+            Assert.AreEqual(representation.BidDepth[1].Volume, 106);
+            Assert.AreEqual(representation.BidDepth[1].OrderCount, 2);
+
+            Assert.AreEqual(representation.AskDepth[1].Price, 409);
+            Assert.AreEqual(representation.AskDepth[1].Volume, 205);
+            Assert.AreEqual(representation.AskDepth[1].OrderCount, 2);
+
+            //2 index
+            Assert.AreEqual(representation.BidDepth[2].Price, 404);
+            Assert.AreEqual(representation.BidDepth[2].Volume, 104);
+            Assert.AreEqual(representation.BidDepth[2].OrderCount, 1);
+
+            Assert.AreEqual(representation.AskDepth[2].Price, 410);
+            Assert.AreEqual(representation.AskDepth[2].Volume, 100);
+            Assert.AreEqual(representation.AskDepth[2].OrderCount, 1);
+
+            //3 index
+            Assert.AreEqual(representation.BidDepth[3].Price, 403);
+            Assert.AreEqual(representation.BidDepth[3].Volume, 103);
+            Assert.AreEqual(representation.BidDepth[3].OrderCount, 1);
+
+            Assert.AreEqual(representation.AskDepth[3].Price, 411);
+            Assert.AreEqual(representation.AskDepth[3].Volume, 105);
+            Assert.AreEqual(representation.AskDepth[3].OrderCount, 1);
+
+            //4 index
+            Assert.AreEqual(representation.BidDepth[4].Price, 402);
+            Assert.AreEqual(representation.BidDepth[4].Volume, 102);
+            Assert.AreEqual(representation.BidDepth[4].OrderCount, 1);
+
+            Assert.AreEqual(representation.AskDepth[4].Price, 412);
+            Assert.AreEqual(representation.AskDepth[4].Volume, 106);
+            Assert.AreEqual(representation.AskDepth[4].OrderCount, 1);
+        }
+
+        private void VerifyBboWhenOrdersPublishedAfterReplayForScenario1(BBORepresentation representation)
+        {
+            Assert.AreEqual(representation.BestAskOrderCount, 2);
+            Assert.AreEqual(representation.BestAskPrice, 407);
+            Assert.AreEqual(representation.BestAskVolume, 202);
+            Assert.AreEqual(representation.BestBidOrderCount, 2);
+            Assert.AreEqual(representation.BestBidPrice, 406);
+            Assert.AreEqual(representation.BestBidVolume, 201);
+            Assert.AreEqual(representation.CurrencyPair, "XBTUSD");
         }
     }
 }
