@@ -60,6 +60,7 @@ namespace CoinExchange.Trades.ReadModel.Persistence.Tests
             BeforeTearDown();
             _databaseUtility.Create();
             OutputDisruptor.ShutDown();
+            _eventStore.RemoveAllEvents();
             AfterTearDown();
         }
 
@@ -97,6 +98,8 @@ namespace CoinExchange.Trades.ReadModel.Persistence.Tests
             Assert.AreEqual(model.Low, 5);
             Assert.AreEqual(model.Close, 5);
             Assert.AreEqual(model.Volume, 40);
+            Assert.AreEqual(model.TotalWeight,475);
+            Assert.AreEqual(model.AveragePrice,11.875);
 
             //bar 2 verification(will form from trade 5-6)
             Assert.NotNull(model2);
@@ -105,6 +108,8 @@ namespace CoinExchange.Trades.ReadModel.Persistence.Tests
             Assert.AreEqual(model2.Low, 2);
             Assert.AreEqual(model2.Close, 10);
             Assert.AreEqual(model2.Volume, 15);
+            Assert.AreEqual(model2.TotalWeight, 70);
+            Assert.AreEqual(model2.AveragePrice, 4.66667);
         }
 
         protected virtual void BeforeSetup() { }

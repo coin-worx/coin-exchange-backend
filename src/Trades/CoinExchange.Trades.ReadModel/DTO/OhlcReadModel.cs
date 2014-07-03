@@ -25,6 +25,8 @@ namespace CoinExchange.Trades.ReadModel.DTO
             Low = low;
             Close = close;
             Volume = volume;
+            TotalWeight = open*volume;
+            AveragePrice = TotalWeight/volume;
         }
 
         /// <summary>
@@ -43,6 +45,9 @@ namespace CoinExchange.Trades.ReadModel.DTO
             Volume += latestTrade.ExecutedVolume.Value;
             //assign new close
             Close = latestTrade.ExecutionPrice.Value;
+            //calculate weighted average price
+            TotalWeight += latestTrade.ExecutionPrice.Value*latestTrade.ExecutedVolume.Value;
+            AveragePrice = TotalWeight/Volume;
         }
 
         public int Id { get; set; }
@@ -53,5 +58,7 @@ namespace CoinExchange.Trades.ReadModel.DTO
         public decimal Close { get; set; }
         public decimal Volume { get; set; }
         public string CurrencyPair { get; set; }
+        public decimal TotalWeight { get; set; }
+        public decimal AveragePrice { get; set; }
     }
 }

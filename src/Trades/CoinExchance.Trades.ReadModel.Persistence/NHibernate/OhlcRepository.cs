@@ -24,7 +24,7 @@ namespace CoinExchange.Trades.ReadModel.Persistence.NHibernate
         {
             return
                 CurrentSession.QueryOver<OhlcReadModel>()
-                    .Select(x => x.Open, x => x.High, x => x.Low, x => x.Close, x => x.DateTime, x => x.Volume).Where(x=>x.CurrencyPair==currencyPair)
+                    .Select(x => x.Open, x => x.High, x => x.Low, x => x.Close, x => x.DateTime, x => x.Volume,x=>x.AveragePrice).Where(x=>x.CurrencyPair==currencyPair)
                     .List<object>();
         }
     }

@@ -1,6 +1,6 @@
 /*
 SQLyog Enterprise - MySQL GUI v6.5
-MySQL - 5.6.14 : Database - coinexchange
+MySQL - 5.6.14 : Database - coinexchangedev
 *********************************************************************
 */
 
@@ -39,6 +39,8 @@ CREATE TABLE `ohlc` (
   `Close` decimal(10,5) DEFAULT NULL,
   `Volume` decimal(10,5) DEFAULT NULL,
   `CurrencyPair` varchar(100) DEFAULT NULL,
+  `AveragePrice` decimal(10,5) DEFAULT NULL,
+  `TotalWeight` decimal(10,5) DEFAULT NULL,
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
