@@ -104,9 +104,40 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         {
             foreach (var exchangeEssential in _exchangeEssentialsList)
             {
-                //TradeListener tradeListener = new TradeListener();
-                //exchangeEssential.LimitOrderBook.TradeExecuted -= exchangeEssential.LimitOrderBook.TradeListener.OnTrade;
-                //exchangeEssential.LimitOrderBook.TradeExecuted += exchangeEssential.LimitOrderBook.TradeListener.OnTrade;
+                IOrderBookListener orderBookListener = new OrderBookListener();
+                exchangeEssential.LimitOrderBook.OrderAccepted -= OnAccept;
+                exchangeEssential.LimitOrderBook.OrderAccepted -= exchangeEssential.DepthOrderBook.OnOrderAccepted;
+
+                exchangeEssential.LimitOrderBook.OrderAccepted += OnAccept;
+                exchangeEssential.LimitOrderBook.OrderAccepted += exchangeEssential.DepthOrderBook.OnOrderAccepted;
+
+                exchangeEssential.LimitOrderBook.OrderCancelled -= exchangeEssential.DepthOrderBook.OnOrderCancelled;
+                exchangeEssential.LimitOrderBook.OrderCancelled += exchangeEssential.DepthOrderBook.OnOrderCancelled;
+
+                exchangeEssential.LimitOrderBook.OrderBookChanged -= exchangeEssential.DepthOrderBook.OnOrderBookChanged;
+                exchangeEssential.LimitOrderBook.OrderBookChanged -= orderBookListener.OnOrderBookChanged;
+
+                exchangeEssential.LimitOrderBook.OrderBookChanged += exchangeEssential.DepthOrderBook.OnOrderBookChanged;
+                exchangeEssential.LimitOrderBook.OrderBookChanged += orderBookListener.OnOrderBookChanged;
+
+                exchangeEssential.LimitOrderBook.OrderChanged -= exchangeEssential.DepthOrderBook.OnOrderChanged;
+                exchangeEssential.LimitOrderBook.OrderChanged -= exchangeEssential.OrderListener.OnOrderChanged;
+
+                exchangeEssential.LimitOrderBook.OrderChanged += exchangeEssential.DepthOrderBook.OnOrderChanged;
+                exchangeEssential.LimitOrderBook.OrderChanged += exchangeEssential.OrderListener.OnOrderChanged;
+
+                exchangeEssential.LimitOrderBook.OrderFilled -= exchangeEssential.DepthOrderBook.OnOrderFilled;
+                exchangeEssential.LimitOrderBook.OrderFilled += exchangeEssential.DepthOrderBook.OnOrderFilled;
+
+                exchangeEssential.LimitOrderBook.TradeExecuted -= exchangeEssential.TradeListener.OnTrade;
+                exchangeEssential.LimitOrderBook.TradeExecuted += exchangeEssential.TradeListener.OnTrade;
+
+                exchangeEssential.DepthOrderBook.BboChanged -= exchangeEssential.BBOListener.OnBBOChange;
+                exchangeEssential.DepthOrderBook.DepthChanged -= exchangeEssential.DepthListener.OnDepthChanged;
+
+                exchangeEssential.DepthOrderBook.BboChanged += exchangeEssential.BBOListener.OnBBOChange;
+                exchangeEssential.DepthOrderBook.DepthChanged += exchangeEssential.DepthListener.OnDepthChanged;
+
                 exchangeEssential.LimitOrderBook.PublishOrderBookState();
                 exchangeEssential.DepthOrderBook.PublishDepth();
             }

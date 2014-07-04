@@ -14,7 +14,7 @@ namespace CoinExchange.Client.Console
         static void Main(string[] args)
         {
             string baseUrl = "http://rockblanc.cloudapp.net/test/v1";
-            //baseUrl = "http://localhost:51780/v1";
+            baseUrl = "http://localhost:51780/v1";
             //ApiClient client = new ApiClient(baseUrl);
             //System.Console.WriteLine(client.QueryTrades("6e8b5195-0e7f-402f-87e7-80eb92a96c85"));
             //Scenario1(client);
@@ -131,7 +131,7 @@ namespace CoinExchange.Client.Console
         {
             IdentityAccessClient client=new IdentityAccessClient(baseUrl);
             AccessControl control=new AccessControl(client,"123","user1");
-            control.CreateAndActivateUser("user1", "123", "jonsnow@user.com");
+            //control.CreateAndActivateUser("user1", "123", "jonsnow@user.com");
             control.Login("user1", "123");
             //Scenario1(client);
             OrderBookGenerator(client);
