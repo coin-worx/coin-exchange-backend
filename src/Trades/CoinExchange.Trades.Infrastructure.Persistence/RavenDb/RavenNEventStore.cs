@@ -248,8 +248,18 @@ namespace CoinExchange.Trades.Infrastructure.Persistence.RavenDb
         {
             if (_eventStore == Constants.OUTPUT_EVENT_STORE)
             {
-                _store.Advanced.AddSnapshot(new Snapshot(_streamId, _snaphost++,
-                    StreamConversion.ObjectToByteArray(exchangeEssentials)));
+                try
+                {
+                    _store.Advanced.AddSnapshot(new Snapshot(_streamId, _snaphost++,
+                        StreamConversion.ObjectToByteArray(exchangeEssentials)));
+                }
+                catch (Exception exception)
+                {
+                    if (Log.IsErrorEnabled)
+                    {
+                        Log.Error("Snapshot Saving error:",exception);
+                    }
+                }
             }
         }
 

@@ -246,8 +246,19 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// <param name="e"></param>
         private void SnaphotTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            _exchangeEssentialsList.LastSnapshotDateTime = DateTime.Now;
-            ExchangeEssentialsSnapshortEvent.Raise(_exchangeEssentialsList);
+            try
+            {
+                _exchangeEssentialsList.LastSnapshotDateTime = DateTime.Now;
+                ExchangeEssentialsSnapshortEvent.Raise(_exchangeEssentialsList);
+            }
+            catch (Exception exception)
+            {
+                if (Log.IsErrorEnabled)
+                {
+                    Log.Error("Snapshot Interval Triggered:",exception);
+                }
+            }
+            
         }
 
         public void StopTimer()
