@@ -60,21 +60,21 @@ namespace CoinExchange.Rest.WebHost
             IEventStore outputEventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
             Journaler inputJournaler = new Journaler(inputEventStore);
             Journaler outputJournaler = new Journaler(outputEventStore);
-            ExchangeEssentialsList exchangeEssentialsList=outputEventStore.LoadLastSnapshot();
+            //ExchangeEssentialsList exchangeEssentialsList=outputEventStore.LoadLastSnapshot();
             Exchange exchange;
-            if (exchangeEssentialsList != null)
-            {
-                //means snapshot found so initialize the exchange
-                exchange = new Exchange(exchangeEssentialsList);
-                InputDisruptorPublisher.InitializeDisruptor(new IEventHandler<InputPayload>[] {exchange, inputJournaler});
-                OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] {outputJournaler});
-                exchange.InitializeExchangeAfterSnaphot();
-                LimitOrderBookReplayService service = new LimitOrderBookReplayService();
-                service.ReplayOrderBooks(exchange, outputJournaler);
-                exchange.EnableSnaphots(Constants.SnaphsortInterval);
-            }
-            else
-            {
+            //if (exchangeEssentialsList != null)
+            //{
+            //    //means snapshot found so initialize the exchange
+            //    exchange = new Exchange(exchangeEssentialsList);
+            //    InputDisruptorPublisher.InitializeDisruptor(new IEventHandler<InputPayload>[] {exchange, inputJournaler});
+            //    OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] {outputJournaler});
+            //    exchange.InitializeExchangeAfterSnaphot();
+            //    LimitOrderBookReplayService service = new LimitOrderBookReplayService();
+            //    service.ReplayOrderBooks(exchange, outputJournaler);
+            //    exchange.EnableSnaphots(Constants.SnaphsortInterval);
+            //}
+           // else
+            //{
                 //no snapshot found
                 exchange = new Exchange();
                 InputDisruptorPublisher.InitializeDisruptor(new IEventHandler<InputPayload>[] { exchange, inputJournaler });
@@ -82,8 +82,8 @@ namespace CoinExchange.Rest.WebHost
                 //check if there are events to replay
                 LimitOrderBookReplayService service = new LimitOrderBookReplayService();
                 service.ReplayOrderBooks(exchange, outputJournaler);
-                exchange.EnableSnaphots(Constants.SnaphsortInterval);
-            }
+                //exchange.EnableSnaphots(Constants.SnaphsortInterval);
+           // }
         }
     }
 }
