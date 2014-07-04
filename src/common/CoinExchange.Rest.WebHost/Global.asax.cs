@@ -80,8 +80,8 @@ namespace CoinExchange.Rest.WebHost
                 InputDisruptorPublisher.InitializeDisruptor(new IEventHandler<InputPayload>[] { exchange, inputJournaler });
                 OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { outputJournaler });
                 //check if there are events to replay
-                LimitOrderBookReplayService service = new LimitOrderBookReplayService();
-                service.ReplayOrderBooks(exchange, outputJournaler);
+                //LimitOrderBookReplayService service = new LimitOrderBookReplayService();
+               // service.ReplayOrderBooks(exchange, outputJournaler);
                 //exchange.EnableSnaphots(Constants.SnaphsortInterval);
            // }
         }
