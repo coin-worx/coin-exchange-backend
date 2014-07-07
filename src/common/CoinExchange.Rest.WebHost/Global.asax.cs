@@ -55,7 +55,8 @@ namespace CoinExchange.Rest.WebHost
         /// </summary>
         private void InitiliazeApplication()
         {
-
+            InputDisruptorPublisher.Shutdown();
+            OutputDisruptor.ShutDown();
             IEventStore inputEventStore = new RavenNEventStore(Constants.INPUT_EVENT_STORE);
             IEventStore outputEventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
             Journaler inputJournaler = new Journaler(inputEventStore);
