@@ -39,13 +39,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Funds\FundsApplicationService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Funds\Commands\" />
-    <Folder Include="Funds\Representation\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\..\Common\CoinExchange.Common\CoinExchange.Common.csproj">
       <Project>{d61dbd04-95dc-4eb1-ad54-1ff929ac2814}</Project>

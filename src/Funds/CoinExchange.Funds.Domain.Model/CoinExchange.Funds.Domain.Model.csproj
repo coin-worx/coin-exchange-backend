@@ -39,13 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Entities\AccountBalance.cs" />
-    <Compile Include="Entities\LedgerInfo.cs" />
-    <Compile Include="Entities\LedgerInfoRequest.cs" />
-    <Compile Include="Entities\TradeBalance.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="VOs\AssetFee.cs" />
-    <Compile Include="VOs\TradeableAsset.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
