@@ -40,6 +40,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DepositAggregate\DepositLimit.cs" />
+    <Compile Include="DepositAggregate\Fee.cs" />
+    <Compile Include="DepositAggregate\Ledger.cs" />
+    <Compile Include="DepositAggregate\LedgerType.cs" />
     <Compile Include="DepositAggregate\TransactionStatus.cs" />
     <Compile Include="DepositAggregate\AccountId.cs" />
     <Compile Include="DepositAggregate\AddressStatus.cs" />
@@ -50,6 +53,7 @@
     <Compile Include="WithdrawAggregate\BankAccount.cs" />
     <Compile Include="WithdrawAggregate\Withdraw.cs" />
     <Compile Include="WithdrawAggregate\WithdrawAddress.cs" />
+    <Compile Include="WithdrawAggregate\WithdrawFees.cs" />
     <Compile Include="WithdrawAggregate\WithdrawLimit.cs" />
   </ItemGroup>
   <ItemGroup />
