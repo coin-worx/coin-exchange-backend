@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CoinExchange.Funds.Domain.Model.Common;
 
 namespace CoinExchange.Funds.Domain.Model.DepositAggregate
 {

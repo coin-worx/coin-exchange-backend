@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CoinExchange.Funds.Domain.Model.Common
+﻿namespace CoinExchange.Funds.Domain.Model.DepositAggregate
 {
     /// <summary>
     /// Represents the Status of a Deposit or Withdrawal

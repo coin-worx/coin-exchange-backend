@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace CoinExchange.Funds.Domain.Model.DepositAggregate
 {
-    class BitcoinAddress
+    /// <summary>
+    /// Bitcoin Address to make Deposits to or Withdrawals from
+    /// </summary>
+    public class BitcoinAddress
     {
+        public string Value { get; set; }
     }
 }

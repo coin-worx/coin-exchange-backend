@@ -78,10 +78,6 @@
       <Project>{4c4f167d-3339-45f1-9a85-71159ef0d806}</Project>
       <Name>CoinExchange.Funds.Domain.Model</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CoinExchange.Funds.Port.Adapter.Rest\CoinExchange.Funds.Port.Adapter.Rest.csproj">
-      <Project>{62d77a23-3f0f-4481-a7d7-773d63d9917a}</Project>
-      <Name>CoinExchange.Funds.Port.Adapter.Rest</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

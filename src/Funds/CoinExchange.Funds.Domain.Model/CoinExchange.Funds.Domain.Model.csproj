@@ -39,7 +39,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DepositAggregate\DepositLimit.cs" />
+    <Compile Include="DepositAggregate\TransactionStatus.cs" />
+    <Compile Include="DepositAggregate\AccountId.cs" />
+    <Compile Include="DepositAggregate\AddressStatus.cs" />
+    <Compile Include="DepositAggregate\BitcoinAddress.cs" />
+    <Compile Include="DepositAggregate\Deposit.cs" />
+    <Compile Include="DepositAggregate\DepositAddress.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WithdrawAggregate\BankAccount.cs" />
+    <Compile Include="WithdrawAggregate\Withdraw.cs" />
+    <Compile Include="WithdrawAggregate\WithdrawAddress.cs" />
+    <Compile Include="WithdrawAggregate\WithdrawLimit.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\CoinExchange.Common\CoinExchange.Common.csproj">
+      <Project>{d61dbd04-95dc-4eb1-ad54-1ff929ac2814}</Project>
+      <Name>CoinExchange.Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
