@@ -56,18 +56,31 @@ namespace CoinExchange.Trades.ReadModel.DTO
         public void UpdateTickerInfo(object[] today, object[] last24Hour,decimal openingPrice,decimal lastTradePrice,decimal lastTradeVolume)
         {
             //update only if more than one records are found
-            if ((long) today[0] > 1 && (long) last24Hour[0] > 1)
+            if ((long) today[0] >= 1)
             {
                 TodaysTrades = (long) today[0];
-                Last24HourTrades = (long) last24Hour[0];
+                //Last24HourTrades = (long) last24Hour[0];
                 TodaysHigh = (decimal) today[1];
-                Last24HoursHigh = (decimal) last24Hour[1];
+                //Last24HoursHigh = (decimal) last24Hour[1];
                 TodaysLow = (decimal) today[2];
-                Last24HoursLow = (decimal) last24Hour[2];
+                //Last24HoursLow = (decimal) last24Hour[2];
                 TodaysVolume = (decimal) today[3];
-                Last24HourVolume = (decimal) last24Hour[3];
+                //Last24HourVolume = (decimal) last24Hour[3];
                 TodaysVolumeWeight = (decimal) today[4];
-                Last24HourVolumeWeight = (decimal) last24Hour[4];
+                //Last24HourVolumeWeight = (decimal) last24Hour[4];
+            }
+            if ((long)last24Hour[0] >= 1)
+            {
+                //TodaysTrades = (long)today[0];
+                Last24HourTrades = (long)last24Hour[0];
+                //TodaysHigh = (decimal)today[1];
+                Last24HoursHigh = (decimal)last24Hour[1];
+                //TodaysLow = (decimal)today[2];
+                Last24HoursLow = (decimal)last24Hour[2];
+                //TodaysVolume = (decimal)today[3];
+                Last24HourVolume = (decimal)last24Hour[3];
+                //TodaysVolumeWeight = (decimal)today[4];
+                Last24HourVolumeWeight = (decimal)last24Hour[4];
             }
             TradePrice = lastTradePrice;
             TradeVolume = lastTradeVolume;

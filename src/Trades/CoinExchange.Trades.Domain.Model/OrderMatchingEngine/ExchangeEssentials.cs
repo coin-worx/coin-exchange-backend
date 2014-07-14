@@ -37,6 +37,15 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             this.BBOListener = bboListener;
         }
 
+        public void Update(ITradeListener tradeListener,
+            IOrderListener orderListener, IDepthListener depthListener, IBBOListener bboListener)
+        {
+            this.TradeListener = tradeListener;
+            this.OrderListener = orderListener;
+            this.DepthListener = depthListener;
+            this.BBOListener = bboListener;
+        }
+
         /// <summary>
         /// Limit order Book
         /// </summary>

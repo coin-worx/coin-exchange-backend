@@ -1,6 +1,6 @@
 /*
 SQLyog Enterprise - MySQL GUI v6.5
-MySQL - 5.6.14 : Database - coinexchangedev
+MySQL - 5.5.36 : Database - coinexchangedev
 *********************************************************************
 */
 
@@ -33,16 +33,16 @@ DROP TABLE IF EXISTS `ohlc`;
 CREATE TABLE `ohlc` (
   `Id` int(11) NOT NULL AUTO_INCREMENT,
   `DateTime` datetime DEFAULT NULL,
-  `Open` decimal(10,5) DEFAULT NULL,
-  `High` decimal(10,5) DEFAULT NULL,
-  `Low` decimal(10,5) DEFAULT NULL,
-  `Close` decimal(10,5) DEFAULT NULL,
-  `Volume` decimal(10,5) DEFAULT NULL,
+  `Open` decimal(15,5) DEFAULT NULL,
+  `High` decimal(15,5) DEFAULT NULL,
+  `Low` decimal(15,5) DEFAULT NULL,
+  `Close` decimal(15,5) DEFAULT NULL,
+  `Volume` decimal(15,5) DEFAULT NULL,
   `CurrencyPair` varchar(100) DEFAULT NULL,
-  `AveragePrice` decimal(10,5) DEFAULT NULL,
-  `TotalWeight` decimal(10,5) DEFAULT NULL,
+  `AveragePrice` decimal(15,5) DEFAULT NULL,
+  `TotalWeight` decimal(15,5) DEFAULT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=latin1;
 
 /*Table structure for table `order` */
 
@@ -52,15 +52,15 @@ CREATE TABLE `order` (
   `OrderId` varchar(100) NOT NULL,
   `OrderType` varchar(100) DEFAULT NULL,
   `OrderSide` varchar(100) DEFAULT NULL,
-  `Price` decimal(10,5) DEFAULT NULL,
-  `VolumeExecuted` decimal(10,5) DEFAULT NULL,
+  `Price` decimal(15,5) DEFAULT NULL,
+  `VolumeExecuted` decimal(15,5) DEFAULT NULL,
   `Status` varchar(100) DEFAULT NULL,
   `TraderId` varchar(100) DEFAULT NULL,
   `CurrencyPair` varchar(25) DEFAULT NULL,
   `OrderDateTime` datetime DEFAULT NULL,
-  `Volume` decimal(10,5) DEFAULT NULL,
-  `OpenQuantity` decimal(10,5) DEFAULT NULL,
-  `AveragePrice` decimal(10,5) DEFAULT NULL,
+  `Volume` decimal(15,5) DEFAULT NULL,
+  `OpenQuantity` decimal(15,5) DEFAULT NULL,
+  `AveragePrice` decimal(15,5) DEFAULT NULL,
   `ClosingDateTime` datetime DEFAULT NULL,
   PRIMARY KEY (`OrderId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -131,26 +131,26 @@ DROP TABLE IF EXISTS `tickerinfo`;
 
 CREATE TABLE `tickerinfo` (
   `Id` int(11) NOT NULL AUTO_INCREMENT,
-  `AskPrice` decimal(10,5) DEFAULT NULL,
-  `AskVolume` decimal(10,5) DEFAULT NULL,
-  `BidPrice` decimal(10,5) DEFAULT NULL,
-  `BidVolume` decimal(10,5) DEFAULT NULL,
-  `OpeningPrice` decimal(10,5) DEFAULT NULL,
-  `TradePrice` decimal(10,5) DEFAULT NULL,
-  `TradeVolume` decimal(10,5) DEFAULT NULL,
-  `TodaysVolumeWeight` decimal(10,5) DEFAULT NULL,
-  `Last24HourVolumeWeight` decimal(10,5) DEFAULT NULL,
+  `AskPrice` decimal(15,5) DEFAULT NULL,
+  `AskVolume` decimal(15,5) DEFAULT NULL,
+  `BidPrice` decimal(15,5) DEFAULT NULL,
+  `BidVolume` decimal(15,5) DEFAULT NULL,
+  `OpeningPrice` decimal(15,5) DEFAULT NULL,
+  `TradePrice` decimal(15,5) DEFAULT NULL,
+  `TradeVolume` decimal(15,5) DEFAULT NULL,
+  `TodaysVolumeWeight` decimal(15,5) DEFAULT NULL,
+  `Last24HourVolumeWeight` decimal(15,5) DEFAULT NULL,
   `TodaysTrades` bigint(20) DEFAULT NULL,
   `Last24HourTrades` bigint(20) DEFAULT NULL,
-  `TodaysLow` decimal(10,5) DEFAULT NULL,
-  `Last24HoursLow` decimal(10,5) DEFAULT NULL,
-  `TodaysHigh` decimal(10,5) DEFAULT NULL,
-  `Last24HoursHigh` decimal(10,5) DEFAULT NULL,
-  `TodaysVolume` decimal(10,5) DEFAULT NULL,
-  `Last24HourVolume` decimal(10,5) DEFAULT NULL,
+  `TodaysLow` decimal(15,5) DEFAULT NULL,
+  `Last24HoursLow` decimal(15,5) DEFAULT NULL,
+  `TodaysHigh` decimal(15,5) DEFAULT NULL,
+  `Last24HoursHigh` decimal(15,5) DEFAULT NULL,
+  `TodaysVolume` decimal(15,5) DEFAULT NULL,
+  `Last24HourVolume` decimal(15,5) DEFAULT NULL,
   `CurrencyPair` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
 
 /*Table structure for table `tier` */
 
@@ -168,8 +168,8 @@ DROP TABLE IF EXISTS `trade`;
 
 CREATE TABLE `trade` (
   `TradeId` varchar(100) NOT NULL,
-  `Price` decimal(10,5) DEFAULT NULL,
-  `Volume` decimal(10,5) DEFAULT NULL,
+  `Price` decimal(15,5) DEFAULT NULL,
+  `Volume` decimal(15,5) DEFAULT NULL,
   `ExecutionDateTime` datetime DEFAULT NULL,
   `CurrencyPair` varchar(50) DEFAULT NULL,
   `BuyOrderId` varchar(100) DEFAULT NULL,
@@ -212,7 +212,7 @@ CREATE TABLE `user` (
   `DateOfBirth` date DEFAULT NULL,
   PRIMARY KEY (`Id`),
   UNIQUE KEY `NewIndex1` (`UserName`,`Email`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
 
 /*Table structure for table `userdocument` */
 
@@ -236,7 +236,7 @@ CREATE TABLE `usertierlevelstatus` (
   `Status` varchar(50) DEFAULT NULL,
   `UserId` int(11) DEFAULT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=latin1;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

@@ -97,7 +97,12 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             _exchangeEssentialsList = exchangeEssentialsList;
             foreach (var exchangeEssential in _exchangeEssentialsList)
             {
+                //TradeListener tradeListener = new TradeListener();
+                //IOrderListener orderListener = new OrderListener();
                 IOrderBookListener orderBookListener = new OrderBookListener();
+                //IBBOListener bboListener = new BBOListener();
+                //IDepthListener depthListener = new DepthListener();
+
                 exchangeEssential.LimitOrderBook.OrderAccepted -= OnAccept;
                 exchangeEssential.LimitOrderBook.OrderAccepted -= exchangeEssential.DepthOrderBook.OnOrderAccepted;
 
@@ -130,9 +135,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
 
                 exchangeEssential.DepthOrderBook.BboChanged += exchangeEssential.BBOListener.OnBBOChange;
                 exchangeEssential.DepthOrderBook.DepthChanged += exchangeEssential.DepthListener.OnDepthChanged;
-
-                //exchangeEssential.LimitOrderBook.PublishOrderBookState();
-                //exchangeEssential.DepthOrderBook.PublishDepth();
+                //exchangeEssential.Update(tradeListener,orderListener,depthListener,bboListener);
             }
         }
 

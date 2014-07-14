@@ -55,7 +55,8 @@ namespace CoinExchange.Rest.WebHost
         /// </summary>
         private void InitiliazeApplication()
         {
-
+            InputDisruptorPublisher.Shutdown();
+            OutputDisruptor.ShutDown();
             IEventStore inputEventStore = new RavenNEventStore(Constants.INPUT_EVENT_STORE);
             IEventStore outputEventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
             Journaler inputJournaler = new Journaler(inputEventStore);
@@ -79,7 +80,7 @@ namespace CoinExchange.Rest.WebHost
                 exchange = new Exchange();
                 InputDisruptorPublisher.InitializeDisruptor(new IEventHandler<InputPayload>[] { exchange, inputJournaler });
                 OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { outputJournaler });
-                //check if there are events to replay
+               // check if there are events to replay
                 LimitOrderBookReplayService service = new LimitOrderBookReplayService();
                 service.ReplayOrderBooks(exchange, outputJournaler);
                 exchange.EnableSnaphots(Constants.SnaphsortInterval);
