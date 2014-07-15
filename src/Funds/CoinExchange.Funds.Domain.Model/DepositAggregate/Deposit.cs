@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CoinExchange.Common.Domain.Model;
 
 namespace CoinExchange.Funds.Domain.Model.DepositAggregate
 {
@@ -12,9 +13,31 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
     public class Deposit
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="T:System.Object"/> class.
+        /// </summary>
+        public Deposit()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:System.Object"/> class.
+        /// </summary>
+        public Deposit(Currency currency, string depositId, DateTime date, string type, double amount, double fee, TransactionStatus status, AccountId accountId)
+        {
+            Currency = currency;
+            DepositId = depositId;
+            Date = date;
+            Type = type;
+            Amount = amount;
+            Fee = fee;
+            Status = status;
+            AccountId = accountId;
+        }
+
+        /// <summary>
         /// Currency
         /// </summary>
-        public CoinExchange.Common.Domain.Model.Currency Currency { get; set; }
+        public Currency Currency { get; set; }
 
         /// <summary>
         /// DepositId

@@ -169,6 +169,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinExchange.Funds.Domain.M
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinExchange.Funds.Port.Adapter.Rest", "Funds\CoinExchange.Funds.Port.Adapter.Rest\CoinExchange.Funds.Port.Adapter.Rest.csproj", "{D234EA72-F051-461C-B417-1D45E8674881}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests", "Funds\CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests\CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests.csproj", "{37BCBC65-4B80-4023-A450-B10A32DA2D10}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -387,6 +389,10 @@ Global
 		{D234EA72-F051-461C-B417-1D45E8674881}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D234EA72-F051-461C-B417-1D45E8674881}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D234EA72-F051-461C-B417-1D45E8674881}.Release|Any CPU.Build.0 = Release|Any CPU
+		{37BCBC65-4B80-4023-A450-B10A32DA2D10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37BCBC65-4B80-4023-A450-B10A32DA2D10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37BCBC65-4B80-4023-A450-B10A32DA2D10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37BCBC65-4B80-4023-A450-B10A32DA2D10}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -423,6 +429,7 @@ Global
 		{4CBA757A-C25F-49BF-BD1D-693A98A7C175} = {8DF74568-2852-41F1-A25C-1FAFB34C0DEF}
 		{27301EBA-3E81-4091-B877-DA0BE0BAE158} = {8DF74568-2852-41F1-A25C-1FAFB34C0DEF}
 		{4ED67F1A-B775-4C35-A175-E1E316955E6D} = {8DF74568-2852-41F1-A25C-1FAFB34C0DEF}
+		{37BCBC65-4B80-4023-A450-B10A32DA2D10} = {8DF74568-2852-41F1-A25C-1FAFB34C0DEF}
 		{8DB1B3EB-5262-4208-ACC5-8ACF284C5977} = {1631B2D7-CE93-46FA-9C7C-754415AC5E47}
 		{B96CB3A4-B8CC-49A5-93B9-34255F801A7F} = {1631B2D7-CE93-46FA-9C7C-754415AC5E47}
 		{ED90B5C6-71F0-46F6-A2A5-806997104121} = {1631B2D7-CE93-46FA-9C7C-754415AC5E47}

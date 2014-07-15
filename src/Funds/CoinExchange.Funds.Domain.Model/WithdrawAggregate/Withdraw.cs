@@ -1,4 +1,5 @@
 ﻿using System;
+using CoinExchange.Common.Domain.Model;
 using CoinExchange.Funds.Domain.Model.DepositAggregate;
 
 namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
@@ -9,9 +10,24 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
     public class Withdraw
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="T:System.Object"/> class.
+        /// </summary>
+        public Withdraw(Currency currency, string depositId, DateTime date, string type, double amount, double fee, TransactionStatus status, AccountId accountId)
+        {
+            Currency = currency;
+            DepositId = depositId;
+            Date = date;
+            Type = type;
+            Amount = amount;
+            Fee = fee;
+            Status = status;
+            AccountId = accountId;
+        }
+
+        /// <summary>
         /// Currency
         /// </summary>
-        public CoinExchange.Common.Domain.Model.Currency Currency { get; set; }
+        public Currency Currency { get; set; }
 
         /// <summary>
         /// DepositId

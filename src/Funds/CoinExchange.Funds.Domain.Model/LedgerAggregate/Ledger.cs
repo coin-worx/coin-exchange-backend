@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CoinExchange.Common.Domain.Model;
+using CoinExchange.Funds.Domain.Model.DepositAggregate;
 
-namespace CoinExchange.Funds.Domain.Model.DepositAggregate
+namespace CoinExchange.Funds.Domain.Model.LedgerAggregate
 {
     /// <summary>
     /// Ledger VO

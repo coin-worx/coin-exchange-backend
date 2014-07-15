@@ -8,6 +8,17 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
     public class DepositAddress
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="T:System.Object"/> class.
+        /// </summary>
+        public DepositAddress(BitcoinAddress bitcoinAddress, AddressStatus status, DateTime creationDateTime, AccountId accountId)
+        {
+            BitcoinAddress = bitcoinAddress;
+            Status = status;
+            CreationDateTime = creationDateTime;
+            AccountId = accountId;
+        }
+
+        /// <summary>
         /// Bitcoin Address
         /// </summary>
         public BitcoinAddress BitcoinAddress { get; set; }

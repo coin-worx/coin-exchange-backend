@@ -5,6 +5,7 @@ using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 using CoinExchange.Common.Domain.Model;
+using CoinExchange.Funds.Domain.Model.DepositAggregate;
 
 namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
 {
