@@ -18,14 +18,6 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
         public decimal Fee { get; private set; }
 
         /// <summary>
-        /// default constructor
-        /// </summary>
-        public WithdrawFees()
-        {
-            
-        }
-
-        /// <summary>
         /// parameterized constructor
         /// </summary>
         /// <param name="currency"></param>

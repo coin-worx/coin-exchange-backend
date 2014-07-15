@@ -14,16 +14,16 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
         /// <summary>
         /// Tier Level
         /// </summary>
-        public string TierLevel { get; set; }
+        public string TierLevel { get; private set; }
 
         /// <summary>
         /// Monthly Limit
         /// </summary>
-        public double MonthlyLimit { get; set; }
+        public double MonthlyLimit { get; private set; }
 
         /// <summary>
         /// Daily Limit
         /// </summary>
-        public double DailyLimit { get; set; }
+        public double DailyLimit { get; private set; }
     }
 }

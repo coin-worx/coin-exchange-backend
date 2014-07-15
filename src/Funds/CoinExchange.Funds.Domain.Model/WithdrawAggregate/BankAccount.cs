@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
+﻿namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
 {
     /// <summary>
     /// Bank Account
@@ -12,18 +6,28 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
     public class BankAccount
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="T:System.Object"/> class.
+        /// </summary>
+        public BankAccount(string bankName, string accountAddress, string swiftCode)
+        {
+            BankName = bankName;
+            AccountAddress = accountAddress;
+            SwiftCode = swiftCode;
+        }
+
+        /// <summary>
         /// BankName
         /// </summary>
-        public string BankName { get; set; }
+        public string BankName { get; private set; }
 
         /// <summary>
         /// AccountAddress
         /// </summary>
-        public string AccountAddress { get; set; }
+        public string AccountAddress { get; private set; }
 
         /// <summary>
         /// SwiftCode
         /// </summary>
-        public string SwiftCode { get; set; }
+        public string SwiftCode { get; private set; }
     }
 }

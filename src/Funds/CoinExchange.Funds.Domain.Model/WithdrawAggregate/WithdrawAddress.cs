@@ -13,18 +13,28 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
     public class WithdrawAddress
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="T:System.Object"/> class.
+        /// </summary>
+        public WithdrawAddress(BitcoinAddress bitcoinAddress, string description, AccountId accountId)
+        {
+            BitcoinAddress = bitcoinAddress;
+            Description = description;
+            AccountId = accountId;
+        }
+
+        /// <summary>
         /// Bitcoin Address
         /// </summary>
-        public BitcoinAddress BitcoinAddress { get; set; }
+        public BitcoinAddress BitcoinAddress { get; private set; }
 
         /// <summary>
         /// Unique desciption  so that the user can identify this address
         /// </summary>
-        public string Description { get; set; }
+        public string Description { get; private set; }
 
         /// <summary>
         /// AccountID
         /// </summary>
-        public AccountId AccountId { get; set; }
+        public AccountId AccountId { get; private set; }
     }
 }
