@@ -13,6 +13,11 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
     public class Deposit
     {
         /// <summary>
+        /// For database record
+        /// </summary>
+        private int _id { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
         public Deposit()
@@ -33,6 +38,11 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
             Status = status;
             AccountId = accountId;
         }
+
+        /// <summary>
+        /// Database primary key
+        /// </summary>
+        public int Id { get; private set; }
 
         /// <summary>
         /// Currency
@@ -73,6 +83,11 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
         /// AccountID
         /// </summary>
         public AccountId AccountId { get; set; }
+
+        /// <summary>
+        /// The number of confirmations for this Deposit
+        /// </summary>
+        public int Confirmations { get; set; }
 
         /// <summary>
         /// Sets the status to Confirmed

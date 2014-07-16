@@ -9,21 +9,73 @@ namespace CoinExchange.Funds.Domain.Model.LedgerAggregate
     /// </summary>
     public class Ledger
     {
+        /// <summary>
+        /// Database primary key
+        /// </summary>
         public int Id { get; private set; }
+
+        /// <summary>
+        /// Ledger ID
+        /// </summary>
+        public string LedgerId { get; private set; }
+
+        /// <summary>
+        /// Datetime
+        /// </summary>
         public DateTime DateTime { get; private set; }
+
+        /// <summary>
+        /// Type of Ledger
+        /// </summary>
         public LedgerType LedgerType { get; private set; }
+
+        /// <summary>
+        /// Currency
+        /// </summary>
         public Currency Currency { get; private set; }
-        public decimal Amount { get; private set; }
-        public decimal Fee { get; private set; }
-        public decimal Balance { get; private set; }
+
+        /// <summary>
+        /// Amount
+        /// </summary>
+        public double Amount { get; private set; }
+
+        /// <summary>
+        /// Fee
+        /// </summary>
+        public double Fee { get; private set; }
+
+        /// <summary>
+        /// Balance
+        /// </summary>
+        public double Balance { get; private set; }
+
+        /// <summary>
+        /// TradeId
+        /// </summary>
         public string TradeId { get; private set; }
+
+        /// <summary>
+        /// Order ID
+        /// </summary>
         public string OrderId { get; private set; }
+
+        /// <summary>
+        /// Withdraw ID
+        /// </summary>
         public string WithdrawId { get; private set; }
+        
+        /// <summary>
+        /// Deposit ID
+        /// </summary>
         public string DepositId { get; private set; }
+
+        /// <summary>
+        /// Account ID
+        /// </summary>
         public AccountId AccountId { get; private set; }
 
         /// <summary>
-        /// default constructor
+        /// Default constructor
         /// </summary>
         public Ledger()
         {
@@ -31,9 +83,9 @@ namespace CoinExchange.Funds.Domain.Model.LedgerAggregate
         }
 
         /// <summary>
-        /// parameterized constructor
+        /// Parameterized constructor
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="ledgerId"></param>
         /// <param name="dateTime"></param>
         /// <param name="ledgerType"></param>
         /// <param name="currency"></param>
@@ -45,9 +97,9 @@ namespace CoinExchange.Funds.Domain.Model.LedgerAggregate
         /// <param name="withdrawId"></param>
         /// <param name="depositId"></param>
         /// <param name="accountId"></param>
-        public Ledger(int id, DateTime dateTime, LedgerType ledgerType, Currency currency, decimal amount, decimal fee, decimal balance, string tradeId, string orderId, string withdrawId, string depositId, AccountId accountId)
+        public Ledger(string ledgerId, DateTime dateTime, LedgerType ledgerType, Currency currency, double amount, double fee, double balance, string tradeId, string orderId, string withdrawId, string depositId, AccountId accountId)
         {
-            Id = id;
+            LedgerId = ledgerId;
             DateTime = dateTime;
             LedgerType = ledgerType;
             Currency = currency;

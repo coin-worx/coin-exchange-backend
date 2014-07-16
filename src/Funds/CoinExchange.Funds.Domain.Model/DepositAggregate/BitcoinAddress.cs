@@ -14,6 +14,13 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
+        public BitcoinAddress()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:System.Object"/> class.
+        /// </summary>
         public BitcoinAddress(string value)
         {
             Value = value;

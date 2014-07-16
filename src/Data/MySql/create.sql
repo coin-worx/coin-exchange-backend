@@ -31,14 +31,51 @@ CREATE TABLE `currencypair` (
 DROP TABLE IF EXISTS `deposit`;
 
 CREATE TABLE `deposit` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
   `Currency` varchar(7) DEFAULT NULL,
   `AccountId` varchar(15) DEFAULT NULL,
   `DepositId` varchar(20) DEFAULT NULL,
   `Date` datetime DEFAULT NULL,
   `Amount` double DEFAULT NULL,
   `Fee` double DEFAULT NULL,
+  `Confirmations` int(11) DEFAULT NULL,
   `Status` varchar(15) DEFAULT NULL,
-  `Type` varchar(15) DEFAULT NULL
+  `Type` varchar(15) DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+/*Table structure for table `depositaddress` */
+
+DROP TABLE IF EXISTS `depositaddress`;
+
+CREATE TABLE `depositaddress` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `AccountId` varchar(20) DEFAULT NULL,
+  `BitcoinAddress` varchar(30) DEFAULT NULL,
+  `Status` varchar(20) DEFAULT NULL,
+  `CreationDateTime` datetime DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Table structure for table `ledger` */
+
+DROP TABLE IF EXISTS `ledger`;
+
+CREATE TABLE `ledger` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `LedgerId` varchar(20) DEFAULT NULL,
+  `DateTime` datetime DEFAULT NULL,
+  `LedgerType` varchar(15) DEFAULT NULL,
+  `Currency` varchar(15) DEFAULT NULL,
+  `AccountId` varchar(20) DEFAULT NULL,
+  `Amount` double DEFAULT NULL,
+  `Fee` double DEFAULT NULL,
+  `Balance` double DEFAULT NULL,
+  `TradeId` varchar(20) DEFAULT NULL,
+  `OrderId` varchar(20) DEFAULT NULL,
+  `WithdrawId` varchar(20) DEFAULT NULL,
+  `DepositId` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Table structure for table `ohlc` */
@@ -250,6 +287,39 @@ CREATE TABLE `usertierlevelstatus` (
   `TierLevel` varchar(50) DEFAULT NULL,
   `Status` varchar(50) DEFAULT NULL,
   `UserId` int(11) DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Table structure for table `withdraw` */
+
+DROP TABLE IF EXISTS `withdraw`;
+
+CREATE TABLE `withdraw` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `WithdrawId` varchar(15) DEFAULT NULL,
+  `Currency` varchar(10) DEFAULT NULL,
+  `Amount` double DEFAULT NULL,
+  `Fee` double DEFAULT NULL,
+  `DateTime` datetime DEFAULT NULL,
+  `Type` varchar(15) DEFAULT NULL,
+  `Status` varchar(15) DEFAULT NULL,
+  `AccountId` varchar(15) DEFAULT NULL,
+  `BankName` varchar(20) DEFAULT NULL,
+  `BankAccountAddress` varchar(20) DEFAULT NULL,
+  `BankAccountSwiftCode` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Table structure for table `withdrawaddress` */
+
+DROP TABLE IF EXISTS `withdrawaddress`;
+
+CREATE TABLE `withdrawaddress` (
+  `Id` int(10) NOT NULL AUTO_INCREMENT,
+  `AccountId` varchar(25) DEFAULT NULL,
+  `BitcoinAddress` varchar(30) DEFAULT NULL,
+  `Description` varchar(100) DEFAULT NULL,
+  `CreationDateTime` datetime DEFAULT NULL,
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 

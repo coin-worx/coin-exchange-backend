@@ -8,6 +8,13 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
+        public BankAccount()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:System.Object"/> class.
+        /// </summary>
         public BankAccount(string bankName, string accountAddress, string swiftCode)
         {
             BankName = bankName;

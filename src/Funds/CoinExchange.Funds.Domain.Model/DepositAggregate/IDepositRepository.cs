@@ -11,9 +11,9 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
     /// </summary>
     public interface IDepositRepository
     {
-        Deposit GetDepositById(string depositId);
-        Deposit GetDepositByDate(DateTime dateTime);
-        Deposit GetDepositByCurrencyName(string currency);
-        Deposit GetDepositByDepositId(string currency);
+        Deposit GetDepositById(int id);
+        List<Deposit> GetDepositByAccountId(AccountId accountId);
+        List<Deposit> GetDepositByCurrencyName(string currency);
+        Deposit GetDepositByDepositId(string depositId);
     }
 }

@@ -76,8 +76,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="NHibernateSessionFactory.cs" />
+    <Compile Include="NHibernate\DepositAddressRepository.cs" />
     <Compile Include="NHibernate\DepositRepository.cs" />
     <Compile Include="NHibernate\FundsPersistenceRepository.cs" />
+    <Compile Include="NHibernate\LedgerRepository.cs" />
+    <Compile Include="NHibernate\WithdrawAddressRepository.cs" />
+    <Compile Include="NHibernate\WithdrawRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -97,6 +101,26 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="FundsPersistenceConfig.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="NHibernateMappings\Withdraw.hbm.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="NHibernateMappings\Ledger.hbm.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="NHibernateMappings\DepositAddress.hbm.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="NHibernateMappings\WithdrawAddress.hbm.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>

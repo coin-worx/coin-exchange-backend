@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CoinExchange.Funds.Domain.Model.DepositAggregate;
+using NHibernate.Linq;
 using Spring.Stereotype;
 using Spring.Transaction.Interceptor;
 
@@ -16,15 +17,19 @@ namespace CoinExchange.Funds.Infrastructure.Persistence.NHibernate.NHibernate
     public class DepositRepository : NHibernateSessionFactory, IDepositRepository
     {
         [Transaction]
-        public Deposit GetDepositById(string depositId)
+        public Deposit GetDepositById(int id)
         {
-            return CurrentSession.Get<Deposit>(depositId);
+            return CurrentSession.QueryOver<Deposit>().Where(x => x.Id == id).SingleOrDefault();
         }
 
         [Transaction]
-        public Deposit GetDepositByCurrencyName(string currency)
+        public List<Deposit> GetDepositByCurrencyName(string currency)
         {
-            return CurrentSession.QueryOver<Deposit>().Where(x => x.Currency.Name == currency).SingleOrDefault();
+            return CurrentSession.Query<Deposit>()
+                .Where(x => x.Currency.Name == currency)
+                .AsQueryable()
+                .OrderByDescending(x => x.Date)
+                .ToList();
         }
 
         [Transaction]
@@ -34,9 +39,13 @@ namespace CoinExchange.Funds.Infrastructure.Persistence.NHibernate.NHibernate
         }
 
         [Transaction]
-        public Deposit GetDepositByDate(DateTime dateTime)
+        public List<Deposit> GetDepositByAccountId(AccountId accountId)
         {
-            return CurrentSession.QueryOver<Deposit>().Where(x => x.Date == dateTime).SingleOrDefault();
+            return CurrentSession.Query<Deposit>()
+                .Where(x => x.AccountId.Value == accountId.Value)
+                .AsQueryable()
+                .OrderByDescending(x => x.Date)
+                .ToList();
         }
     }
 }

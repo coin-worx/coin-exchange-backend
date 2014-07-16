@@ -12,17 +12,29 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
-        public Withdraw(Currency currency, string depositId, DateTime date, string type, double amount, double fee, TransactionStatus status, AccountId accountId)
+        public Withdraw()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:System.Object"/> class.
+        /// </summary>
+        public Withdraw(Currency currency, string withdrawId, DateTime date, string type, double amount, double fee, TransactionStatus status, AccountId accountId)
         {
             Currency = currency;
-            DepositId = depositId;
-            Date = date;
+            WithdrawId = withdrawId;
+            DateTime = date;
             Type = type;
             Amount = amount;
             Fee = fee;
             Status = status;
             AccountId = accountId;
         }
+
+        /// <summary>
+        /// Database primary key
+        /// </summary>
+        public int Id { get; private set; }
 
         /// <summary>
         /// Currency
@@ -32,12 +44,12 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
         /// <summary>
         /// DepositId
         /// </summary>
-        public string DepositId { get; set; }
+        public string WithdrawId { get; set; }
 
         /// <summary>
         /// Date
         /// </summary>
-        public DateTime Date { get; set; }
+        public DateTime DateTime { get; set; }
 
         /// <summary>
         /// Type
@@ -53,6 +65,11 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
         /// Fee
         /// </summary>
         public double Fee { get; set; }
+
+        /// <summary>
+        /// Bank Account
+        /// </summary>
+        public BankAccount BankAccount { get; set; }
 
         /// <summary>
         /// Status of the Deposit
