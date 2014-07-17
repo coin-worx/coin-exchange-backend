@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using CoinExchange.Common.Tests;
 using CoinExchange.Funds.Domain.Model.DepositAggregate;
 using CoinExchange.Funds.Domain.Model.Repositories;
@@ -12,7 +9,7 @@ using CoinExchange.Funds.Domain.Model.WithdrawAggregate;
 using NUnit.Framework;
 using Spring.Context.Support;
 
-namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests
+namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests.DatabasePersistenceTests
 {
     /// <summary>
     /// Tests for Withdrawal persistence by actually saving in the database
@@ -21,6 +18,8 @@ namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests
     class WithdrawDatabasePersistenceTests
     {
         private DatabaseUtility _databaseUtility;
+        private IFundsPersistenceRepository _persistanceRepository;
+        private IWithdrawRepository _withdrawRepository;
 
         [SetUp]
         public void Setup()
@@ -38,25 +37,6 @@ namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests
         public void Teardown()
         {
             _databaseUtility.Create();
-        }
-
-        private IFundsPersistenceRepository _persistanceRepository;
-        private IWithdrawRepository _withdrawRepository;
-
-        /// <summary>
-        /// Spring's Injection using FundsAbstractConfiguration class
-        /// </summary>
-        public IWithdrawRepository WithdrawRepository
-        {
-            set { _withdrawRepository = value; }
-        }
-
-        /// <summary>
-        /// Spring's Injection using FundsAbstractConfiguration class
-        /// </summary>
-        public IFundsPersistenceRepository Persistance
-        {
-            set { _persistanceRepository = value; }
         }
 
         [Test]

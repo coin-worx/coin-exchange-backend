@@ -1,26 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using CoinExchange.Common.Tests;
 using CoinExchange.Funds.Domain.Model.DepositAggregate;
 using CoinExchange.Funds.Domain.Model.Repositories;
 using NUnit.Framework;
 using Spring.Context.Support;
 
-namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests
+namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests.DatabasePersistenceTests
 {
     [TestFixture]
-    class DepositDatabasePersistenceTests //: AbstractConfiguration
+    class DepositDatabasePersistenceTests
     {
         private DatabaseUtility _databaseUtility;
 
         [SetUp]
         public void Setup()
         {
+            _depositRepository = (IDepositRepository)ContextRegistry.GetContext()["DepositRepository"];
+            _persistanceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];
             var connection = ConfigurationManager.ConnectionStrings["MySql"].ToString();
             _databaseUtility = new DatabaseUtility(connection);
             _databaseUtility.Create();
@@ -55,8 +54,6 @@ namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests
         [Test]
         public void SaveDepositAndRetreiveByIdTest_SavesAnObjectToDatabaseAndManipulatesIt_ChecksIfItIsUpdatedAsExpected()
         {
-            _depositRepository = (IDepositRepository)ContextRegistry.GetContext()["DepositRepository"];
-            _persistanceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];
             Deposit deposit = new Deposit(new Currency("LTC", true), "1234", DateTime.Now, "New", 2000, 0.005, TransactionStatus.Pending,
                 new AccountId("123"));
 
@@ -81,8 +78,6 @@ namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests
         [Test]
         public void SaveDepositAndRetreiveByDepositIdTest_SavesAnObjectToDatabaseAndManipulatesIt_ChecksIfItIsUpdatedAsExpected()
         {
-            _depositRepository = (IDepositRepository)ContextRegistry.GetContext()["DepositRepository"];
-            _persistanceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];
             Deposit deposit = new Deposit(new Currency("LTC", true), "1234", DateTime.Now, "New", 2000, 0.005, TransactionStatus.Pending, 
                 new AccountId("123"));
 
@@ -106,8 +101,6 @@ namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests
         [Test]
         public void SaveDepositAndRetreiveByCurrencyNameTest_SavesAnObjectToDatabaseAndManipulatesIt_ChecksIfItIsUpdatedAsExpected()
         {
-            _depositRepository = (IDepositRepository)ContextRegistry.GetContext()["DepositRepository"];
-            _persistanceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];
             Deposit deposit = new Deposit(new Currency("LTC", true), "1234", DateTime.Now, "New", 2000, 0.005, TransactionStatus.Pending,
                 new AccountId("123"));
 
@@ -130,8 +123,6 @@ namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests
 
         [Test] public void SaveDepositsAndRetreiveByAccountIdTest_SavesMultipleObjectsToDatabase_ChecksIfTheyAreAsExpected()
         {
-            _depositRepository = (IDepositRepository)ContextRegistry.GetContext()["DepositRepository"];
-            _persistanceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];
             Deposit deposit = new Deposit(new Currency("LTC", true), "1234", DateTime.Now, "New", 2000, 0.005, TransactionStatus.Pending,
                 new AccountId("123"));
 

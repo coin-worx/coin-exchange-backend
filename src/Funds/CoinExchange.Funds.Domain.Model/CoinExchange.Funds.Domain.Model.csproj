@@ -42,8 +42,10 @@
     <Compile Include="DepositAggregate\Currency.cs" />
     <Compile Include="DepositAggregate\DepositLimit.cs" />
     <Compile Include="DepositAggregate\IDepositAddressRepository.cs" />
+    <Compile Include="DepositAggregate\IDepositLimitRepository.cs" />
     <Compile Include="DepositAggregate\IDepositRepository.cs" />
     <Compile Include="FeeAggregate\Fee.cs" />
+    <Compile Include="FeeAggregate\IFeeRepository.cs" />
     <Compile Include="LedgerAggregate\ILedgerRepository.cs" />
     <Compile Include="LedgerAggregate\Ledger.cs" />
     <Compile Include="LedgerAggregate\LedgerType.cs" />
@@ -57,6 +59,8 @@
     <Compile Include="Repositories\IFundsPersistenceRepository.cs" />
     <Compile Include="WithdrawAggregate\BankAccount.cs" />
     <Compile Include="WithdrawAggregate\IWithdrawAddressRepository.cs" />
+    <Compile Include="WithdrawAggregate\IWithdrawFeesRepository.cs" />
+    <Compile Include="WithdrawAggregate\IWithdrawLimitRepository.cs" />
     <Compile Include="WithdrawAggregate\IWithdrawRepository.cs" />
     <Compile Include="WithdrawAggregate\Withdraw.cs" />
     <Compile Include="WithdrawAggregate\WithdrawAddress.cs" />

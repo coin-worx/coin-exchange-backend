@@ -1,7 +1,7 @@
 ﻿using NUnit.Framework;
 using Spring.Testing.NUnit;
 
-namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests
+namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests.VirtualPersistenceTests
 {
     /// <summary>
     /// http://www.springframework.net/docs/1.3.0/reference/html/testing.html#testing-ctx-management

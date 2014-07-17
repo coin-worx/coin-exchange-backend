@@ -63,5 +63,21 @@
   <object id="WithdrawAddressRepository" type="CoinExchange.Funds.Infrastructure.Persistence.NHibernate.NHibernate.WithdrawAddressRepository, CoinExchange.Funds.Infrastructure.Persistence.NHibernate">
     <property name="SessionFactory" ref="NHibernateSessionFactory"/>
   </object>
+  
+  <object id="WithdrawLimitRepository" type="CoinExchange.Funds.Infrastructure.Persistence.NHibernate.NHibernate.WithdrawLimitRepository, CoinExchange.Funds.Infrastructure.Persistence.NHibernate">
+    <property name="SessionFactory" ref="NHibernateSessionFactory"/>
+  </object>
+
+  <object id="DepositLimitRepository" type="CoinExchange.Funds.Infrastructure.Persistence.NHibernate.NHibernate.DepositLimitRepository, CoinExchange.Funds.Infrastructure.Persistence.NHibernate">
+    <property name="SessionFactory" ref="NHibernateSessionFactory"/>
+  </object>
+
+  <object id="FeeRepository" type="CoinExchange.Funds.Infrastructure.Persistence.NHibernate.NHibernate.FeeRepository, CoinExchange.Funds.Infrastructure.Persistence.NHibernate">
+    <property name="SessionFactory" ref="NHibernateSessionFactory"/>
+  </object>
+
+  <object id="WithdrawFeesRepository" type="CoinExchange.Funds.Infrastructure.Persistence.NHibernate.NHibernate.WithdrawFeesRepository, CoinExchange.Funds.Infrastructure.Persistence.NHibernate">
+    <property name="SessionFactory" ref="NHibernateSessionFactory"/>
+  </object>
   <tx:attribute-driven/>
 </objects>

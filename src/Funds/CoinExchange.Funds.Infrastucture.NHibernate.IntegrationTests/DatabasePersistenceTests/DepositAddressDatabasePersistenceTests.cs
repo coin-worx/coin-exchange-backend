@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using CoinExchange.Common.Tests;
 using CoinExchange.Funds.Domain.Model.DepositAggregate;
 using CoinExchange.Funds.Domain.Model.Repositories;
 using NUnit.Framework;
 using Spring.Context.Support;
 
-namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests
+namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests.DatabasePersistenceTests
 {
     /// <summary>
     /// Tests for actual persistence in databse for Deposit address objects

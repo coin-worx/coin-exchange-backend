@@ -42,7 +42,7 @@ CREATE TABLE `deposit` (
   `Status` varchar(15) DEFAULT NULL,
   `Type` varchar(15) DEFAULT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Table structure for table `depositaddress` */
 
@@ -54,6 +54,30 @@ CREATE TABLE `depositaddress` (
   `BitcoinAddress` varchar(30) DEFAULT NULL,
   `Status` varchar(20) DEFAULT NULL,
   `CreationDateTime` datetime DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Table structure for table `depositlimit` */
+
+DROP TABLE IF EXISTS `depositlimit`;
+
+CREATE TABLE `depositlimit` (
+  `Id` int(10) NOT NULL AUTO_INCREMENT,
+  `TierLevel` varchar(15) DEFAULT NULL,
+  `DailyLimit` double DEFAULT NULL,
+  `MonthlyLimit` double DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Table structure for table `fee` */
+
+DROP TABLE IF EXISTS `fee`;
+
+CREATE TABLE `fee` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `CurrencyPair` varchar(15) DEFAULT NULL,
+  `PercentageFee` double DEFAULT NULL,
+  `Amount` double DEFAULT NULL,
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -320,6 +344,30 @@ CREATE TABLE `withdrawaddress` (
   `BitcoinAddress` varchar(30) DEFAULT NULL,
   `Description` varchar(100) DEFAULT NULL,
   `CreationDateTime` datetime DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Table structure for table `withdrawfees` */
+
+DROP TABLE IF EXISTS `withdrawfees`;
+
+CREATE TABLE `withdrawfees` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `Currency` varchar(15) DEFAULT NULL,
+  `MinimumAmount` double DEFAULT NULL,
+  `Fee` double DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Table structure for table `withdrawlimit` */
+
+DROP TABLE IF EXISTS `withdrawlimit`;
+
+CREATE TABLE `withdrawlimit` (
+  `Id` int(10) NOT NULL AUTO_INCREMENT,
+  `TierLevel` varchar(15) DEFAULT NULL,
+  `DailyLimit` double DEFAULT NULL,
+  `MonthlyLimit` double DEFAULT NULL,
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 

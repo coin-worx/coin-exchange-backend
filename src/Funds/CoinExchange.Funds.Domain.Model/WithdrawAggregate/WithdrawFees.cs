@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
-using CoinExchange.Common.Domain.Model;
-using CoinExchange.Funds.Domain.Model.DepositAggregate;
+﻿using CoinExchange.Funds.Domain.Model.DepositAggregate;
 
 namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
 {
@@ -14,9 +7,12 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
     /// </summary>
     public class WithdrawFees
     {
-        public Currency Currency { get; private set; }
-        public decimal MinAmount { get; private set; }
-        public decimal Fee { get; private set; }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:System.Object"/> class.
+        /// </summary>
+        public WithdrawFees()
+        {
+        }
 
         /// <summary>
         /// parameterized constructor
@@ -24,11 +20,31 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
         /// <param name="currency"></param>
         /// <param name="minAmount"></param>
         /// <param name="fee"></param>
-        public WithdrawFees(Currency currency, decimal minAmount, decimal fee)
+        public WithdrawFees(Currency currency, double minAmount, double fee)
         {
             Currency = currency;
-            MinAmount = minAmount;
+            MinimumAmount = minAmount;
             Fee = fee;
         }
+
+        /// <summary>
+        /// Primary Key for database ID
+        /// </summary>
+        public int Id { get; private set; }
+
+        /// <summary>
+        /// Currency
+        /// </summary>
+        public Currency Currency { get; private set; }
+
+        /// <summary>
+        /// Minimum Amount
+        /// </summary>
+        public double MinimumAmount { get; private set; }
+
+        /// <summary>
+        /// Fee
+        /// </summary>
+        public double Fee { get; private set; }
     }
 }

@@ -77,10 +77,14 @@
   <ItemGroup>
     <Compile Include="NHibernateSessionFactory.cs" />
     <Compile Include="NHibernate\DepositAddressRepository.cs" />
+    <Compile Include="NHibernate\DepositLimitRepository.cs" />
     <Compile Include="NHibernate\DepositRepository.cs" />
+    <Compile Include="NHibernate\FeeRepository.cs" />
     <Compile Include="NHibernate\FundsPersistenceRepository.cs" />
     <Compile Include="NHibernate\LedgerRepository.cs" />
     <Compile Include="NHibernate\WithdrawAddressRepository.cs" />
+    <Compile Include="NHibernate\WithdrawFeesRepository.cs" />
+    <Compile Include="NHibernate\WithdrawLimitRepository.cs" />
     <Compile Include="NHibernate\WithdrawRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -121,6 +125,26 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="NHibernateMappings\WithdrawAddress.hbm.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="NHibernateMappings\WithdrawLimit.hbm.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="NHibernateMappings\DepositLimit.hbm.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="NHibernateMappings\Fee.hbm.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="NHibernateMappings\WithdrawFees.hbm.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
