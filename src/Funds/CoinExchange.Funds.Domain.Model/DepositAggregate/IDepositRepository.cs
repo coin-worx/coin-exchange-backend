@@ -15,5 +15,7 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
         List<Deposit> GetDepositByAccountId(AccountId accountId);
         List<Deposit> GetDepositByCurrencyName(string currency);
         Deposit GetDepositByDepositId(string depositId);
+        Deposit GetDepositByTransactionId(TransactionId transactionId);
+        List<Deposit> GetDepositsByBitcoinAddress(BitcoinAddress bitcoinAddress);
     }
 }

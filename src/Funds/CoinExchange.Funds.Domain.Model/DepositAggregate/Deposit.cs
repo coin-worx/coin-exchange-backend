@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CoinExchange.Common.Domain.Model;
+using CoinExchange.Funds.Domain.Model.CurrencyAggregate;
 
 namespace CoinExchange.Funds.Domain.Model.DepositAggregate
 {
@@ -27,7 +23,8 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
-        public Deposit(Currency currency, string depositId, DateTime date, string type, double amount, double fee, TransactionStatus status, AccountId accountId)
+        public Deposit(Currency currency, string depositId, DateTime date, string type, double amount, double fee,
+            TransactionStatus status, AccountId accountId, TransactionId transactionId, BitcoinAddress bitcoinAddress)
         {
             Currency = currency;
             DepositId = depositId;
@@ -37,6 +34,8 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
             Fee = fee;
             Status = status;
             AccountId = accountId;
+            TransactionId = transactionId;
+            BitcoinAddress = bitcoinAddress;
         }
 
         /// <summary>
@@ -83,6 +82,16 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
         /// AccountID
         /// </summary>
         public AccountId AccountId { get; set; }
+
+        /// <summary>
+        /// Transaction ID for the Deposit
+        /// </summary>
+        public TransactionId TransactionId { get; set; }
+
+        /// <summary>
+        /// Bitcoin Address associated with this Deposit
+        /// </summary>
+        public BitcoinAddress BitcoinAddress { get; set; }
 
         /// <summary>
         /// The number of confirmations for this Deposit

@@ -1,4 +1,5 @@
-﻿using CoinExchange.Funds.Domain.Model.DepositAggregate;
+﻿using CoinExchange.Funds.Domain.Model.CurrencyAggregate;
+using CoinExchange.Funds.Domain.Model.DepositAggregate;
 
 namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
 {

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using CoinExchange.Funds.Domain.Model.CurrencyAggregate;
 using CoinExchange.Funds.Domain.Model.DepositAggregate;
 using CoinExchange.Funds.Domain.Model.LedgerAggregate;
 using CoinExchange.Funds.Domain.Model.Repositories;
@@ -40,7 +41,7 @@ namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests.VirtualPe
         [Test]
         public void SaveLedgerAndRetreiveByIdTest_SavesAnObjectToDatabaseAndGetsThePrimaryKeyIdForDatabase_ChecksIfTheOutputIsAsExpected()
         {
-            Ledger ledger = new Ledger("1234", DateTime.Now, LedgerType.Trades, new Currency("LTC", true), 1000.543,
+            Ledger ledger = new Ledger("1234", DateTime.Now, LedgerType.Trade, new Currency("LTC", true), 1000.543,
                 0.005, 23000, "trade123", "order123", null, null, new AccountId("123"));
 
             _persistanceRepository.SaveOrUpdate(ledger);
@@ -68,11 +69,11 @@ namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests.VirtualPe
         [Test]
         public void SaveLedgersAndRetreiveByCurrencyNameTest_SavesMultipleObjectInDatabase_ChecksIfTheoutputIsAsExpected()
         {
-            Ledger ledger = new Ledger("1234", DateTime.Now, LedgerType.Trades, new Currency("LTC", true), 1000.543,
+            Ledger ledger = new Ledger("1234", DateTime.Now, LedgerType.Trade, new Currency("LTC", true), 1000.543,
                 0.005, 23000, "trade123", "order123", null, null, new AccountId("123"));
             _persistanceRepository.SaveOrUpdate(ledger);
 
-            Ledger ledger2 = new Ledger("12345", DateTime.Now, LedgerType.Trades, new Currency("LTC", true), 2000.543,
+            Ledger ledger2 = new Ledger("12345", DateTime.Now, LedgerType.Trade, new Currency("LTC", true), 2000.543,
                 0.005, 3000, "trade1234", "order1234", null, null, new AccountId("123"));
             _persistanceRepository.SaveOrUpdate(ledger2);
 
@@ -106,11 +107,11 @@ namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests.VirtualPe
         [Test]
         public void SaveLedgersAndRetreiveByTradeIdTest_SavesMultipleObjectInDatabase_ChecksIfTheoutputIsAsExpected()
         {
-            Ledger ledger = new Ledger("1234", DateTime.Now, LedgerType.Trades, new Currency("LTC", true), 1000.543,
+            Ledger ledger = new Ledger("1234", DateTime.Now, LedgerType.Trade, new Currency("LTC", true), 1000.543,
                 0.005, 23000, "trade123", "order123", null, null, new AccountId("123"));
             _persistanceRepository.SaveOrUpdate(ledger);
 
-            Ledger ledger2 = new Ledger("12345", DateTime.Now, LedgerType.Trades, new Currency("LTC", true), 2000.543,
+            Ledger ledger2 = new Ledger("12345", DateTime.Now, LedgerType.Trade, new Currency("LTC", true), 2000.543,
                 0.005, 3000, "trade123", "order1234", null, null, new AccountId("123"));
             _persistanceRepository.SaveOrUpdate(ledger2);
 
@@ -145,11 +146,11 @@ namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests.VirtualPe
         [Test]
         public void SaveLedgersAndRetreiveByOrderIdTest_SavesMultipleObjectInDatabase_ChecksIfTheoutputIsAsExpected()
         {
-            Ledger ledger = new Ledger("1234", DateTime.Now, LedgerType.Trades, new Currency("LTC", true), 1000.543,
+            Ledger ledger = new Ledger("1234", DateTime.Now, LedgerType.Trade, new Currency("LTC", true), 1000.543,
                 0.005, 23000, "trade1234", "order123", null, null, new AccountId("123"));
             _persistanceRepository.SaveOrUpdate(ledger);
 
-            Ledger ledger2 = new Ledger("12345", DateTime.Now, LedgerType.Trades, new Currency("LTC", true), 2000.543,
+            Ledger ledger2 = new Ledger("12345", DateTime.Now, LedgerType.Trade, new Currency("LTC", true), 2000.543,
                 0.005, 3000, "trade123", "order123", null, null, new AccountId("123"));
             _persistanceRepository.SaveOrUpdate(ledger2);
 
@@ -184,11 +185,11 @@ namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests.VirtualPe
         [Test]
         public void SaveLedgerAndRetreiveByWithdrawIdTest_SavesMultipleObjectInDatabase_ChecksIfTheoutputIsAsExpected()
         {
-            Ledger ledger = new Ledger("1234", DateTime.Now, LedgerType.Trades, new Currency("LTC", true), 1000.543,
+            Ledger ledger = new Ledger("1234", DateTime.Now, LedgerType.Trade, new Currency("LTC", true), 1000.543,
                 0.005, 23000, null, null, "withdraw123", null, new AccountId("123"));
             _persistanceRepository.SaveOrUpdate(ledger);
 
-            Ledger ledger2 = new Ledger("12345", DateTime.Now, LedgerType.Trades, new Currency("LTC", true), 2000.543,
+            Ledger ledger2 = new Ledger("12345", DateTime.Now, LedgerType.Trade, new Currency("LTC", true), 2000.543,
                 0.005, 3000, null, null, "withdraw123", null, new AccountId("123"));
             _persistanceRepository.SaveOrUpdate(ledger2);
 
@@ -223,11 +224,11 @@ namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests.VirtualPe
         [Test]
         public void SaveLedgersAndRetreiveByDepositIdTest_SavesMultipleObjectInDatabase_ChecksIfTheoutputIsAsExpected()
         {
-            Ledger ledger = new Ledger("1234", DateTime.Now, LedgerType.Trades, new Currency("LTC", true), 1000.543,
+            Ledger ledger = new Ledger("1234", DateTime.Now, LedgerType.Trade, new Currency("LTC", true), 1000.543,
                 0.005, 23000, null, null, null, "deposit123", new AccountId("123"));
             _persistanceRepository.SaveOrUpdate(ledger);
 
-            Ledger ledger2 = new Ledger("12345", DateTime.Now, LedgerType.Trades, new Currency("LTC", true), 2000.543,
+            Ledger ledger2 = new Ledger("12345", DateTime.Now, LedgerType.Trade, new Currency("LTC", true), 2000.543,
                 0.005, 3000, null, null, null, "deposit123", new AccountId("123"));
             _persistanceRepository.SaveOrUpdate(ledger2);
 
@@ -257,6 +258,57 @@ namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests.VirtualPe
             Assert.AreEqual(ledger2.TradeId, retrievedLedgers[1].TradeId);
             Assert.AreEqual(ledger2.OrderId, retrievedLedgers[1].OrderId);
             Assert.AreEqual(ledger2.AccountId.Value, retrievedLedgers[1].AccountId.Value);
+        }
+
+        [Test]
+        public void SaveLedgersAndGetAllLedgersTest_SavesMultipleObjectInDatabase_ChecksIfTheOutputIsAsExpected()
+        {
+            Ledger ledger = new Ledger("1234", DateTime.Now, LedgerType.Trade, new Currency("XBT", true), 1000.543,
+                0.005, 23000, null, null, null, "deposit123", new AccountId("123"));
+            _persistanceRepository.SaveOrUpdate(ledger);
+            Thread.Sleep(1000);
+            Ledger ledger2 = new Ledger("12345", DateTime.Now, LedgerType.Trade, new Currency("LTC", true), 2000.543,
+                0.005, 3000, null, null, null, "deposit123", new AccountId("123"));
+            _persistanceRepository.SaveOrUpdate(ledger2);
+            Thread.Sleep(1000);
+            Ledger ledger3 = new Ledger("123456", DateTime.Now, LedgerType.Trade, new Currency("BTC", true), 3000.543,
+                0.005, 3000, null, null, null, "deposit123", new AccountId("123"));
+            _persistanceRepository.SaveOrUpdate(ledger3);
+
+            // Retreives the list in descending order of time
+            IList<Ledger> retrievedLedgers = _ledgerRepository.GetAllLedgers();
+            Assert.IsNotNull(retrievedLedgers);
+            Assert.AreEqual(3, retrievedLedgers.Count);
+
+            Assert.AreEqual(ledger.Currency.Name, retrievedLedgers[0].Currency.Name);
+            Assert.AreEqual(ledger.LedgerId, retrievedLedgers[0].LedgerId);
+            Assert.AreEqual(ledger.LedgerType, retrievedLedgers[0].LedgerType);
+            Assert.AreEqual(ledger.Amount, retrievedLedgers[0].Amount);
+            Assert.AreEqual(ledger.Fee, retrievedLedgers[0].Fee);
+            Assert.AreEqual(ledger.Balance, retrievedLedgers[0].Balance);
+            Assert.AreEqual(ledger.TradeId, retrievedLedgers[0].TradeId);
+            Assert.AreEqual(ledger.OrderId, retrievedLedgers[0].OrderId);
+            Assert.AreEqual(ledger.AccountId.Value, retrievedLedgers[0].AccountId.Value);
+
+            Assert.AreEqual(ledger2.Currency.Name, retrievedLedgers[1].Currency.Name);
+            Assert.AreEqual(ledger2.LedgerId, retrievedLedgers[1].LedgerId);
+            Assert.AreEqual(ledger2.LedgerType, retrievedLedgers[1].LedgerType);
+            Assert.AreEqual(ledger2.Amount, retrievedLedgers[1].Amount);
+            Assert.AreEqual(ledger2.Fee, retrievedLedgers[1].Fee);
+            Assert.AreEqual(ledger2.Balance, retrievedLedgers[1].Balance);
+            Assert.AreEqual(ledger2.TradeId, retrievedLedgers[1].TradeId);
+            Assert.AreEqual(ledger2.OrderId, retrievedLedgers[1].OrderId);
+            Assert.AreEqual(ledger2.AccountId.Value, retrievedLedgers[1].AccountId.Value);
+
+            Assert.AreEqual(ledger3.Currency.Name, retrievedLedgers[2].Currency.Name);
+            Assert.AreEqual(ledger3.LedgerId, retrievedLedgers[2].LedgerId);
+            Assert.AreEqual(ledger3.LedgerType, retrievedLedgers[2].LedgerType);
+            Assert.AreEqual(ledger3.Amount, retrievedLedgers[2].Amount);
+            Assert.AreEqual(ledger3.Fee, retrievedLedgers[2].Fee);
+            Assert.AreEqual(ledger3.Balance, retrievedLedgers[2].Balance);
+            Assert.AreEqual(ledger3.TradeId, retrievedLedgers[2].TradeId);
+            Assert.AreEqual(ledger3.OrderId, retrievedLedgers[2].OrderId);
+            Assert.AreEqual(ledger3.AccountId.Value, retrievedLedgers[2].AccountId.Value);
         }
     }
 }

@@ -7,6 +7,6 @@
     {
         Deposit,
         Withdrawal,
-        Trades
+        Trade
     }
 }

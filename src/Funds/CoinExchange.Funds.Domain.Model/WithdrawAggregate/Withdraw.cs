@@ -1,5 +1,6 @@
 ﻿using System;
 using CoinExchange.Common.Domain.Model;
+using CoinExchange.Funds.Domain.Model.CurrencyAggregate;
 using CoinExchange.Funds.Domain.Model.DepositAggregate;
 
 namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
@@ -19,7 +20,8 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
-        public Withdraw(Currency currency, string withdrawId, DateTime date, string type, double amount, double fee, TransactionStatus status, AccountId accountId)
+        public Withdraw(Currency currency, string withdrawId, DateTime date, string type, double amount, double fee, 
+            TransactionStatus status, AccountId accountId, TransactionId transactionId, BitcoinAddress bitcoinAddress)
         {
             Currency = currency;
             WithdrawId = withdrawId;
@@ -29,6 +31,8 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
             Fee = fee;
             Status = status;
             AccountId = accountId;
+            TransactionId = transactionId;
+            BitcoinAddress = bitcoinAddress;
         }
 
         /// <summary>
@@ -80,6 +84,16 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
         /// AccountID
         /// </summary>
         public AccountId AccountId { get; set; }
+
+        /// <summary>
+        /// Transaction ID for the Withdrawaal
+        /// </summary>
+        public TransactionId TransactionId { get; set; }
+
+        /// <summary>
+        /// Bitcoin Address associated with this withdrawal
+        /// </summary>
+        public BitcoinAddress BitcoinAddress { get; set; }
 
         /// <summary>
         /// Sets the status to Confirmed

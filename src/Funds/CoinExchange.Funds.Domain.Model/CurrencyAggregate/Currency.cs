@@ -1,4 +1,4 @@
-﻿namespace CoinExchange.Funds.Domain.Model.DepositAggregate
+﻿namespace CoinExchange.Funds.Domain.Model.CurrencyAggregate
 {
     /// <summary>
     /// Represents a single currency - VO
@@ -10,6 +10,14 @@
         /// </summary>
         public Currency()
         {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:System.Object"/> class.
+        /// </summary>
+        public Currency(string name)
+        {
+            Name = name;
         }
 
         /// <summary>

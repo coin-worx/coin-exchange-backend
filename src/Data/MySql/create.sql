@@ -35,12 +35,14 @@ CREATE TABLE `deposit` (
   `Currency` varchar(7) DEFAULT NULL,
   `AccountId` varchar(15) DEFAULT NULL,
   `DepositId` varchar(20) DEFAULT NULL,
-  `Date` datetime DEFAULT NULL,
+  `Date` datetime(6) DEFAULT NULL,
   `Amount` double DEFAULT NULL,
   `Fee` double DEFAULT NULL,
   `Confirmations` int(11) DEFAULT NULL,
   `Status` varchar(15) DEFAULT NULL,
   `Type` varchar(15) DEFAULT NULL,
+  `TransactionId` varchar(30) DEFAULT NULL,
+  `BitcoinAddress` varchar(30) DEFAULT NULL,
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -331,6 +333,8 @@ CREATE TABLE `withdraw` (
   `BankName` varchar(20) DEFAULT NULL,
   `BankAccountAddress` varchar(20) DEFAULT NULL,
   `BankAccountSwiftCode` varchar(20) DEFAULT NULL,
+  `TransactionId` varchar(30) DEFAULT NULL,
+  `BitcoinAddress` varchar(30) DEFAULT NULL,
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using CoinExchange.Common.Domain.Model;
+using CoinExchange.Funds.Domain.Model.CurrencyAggregate;
 using CoinExchange.Funds.Domain.Model.DepositAggregate;
 
 namespace CoinExchange.Funds.Domain.Model.LedgerAggregate

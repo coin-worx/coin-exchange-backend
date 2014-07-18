@@ -16,5 +16,7 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
         List<Withdraw> GetWithdrawByAccountId(AccountId accountId);
         List<Withdraw> GetWithdrawByCurrencyName(string currency);
         Withdraw GetWithdrawByWithdrawId(string withdrawId);
+        Withdraw GetWithdrawByTransactionId(TransactionId transactionId);
+        List<Withdraw> GetWithdrawByBitcoinAddress(BitcoinAddress bitcoinAddress);
     }
 }

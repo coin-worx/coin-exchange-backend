@@ -88,5 +88,11 @@ namespace CoinExchange.Funds.Infrastructure.Persistence.NHibernate.NHibernate
                 .OrderByDescending(x => x.DateTime)
                 .ToList();
         }
+
+        [Transaction]
+        public IList<Ledger> GetAllLedgers()
+        {
+            return CurrentSession.QueryOver<Ledger>().List<Ledger>();
+        }
     }
 }

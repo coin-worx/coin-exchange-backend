@@ -23,5 +23,11 @@ assembly="CoinExchange.Funds.Domain.Model" namespace="CoinExchange.Funds.Domain.
     <component name="AccountId">
       <property name="Value" column="AccountId"/>
     </component>
+    <component name="TransactionId">
+      <property name="Value" column="TransactionId"/>
+    </component>
+    <component name="BitcoinAddress">
+      <property name="Value" column="BitcoinAddress"/>
+    </component>
   </class>
 </hibernate-mapping>

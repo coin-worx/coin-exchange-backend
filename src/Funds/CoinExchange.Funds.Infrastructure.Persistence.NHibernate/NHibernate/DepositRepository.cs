@@ -39,6 +39,22 @@ namespace CoinExchange.Funds.Infrastructure.Persistence.NHibernate.NHibernate
         }
 
         [Transaction]
+        public Deposit GetDepositByTransactionId(TransactionId transactionId)
+        {
+            return CurrentSession.QueryOver<Deposit>().Where(x => x.TransactionId.Value == transactionId.Value).SingleOrDefault();
+        }
+
+        [Transaction]
+        public List<Deposit> GetDepositsByBitcoinAddress(BitcoinAddress bitcoinAddress)
+        {
+            return CurrentSession.Query<Deposit>()
+                .Where(x => x.BitcoinAddress.Value == bitcoinAddress.Value)
+                .AsQueryable()
+                .OrderByDescending(x => x.Date)
+                .ToList();
+        }
+
+        [Transaction]
         public List<Deposit> GetDepositByAccountId(AccountId accountId)
         {
             return CurrentSession.Query<Deposit>()

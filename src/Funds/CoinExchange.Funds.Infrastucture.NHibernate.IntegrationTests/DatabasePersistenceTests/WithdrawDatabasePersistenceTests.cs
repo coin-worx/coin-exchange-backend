@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Threading;
 using CoinExchange.Common.Tests;
+using CoinExchange.Funds.Domain.Model.CurrencyAggregate;
 using CoinExchange.Funds.Domain.Model.DepositAggregate;
 using CoinExchange.Funds.Domain.Model.Repositories;
 using CoinExchange.Funds.Domain.Model.WithdrawAggregate;
@@ -43,7 +44,7 @@ namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests.DatabaseP
         public void SaveWithdrawalAndRetreiveByIdTest_SavesAnObjectToDatabaseAndManipulatesIt_ChecksIfItIsUpdatedAsExpected()
         {
             Withdraw withdraw = new Withdraw(new Currency("LTC", true), "1234", DateTime.Now, "New", 2000, 0.005, TransactionStatus.Pending,
-                new AccountId("123"));
+                new AccountId("123"), new TransactionId("transaction123"), new BitcoinAddress("bitcoin123"));
 
             _persistanceRepository.SaveOrUpdate(withdraw);
 
@@ -67,7 +68,7 @@ namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests.DatabaseP
         public void SaveWithdrawalAndRetreiveByWithdrawIdTest_SavesAnObjectToDatabaseAndManipulatesIt_ChecksIfItIsUpdatedAsExpected()
         {
             Withdraw withdraw = new Withdraw(new Currency("LTC", true), "1234", DateTime.Now, "New", 2000, 0.005, TransactionStatus.Pending,
-                new AccountId("123"));
+                new AccountId("123"), new TransactionId("transaction123"), new BitcoinAddress("bitcoin123"));
 
             _persistanceRepository.SaveOrUpdate(withdraw);
 
@@ -90,7 +91,7 @@ namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests.DatabaseP
         public void SaveWithdrawalAndRetreiveByCurrencyNameTest_SavesAnObjectToDatabaseAndManipulatesIt_ChecksIfItIsUpdatedAsExpected()
         {
             Withdraw withdraw = new Withdraw(new Currency("LTC", true), "1234", DateTime.Now, "New", 2000, 0.005, TransactionStatus.Pending,
-                new AccountId("123"));
+                new AccountId("123"), new TransactionId("transaction123"), new BitcoinAddress("bitcoin123"));
 
             _persistanceRepository.SaveOrUpdate(withdraw);
 
@@ -113,12 +114,12 @@ namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests.DatabaseP
         public void SaveWithdrawalsAndRetreiveByAccountIdTest_SavesMultipleObjectInDatabase_ChecksIfTheoutputIsAsExpected()
         {
             Withdraw withdraw = new Withdraw(new Currency("LTC", true), "1234", DateTime.Now, "New", 2000, 0.005, TransactionStatus.Pending,
-                new AccountId("123"));
+                new AccountId("123"), new TransactionId("transaction123"), new BitcoinAddress("bitcoin123"));
 
             _persistanceRepository.SaveOrUpdate(withdraw);
 
             Withdraw withdraw2 = new Withdraw(new Currency("BTC", true), "123", DateTime.Now, "New", 1000, 0.010, TransactionStatus.Pending,
-                new AccountId("123"));
+                new AccountId("123"), new TransactionId("transaction123"), new BitcoinAddress("bitcoin123"));
             Thread.Sleep(500);
 
             _persistanceRepository.SaveOrUpdate(withdraw2);
@@ -142,6 +143,62 @@ namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests.DatabaseP
             Assert.AreEqual(withdraw2.Fee, retrievedDepositList[1].Fee);
             Assert.AreEqual(withdraw2.Status, retrievedDepositList[1].Status);
             Assert.AreEqual(withdraw2.AccountId.Value, retrievedDepositList[1].AccountId.Value);
+        }
+
+        [Test]
+        public void SaveWithdrawAndRetreiveByTransacitonIdTest_SavesAnObjectToDatabaseAndManipulatesIt_ChecksIfItIsUpdatedAsExpected()
+        {
+            Withdraw withdraw = new Withdraw(new Currency("LTC", true), "1234", DateTime.Now, "New", 2000, 0.005, TransactionStatus.Pending,
+                new AccountId("123"), new TransactionId("transact123"), new BitcoinAddress("address123"));
+
+            _persistanceRepository.SaveOrUpdate(withdraw);
+
+            Withdraw retrievedWithdraw = _withdrawRepository.GetWithdrawByTransactionId(new TransactionId("transact123"));
+            Assert.IsNotNull(retrievedWithdraw);
+            retrievedWithdraw.Amount = 777;
+            _persistanceRepository.SaveOrUpdate(retrievedWithdraw);
+
+            retrievedWithdraw = _withdrawRepository.GetWithdrawByTransactionId(new TransactionId("transact123"));
+            Assert.AreEqual(withdraw.Currency.Name, retrievedWithdraw.Currency.Name);
+            Assert.AreEqual(withdraw.WithdrawId, retrievedWithdraw.WithdrawId);
+            Assert.AreEqual(withdraw.Type, retrievedWithdraw.Type);
+            Assert.AreEqual(777, retrievedWithdraw.Amount);
+            Assert.AreEqual(withdraw.Fee, retrievedWithdraw.Fee);
+            Assert.AreEqual(withdraw.Status, retrievedWithdraw.Status);
+            Assert.AreEqual(withdraw.AccountId.Value, retrievedWithdraw.AccountId.Value);
+        }
+
+        [Test]
+        public void SaveWithdrawsAndRetreiveByBitcoinAddressTest_SavesMultipleObjectsToDatabase_ChecksIfTheyAreAsExpected()
+        {
+            Withdraw withdraw = new Withdraw(new Currency("LTC", true), "1234", DateTime.Now, "New", 2000, 0.005, TransactionStatus.Pending,
+                new AccountId("123"), new TransactionId("transact123"), new BitcoinAddress("address123"));
+
+            _persistanceRepository.SaveOrUpdate(withdraw);
+            Thread.Sleep(1000);
+            Withdraw withdraw2 = new Withdraw(new Currency("BTC", true), "123", DateTime.Now, "New", 1000, 0.010, TransactionStatus.Pending,
+                new AccountId("123"), new TransactionId("transact123"), new BitcoinAddress("address123"));
+            _persistanceRepository.SaveOrUpdate(withdraw2);
+
+            List<Withdraw> retrievedWithdrawList = _withdrawRepository.GetWithdrawByBitcoinAddress(new BitcoinAddress("address123"));
+            Assert.IsNotNull(retrievedWithdrawList);
+            Assert.AreEqual(2, retrievedWithdrawList.Count);
+
+            Assert.AreEqual(withdraw.Currency.Name, retrievedWithdrawList[1].Currency.Name);
+            Assert.AreEqual(withdraw.WithdrawId, retrievedWithdrawList[1].WithdrawId);
+            Assert.AreEqual(withdraw.Type, retrievedWithdrawList[1].Type);
+            Assert.AreEqual(withdraw.Amount, retrievedWithdrawList[1].Amount);
+            Assert.AreEqual(withdraw.Fee, retrievedWithdrawList[1].Fee);
+            Assert.AreEqual(withdraw.Status, retrievedWithdrawList[1].Status);
+            Assert.AreEqual(withdraw.AccountId.Value, retrievedWithdrawList[1].AccountId.Value);
+
+            Assert.AreEqual(withdraw2.Currency.Name, retrievedWithdrawList[0].Currency.Name);
+            Assert.AreEqual(withdraw2.WithdrawId, retrievedWithdrawList[0].WithdrawId);
+            Assert.AreEqual(withdraw2.Type, retrievedWithdrawList[0].Type);
+            Assert.AreEqual(withdraw2.Amount, retrievedWithdrawList[0].Amount);
+            Assert.AreEqual(withdraw2.Fee, retrievedWithdrawList[0].Fee);
+            Assert.AreEqual(withdraw2.Status, retrievedWithdrawList[0].Status);
+            Assert.AreEqual(withdraw2.AccountId.Value, retrievedWithdrawList[0].AccountId.Value);
         }
     }
 }

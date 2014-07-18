@@ -48,5 +48,21 @@ namespace CoinExchange.Funds.Infrastructure.Persistence.NHibernate.NHibernate
         {
             return CurrentSession.QueryOver<Withdraw>().Where(x => x.WithdrawId == withdrawId).SingleOrDefault();
         }
+
+        [Transaction]
+        public Withdraw GetWithdrawByTransactionId(TransactionId transactionId)
+        {
+            return CurrentSession.QueryOver<Withdraw>().Where(x => x.TransactionId.Value == transactionId.Value).SingleOrDefault();
+        }
+
+        [Transaction]
+        public List<Withdraw> GetWithdrawByBitcoinAddress(BitcoinAddress bitcoinAddress)
+        {
+            return CurrentSession.Query<Withdraw>()
+                .Where(x => x.BitcoinAddress.Value == bitcoinAddress.Value)
+                .AsQueryable()
+                .OrderByDescending(x => x.DateTime)
+                .ToList();
+        }
     }
 }
