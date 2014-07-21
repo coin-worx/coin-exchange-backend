@@ -96,7 +96,15 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
         /// <summary>
         /// The number of confirmations for this Deposit
         /// </summary>
-        public int Confirmations { get; set; }
+        public int Confirmations { get; private set; }
+
+        /// <summary>
+        /// Increments the Confirmations by one digit
+        /// </summary>
+        public void IncrementConfirmations()
+        {
+            Confirmations++;
+        }
 
         /// <summary>
         /// Sets the status to Confirmed

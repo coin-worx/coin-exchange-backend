@@ -15,6 +15,6 @@ namespace CoinExchange.Funds.Domain.Model.Services
         /// <param name="amount"></param>
         /// <param name="orderSide"></param>
         /// <returns></returns>
-        bool ValidateFunds(AccountId accountId, string curerncyPair, double amount, OrderSide orderSide);
+        bool ValidateFunds(AccountId accountId, string curerncyPair, double amount, string orderSide);
     }
 }

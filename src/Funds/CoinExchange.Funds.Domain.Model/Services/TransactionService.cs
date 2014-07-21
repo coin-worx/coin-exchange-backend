@@ -28,13 +28,13 @@ namespace CoinExchange.Funds.Domain.Model.Services
         /// Parameterized Constructor
         /// </summary>
         /// <param name="fundsPersistenceRepository"> </param>
-        /// <param name="ledgerIdGeneraterService"></param>
+        /// <param name="ledgerIdGeneratorService"></param>
         /// <param name="ledgerRepository"> </param>
         public TransactionService(IFundsPersistenceRepository fundsPersistenceRepository, 
-            ILedgerIdGeneraterService ledgerIdGeneraterService, ILedgerRepository ledgerRepository)
+            ILedgerIdGeneraterService ledgerIdGeneratorService, ILedgerRepository ledgerRepository)
         {
             _fundsPersistenceRepository = fundsPersistenceRepository;
-            _ledgerIdGeneraterService = ledgerIdGeneraterService;
+            _ledgerIdGeneraterService = ledgerIdGeneratorService;
             _ledgerRepository = ledgerRepository;
         }
 
@@ -44,7 +44,6 @@ namespace CoinExchange.Funds.Domain.Model.Services
         /// <param name="currencyPair"></param>
         /// <param name="tradeVolume"></param>
         /// <param name="price"></param>
-        /// <param name="cost"> </param>
         /// <param name="executionDateTime"> </param>
         /// <param name="tradeId"></param>
         /// <param name="buyAccountId"></param>
@@ -52,16 +51,16 @@ namespace CoinExchange.Funds.Domain.Model.Services
         /// <param name="buyOrderId"></param>
         /// <param name="sellOrderId"></param>
         /// <returns></returns>
-        public bool CreateTradeTransaction(string currencyPair, double tradeVolume, double price, double cost,
+        public bool CreateTradeTransaction(string currencyPair, double tradeVolume, double price,
             DateTime executionDateTime, string tradeId, string buyAccountId, string sellAccountId, string buyOrderId, 
             string sellOrderId)
         {
             Tuple<Currency, Currency> baseQuoteCurencies = SeparateBaseQuoteCurrency(currencyPair);
 
-            if (BuyOrderLedger(baseQuoteCurencies.Item1, baseQuoteCurencies.Item2, tradeVolume, price, cost,
+            if (BuyOrderLedger(baseQuoteCurencies.Item1, baseQuoteCurencies.Item2, tradeVolume, price,
                            executionDateTime, buyOrderId, tradeId, buyAccountId))
             {
-                return SellOrderLedger(baseQuoteCurencies.Item1, baseQuoteCurencies.Item2, tradeVolume, price, cost,
+                return SellOrderLedger(baseQuoteCurencies.Item1, baseQuoteCurencies.Item2, tradeVolume, price,
                                 executionDateTime, sellOrderId, tradeId, sellAccountId);
             }
             return false;
@@ -73,16 +72,17 @@ namespace CoinExchange.Funds.Domain.Model.Services
         /// </summary>
         /// <returns></returns>
         private bool BuyOrderLedger(Currency baseCurrency, Currency quoteCurrency, double volume, double price, 
-            double cost, DateTime executionDateTime, string buyOrderId, string tradeId, string accountId)
+            DateTime executionDateTime, string buyOrderId, string tradeId, string accountId)
         {
             // First we create a ledger for base currency
-            double currenctBalance = GetBalance(baseCurrency);
-            if (CreateLedgerEntry(baseCurrency, volume, 0, currenctBalance + volume, executionDateTime, buyOrderId, tradeId,
+            double currentBalance = _ledgerRepository.GetBalanceForCurrency(baseCurrency.Name, new AccountId(accountId));
+            if (CreateLedgerEntry(baseCurrency, volume, 0, currentBalance + volume, executionDateTime, buyOrderId, tradeId,
                 accountId))
             {
+                currentBalance = _ledgerRepository.GetBalanceForCurrency(quoteCurrency.Name, new AccountId(accountId));
                 // Second, create ledger entry for the quote currency
                 // Todo: Provide master data for fee in database and get it from the repository
-                return CreateLedgerEntry(quoteCurrency, volume * price, 0 /* Update Me*/, currenctBalance - (volume * price), 
+                return CreateLedgerEntry(quoteCurrency, -(volume * price), 0 /* Update Me*/, currentBalance - (volume * price), 
                     executionDateTime, buyOrderId, tradeId, accountId);
             }
             return false;
@@ -93,13 +93,15 @@ namespace CoinExchange.Funds.Domain.Model.Services
         /// </summary>
         /// <returns></returns>
         private bool SellOrderLedger(Currency baseCurrency, Currency quoteCurrency, double volume, double price,
-            double cost, DateTime executionDateTime, string orderId, string tradeId, string accountId)
+            DateTime executionDateTime, string orderId, string tradeId, string accountId)
         {
             // First we create a ledger for base currency
-            double currenctBalance = GetBalance(baseCurrency);
+            double currenctBalance = _ledgerRepository.GetBalanceForCurrency(baseCurrency.Name,  new AccountId(accountId));
             if (CreateLedgerEntry(baseCurrency, -volume, 0, currenctBalance - volume, executionDateTime, orderId,
                 tradeId, accountId))
             {
+                currenctBalance = _ledgerRepository.GetBalanceForCurrency(quoteCurrency.Name, new AccountId(accountId));
+                // Secondly, we create the ledger for the quote currency
                 return CreateLedgerEntry(quoteCurrency, volume*price, 0 /*Update Me*/, currenctBalance + (volume*price),
                                          executionDateTime, orderId, tradeId, accountId);
             }
@@ -112,7 +114,7 @@ namespace CoinExchange.Funds.Domain.Model.Services
             try
             {
                 Ledger ledger = new Ledger(_ledgerIdGeneraterService.GenerateLedgerId(), executionDate, LedgerType.Trade, 
-                                           currency, amount, fee, balance, tradeId, orderId, null, null, new AccountId(accountId));
+                    currency, amount, fee, balance, tradeId, orderId, null, null, new AccountId(accountId));
                 _fundsPersistenceRepository.SaveOrUpdate(ledger);
                 return true;
             }
@@ -146,7 +148,8 @@ namespace CoinExchange.Funds.Domain.Model.Services
         {
             if (deposit != null)
             {
-                double currenctBalance = this.GetBalance(deposit.Currency);
+                double currenctBalance = _ledgerRepository.GetBalanceForCurrency(deposit.Currency.Name, 
+                    new AccountId(deposit.AccountId.Value));
                 if (deposit.Confirmations >= 7)
                 {
                     Ledger ledger = new Ledger(_ledgerIdGeneraterService.GenerateLedgerId(), DateTime.Now,
@@ -169,7 +172,8 @@ namespace CoinExchange.Funds.Domain.Model.Services
         {
             if (withdraw != null)
             {
-                double currenctBalance = this.GetBalance(withdraw.Currency);
+                double currenctBalance = _ledgerRepository.GetBalanceForCurrency(withdraw.Currency.Name, 
+                    new AccountId(withdraw.AccountId.Value));
                 Ledger ledger = new Ledger(_ledgerIdGeneraterService.GenerateLedgerId(), DateTime.Now,
                                            LedgerType.Withdrawal,
                                            withdraw.Currency, withdraw.Amount, withdraw.Fee,
@@ -185,9 +189,20 @@ namespace CoinExchange.Funds.Domain.Model.Services
         /// Gets the balance by calculating the balance avaialble to the existing ledgers
         /// </summary>
         /// <returns></returns>
-        private double GetBalance(Currency currency)
+        /*private double GetBalance(Currency currency, AccountId accountId)
         {
-            return _ledgerRepository.GetLedgerByCurrencyName(currency.Name).Last().Balance;
-        }
+            List<Ledger> ledgerByCurrencyName = _ledgerRepository.GetLedgerByCurrencyName(currency.Name);
+            if (ledgerByCurrencyName != null && ledgerByCurrencyName.Any())
+            {
+                foreach (var ledger in ledgerByCurrencyName)
+                {
+                    
+                }
+            }
+            else
+            {
+                return 0;
+            }
+        }*/
     }
 }

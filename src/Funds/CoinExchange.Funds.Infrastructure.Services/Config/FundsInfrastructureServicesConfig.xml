@@ -3,7 +3,7 @@
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xsi:schemaLocation="http://www.springframework.net http://www.springframework.net/xsd/spring-objects.xsd">
 
-  <object id="LedgerIdGenerator" type="CoinExchange.Funds.Infrastructure.Services.LedgerIdGeneratorService, CoinExchange.Funds.Infrastructure.Services">
+  <object id="LedgerIdGeneratorService" type="CoinExchange.Funds.Infrastructure.Services.LedgerIdGeneratorService, CoinExchange.Funds.Infrastructure.Services">
   </object>
 
 </objects>

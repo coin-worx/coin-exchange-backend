@@ -90,7 +90,7 @@ DROP TABLE IF EXISTS `ledger`;
 CREATE TABLE `ledger` (
   `Id` int(11) NOT NULL AUTO_INCREMENT,
   `LedgerId` varchar(20) DEFAULT NULL,
-  `DateTime` datetime DEFAULT NULL,
+  `DateTime` datetime(6) DEFAULT NULL,
   `LedgerType` varchar(15) DEFAULT NULL,
   `Currency` varchar(15) DEFAULT NULL,
   `AccountId` varchar(20) DEFAULT NULL,

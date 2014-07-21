@@ -15,7 +15,7 @@ namespace CoinExchange.Funds.Domain.Model.Services
     /// </summary>
     public interface ITransactionService
     {
-        bool CreateTradeTransaction(string currencyPair, double tradeVolume, double price, double cost,
+        bool CreateTradeTransaction(string currencyPair, double tradeVolume, double price,
                                     DateTime executionDateTime, string tradeId, string buyAccountId, string sellAccountId,
                                     string buyOrderId, string sellOrderId);
 

@@ -43,6 +43,26 @@ namespace CoinExchange.Funds.Infrastructure.Persistence.NHibernate.NHibernate
                 .ToList();
         }
 
+        /// <summary>
+        /// Gets the balance for a currency for the specified Account ID
+        /// </summary>
+        /// <returns></returns>
+        [Transaction]
+        public double GetBalanceForCurrency(string currency, AccountId accountId)
+        {
+            List<Ledger> ledgers = CurrentSession.Query<Ledger>().
+                Where(x => x.Currency.Name == currency && x.AccountId.Value == accountId.Value).
+                AsQueryable().
+                OrderBy(x => x.DateTime).
+                ToList();
+
+            if (ledgers.Any())
+            {
+                return ledgers.Last().Balance;
+            }
+            return 0;
+        }
+
         [Transaction]
         public Ledger GetLedgerByLedgerId(string ledgerId)
         {
