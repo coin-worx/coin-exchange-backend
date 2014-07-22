@@ -44,6 +44,10 @@
     <property name="SessionFactory" ref="NHibernateSessionFactory"/>
   </object>
 
+  <object id="BalanceRepository" type="CoinExchange.Funds.Infrastructure.Persistence.NHibernate.NHibernate.BalanceRepository, CoinExchange.Funds.Infrastructure.Persistence.NHibernate">
+    <property name="SessionFactory" ref="NHibernateSessionFactory"/>
+  </object>
+
   <object id="DepositRepository" type="CoinExchange.Funds.Infrastructure.Persistence.NHibernate.NHibernate.DepositRepository, CoinExchange.Funds.Infrastructure.Persistence.NHibernate">
     <property name="SessionFactory" ref="NHibernateSessionFactory"/>
   </object>

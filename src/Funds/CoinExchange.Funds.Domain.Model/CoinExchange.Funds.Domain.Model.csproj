@@ -42,6 +42,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BalanceAggregate\Balance.cs" />
+    <Compile Include="BalanceAggregate\IBalanceRepository.cs" />
     <Compile Include="CurrencyAggregate\Currency.cs" />
     <Compile Include="CurrencyAggregate\CurrencyPair.cs" />
     <Compile Include="DepositAggregate\DepositLimit.cs" />
@@ -50,6 +52,8 @@
     <Compile Include="DepositAggregate\IDepositRepository.cs" />
     <Compile Include="DepositAggregate\TransactionId.cs" />
     <Compile Include="FeeAggregate\Fee.cs" />
+    <Compile Include="FeeAggregate\FeeCalculationService.cs" />
+    <Compile Include="FeeAggregate\IFeeCalculationService.cs" />
     <Compile Include="FeeAggregate\IFeeRepository.cs" />
     <Compile Include="LedgerAggregate\ILedgerRepository.cs" />
     <Compile Include="LedgerAggregate\Ledger.cs" />

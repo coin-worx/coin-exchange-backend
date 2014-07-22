@@ -3,10 +3,15 @@
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xsi:schemaLocation="http://www.springframework.net http://www.springframework.net/xsd/spring-objects.xsd">
 
+  <object id="FeeCalculationService" type="CoinExchange.Funds.Domain.Model.FeeAggregate.FeeCalculationService, CoinExchange.Funds.Domain.Model">
+    <constructor-arg name="feeRepository" ref="FeeRepository"/>
+  </object>
+  
   <object id="TransactionService" type="CoinExchange.Funds.Domain.Model.Services.TransactionService, CoinExchange.Funds.Domain.Model">
     <constructor-arg name="fundsPersistenceRepository" ref="FundsPersistenceRepository"/>
-  <constructor-arg name="ledgerIdGeneratorService" ref="LedgerIdGeneratorService"/>
-  <constructor-arg name="ledgerRepository" ref="LedgerRepository"/>
+    <constructor-arg name="ledgerIdGeneratorService" ref="LedgerIdGeneratorService"/>
+    <constructor-arg name="ledgerRepository" ref="LedgerRepository"/>
+    <constructor-arg name="feeCalculationService" ref="FeeCalculationService"/>
   </object>
 
 </objects>

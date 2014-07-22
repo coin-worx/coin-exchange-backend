@@ -15,6 +15,20 @@ create database if not exists `coinexchangedev`;
 
 USE `coinexchangedev`;
 
+/*Table structure for table `balance` */
+
+DROP TABLE IF EXISTS `balance`;
+
+CREATE TABLE `balance` (
+  `Id` int(10) NOT NULL AUTO_INCREMENT,
+  `Currency` varchar(10) DEFAULT NULL,
+  `AccountId` varchar(30) DEFAULT NULL,
+  `AvailableBalance` double DEFAULT NULL,
+  `CurrentBalance` double DEFAULT NULL,
+  `PendingBalance` double DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 /*Table structure for table `currencypair` */
 
 DROP TABLE IF EXISTS `currencypair`;
@@ -81,7 +95,7 @@ CREATE TABLE `fee` (
   `PercentageFee` double DEFAULT NULL,
   `Amount` double DEFAULT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=latin1;
 
 /*Table structure for table `ledger` */
 

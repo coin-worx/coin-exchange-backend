@@ -24,5 +24,13 @@ namespace CoinExchange.Funds.Domain.Model.FeeAggregate
         /// <param name="currencyPair"></param>
         /// <returns></returns>
         Fee GetFeeByCurrencyPair(string currencyPair);
+
+        /// <summary>
+        /// Gets the Fee corresponding to the given currency and the amount
+        /// </summary>
+        /// <param name="currencyPair"></param>
+        /// <param name="amount"></param>
+        /// <returns></returns>
+        Fee GetFeeByCurrencyAndAmount(string currencyPair, int amount);
     }
 }

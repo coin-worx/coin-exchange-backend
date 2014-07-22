@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CoinExchange.Funds.Domain.Model.CurrencyAggregate;
 using CoinExchange.Funds.Domain.Model.DepositAggregate;
+using CoinExchange.Funds.Domain.Model.FeeAggregate;
 using CoinExchange.Funds.Domain.Model.LedgerAggregate;
 using CoinExchange.Funds.Domain.Model.Repositories;
 using CoinExchange.Funds.Domain.Model.WithdrawAggregate;
@@ -23,6 +24,7 @@ namespace CoinExchange.Funds.Domain.Model.Services
         private IFundsPersistenceRepository _fundsPersistenceRepository;
         private ILedgerIdGeneraterService _ledgerIdGeneraterService;
         private ILedgerRepository _ledgerRepository;
+        private IFeeCalculationService _feeCalculationService;
 
         /// <summary>
         /// Parameterized Constructor
@@ -30,12 +32,15 @@ namespace CoinExchange.Funds.Domain.Model.Services
         /// <param name="fundsPersistenceRepository"> </param>
         /// <param name="ledgerIdGeneratorService"></param>
         /// <param name="ledgerRepository"> </param>
+        /// <param name="feeCalculationService"> </param>
         public TransactionService(IFundsPersistenceRepository fundsPersistenceRepository, 
-            ILedgerIdGeneraterService ledgerIdGeneratorService, ILedgerRepository ledgerRepository)
+            ILedgerIdGeneraterService ledgerIdGeneratorService, ILedgerRepository ledgerRepository, 
+            IFeeCalculationService feeCalculationService)
         {
             _fundsPersistenceRepository = fundsPersistenceRepository;
             _ledgerIdGeneraterService = ledgerIdGeneratorService;
             _ledgerRepository = ledgerRepository;
+            _feeCalculationService = feeCalculationService;
         }
 
         /// <summary>
@@ -76,13 +81,13 @@ namespace CoinExchange.Funds.Domain.Model.Services
         {
             // First we create a ledger for base currency
             double currentBalance = _ledgerRepository.GetBalanceForCurrency(baseCurrency.Name, new AccountId(accountId));
-            if (CreateLedgerEntry(baseCurrency, volume, 0, currentBalance + volume, executionDateTime, buyOrderId, tradeId,
+            if (CreateLedgerEntry(baseCurrency, volume, 0.000, currentBalance + volume, executionDateTime, buyOrderId, tradeId,
                 accountId))
             {
                 currentBalance = _ledgerRepository.GetBalanceForCurrency(quoteCurrency.Name, new AccountId(accountId));
-                // Second, create ledger entry for the quote currency
-                // Todo: Provide master data for fee in database and get it from the repository
-                return CreateLedgerEntry(quoteCurrency, -(volume * price), 0 /* Update Me*/, currentBalance - (volume * price), 
+                // Second, create ledger entry for the quote currency. Fee is charged for the quote currency side
+                double fee = _feeCalculationService.GetFee(quoteCurrency, volume * price);
+                return CreateLedgerEntry(quoteCurrency, -(volume * price), fee, currentBalance - (volume * price), 
                     executionDateTime, buyOrderId, tradeId, accountId);
             }
             return false;
@@ -97,17 +102,30 @@ namespace CoinExchange.Funds.Domain.Model.Services
         {
             // First we create a ledger for base currency
             double currenctBalance = _ledgerRepository.GetBalanceForCurrency(baseCurrency.Name,  new AccountId(accountId));
-            if (CreateLedgerEntry(baseCurrency, -volume, 0, currenctBalance - volume, executionDateTime, orderId,
+            if (CreateLedgerEntry(baseCurrency, -volume, 0.000, currenctBalance - volume, executionDateTime, orderId,
                 tradeId, accountId))
             {
                 currenctBalance = _ledgerRepository.GetBalanceForCurrency(quoteCurrency.Name, new AccountId(accountId));
-                // Secondly, we create the ledger for the quote currency
-                return CreateLedgerEntry(quoteCurrency, volume*price, 0 /*Update Me*/, currenctBalance + (volume*price),
+                // Secondly, we create the ledger for the quote currency. Fee is charged for the quote currency side
+                double fee = _feeCalculationService.GetFee(quoteCurrency, volume * price);
+                return CreateLedgerEntry(quoteCurrency, volume*price, fee, currenctBalance + (volume*price),
                                          executionDateTime, orderId, tradeId, accountId);
             }
             return false;
         }
 
+        /// <summary>
+        /// Create a ledger entry for the given value and store it inside the database
+        /// </summary>
+        /// <param name="currency"></param>
+        /// <param name="amount"></param>
+        /// <param name="fee"></param>
+        /// <param name="balance"></param>
+        /// <param name="executionDate"></param>
+        /// <param name="orderId"></param>
+        /// <param name="tradeId"></param>
+        /// <param name="accountId"></param>
+        /// <returns></returns>
         private bool CreateLedgerEntry(Currency currency, double amount, double fee, double balance, DateTime executionDate,
             string orderId, string tradeId, string accountId)
         {
@@ -172,6 +190,7 @@ namespace CoinExchange.Funds.Domain.Model.Services
         {
             if (withdraw != null)
             {
+                // ToDo:
                 double currenctBalance = _ledgerRepository.GetBalanceForCurrency(withdraw.Currency.Name, 
                     new AccountId(withdraw.AccountId.Value));
                 Ledger ledger = new Ledger(_ledgerIdGeneraterService.GenerateLedgerId(), DateTime.Now,
@@ -184,25 +203,5 @@ namespace CoinExchange.Funds.Domain.Model.Services
             }
             return null;
         }
-
-        /// <summary>
-        /// Gets the balance by calculating the balance avaialble to the existing ledgers
-        /// </summary>
-        /// <returns></returns>
-        /*private double GetBalance(Currency currency, AccountId accountId)
-        {
-            List<Ledger> ledgerByCurrencyName = _ledgerRepository.GetLedgerByCurrencyName(currency.Name);
-            if (ledgerByCurrencyName != null && ledgerByCurrencyName.Any())
-            {
-                foreach (var ledger in ledgerByCurrencyName)
-                {
-                    
-                }
-            }
-            else
-            {
-                return 0;
-            }
-        }*/
     }
 }

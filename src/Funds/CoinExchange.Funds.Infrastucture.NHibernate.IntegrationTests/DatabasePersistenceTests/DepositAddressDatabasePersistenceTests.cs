@@ -11,7 +11,7 @@ using Spring.Context.Support;
 namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests.DatabasePersistenceTests
 {
     /// <summary>
-    /// Tests for actual persistence in databse for Deposit address objects
+    /// Tests for actual persistence in database for Deposit address objects
     /// </summary>
     [TestFixture]
     class DepositAddressDatabasePersistenceTests

@@ -25,6 +25,21 @@ namespace CoinExchange.Funds.Infrastructure.Persistence.NHibernate.NHibernate
         }
 
         /// <summary>
+        /// Gets the fee corresponding to a currency and an amount that will represent the percentage within that range
+        /// </summary>
+        /// <param name="currencyPair"></param>
+        /// <param name="amount"></param>
+        /// <returns></returns>
+        [Transaction]
+        public Fee GetFeeByCurrencyAndAmount(string currencyPair, int amount)
+        {
+            return CurrentSession
+                .QueryOver<Fee>()
+                .Where(x => x.CurrencyPair == currencyPair && x.Amount == amount)
+                .SingleOrDefault();
+        }
+
+        /// <summary>
         /// Gets the Fee by specifying the database primary key ID
         /// </summary>
         /// <param name="id"></param>
