@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CoinExchange.Funds.Domain.Model.CurrencyAggregate;
+using CoinExchange.Funds.Domain.Model.FeeAggregate;
 
-namespace CoinExchange.Funds.Domain.Model.FeeAggregate
+namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
 {
     /// <summary>
     /// Service reposnsible for matters related to calculation and retreival of fee

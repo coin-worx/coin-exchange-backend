@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CoinExchange.Funds.Domain.Model.CurrencyAggregate;
 using CoinExchange.Funds.Domain.Model.DepositAggregate;
 using CoinExchange.Funds.Domain.Model.FeeAggregate;
 using CoinExchange.Funds.Domain.Model.LedgerAggregate;
 using CoinExchange.Funds.Domain.Model.Repositories;
+using CoinExchange.Funds.Domain.Model.Services;
 using CoinExchange.Funds.Domain.Model.WithdrawAggregate;
 
-namespace CoinExchange.Funds.Domain.Model.Services
+namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
 {
     /// <summary>
     /// Service for making transaction resulting in Ledgers
@@ -190,7 +187,6 @@ namespace CoinExchange.Funds.Domain.Model.Services
         {
             if (withdraw != null)
             {
-                // ToDo:
                 double currenctBalance = _ledgerRepository.GetBalanceForCurrency(withdraw.Currency.Name, 
                     new AccountId(withdraw.AccountId.Value));
                 Ledger ledger = new Ledger(_ledgerIdGeneraterService.GenerateLedgerId(), DateTime.Now,

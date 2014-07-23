@@ -12,7 +12,7 @@ using CoinExchange.Funds.Domain.Model.Services;
 using NUnit.Framework;
 using Spring.Context.Support;
 
-namespace CoinExchange.Funds.Domain.Model.IntegrationTests
+namespace CoinExchange.Funds.Application.IntegrationTests
 {
     [TestFixture]
     class TransactionServiceIntegrationTests

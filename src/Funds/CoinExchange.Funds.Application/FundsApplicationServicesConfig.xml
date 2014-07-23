@@ -14,4 +14,10 @@
     <constructor-arg name="feeCalculationService" ref="FeeCalculationService"/>
   </object>
 
+  <object id="FundsValidationService" type="CoinExchange.Funds.Domain.Model.Services.FundsValidationService, CoinExchange.Funds.Domain.Model">
+    <constructor-arg name="transactionService" ref="TransactionService"/>
+    <constructor-arg name="fundsPersistenceRepository" ref="FundsPersistenceRepository"/>
+    <constructor-arg name="balanceRepository" ref="BalanceRepository"/>
+  </object>
+
 </objects>

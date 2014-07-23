@@ -52,7 +52,6 @@
     <Compile Include="DepositAggregate\IDepositRepository.cs" />
     <Compile Include="DepositAggregate\TransactionId.cs" />
     <Compile Include="FeeAggregate\Fee.cs" />
-    <Compile Include="FeeAggregate\FeeCalculationService.cs" />
     <Compile Include="FeeAggregate\IFeeCalculationService.cs" />
     <Compile Include="FeeAggregate\IFeeRepository.cs" />
     <Compile Include="LedgerAggregate\ILedgerRepository.cs" />
@@ -69,7 +68,6 @@
     <Compile Include="Services\IFundsValidationService.cs" />
     <Compile Include="Services\ILedgerIdGeneraterService.cs" />
     <Compile Include="Services\ITransactionService.cs" />
-    <Compile Include="Services\TransactionService.cs" />
     <Compile Include="WithdrawAggregate\BankAccount.cs" />
     <Compile Include="WithdrawAggregate\IWithdrawAddressRepository.cs" />
     <Compile Include="WithdrawAggregate\IWithdrawFeesRepository.cs" />
@@ -88,11 +86,6 @@
       <Project>{d61dbd04-95dc-4eb1-ad54-1ff929ac2814}</Project>
       <Name>CoinExchange.Common</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Config\FundsDomainModelConfig.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
