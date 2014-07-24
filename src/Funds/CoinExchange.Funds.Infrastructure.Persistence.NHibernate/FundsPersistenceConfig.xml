@@ -21,6 +21,7 @@
         <entry key="hibernate.connection.provider" value="NHibernate.Connection.DriverConnectionProvider"/>
         <entry key="dialect" value="NHibernate.Dialect.MySQL5Dialect"/>
         <entry key="connection.driver_class" value="NHibernate.Driver.MySqlDataDriver"/>
+        <entry key="use_proxy_validator" value="false" />
       </dictionary>
     </property>
 
@@ -37,7 +38,7 @@
   </object>
 
   <!-- Exception translation object post processor -->
-  <!--<object type="Spring.Dao.Attributes.PersistenceExceptionTranslationPostProcessor, Spring.Data"/>-->
+  <object type="Spring.Dao.Attributes.PersistenceExceptionTranslationPostProcessor, Spring.Data"/>
 
   <!-- Repositories -->
   <object id="FundsPersistenceRepository" type="CoinExchange.Funds.Infrastructure.Persistence.NHibernate.NHibernate.FundsPersistenceRepository, CoinExchange.Funds.Infrastructure.Persistence.NHibernate">

@@ -1,23 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <objects xmlns="http://www.springframework.net"
-                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                xsi:schemaLocation="http://www.springframework.net http://www.springframework.net/xsd/spring-objects.xsd">
-
-  <object id="FeeCalculationService" type="CoinExchange.Funds.Domain.Model.FeeAggregate.FeeCalculationService, CoinExchange.Funds.Domain.Model">
+         xmlns:tx="http://www.springframework.net/tx">
+  
+  <!-- Services -->
+  <object id="FeeCalculationService" type="CoinExchange.Funds.Application.CrossBoundedContextsServices.FeeCalculationService, CoinExchange.Funds.Application">
     <constructor-arg name="feeRepository" ref="FeeRepository"/>
   </object>
-  
-  <object id="TransactionService" type="CoinExchange.Funds.Domain.Model.Services.TransactionService, CoinExchange.Funds.Domain.Model">
+
+  <object id="TransactionService" type="CoinExchange.Funds.Application.CrossBoundedContextsServices.TransactionService, CoinExchange.Funds.Application">
     <constructor-arg name="fundsPersistenceRepository" ref="FundsPersistenceRepository"/>
     <constructor-arg name="ledgerIdGeneratorService" ref="LedgerIdGeneratorService"/>
     <constructor-arg name="ledgerRepository" ref="LedgerRepository"/>
     <constructor-arg name="feeCalculationService" ref="FeeCalculationService"/>
   </object>
 
-  <object id="FundsValidationService" type="CoinExchange.Funds.Domain.Model.Services.FundsValidationService, CoinExchange.Funds.Domain.Model">
+  <object id="FundsValidationService" type="CoinExchange.Funds.Application.CrossBoundedContextsServices.FundsValidationService, CoinExchange.Funds.Application">
     <constructor-arg name="transactionService" ref="TransactionService"/>
     <constructor-arg name="fundsPersistenceRepository" ref="FundsPersistenceRepository"/>
     <constructor-arg name="balanceRepository" ref="BalanceRepository"/>
   </object>
-
+  
+  <tx:attribute-driven/>
 </objects>

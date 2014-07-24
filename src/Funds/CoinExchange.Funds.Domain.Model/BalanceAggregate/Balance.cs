@@ -36,25 +36,33 @@ namespace CoinExchange.Funds.Domain.Model.BalanceAggregate
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
-        public Balance(Currency currency, AccountId accountId, double availableBalance, double currentBalance, double pendingBalance)
+        public Balance(Currency currency, AccountId accountId, double availableBalance, double currentBalance)
         {
             Currency = currency;
             AccountId = accountId;
             _availableBalance = availableBalance;
             _currentBalance = currentBalance;
-            _pendingBalance = pendingBalance;
         }
 
         #region Methods
 
         /// <summary>
-        /// Adds the balance to the Current Balance
+        /// Adds the balance to the CurrentBalance
         /// </summary>
         /// <returns></returns>
-        public bool AddBalance(double amount)
+        public bool AddCurrentBalance(double amount)
         {
-            AvailableBalance += amount;
-            CurrentBalance += amount;
+            _currentBalance += amount;
+            return true;
+        }
+
+        /// <summary>
+        /// Adds the balance to the AvailableBalance
+        /// </summary>
+        /// <returns></returns>
+        public bool AddAvailableBalance(double amount)
+        {
+            _availableBalance += amount;
             return true;
         }
 
@@ -100,7 +108,7 @@ namespace CoinExchange.Funds.Domain.Model.BalanceAggregate
         /// </summary>
         public double PendingBalance
         {
-            get { return _pendingBalance; }
+            get { return _currentBalance - _availableBalance; }
             private set { _pendingBalance = value; }
         }
 

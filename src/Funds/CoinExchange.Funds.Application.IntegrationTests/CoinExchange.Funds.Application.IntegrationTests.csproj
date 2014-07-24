@@ -82,7 +82,9 @@
     <Compile Include="TransactionServiceIntegrationTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -90,9 +92,21 @@
       <Project>{bbf58888-03cd-47f4-aeb9-bc6070d97920}</Project>
       <Name>CoinExchange.Common.Tests</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CoinExchange.Funds.Application\CoinExchange.Funds.Application.csproj">
+      <Project>{f6edd751-080b-4c4e-8216-2e1ed3ed0a66}</Project>
+      <Name>CoinExchange.Funds.Application</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CoinExchange.Funds.Domain.Model\CoinExchange.Funds.Domain.Model.csproj">
       <Project>{4c4f167d-3339-45f1-9a85-71159ef0d806}</Project>
       <Name>CoinExchange.Funds.Domain.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CoinExchange.Funds.Infrastructure.Persistence.NHibernate\CoinExchange.Funds.Infrastructure.Persistence.NHibernate.csproj">
+      <Project>{4cba757a-c25f-49bf-bd1d-693a98a7c175}</Project>
+      <Name>CoinExchange.Funds.Infrastructure.Persistence.NHibernate</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CoinExchange.Funds.Infrastructure.Services\CoinExchange.Funds.Infrastructure.Services.csproj">
+      <Project>{27301eba-3e81-4091-b877-da0be0bae158}</Project>
+      <Name>CoinExchange.Funds.Infrastructure.Services</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

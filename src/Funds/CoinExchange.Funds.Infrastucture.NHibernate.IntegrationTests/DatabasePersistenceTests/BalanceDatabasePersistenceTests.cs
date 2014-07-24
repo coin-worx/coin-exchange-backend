@@ -43,7 +43,7 @@ namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests.DatabaseP
         [Test]
         public void SaveDepositAddressesAndRetreiveByAccountIdTest_SavesObjectsToDatabase_ChecksIfTheyAreAsExpected()
         {
-            Balance balance = new Balance(new Currency("LTC", true), new AccountId("123"), 5000, 4000, 1000);
+            Balance balance = new Balance(new Currency("LTC", true), new AccountId("123"), 5000, 4000);
 
             _persistanceRepository.SaveOrUpdate(balance);
 

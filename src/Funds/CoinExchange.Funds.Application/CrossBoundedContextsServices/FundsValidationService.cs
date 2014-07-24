@@ -5,6 +5,7 @@ using CoinExchange.Funds.Domain.Model.CurrencyAggregate;
 using CoinExchange.Funds.Domain.Model.DepositAggregate;
 using CoinExchange.Funds.Domain.Model.Repositories;
 using CoinExchange.Funds.Domain.Model.Services;
+using Spring.Transaction.Interceptor;
 
 namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
 {
@@ -49,6 +50,7 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         /// <param name="orderSide"></param>
         /// <param name="baseCurrency"> </param>
         /// <returns></returns>
+        [Transaction]
         public bool ValidateFundsForOrder(AccountId accountId, Currency baseCurrency, Currency quoteCurrency, 
             double volume, double price, string orderSide)
         {
@@ -65,6 +67,8 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
                     // Also, we need to check the Curret Balance(balance that does not contain pending balance)
                     if (quoteCurrencyBalance.CurrentBalance >= price * volume)
                     {
+                        quoteCurrencyBalance.AddAvailableBalance(-(price*volume));
+                        _fundsPersistenceRepository.SaveOrUpdate(quoteCurrencyBalance);
                         return true;
                     }
                 }
@@ -74,6 +78,8 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
                     // balance(does not contain pending balance) for XBT is enough for the order to take place
                     if (baseCurrencyBalance.CurrentBalance >= volume)
                     {
+                        baseCurrencyBalance.AddAvailableBalance(-volume);
+                        _fundsPersistenceRepository.SaveOrUpdate(baseCurrencyBalance);
                         return true;
                     }
                 }
@@ -90,7 +96,17 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         /// <returns></returns>
         public bool ValidateFundsForWithdrawal(AccountId accountId, Currency currency, double amount)
         {
-            throw new NotImplementedException();
+            Balance currencyBalance = BalancePresentForAccountId(accountId, currency);
+            if (currencyBalance != null)
+            {
+                if (currencyBalance.AvailableBalance >= amount)
+                {
+                    currencyBalance.AddAvailableBalance(-amount);
+                    _fundsPersistenceRepository.SaveOrUpdate(currencyBalance);
+                    return true;
+                }
+            }
+            return false;
         }
 
         /// <summary>
@@ -153,14 +169,6 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         private Balance BalancePresentForAccountId(AccountId accountId, Currency currency)
         {
             return _balanceRepository.GetBalanceByCurrencyAndAccoutnId(currency, accountId);
-
-            /*foreach (var balance in _balanceList)
-            {
-                if (balance.AccountId.Value == accountId.Value)
-                {
-                    return balance;
-                }
-            }*/
         }
 
         /// <summary>
