@@ -32,7 +32,7 @@ namespace CoinExchange.Funds.Application.Tests
             throw new NotImplementedException();
         }
 
-        public List<Ledger> GetLedgersByDepositId(string depositId)
+        public Ledger GetLedgersByDepositId(string depositId)
         {
             throw new NotImplementedException();
         }

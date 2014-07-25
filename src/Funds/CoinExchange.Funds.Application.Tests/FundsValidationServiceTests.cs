@@ -1,4 +1,5 @@
-﻿using CoinExchange.Funds.Application.CrossBoundedContextsServices;
+﻿using System;
+using CoinExchange.Funds.Application.CrossBoundedContextsServices;
 using CoinExchange.Funds.Domain.Model.BalanceAggregate;
 using CoinExchange.Funds.Domain.Model.DepositAggregate;
 using CoinExchange.Funds.Domain.Model.CurrencyAggregate;
@@ -14,9 +15,9 @@ namespace CoinExchange.Funds.Application.Tests
         {
             var mockFundsRepository = new MockFundsRepository();
             TransactionService transactionService = new TransactionService(mockFundsRepository, new 
-                MockLedgerGeneratorService(), new MockLedgerRepository(), new MockFeeCalculationService());
-            FundsValidationService fundsValidationService = new FundsValidationService(transactionService, 
-                mockFundsRepository, new MockBalanceRepository());
+                MockLedgerGeneratorService(), new MockLedgerRepository(), new MockFeeCalculationService(), new MockBalanceRepository());
+            FundsValidationService fundsValidationService = new FundsValidationService(transactionService,
+                mockFundsRepository, new MockBalanceRepository(), new MockDepositRepository(), new MockFeeCalculationService());
 
             bool validateFundsForOrder = fundsValidationService.ValidateFundsForOrder(new AccountId("accountid123"), 
                 new Currency("XBT"), new Currency("USD"),  300, 101, "buy");
@@ -29,9 +30,9 @@ namespace CoinExchange.Funds.Application.Tests
             var mockFundsRepository = new MockFundsRepository();
             var mockBalanceRepository = new MockBalanceRepository();
             TransactionService transactionService = new TransactionService(mockFundsRepository, new
-                MockLedgerGeneratorService(), new MockLedgerRepository(), new MockFeeCalculationService());
+                MockLedgerGeneratorService(), new MockLedgerRepository(), new MockFeeCalculationService(), new MockBalanceRepository());
             FundsValidationService fundsValidationService = new FundsValidationService(transactionService,
-                mockFundsRepository, mockBalanceRepository);
+                mockFundsRepository, new MockBalanceRepository(), new MockDepositRepository(), new MockFeeCalculationService());
 
             Balance balance = new Balance(new Currency("XBT"), new AccountId("accountid123"), 4000, 4000);
             mockBalanceRepository.AddBalance(balance);
@@ -50,9 +51,9 @@ namespace CoinExchange.Funds.Application.Tests
             var mockFundsRepository = new MockFundsRepository();
             var mockBalanceRepository = new MockBalanceRepository();
             TransactionService transactionService = new TransactionService(mockFundsRepository, new
-                MockLedgerGeneratorService(), new MockLedgerRepository(), new MockFeeCalculationService());
+                MockLedgerGeneratorService(), new MockLedgerRepository(), new MockFeeCalculationService(), new MockBalanceRepository());
             FundsValidationService fundsValidationService = new FundsValidationService(transactionService,
-                mockFundsRepository, mockBalanceRepository);
+                mockFundsRepository, new MockBalanceRepository(), new MockDepositRepository(), new MockFeeCalculationService());
 
             Balance balance = new Balance(new Currency("XBT"), new AccountId("accountid123"), 4000, 4000);
             mockBalanceRepository.AddBalance(balance);
@@ -71,9 +72,9 @@ namespace CoinExchange.Funds.Application.Tests
             var mockFundsRepository = new MockFundsRepository();
             var mockBalanceRepository = new MockBalanceRepository();
             TransactionService transactionService = new TransactionService(mockFundsRepository, new
-                MockLedgerGeneratorService(), new MockLedgerRepository(), new MockFeeCalculationService());
+                MockLedgerGeneratorService(), new MockLedgerRepository(), new MockFeeCalculationService(), new MockBalanceRepository());
             FundsValidationService fundsValidationService = new FundsValidationService(transactionService,
-                mockFundsRepository, mockBalanceRepository);
+                mockFundsRepository, new MockBalanceRepository(), new MockDepositRepository(), new MockFeeCalculationService());
 
             Balance balance = new Balance(new Currency("XBT"), new AccountId("accountid123"), 1000, 1000);
             mockBalanceRepository.AddBalance(balance);
@@ -92,9 +93,9 @@ namespace CoinExchange.Funds.Application.Tests
             var mockFundsRepository = new MockFundsRepository();
             var mockBalanceRepository = new MockBalanceRepository();
             TransactionService transactionService = new TransactionService(mockFundsRepository, new
-                MockLedgerGeneratorService(), new MockLedgerRepository(), new MockFeeCalculationService());
+                MockLedgerGeneratorService(), new MockLedgerRepository(), new MockFeeCalculationService(), new MockBalanceRepository());
             FundsValidationService fundsValidationService = new FundsValidationService(transactionService,
-                mockFundsRepository, mockBalanceRepository);
+                mockFundsRepository, new MockBalanceRepository(), new MockDepositRepository(), new MockFeeCalculationService());
 
             Balance balance = new Balance(new Currency("XBT"), new AccountId("accountid123"), 100, 100);
             mockBalanceRepository.AddBalance(balance);
@@ -115,9 +116,9 @@ namespace CoinExchange.Funds.Application.Tests
             var mockFundsRepository = new MockFundsRepository();
             var mockBalanceRepository = new MockBalanceRepository();
             TransactionService transactionService = new TransactionService(mockFundsRepository, new
-                MockLedgerGeneratorService(), new MockLedgerRepository(), new MockFeeCalculationService());
+                MockLedgerGeneratorService(), new MockLedgerRepository(), new MockFeeCalculationService(), new MockBalanceRepository());
             FundsValidationService fundsValidationService = new FundsValidationService(transactionService,
-                mockFundsRepository, mockBalanceRepository);
+                mockFundsRepository, new MockBalanceRepository(), new MockDepositRepository(), new MockFeeCalculationService());
 
             Balance balance = new Balance(new Currency("XBT"), new AccountId("accountid123"), 100, 100);
             mockBalanceRepository.AddBalance(balance);
@@ -133,9 +134,9 @@ namespace CoinExchange.Funds.Application.Tests
             var mockFundsRepository = new MockFundsRepository();
             var mockBalanceRepository = new MockBalanceRepository();
             TransactionService transactionService = new TransactionService(mockFundsRepository, new
-                MockLedgerGeneratorService(), new MockLedgerRepository(), new MockFeeCalculationService());
+                MockLedgerGeneratorService(), new MockLedgerRepository(), new MockFeeCalculationService(), new MockBalanceRepository());
             FundsValidationService fundsValidationService = new FundsValidationService(transactionService,
-                mockFundsRepository, mockBalanceRepository);
+                mockFundsRepository, new MockBalanceRepository(), new MockDepositRepository(), new MockFeeCalculationService());
 
             Balance balance = new Balance(new Currency("XBT"), new AccountId("accountid123"), 100, 100);
             mockBalanceRepository.AddBalance(balance);
@@ -146,5 +147,41 @@ namespace CoinExchange.Funds.Application.Tests
         }
 
         #endregion Withdraw Unit Tests
+
+        #region Deposit Unit Tests
+
+        [Test]
+        public void DepositAmountTest_TestsIfDepositTransactionProceedsAsExpected_VerifiesThroughReturnedValue()
+        {
+            var mockFundsRepository = new MockFundsRepository();
+            var mockBalanceRepository = new MockBalanceRepository();
+            var mockDepositIdGeneratorService = new MockDepositIdGeneratorService();
+            var mockDepositRepository = new MockDepositRepository();
+            TransactionService transactionService = new TransactionService(mockFundsRepository, new
+                MockLedgerGeneratorService(), new MockLedgerRepository(), new MockFeeCalculationService(), new MockBalanceRepository());
+            FundsValidationService fundsValidationService = new FundsValidationService(transactionService,
+                mockFundsRepository, new MockBalanceRepository(), new MockDepositRepository(), new MockFeeCalculationService());
+
+            Balance balance = new Balance(new Currency("XBT"), new AccountId("accountid123"), 100, 100);
+            mockBalanceRepository.AddBalance(balance);
+
+            Deposit deposit = new Deposit(balance.Currency, mockDepositIdGeneratorService.GenerateId(), DateTime.Now,
+                DepositType.Default, 500, 0, TransactionStatus.Pending, balance.AccountId, new TransactionId("123"),
+                new BitcoinAddress("123"));
+            deposit.IncrementConfirmations();
+            deposit.IncrementConfirmations();
+            deposit.IncrementConfirmations();
+            deposit.IncrementConfirmations();
+            deposit.IncrementConfirmations();
+            deposit.IncrementConfirmations();
+            deposit.IncrementConfirmations();
+            mockDepositRepository.Save(deposit);
+            bool response = fundsValidationService.DepositConfirmed(deposit);
+            Assert.IsTrue(response);
+            // 3 Object: 1 = Balance, 2 = Deposit, 3 = Ledger
+            Assert.AreEqual(3, mockFundsRepository.GetNumberOfObjects());
+        }
+
+        #endregion Deposit Unit Tests
     }
 }

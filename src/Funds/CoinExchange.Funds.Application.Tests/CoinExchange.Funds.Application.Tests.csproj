@@ -44,6 +44,8 @@
   <ItemGroup>
     <Compile Include="FundsValidationServiceTests.cs" />
     <Compile Include="MockBalanceRepository.cs" />
+    <Compile Include="MockDepositIdGeneratorService.cs" />
+    <Compile Include="MockDepositRepository.cs" />
     <Compile Include="MockFeeCalculationService.cs" />
     <Compile Include="MockFundsRepository.cs" />
     <Compile Include="MockLedgerGeneratorService.cs" />

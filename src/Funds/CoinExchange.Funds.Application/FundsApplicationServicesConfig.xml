@@ -12,12 +12,15 @@
     <constructor-arg name="ledgerIdGeneratorService" ref="LedgerIdGeneratorService"/>
     <constructor-arg name="ledgerRepository" ref="LedgerRepository"/>
     <constructor-arg name="feeCalculationService" ref="FeeCalculationService"/>
+  <constructor-arg name="balanceRepository" ref="BalanceRepository"/>
   </object>
 
   <object id="FundsValidationService" type="CoinExchange.Funds.Application.CrossBoundedContextsServices.FundsValidationService, CoinExchange.Funds.Application">
     <constructor-arg name="transactionService" ref="TransactionService"/>
     <constructor-arg name="fundsPersistenceRepository" ref="FundsPersistenceRepository"/>
     <constructor-arg name="balanceRepository" ref="BalanceRepository"/>
+    <constructor-arg name="depositRepository" ref="DepositRepository"/>
+    <constructor-arg name="feeCalculationService" ref="FeeCalculationService"/>
   </object>
   
   <tx:attribute-driven/>

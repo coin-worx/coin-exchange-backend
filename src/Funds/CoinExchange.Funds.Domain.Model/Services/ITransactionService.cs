@@ -15,12 +15,15 @@ namespace CoinExchange.Funds.Domain.Model.Services
     /// </summary>
     public interface ITransactionService
     {
+        bool CreateLedgerEntry(Currency currency, double amount, double fee, double balance, DateTime executionDate,
+                               string orderId, string tradeId, AccountId accountId);
+
         bool CreateTradeTransaction(string currencyPair, double tradeVolume, double price,
                                     DateTime executionDateTime, string tradeId, string buyAccountId, string sellAccountId,
                                     string buyOrderId, string sellOrderId);
 
-        Ledger CreateDepositTransaction(Deposit deposit);
+        bool CreateDepositTransaction(Deposit deposit, double balance);
 
-        Ledger CreateWithdrawTransaction(Withdraw withdraw);
+        bool CreateWithdrawTransaction(Withdraw withdraw);
     }
 }

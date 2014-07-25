@@ -12,7 +12,7 @@ namespace CoinExchange.Funds.Application.Tests
  
         public void SaveOrUpdate(object domainObject)
         {
-            
+            _objectsList.Add(domainObject);
         }
 
         public int GetNumberOfObjects()

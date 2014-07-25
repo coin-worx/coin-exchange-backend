@@ -80,13 +80,9 @@ namespace CoinExchange.Funds.Infrastructure.Persistence.NHibernate.NHibernate
         }
 
         [Transaction]
-        public List<Ledger> GetLedgersByDepositId(string depositId)
+        public Ledger GetLedgersByDepositId(string depositId)
         {
-            return CurrentSession.Query<Ledger>()
-                .Where(x => x.DepositId == depositId)
-                .AsQueryable()
-                .OrderByDescending(x => x.DateTime)
-                .ToList();
+            return CurrentSession.QueryOver<Ledger>().Where(x => x.DepositId == depositId).SingleOrDefault();
         }
 
         [Transaction]

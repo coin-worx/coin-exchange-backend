@@ -223,33 +223,34 @@ namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests.DatabaseP
             _persistanceRepository.SaveOrUpdate(ledger);
             Thread.Sleep(1000);
             Ledger ledger2 = new Ledger("12345", DateTime.Now, LedgerType.Trade, new Currency("LTC", true), 2000.543,
-                0.005, 3000, null, null, null, "deposit123", new AccountId("123"));
+                0.005, 3000, null, null, null, "deposit1234", new AccountId("123"));
             _persistanceRepository.SaveOrUpdate(ledger2);
 
-            // Retreives the list in descending order of time
-            List<Ledger> retrievedLedgers = _ledgerRepository.GetLedgersByDepositId("deposit123");
-            Assert.IsNotNull(retrievedLedgers);
-            Assert.AreEqual(2, retrievedLedgers.Count);
+            Ledger retrievedLedger1 = _ledgerRepository.GetLedgersByDepositId("deposit123");
+            Assert.IsNotNull(retrievedLedger1);
 
-            Assert.AreEqual(ledger.Currency.Name, retrievedLedgers[0].Currency.Name);
-            Assert.AreEqual(ledger.LedgerId, retrievedLedgers[0].LedgerId);
-            Assert.AreEqual(ledger.LedgerType, retrievedLedgers[0].LedgerType);
-            Assert.AreEqual(ledger.Amount, retrievedLedgers[0].Amount);
-            Assert.AreEqual(ledger.Fee, retrievedLedgers[0].Fee);
-            Assert.AreEqual(ledger.Balance, retrievedLedgers[0].Balance);
-            Assert.AreEqual(ledger.TradeId, retrievedLedgers[0].TradeId);
-            Assert.AreEqual(ledger.OrderId, retrievedLedgers[0].OrderId);
-            Assert.AreEqual(ledger.AccountId.Value, retrievedLedgers[0].AccountId.Value);
+            Assert.AreEqual(ledger.Currency.Name, retrievedLedger1.Currency.Name);
+            Assert.AreEqual(ledger.LedgerId, retrievedLedger1.LedgerId);
+            Assert.AreEqual(ledger.LedgerType, retrievedLedger1.LedgerType);
+            Assert.AreEqual(ledger.Amount, retrievedLedger1.Amount);
+            Assert.AreEqual(ledger.Fee, retrievedLedger1.Fee);
+            Assert.AreEqual(ledger.Balance, retrievedLedger1.Balance);
+            Assert.AreEqual(ledger.TradeId, retrievedLedger1.TradeId);
+            Assert.AreEqual(ledger.OrderId, retrievedLedger1.OrderId);
+            Assert.AreEqual(ledger.AccountId.Value, retrievedLedger1.AccountId.Value);
 
-            Assert.AreEqual(ledger2.Currency.Name, retrievedLedgers[1].Currency.Name);
-            Assert.AreEqual(ledger2.LedgerId, retrievedLedgers[1].LedgerId);
-            Assert.AreEqual(ledger2.LedgerType, retrievedLedgers[1].LedgerType);
-            Assert.AreEqual(ledger2.Amount, retrievedLedgers[1].Amount);
-            Assert.AreEqual(ledger2.Fee, retrievedLedgers[1].Fee);
-            Assert.AreEqual(ledger2.Balance, retrievedLedgers[1].Balance);
-            Assert.AreEqual(ledger2.TradeId, retrievedLedgers[1].TradeId);
-            Assert.AreEqual(ledger2.OrderId, retrievedLedgers[1].OrderId);
-            Assert.AreEqual(ledger2.AccountId.Value, retrievedLedgers[1].AccountId.Value);
+            Ledger retrievedLedger2 = _ledgerRepository.GetLedgersByDepositId("deposit1234");
+            Assert.IsNotNull(retrievedLedger2);
+
+            Assert.AreEqual(ledger2.Currency.Name, retrievedLedger2.Currency.Name);
+            Assert.AreEqual(ledger2.LedgerId, retrievedLedger2.LedgerId);
+            Assert.AreEqual(ledger2.LedgerType, retrievedLedger2.LedgerType);
+            Assert.AreEqual(ledger2.Amount, retrievedLedger2.Amount);
+            Assert.AreEqual(ledger2.Fee, retrievedLedger2.Fee);
+            Assert.AreEqual(ledger2.Balance, retrievedLedger2.Balance);
+            Assert.AreEqual(ledger2.TradeId, retrievedLedger2.TradeId);
+            Assert.AreEqual(ledger2.OrderId, retrievedLedger2.OrderId);
+            Assert.AreEqual(ledger2.AccountId.Value, retrievedLedger2.AccountId.Value);
         }
 
         [Test]

@@ -14,7 +14,7 @@ namespace CoinExchange.Funds.Application.Tests
             throw new NotImplementedException();
         }
 
-        public Balance GetBalanceByCurrencyAndAccoutnId(Currency currency, AccountId accountId)
+        public Balance GetBalanceByCurrencyAndAccountId(Currency currency, AccountId accountId)
         {
             foreach (var balance1 in _balanceList)
             {

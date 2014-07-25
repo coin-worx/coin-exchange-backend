@@ -45,20 +45,16 @@ namespace CoinExchange.Funds.Domain.Model.Services
         /// <summary>
         /// Handles the event that a Deposit has been made and performes the necesssary options
         /// </summary>
-        /// <param name="accountId"></param>
-        /// <param name="currency"></param>
-        /// <param name="amount"></param>
-        /// <param name="transactionId"></param>
-        /// <param name="bitcoinAddress"></param>
+        /// <param name="deposit"> </param>
         /// <returns></returns>
-        bool DepositConfirmed(AccountId accountId, CurrencyAggregate.Currency currency, double amount, TransactionId
-            transactionId, BitcoinAddress bitcoinAddress);
+        bool DepositConfirmed(Deposit deposit);
 
         /// <summary>
         /// Handles the event that a trade has been executed and performs the necessay steps to update the balance and 
         /// create a transaction record
         /// </summary>
-        /// <param name="currencyPair"></param>
+        /// <param name="baseCurrency"></param>
+        /// <param name="quoteCurrency"> </param>
         /// <param name="tradeVolume"></param>
         /// <param name="price"></param>
         /// <param name="executionDateTime"></param>
@@ -68,7 +64,7 @@ namespace CoinExchange.Funds.Domain.Model.Services
         /// <param name="buyOrderId"></param>
         /// <param name="sellOrderId"></param>
         /// <returns></returns>
-        bool TradeExecuted(string currencyPair, double tradeVolume, double price,
+        bool TradeExecuted(string baseCurrency, string quoteCurrency, double tradeVolume, double price,
             DateTime executionDateTime, string tradeId, string buyAccountId, string sellAccountId, string buyOrderId,
             string sellOrderId);
     }

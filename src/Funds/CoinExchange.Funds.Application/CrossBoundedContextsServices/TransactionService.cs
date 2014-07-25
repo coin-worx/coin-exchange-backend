@@ -1,4 +1,5 @@
 ﻿using System;
+using CoinExchange.Funds.Domain.Model.BalanceAggregate;
 using CoinExchange.Funds.Domain.Model.CurrencyAggregate;
 using CoinExchange.Funds.Domain.Model.DepositAggregate;
 using CoinExchange.Funds.Domain.Model.FeeAggregate;
@@ -22,6 +23,7 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         private ILedgerIdGeneraterService _ledgerIdGeneraterService;
         private ILedgerRepository _ledgerRepository;
         private IFeeCalculationService _feeCalculationService;
+        private IBalanceRepository _balanceRepository;
 
         /// <summary>
         /// Parameterized Constructor
@@ -30,20 +32,22 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         /// <param name="ledgerIdGeneratorService"></param>
         /// <param name="ledgerRepository"> </param>
         /// <param name="feeCalculationService"> </param>
+        /// <param name="balanceRepository"> </param>
         public TransactionService(IFundsPersistenceRepository fundsPersistenceRepository, 
             ILedgerIdGeneraterService ledgerIdGeneratorService, ILedgerRepository ledgerRepository, 
-            IFeeCalculationService feeCalculationService)
+            IFeeCalculationService feeCalculationService, IBalanceRepository balanceRepository)
         {
             _fundsPersistenceRepository = fundsPersistenceRepository;
             _ledgerIdGeneraterService = ledgerIdGeneratorService;
             _ledgerRepository = ledgerRepository;
             _feeCalculationService = feeCalculationService;
+            _balanceRepository = balanceRepository;
         }
 
         /// <summary>
         /// Creates a transaction as a result of a Trade
         /// </summary>
-        /// <param name="currencyPair"></param>
+        /// <param name="currencyPair"> </param>
         /// <param name="tradeVolume"></param>
         /// <param name="price"></param>
         /// <param name="executionDateTime"> </param>
@@ -51,19 +55,18 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         /// <param name="buyAccountId"></param>
         /// <param name="sellAccountId"></param>
         /// <param name="buyOrderId"></param>
-        /// <param name="sellOrderId"></param>
+        /// <param name="sellOrderId"></param>        
         /// <returns></returns>
         public bool CreateTradeTransaction(string currencyPair, double tradeVolume, double price,
             DateTime executionDateTime, string tradeId, string buyAccountId, string sellAccountId, string buyOrderId, 
             string sellOrderId)
         {
-            Tuple<Currency, Currency> baseQuoteCurencies = SeparateBaseQuoteCurrency(currencyPair);
-
-            if (BuyOrderLedger(baseQuoteCurencies.Item1, baseQuoteCurencies.Item2, tradeVolume, price,
+            Tuple<Currency, Currency> separateBaseQuoteCurrencies = SeparateBaseQuoteCurrency(currencyPair);
+            if (BuyOrderLedger(separateBaseQuoteCurrencies.Item1, separateBaseQuoteCurrencies.Item2, tradeVolume, price,
                            executionDateTime, buyOrderId, tradeId, buyAccountId))
             {
-                return SellOrderLedger(baseQuoteCurencies.Item1, baseQuoteCurencies.Item2, tradeVolume, price,
-                                executionDateTime, sellOrderId, tradeId, sellAccountId);
+                return SellOrderLedger(separateBaseQuoteCurrencies.Item1, separateBaseQuoteCurrencies.Item2, tradeVolume,
+                            price, executionDateTime, sellOrderId, tradeId, sellAccountId);
             }
             return false;
         }
@@ -76,16 +79,28 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         private bool BuyOrderLedger(Currency baseCurrency, Currency quoteCurrency, double volume, double price, 
             DateTime executionDateTime, string buyOrderId, string tradeId, string accountId)
         {
-            // First we create a ledger for base currency
-            double currentBalance = _ledgerRepository.GetBalanceForCurrency(baseCurrency.Name, new AccountId(accountId));
-            if (CreateLedgerEntry(baseCurrency, volume, 0.000, currentBalance + volume, executionDateTime, buyOrderId, tradeId,
-                accountId))
+            // First, we take the balance of that currency
+            Balance balance = _balanceRepository.GetBalanceByCurrencyAndAccountId(baseCurrency, new AccountId(accountId));
+            if (balance != null)
             {
-                currentBalance = _ledgerRepository.GetBalanceForCurrency(quoteCurrency.Name, new AccountId(accountId));
-                // Second, create ledger entry for the quote currency. Fee is charged for the quote currency side
-                double fee = _feeCalculationService.GetFee(quoteCurrency, volume * price);
-                return CreateLedgerEntry(quoteCurrency, -(volume * price), fee, currentBalance - (volume * price), 
-                    executionDateTime, buyOrderId, tradeId, accountId);
+                double currentBalance = balance.CurrentBalance;
+                // Then we give details to the CreateLedgerEntry method that creates the ledger transaction
+                if (CreateLedgerEntry(baseCurrency, volume, 0.000, currentBalance + volume, executionDateTime,
+                                      buyOrderId, tradeId,
+                                      new AccountId(accountId)))
+                {
+                    // Then, we get the balance for the quote currency
+                    balance = _balanceRepository.GetBalanceByCurrencyAndAccountId(quoteCurrency, new AccountId(accountId));
+                    if (balance != null)
+                    {
+                        currentBalance = balance.CurrentBalance;
+                        // Finally, we create ledger entry for the quote currency. Fee is charged for the quote currency
+                        // side
+                        double fee = _feeCalculationService.GetFee(quoteCurrency, volume*price);
+                        return CreateLedgerEntry(quoteCurrency, -(volume*price), fee, currentBalance - (volume*price),
+                                                 executionDateTime, buyOrderId, tradeId, new AccountId(accountId));
+                    }
+                }
             }
             return false;
         }
@@ -97,22 +112,32 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         private bool SellOrderLedger(Currency baseCurrency, Currency quoteCurrency, double volume, double price,
             DateTime executionDateTime, string orderId, string tradeId, string accountId)
         {
-            // First we create a ledger for base currency
-            double currenctBalance = _ledgerRepository.GetBalanceForCurrency(baseCurrency.Name,  new AccountId(accountId));
-            if (CreateLedgerEntry(baseCurrency, -volume, 0.000, currenctBalance - volume, executionDateTime, orderId,
-                tradeId, accountId))
+            // First, we take the balance of that currency
+            Balance balance = _balanceRepository.GetBalanceByCurrencyAndAccountId(baseCurrency, new AccountId(accountId));
+            if (balance != null)
             {
-                currenctBalance = _ledgerRepository.GetBalanceForCurrency(quoteCurrency.Name, new AccountId(accountId));
-                // Secondly, we create the ledger for the quote currency. Fee is charged for the quote currency side
-                double fee = _feeCalculationService.GetFee(quoteCurrency, volume * price);
-                return CreateLedgerEntry(quoteCurrency, volume*price, fee, currenctBalance + (volume*price),
-                                         executionDateTime, orderId, tradeId, accountId);
+                double currenctBalance = balance.CurrentBalance;
+                // Then we give details to the CreateLedgerEntry method that creates the ledger transaction
+                if (CreateLedgerEntry(baseCurrency, -volume, 0.000, currenctBalance - volume, executionDateTime, orderId,
+                                      tradeId, new AccountId(accountId)))
+                {
+                    // Afterwards, we get the balance for the quote currency
+                    balance = _balanceRepository.GetBalanceByCurrencyAndAccountId(quoteCurrency, new AccountId(accountId));
+                    if (balance != null)
+                    {
+                        currenctBalance = balance.CurrentBalance;
+                        // Finally, we create the ledger for the quote currency. Fee is charged for the quote currency side
+                        double fee = _feeCalculationService.GetFee(quoteCurrency, volume*price);
+                        return CreateLedgerEntry(quoteCurrency, volume*price, fee, currenctBalance + (volume*price),
+                                                 executionDateTime, orderId, tradeId, new AccountId(accountId));
+                    }
+                }
             }
             return false;
         }
 
         /// <summary>
-        /// Create a ledger entry for the given value and store it inside the database
+        /// Creates a ledger entry for one currency of one of the two order sids of a trade
         /// </summary>
         /// <param name="currency"></param>
         /// <param name="amount"></param>
@@ -123,13 +148,13 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         /// <param name="tradeId"></param>
         /// <param name="accountId"></param>
         /// <returns></returns>
-        private bool CreateLedgerEntry(Currency currency, double amount, double fee, double balance, DateTime executionDate,
-            string orderId, string tradeId, string accountId)
+        public bool CreateLedgerEntry(Currency currency, double amount, double fee, double balance, DateTime executionDate,
+            string orderId, string tradeId, AccountId accountId)
         {
             try
             {
                 Ledger ledger = new Ledger(_ledgerIdGeneraterService.GenerateLedgerId(), executionDate, LedgerType.Trade, 
-                    currency, amount, fee, balance, tradeId, orderId, null, null, new AccountId(accountId));
+                    currency, amount, fee, balance, tradeId, orderId, null, null, accountId);
                 _fundsPersistenceRepository.SaveOrUpdate(ledger);
                 return true;
             }
@@ -158,24 +183,23 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         /// Creates a transaction in result of a Deposit
         /// </summary>
         /// <param name="deposit"> </param>
+        /// <param name="balance"> </param>
         /// <returns></returns>
-        public Ledger CreateDepositTransaction(Deposit deposit)
+        public bool CreateDepositTransaction(Deposit deposit, double balance)
         {
             if (deposit != null)
             {
-                double currenctBalance = _ledgerRepository.GetBalanceForCurrency(deposit.Currency.Name, 
-                    new AccountId(deposit.AccountId.Value));
-                if (deposit.Confirmations >= 7)
-                {
-                    Ledger ledger = new Ledger(_ledgerIdGeneraterService.GenerateLedgerId(), DateTime.Now,
-                                               LedgerType.Deposit, deposit.Currency, deposit.Amount, 0, 
-                                               currenctBalance + deposit.Amount, null, null, null, deposit.DepositId,
-                                               deposit.AccountId);
-                    _fundsPersistenceRepository.SaveOrUpdate(ledger);
-                    return ledger;
-                }
+                // double currenctBalance = _ledgerRepository.GetBalanceForCurrency(deposit.Currency.Name, 
+                //    new AccountId(deposit.AccountId.Value));
+
+                Ledger ledger = new Ledger(_ledgerIdGeneraterService.GenerateLedgerId(), DateTime.Now,
+                                           LedgerType.Deposit, deposit.Currency, deposit.Amount, 0,
+                                           balance, null, null, null, deposit.DepositId,
+                                           deposit.AccountId);
+                _fundsPersistenceRepository.SaveOrUpdate(ledger);
+                return true;
             }
-            return null;
+            return false;
         }
 
         /// <summary>
@@ -183,7 +207,7 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         /// </summary>
         /// <param name="withdraw"> </param>
         /// <returns></returns>
-        public Ledger CreateWithdrawTransaction(Withdraw withdraw)
+        public bool CreateWithdrawTransaction(Withdraw withdraw)
         {
             if (withdraw != null)
             {
@@ -195,9 +219,9 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
                                            currenctBalance - withdraw.Amount, null, null, withdraw.WithdrawId,
                                            null, withdraw.AccountId);
                 _fundsPersistenceRepository.SaveOrUpdate(ledger);
-                return ledger;
+                return true;
             }
-            return null;
+            return false;
         }
     }
 }

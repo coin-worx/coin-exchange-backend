@@ -23,7 +23,7 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
-        public Deposit(Currency currency, string depositId, DateTime date, string type, double amount, double fee,
+        public Deposit(Currency currency, string depositId, DateTime date, DepositType type, double amount, double fee,
             TransactionStatus status, AccountId accountId, TransactionId transactionId, BitcoinAddress bitcoinAddress)
         {
             Currency = currency;
@@ -61,7 +61,7 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
         /// <summary>
         /// Type
         /// </summary>
-        public string Type { get; set; }
+        public DepositType Type { get; set; }
         
         /// <summary>
         /// Amount
@@ -104,6 +104,19 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
         public void IncrementConfirmations()
         {
             Confirmations++;
+        }
+
+        /// <summary>
+        /// Increments the confirmations by the given digit
+        /// </summary>
+        /// <param name="confirmations"></param>
+        public void IncrementConfirmations(int confirmations)
+        {
+            Confirmations += confirmations;
+            if (confirmations >= 7)
+            {
+                StatusConfirmed();
+            }
         }
 
         /// <summary>

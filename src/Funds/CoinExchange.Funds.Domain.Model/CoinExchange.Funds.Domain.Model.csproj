@@ -47,7 +47,9 @@
     <Compile Include="CurrencyAggregate\Currency.cs" />
     <Compile Include="CurrencyAggregate\CurrencyPair.cs" />
     <Compile Include="DepositAggregate\DepositLimit.cs" />
+    <Compile Include="DepositAggregate\DepositType.cs" />
     <Compile Include="DepositAggregate\IDepositAddressRepository.cs" />
+    <Compile Include="DepositAggregate\IDepositIdGeneratorService.cs" />
     <Compile Include="DepositAggregate\IDepositLimitRepository.cs" />
     <Compile Include="DepositAggregate\IDepositRepository.cs" />
     <Compile Include="DepositAggregate\TransactionId.cs" />

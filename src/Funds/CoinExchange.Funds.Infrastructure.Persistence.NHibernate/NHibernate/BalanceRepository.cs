@@ -34,7 +34,7 @@ namespace CoinExchange.Funds.Infrastructure.Persistence.NHibernate.NHibernate
         /// <param name="accountId"></param>
         /// <returns></returns>
         [Transaction]
-        public Balance GetBalanceByCurrencyAndAccoutnId(Currency currency, AccountId accountId)
+        public Balance GetBalanceByCurrencyAndAccountId(Currency currency, AccountId accountId)
         {
             return CurrentSession
                 .QueryOver<Balance>()

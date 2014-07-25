@@ -17,7 +17,7 @@ namespace CoinExchange.Funds.Domain.Model.LedgerAggregate
         List<Ledger> GetLedgerByCurrencyName(string currency);
         Ledger GetLedgerByLedgerId(string ledgerId);
         List<Ledger> GetLedgersByTradeId(string tradeId);
-        List<Ledger> GetLedgersByDepositId(string depositId);
+        Ledger GetLedgersByDepositId(string depositId);
         List<Ledger> GetLedgersByWithdrawId(string withdrawId);
         List<Ledger> GetLedgersByOrderId(string orderId);
         double GetBalanceForCurrency(string currency, AccountId accountId);

@@ -47,7 +47,7 @@ namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests.DatabaseP
 
             _persistanceRepository.SaveOrUpdate(balance);
 
-            Balance retrievedDepositAddressList = _balanceRepository.GetBalanceByCurrencyAndAccoutnId(balance.Currency, balance.AccountId);
+            Balance retrievedDepositAddressList = _balanceRepository.GetBalanceByCurrencyAndAccountId(balance.Currency, balance.AccountId);
             Assert.IsNotNull(retrievedDepositAddressList);
 
             Assert.AreEqual(balance.AvailableBalance, retrievedDepositAddressList.AvailableBalance);

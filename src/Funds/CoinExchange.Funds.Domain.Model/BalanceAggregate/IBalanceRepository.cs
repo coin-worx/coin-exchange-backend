@@ -26,6 +26,6 @@ namespace CoinExchange.Funds.Domain.Model.BalanceAggregate
         /// <param name="currency"> </param>
         /// <param name="accountId"></param>
         /// <returns></returns>
-        Balance GetBalanceByCurrencyAndAccoutnId(CurrencyAggregate.Currency currency, AccountId accountId);
+        Balance GetBalanceByCurrencyAndAccountId(CurrencyAggregate.Currency currency, AccountId accountId);
     }
 }
