@@ -44,6 +44,8 @@
   <ItemGroup>
     <Compile Include="BalanceAggregate\Balance.cs" />
     <Compile Include="BalanceAggregate\IBalanceRepository.cs" />
+    <Compile Include="BalanceAggregate\PendingTransactionType.cs" />
+    <Compile Include="BalanceAggregate\PendingTransaction.cs" />
     <Compile Include="CurrencyAggregate\Currency.cs" />
     <Compile Include="CurrencyAggregate\CurrencyPair.cs" />
     <Compile Include="DepositAggregate\DepositLimit.cs" />
@@ -73,12 +75,14 @@
     <Compile Include="WithdrawAggregate\BankAccount.cs" />
     <Compile Include="WithdrawAggregate\IWithdrawAddressRepository.cs" />
     <Compile Include="WithdrawAggregate\IWithdrawFeesRepository.cs" />
+    <Compile Include="WithdrawAggregate\IWithdrawIdGeneratorService.cs" />
     <Compile Include="WithdrawAggregate\IWithdrawLimitRepository.cs" />
     <Compile Include="WithdrawAggregate\IWithdrawRepository.cs" />
     <Compile Include="WithdrawAggregate\Withdraw.cs" />
     <Compile Include="WithdrawAggregate\WithdrawAddress.cs" />
     <Compile Include="WithdrawAggregate\WithdrawFees.cs" />
     <Compile Include="WithdrawAggregate\WithdrawLimit.cs" />
+    <Compile Include="WithdrawAggregate\WithdrawType.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

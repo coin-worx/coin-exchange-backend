@@ -41,7 +41,7 @@ namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests.VirtualPe
         [Test]
         public void SaveWithdrawalAndRetreiveByIdTest_SavesAnObjectToDatabaseAndManipulatesIt_ChecksIfItIsUpdatedAsExpected()
         {
-            Withdraw withdraw = new Withdraw(new Currency("LTC", true), "1234", DateTime.Now, "New", 2000, 0.005, TransactionStatus.Pending,
+            Withdraw withdraw = new Withdraw(new Currency("LTC", true), "1234", DateTime.Now, WithdrawType.Default, 2000, 0.005, TransactionStatus.Pending,
                 new AccountId("123"), new TransactionId("transaction123"), new BitcoinAddress("bitcoin123"));
 
             _persistanceRepository.SaveOrUpdate(withdraw);
@@ -65,7 +65,7 @@ namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests.VirtualPe
         [Test]
         public void SaveWithdrawalAndRetreiveByWithdrawIdTest_SavesAnObjectToDatabaseAndManipulatesIt_ChecksIfItIsUpdatedAsExpected()
         {
-            Withdraw withdraw = new Withdraw(new Currency("LTC", true), "1234", DateTime.Now, "New", 2000, 0.005, TransactionStatus.Pending,
+            Withdraw withdraw = new Withdraw(new Currency("LTC", true), "1234", DateTime.Now, WithdrawType.Default, 2000, 0.005, TransactionStatus.Pending,
                 new AccountId("123"), new TransactionId("transaction123"), new BitcoinAddress("bitcoin123"));
 
             _persistanceRepository.SaveOrUpdate(withdraw);
@@ -88,7 +88,7 @@ namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests.VirtualPe
         [Test]
         public void SaveWithdrawalAndRetreiveByCurrencyNameTest_SavesAnObjectToDatabaseAndManipulatesIt_ChecksIfItIsUpdatedAsExpected()
         {
-            Withdraw withdraw = new Withdraw(new Currency("LTC", true), "1234", DateTime.Now, "New", 2000, 0.005, TransactionStatus.Pending,
+            Withdraw withdraw = new Withdraw(new Currency("LTC", true), "1234", DateTime.Now, WithdrawType.Default, 2000, 0.005, TransactionStatus.Pending,
                 new AccountId("123"), new TransactionId("transaction123"), new BitcoinAddress("bitcoin123"));
 
             _persistanceRepository.SaveOrUpdate(withdraw);
@@ -111,12 +111,12 @@ namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests.VirtualPe
         [Test]
         public void SaveWithdrawalsAndRetreiveByAccountIdTest_SavesMultipleObjectInDatabase_ChecksIfTheoutputIsAsExpected()
         {
-            Withdraw withdraw = new Withdraw(new Currency("LTC", true), "1234", DateTime.Now, "New", 2000, 0.005, TransactionStatus.Pending,
+            Withdraw withdraw = new Withdraw(new Currency("LTC", true), "1234", DateTime.Now, WithdrawType.Default, 2000, 0.005, TransactionStatus.Pending,
                 new AccountId("123"), new TransactionId("transaction123"), new BitcoinAddress("bitcoin123"));
 
             _persistanceRepository.SaveOrUpdate(withdraw);
 
-            Withdraw withdraw2 = new Withdraw(new Currency("BTC", true), "123", DateTime.Now, "New", 1000, 0.010, TransactionStatus.Pending,
+            Withdraw withdraw2 = new Withdraw(new Currency("BTC", true), "123", DateTime.Now, WithdrawType.Default, 1000, 0.010, TransactionStatus.Pending,
                 new AccountId("123"), new TransactionId("transaction123"), new BitcoinAddress("bitcoin123"));
             Thread.Sleep(500);
 

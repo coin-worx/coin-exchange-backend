@@ -15,5 +15,9 @@ assembly="CoinExchange.Funds.Domain.Model" namespace="CoinExchange.Funds.Domain.
     <property name="AvailableBalance" />
     <property name="CurrentBalance" />
     <property name="PendingBalance" />
+    <bag name="_pendingTransactions" table="pendingtransaction" cascade="save-update" inverse="true" lazy="false">
+      <key column="Currency" />
+      <one-to-many class="PendingTransaction" />
+    </bag>
   </class>
 </hibernate-mapping>

@@ -19,8 +19,9 @@
     <constructor-arg name="transactionService" ref="TransactionService"/>
     <constructor-arg name="fundsPersistenceRepository" ref="FundsPersistenceRepository"/>
     <constructor-arg name="balanceRepository" ref="BalanceRepository"/>
-    <constructor-arg name="depositRepository" ref="DepositRepository"/>
     <constructor-arg name="feeCalculationService" ref="FeeCalculationService"/>
+    <constructor-arg name="withdrawFeesRepository" ref="WithdrawFeesRepository"/>
+    <constructor-arg name="withdrawIdGeneratorService" ref="WithdrawIdGeneratorService"/>
   </object>
   
   <tx:attribute-driven/>

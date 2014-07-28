@@ -20,7 +20,7 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
-        public Withdraw(Currency currency, string withdrawId, DateTime date, string type, double amount, double fee, 
+        public Withdraw(Currency currency, string withdrawId, DateTime date, WithdrawType type, double amount, double fee, 
             TransactionStatus status, AccountId accountId, TransactionId transactionId, BitcoinAddress bitcoinAddress)
         {
             Currency = currency;
@@ -58,7 +58,7 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
         /// <summary>
         /// Type
         /// </summary>
-        public string Type { get; set; }
+        public WithdrawType Type { get; set; }
 
         /// <summary>
         /// Amount
@@ -94,6 +94,17 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
         /// Bitcoin Address associated with this withdrawal
         /// </summary>
         public BitcoinAddress BitcoinAddress { get; set; }
+
+        /// <summary>
+        /// Assigns the withdraw fee to this instance
+        /// </summary>
+        /// <param name="fee"></param>
+        /// <returns></returns>
+        public bool AssignFee(double fee)
+        {
+            Fee = fee;
+            return true;
+        }
 
         /// <summary>
         /// Sets the status to Confirmed

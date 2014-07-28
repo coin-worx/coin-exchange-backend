@@ -97,6 +97,7 @@
     <Compile Include="DatabasePersistenceTests\DepositAddressDatabasePersistenceTests.cs" />
     <Compile Include="DatabasePersistenceTests\DepositDatabasePersistenceTests.cs" />
     <Compile Include="DatabasePersistenceTests\DepositLimitDatabasePersistenceTests.cs" />
+    <Compile Include="VirtualPersistenceTests\BalanceVirtualPersistenceTest.cs" />
     <Compile Include="VirtualPersistenceTests\DepositAddressVirtualPersistenceTests.cs" />
     <Compile Include="VirtualPersistenceTests\DepositLimitVirtualPersistenceTests.cs" />
     <Compile Include="VirtualPersistenceTests\DepositVirtualPersistenceTests.cs" />

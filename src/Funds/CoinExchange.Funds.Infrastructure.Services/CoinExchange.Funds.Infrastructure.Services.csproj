@@ -42,6 +42,7 @@
     <Compile Include="DepositIdGeneratorService.cs" />
     <Compile Include="LedgerIdGeneratorService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WithdrawIdGeneratorService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CoinExchange.Funds.Domain.Model\CoinExchange.Funds.Domain.Model.csproj">

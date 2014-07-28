@@ -206,17 +206,16 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         /// Creates a transaction in result of a Withdraw
         /// </summary>
         /// <param name="withdraw"> </param>
+        /// <param name="balance"> </param>
         /// <returns></returns>
-        public bool CreateWithdrawTransaction(Withdraw withdraw)
+        public bool CreateWithdrawTransaction(Withdraw withdraw, double balance)
         {
             if (withdraw != null)
             {
-                double currenctBalance = _ledgerRepository.GetBalanceForCurrency(withdraw.Currency.Name, 
-                    new AccountId(withdraw.AccountId.Value));
                 Ledger ledger = new Ledger(_ledgerIdGeneraterService.GenerateLedgerId(), DateTime.Now,
                                            LedgerType.Withdrawal,
                                            withdraw.Currency, withdraw.Amount, withdraw.Fee,
-                                           currenctBalance - withdraw.Amount, null, null, withdraw.WithdrawId,
+                                           balance, null, null, withdraw.WithdrawId,
                                            null, withdraw.AccountId);
                 _fundsPersistenceRepository.SaveOrUpdate(ledger);
                 return true;

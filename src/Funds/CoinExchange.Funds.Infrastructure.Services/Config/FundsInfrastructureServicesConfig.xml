@@ -8,5 +8,8 @@
   
   <object id="DepositIdGeneratorService" type="CoinExchange.Funds.Infrastructure.Services.DepositIdGeneratorService, CoinExchange.Funds.Infrastructure.Services">
   </object>
+  
+  <object id="WithdrawIdGeneratorService" type="CoinExchange.Funds.Infrastructure.Services.WithdrawIdGeneratorService, CoinExchange.Funds.Infrastructure.Services">
+  </object>
 
 </objects>

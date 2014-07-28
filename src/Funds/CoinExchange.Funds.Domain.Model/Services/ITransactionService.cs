@@ -24,6 +24,6 @@ namespace CoinExchange.Funds.Domain.Model.Services
 
         bool CreateDepositTransaction(Deposit deposit, double balance);
 
-        bool CreateWithdrawTransaction(Withdraw withdraw);
+        bool CreateWithdrawTransaction(Withdraw withdraw, double balance);
     }
 }

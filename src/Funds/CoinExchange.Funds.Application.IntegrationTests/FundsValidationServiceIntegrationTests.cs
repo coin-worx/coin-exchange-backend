@@ -54,7 +54,8 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             Balance quoteCurrencyBalance = new Balance(quoteCurrency, accountId, 4000, 4000);
             fundsPersistenceRepository.SaveOrUpdate(quoteCurrencyBalance);
             // Since 40 * 101 > 4000, we dont have enough USD to buy XBT
-            bool validateFundsForOrder = fundsValidationService.ValidateFundsForOrder(accountId, baseCurrency, quoteCurrency, 40, 101, "buy");
+            bool validateFundsForOrder = fundsValidationService.ValidateFundsForOrder(accountId, baseCurrency,
+                quoteCurrency, 40, 101, "buy", "order123");
             Assert.IsFalse(validateFundsForOrder);
         }
 
@@ -72,7 +73,8 @@ namespace CoinExchange.Funds.Application.IntegrationTests
 
             Balance quoteCurrencyBalance = new Balance(quoteCurrency, accountId, 4000, 4000);
             fundsPersistenceRepository.SaveOrUpdate(quoteCurrencyBalance);
-            bool validateFundsForOrder = fundsValidationService.ValidateFundsForOrder(accountId, baseCurrency, quoteCurrency, 40, 100, "buy");
+            bool validateFundsForOrder = fundsValidationService.ValidateFundsForOrder(accountId, baseCurrency,
+                quoteCurrency, 40, 100, "buy", "order123");
             Assert.IsTrue(validateFundsForOrder);
         }
 
@@ -92,7 +94,8 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             Balance quoteCurrencyBalance = new Balance(quoteCurrency, accountId, 4000, 4000);
             fundsPersistenceRepository.SaveOrUpdate(quoteCurrencyBalance);
             // Since 40 * 101 > 4000, we dont have enough USD to buy XBT
-            bool validateFundsForOrder = fundsValidationService.ValidateFundsForOrder(accountId, baseCurrency, quoteCurrency, 40, 101, "buy");
+            bool validateFundsForOrder = fundsValidationService.ValidateFundsForOrder(accountId, baseCurrency,
+                quoteCurrency, 40, 101, "buy", "order123");
             Assert.IsFalse(validateFundsForOrder);
 
             Balance baseAfterValidationBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(baseCurrency, accountId);
@@ -120,7 +123,8 @@ namespace CoinExchange.Funds.Application.IntegrationTests
 
             Balance quoteCurrencyBalance = new Balance(quoteCurrency, accountId, 4000, 4000);
             fundsPersistenceRepository.SaveOrUpdate(quoteCurrencyBalance);
-            bool validateFundsForOrder = fundsValidationService.ValidateFundsForOrder(accountId, baseCurrency, quoteCurrency, 40, 90, "buy");
+            bool validateFundsForOrder = fundsValidationService.ValidateFundsForOrder(accountId, baseCurrency,
+                quoteCurrency, 40, 90, "buy", "order123");
             Assert.IsTrue(validateFundsForOrder);
 
             Balance baseAfterValidationBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(baseCurrency, accountId);
@@ -148,7 +152,8 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             Balance quoteCurrencyBalance = new Balance(quoteCurrency, accountId, 4000, 4000);
             fundsPersistenceRepository.SaveOrUpdate(quoteCurrencyBalance);
             // Since 401 > 400, we dont have enough XBT to sell
-            bool validateFundsForOrder = fundsValidationService.ValidateFundsForOrder(accountId, baseCurrency, quoteCurrency, 401, 101, "sell");
+            bool validateFundsForOrder = fundsValidationService.ValidateFundsForOrder(accountId, baseCurrency,
+                quoteCurrency, 401, 101, "sell", "order123");
             Assert.IsFalse(validateFundsForOrder);
         }
 
@@ -167,7 +172,8 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             Balance quoteCurrencyBalance = new Balance(quoteCurrency, accountId, 4000, 4000);
             fundsPersistenceRepository.SaveOrUpdate(quoteCurrencyBalance);
             // We have enough XBT to sell
-            bool validateFundsForOrder = fundsValidationService.ValidateFundsForOrder(accountId, baseCurrency, quoteCurrency, 400, 101, "sell");
+            bool validateFundsForOrder = fundsValidationService.ValidateFundsForOrder(accountId, baseCurrency,
+                quoteCurrency, 400, 101, "sell", "order123");
             Assert.IsTrue(validateFundsForOrder);
         }
 
@@ -187,7 +193,8 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             Balance quoteCurrencyBalance = new Balance(quoteCurrency, accountId, 4000, 4000);
             fundsPersistenceRepository.SaveOrUpdate(quoteCurrencyBalance);
             // Since 401 > 400, we dont have enough XBT to sell
-            bool validateFundsForOrder = fundsValidationService.ValidateFundsForOrder(accountId, baseCurrency, quoteCurrency, 401, 101, "sell");
+            bool validateFundsForOrder = fundsValidationService.ValidateFundsForOrder(accountId, baseCurrency,
+                quoteCurrency, 401, 101, "sell", "order123");
             Assert.IsFalse(validateFundsForOrder);
 
             Balance baseAfterValidationBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(baseCurrency, accountId);
@@ -216,7 +223,8 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             Balance quoteCurrencyBalance = new Balance(quoteCurrency, accountId, 4000, 4000);
             fundsPersistenceRepository.SaveOrUpdate(quoteCurrencyBalance);
             // We have enough XBT to sell
-            bool validateFundsForOrder = fundsValidationService.ValidateFundsForOrder(accountId, baseCurrency, quoteCurrency, 300, 101, "sell");
+            bool validateFundsForOrder = fundsValidationService.ValidateFundsForOrder(accountId, baseCurrency,
+                quoteCurrency, 300, 101, "sell", "order123");
             Assert.IsTrue(validateFundsForOrder);
 
             Balance baseAfterValidationBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(baseCurrency, accountId);
@@ -244,8 +252,9 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             Balance baseCurrencyBalance = new Balance(baseCurrency, accountId, 400, 400);
             fundsPersistenceRepository.SaveOrUpdate(baseCurrencyBalance);
 
-            bool validateFundsForOrder = fundsValidationService.ValidateFundsForWithdrawal(accountId, baseCurrency, 500);
-            Assert.IsFalse(validateFundsForOrder);
+            Withdraw validateFundsForOrder = fundsValidationService.ValidateFundsForWithdrawal(accountId, baseCurrency, 500
+                , new TransactionId("transaction123"), new BitcoinAddress("bitcoinid123"));
+            Assert.IsNull(validateFundsForOrder);
         }
 
         [Test]
@@ -259,8 +268,9 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             Balance baseCurrencyBalance = new Balance(baseCurrency, accountId, 400, 400);
             fundsPersistenceRepository.SaveOrUpdate(baseCurrencyBalance);
 
-            bool validateFundsForOrder = fundsValidationService.ValidateFundsForWithdrawal(accountId, baseCurrency, 101);
-            Assert.IsTrue(validateFundsForOrder);
+            Withdraw validateFundsForOrder = fundsValidationService.ValidateFundsForWithdrawal(accountId, baseCurrency, 101
+                , new TransactionId("transaction123"), new BitcoinAddress("bitcoinid123"));
+            Assert.IsNotNull(validateFundsForOrder);
         }
 
         [Test]
@@ -275,8 +285,9 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             Balance balance = new Balance(currency, accountId, 400, 400);
             fundsPersistenceRepository.SaveOrUpdate(balance);
 
-            bool validateFundsForOrder = fundsValidationService.ValidateFundsForWithdrawal(accountId, currency, 500);
-            Assert.IsFalse(validateFundsForOrder);
+            Withdraw validateFundsForOrder = fundsValidationService.ValidateFundsForWithdrawal(accountId, currency, 500
+                , new TransactionId("transaction123"), new BitcoinAddress("bitcoinid123"));
+            Assert.IsNull(validateFundsForOrder);
 
             Balance baseAfterValidationBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(currency, accountId);
             Assert.AreEqual(balance.AvailableBalance, baseAfterValidationBalance.AvailableBalance);
@@ -296,8 +307,9 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             Balance balance = new Balance(currency, accountId, 400, 400);
             fundsPersistenceRepository.SaveOrUpdate(balance);
 
-            bool validateFundsForOrder = fundsValidationService.ValidateFundsForWithdrawal(accountId, currency, 101);
-            Assert.IsTrue(validateFundsForOrder);
+            Withdraw validateFundsForOrder = fundsValidationService.ValidateFundsForWithdrawal(accountId, currency, 101
+                , new TransactionId("transaction123"), new BitcoinAddress("bitcoinid123"));
+            Assert.IsNotNull(validateFundsForOrder);
 
             Balance baseAfterValidationBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(currency, accountId);
             Assert.AreEqual(299, baseAfterValidationBalance.AvailableBalance);
@@ -534,7 +546,6 @@ namespace CoinExchange.Funds.Application.IntegrationTests
         public void TradeTransactionsAfterValidationTest_TEstsIfTheLedgerTransactionsWereCreatedAsExpectedAfterBalanceUpdate_VerifiesThroughDatabaseQUery()
         {
             IFundsValidationService fundsValidationService = (IFundsValidationService)ContextRegistry.GetContext()["FundsValidationService"];
-            IBalanceRepository balanceRepository = (IBalanceRepository)ContextRegistry.GetContext()["BalanceRepository"];
             IFundsPersistenceRepository fundsPersistenceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];
             ILedgerRepository ledgerRepository = (ILedgerRepository)ContextRegistry.GetContext()["LedgerRepository"];
             IFeeCalculationService feeCalculationService = (IFeeCalculationService)ContextRegistry.GetContext()["FeeCalculationService"];
@@ -663,19 +674,44 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             string buyAccountId = "buyaccountid123";
             string sellAccountId = "sellaccountid123";
 
-            Balance buyAccountBaseCurrencyBalance = new Balance(new Currency(baseCurrency), new AccountId(buyAccountId), 0, 0);
-            fundsPersistenceRepository.SaveOrUpdate(buyAccountBaseCurrencyBalance);
-            Balance buyAccountQuoteCurrencyBalance = new Balance(new Currency(quoteCurrency), new AccountId(buyAccountId), 0, 0);
-            fundsPersistenceRepository.SaveOrUpdate(buyAccountQuoteCurrencyBalance);
+            Balance buyXbtBalance = new Balance(new Currency(baseCurrency), new AccountId(buyAccountId), 4000, 4000);
+            fundsPersistenceRepository.SaveOrUpdate(buyXbtBalance);
+            Balance buyUsdBalance = new Balance(new Currency(quoteCurrency), new AccountId(buyAccountId), 50000, 50000);
+            fundsPersistenceRepository.SaveOrUpdate(buyUsdBalance);
 
-            Balance sellAccountBaseCurrencyBalance = new Balance(new Currency(baseCurrency), new AccountId(sellAccountId), 0, 0);
-            fundsPersistenceRepository.SaveOrUpdate(sellAccountBaseCurrencyBalance);
-            Balance sellAccountQuoteCurrencyBalance = new Balance(new Currency(quoteCurrency), new AccountId(sellAccountId), 0, 0);
-            fundsPersistenceRepository.SaveOrUpdate(sellAccountQuoteCurrencyBalance);
+            Balance sellXbtBalance = new Balance(new Currency(baseCurrency), new AccountId(sellAccountId), 4000, 4000);
+            fundsPersistenceRepository.SaveOrUpdate(sellXbtBalance);
+            Balance sellUsdBalance = new Balance(new Currency(quoteCurrency), new AccountId(sellAccountId), 50000, 50000);
+            fundsPersistenceRepository.SaveOrUpdate(sellUsdBalance);
 
-            bool tradeExecutedResponse = fundsValidationService.TradeExecuted(baseCurrency, quoteCurrency, 400, 100,
+            // ----- Trade 1-----
+            bool validateFundsForOrder = fundsValidationService.ValidateFundsForOrder(new AccountId(buyAccountId), 
+                new Currency(baseCurrency), new Currency(quoteCurrency), 100, 100, "buy", buyOrderId + "1");
+            Assert.IsTrue(validateFundsForOrder);
+
+            validateFundsForOrder = fundsValidationService.ValidateFundsForOrder(new AccountId(sellAccountId),
+                new Currency(baseCurrency), new Currency(quoteCurrency), 100, 100, "sell", sellOrderId + "1");
+            Assert.IsTrue(validateFundsForOrder);
+
+            bool tradeExecutedResponse = fundsValidationService.TradeExecuted(baseCurrency, quoteCurrency, 100, 100,
                 DateTime.Now, tradeId, buyAccountId, sellAccountId, buyOrderId + "1", sellOrderId + "1");
             Assert.IsTrue(tradeExecutedResponse);
+
+            buyXbtBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(new Currency(baseCurrency),
+                                                                   new AccountId(buyAccountId));
+            double buyerBaseAccountBalance = ledgerRepository.GetBalanceForCurrency(baseCurrency, new AccountId(buyAccountId));
+            Assert.AreEqual(buyXbtBalance.CurrentBalance, buyerBaseAccountBalance);
+            Assert.AreEqual(4100, buyXbtBalance.CurrentBalance);
+            Assert.AreEqual(4100, buyXbtBalance.AvailableBalance);
+
+            buyUsdBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(new Currency(quoteCurrency),
+                                                                   new AccountId(buyAccountId));
+            double buyerQuoteAccountBalance = ledgerRepository.GetBalanceForCurrency(quoteCurrency, new AccountId(buyAccountId));
+            Assert.AreEqual(buyUsdBalance.CurrentBalance, buyerQuoteAccountBalance);
+            Assert.AreEqual(40000, buyUsdBalance.CurrentBalance);
+            Assert.AreEqual(40000, buyUsdBalance.AvailableBalance);
+
+            // ----- Trade 1-----
 
             tradeExecutedResponse = fundsValidationService.TradeExecuted(baseCurrency, quoteCurrency, 300, 102,
                 DateTime.Now, tradeId, buyAccountId, sellAccountId, buyOrderId + "2", sellOrderId + "2");
@@ -685,28 +721,89 @@ namespace CoinExchange.Funds.Application.IntegrationTests
                 DateTime.Now, tradeId, buyAccountId, sellAccountId, buyOrderId + "3", sellOrderId + "3");
             Assert.IsTrue(tradeExecutedResponse);
 
-            buyAccountBaseCurrencyBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(new Currency(baseCurrency),
+            buyXbtBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(new Currency(baseCurrency),
                                                                    new AccountId(buyAccountId));
-            double buyerBaseAccountBalance = ledgerRepository.GetBalanceForCurrency(baseCurrency, new AccountId(buyAccountId));
-            Assert.AreEqual(buyAccountBaseCurrencyBalance.CurrentBalance, buyerBaseAccountBalance);
+            buyerBaseAccountBalance = ledgerRepository.GetBalanceForCurrency(baseCurrency, new AccountId(buyAccountId));
+            Assert.AreEqual(buyXbtBalance.CurrentBalance, buyerBaseAccountBalance);
 
-            buyAccountQuoteCurrencyBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(new Currency(quoteCurrency),
+            buyUsdBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(new Currency(quoteCurrency),
                                                                    new AccountId(buyAccountId));
-            double buyerQuoteAccountBalance = ledgerRepository.GetBalanceForCurrency(quoteCurrency, new AccountId(buyAccountId));
-            Assert.AreEqual(buyAccountQuoteCurrencyBalance.CurrentBalance, buyerQuoteAccountBalance);
+            buyerQuoteAccountBalance = ledgerRepository.GetBalanceForCurrency(quoteCurrency, new AccountId(buyAccountId));
+            Assert.AreEqual(buyUsdBalance.CurrentBalance, buyerQuoteAccountBalance);
 
-            sellAccountBaseCurrencyBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(new Currency(baseCurrency),
+            sellXbtBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(new Currency(baseCurrency),
                                                                    new AccountId(sellAccountId));
             double sellerBaseAccountBalance = ledgerRepository.GetBalanceForCurrency(quoteCurrency, new AccountId(sellAccountId));
-            Assert.AreEqual(sellAccountBaseCurrencyBalance.CurrentBalance, sellerBaseAccountBalance);
+            Assert.AreEqual(sellXbtBalance.CurrentBalance, sellerBaseAccountBalance);
 
-            sellAccountQuoteCurrencyBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(new Currency(quoteCurrency),
+            sellUsdBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(new Currency(quoteCurrency),
                                                                    new AccountId(sellAccountId));
             double sellerQuoteAccountBalance = ledgerRepository.GetBalanceForCurrency(quoteCurrency, new AccountId(sellAccountId));
-            Assert.AreEqual(sellAccountQuoteCurrencyBalance.CurrentBalance, sellerQuoteAccountBalance);
+            Assert.AreEqual(sellUsdBalance.CurrentBalance, sellerQuoteAccountBalance);
         }
 
         #endregion Trade Tests
+
+        #region Withdrawal Confirmed Tests
+
+        [Test]
+        public void WithdrawalConfirmedPassTest_TestsIfTheWithdrawalOperationProceedsAsExpected_VerifiesThroughDatabaseQuery()
+        {
+            IFundsValidationService fundsValidationService = (IFundsValidationService)ContextRegistry.GetContext()["FundsValidationService"];
+            ILedgerRepository ledgerRepository = (ILedgerRepository)ContextRegistry.GetContext()["LedgerRepository"];
+            IDepositIdGeneratorService depositIdGeneratorService = (IDepositIdGeneratorService)ContextRegistry.GetContext()["DepositIdGeneratorService"];
+            IBalanceRepository balanceRepository = (IBalanceRepository)ContextRegistry.GetContext()["BalanceRepository"];
+            IFundsPersistenceRepository fundsPersistenceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];
+            IWithdrawIdGeneratorService withdrawIdGeneratorService = (IWithdrawIdGeneratorService)ContextRegistry.GetContext()["WithdrawIdGeneratorService"];
+
+            AccountId accountId = new AccountId("accountid123");
+            Currency currency = new Currency("XBT");
+
+            Balance balance = new Balance(currency, accountId, 2000, 2400);
+            fundsPersistenceRepository.SaveOrUpdate(balance);
+
+            Withdraw withdraw = new Withdraw(currency, withdrawIdGeneratorService.GenerateNewId(), DateTime.Now, 
+                WithdrawType.Default, 400, 0.4, TransactionStatus.Confirmed, accountId, new TransactionId("transaction123"),
+                new BitcoinAddress("bitcoin123"));
+
+            bool withdrawalExecuted = fundsValidationService.WithdrawalExecuted(withdraw);
+            Assert.IsTrue(withdrawalExecuted);
+
+            balance = balanceRepository.GetBalanceByCurrencyAndAccountId(currency, accountId);
+            Assert.IsNotNull(balance);
+            Assert.AreEqual(2000, balance.CurrentBalance);
+            Assert.AreEqual(2000, balance.AvailableBalance);
+            Assert.AreEqual(0, balance.PendingBalance);
+        }
+
+        #endregion Withdrawal Confirmed Tests
+
+        #region Order Cancelled Tests
+
+        [Test]
+        public void OrderCancelledFundsRestoreTest_TestsIfTheFundsAreRestoredAsExpectedInCaseOfAnOrderCancelled_VerifiesThroughDatabaseQuery()
+        {
+            IFundsValidationService fundsValidationService = (IFundsValidationService)ContextRegistry.GetContext()["FundsValidationService"];
+            ILedgerRepository ledgerRepository = (ILedgerRepository)ContextRegistry.GetContext()["LedgerRepository"];
+            IDepositIdGeneratorService depositIdGeneratorService = (IDepositIdGeneratorService)ContextRegistry.GetContext()["DepositIdGeneratorService"];
+            IBalanceRepository balanceRepository = (IBalanceRepository)ContextRegistry.GetContext()["BalanceRepository"];
+            IFundsPersistenceRepository fundsPersistenceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];
+            IWithdrawIdGeneratorService withdrawIdGeneratorService = (IWithdrawIdGeneratorService)ContextRegistry.GetContext()["WithdrawIdGeneratorService"];
+
+            AccountId accountId = new AccountId("accountid123");
+            Currency baseCurrency = new Currency("XBT");
+            Currency quoteCurrency = new Currency("USD");
+            Balance baseCurrencyBalance = new Balance(baseCurrency, accountId, 5000, 5000);
+            Balance quoteCurrencyBalance = new Balance(baseCurrency, accountId, 20000, 20000);
+            fundsPersistenceRepository.SaveOrUpdate(baseCurrencyBalance);
+            fundsPersistenceRepository.SaveOrUpdate(quoteCurrencyBalance);
+            bool validateFundsForOrder = fundsValidationService.ValidateFundsForOrder(accountId, baseCurrency,
+                quoteCurrency, 100, 90, "buy", "order123");
+            Assert.IsTrue(validateFundsForOrder);
+            fundsValidationService.OrderCancelled(baseCurrency, accountId, "orderid123", 500);
+
+        }
+        #endregion Order Cancelled Tests
 
         #region Transaction Jobs Tests
 
@@ -716,10 +813,11 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             IFundsValidationService fundsValidationService = (IFundsValidationService)ContextRegistry.GetContext()["FundsValidationService"];
             ITransactionService transactionService = (ITransactionService)ContextRegistry.GetContext()["TransactionService"];
             IBalanceRepository balanceRepository = (IBalanceRepository)ContextRegistry.GetContext()["BalanceRepository"];
-            IFundsPersistenceRepository fundsPersistenceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];
-            IDepositIdGeneratorService depositIdGeneratorService = (IDepositIdGeneratorService)ContextRegistry.GetContext()["DepositIdGeneratorService"];
+            IFundsPersistenceRepository fundsPersistenceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];            
             IDepositRepository depositRepository = (IDepositRepository)ContextRegistry.GetContext()["DepositRepository"];
             IFeeCalculationService feeCalculationService = (IFeeCalculationService)ContextRegistry.GetContext()["FeeCalculationService"];
+            IWithdrawFeesRepository withdrawFeesRepository = (IWithdrawFeesRepository)ContextRegistry.GetContext()["WithdrawFeesRepository"];
+            IWithdrawIdGeneratorService withdrawIdGeneratorService = (IWithdrawIdGeneratorService)ContextRegistry.GetContext()["WithdrawIdGeneratorService"];
 
             AccountId accountId = new AccountId("accountid123");
             Currency baseCurrency = new Currency("XBT");
@@ -729,13 +827,14 @@ namespace CoinExchange.Funds.Application.IntegrationTests
 
             Balance quoteCurrencyBalance = new Balance(quoteCurrency, accountId, 4000, 4000);
             fundsPersistenceRepository.SaveOrUpdate(quoteCurrencyBalance);
-            fundsValidationService.ValidateFundsForOrder(accountId, baseCurrency, quoteCurrency, 400, 101, "sell");
-            fundsValidationService.ValidateFundsForOrder(accountId, baseCurrency, quoteCurrency, 300, 101, "sell");
+            fundsValidationService.ValidateFundsForOrder(accountId, baseCurrency, quoteCurrency, 400, 101, "sell", "order123");
+            fundsValidationService.ValidateFundsForOrder(accountId, baseCurrency, quoteCurrency, 300, 101, "sell", "order123");
 
             // Here we create a service without using the spring dependency injection to create a new instance
             IFundsValidationService fundsValidationService2 = new FundsValidationService(transactionService,
-                fundsPersistenceRepository, balanceRepository, depositRepository, feeCalculationService);            
-            fundsValidationService2.ValidateFundsForOrder(accountId, baseCurrency, quoteCurrency, 100, 101, "sell");
+                fundsPersistenceRepository, balanceRepository, feeCalculationService, 
+                withdrawFeesRepository, withdrawIdGeneratorService);
+            fundsValidationService2.ValidateFundsForOrder(accountId, baseCurrency, quoteCurrency, 100, 101, "sell", "order123");
             Balance balance = balanceRepository.GetBalanceByCurrencyAndAccountId(baseCurrency, accountId);
             Assert.IsNotNull(balance);
             Assert.AreEqual(1000, balance.CurrentBalance);
@@ -753,18 +852,21 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             IDepositIdGeneratorService depositIdGeneratorService = (IDepositIdGeneratorService)ContextRegistry.GetContext()["DepositIdGeneratorService"];
             IDepositRepository depositRepository = (IDepositRepository)ContextRegistry.GetContext()["DepositRepository"];
             IFeeCalculationService feeCalculationService = (IFeeCalculationService)ContextRegistry.GetContext()["FeeCalculationService"];
+            IWithdrawFeesRepository withdrawFeesRepository = (IWithdrawFeesRepository)ContextRegistry.GetContext()["WithdrawFeesRepository"];
+            IWithdrawIdGeneratorService withdrawIdGeneratorService = (IWithdrawIdGeneratorService)ContextRegistry.GetContext()["WithdrawIdGeneratorService"];
 
             AccountId accountId = new AccountId("accountid123");
             Currency baseCurrency = new Currency("XBT");
             Balance baseCurrencyBalance = new Balance(baseCurrency, accountId, 1000, 1000);
             fundsPersistenceRepository.SaveOrUpdate(baseCurrencyBalance);
 
-            fundsValidationService.ValidateFundsForWithdrawal(accountId, baseCurrency, 400);
+            fundsValidationService.ValidateFundsForWithdrawal(accountId, baseCurrency, 400, new TransactionId("transaction123"), new BitcoinAddress("bitcoinid123"));
 
             // Here we create a service without using the spring dependency injection to create a new instance
             IFundsValidationService fundsValidationService2 = new FundsValidationService(transactionService,
-                fundsPersistenceRepository, balanceRepository, depositRepository, feeCalculationService);
-            fundsValidationService2.ValidateFundsForWithdrawal(accountId, baseCurrency, 100);
+                fundsPersistenceRepository, balanceRepository, feeCalculationService, withdrawFeesRepository,
+                withdrawIdGeneratorService);
+            fundsValidationService2.ValidateFundsForWithdrawal(accountId, baseCurrency, 100, new TransactionId("transaction123"), new BitcoinAddress("bitcoinid123"));
             Balance balance = balanceRepository.GetBalanceByCurrencyAndAccountId(baseCurrency, accountId);
             Assert.IsNotNull(balance);
             Assert.AreEqual(1000, balance.CurrentBalance);

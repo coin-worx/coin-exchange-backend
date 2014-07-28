@@ -6,6 +6,7 @@ using CoinExchange.Funds.Domain.Model.DepositAggregate;
 using CoinExchange.Funds.Domain.Model.FeeAggregate;
 using CoinExchange.Funds.Domain.Model.Repositories;
 using CoinExchange.Funds.Domain.Model.Services;
+using CoinExchange.Funds.Domain.Model.WithdrawAggregate;
 using Spring.Transaction.Interceptor;
 
 namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
@@ -23,6 +24,8 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         private IBalanceRepository _balanceRepository = null;
         private IDepositRepository _depositRepository = null;
         private IFeeCalculationService _feeCalculationService = null;
+        private IWithdrawFeesRepository _withdrawFeesRepository = null;
+        private IWithdrawIdGeneratorService _withdrawIdGeneratorService = null;
 
         #endregion Private Fields
 
@@ -32,14 +35,16 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
         public FundsValidationService(ITransactionService transactionService, IFundsPersistenceRepository
-            fundsPersistenceRepository, IBalanceRepository balanceRepository, IDepositRepository depositRepository, 
-            IFeeCalculationService feeCalculationService)
+            fundsPersistenceRepository, IBalanceRepository balanceRepository,
+            IFeeCalculationService feeCalculationService, IWithdrawFeesRepository withdrawFeesRepository, 
+            IWithdrawIdGeneratorService withdrawIdGeneratorService)
         {
             _transactionService = transactionService;
             _fundsPersistenceRepository = fundsPersistenceRepository;
             _balanceRepository = balanceRepository;
-            _depositRepository = depositRepository;
             _feeCalculationService = feeCalculationService;
+            _withdrawFeesRepository = withdrawFeesRepository;
+            _withdrawIdGeneratorService = withdrawIdGeneratorService;
         }
 
         #endregion Constructors
@@ -55,10 +60,11 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         /// <param name="price"> </param>
         /// <param name="orderSide"></param>
         /// <param name="baseCurrency"> </param>
+        /// <param name="orderId"> </param>
         /// <returns></returns>
         [Transaction]
         public bool ValidateFundsForOrder(AccountId accountId, Currency baseCurrency, Currency quoteCurrency, 
-            double volume, double price, string orderSide)
+            double volume, double price, string orderSide, string orderId)
         {
             Balance baseCurrencyBalance = GetBalanceForAccountId(accountId, baseCurrency);
             Balance quoteCurrencyBalance = GetBalanceForAccountId(accountId, quoteCurrency);
@@ -70,21 +76,21 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
                     // currency of the currency pairto carry out the order. If we are trading XBT/USD,
                     // If 1 XBT = 101 USD, then if we want to buy 8 XBT coins, then, 8 XBT = 8*101 USD
                     // So we need askPrice(XBT/USD) * Volume(Volume of the order)
-                    // Also, we need to check the Curret Balance(balance that does not contain pending balance)
-                    if (quoteCurrencyBalance.CurrentBalance >= price * volume)
+                    // Also, we need to check the Available Balance(balance that does not contain pending balance)
+                    if (quoteCurrencyBalance.AvailableBalance >= price * volume)
                     {
-                        quoteCurrencyBalance.AddAvailableBalance(-(price*volume));
+                        quoteCurrencyBalance.AddPendingTransaction(orderId, PendingTransactionType.Order, -(price*volume));
                         _fundsPersistenceRepository.SaveOrUpdate(quoteCurrencyBalance);
                         return true;
                     }
                 }
                 else if (orderSide.Equals("sell", StringComparison.OrdinalIgnoreCase))
                 {
-                    // If we are trading for XBT/USD and want to sell XBT, then we need to check if the current
+                    // If we are trading for XBT/USD and want to sell XBT, then we need to check if the Available
                     // balance(does not contain pending balance) for XBT is enough for the order to take place
-                    if (baseCurrencyBalance.CurrentBalance >= volume)
+                    if (baseCurrencyBalance.AvailableBalance >= volume)
                     {
-                        baseCurrencyBalance.AddAvailableBalance(-volume);
+                        baseCurrencyBalance.AddPendingTransaction(orderId, PendingTransactionType.Order, -volume);
                         _fundsPersistenceRepository.SaveOrUpdate(baseCurrencyBalance);
                         return true;
                     }
@@ -99,40 +105,67 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         /// <param name="accountId"></param>
         /// <param name="currency"></param>
         /// <param name="amount"></param>
+        /// <param name="transactionId"> </param>
+        /// <param name="bitcoinAddress"> </param>
         /// <returns></returns>
-        public bool ValidateFundsForWithdrawal(AccountId accountId, Currency currency, double amount)
+        [Transaction]
+        public Withdraw ValidateFundsForWithdrawal(AccountId accountId, Currency currency, double amount, TransactionId
+            transactionId, BitcoinAddress bitcoinAddress)
         {
-            Balance currencyBalance = GetBalanceForAccountId(accountId, currency);
-            if (currencyBalance != null)
+            WithdrawFees withdrawFees = _withdrawFeesRepository.GetWithdrawFeesByCurrencyName(currency.Name);
+            if (withdrawFees != null)
             {
-                if (currencyBalance.AvailableBalance >= amount)
+                // Check if the user has the permission to withdraw this amount
+                if (amount >= withdrawFees.MinimumAmount)
                 {
-                    currencyBalance.AddAvailableBalance(-amount);
-                    _fundsPersistenceRepository.SaveOrUpdate(currencyBalance);
-                    return true;
+                    Balance currencyBalance = GetBalanceForAccountId(accountId, currency);
+                    if (currencyBalance != null)
+                    {
+                        if (currencyBalance.AvailableBalance >= amount)
+                        {
+                            Withdraw withdraw = new Withdraw(currency, _withdrawIdGeneratorService.GenerateNewId(), 
+                                DateTime.Now, WithdrawType.Default, amount, withdrawFees.Fee, TransactionStatus.Pending, 
+                                accountId, transactionId, bitcoinAddress);
+                            _fundsPersistenceRepository.SaveOrUpdate(withdraw);
+                            currencyBalance.AddPendingTransaction(withdraw.WithdrawId, PendingTransactionType.Withdraw,
+                                                                  withdraw.Amount);
+                            _fundsPersistenceRepository.SaveOrUpdate(currencyBalance);
+                            return withdraw;
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Handles the event that withdraw has been confirmed and takes the necessary steps
+        /// </summary>
+        /// <param name="withdraw"> </param>
+        /// <returns></returns>
+        [Transaction]
+        public bool WithdrawalExecuted(Withdraw withdraw)
+        {
+            Balance balance = _balanceRepository.GetBalanceByCurrencyAndAccountId(withdraw.Currency, withdraw.AccountId);
+
+            if (balance != null)
+            {
+                bool addResponse= balance.ConfirmPendingTransaction(withdraw.WithdrawId, PendingTransactionType.Withdraw,
+                    -withdraw.Amount);
+                if (addResponse)
+                {
+                    balance.AddAvailableBalance(-withdraw.Fee);
+                    return _transactionService.CreateWithdrawTransaction(withdraw, balance.CurrentBalance);
                 }
             }
             return false;
         }
 
         /// <summary>
-        /// Handles the event that withdraw has been confirmed and takes the necessary steps
-        /// </summary>
-        /// <param name="accountId"></param>
-        /// <param name="currency"></param>
-        /// <param name="amount"></param>
-        /// <param name="transactionId"></param>
-        /// <param name="bitcoinAddress"></param>
-        /// <returns></returns>
-        public bool WithdrawalExecuted(AccountId accountId, Currency currency, double amount, TransactionId transactionId, BitcoinAddress bitcoinAddress)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
         /// Handles the event that a Deposit has been made and performes the necesssary options
         /// </summary>
         /// <returns></returns>
+        [Transaction]
         public bool DepositConfirmed(Deposit deposit)
         {
             if (deposit != null && deposit.Confirmations >= 7)
@@ -170,27 +203,46 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         /// <param name="buyOrderId"></param>
         /// <param name="sellOrderId"></param>
         /// <returns></returns>
+        [Transaction]
         public bool TradeExecuted(string baseCurrency, string quoteCurrency, double tradeVolume, double price, DateTime executionDateTime,
             string tradeId, string buyAccountId, string sellAccountId, string buyOrderId, string sellOrderId)
         {
             // First we update balance for Buy Account's Base Currency
             if (InitializeBalanceLedgerUpdate(new Currency(baseCurrency), new AccountId(buyAccountId), tradeVolume,
-                                          executionDateTime, buyOrderId, tradeId, false))
+                                          executionDateTime, buyOrderId, tradeId, false, false))
             {
                 // Then, for Buy Account's Quote Currency
                 if (InitializeBalanceLedgerUpdate(new Currency(quoteCurrency), new AccountId(buyAccountId),
                                               -(tradeVolume * price),
-                                              executionDateTime, buyOrderId, tradeId, false))
+                                              executionDateTime, buyOrderId, tradeId, false, true))
                 {
                     // Then, for the Seller Account's Base Currency
                     if (InitializeBalanceLedgerUpdate(new Currency(baseCurrency), new AccountId(sellAccountId),
-                                                        -tradeVolume, executionDateTime, sellOrderId, tradeId, false))
+                                                        -tradeVolume, executionDateTime, sellOrderId, tradeId, false, true))
                     {
                         // Last, for the seller account's quote currency
                         return InitializeBalanceLedgerUpdate(new Currency(quoteCurrency), new AccountId(sellAccountId),
-                                                      tradeVolume*price,executionDateTime, sellOrderId, tradeId, false);
+                                                      tradeVolume*price,executionDateTime, sellOrderId, tradeId, false, false);
                     }
                 }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Updates the funds when an order is cancelled
+        /// </summary>
+        /// <param name="currency"></param>
+        /// <param name="accountId"></param>
+        /// <param name="orderId"></param>
+        /// <param name="openQuantity"> </param>
+        /// <returns></returns>
+        public bool OrderCancelled(Currency currency, AccountId accountId, string orderId, double openQuantity)
+        {
+            Balance currencyBalance = GetBalanceForAccountId(accountId, currency);
+            if (currencyBalance != null)
+            {
+                return currencyBalance.ConfirmPendingTransaction(orderId, PendingTransactionType.Order, openQuantity);                
             }
             return false;
         }
@@ -200,13 +252,18 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         /// </summary>
         /// <returns></returns>
         private bool InitializeBalanceLedgerUpdate(Currency currency, AccountId accountId, double amount, DateTime 
-            executionDateTime, string orderId, string tradeId, bool includeFee)
+            executionDateTime, string orderId, string tradeId, bool includeFee, bool isPending)
         {
+            double fee = 0;
+            if (includeFee)
+            {
+                fee = _feeCalculationService.GetFee(currency, amount);
+            }
             // Update the balance
-            double balance = UpdateBalanceAfterTrade(currency, accountId, amount);
+            double balance = UpdateBalanceAfterTrade(currency, accountId, amount, orderId, fee, isPending);
             // Create Ledger and save in database
             return CreatePostTradeTransaction(currency, accountId, amount, balance, executionDateTime, tradeId, orderId,
-                                       includeFee);
+                                       includeFee, fee);
         }
 
         /// <summary>
@@ -215,15 +272,31 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         /// <param name="currency"></param>
         /// <param name="accountId"></param>
         /// <param name="volume"></param>
+        /// <param name="orderId"> </param>
+        /// <param name="fee"> </param>
+        /// <param name="isPending"> </param>
         /// <returns></returns>
-        private double UpdateBalanceAfterTrade(Currency currency, AccountId accountId, double volume)
+        private double UpdateBalanceAfterTrade(Currency currency, AccountId accountId, double volume, string orderId,
+            double fee, bool isPending)
         {
             Balance balance = _balanceRepository.GetBalanceByCurrencyAndAccountId(currency, accountId);
             if (balance != null)
             {
-                balance.AddAvailableBalance(volume);
-                balance.AddCurrentBalance(volume);
+                if (!isPending)
+                {
+                    balance.AddAvailableBalance(volume);
+                    balance.AddCurrentBalance(volume);
+                }
+                else
+                {
+                    balance.ConfirmPendingTransaction(orderId, PendingTransactionType.Order, volume);
+                }
                 _fundsPersistenceRepository.SaveOrUpdate(balance);
+                if (fee > 0)
+                {
+                    balance.AddAvailableBalance(-fee);
+                    balance.AddCurrentBalance(-fee);
+                }
                 return balance.CurrentBalance;
             }
             return 0;
@@ -235,13 +308,8 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         /// </summary>
         /// <returns></returns>
         private bool CreatePostTradeTransaction(Currency currency, AccountId accountId, double amount, double balance,
-            DateTime executionDateTime, string tradeId, string orderId, bool includeFee)
+            DateTime executionDateTime, string tradeId, string orderId, bool includeFee, double fee)
         {
-            double fee = 0;
-            if (includeFee)
-            {
-                fee = _feeCalculationService.GetFee(currency, amount);
-            }
             return _transactionService.CreateLedgerEntry(currency, amount, fee, balance, executionDateTime, orderId, tradeId,
                                                   accountId);
         }
