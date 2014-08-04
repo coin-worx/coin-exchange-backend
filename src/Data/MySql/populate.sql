@@ -15,6 +15,8 @@ create database if not exists `coinexchangedev`;
 
 USE `coinexchangedev`;
 
+/*Data for the table `balance` */
+
 /*Data for the table `currencypair` */
 
 insert  into `currencypair`(`CurrencyPairName`,`BaseCurrency`,`QuoteCurrency`) values ('XBTUSD','USD','XBT');
@@ -36,6 +38,8 @@ insert  into `fee`(`Id`,`CurrencyPair`,`PercentageFee`,`Amount`) values (1,'USD'
 /*Data for the table `order` */
 
 /*Data for the table `passwordcoderecord` */
+
+/*Data for the table `pendingtransaction` */
 
 /*Data for the table `permission` */
 

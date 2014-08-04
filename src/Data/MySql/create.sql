@@ -20,14 +20,14 @@ USE `coinexchangedev`;
 DROP TABLE IF EXISTS `balance`;
 
 CREATE TABLE `balance` (
-  `Id` int(10) NOT NULL AUTO_INCREMENT,
+  `BalanceId` int(10) NOT NULL AUTO_INCREMENT,
   `Currency` varchar(10) DEFAULT NULL,
   `AccountId` varchar(50) DEFAULT NULL,
   `AvailableBalance` double DEFAULT NULL,
   `CurrentBalance` double DEFAULT NULL,
   `PendingBalance` double DEFAULT NULL,
-  PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+  PRIMARY KEY (`BalanceId`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
 /*Table structure for table `currencypair` */
 
@@ -170,6 +170,20 @@ CREATE TABLE `passwordcoderecord` (
   `UserId` int(11) DEFAULT NULL,
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Table structure for table `pendingtransaction` */
+
+DROP TABLE IF EXISTS `pendingtransaction`;
+
+CREATE TABLE `pendingtransaction` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `BalanceId` int(10) DEFAULT NULL,
+  `Currency` varchar(20) DEFAULT NULL,
+  `InstanceId` varchar(50) DEFAULT NULL,
+  `PendingTransactionType` int(11) DEFAULT NULL,
+  `Amount` double DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 
 /*Table structure for table `permission` */
 
@@ -375,7 +389,7 @@ CREATE TABLE `withdrawfees` (
   `MinimumAmount` double DEFAULT NULL,
   `Fee` double DEFAULT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 /*Table structure for table `withdrawlimit` */
 
