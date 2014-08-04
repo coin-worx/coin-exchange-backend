@@ -494,60 +494,6 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             IFundsValidationService fundsValidationService = (IFundsValidationService)ContextRegistry.GetContext()["FundsValidationService"];            
             IBalanceRepository balanceRepository = (IBalanceRepository)ContextRegistry.GetContext()["BalanceRepository"];
             IFundsPersistenceRepository fundsPersistenceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];
-
-            string baseCurrency = "XBT";
-            string quoteCurrency = "USD";
-            string tradeId = "tradeid123";
-            string buyOrderId = "buyorderId123";
-            string sellOrderId = "sellorderid123";
-            string buyAccountId = "buyaccountid123";
-            string sellAccountId = "sellaccountid123";
-
-            Balance buyAccountBaseCurrencyBalance = new Balance(new Currency(baseCurrency), new AccountId(buyAccountId), 0, 0);
-            fundsPersistenceRepository.SaveOrUpdate(buyAccountBaseCurrencyBalance);
-            Balance buyAccountQuoteCurrencyBalance = new Balance(new Currency(quoteCurrency), new AccountId(buyAccountId), 0, 0);
-            fundsPersistenceRepository.SaveOrUpdate(buyAccountQuoteCurrencyBalance);
-
-            Balance sellAccountBaseCurrencyBalance = new Balance(new Currency(baseCurrency), new AccountId(sellAccountId), 0, 0);
-            fundsPersistenceRepository.SaveOrUpdate(sellAccountBaseCurrencyBalance);
-            Balance sellAccountQuoteCurrencyBalance = new Balance(new Currency(quoteCurrency), new AccountId(sellAccountId), 0, 0);
-            fundsPersistenceRepository.SaveOrUpdate(sellAccountQuoteCurrencyBalance);
-            bool tradeExecutedResponse = fundsValidationService.TradeExecuted(baseCurrency, quoteCurrency, 400, 100,
-                DateTime.Now, tradeId, buyAccountId, sellAccountId, buyOrderId, sellOrderId);
-            Assert.IsTrue(tradeExecutedResponse);
-
-            buyAccountBaseCurrencyBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(
-                new Currency(baseCurrency), new AccountId(buyAccountId));
-            Assert.IsNotNull(buyAccountBaseCurrencyBalance);
-            Assert.AreEqual(400, buyAccountBaseCurrencyBalance.CurrentBalance);
-            Assert.AreEqual(400, buyAccountBaseCurrencyBalance.AvailableBalance);
-            Assert.AreEqual(0, buyAccountBaseCurrencyBalance.PendingBalance);
-
-            buyAccountQuoteCurrencyBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(
-                new Currency(quoteCurrency), new AccountId(buyAccountId));
-            Assert.AreEqual(-40000, buyAccountQuoteCurrencyBalance.CurrentBalance);
-            Assert.AreEqual(-40000, buyAccountQuoteCurrencyBalance.AvailableBalance);
-            Assert.AreEqual(0, buyAccountQuoteCurrencyBalance.PendingBalance);
-
-            sellAccountBaseCurrencyBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(
-                new Currency(baseCurrency), new AccountId(sellAccountId));
-            Assert.AreEqual(-400, sellAccountBaseCurrencyBalance.CurrentBalance);
-            Assert.AreEqual(-400, sellAccountBaseCurrencyBalance.AvailableBalance);
-            Assert.AreEqual(0, sellAccountBaseCurrencyBalance.PendingBalance);
-
-            sellAccountQuoteCurrencyBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(
-                new Currency(quoteCurrency), new AccountId(sellAccountId));
-            Assert.AreEqual(40000, sellAccountQuoteCurrencyBalance.CurrentBalance);
-            Assert.AreEqual(40000, sellAccountQuoteCurrencyBalance.AvailableBalance);
-            Assert.AreEqual(0, sellAccountQuoteCurrencyBalance.PendingBalance);
-        }
-
-        [Test]
-        public void TradeTransactionsAfterValidationTest_TEstsIfTheLedgerTransactionsWereCreatedAsExpectedAfterBalanceUpdate_VerifiesThroughDatabaseQUery()
-        {
-            IFundsValidationService fundsValidationService = (IFundsValidationService)ContextRegistry.GetContext()["FundsValidationService"];
-            IFundsPersistenceRepository fundsPersistenceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];
-            ILedgerRepository ledgerRepository = (ILedgerRepository)ContextRegistry.GetContext()["LedgerRepository"];
             IFeeCalculationService feeCalculationService = (IFeeCalculationService)ContextRegistry.GetContext()["FeeCalculationService"];
 
             string baseCurrency = "XBT";
@@ -558,20 +504,102 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             string buyAccountId = "buyaccountid123";
             string sellAccountId = "sellaccountid123";
 
-            Balance buyAccountBaseCurrencyBalance = new Balance(new Currency(baseCurrency), new AccountId(buyAccountId), 0, 0);
+            Balance buyAccountBaseCurrencyBalance = new Balance(new Currency(baseCurrency), new AccountId(buyAccountId), 4000, 4000);
             fundsPersistenceRepository.SaveOrUpdate(buyAccountBaseCurrencyBalance);
-            Balance buyAccountQuoteCurrencyBalance = new Balance(new Currency(quoteCurrency), new AccountId(buyAccountId), 0, 0);
+            Balance buyAccountQuoteCurrencyBalance = new Balance(new Currency(quoteCurrency), new AccountId(buyAccountId), 50000, 50000);
             fundsPersistenceRepository.SaveOrUpdate(buyAccountQuoteCurrencyBalance);
 
-            Balance sellAccountBaseCurrencyBalance = new Balance(new Currency(baseCurrency), new AccountId(sellAccountId), 0, 0);
+            Balance sellAccountBaseCurrencyBalance = new Balance(new Currency(baseCurrency), new AccountId(sellAccountId), 6000, 6000);
             fundsPersistenceRepository.SaveOrUpdate(sellAccountBaseCurrencyBalance);
-            Balance sellAccountQuoteCurrencyBalance = new Balance(new Currency(quoteCurrency), new AccountId(sellAccountId), 0, 0);
+            Balance sellAccountQuoteCurrencyBalance = new Balance(new Currency(quoteCurrency), new AccountId(sellAccountId), 60000, 60000);
             fundsPersistenceRepository.SaveOrUpdate(sellAccountQuoteCurrencyBalance);
+            bool orderValidation = fundsValidationService.ValidateFundsForOrder(new AccountId(buyAccountId), new Currency(baseCurrency),
+                                                         new Currency(quoteCurrency), 400, 100, "buy", buyOrderId);
+            Assert.IsTrue(orderValidation);
+            orderValidation = fundsValidationService.ValidateFundsForOrder(new AccountId(sellAccountId),
+                new Currency(baseCurrency), new Currency(quoteCurrency), 400, 100, "sell", sellOrderId);
+            Assert.IsTrue(orderValidation);
             bool tradeExecutedResponse = fundsValidationService.TradeExecuted(baseCurrency, quoteCurrency, 400, 100,
                 DateTime.Now, tradeId, buyAccountId, sellAccountId, buyOrderId, sellOrderId);
             Assert.IsTrue(tradeExecutedResponse);
 
+            // Get the fee corresponding to the currenct volume of the quote currency
+            double usdFee = feeCalculationService.GetFee(new Currency(quoteCurrency), 400 * 100);
+
+            buyAccountBaseCurrencyBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(
+                new Currency(baseCurrency), new AccountId(buyAccountId));
+            Assert.IsNotNull(buyAccountBaseCurrencyBalance);
+            Assert.AreEqual(4400, buyAccountBaseCurrencyBalance.CurrentBalance);
+            Assert.AreEqual(4400, buyAccountBaseCurrencyBalance.AvailableBalance);
+            Assert.AreEqual(0, buyAccountBaseCurrencyBalance.PendingBalance);
+
+            buyAccountQuoteCurrencyBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(
+                new Currency(quoteCurrency), new AccountId(buyAccountId));
+            Assert.AreEqual(50000-40000-usdFee, buyAccountQuoteCurrencyBalance.CurrentBalance);
+            Assert.AreEqual(50000-40000-usdFee, buyAccountQuoteCurrencyBalance.AvailableBalance);
+            Assert.AreEqual(0, buyAccountQuoteCurrencyBalance.PendingBalance);
+
+            sellAccountBaseCurrencyBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(
+                new Currency(baseCurrency), new AccountId(sellAccountId));
+            Assert.AreEqual(6000 - 400, sellAccountBaseCurrencyBalance.CurrentBalance);
+            Assert.AreEqual(6000 - 400, sellAccountBaseCurrencyBalance.AvailableBalance);
+            Assert.AreEqual(0, sellAccountBaseCurrencyBalance.PendingBalance);
+
+            sellAccountQuoteCurrencyBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(
+                new Currency(quoteCurrency), new AccountId(sellAccountId));
+            Assert.AreEqual(60000 + (400 * 100) - usdFee, sellAccountQuoteCurrencyBalance.CurrentBalance);
+            Assert.AreEqual(60000 + (400 * 100) - usdFee, sellAccountQuoteCurrencyBalance.AvailableBalance);
+            Assert.AreEqual(0, sellAccountQuoteCurrencyBalance.PendingBalance);
+        }
+
+        [Test]
+        public void TradeTransactionsAfterValidationTest_TEstsIfTheLedgerTransactionsWereCreatedAsExpectedAfterBalanceUpdate_VerifiesThroughDatabaseQUery()
+        {
+            IFundsValidationService fundsValidationService = (IFundsValidationService)ContextRegistry.GetContext()["FundsValidationService"];
+            IFundsPersistenceRepository fundsPersistenceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];
+            ILedgerRepository ledgerRepository = (ILedgerRepository)ContextRegistry.GetContext()["LedgerRepository"];
+            IFeeCalculationService feeCalculationService = (IFeeCalculationService)ContextRegistry.GetContext()["FeeCalculationService"];
+            IBalanceRepository balanceRepository = (IBalanceRepository)ContextRegistry.GetContext()["BalanceRepository"];
+
+            string baseCurrency = "XBT";
+            string quoteCurrency = "USD";
+            string tradeId = "tradeid123";
+            string buyOrderId = "buyorderid123";
+            string sellOrderId = "sellorderid123";
+            string buyAccountId = "buyaccountid123";
+            string sellAccountId = "sellaccountid123";
+
+            Balance buyAccountBaseCurrencyBalance = new Balance(new Currency(baseCurrency), new AccountId(buyAccountId), 4000, 4000);
+            fundsPersistenceRepository.SaveOrUpdate(buyAccountBaseCurrencyBalance);
+            Balance buyAccountQuoteCurrencyBalance = new Balance(new Currency(quoteCurrency), new AccountId(buyAccountId), 50000, 50000);
+            fundsPersistenceRepository.SaveOrUpdate(buyAccountQuoteCurrencyBalance);
+
+            Balance sellAccountBaseCurrencyBalance = new Balance(new Currency(baseCurrency), new AccountId(sellAccountId), 6000, 6000);
+            fundsPersistenceRepository.SaveOrUpdate(sellAccountBaseCurrencyBalance);
+            Balance sellAccountQuoteCurrencyBalance = new Balance(new Currency(quoteCurrency), new AccountId(sellAccountId), 60000, 60000);
+            fundsPersistenceRepository.SaveOrUpdate(sellAccountQuoteCurrencyBalance);
+            bool orderValidation = fundsValidationService.ValidateFundsForOrder(new AccountId(buyAccountId), new Currency(baseCurrency),
+                                                         new Currency(quoteCurrency), 400, 100, "buy", buyOrderId);
+            Assert.IsTrue(orderValidation);
+            orderValidation = fundsValidationService.ValidateFundsForOrder(new AccountId(sellAccountId),
+                new Currency(baseCurrency), new Currency(quoteCurrency), 400, 100, "sell", sellOrderId);
+            Assert.IsTrue(orderValidation);
+            bool tradeExecutedResponse = fundsValidationService.TradeExecuted(baseCurrency, quoteCurrency, 400, 100,
+                DateTime.Now, tradeId, buyAccountId, sellAccountId, buyOrderId, sellOrderId);
+            Assert.IsTrue(tradeExecutedResponse);
+
+            // Get the fee corresponding to the currenct volume of the quote currency
+            double usdFee = feeCalculationService.GetFee(new Currency(quoteCurrency), 400*100);
+            Assert.Greater(usdFee, 0);
+
+            Balance buyXbtBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(new Currency(baseCurrency), new AccountId(buyAccountId));
+            Assert.AreEqual(4000 + 400, buyXbtBalance.AvailableBalance);
+            Assert.AreEqual(4000 + 400, buyXbtBalance.CurrentBalance);
+            Balance buyUsdBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(new Currency(quoteCurrency), new AccountId(buyAccountId));
+            Assert.AreEqual(50000 + (-400 * 100) - usdFee, buyUsdBalance.AvailableBalance);
+            Assert.AreEqual(50000 + (-400 * 100) - usdFee, buyUsdBalance.CurrentBalance);
             List<Ledger> ledgerByAccountId = ledgerRepository.GetLedgerByAccountId(new AccountId("buyaccountid123"));
+            
             Assert.AreEqual(2, ledgerByAccountId.Count);
 
             // Any of the two ledgers for currencies can be fetched one after the other as they might be happening in the
@@ -582,27 +610,23 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             {
                 // For XBT
                 Assert.AreEqual(400, ledgerByAccountId[0].Amount);
-                Assert.AreEqual(400, ledgerByAccountId[0].Balance);
+                Assert.AreEqual(4000 + 400, ledgerByAccountId[0].Balance);
                 // For USD
                 Assert.AreEqual(-(400 * 100), ledgerByAccountId[1].Amount);
-                Assert.AreEqual(-(400 * 100), ledgerByAccountId[1].Balance);
+                Assert.AreEqual(50000 -(400 * 100) - usdFee, ledgerByAccountId[1].Balance);
 
-                // Get the fee corresponding to the currenct volume of the quote currency
-                double fee = feeCalculationService.GetFee(new Currency("USD"), 400 * 100);
-                Assert.AreEqual(fee, ledgerByAccountId[1].Fee);
+                Assert.AreEqual(usdFee, ledgerByAccountId[1].Fee);
             }
             else if (ledgerByAccountId[0].Currency.Name == "USD")
             {
                 // For USD
                 Assert.AreEqual(-(400 * 100), ledgerByAccountId[0].Amount);
-                Assert.AreEqual(-(400 * 100), ledgerByAccountId[0].Balance);
-                // Get the fee corresponding to the currenct volume of the quote currency
-                double fee = feeCalculationService.GetFee(new Currency("USD"), 400 * 100);
-                Assert.AreEqual(fee, ledgerByAccountId[0].Fee);
+                Assert.AreEqual(50000 -(400 * 100) - usdFee, ledgerByAccountId[0].Balance);
+                Assert.AreEqual(usdFee, ledgerByAccountId[0].Fee);
 
                 // For XBT
                 Assert.AreEqual(400, ledgerByAccountId[1].Amount);
-                Assert.AreEqual(400, ledgerByAccountId[1].Balance);
+                Assert.AreEqual(4000 + 400, ledgerByAccountId[1].Balance);
             }
             else
             {
@@ -615,8 +639,17 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             Assert.AreEqual(LedgerType.Trade, ledgerByAccountId[1].LedgerType);
             Assert.AreEqual("buyorderid123", ledgerByAccountId[1].OrderId);
 
+            Balance sellXbtBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(new Currency(baseCurrency),
+                new AccountId(sellAccountId));
+            Assert.AreEqual(6000 - 400, sellXbtBalance.AvailableBalance);
+            Assert.AreEqual(6000 - 400, sellXbtBalance.CurrentBalance);
 
-            ledgerByAccountId = ledgerRepository.GetLedgerByAccountId(new AccountId("sellaccountid123"));
+            Balance sellUsdBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(new Currency(quoteCurrency),
+                new AccountId(sellAccountId));
+            Assert.AreEqual(60000 + (400 * 100) - usdFee, sellUsdBalance.AvailableBalance);
+            Assert.AreEqual(60000 + (400 * 100) - usdFee, sellUsdBalance.CurrentBalance);
+
+            ledgerByAccountId = ledgerRepository.GetLedgerByAccountId(new AccountId("sellaccountid123"));            
             Assert.AreEqual(2, ledgerByAccountId.Count);
 
             // Secondly, wee verify for the sell order side's ledgers
@@ -624,25 +657,23 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             {
                 // For XBT
                 Assert.AreEqual(-400, ledgerByAccountId[0].Amount);
-                Assert.AreEqual(-400, ledgerByAccountId[0].Balance);
+                Assert.AreEqual(6000 - 400, ledgerByAccountId[0].Balance);
                 // For USD
                 Assert.AreEqual((400 * 100), ledgerByAccountId[1].Amount);
-                Assert.AreEqual((400 * 100), ledgerByAccountId[1].Balance);
-                // Get the fee corresponding to the currenct volume of the quote currency
-                double fee = feeCalculationService.GetFee(new Currency("USD"), 400 * 100);
-                Assert.AreEqual(fee, ledgerByAccountId[1].Fee);
+                Assert.AreEqual(60000 + (400 * 100) - usdFee, ledgerByAccountId[1].Balance);
+                Assert.AreEqual(usdFee, ledgerByAccountId[1].Fee);
             }
             else if (ledgerByAccountId[0].Currency.Name == "USD")
             {
                 // For USD
                 Assert.AreEqual((400 * 100), ledgerByAccountId[0].Amount);
-                Assert.AreEqual((400 * 100), ledgerByAccountId[0].Balance);
+                Assert.AreEqual(60000 + (400 * 100) - usdFee, ledgerByAccountId[0].Balance);
                 // Get the fee corresponding to the currenct volume of the quote currency
                 double fee = feeCalculationService.GetFee(new Currency("USD"), 400 * 100);
                 Assert.AreEqual(fee, ledgerByAccountId[0].Fee);
                 // For XBT
                 Assert.AreEqual(-400, ledgerByAccountId[1].Amount);
-                Assert.AreEqual(-400, ledgerByAccountId[1].Balance);
+                Assert.AreEqual(6000 - 400, ledgerByAccountId[1].Balance);
             }
             else
             {
@@ -697,21 +728,25 @@ namespace CoinExchange.Funds.Application.IntegrationTests
                 DateTime.Now, tradeId, buyAccountId, sellAccountId, buyOrderId + "1", sellOrderId + "1");
             Assert.IsTrue(tradeExecutedResponse);
 
+            // Get the fee corresponding to the currenct volume of the quote currency
+            double usdFee = feeCalculationService.GetFee(new Currency(quoteCurrency), 100 * 100);
+            Assert.Greater(usdFee, 0);
+
             buyXbtBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(new Currency(baseCurrency),
                                                                    new AccountId(buyAccountId));
             double buyerBaseAccountBalance = ledgerRepository.GetBalanceForCurrency(baseCurrency, new AccountId(buyAccountId));
             Assert.AreEqual(buyXbtBalance.CurrentBalance, buyerBaseAccountBalance);
-            Assert.AreEqual(4100, buyXbtBalance.CurrentBalance);
-            Assert.AreEqual(4100, buyXbtBalance.AvailableBalance);
+            Assert.AreEqual(4000 + 100, buyXbtBalance.CurrentBalance);
+            Assert.AreEqual(4000 + 100, buyXbtBalance.AvailableBalance);
 
             buyUsdBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(new Currency(quoteCurrency),
                                                                    new AccountId(buyAccountId));
             double buyerQuoteAccountBalance = ledgerRepository.GetBalanceForCurrency(quoteCurrency, new AccountId(buyAccountId));
             Assert.AreEqual(buyUsdBalance.CurrentBalance, buyerQuoteAccountBalance);
-            Assert.AreEqual(40000, buyUsdBalance.CurrentBalance);
-            Assert.AreEqual(40000, buyUsdBalance.AvailableBalance);
+            Assert.AreEqual(50000 - (100 * 100) - usdFee, buyUsdBalance.CurrentBalance);
+            Assert.AreEqual(50000 - (100 * 100) - usdFee, buyUsdBalance.AvailableBalance);
 
-            // ----- Trade 1-----
+            // ----- Trade 2-----
 
             tradeExecutedResponse = fundsValidationService.TradeExecuted(baseCurrency, quoteCurrency, 300, 102,
                 DateTime.Now, tradeId, buyAccountId, sellAccountId, buyOrderId + "2", sellOrderId + "2");
@@ -733,7 +768,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
 
             sellXbtBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(new Currency(baseCurrency),
                                                                    new AccountId(sellAccountId));
-            double sellerBaseAccountBalance = ledgerRepository.GetBalanceForCurrency(quoteCurrency, new AccountId(sellAccountId));
+            double sellerBaseAccountBalance = ledgerRepository.GetBalanceForCurrency(baseCurrency, new AccountId(sellAccountId));
             Assert.AreEqual(sellXbtBalance.CurrentBalance, sellerBaseAccountBalance);
 
             sellUsdBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(new Currency(quoteCurrency),
@@ -755,24 +790,30 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             IBalanceRepository balanceRepository = (IBalanceRepository)ContextRegistry.GetContext()["BalanceRepository"];
             IFundsPersistenceRepository fundsPersistenceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];
             IWithdrawIdGeneratorService withdrawIdGeneratorService = (IWithdrawIdGeneratorService)ContextRegistry.GetContext()["WithdrawIdGeneratorService"];
+            IFeeCalculationService feeCalculationService = (IFeeCalculationService)ContextRegistry.GetContext()["FeeCalculationService"];
+            IWithdrawFeesRepository withdrawFeesRepository = (IWithdrawFeesRepository)ContextRegistry.GetContext()["WithdrawFeesRepository"];
 
             AccountId accountId = new AccountId("accountid123");
             Currency currency = new Currency("XBT");
 
-            Balance balance = new Balance(currency, accountId, 2000, 2400);
+            Balance balance = new Balance(currency, accountId, 2400, 2400);
             fundsPersistenceRepository.SaveOrUpdate(balance);
 
             Withdraw withdraw = new Withdraw(currency, withdrawIdGeneratorService.GenerateNewId(), DateTime.Now, 
                 WithdrawType.Default, 400, 0.4, TransactionStatus.Confirmed, accountId, new TransactionId("transaction123"),
                 new BitcoinAddress("bitcoin123"));
 
-            bool withdrawalExecuted = fundsValidationService.WithdrawalExecuted(withdraw);
+            Withdraw validateFundsForWithdrawal = fundsValidationService.ValidateFundsForWithdrawal(accountId, currency, 400, new TransactionId("transaction123"), new BitcoinAddress("bitcoin123"));
+            Assert.IsNotNull(validateFundsForWithdrawal);
+            bool withdrawalExecuted = fundsValidationService.WithdrawalExecuted(validateFundsForWithdrawal);
             Assert.IsTrue(withdrawalExecuted);
+
+            WithdrawFees withdrawFee = withdrawFeesRepository.GetWithdrawFeesByCurrencyName(currency.Name);
 
             balance = balanceRepository.GetBalanceByCurrencyAndAccountId(currency, accountId);
             Assert.IsNotNull(balance);
-            Assert.AreEqual(2000, balance.CurrentBalance);
-            Assert.AreEqual(2000, balance.AvailableBalance);
+            Assert.AreEqual(2400 - 400 - withdrawFee.Fee, balance.CurrentBalance);
+            Assert.AreEqual(2400 - 400 - withdrawFee.Fee, balance.AvailableBalance);
             Assert.AreEqual(0, balance.PendingBalance);
         }
 
@@ -781,28 +822,117 @@ namespace CoinExchange.Funds.Application.IntegrationTests
         #region Order Cancelled Tests
 
         [Test]
-        public void OrderCancelledFundsRestoreTest_TestsIfTheFundsAreRestoredAsExpectedInCaseOfAnOrderCancelled_VerifiesThroughDatabaseQuery()
+        public void BuyOrderCancelledFundsRestoreTest_TestsIfTheFundsAreRestoredAsExpectedInCaseOfAnOrderCancelled_VerifiesThroughDatabaseQuery()
         {
-            IFundsValidationService fundsValidationService = (IFundsValidationService)ContextRegistry.GetContext()["FundsValidationService"];
-            ILedgerRepository ledgerRepository = (ILedgerRepository)ContextRegistry.GetContext()["LedgerRepository"];
-            IDepositIdGeneratorService depositIdGeneratorService = (IDepositIdGeneratorService)ContextRegistry.GetContext()["DepositIdGeneratorService"];
+            IFundsValidationService fundsValidationService = (IFundsValidationService)ContextRegistry.GetContext()["FundsValidationService"];            
             IBalanceRepository balanceRepository = (IBalanceRepository)ContextRegistry.GetContext()["BalanceRepository"];
-            IFundsPersistenceRepository fundsPersistenceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];
-            IWithdrawIdGeneratorService withdrawIdGeneratorService = (IWithdrawIdGeneratorService)ContextRegistry.GetContext()["WithdrawIdGeneratorService"];
+            IFundsPersistenceRepository fundsPersistenceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];            
+            IFeeCalculationService feeCalculationService = (IFeeCalculationService)ContextRegistry.GetContext()["FeeCalculationService"];
 
             AccountId accountId = new AccountId("accountid123");
             Currency baseCurrency = new Currency("XBT");
             Currency quoteCurrency = new Currency("USD");
             Balance baseCurrencyBalance = new Balance(baseCurrency, accountId, 5000, 5000);
-            Balance quoteCurrencyBalance = new Balance(baseCurrency, accountId, 20000, 20000);
+            Balance quoteCurrencyBalance = new Balance(quoteCurrency, accountId, 20000, 20000);
             fundsPersistenceRepository.SaveOrUpdate(baseCurrencyBalance);
             fundsPersistenceRepository.SaveOrUpdate(quoteCurrencyBalance);
             bool validateFundsForOrder = fundsValidationService.ValidateFundsForOrder(accountId, baseCurrency,
-                quoteCurrency, 100, 90, "buy", "order123");
+                quoteCurrency, 100, 90, "buy", "orderid123");
             Assert.IsTrue(validateFundsForOrder);
-            fundsValidationService.OrderCancelled(baseCurrency, accountId, "orderid123", 500);
 
+            Balance retrievedXbtBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(baseCurrency, accountId);
+            Assert.IsNotNull(retrievedXbtBalance);
+
+            Assert.AreEqual(5000, retrievedXbtBalance.AvailableBalance);
+            Assert.AreEqual(5000, retrievedXbtBalance.CurrentBalance);
+            Assert.AreEqual(0, retrievedXbtBalance.PendingBalance);
+
+            Balance retrievedUsdBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(quoteCurrency, accountId);
+            Assert.IsNotNull(retrievedUsdBalance);
+
+            Assert.AreEqual(20000 - 100 * 90, retrievedUsdBalance.AvailableBalance);
+            Assert.AreEqual(20000, retrievedUsdBalance.CurrentBalance);
+            Assert.AreEqual(100*90, retrievedUsdBalance.PendingBalance);
+
+            bool orderCancelled = fundsValidationService.OrderCancelled(baseCurrency, quoteCurrency, accountId, 
+                "buy", "orderid123", 100, 90);
+            Assert.IsTrue(orderCancelled);
+
+            // Get the fee corresponding to the current volume of the quote currency
+            double usdFee = feeCalculationService.GetFee(quoteCurrency, 100 * 90);
+            Assert.Greater(usdFee, 0);
+
+            retrievedXbtBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(baseCurrency, accountId);
+            Assert.IsNotNull(retrievedXbtBalance);
+
+            Assert.AreEqual(5000, retrievedXbtBalance.AvailableBalance);
+            Assert.AreEqual(5000, retrievedXbtBalance.CurrentBalance);
+            Assert.AreEqual(0, retrievedXbtBalance.PendingBalance);
+
+            retrievedUsdBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(quoteCurrency, accountId);
+            Assert.IsNotNull(retrievedUsdBalance);
+
+            Assert.AreEqual(20000, retrievedUsdBalance.AvailableBalance);
+            Assert.AreEqual(20000, retrievedUsdBalance.CurrentBalance);
+            Assert.AreEqual(0, retrievedUsdBalance.PendingBalance);
         }
+
+        [Test]
+        public void SellOrderCancelledFundsRestoreTest_TestsIfTheFundsAreRestoredAsExpectedInCaseOfAnOrderCancelled_VerifiesThroughDatabaseQuery()
+        {
+            IFundsValidationService fundsValidationService = (IFundsValidationService)ContextRegistry.GetContext()["FundsValidationService"];
+            IBalanceRepository balanceRepository = (IBalanceRepository)ContextRegistry.GetContext()["BalanceRepository"];
+            IFundsPersistenceRepository fundsPersistenceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];
+            IFeeCalculationService feeCalculationService = (IFeeCalculationService)ContextRegistry.GetContext()["FeeCalculationService"];
+
+            AccountId accountId = new AccountId("accountid123");
+            Currency baseCurrency = new Currency("XBT");
+            Currency quoteCurrency = new Currency("USD");
+            Balance baseCurrencyBalance = new Balance(baseCurrency, accountId, 5000, 5000);
+            Balance quoteCurrencyBalance = new Balance(quoteCurrency, accountId, 20000, 20000);
+            fundsPersistenceRepository.SaveOrUpdate(baseCurrencyBalance);
+            fundsPersistenceRepository.SaveOrUpdate(quoteCurrencyBalance);
+            bool validateFundsForOrder = fundsValidationService.ValidateFundsForOrder(accountId, baseCurrency,
+                quoteCurrency, 100, 90, "sell", "orderid123");
+            Assert.IsTrue(validateFundsForOrder);
+
+            Balance retrievedXbtBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(baseCurrency, accountId);
+            Assert.IsNotNull(retrievedXbtBalance);
+
+            Assert.AreEqual(5000 - 100, retrievedXbtBalance.AvailableBalance);
+            Assert.AreEqual(5000, retrievedXbtBalance.CurrentBalance);
+            Assert.AreEqual(100, retrievedXbtBalance.PendingBalance);
+
+            Balance retrievedUsdBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(quoteCurrency, accountId);
+            Assert.IsNotNull(retrievedUsdBalance);
+
+            Assert.AreEqual(20000, retrievedUsdBalance.AvailableBalance);
+            Assert.AreEqual(20000, retrievedUsdBalance.CurrentBalance);
+            Assert.AreEqual(0, retrievedUsdBalance.PendingBalance);
+
+            bool orderCancelled = fundsValidationService.OrderCancelled(baseCurrency, quoteCurrency, accountId, "sell", 
+                "orderid123", 100, 90);
+            Assert.IsTrue(orderCancelled);
+
+            // Get the fee corresponding to the current volume of the quote currency
+            double usdFee = feeCalculationService.GetFee(quoteCurrency, 100 * 90);
+            Assert.Greater(usdFee, 0);
+
+            retrievedXbtBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(baseCurrency, accountId);
+            Assert.IsNotNull(retrievedXbtBalance);
+
+            Assert.AreEqual(5000, retrievedXbtBalance.AvailableBalance);
+            Assert.AreEqual(5000, retrievedXbtBalance.CurrentBalance);
+            Assert.AreEqual(0, retrievedXbtBalance.PendingBalance);
+
+            retrievedUsdBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(quoteCurrency, accountId);
+            Assert.IsNotNull(retrievedUsdBalance);
+
+            Assert.AreEqual(20000, retrievedUsdBalance.AvailableBalance);
+            Assert.AreEqual(20000, retrievedUsdBalance.CurrentBalance);
+            Assert.AreEqual(0, retrievedUsdBalance.PendingBalance);
+        }
+
         #endregion Order Cancelled Tests
 
         #region Transaction Jobs Tests

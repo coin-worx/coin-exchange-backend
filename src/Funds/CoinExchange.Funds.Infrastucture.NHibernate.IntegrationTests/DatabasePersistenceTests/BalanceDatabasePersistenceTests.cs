@@ -54,5 +54,32 @@ namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests.DatabaseP
             Assert.AreEqual(balance.CurrentBalance, retrievedDepositAddressList.CurrentBalance);
             Assert.AreEqual(balance.PendingBalance, retrievedDepositAddressList.PendingBalance);
         }
+
+        [Test]
+        public void SavePendingTransactionsTest_SavesObjectsToPendingTransactionsList_ChecksIfTheyAreAsExpected()
+        {
+            Balance balance = new Balance(new Currency("LTC", true), new AccountId("123"), 5000, 5000);
+            _persistanceRepository.SaveOrUpdate(balance);
+            bool addPendingTransaction = balance.AddPendingTransaction("withdrawid123", PendingTransactionType.Withdraw, -500);
+            Assert.IsTrue(addPendingTransaction);
+
+            _persistanceRepository.SaveOrUpdate(balance);
+
+            Balance retrievedBalance = _balanceRepository.GetBalanceByCurrencyAndAccountId(balance.Currency, balance.AccountId);
+            Assert.IsNotNull(retrievedBalance);
+
+            Assert.AreEqual(4500, retrievedBalance.AvailableBalance);
+            Assert.AreEqual(5000, retrievedBalance.CurrentBalance);
+            Assert.AreEqual(500, retrievedBalance.PendingBalance);
+
+            retrievedBalance.ConfirmPendingTransaction("withdrawid123", PendingTransactionType.Withdraw, -500);
+
+            _persistanceRepository.SaveOrUpdate(retrievedBalance);
+            retrievedBalance = _balanceRepository.GetBalanceByCurrencyAndAccountId(balance.Currency, balance.AccountId);
+            Assert.IsNotNull(retrievedBalance);
+            Assert.AreEqual(4500, retrievedBalance.AvailableBalance);
+            Assert.AreEqual(4500, retrievedBalance.CurrentBalance);
+            Assert.AreEqual(0, retrievedBalance.PendingBalance);
+        }
     }
 }

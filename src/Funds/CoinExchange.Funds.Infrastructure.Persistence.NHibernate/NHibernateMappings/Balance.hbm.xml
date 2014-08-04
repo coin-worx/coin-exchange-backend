@@ -2,7 +2,7 @@
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
 assembly="CoinExchange.Funds.Domain.Model" namespace="CoinExchange.Funds.Domain.Model.BalanceAggregate">
   <class name="Balance" table="balance" lazy="false">
-    <id name="Id" column="Id">
+    <id name="BalanceId" column="BalanceId">
       <generator class="native" />
     </id>
 
@@ -15,8 +15,8 @@ assembly="CoinExchange.Funds.Domain.Model" namespace="CoinExchange.Funds.Domain.
     <property name="AvailableBalance" />
     <property name="CurrentBalance" />
     <property name="PendingBalance" />
-    <bag name="_pendingTransactions" table="pendingtransaction" cascade="save-update" inverse="true" lazy="false">
-      <key column="Currency" />
+    <bag name="PendingTransactions" table="PendingTransaction" cascade="save-update" inverse="true" lazy="false">
+      <key column="BalanceId" />
       <one-to-many class="PendingTransaction" />
     </bag>
   </class>

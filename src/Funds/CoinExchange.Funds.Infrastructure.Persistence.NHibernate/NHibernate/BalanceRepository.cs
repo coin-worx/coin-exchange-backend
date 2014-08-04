@@ -24,7 +24,7 @@ namespace CoinExchange.Funds.Infrastructure.Persistence.NHibernate.NHibernate
         /// <returns></returns>
         public Balance GetBalanceById(int id)
         {
-            return CurrentSession.QueryOver<Balance>().Where(x => x.Id == id).SingleOrDefault();
+            return CurrentSession.QueryOver<Balance>().Where(x => x.BalanceId == id).SingleOrDefault();
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace CoinExchange.Funds.Infrastructure.Persistence.NHibernate.NHibernate
         {
             return CurrentSession
                 .QueryOver<Balance>()
-                .Where(x => x.Currency == currency && x.AccountId.Value == accountId.Value)
+                .Where(x => x.Currency.Name == currency.Name && x.AccountId.Value == accountId.Value)
                 .SingleOrDefault();
         }
     }

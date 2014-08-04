@@ -128,7 +128,7 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
                                 accountId, transactionId, bitcoinAddress);
                             _fundsPersistenceRepository.SaveOrUpdate(withdraw);
                             currencyBalance.AddPendingTransaction(withdraw.WithdrawId, PendingTransactionType.Withdraw,
-                                                                  withdraw.Amount);
+                                                                  -withdraw.Amount);
                             _fundsPersistenceRepository.SaveOrUpdate(currencyBalance);
                             return withdraw;
                         }
@@ -155,6 +155,8 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
                 if (addResponse)
                 {
                     balance.AddAvailableBalance(-withdraw.Fee);
+                    balance.AddCurrentBalance(-withdraw.Fee);
+                    _fundsPersistenceRepository.SaveOrUpdate(balance);
                     return _transactionService.CreateWithdrawTransaction(withdraw, balance.CurrentBalance);
                 }
             }
@@ -207,42 +209,66 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         public bool TradeExecuted(string baseCurrency, string quoteCurrency, double tradeVolume, double price, DateTime executionDateTime,
             string tradeId, string buyAccountId, string sellAccountId, string buyOrderId, string sellOrderId)
         {
-            // First we update balance for Buy Account's Base Currency
-            if (InitializeBalanceLedgerUpdate(new Currency(baseCurrency), new AccountId(buyAccountId), tradeVolume,
-                                          executionDateTime, buyOrderId, tradeId, false, false))
+            // As in case of buy order, the current and available balances differ in the case of quote currency, we 
+            // evaluate the quote currency first
+            if (InitializeBalanceLedgerUpdate(new Currency(quoteCurrency), new AccountId(buyAccountId),
+                                          -(tradeVolume * price),
+                                          executionDateTime, buyOrderId, tradeId, true, true))
             {
-                // Then, for Buy Account's Quote Currency
-                if (InitializeBalanceLedgerUpdate(new Currency(quoteCurrency), new AccountId(buyAccountId),
-                                              -(tradeVolume * price),
-                                              executionDateTime, buyOrderId, tradeId, false, true))
+                // Then, we update balance for Buy Account's Base Currency
+                if (InitializeBalanceLedgerUpdate(new Currency(baseCurrency), new AccountId(buyAccountId), tradeVolume,
+                                              executionDateTime, buyOrderId, tradeId, false, false))
                 {
-                    // Then, for the Seller Account's Base Currency
+                    // In case of a sell order, the available balance is deducted from the base currency, so we validate the 
+                    // base currency first
                     if (InitializeBalanceLedgerUpdate(new Currency(baseCurrency), new AccountId(sellAccountId),
                                                         -tradeVolume, executionDateTime, sellOrderId, tradeId, false, true))
                     {
-                        // Last, for the seller account's quote currency
+                        // Lastly, for the seller account's quote currency
                         return InitializeBalanceLedgerUpdate(new Currency(quoteCurrency), new AccountId(sellAccountId),
-                                                      tradeVolume*price,executionDateTime, sellOrderId, tradeId, false, false);
+                                                      tradeVolume * price, executionDateTime, sellOrderId, tradeId, true, false);
                     }
                 }
             }
+            
             return false;
         }
 
         /// <summary>
         /// Updates the funds when an order is cancelled
         /// </summary>
-        /// <param name="currency"></param>
+        /// <param name="quoteCurrency"> </param>
         /// <param name="accountId"></param>
+        /// <param name="orderside"> </param>
         /// <param name="orderId"></param>
         /// <param name="openQuantity"> </param>
+        /// <param name="price"> </param>
+        /// <param name="baseCurrency"> </param>
         /// <returns></returns>
-        public bool OrderCancelled(Currency currency, AccountId accountId, string orderId, double openQuantity)
+        public bool OrderCancelled(Currency baseCurrency, Currency quoteCurrency, AccountId accountId, string orderside, string orderId, double openQuantity, double price)
         {
-            Balance currencyBalance = GetBalanceForAccountId(accountId, currency);
+            double amount = 0;
+            Balance currencyBalance = null;
+            // If the order is buy order, then we deducted price * volume from the quote currency. So now we add the 
+            // openQuantity*price in the quote currency, as the order may be partially filled
+            if (orderside.Equals("buy", StringComparison.OrdinalIgnoreCase))
+            {
+                amount = price * openQuantity;
+                currencyBalance = GetBalanceForAccountId(accountId, quoteCurrency);
+            }
+            // If the order is a sell order, then we had deducted the volume from the base currency. So we now add the 
+            // volume back in the base currency
+            else if (orderside.Equals("sell", StringComparison.OrdinalIgnoreCase))
+            {
+                amount = openQuantity;
+                currencyBalance = GetBalanceForAccountId(accountId, baseCurrency);
+            }
+            
             if (currencyBalance != null)
             {
-                return currencyBalance.ConfirmPendingTransaction(orderId, PendingTransactionType.Order, openQuantity);                
+                currencyBalance.CancelPendingTransaction(orderId, PendingTransactionType.Order, amount);
+                _fundsPersistenceRepository.SaveOrUpdate(currencyBalance);
+                return true;
             }
             return false;
         }
@@ -257,7 +283,7 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
             double fee = 0;
             if (includeFee)
             {
-                fee = _feeCalculationService.GetFee(currency, amount);
+                fee = _feeCalculationService.GetFee(currency, Math.Abs(amount));
             }
             // Update the balance
             double balance = UpdateBalanceAfterTrade(currency, accountId, amount, orderId, fee, isPending);
@@ -291,12 +317,12 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
                 {
                     balance.ConfirmPendingTransaction(orderId, PendingTransactionType.Order, volume);
                 }
-                _fundsPersistenceRepository.SaveOrUpdate(balance);
-                if (fee > 0)
+                if (fee != 0)
                 {
                     balance.AddAvailableBalance(-fee);
                     balance.AddCurrentBalance(-fee);
                 }
+                _fundsPersistenceRepository.SaveOrUpdate(balance);
                 return balance.CurrentBalance;
             }
             return 0;

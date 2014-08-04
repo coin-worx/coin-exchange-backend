@@ -72,11 +72,15 @@ namespace CoinExchange.Funds.Domain.Model.Services
         /// <summary>
         /// Updates the balance when the order is cancelled
         /// </summary>
-        /// <param name="currency"></param>
+        /// <param name="quoteCurrency"> </param>
         /// <param name="accountId"></param>
+        /// <param name="orderside"> </param>
         /// <param name="orderId"></param>
         /// <param name="openQuantity"> </param>
+        /// <param name="baseCurrency"> </param>
+        /// <param name="price"> </param>
         /// <returns></returns>
-        bool OrderCancelled(Currency currency, AccountId accountId, string orderId, double openQuantity);
+        bool OrderCancelled(Currency baseCurrency, Currency quoteCurrency, AccountId accountId, string orderside,
+            string orderId, double openQuantity, double price);
     }
 }

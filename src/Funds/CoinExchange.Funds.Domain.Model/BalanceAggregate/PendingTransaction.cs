@@ -22,37 +22,44 @@ namespace CoinExchange.Funds.Domain.Model.BalanceAggregate
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
-        public PendingTransaction(string currency, string instanceId, PendingTransactionType pendingEntityType, double amount)
+        public PendingTransaction(Currency currency, string instanceId, PendingTransactionType pendingEntityType, 
+            double amount, int balanceId)
         {
             Currency = currency;
             InstanceId = instanceId;
             PendingTransactionType = pendingEntityType;
             Amount = amount;
+            BalanceId = balanceId;
         }
 
         /// <summary>
         /// Database Primary Key
         /// </summary>
-        public string Id { get; private set; }
+        public int Id { get; private set; }
+
+        /// <summary>
+        /// Primary key ID of the balance database record
+        /// </summary>
+        public int BalanceId { get; private set; }
 
         /// <summary>
         /// Currency
         /// </summary>
-        public string Currency { get; private set; }
+        public virtual Currency Currency { get; private set; }
 
         /// <summary>
         /// ID of Order or Withdrawal instance
         /// </summary>
-        public string InstanceId { get; private set; }
+        public virtual string InstanceId { get; private set; }
 
         /// <summary>
         /// Type of the Pending Transaction i.e., Order or Withdraw
         /// </summary>
-        public PendingTransactionType PendingTransactionType { get; private set; }
+        public virtual PendingTransactionType PendingTransactionType { get; private set; }
 
         /// <summary>
         /// Amount of the pending transaction
         /// </summary>
-        public double Amount { get; private set; }
+        public virtual double Amount { get; private set; }
     }
 }

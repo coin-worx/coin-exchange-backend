@@ -20,7 +20,7 @@ namespace CoinExchange.Funds.Domain.Model.BalanceAggregate
         private double _availableBalance = 0;
         private double _currentBalance = 0;
         private double _pendingBalance = 0;
-        private IList<PendingTransaction> _pendingTransactions { get; set; }
+        private IList<PendingTransaction> _pendingTransactions;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
@@ -63,11 +63,31 @@ namespace CoinExchange.Funds.Domain.Model.BalanceAggregate
             // Add this pending transaction to the pending entities list. This entity can only be removed from this list 
             // when the transaction is compelte for this entity(Trade, Withdraw confirmed) or reverted in case of order
             // cancelled
-            PendingTransaction pendingEntity = new PendingTransaction(Currency.Name, id, pendingEntityType, amount);
+            PendingTransaction pendingEntity = new PendingTransaction(Currency, id, pendingEntityType, amount, BalanceId);
             _pendingTransactions.Add(pendingEntity);
             // Deduct the amount
             _availableBalance += amount;
             return true;
+        }
+
+        /// <summary>
+        /// Handles the event of an order cancel, and restores amount to the available balance
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="pendingEntityType"></param>
+        /// <param name="amount"></param>
+        /// <returns></returns>
+        public bool CancelPendingTransaction(string id, PendingTransactionType pendingEntityType, double amount)
+        {
+            PendingTransaction pendingTransaction = GetPendingTransaction(id, pendingEntityType);
+            if (pendingTransaction != null)
+            {
+                // As the Pending transaction is cancelled for order
+                _availableBalance += amount;
+                return true;
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -79,8 +99,9 @@ namespace CoinExchange.Funds.Domain.Model.BalanceAggregate
             PendingTransaction pendingTransaction = GetPendingTransaction(id, pendingEntityType);
             if (pendingTransaction != null)
             {
-                // As the Pending transaction is confirmed for either withdraw
+                // As the Pending transaction is confirmed for either withdraw or order
                 _currentBalance += amount;
+                return true;
             }
             
             return false;
@@ -148,22 +169,22 @@ namespace CoinExchange.Funds.Domain.Model.BalanceAggregate
         /// <summary>
         /// Primary key ID of the database
         /// </summary>
-        public int Id { get; private set; }
+        public virtual int BalanceId { get; set; }
 
         /// <summary>
         /// Currency
         /// </summary>
-        public CurrencyAggregate.Currency Currency { get; private set; }
+        public virtual CurrencyAggregate.Currency Currency { get; private set; }
 
         /// <summary>
         /// Account Id
         /// </summary>
-        public AccountId AccountId { get; private set; }
+        public virtual AccountId AccountId { get; private set; }
 
         /// <summary>
         /// The balance that is available for transaction and does not include the pending balance
         /// </summary>
-        public double AvailableBalance
+        public virtual double AvailableBalance
         {
             get { return _availableBalance; }
             private set { _availableBalance = value; }
@@ -172,7 +193,7 @@ namespace CoinExchange.Funds.Domain.Model.BalanceAggregate
         /// <summary>
         /// The balance that includes the pending balance
         /// </summary>
-        public double CurrentBalance
+        public virtual double CurrentBalance
         {
             get { return _currentBalance; }
             private set { _currentBalance = value; }
@@ -181,10 +202,19 @@ namespace CoinExchange.Funds.Domain.Model.BalanceAggregate
         /// <summary>
         /// The balance that is pending confirmation to be subtracted
         /// </summary>
-        public double PendingBalance
+        public virtual double PendingBalance
         {
             get { return _currentBalance - _availableBalance; }
             private set { _pendingBalance = value; }
+        }
+
+        /// <summary>
+        /// PendingTransactions
+        /// </summary>
+        public IList<PendingTransaction> PendingTransactions
+        {
+            get { return _pendingTransactions; }
+            set { _pendingTransactions = value; }
         }
 
         #endregion Properties

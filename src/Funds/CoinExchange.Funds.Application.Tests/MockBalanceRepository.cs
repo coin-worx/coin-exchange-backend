@@ -8,7 +8,8 @@ namespace CoinExchange.Funds.Application.Tests
 {
     public class MockBalanceRepository : IBalanceRepository
     {
-        private List<Balance> _balanceList = new List<Balance>(); 
+        private List<Balance> _balanceList = new List<Balance>();
+
         public Balance GetBalanceById(int id)
         {
             throw new NotImplementedException();
