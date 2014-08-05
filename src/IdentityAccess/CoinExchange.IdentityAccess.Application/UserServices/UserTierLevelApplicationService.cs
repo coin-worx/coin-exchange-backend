@@ -119,7 +119,7 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
                 }
                 return representations.ToArray();
             }
-            throw new InvalidOperationException("Invlaid apiKey");
+            throw new InvalidOperationException("Invalid apiKey");
         }
 
         /// <summary>

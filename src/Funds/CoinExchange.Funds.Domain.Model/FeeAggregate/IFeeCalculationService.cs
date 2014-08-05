@@ -15,9 +15,10 @@ namespace CoinExchange.Funds.Domain.Model.FeeAggregate
         /// <summary>
         /// Gets the fee for the given currency and the amount
         /// </summary>
-        /// <param name="currency"></param>
+        /// <param name="quoteCurrency"> </param>
         /// <param name="amount"></param>
+        /// <param name="baseCurrency"> </param>
         /// <returns></returns>
-        double GetFee(Currency currency, double amount);
+        double GetFee(Currency baseCurrency, Currency quoteCurrency, double amount);
     }
 }

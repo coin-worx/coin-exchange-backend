@@ -29,7 +29,7 @@ insert  into `currencypair`(`CurrencyPairName`,`BaseCurrency`,`QuoteCurrency`) v
 
 /*Data for the table `fee` */
 
-insert  into `fee`(`Id`,`CurrencyPair`,`PercentageFee`,`Amount`) values (1,'USD',0.3,1000),(2,'USD',0.29,2000),(3,'USD',0.28,3500),(4,'USD',0.27,5000),(5,'USD',0.26,6500),(6,'USD',0.25,8000),(7,'USD',0.24,10000),(8,'USD',0.23,12500),(9,'USD',0.22,15000),(10,'USD',0.21,17500),(11,'USD',0.2,20000),(12,'USD',0.19,25000),(13,'USD',0.18,30000),(14,'USD',0.17,40000),(15,'USD',0.16,50000),(16,'USD',0.15,60000),(17,'USD',0.14,80000),(18,'USD',0.13,100000),(19,'USD',0.12,125000),(20,'USD',0.11,150000),(21,'USD',0.1,200000),(22,'USD',0.09,350000),(23,'USD',0.08,500000),(24,'USD',0.07,750000),(25,'USD',0.06,1000000);
+insert  into `fee`(`Id`,`CurrencyPair`,`PercentageFee`,`Amount`) values (1,'XBTUSD',0.3,1000),(2,'XBTUSD',0.29,2000),(3,'XBTUSD',0.28,3500),(4,'XBTUSD',0.27,5000),(5,'XBTUSD',0.26,6500),(6,'XBTUSD',0.25,8000),(7,'XBTUSD',0.24,10000),(8,'XBTUSD',0.23,12500),(9,'XBTUSD',0.22,15000),(10,'XBTUSD',0.21,17500),(11,'XBTUSD',0.2,20000),(12,'XBTUSD',0.19,25000),(13,'XBTUSD',0.18,30000),(14,'XBTUSD',0.17,40000),(15,'XBTUSD',0.16,50000),(16,'XBTUSD',0.15,60000),(17,'XBTUSD',0.14,80000),(18,'XBTUSD',0.13,100000),(19,'XBTUSD',0.12,125000),(20,'XBTUSD',0.11,150000),(21,'XBTUSD',0.1,200000),(22,'XBTUSD',0.09,350000),(23,'XBTUSD',0.08,500000),(24,'XBTUSD',0.07,750000),(25,'XBTUSD',0.06,1000000);
 
 /*Data for the table `ledger` */
 

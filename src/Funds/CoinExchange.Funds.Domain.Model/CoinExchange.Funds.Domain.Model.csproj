@@ -49,9 +49,11 @@
     <Compile Include="CurrencyAggregate\Currency.cs" />
     <Compile Include="CurrencyAggregate\CurrencyPair.cs" />
     <Compile Include="DepositAggregate\DepositLimit.cs" />
+    <Compile Include="DepositAggregate\DepositLimitEvaluationService.cs" />
     <Compile Include="DepositAggregate\DepositType.cs" />
     <Compile Include="DepositAggregate\IDepositAddressRepository.cs" />
     <Compile Include="DepositAggregate\IDepositIdGeneratorService.cs" />
+    <Compile Include="DepositAggregate\IDepositLimitEvaluationService.cs" />
     <Compile Include="DepositAggregate\IDepositLimitRepository.cs" />
     <Compile Include="DepositAggregate\IDepositRepository.cs" />
     <Compile Include="DepositAggregate\TransactionId.cs" />
@@ -76,12 +78,14 @@
     <Compile Include="WithdrawAggregate\IWithdrawAddressRepository.cs" />
     <Compile Include="WithdrawAggregate\IWithdrawFeesRepository.cs" />
     <Compile Include="WithdrawAggregate\IWithdrawIdGeneratorService.cs" />
+    <Compile Include="WithdrawAggregate\IWithdrawLimitEvaluationService.cs" />
     <Compile Include="WithdrawAggregate\IWithdrawLimitRepository.cs" />
     <Compile Include="WithdrawAggregate\IWithdrawRepository.cs" />
     <Compile Include="WithdrawAggregate\Withdraw.cs" />
     <Compile Include="WithdrawAggregate\WithdrawAddress.cs" />
     <Compile Include="WithdrawAggregate\WithdrawFees.cs" />
     <Compile Include="WithdrawAggregate\WithdrawLimit.cs" />
+    <Compile Include="WithdrawAggregate\WithdrawLimitEvaluationService.cs" />
     <Compile Include="WithdrawAggregate\WithdrawType.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -92,6 +96,11 @@
       <Project>{d61dbd04-95dc-4eb1-ad54-1ff929ac2814}</Project>
       <Name>CoinExchange.Common</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="FundsDomainModelConfig.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -45,6 +45,8 @@
     <Compile Include="FundsValidationServiceTests.cs" />
     <Compile Include="MockBalanceRepository.cs" />
     <Compile Include="MockDepositIdGeneratorService.cs" />
+    <Compile Include="MockDepositLimitEvaluationService.cs" />
+    <Compile Include="MockDepositLimitRepository.cs" />
     <Compile Include="MockDepositRepository.cs" />
     <Compile Include="MockFeeCalculationService.cs" />
     <Compile Include="MockFundsRepository.cs" />
@@ -52,6 +54,8 @@
     <Compile Include="MockLedgerRepository.cs" />
     <Compile Include="MockWithdrawFeesRepository.cs" />
     <Compile Include="MockWithdrawIdGeneratorService.cs" />
+    <Compile Include="MockWithdrawLimitEvaluationService.cs" />
+    <Compile Include="MockWithdrawLimitRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

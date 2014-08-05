@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using CoinExchange.Funds.Domain.Model.BalanceAggregate;
 using CoinExchange.Funds.Domain.Model.CurrencyAggregate;
 using CoinExchange.Funds.Domain.Model.DepositAggregate;
 using CoinExchange.Funds.Domain.Model.FeeAggregate;
+using CoinExchange.Funds.Domain.Model.LedgerAggregate;
 using CoinExchange.Funds.Domain.Model.Repositories;
 using CoinExchange.Funds.Domain.Model.Services;
 using CoinExchange.Funds.Domain.Model.WithdrawAggregate;
@@ -18,7 +20,6 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
     {
         #region Private Fields
 
-        private List<Balance> _balanceList = new List<Balance>();
         private ITransactionService _transactionService = null;
         private IFundsPersistenceRepository _fundsPersistenceRepository = null;
         private IBalanceRepository _balanceRepository = null;
@@ -26,6 +27,12 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         private IFeeCalculationService _feeCalculationService = null;
         private IWithdrawFeesRepository _withdrawFeesRepository = null;
         private IWithdrawIdGeneratorService _withdrawIdGeneratorService = null;
+        private ILedgerRepository _ledgerRepository = null;
+        private IDepositLimitEvaluationService _depositLimitEvaluationService = null;
+        private IDepositLimitRepository _depositLimitRepository = null;
+        private IWithdrawLimitEvaluationService _withdrawLimitEvaluationService = null;
+        private IWithdrawLimitRepository _withdrawLimitRepository = null;
+        
 
         #endregion Private Fields
 
@@ -37,7 +44,9 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         public FundsValidationService(ITransactionService transactionService, IFundsPersistenceRepository
             fundsPersistenceRepository, IBalanceRepository balanceRepository,
             IFeeCalculationService feeCalculationService, IWithdrawFeesRepository withdrawFeesRepository, 
-            IWithdrawIdGeneratorService withdrawIdGeneratorService)
+            IWithdrawIdGeneratorService withdrawIdGeneratorService, ILedgerRepository ledgerRepository,
+            IDepositLimitEvaluationService depositLimitEvaluationService, IDepositLimitRepository depositLimitRepository,
+            IWithdrawLimitEvaluationService withdrawLimitEvaluationService, IWithdrawLimitRepository withdrawLimitRepository)
         {
             _transactionService = transactionService;
             _fundsPersistenceRepository = fundsPersistenceRepository;
@@ -45,6 +54,11 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
             _feeCalculationService = feeCalculationService;
             _withdrawFeesRepository = withdrawFeesRepository;
             _withdrawIdGeneratorService = withdrawIdGeneratorService;
+            _ledgerRepository = ledgerRepository;
+            _depositLimitEvaluationService = depositLimitEvaluationService;
+            _depositLimitRepository = depositLimitRepository;
+            _withdrawLimitEvaluationService = withdrawLimitEvaluationService;
+            _withdrawLimitRepository = withdrawLimitRepository;
         }
 
         #endregion Constructors
@@ -170,27 +184,63 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         [Transaction]
         public bool DepositConfirmed(Deposit deposit)
         {
-            if (deposit != null && deposit.Confirmations >= 7)
+            string tierLevel = null;
+            
+            IList<Ledger> depositLedgers = GetDepositLedgers();
+            // Check if the current Deposit transaction is within the Deposit limits
+            // ToDo: Get User Tier Levels, so the daily and monthly limits can be verified
+            DepositLimit depositLimit = _depositLimitRepository.GetDepositLimitByTierLevel("Tier1");
+
+            // ToDo: Get Best Bid and Best Ask using an Infrastructural service from the Trades BC
+            double bestBidPrice = 0;
+            double bestAskPrice = 0;
+            if (_depositLimitEvaluationService.EvaluateDepositLimit(deposit.Amount, depositLedgers, depositLimit, 
+                bestBidPrice, bestAskPrice))
             {
-                Balance balance = GetBalanceForAccountId(deposit.AccountId, deposit.Currency);
-
-                if (balance == null)
+                if (deposit != null && deposit.Confirmations >= 7)
                 {
-                    balance = new Balance(deposit.Currency, deposit.AccountId, deposit.Amount, deposit.Amount);
-                }
-                else
-                {
-                    balance.AddAvailableBalance(deposit.Amount);
-                    balance.AddCurrentBalance(deposit.Amount);
-                }
-                _fundsPersistenceRepository.SaveOrUpdate(balance);
+                    Balance balance = GetBalanceForAccountId(deposit.AccountId, deposit.Currency);
 
-                return _transactionService.CreateDepositTransaction(deposit, balance.CurrentBalance);
+                    if (balance == null)
+                    {
+                        balance = new Balance(deposit.Currency, deposit.AccountId, deposit.Amount, deposit.Amount);
+                    }
+                    else
+                    {
+                        balance.AddAvailableBalance(deposit.Amount);
+                        balance.AddCurrentBalance(deposit.Amount);
+                    }
+                    _fundsPersistenceRepository.SaveOrUpdate(balance);
+
+                    return _transactionService.CreateDepositTransaction(deposit, balance.CurrentBalance);
+                }
             }
             return false;
         }
 
         /// <summary>
+        /// Gets all the Deposit Ledger transactions
+        /// </summary>
+        /// <returns></returns>
+        private IList<Ledger> GetDepositLedgers()
+        {
+            IList<Ledger> depositLedgers = new List<Ledger>();
+            IList<Ledger> allLedgers = _ledgerRepository.GetAllLedgers();
+            foreach (var ledger in allLedgers)
+            {
+                if (ledger.LedgerType == LedgerType.Deposit)
+                {
+                    depositLedgers.Add(ledger);
+                }
+            }
+            if (!depositLedgers.Any())
+            {
+                depositLedgers = null;
+            }
+            return depositLedgers;
+        }
+
+            /// <summary>
         /// Handles the event that a trade has been executed and performs the necessay steps to update the balance and 
         /// create a transaction record
         /// </summary>
@@ -209,24 +259,28 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         public bool TradeExecuted(string baseCurrency, string quoteCurrency, double tradeVolume, double price, DateTime executionDateTime,
             string tradeId, string buyAccountId, string sellAccountId, string buyOrderId, string sellOrderId)
         {
+            double fee = _feeCalculationService.GetFee(new Currency(baseCurrency), new Currency(quoteCurrency), 
+                Math.Abs(tradeVolume*price));
             // As in case of buy order, the current and available balances differ in the case of quote currency, we 
             // evaluate the quote currency first
             if (InitializeBalanceLedgerUpdate(new Currency(quoteCurrency), new AccountId(buyAccountId),
                                           -(tradeVolume * price),
-                                          executionDateTime, buyOrderId, tradeId, true, true))
+                                          executionDateTime, buyOrderId, tradeId, true, true, fee))
             {
                 // Then, we update balance for Buy Account's Base Currency
                 if (InitializeBalanceLedgerUpdate(new Currency(baseCurrency), new AccountId(buyAccountId), tradeVolume,
-                                              executionDateTime, buyOrderId, tradeId, false, false))
+                                              executionDateTime, buyOrderId, tradeId, false, false, 0))
                 {
                     // In case of a sell order, the available balance is deducted from the base currency, so we validate the 
                     // base currency first
                     if (InitializeBalanceLedgerUpdate(new Currency(baseCurrency), new AccountId(sellAccountId),
-                                                        -tradeVolume, executionDateTime, sellOrderId, tradeId, false, true))
+                                                        -tradeVolume, executionDateTime, sellOrderId, tradeId, false, true,
+                                                        0))
                     {
                         // Lastly, for the seller account's quote currency
                         return InitializeBalanceLedgerUpdate(new Currency(quoteCurrency), new AccountId(sellAccountId),
-                                                      tradeVolume * price, executionDateTime, sellOrderId, tradeId, true, false);
+                                                      tradeVolume * price, executionDateTime, sellOrderId, tradeId, true, 
+                                                      false, fee);
                     }
                 }
             }
@@ -278,13 +332,8 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         /// </summary>
         /// <returns></returns>
         private bool InitializeBalanceLedgerUpdate(Currency currency, AccountId accountId, double amount, DateTime 
-            executionDateTime, string orderId, string tradeId, bool includeFee, bool isPending)
+            executionDateTime, string orderId, string tradeId, bool includeFee, bool isPending, double fee)
         {
-            double fee = 0;
-            if (includeFee)
-            {
-                fee = _feeCalculationService.GetFee(currency, Math.Abs(amount));
-            }
             // Update the balance
             double balance = UpdateBalanceAfterTrade(currency, accountId, amount, orderId, fee, isPending);
             // Create Ledger and save in database
@@ -317,7 +366,7 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
                 {
                     balance.ConfirmPendingTransaction(orderId, PendingTransactionType.Order, volume);
                 }
-                if (fee != 0)
+                if (fee != 0.0)
                 {
                     balance.AddAvailableBalance(-fee);
                     balance.AddCurrentBalance(-fee);

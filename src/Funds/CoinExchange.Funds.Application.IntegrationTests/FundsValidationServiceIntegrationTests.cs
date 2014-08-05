@@ -524,7 +524,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             Assert.IsTrue(tradeExecutedResponse);
 
             // Get the fee corresponding to the currenct volume of the quote currency
-            double usdFee = feeCalculationService.GetFee(new Currency(quoteCurrency), 400 * 100);
+            double usdFee = feeCalculationService.GetFee(new Currency(baseCurrency), new Currency(quoteCurrency), 400 * 100);
 
             buyAccountBaseCurrencyBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(
                 new Currency(baseCurrency), new AccountId(buyAccountId));
@@ -589,7 +589,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             Assert.IsTrue(tradeExecutedResponse);
 
             // Get the fee corresponding to the currenct volume of the quote currency
-            double usdFee = feeCalculationService.GetFee(new Currency(quoteCurrency), 400*100);
+            double usdFee = feeCalculationService.GetFee(new Currency(baseCurrency), new Currency(quoteCurrency), 400 * 100);
             Assert.Greater(usdFee, 0);
 
             Balance buyXbtBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(new Currency(baseCurrency), new AccountId(buyAccountId));
@@ -669,7 +669,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
                 Assert.AreEqual((400 * 100), ledgerByAccountId[0].Amount);
                 Assert.AreEqual(60000 + (400 * 100) - usdFee, ledgerByAccountId[0].Balance);
                 // Get the fee corresponding to the currenct volume of the quote currency
-                double fee = feeCalculationService.GetFee(new Currency("USD"), 400 * 100);
+                double fee = feeCalculationService.GetFee(new Currency(baseCurrency), new Currency(quoteCurrency), 400 * 100);
                 Assert.AreEqual(fee, ledgerByAccountId[0].Fee);
                 // For XBT
                 Assert.AreEqual(-400, ledgerByAccountId[1].Amount);
@@ -729,7 +729,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             Assert.IsTrue(tradeExecutedResponse);
 
             // Get the fee corresponding to the currenct volume of the quote currency
-            double usdFee = feeCalculationService.GetFee(new Currency(quoteCurrency), 100 * 100);
+            double usdFee = feeCalculationService.GetFee(new Currency(baseCurrency), new Currency(quoteCurrency), 100 * 100);
             Assert.Greater(usdFee, 0);
 
             buyXbtBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(new Currency(baseCurrency),
@@ -859,7 +859,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             Assert.IsTrue(orderCancelled);
 
             // Get the fee corresponding to the current volume of the quote currency
-            double usdFee = feeCalculationService.GetFee(quoteCurrency, 100 * 90);
+            double usdFee = feeCalculationService.GetFee(baseCurrency, quoteCurrency, 100 * 90);
             Assert.Greater(usdFee, 0);
 
             retrievedXbtBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(baseCurrency, accountId);
@@ -915,7 +915,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             Assert.IsTrue(orderCancelled);
 
             // Get the fee corresponding to the current volume of the quote currency
-            double usdFee = feeCalculationService.GetFee(quoteCurrency, 100 * 90);
+            double usdFee = feeCalculationService.GetFee(baseCurrency, quoteCurrency, 100 * 90);
             Assert.Greater(usdFee, 0);
 
             retrievedXbtBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(baseCurrency, accountId);
@@ -948,6 +948,11 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             IFeeCalculationService feeCalculationService = (IFeeCalculationService)ContextRegistry.GetContext()["FeeCalculationService"];
             IWithdrawFeesRepository withdrawFeesRepository = (IWithdrawFeesRepository)ContextRegistry.GetContext()["WithdrawFeesRepository"];
             IWithdrawIdGeneratorService withdrawIdGeneratorService = (IWithdrawIdGeneratorService)ContextRegistry.GetContext()["WithdrawIdGeneratorService"];
+            ILedgerRepository ledgerRepository = (ILedgerRepository)ContextRegistry.GetContext()["LedgerRepository"];
+            IDepositLimitEvaluationService depositLimitEvaluationService = (IDepositLimitEvaluationService)ContextRegistry.GetContext()["DepositLimitEvaluationService"];
+            IDepositLimitRepository depositLimitRepository = (IDepositLimitRepository)ContextRegistry.GetContext()["DepositLimitRepository"];
+            IWithdrawLimitEvaluationService withdrawLimitEvaluationService = (IWithdrawLimitEvaluationService)ContextRegistry.GetContext()["WithdrawLimitEvaluationService"];
+            IWithdrawLimitRepository withdrawLimitRepository = (IWithdrawLimitRepository)ContextRegistry.GetContext()["WithdrawLimitRepository"];
 
             AccountId accountId = new AccountId("accountid123");
             Currency baseCurrency = new Currency("XBT");
@@ -963,7 +968,8 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             // Here we create a service without using the spring dependency injection to create a new instance
             IFundsValidationService fundsValidationService2 = new FundsValidationService(transactionService,
                 fundsPersistenceRepository, balanceRepository, feeCalculationService, 
-                withdrawFeesRepository, withdrawIdGeneratorService);
+                withdrawFeesRepository, withdrawIdGeneratorService, ledgerRepository, depositLimitEvaluationService,
+                depositLimitRepository, withdrawLimitEvaluationService, withdrawLimitRepository);
             fundsValidationService2.ValidateFundsForOrder(accountId, baseCurrency, quoteCurrency, 100, 101, "sell", "order123");
             Balance balance = balanceRepository.GetBalanceByCurrencyAndAccountId(baseCurrency, accountId);
             Assert.IsNotNull(balance);
@@ -977,13 +983,15 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             IFundsValidationService fundsValidationService = (IFundsValidationService)ContextRegistry.GetContext()["FundsValidationService"];
             ITransactionService transactionService = (ITransactionService)ContextRegistry.GetContext()["TransactionService"];
             IBalanceRepository balanceRepository = (IBalanceRepository)ContextRegistry.GetContext()["BalanceRepository"];
-            IFundsPersistenceRepository fundsPersistenceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];
-            IWithdrawRepository withdrawRepository = (IWithdrawRepository)ContextRegistry.GetContext()["WithdrawRepository"];
-            IDepositIdGeneratorService depositIdGeneratorService = (IDepositIdGeneratorService)ContextRegistry.GetContext()["DepositIdGeneratorService"];
-            IDepositRepository depositRepository = (IDepositRepository)ContextRegistry.GetContext()["DepositRepository"];
+            IFundsPersistenceRepository fundsPersistenceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];            
             IFeeCalculationService feeCalculationService = (IFeeCalculationService)ContextRegistry.GetContext()["FeeCalculationService"];
             IWithdrawFeesRepository withdrawFeesRepository = (IWithdrawFeesRepository)ContextRegistry.GetContext()["WithdrawFeesRepository"];
             IWithdrawIdGeneratorService withdrawIdGeneratorService = (IWithdrawIdGeneratorService)ContextRegistry.GetContext()["WithdrawIdGeneratorService"];
+            ILedgerRepository ledgerRepository = (ILedgerRepository)ContextRegistry.GetContext()["LedgerRepository"];
+            IDepositLimitEvaluationService depositLimitEvaluationService = (IDepositLimitEvaluationService)ContextRegistry.GetContext()["DepositLimitEvaluationService"];
+            IDepositLimitRepository depositLimitRepository = (IDepositLimitRepository)ContextRegistry.GetContext()["DepositLimitRepository"];
+            IWithdrawLimitEvaluationService withdrawLimitEvaluationService = (IWithdrawLimitEvaluationService)ContextRegistry.GetContext()["WithdrawLimitEvaluationService"];
+            IWithdrawLimitRepository withdrawLimitRepository = (IWithdrawLimitRepository)ContextRegistry.GetContext()["WithdrawLimitRepository"];
 
             AccountId accountId = new AccountId("accountid123");
             Currency baseCurrency = new Currency("XBT");
@@ -995,7 +1003,8 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             // Here we create a service without using the spring dependency injection to create a new instance
             IFundsValidationService fundsValidationService2 = new FundsValidationService(transactionService,
                 fundsPersistenceRepository, balanceRepository, feeCalculationService, withdrawFeesRepository,
-                withdrawIdGeneratorService);
+                withdrawIdGeneratorService, ledgerRepository, depositLimitEvaluationService, depositLimitRepository, 
+                withdrawLimitEvaluationService, withdrawLimitRepository);
             fundsValidationService2.ValidateFundsForWithdrawal(accountId, baseCurrency, 100, new TransactionId("transaction123"), new BitcoinAddress("bitcoinid123"));
             Balance balance = balanceRepository.GetBalanceByCurrencyAndAccountId(baseCurrency, accountId);
             Assert.IsNotNull(balance);

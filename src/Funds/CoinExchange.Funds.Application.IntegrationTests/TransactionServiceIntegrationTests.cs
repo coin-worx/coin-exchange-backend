@@ -76,7 +76,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
                 Assert.AreEqual(-(300 * 498.98), ledgerByAccountId[1].Balance);
 
                 // Get the fee corresponding to the currenct volume of the quote currency
-                double fee = feeCalculationService.GetFee(new Currency("USD"), 300*498.98);
+                double fee = feeCalculationService.GetFee(new Currency("XBT"), new Currency("USD"), 300*498.98);
                 Assert.AreEqual(fee, ledgerByAccountId[1].Fee);
             }
             else if (ledgerByAccountId[0].Currency.Name == "USD")
@@ -85,7 +85,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
                 Assert.AreEqual(-(300 * 498.98), ledgerByAccountId[0].Amount);
                 Assert.AreEqual(-(300 * 498.98), ledgerByAccountId[0].Balance);
                 // Get the fee corresponding to the currenct volume of the quote currency
-                double fee = feeCalculationService.GetFee(new Currency("USD"), 300 * 498.98);
+                double fee = feeCalculationService.GetFee(new Currency("XBT"), new Currency("USD"), 300 * 498.98);
                 Assert.AreEqual(fee, ledgerByAccountId[0].Fee);
 
                 // For XBT
@@ -116,7 +116,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
                 Assert.AreEqual((300 * 498.98), ledgerByAccountId[1].Amount);
                 Assert.AreEqual((300 * 498.98), ledgerByAccountId[1].Balance);
                 // Get the fee corresponding to the currenct volume of the quote currency
-                double fee = feeCalculationService.GetFee(new Currency("USD"), 300 * 498.98);
+                double fee = feeCalculationService.GetFee(new Currency("XBT"), new Currency("USD"), 300 * 498.98);
                 Assert.AreEqual(fee, ledgerByAccountId[1].Fee);
             }
             else if (ledgerByAccountId[0].Currency.Name == "USD")
@@ -125,7 +125,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
                 Assert.AreEqual((300 * 498.98), ledgerByAccountId[0].Amount);
                 Assert.AreEqual((300 * 498.98), ledgerByAccountId[0].Balance);
                 // Get the fee corresponding to the currenct volume of the quote currency
-                double fee = feeCalculationService.GetFee(new Currency("USD"), 300 * 498.98);
+                double fee = feeCalculationService.GetFee(new Currency("XBT"), new Currency("USD"), 300 * 498.98);
                 Assert.AreEqual(fee, ledgerByAccountId[0].Fee);
                 // For XBT
                 Assert.AreEqual(-300, ledgerByAccountId[1].Amount);
@@ -171,7 +171,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
                 Assert.AreEqual(-(300 * 498.98), ledgerByCurrencyName[1].Amount);
                 Assert.AreEqual(-(300 * 498.98), ledgerByCurrencyName[1].Balance);
                 // Get the fee corresponding to the currenct volume of the quote currency
-                double fee = feeCalculationService.GetFee(new Currency("USD"), 300 * 498.98);
+                double fee = feeCalculationService.GetFee(new Currency("XBT"), new Currency("USD"), 300 * 498.98);
                 Assert.AreEqual(fee, ledgerByCurrencyName[1].Fee);
             }
             else if (ledgerByCurrencyName[0].Currency.Name == "USD")
@@ -180,7 +180,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
                 Assert.AreEqual(-(300 * 498.98), ledgerByCurrencyName[0].Amount);
                 Assert.AreEqual(-(300 * 498.98), ledgerByCurrencyName[0].Balance);
                 // Get the fee corresponding to the currenct volume of the quote currency
-                double fee = feeCalculationService.GetFee(new Currency("USD"), 300 * 498.98);
+                double fee = feeCalculationService.GetFee(new Currency("XBT"), new Currency("USD"), 300 * 498.98);
                 Assert.AreEqual(fee, ledgerByCurrencyName[0].Fee);
                 // For XBT
                 Assert.AreEqual(300, ledgerByCurrencyName[1].Amount);
@@ -210,7 +210,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
                 Assert.AreEqual((300 * 498.98), ledgerByCurrencyName[1].Amount);
                 Assert.AreEqual((300 * 498.98), ledgerByCurrencyName[1].Balance);
                 // Get the fee corresponding to the currenct volume of the quote currency
-                double fee = feeCalculationService.GetFee(new Currency("USD"), 300 * 498.98);
+                double fee = feeCalculationService.GetFee(new Currency("XBT"), new Currency("USD"), 300 * 498.98);
                 Assert.AreEqual(fee, ledgerByCurrencyName[1].Fee);
             }
             else if (ledgerByCurrencyName[0].Currency.Name == "USD")
@@ -219,7 +219,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
                 Assert.AreEqual((300 * 498.98), ledgerByCurrencyName[0].Amount);
                 Assert.AreEqual((300 * 498.98), ledgerByCurrencyName[0].Balance);
                 // Get the fee corresponding to the currenct volume of the quote currency
-                double fee = feeCalculationService.GetFee(new Currency("USD"), 300 * 498.98);
+                double fee = feeCalculationService.GetFee(new Currency("XBT"), new Currency("USD"), 300 * 498.98);
                 Assert.AreEqual(fee, ledgerByCurrencyName[0].Fee);
                 // For XBT
                 Assert.AreEqual(-300, ledgerByCurrencyName[1].Amount);

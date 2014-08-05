@@ -96,7 +96,7 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
                         currentBalance = balance.CurrentBalance;
                         // Finally, we create ledger entry for the quote currency. Fee is charged for the quote currency
                         // side
-                        double fee = _feeCalculationService.GetFee(quoteCurrency, volume*price);
+                        double fee = _feeCalculationService.GetFee(baseCurrency, quoteCurrency, volume*price);
                         return CreateLedgerEntry(quoteCurrency, -(volume*price), fee, currentBalance - (volume*price),
                                                  executionDateTime, buyOrderId, tradeId, new AccountId(accountId));
                     }
@@ -127,7 +127,7 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
                     {
                         currenctBalance = balance.CurrentBalance;
                         // Finally, we create the ledger for the quote currency. Fee is charged for the quote currency side
-                        double fee = _feeCalculationService.GetFee(quoteCurrency, volume*price);
+                        double fee = _feeCalculationService.GetFee(baseCurrency, quoteCurrency, volume*price);
                         return CreateLedgerEntry(quoteCurrency, volume*price, fee, currenctBalance + (volume*price),
                                                  executionDateTime, orderId, tradeId, new AccountId(accountId));
                     }
