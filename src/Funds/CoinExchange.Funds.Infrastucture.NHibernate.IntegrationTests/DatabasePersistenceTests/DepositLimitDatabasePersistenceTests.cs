@@ -37,7 +37,7 @@ namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests.DatabaseP
         [Test]
         public void SaveDepositLimitAndRetreiveByTierLevelTest_SavesAnObjectToDatabaseAndManipulatesIt_ChecksIfItIsUpdatedAsExpected()
         {
-            DepositLimit depositLimit = new DepositLimit("tierlevel1", 4000, 500);
+            DepositLimit depositLimit = new DepositLimit("tierlevel1", 500, 4000);
 
             _persistanceRepository.SaveOrUpdate(depositLimit);
 
@@ -51,7 +51,7 @@ namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests.DatabaseP
         [Test]
         public void SaveDepositLimitAndRetreiveByIdTest_SavesAnObjectToDatabaseAndManipulatesIt_ChecksIfItIsUpdatedAsExpected()
         {
-            DepositLimit depositLimit = new DepositLimit("tierlevel1", 4000, 500);
+            DepositLimit depositLimit = new DepositLimit("tierlevel1", 500, 4000);
 
             _persistanceRepository.SaveOrUpdate(depositLimit);
 

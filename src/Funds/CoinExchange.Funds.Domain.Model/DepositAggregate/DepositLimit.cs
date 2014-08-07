@@ -21,11 +21,11 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
-        public DepositLimit(string tierLevel, double monthlyLimit, double dailyLimit)
+        public DepositLimit(string tierLevel, double dailyLimit, double monthlyLimit)
         {
             TierLevel = tierLevel;
-            MonthlyLimit = monthlyLimit;
             DailyLimit = dailyLimit;
+            MonthlyLimit = monthlyLimit;            
         }
 
         /// <summary>

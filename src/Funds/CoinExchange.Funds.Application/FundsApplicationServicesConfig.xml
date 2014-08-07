@@ -27,6 +27,8 @@
     <constructor-arg name="depositLimitRepository" ref="DepositLimitRepository"/>
     <constructor-arg name="withdrawLimitEvaluationService" ref="WithdrawLimitEvaluationService"/>
     <constructor-arg name="withdrawLimitRepository" ref="WithdrawLimitRepository"/>
+    <constructor-arg name="tierLevelRetrievalService" ref="StubTierLevelRetrievalService"/>
+    <constructor-arg name="bboRetrievalService" ref="StubBboRetrievalService"/>
   </object>
   
   <tx:attribute-driven/>

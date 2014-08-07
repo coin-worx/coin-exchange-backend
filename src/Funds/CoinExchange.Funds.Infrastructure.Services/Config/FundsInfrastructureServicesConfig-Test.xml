@@ -12,4 +12,10 @@
   <object id="WithdrawIdGeneratorService" type="CoinExchange.Funds.Infrastructure.Services.WithdrawIdGeneratorService, CoinExchange.Funds.Infrastructure.Services">
   </object>
 
+  <object id="StubTierLevelRetrievalService" type="CoinExchange.Funds.Infrastructure.Services.StubTierLevelRetrievalService, CoinExchange.Funds.Infrastructure.Services">
+  </object>
+  
+  <object id="StubBboRetrievalService" type="CoinExchange.Funds.Infrastructure.Services.StubBboRetrievalService, CoinExchange.Funds.Infrastructure.Services">
+  </object>
+
 </objects>

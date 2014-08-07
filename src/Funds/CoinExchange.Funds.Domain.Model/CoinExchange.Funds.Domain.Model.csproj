@@ -71,9 +71,11 @@
     <Compile Include="DepositAggregate\DepositAddress.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\IFundsPersistenceRepository.cs" />
+    <Compile Include="Services\IBboRetrievalService.cs" />
     <Compile Include="Services\IFundsValidationService.cs" />
     <Compile Include="Services\ILedgerIdGeneraterService.cs" />
     <Compile Include="Services\ITransactionService.cs" />
+    <Compile Include="Services\ITierLevelRetrievalService.cs" />
     <Compile Include="WithdrawAggregate\BankAccount.cs" />
     <Compile Include="WithdrawAggregate\IWithdrawAddressRepository.cs" />
     <Compile Include="WithdrawAggregate\IWithdrawFeesRepository.cs" />

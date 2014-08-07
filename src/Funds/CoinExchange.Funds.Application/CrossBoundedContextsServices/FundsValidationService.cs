@@ -32,8 +32,9 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         private IDepositLimitRepository _depositLimitRepository = null;
         private IWithdrawLimitEvaluationService _withdrawLimitEvaluationService = null;
         private IWithdrawLimitRepository _withdrawLimitRepository = null;
+        private ITierLevelRetrievalService _tierLevelRetrievalService = null;
+        private IBboRetrievalService _bboRetrievalService = null;
         
-
         #endregion Private Fields
 
         #region Constructors
@@ -46,7 +47,8 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
             IFeeCalculationService feeCalculationService, IWithdrawFeesRepository withdrawFeesRepository, 
             IWithdrawIdGeneratorService withdrawIdGeneratorService, ILedgerRepository ledgerRepository,
             IDepositLimitEvaluationService depositLimitEvaluationService, IDepositLimitRepository depositLimitRepository,
-            IWithdrawLimitEvaluationService withdrawLimitEvaluationService, IWithdrawLimitRepository withdrawLimitRepository)
+            IWithdrawLimitEvaluationService withdrawLimitEvaluationService, IWithdrawLimitRepository withdrawLimitRepository,
+            ITierLevelRetrievalService tierLevelRetrievalService, IBboRetrievalService bboRetrievalService)
         {
             _transactionService = transactionService;
             _fundsPersistenceRepository = fundsPersistenceRepository;
@@ -59,6 +61,8 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
             _depositLimitRepository = depositLimitRepository;
             _withdrawLimitEvaluationService = withdrawLimitEvaluationService;
             _withdrawLimitRepository = withdrawLimitRepository;
+            _tierLevelRetrievalService = tierLevelRetrievalService;
+            _bboRetrievalService = bboRetrievalService;
         }
 
         #endregion Constructors
@@ -184,21 +188,26 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         [Transaction]
         public bool DepositConfirmed(Deposit deposit)
         {
-            string tierLevel = null;
-            
-            IList<Ledger> depositLedgers = GetDepositLedgers();
-            // Check if the current Deposit transaction is within the Deposit limits
-            // ToDo: Get User Tier Levels, so the daily and monthly limits can be verified
-            DepositLimit depositLimit = _depositLimitRepository.GetDepositLimitByTierLevel("Tier1");
-
-            // ToDo: Get Best Bid and Best Ask using an Infrastructural service from the Trades BC
-            double bestBidPrice = 0;
-            double bestAskPrice = 0;
-            if (_depositLimitEvaluationService.EvaluateDepositLimit(deposit.Amount, depositLedgers, depositLimit, 
-                bestBidPrice, bestAskPrice))
+            if (deposit != null && deposit.Confirmations >= 7)
             {
-                if (deposit != null && deposit.Confirmations >= 7)
+                // Get all the Deposit Ledgers
+                IList<Ledger> depositLedgers = GetDepositLedgers();
+                // Get the Current Tier Level for this user using the corss bounded context Tier retrieval service
+                string currentTierLevel = _tierLevelRetrievalService.GetCurrentTierLevel(deposit.AccountId.Value);
+                // Get the Current Deposit limits for this user
+                DepositLimit depositLimit = _depositLimitRepository.GetDepositLimitByTierLevel(currentTierLevel);
+
+                // Get the best bid and best ask form the Trades BC.
+                // NOTE: Implement adn use real implementation later, rather than using the stub implementation being used right now
+                Tuple<double, double> bestBidBestAsk = _bboRetrievalService.GetBestBidBestAsk(deposit.Currency.Name,
+                                                                                              "USD");
+
+                // Check if the current Deposit transaction is within the Deposit limits
+                if (_depositLimitEvaluationService.EvaluateDepositLimit(deposit.Amount, depositLedgers,
+                                                                        depositLimit, bestBidBestAsk.Item1,
+                                                                        bestBidBestAsk.Item2))
                 {
+
                     Balance balance = GetBalanceForAccountId(deposit.AccountId, deposit.Currency);
 
                     if (balance == null)
@@ -259,6 +268,8 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         public bool TradeExecuted(string baseCurrency, string quoteCurrency, double tradeVolume, double price, DateTime executionDateTime,
             string tradeId, string buyAccountId, string sellAccountId, string buyOrderId, string sellOrderId)
         {
+            // ToDo: Fee is calculated on the total volume traded in the last 30 days, not the individual volume of the 
+            // trade being currently executed
             double fee = _feeCalculationService.GetFee(new Currency(baseCurrency), new Currency(quoteCurrency), 
                 Math.Abs(tradeVolume*price));
             // As in case of buy order, the current and available balances differ in the case of quote currency, we 

@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="FundsValidationServiceTests.cs" />
     <Compile Include="MockBalanceRepository.cs" />
+    <Compile Include="MockBboRetrievalService.cs" />
     <Compile Include="MockDepositIdGeneratorService.cs" />
     <Compile Include="MockDepositLimitEvaluationService.cs" />
     <Compile Include="MockDepositLimitRepository.cs" />
@@ -52,6 +53,7 @@
     <Compile Include="MockFundsRepository.cs" />
     <Compile Include="MockLedgerGeneratorService.cs" />
     <Compile Include="MockLedgerRepository.cs" />
+    <Compile Include="MockTierLevelRetrievalService.cs" />
     <Compile Include="MockWithdrawFeesRepository.cs" />
     <Compile Include="MockWithdrawIdGeneratorService.cs" />
     <Compile Include="MockWithdrawLimitEvaluationService.cs" />

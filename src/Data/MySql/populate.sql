@@ -27,6 +27,8 @@ insert  into `currencypair`(`CurrencyPairName`,`BaseCurrency`,`QuoteCurrency`) v
 
 /*Data for the table `depositlimit` */
 
+insert  into `depositlimit`(`Id`,`TierLevel`,`DailyLimit`,`MonthlyLimit`) values (1,'Tier 0',0,0),(2,'Tier 1',1000,5000);
+
 /*Data for the table `fee` */
 
 insert  into `fee`(`Id`,`CurrencyPair`,`PercentageFee`,`Amount`) values (1,'XBTUSD',0.3,1000),(2,'XBTUSD',0.29,2000),(3,'XBTUSD',0.28,3500),(4,'XBTUSD',0.27,5000),(5,'XBTUSD',0.26,6500),(6,'XBTUSD',0.25,8000),(7,'XBTUSD',0.24,10000),(8,'XBTUSD',0.23,12500),(9,'XBTUSD',0.22,15000),(10,'XBTUSD',0.21,17500),(11,'XBTUSD',0.2,20000),(12,'XBTUSD',0.19,25000),(13,'XBTUSD',0.18,30000),(14,'XBTUSD',0.17,40000),(15,'XBTUSD',0.16,50000),(16,'XBTUSD',0.15,60000),(17,'XBTUSD',0.14,80000),(18,'XBTUSD',0.13,100000),(19,'XBTUSD',0.12,125000),(20,'XBTUSD',0.11,150000),(21,'XBTUSD',0.1,200000),(22,'XBTUSD',0.09,350000),(23,'XBTUSD',0.08,500000),(24,'XBTUSD',0.07,750000),(25,'XBTUSD',0.06,1000000);
@@ -72,6 +74,8 @@ insert  into `tier`(`TierLevel`,`TierName`) values ('Tier 0','Tier 0'),('Tier 1'
 insert  into `withdrawfees`(`Id`,`Currency`,`MinimumAmount`,`Fee`) values (3,'XBT',1,0.01),(4,'USD',1,0.01);
 
 /*Data for the table `withdrawlimit` */
+
+insert  into `withdrawlimit`(`Id`,`TierLevel`,`DailyLimit`,`MonthlyLimit`) values (1,'Tier 0',0,0);
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

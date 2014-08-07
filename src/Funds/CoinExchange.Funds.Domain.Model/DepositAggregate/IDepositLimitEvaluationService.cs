@@ -12,8 +12,8 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
         /// Evaluate the limit for deposit and signify if current transaction is within the deposit limits
         /// </summary>
         /// <returns></returns>
-        bool EvaluateDepositLimit(double currentDepositAmount, IList<Ledger> depositLedgers, DepositLimit depositLimit, double bestBidPrice, double
-            bestAskPrice);
+        bool EvaluateDepositLimit(double currentDepositAmount, IList<Ledger> depositLedgers, DepositLimit depositLimit,
+            double bestBidPrice, double bestAskPrice);
 
         /// <summary>
         /// Daily Deposit Limit
@@ -21,12 +21,22 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
         double DailyLimit { get; }
 
         /// <summary>
+        /// Daily Deposit Limit that has been used in the last 24 hours
+        /// </summary>
+        double DailyLimitUsed { get; }
+
+        /// <summary>
         /// Monthly Deposit Limit
         /// </summary>
         double MonthlyLimit { get; }
 
         /// <summary>
-        /// Maximum Deposit
+        /// Monthly Deposit Limit that has been used in the last 30 days
+        /// </summary>
+        double MonthlyLimitUsed { get; }
+
+        /// <summary>
+        /// Maximum Deposit amount allowed to the user at this moment.. Deposit should be kept 5-10% lower than this limit
         /// </summary>
         double MaximumDeposit { get; }
     }
