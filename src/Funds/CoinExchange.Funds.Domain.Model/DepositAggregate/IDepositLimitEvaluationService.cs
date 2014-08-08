@@ -12,7 +12,7 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
         /// Evaluate the limit for deposit and signify if current transaction is within the deposit limits
         /// </summary>
         /// <returns></returns>
-        bool EvaluateDepositLimit(double currentDepositAmount, IList<Ledger> depositLedgers, DepositLimit depositLimit,
+        bool EvaluateDepositLimit(double amountInUsd, IList<Ledger> depositLedgers, DepositLimit depositLimit,
             double bestBidPrice, double bestAskPrice);
 
         /// <summary>

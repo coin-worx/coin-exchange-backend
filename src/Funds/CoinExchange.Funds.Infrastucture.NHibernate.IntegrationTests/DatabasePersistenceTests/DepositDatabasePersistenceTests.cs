@@ -63,7 +63,7 @@ namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests.DatabaseP
             Deposit retrievedDeposit = _depositRepository.GetDepositByDepositId("1234");
             Assert.IsNotNull(retrievedDeposit);
             int id = retrievedDeposit.Id;
-            retrievedDeposit.Amount = 777;
+            retrievedDeposit.SetAmount(777);
             _persistanceRepository.SaveOrUpdate(retrievedDeposit);
 
             retrievedDeposit = _depositRepository.GetDepositById(id);
@@ -86,7 +86,7 @@ namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests.DatabaseP
 
             Deposit retrievedDeposit = _depositRepository.GetDepositByDepositId("1234");
             Assert.IsNotNull(retrievedDeposit);
-            retrievedDeposit.Amount = 777;
+            retrievedDeposit.SetAmount(777);
             _persistanceRepository.SaveOrUpdate(retrievedDeposit);
 
             retrievedDeposit = _depositRepository.GetDepositByDepositId("1234");
@@ -109,7 +109,7 @@ namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests.DatabaseP
 
             List<Deposit> retrievedDeposits = _depositRepository.GetDepositByCurrencyName("LTC");
             Assert.IsNotNull(retrievedDeposits);
-            retrievedDeposits[0].Amount = 777;
+            retrievedDeposits[0].SetAmount(777);
             _persistanceRepository.SaveOrUpdate(retrievedDeposits[0]);
 
             retrievedDeposits = _depositRepository.GetDepositByCurrencyName("LTC");

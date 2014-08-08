@@ -10,6 +10,7 @@ assembly="CoinExchange.Funds.Domain.Model" namespace="CoinExchange.Funds.Domain.
     <property name="DateTime" />
     <property name="LedgerType" />
     <property name="Amount" />
+    <property name="AmountInUsd" />
     <property name="Fee" />
     <property name="Balance" />
     <property name="TradeId" />

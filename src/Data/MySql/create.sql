@@ -109,6 +109,7 @@ CREATE TABLE `ledger` (
   `Currency` varchar(15) DEFAULT NULL,
   `AccountId` varchar(50) DEFAULT NULL,
   `Amount` double DEFAULT NULL,
+  `AmountInUsd` double DEFAULT NULL,
   `Fee` double DEFAULT NULL,
   `Balance` double DEFAULT NULL,
   `TradeId` varchar(50) DEFAULT NULL,

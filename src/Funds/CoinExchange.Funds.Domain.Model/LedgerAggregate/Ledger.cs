@@ -41,6 +41,11 @@ namespace CoinExchange.Funds.Domain.Model.LedgerAggregate
         public double Amount { get; private set; }
 
         /// <summary>
+        /// Amount in US Dollars
+        /// </summary>
+        public double AmountInUsd { get; private set; }
+
+        /// <summary>
         /// Fee
         /// </summary>
         public double Fee { get; private set; }
@@ -105,6 +110,26 @@ namespace CoinExchange.Funds.Domain.Model.LedgerAggregate
             LedgerType = ledgerType;
             Currency = currency;
             Amount = amount;
+            Fee = fee;
+            Balance = balance;
+            TradeId = tradeId;
+            OrderId = orderId;
+            WithdrawId = withdrawId;
+            DepositId = depositId;
+            AccountId = accountId;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:System.Object"/> class.
+        /// </summary>
+        public Ledger(string ledgerId, DateTime dateTime, LedgerType ledgerType, Currency currency, double amount, double amountInUsd, double fee, double balance, string tradeId, string orderId, string withdrawId, string depositId, AccountId accountId)
+        {
+            LedgerId = ledgerId;
+            DateTime = dateTime;
+            LedgerType = ledgerType;
+            Currency = currency;
+            Amount = amount;
+            AmountInUsd = amountInUsd;
             Fee = fee;
             Balance = balance;
             TradeId = tradeId;

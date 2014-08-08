@@ -202,8 +202,10 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
                 Tuple<double, double> bestBidBestAsk = _bboRetrievalService.GetBestBidBestAsk(deposit.Currency.Name,
                                                                                               "USD");
 
+                deposit.SetAmountInUsd(ConvertCurrencyToUsd(deposit.Amount, bestBidBestAsk.Item1,
+                                                                bestBidBestAsk.Item2));
                 // Check if the current Deposit transaction is within the Deposit limits
-                if (_depositLimitEvaluationService.EvaluateDepositLimit(deposit.Amount, depositLedgers,
+                if (_depositLimitEvaluationService.EvaluateDepositLimit(deposit.AmountInUsd, depositLedgers,
                                                                         depositLimit, bestBidBestAsk.Item1,
                                                                         bestBidBestAsk.Item2))
                 {
@@ -225,6 +227,15 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
                 }
             }
             return false;
+        }
+
+        /// <summary>
+        /// Converts the specified currency to US Dollars based on the given Currency - USD best bid and best ask
+        /// </summary>
+        /// <returns></returns>
+        private double ConvertCurrencyToUsd(double currencyAmount, double bestBid, double bestAsk)
+        {
+            return (((currencyAmount * bestBid) + (currencyAmount * bestAsk)) / 2);
         }
 
         /// <summary>
