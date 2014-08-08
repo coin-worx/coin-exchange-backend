@@ -71,11 +71,6 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
                         return SetMaximumDeposit(_monthlyLimit - _monthlyLimitUsed, bestBid, bestAsk);
                     }
                 }
-                // E.g., if DailyLimit = 500/1000 & MonthlyLimit = 0/5000
-                else if (_monthlyLimitUsed.Equals(0))
-                {
-                    return SetMaximumDeposit(_dailyLimit - _dailyLimitUsed, bestBid, bestAsk);
-                }
                 // E.g., if DailyLimit = 500/1000 & MonthlyLimit = 4000/5000
                 else if ((_monthlyLimit - _monthlyLimitUsed) > (_dailyLimit - _dailyLimitUsed))
                 {
@@ -83,6 +78,10 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
                 }
                 // E.g., if DailyLimit = 400/1000 & MonthlyLimit = 4500/5000
                 else if ((_monthlyLimit - _monthlyLimitUsed) < (_dailyLimit - _dailyLimitUsed))
+                {
+                    return SetMaximumDeposit(_monthlyLimit - _monthlyLimitUsed, bestBid, bestAsk);
+                }
+                else if ((_monthlyLimit - _monthlyLimitUsed).Equals(_dailyLimit - _dailyLimitUsed))
                 {
                     return SetMaximumDeposit(_monthlyLimit - _monthlyLimitUsed, bestBid, bestAsk);
                 }
