@@ -214,6 +214,8 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
                 // Get all the Deposit Ledgers
                 IList<Ledger> depositLedgers = GetDepositLedgers();
                 // Get the Current Tier Level for this user using the corss bounded context Tier retrieval service
+                // ToDo: Using the stub impllementation for now, upgrade to the real cross bounded context service
+                // once completed
                 string currentTierLevel = _tierLevelRetrievalService.GetCurrentTierLevel(deposit.AccountId.Value);
                 // Get the Current Deposit limits for this user
                 DepositLimit depositLimit = _depositLimitRepository.GetDepositLimitByTierLevel(currentTierLevel);

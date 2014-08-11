@@ -124,16 +124,21 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
         {
             double tempDailyLimitUsed = 0;
             double tempMonthlyLimitUsed = 0;
-            foreach (var depositLedger in depositLedgers)
+
+            if (depositLedgers != null)
             {
-                if (depositLedger.DateTime >= DateTime.Now.AddHours(-24))
+                foreach (var depositLedger in depositLedgers)
                 {
-                    tempDailyLimitUsed += depositLedger.AmountInUsd;
-                    tempMonthlyLimitUsed += depositLedger.AmountInUsd;
-                }
-                if (depositLedger.DateTime >= DateTime.Now.AddDays(-30) && depositLedger.DateTime < DateTime.Now.AddHours(-24))
-                {
-                    tempMonthlyLimitUsed += depositLedger.AmountInUsd;
+                    if (depositLedger.DateTime >= DateTime.Now.AddHours(-24))
+                    {
+                        tempDailyLimitUsed += depositLedger.AmountInUsd;
+                        tempMonthlyLimitUsed += depositLedger.AmountInUsd;
+                    }
+                    if (depositLedger.DateTime >= DateTime.Now.AddDays(-30) &&
+                        depositLedger.DateTime < DateTime.Now.AddHours(-24))
+                    {
+                        tempMonthlyLimitUsed += depositLedger.AmountInUsd;
+                    }
                 }
             }
 

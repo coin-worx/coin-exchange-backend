@@ -9,6 +9,7 @@ using CoinExchange.Funds.Domain.Model.BalanceAggregate;
 using CoinExchange.Funds.Domain.Model.CurrencyAggregate;
 using CoinExchange.Funds.Domain.Model.DepositAggregate;
 using CoinExchange.Funds.Domain.Model.FeeAggregate;
+using CoinExchange.Funds.Domain.Model.LedgerAggregate;
 using CoinExchange.Funds.Domain.Model.Repositories;
 using CoinExchange.Funds.Domain.Model.Services;
 using CoinExchange.Funds.Domain.Model.WithdrawAggregate;
@@ -95,7 +96,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
 
             // Deposit
             Deposit deposit = new Deposit(currency, depositIdGeneratorService.GenerateId(), DateTime.Now,
-                                          DepositType.Default, 500, 0, TransactionStatus.Pending, accountId,
+                                          DepositType.Default, 1.4, 0, TransactionStatus.Pending, accountId,
                                           new TransactionId("123"), new BitcoinAddress("bitcoin123"));
             deposit.IncrementConfirmations(7);
             fundsPersistenceRepository.SaveOrUpdate(deposit);
@@ -114,7 +115,8 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             Assert.AreEqual(balance.PendingBalance, 0);
 
             // Withdraw
-            Withdraw validateFundsForWithdrawal = fundsValidationService.ValidateFundsForWithdrawal(accountId, currency, 400, new TransactionId("transaction123"), new BitcoinAddress("bitcoin123"));
+            Withdraw validateFundsForWithdrawal = fundsValidationService.ValidateFundsForWithdrawal(accountId, currency,
+                1.4, new TransactionId("transaction123"), new BitcoinAddress("bitcoin123"));
             Assert.IsNotNull(validateFundsForWithdrawal);
             bool withdrawalExecuted = fundsValidationService.WithdrawalExecuted(validateFundsForWithdrawal);
             Assert.IsTrue(withdrawalExecuted);

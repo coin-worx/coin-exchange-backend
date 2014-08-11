@@ -18,7 +18,7 @@ namespace CoinExchange.Funds.Infrastructure.Services
         /// <returns></returns>
         public string GetCurrentTierLevel(string userId)
         {
-            return "TierLevel1";
+            return "Tier 1";
         }
     }
 }
