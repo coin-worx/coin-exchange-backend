@@ -10,6 +10,7 @@ assembly="CoinExchange.Funds.Domain.Model" namespace="CoinExchange.Funds.Domain.
     <property name="DateTime" />
     <property name="Type" />
     <property name="Amount" />
+    <property name="AmountInUsd" />
     <property name="Fee" />
     <property name="Status" />
     <component name="Currency">

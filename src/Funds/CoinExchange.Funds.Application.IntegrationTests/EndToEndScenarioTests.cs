@@ -83,6 +83,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
         [Test]
         public void DepositAndWithdrawTest_TestsIfThingsGoAsExpectedWhenWithdrawIsMadeAfterDeposit_ChecksBalanceToVerify()
         {
+            // Scenario: Confirmed Deposit --> Withdraw --> Check Balance            
             IFundsValidationService fundsValidationService = (IFundsValidationService)ContextRegistry.GetContext()["FundsValidationService"];
             IFundsPersistenceRepository fundsPersistenceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];
             IBalanceRepository balanceRepository = (IBalanceRepository)ContextRegistry.GetContext()["BalanceRepository"];            
@@ -92,23 +93,27 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             AccountId accountId = new AccountId("accountid123");
             Currency currency = new Currency("XBT");
 
+            // Deposit
             Deposit deposit = new Deposit(currency, depositIdGeneratorService.GenerateId(), DateTime.Now,
                                           DepositType.Default, 500, 0, TransactionStatus.Pending, accountId,
                                           new TransactionId("123"), new BitcoinAddress("bitcoin123"));
             deposit.IncrementConfirmations(7);
             fundsPersistenceRepository.SaveOrUpdate(deposit);
 
+            // Retrieve balance
             Balance balance = balanceRepository.GetBalanceByCurrencyAndAccountId(currency, accountId);
             Assert.IsNull(balance);
             bool depositResponse = fundsValidationService.DepositConfirmed(deposit);
             Assert.IsTrue(depositResponse);
 
+            // Check balance
             balance = balanceRepository.GetBalanceByCurrencyAndAccountId(currency, accountId);
             Assert.IsNotNull(balance);
             Assert.AreEqual(balance.CurrentBalance, deposit.Amount);
             Assert.AreEqual(balance.AvailableBalance, deposit.Amount);
             Assert.AreEqual(balance.PendingBalance, 0);
 
+            // Withdraw
             Withdraw validateFundsForWithdrawal = fundsValidationService.ValidateFundsForWithdrawal(accountId, currency, 400, new TransactionId("transaction123"), new BitcoinAddress("bitcoin123"));
             Assert.IsNotNull(validateFundsForWithdrawal);
             bool withdrawalExecuted = fundsValidationService.WithdrawalExecuted(validateFundsForWithdrawal);
@@ -116,6 +121,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
 
             WithdrawFees withdrawFee = withdrawFeesRepository.GetWithdrawFeesByCurrencyName(currency.Name);
 
+            // Check balance
             balance = balanceRepository.GetBalanceByCurrencyAndAccountId(currency, accountId);
             Assert.IsNotNull(balance);
             Assert.AreEqual(2400 - 400 - withdrawFee.Fee, balance.CurrentBalance);

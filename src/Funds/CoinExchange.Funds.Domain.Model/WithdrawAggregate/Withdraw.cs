@@ -43,57 +43,62 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
         /// <summary>
         /// Currency
         /// </summary>
-        public Currency Currency { get; set; }
+        public Currency Currency { get; private set; }
 
         /// <summary>
         /// DepositId
         /// </summary>
-        public string WithdrawId { get; set; }
+        public string WithdrawId { get; private set; }
 
         /// <summary>
         /// Date
         /// </summary>
-        public DateTime DateTime { get; set; }
+        public DateTime DateTime { get; private set; }
 
         /// <summary>
         /// Type
         /// </summary>
-        public WithdrawType Type { get; set; }
+        public WithdrawType Type { get; private set; }
 
         /// <summary>
         /// Amount
         /// </summary>
-        public double Amount { get; set; }
+        public double Amount { get; private set; }
+
+        /// <summary>
+        /// Amount in US Dollars
+        /// </summary>
+        public double AmountInUsd { get; private set; }
 
         /// <summary>
         /// Fee
         /// </summary>
-        public double Fee { get; set; }
+        public double Fee { get; private set; }
 
         /// <summary>
         /// Bank Account
         /// </summary>
-        public BankAccount BankAccount { get; set; }
+        public BankAccount BankAccount { get; private set; }
 
         /// <summary>
         /// Status of the Deposit
         /// </summary>
-        public TransactionStatus Status { get; set; }
+        public TransactionStatus Status { get; private set; }
 
         /// <summary>
         /// AccountID
         /// </summary>
-        public AccountId AccountId { get; set; }
+        public AccountId AccountId { get; private set; }
 
         /// <summary>
         /// Transaction ID for the Withdrawaal
         /// </summary>
-        public TransactionId TransactionId { get; set; }
+        public TransactionId TransactionId { get; private set; }
 
         /// <summary>
         /// Bitcoin Address associated with this withdrawal
         /// </summary>
-        public BitcoinAddress BitcoinAddress { get; set; }
+        public BitcoinAddress BitcoinAddress { get; private set; }
 
         /// <summary>
         /// Assigns the withdraw fee to this instance
@@ -126,6 +131,22 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
             {
                 Status = TransactionStatus.Cancelled;
             }
+        }
+
+        /// <summary>
+        /// Sets the amount of the withdrawal
+        /// </summary>
+        public void SetAmount(double amount)
+        {
+            Amount = amount;
+        }
+
+        /// <summary>
+        /// Sets the amount of withdrawal in US Dollars
+        /// </summary>
+        public void SetAmountInUsd(double amountInUsd)
+        {
+            AmountInUsd = amountInUsd;
         }
     }
 }

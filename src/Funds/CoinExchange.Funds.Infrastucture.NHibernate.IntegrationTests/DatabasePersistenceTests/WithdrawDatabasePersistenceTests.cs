@@ -51,7 +51,7 @@ namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests.DatabaseP
             Withdraw retrievedDeposit = _withdrawRepository.GetWithdrawByWithdrawId("1234");
             Assert.IsNotNull(retrievedDeposit);
             int id = retrievedDeposit.Id;
-            retrievedDeposit.Amount = 777;
+            retrievedDeposit.SetAmount(777);
             _persistanceRepository.SaveOrUpdate(retrievedDeposit);
 
             retrievedDeposit = _withdrawRepository.GetWithdrawById(id);
@@ -74,7 +74,7 @@ namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests.DatabaseP
 
             Withdraw retrievedDeposit = _withdrawRepository.GetWithdrawByWithdrawId("1234");
             Assert.IsNotNull(retrievedDeposit);
-            retrievedDeposit.Amount = 777;
+            retrievedDeposit.SetAmount(777);
             _persistanceRepository.SaveOrUpdate(retrievedDeposit);
 
             retrievedDeposit = _withdrawRepository.GetWithdrawByWithdrawId("1234");
@@ -97,7 +97,7 @@ namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests.DatabaseP
 
             List<Withdraw> retrievedDeposits = _withdrawRepository.GetWithdrawByCurrencyName("LTC");
             Assert.IsNotNull(retrievedDeposits);
-            retrievedDeposits[0].Amount = 777;
+            retrievedDeposits[0].SetAmount(777);
             _persistanceRepository.SaveOrUpdate(retrievedDeposits[0]);
 
             retrievedDeposits = _withdrawRepository.GetWithdrawByCurrencyName("LTC");
@@ -155,7 +155,7 @@ namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests.DatabaseP
 
             Withdraw retrievedWithdraw = _withdrawRepository.GetWithdrawByTransactionId(new TransactionId("transact123"));
             Assert.IsNotNull(retrievedWithdraw);
-            retrievedWithdraw.Amount = 777;
+            retrievedWithdraw.SetAmount(777);
             _persistanceRepository.SaveOrUpdate(retrievedWithdraw);
 
             retrievedWithdraw = _withdrawRepository.GetWithdrawByTransactionId(new TransactionId("transact123"));

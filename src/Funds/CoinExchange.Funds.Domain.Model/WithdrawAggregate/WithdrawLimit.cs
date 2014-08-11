@@ -16,11 +16,11 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
-        public WithdrawLimit(string tierLevel, double monthlyLimit, double dailyLimit)
+        public WithdrawLimit(string tierLevel, double dailyLimit, double monthlyLimit)
         {
             TierLevel = tierLevel;
-            MonthlyLimit = monthlyLimit;
             DailyLimit = dailyLimit;
+            MonthlyLimit = monthlyLimit;            
         }
 
         /// <summary>

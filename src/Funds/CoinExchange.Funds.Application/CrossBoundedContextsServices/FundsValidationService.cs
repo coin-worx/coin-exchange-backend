@@ -166,10 +166,30 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         {
             Balance balance = _balanceRepository.GetBalanceByCurrencyAndAccountId(withdraw.Currency, withdraw.AccountId);
 
-            if (balance != null)
+            // Get all the Withdraw Ledgers
+            IList<Ledger> withdrawLedgers = GetDepositLedgers();
+            // Get the Current Tier Level for this user using the cross bounded context Tier retrieval service
+            string currentTierLevel = _tierLevelRetrievalService.GetCurrentTierLevel(withdraw.AccountId.Value);
+            // Get the Current Withdraw limits for this user
+            WithdrawLimit withdrawLimit = _withdrawLimitRepository.GetWithdrawLimitByTierLevel(currentTierLevel);
+
+            // Get the best bid and best ask form the Trades BC.
+            // NOTE: Implement adn use real implementation later, rather than using the stub implementation being used right now
+            Tuple<double, double> bestBidBestAsk = _bboRetrievalService.GetBestBidBestAsk(withdraw.Currency.Name,
+                                                                                          "USD");
+            withdraw.SetAmountInUsd(ConvertCurrencyToUsd(withdraw.Amount, bestBidBestAsk.Item1, bestBidBestAsk.Item2));
+
+            // Evaluate if the current withdrawal is within the limits of the maximum withdrawal allowed and the balance
+            // available
+            if (_withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(withdraw.AmountInUsd, withdrawLedgers,
+                                                                             withdrawLimit, bestBidBestAsk.Item1,
+                                                                             bestBidBestAsk.Item2,
+                                                                             balance.AvailableBalance,
+                                                                             balance.CurrentBalance))
             {
-                bool addResponse= balance.ConfirmPendingTransaction(withdraw.WithdrawId, PendingTransactionType.Withdraw,
-                    -withdraw.Amount);
+                bool addResponse = balance.ConfirmPendingTransaction(withdraw.WithdrawId,
+                                                                     PendingTransactionType.Withdraw,
+                                                                     -withdraw.Amount);
                 if (addResponse)
                 {
                     balance.AddAvailableBalance(-withdraw.Fee);
@@ -178,6 +198,7 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
                     return _transactionService.CreateWithdrawTransaction(withdraw, balance.CurrentBalance);
                 }
             }
+
             return false;
         }
 
@@ -209,13 +230,15 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
                                                                         depositLimit, bestBidBestAsk.Item1,
                                                                         bestBidBestAsk.Item2))
                 {
-
+                    // Check if balance instance has been created for this user already
                     Balance balance = GetBalanceForAccountId(deposit.AccountId, deposit.Currency);
 
+                    // If balance instance is not initiated for this currency for the current user, create now
                     if (balance == null)
                     {
                         balance = new Balance(deposit.Currency, deposit.AccountId, deposit.Amount, deposit.Amount);
                     }
+                    // Otherwise, update the balance for the current user's currency
                     else
                     {
                         balance.AddAvailableBalance(deposit.Amount);
@@ -258,6 +281,28 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
                 depositLedgers = null;
             }
             return depositLedgers;
+        }
+
+        /// <summary>
+        /// Gets all the Withdraw Ledger transactions
+        /// </summary>
+        /// <returns></returns>
+        private IList<Ledger> GetWithdrawalLedgers()
+        {
+            IList<Ledger> withdrawLedgers = new List<Ledger>();
+            IList<Ledger> allLedgers = _ledgerRepository.GetAllLedgers();
+            foreach (var ledger in allLedgers)
+            {
+                if (ledger.LedgerType == LedgerType.Withdrawal)
+                {
+                    withdrawLedgers.Add(ledger);
+                }
+            }
+            if (!withdrawLedgers.Any())
+            {
+                withdrawLedgers = null;
+            }
+            return withdrawLedgers;
         }
 
             /// <summary>
