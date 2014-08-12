@@ -22,7 +22,7 @@ namespace CoinExchange.Funds.Domain.Model.Services
         /// <param name="orderId"> </param>
         /// <returns></returns>
         bool ValidateFundsForOrder(AccountId accountId, CurrencyAggregate.Currency baseCurrency, 
-            CurrencyAggregate.Currency quoteCurrency, double volume, double price, string orderSide, string orderId);
+            CurrencyAggregate.Currency quoteCurrency, decimal volume, decimal price, string orderSide, string orderId);
 
         /// <summary>
         /// Validates that enough funds exist for the requested withdrawal to be made
@@ -33,7 +33,7 @@ namespace CoinExchange.Funds.Domain.Model.Services
         /// <param name="transactionId"> </param>
         /// <param name="bitcoinAddress"> </param>
         /// <returns></returns>
-        Withdraw ValidateFundsForWithdrawal(AccountId accountId, CurrencyAggregate.Currency currency, double amount, 
+        Withdraw ValidateFundsForWithdrawal(AccountId accountId, CurrencyAggregate.Currency currency, decimal amount, 
             TransactionId transactionId, BitcoinAddress bitcoinAddress);
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace CoinExchange.Funds.Domain.Model.Services
         /// <param name="buyOrderId"></param>
         /// <param name="sellOrderId"></param>
         /// <returns></returns>
-        bool TradeExecuted(string baseCurrency, string quoteCurrency, double tradeVolume, double price,
+        bool TradeExecuted(string baseCurrency, string quoteCurrency, decimal tradeVolume, decimal price,
             DateTime executionDateTime, string tradeId, string buyAccountId, string sellAccountId, string buyOrderId,
             string sellOrderId);
 
@@ -81,6 +81,6 @@ namespace CoinExchange.Funds.Domain.Model.Services
         /// <param name="price"> </param>
         /// <returns></returns>
         bool OrderCancelled(Currency baseCurrency, Currency quoteCurrency, AccountId accountId, string orderside,
-            string orderId, double openQuantity, double price);
+            string orderId, decimal openQuantity, decimal price);
     }
 }

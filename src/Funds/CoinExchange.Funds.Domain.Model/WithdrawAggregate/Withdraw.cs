@@ -20,7 +20,7 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
-        public Withdraw(Currency currency, string withdrawId, DateTime date, WithdrawType type, double amount, double fee, 
+        public Withdraw(Currency currency, string withdrawId, DateTime date, WithdrawType type, decimal amount, decimal fee, 
             TransactionStatus status, AccountId accountId, TransactionId transactionId, BitcoinAddress bitcoinAddress)
         {
             Currency = currency;
@@ -63,17 +63,17 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
         /// <summary>
         /// Amount
         /// </summary>
-        public double Amount { get; private set; }
+        public decimal Amount { get; private set; }
 
         /// <summary>
         /// Amount in US Dollars
         /// </summary>
-        public double AmountInUsd { get; private set; }
+        public decimal AmountInUsd { get; private set; }
 
         /// <summary>
         /// Fee
         /// </summary>
-        public double Fee { get; private set; }
+        public decimal Fee { get; private set; }
 
         /// <summary>
         /// Bank Account
@@ -105,7 +105,7 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
         /// </summary>
         /// <param name="fee"></param>
         /// <returns></returns>
-        public bool AssignFee(double fee)
+        public bool AssignFee(decimal fee)
         {
             Fee = fee;
             return true;
@@ -136,7 +136,7 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
         /// <summary>
         /// Sets the amount of the withdrawal
         /// </summary>
-        public void SetAmount(double amount)
+        public void SetAmount(decimal amount)
         {
             Amount = amount;
         }
@@ -144,7 +144,7 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
         /// <summary>
         /// Sets the amount of withdrawal in US Dollars
         /// </summary>
-        public void SetAmountInUsd(double amountInUsd)
+        public void SetAmountInUsd(decimal amountInUsd)
         {
             AmountInUsd = amountInUsd;
         }

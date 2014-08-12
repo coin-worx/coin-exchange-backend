@@ -18,9 +18,9 @@ namespace CoinExchange.Funds.Infrastructure.Services
         /// <param name="baseCurrency"></param>
         /// <param name="quoteCurrency"></param>
         /// <returns></returns>
-        public Tuple<double, double> GetBestBidBestAsk(string baseCurrency, string quoteCurrency)
+        public Tuple<decimal, decimal> GetBestBidBestAsk(string baseCurrency, string quoteCurrency)
         {
-            return new Tuple<double, double>(580.65, 590.87); 
+            return new Tuple<decimal, decimal>(580.65M, 590.87M); 
         }
     }
 }

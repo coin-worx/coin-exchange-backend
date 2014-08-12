@@ -23,7 +23,7 @@ namespace CoinExchange.Funds.Domain.Model.BalanceAggregate
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
         public PendingTransaction(Currency currency, string instanceId, PendingTransactionType pendingEntityType, 
-            double amount, int balanceId)
+            decimal amount, int balanceId)
         {
             Currency = currency;
             InstanceId = instanceId;
@@ -60,6 +60,6 @@ namespace CoinExchange.Funds.Domain.Model.BalanceAggregate
         /// <summary>
         /// Amount of the pending transaction
         /// </summary>
-        public virtual double Amount { get; private set; }
+        public virtual decimal Amount { get; private set; }
     }
 }

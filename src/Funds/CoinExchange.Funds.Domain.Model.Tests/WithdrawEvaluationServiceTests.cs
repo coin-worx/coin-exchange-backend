@@ -19,14 +19,14 @@ namespace CoinExchange.Funds.Domain.Model.Tests
         {
             IWithdrawLimitEvaluationService withdrawLimitEvaluationService = new WithdrawLimitEvaluationService();
             
-            double bestBid = 580;
-            double bestAsk = 590;
-            double dailyLimit = 1000;
-            double monthlyLimit = 5000;
-            double midpoint = (bestBid + bestAsk) / 2;
+            decimal bestBid = 580;
+            decimal bestAsk = 590;
+            decimal dailyLimit = 1000;
+            decimal monthlyLimit = 5000;
+            decimal midpoint = (bestBid + bestAsk) / 2;
             // We have suficient balance for this case
-            double availableBalance = (5000/midpoint) + 100;
-            double currentBalance = (5000/midpoint) + 100;
+            decimal availableBalance = (5000/midpoint) + 100;
+            decimal currentBalance = (5000/midpoint) + 100;
 
             List<Ledger> ledgers = new List<Ledger>();
             WithdrawLimit withdrawLimit = new WithdrawLimit("Tier0", dailyLimit, monthlyLimit);
@@ -49,14 +49,14 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             // Balance is less than the evaluated Maximum Withdrawal threshold
             IWithdrawLimitEvaluationService withdrawLimitEvaluationService = new WithdrawLimitEvaluationService();
             
-            double bestBid = 580;
-            double bestAsk = 590;
-            double dailyLimit = 1000;
-            double monthlyLimit = 5000;
+            decimal bestBid = 580;
+            decimal bestAsk = 590;
+            decimal dailyLimit = 1000;
+            decimal monthlyLimit = 5000;
 
             // Balance is less than the calculated maximum threshold
-            double availableBalance = (((1000 / bestBid) + (1000/bestAsk)) / 2 ) - 0.09;
-            double currentBalance = (((1000 / bestBid) + (1000 / bestAsk)) / 2) - 0.09;
+            decimal availableBalance = (((1000 / bestBid) + (1000/bestAsk)) / 2 ) - 0.09m;
+            decimal currentBalance = (((1000 / bestBid) + (1000 / bestAsk)) / 2) - 0.09m;
 
             List<Ledger> ledgers = new List<Ledger>();
             WithdrawLimit withdrawLimit = new WithdrawLimit("Tier0", dailyLimit, monthlyLimit);
@@ -81,17 +81,17 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             Currency currency = new Currency("XBT");
             string withdrawId = "withdrawid123";
             AccountId accountId = new AccountId("accountid123");
-            double bestBid = 580;
-            double bestAsk = 590;
-            double dailyLimit = 1000;
-            double monthlyLimit = 5000;
+            decimal bestBid = 580;
+            decimal bestAsk = 590;
+            decimal dailyLimit = 1000;
+            decimal monthlyLimit = 5000;
             // Balance is less than the calculated maximum threshold
-            double availableBalance = (((1000 / bestBid) + (1000 / bestAsk)) / 2) - 0.09;
-            double currentBalance = (((1000 / bestBid) + (1000 / bestAsk)) / 2) - 0.09;
+            decimal availableBalance = (((1000 / bestBid) + (1000 / bestAsk)) / 2) - 0.09m;
+            decimal currentBalance = (((1000 / bestBid) + (1000 / bestAsk)) / 2) - 0.09m;
 
             List<Ledger> ledgers = new List<Ledger>();
-            Ledger ledger = new Ledger("ledgerid1", DateTime.Now.AddDays(-40), LedgerType.Withdrawal, currency, 1.5,
-                900, 0, 1.5, null, null, withdrawId, null, accountId);
+            Ledger ledger = new Ledger("ledgerid1", DateTime.Now.AddDays(-40), LedgerType.Withdrawal, currency, 1.5m,
+                900, 0, 1.5m, null, null, withdrawId, null, accountId);
             ledgers.Add(ledger);
             WithdrawLimit withdrawLimit = new WithdrawLimit("Tier0", dailyLimit, monthlyLimit);
             bool evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(999, ledgers,
@@ -115,18 +115,18 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             Currency currency = new Currency("XBT");
             string withdrawId = "withdrawid123";
             AccountId accountId = new AccountId("accountid123");
-            double bestBid = 580;
-            double bestAsk = 590;
-            double dailyLimit = 1000;
-            double monthlyLimit = 5000;
-            double midpoint = (bestBid + bestAsk) / 2;
+            decimal bestBid = 580;
+            decimal bestAsk = 590;
+            decimal dailyLimit = 1000;
+            decimal monthlyLimit = 5000;
+            decimal midpoint = (bestBid + bestAsk) / 2;
             // Balance is less than the calculated maximum threshold
-            double availableBalance = (((1000 / bestBid) + (1000 / bestAsk)) / 2) - 0.09;
-            double currentBalance = (((1000 / bestBid) + (1000 / bestAsk)) / 2) - 0.09;
+            decimal availableBalance = (((1000 / bestBid) + (1000 / bestAsk)) / 2) - 0.09m;
+            decimal currentBalance = (((1000 / bestBid) + (1000 / bestAsk)) / 2) - 0.09m;
 
             List<Ledger> ledgers = new List<Ledger>();
             Ledger ledger = new Ledger("ledgerid1", DateTime.Now.AddDays(-29), LedgerType.Withdrawal, currency, 4500 * midpoint,
-                4500, 0, 1.5, null, null, withdrawId, null, accountId);
+                4500, 0, 1.5m, null, null, withdrawId, null, accountId);
             ledgers.Add(ledger);
             WithdrawLimit withdrawLimit = new WithdrawLimit("Tier0", dailyLimit, monthlyLimit);
             bool evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(600, ledgers,
@@ -165,14 +165,14 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             Currency currency = new Currency("XBT");
             string withdrawId = "withdrawid123";
             AccountId accountId = new AccountId("accountid123");
-            double bestBid = 580;
-            double bestAsk = 590;
-            double dailyLimit = 1000;
-            double monthlyLimit = 5000;
-            double midpoint = (bestBid + bestAsk) / 2;
+            decimal bestBid = 580;
+            decimal bestAsk = 590;
+            decimal dailyLimit = 1000;
+            decimal monthlyLimit = 5000;
+            decimal midpoint = (bestBid + bestAsk) / 2;
             // Balance is less than the calculated maximum threshold
-            double availableBalance = (((1000 / bestBid) + (1000 / bestAsk)) / 2) - 0.09;
-            double currentBalance = (((1000 / bestBid) + (1000 / bestAsk)) / 2) - 0.09;
+            decimal availableBalance = (((1000 / bestBid) + (1000 / bestAsk)) / 2) - 0.09m;
+            decimal currentBalance = (((1000 / bestBid) + (1000 / bestAsk)) / 2) - 0.09m;
 
             List<Ledger> ledgers = new List<Ledger>();
             Ledger ledger = new Ledger("ledgerid1", DateTime.Now.AddDays(-29), LedgerType.Withdrawal, currency, 4100 * midpoint,
@@ -218,14 +218,14 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             Currency currency = new Currency("XBT");
             string withdrawId = "withdrawid123";
             AccountId accountId = new AccountId("accountid123");
-            double bestBid = 580;
-            double bestAsk = 590;
-            double dailyLimit = 1000;
-            double monthlyLimit = 5000;
-            double midpoint = (bestBid + bestAsk) / 2;
+            decimal bestBid = 580;
+            decimal bestAsk = 590;
+            decimal dailyLimit = 1000;
+            decimal monthlyLimit = 5000;
+            decimal midpoint = (bestBid + bestAsk) / 2;
             // Balance is less than the calculated maximum threshold
-            double availableBalance = (((1000 / bestBid) + (1000 / bestAsk)) / 2) - 0.09;
-            double currentBalance = (((1000 / bestBid) + (1000 / bestAsk)) / 2) - 0.09;
+            decimal availableBalance = (((1000 / bestBid) + (1000 / bestAsk)) / 2) - 0.09m;
+            decimal currentBalance = (((1000 / bestBid) + (1000 / bestAsk)) / 2) - 0.09m;
 
             List<Ledger> ledgers = new List<Ledger>();
             Ledger ledger = new Ledger("ledgerid1", DateTime.Now.AddDays(-29), LedgerType.Withdrawal, currency, 4100 * midpoint,
@@ -271,14 +271,14 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             Currency currency = new Currency("XBT");
             string withdrawId = "withdrawid123";
             AccountId accountId = new AccountId("accountid123");
-            double bestBid = 580;
-            double bestAsk = 590;
-            double dailyLimit = 1000;
-            double monthlyLimit = 5000;
-            double midpoint = (bestBid + bestAsk) / 2;
+            decimal bestBid = 580;
+            decimal bestAsk = 590;
+            decimal dailyLimit = 1000;
+            decimal monthlyLimit = 5000;
+            decimal midpoint = (bestBid + bestAsk) / 2;
             // Balance is less than the calculated maximum threshold
-            double availableBalance = (((1000 / bestBid) + (1000 / bestAsk)) / 2) - 0.09;
-            double currentBalance = (((1000 / bestBid) + (1000 / bestAsk)) / 2) - 0.09;
+            decimal availableBalance = (((1000 / bestBid) + (1000 / bestAsk)) / 2) - 0.09m;
+            decimal currentBalance = (((1000 / bestBid) + (1000 / bestAsk)) / 2) - 0.09m;
 
             List<Ledger> ledgers = new List<Ledger>();
             Ledger ledger = new Ledger("ledgerid1", DateTime.Now.AddDays(-29), LedgerType.Withdrawal, currency, 3500 * midpoint,
@@ -324,14 +324,14 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             Currency currency = new Currency("XBT");
             string withdrawId = "withdrawid123";
             AccountId accountId = new AccountId("accountid123");
-            double bestBid = 580;
-            double bestAsk = 590;
-            double dailyLimit = 1000;
-            double monthlyLimit = 5000;
-            double midpoint = (bestBid + bestAsk) / 2;
+            decimal bestBid = 580;
+            decimal bestAsk = 590;
+            decimal dailyLimit = 1000;
+            decimal monthlyLimit = 5000;
+            decimal midpoint = (bestBid + bestAsk) / 2;
             // Balance is less than the calculated maximum threshold
-            double availableBalance = (((1000 / bestBid) + (1000 / bestAsk)) / 2) - 0.09;
-            double currentBalance = (((1000 / bestBid) + (1000 / bestAsk)) / 2) - 0.09;
+            decimal availableBalance = (((1000 / bestBid) + (1000 / bestAsk)) / 2) - 0.09m;
+            decimal currentBalance = (((1000 / bestBid) + (1000 / bestAsk)) / 2) - 0.09m;
 
             List<Ledger> ledgers = new List<Ledger>();
             Ledger ledger = new Ledger("ledgerid1", DateTime.Now.AddMinutes(-5), LedgerType.Withdrawal, currency, 500 * midpoint,
@@ -375,14 +375,14 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             Currency currency = new Currency("XBT");
             string withdrawId = "withdrawid123";
             AccountId accountId = new AccountId("accountid123");
-            double bestBid = 580;
-            double bestAsk = 590;
-            double dailyLimit = 1000;
-            double monthlyLimit = 5000;
-            double midpoint = (bestBid + bestAsk) / 2;
+            decimal bestBid = 580;
+            decimal bestAsk = 590;
+            decimal dailyLimit = 1000;
+            decimal monthlyLimit = 5000;
+            decimal midpoint = (bestBid + bestAsk) / 2;
             // Balance is less than the calculated maximum threshold
-            double availableBalance = (((1000 / bestBid) + (1000 / bestAsk)) / 2) - 0.09;
-            double currentBalance = (((1000 / bestBid) + (1000 / bestAsk)) / 2) - 0.09;
+            decimal availableBalance = (((1000 / bestBid) + (1000 / bestAsk)) / 2) - 0.09m;
+            decimal currentBalance = (((1000 / bestBid) + (1000 / bestAsk)) / 2) - 0.09m;
 
             List<Ledger> ledgers = new List<Ledger>();
             Ledger ledger = new Ledger("ledgerid1", DateTime.Now.AddDays(-3), LedgerType.Withdrawal, currency, 4000 * midpoint,
@@ -428,20 +428,20 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             Currency currency = new Currency("XBT");
             string withdrawId = "withdrawid123";
             AccountId accountId = new AccountId("accountid123");
-            double bestBid = 580;
-            double bestAsk = 590;
-            double dailyLimit = 1000;
-            double monthlyLimit = 5000;
-            double midpoint = (bestBid + bestAsk) / 2;
+            decimal bestBid = 580;
+            decimal bestAsk = 590;
+            decimal dailyLimit = 1000;
+            decimal monthlyLimit = 5000;
+            decimal midpoint = (bestBid + bestAsk) / 2;
             // Balance is less than the calculated maximum threshold
-            double availableBalance = (((500 / bestBid) + (500 / bestAsk)) / 2) - 0.09;
-            double currentBalance = (((500 / bestBid) + (500 / bestAsk)) / 2) - 0.09;
+            decimal availableBalance = (((500 / bestBid) + (500 / bestAsk)) / 2) - 0.09m;
+            decimal currentBalance = (((500 / bestBid) + (500 / bestAsk)) / 2) - 0.09m;
             // Amount that can be safely withdrawn
-            double safeAmount = ConvertCurrencyToUsd(bestBid, bestAsk, availableBalance);
+            decimal safeAmount = ConvertCurrencyToUsd(bestBid, bestAsk, availableBalance);
 
             List<Ledger> ledgers = new List<Ledger>();
             Ledger ledger = new Ledger("ledgerid1", DateTime.Now.AddDays(-29), LedgerType.Withdrawal, currency, 4500 * midpoint,
-                4500, 0, 1.5, null, null, withdrawId, null, accountId);
+                4500, 0, 1.5m, null, null, withdrawId, null, accountId);
             ledgers.Add(ledger);
             WithdrawLimit withdrawLimit = new WithdrawLimit("Tier0", dailyLimit, monthlyLimit);
             bool evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(500, ledgers,
@@ -482,22 +482,22 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             Currency currency = new Currency("XBT");
             string withdrawId = "withdrawid123";
             AccountId accountId = new AccountId("accountid123");
-            double bestBid = 580;
-            double bestAsk = 590;
-            double dailyLimit = 1000;
-            double monthlyLimit = 5000;
-            double midpoint = (bestBid + bestAsk) / 2;
+            decimal bestBid = 580;
+            decimal bestAsk = 590;
+            decimal dailyLimit = 1000;
+            decimal monthlyLimit = 5000;
+            decimal midpoint = (bestBid + bestAsk) / 2;
             // Balance is less than the calculated maximum threshold
-            double availableBalance = (((500 / bestBid) + (500 / bestAsk)) / 2) - 0.09;
-            double currentBalance = (((500 / bestBid) + (500 / bestAsk)) / 2) - 0.09;
+            decimal availableBalance = (((500 / bestBid) + (500 / bestAsk)) / 2) - 0.09m;
+            decimal currentBalance = (((500 / bestBid) + (500 / bestAsk)) / 2) - 0.09m;
             // Amount that can be safely withdrawn
-            double safeAmount = ConvertCurrencyToUsd(bestBid, bestAsk, availableBalance);
+            decimal safeAmount = ConvertCurrencyToUsd(bestBid, bestAsk, availableBalance);
 
             List<Ledger> ledgers = new List<Ledger>();
             Ledger ledger = new Ledger("ledgerid1", DateTime.Now.AddDays(-29), LedgerType.Withdrawal, currency, 4100 * midpoint,
-                4100, 0, 1.5, null, null, withdrawId, null, accountId);
+                4100, 0, 1.5m, null, null, withdrawId, null, accountId);
             Ledger ledger2 = new Ledger("ledgerid2", DateTime.Now.AddMinutes(-29), LedgerType.Withdrawal, currency, 400 * midpoint,
-                400, 0, 1.5, null, null, withdrawId, null, accountId);
+                400, 0, 1.5m, null, null, withdrawId, null, accountId);
             ledgers.Add(ledger);
             ledgers.Add(ledger2);
             WithdrawLimit withdrawLimit = new WithdrawLimit("Tier0", dailyLimit, monthlyLimit);
@@ -539,22 +539,22 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             Currency currency = new Currency("XBT");
             string withdrawId = "withdrawid123";
             AccountId accountId = new AccountId("accountid123");
-            double bestBid = 580;
-            double bestAsk = 590;
-            double dailyLimit = 1000;
-            double monthlyLimit = 5000;
-            double midpoint = (bestBid + bestAsk) / 2;
+            decimal bestBid = 580;
+            decimal bestAsk = 590;
+            decimal dailyLimit = 1000;
+            decimal monthlyLimit = 5000;
+            decimal midpoint = (bestBid + bestAsk) / 2;
             // Balance is less than the calculated maximum threshold foor the remaining quantity from the daily limit used
-            double availableBalance = (((500 / bestBid) + (500 / bestAsk)) / 2) - 0.09;
-            double currentBalance = (((500 / bestBid) + (500 / bestAsk)) / 2) - 0.09;
+            decimal availableBalance = (((500 / bestBid) + (500 / bestAsk)) / 2) - 0.09m;
+            decimal currentBalance = (((500 / bestBid) + (500 / bestAsk)) / 2) - 0.09m;
             // Amount that can be safely withdrawn
-            double safeAmount = ConvertCurrencyToUsd(bestBid, bestAsk, availableBalance);
+            decimal safeAmount = ConvertCurrencyToUsd(bestBid, bestAsk, availableBalance);
 
             List<Ledger> ledgers = new List<Ledger>();
             Ledger ledger = new Ledger("ledgerid1", DateTime.Now.AddDays(-29), LedgerType.Withdrawal, currency, 3500 * midpoint,
-                3500, 0, 1.5, null, null, withdrawId, null, accountId);
+                3500, 0, 1.5m, null, null, withdrawId, null, accountId);
             Ledger ledger2 = new Ledger("ledgerid2", DateTime.Now.AddMinutes(-29), LedgerType.Withdrawal, currency, 500 * midpoint,
-                500, 0, 1.5, null, null, withdrawId, null, accountId);
+                500, 0, 1.5m, null, null, withdrawId, null, accountId);
             ledgers.Add(ledger);
             ledgers.Add(ledger2);
             WithdrawLimit withdrawLimit = new WithdrawLimit("Tier0", dailyLimit, monthlyLimit);
@@ -596,22 +596,22 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             Currency currency = new Currency("XBT");
             string withdrawId = "withdrawid123";
             AccountId accountId = new AccountId("accountid123");
-            double bestBid = 580;
-            double bestAsk = 590;
-            double dailyLimit = 1000;
-            double monthlyLimit = 5000;
-            double midpoint = (bestBid + bestAsk) / 2;
+            decimal bestBid = 580;
+            decimal bestAsk = 590;
+            decimal dailyLimit = 1000;
+            decimal monthlyLimit = 5000;
+            decimal midpoint = (bestBid + bestAsk) / 2;
             // Balance is less than the calculated maximum threshold foor the remaining quantity from the daily limit used
-            double availableBalance = (((500 / bestBid) + (500 / bestAsk)) / 2) - 0.09;
-            double currentBalance = (((500 / bestBid) + (500 / bestAsk)) / 2) - 0.09;
+            decimal availableBalance = (((500 / bestBid) + (500 / bestAsk)) / 2) - 0.09m;
+            decimal currentBalance = (((500 / bestBid) + (500 / bestAsk)) / 2) - 0.09m;
             // Amount that can be safely withdrawn
-            double safeAmount = ConvertCurrencyToUsd(bestBid, bestAsk, availableBalance);
+            decimal safeAmount = ConvertCurrencyToUsd(bestBid, bestAsk, availableBalance);
 
             List<Ledger> ledgers = new List<Ledger>();
             Ledger ledger = new Ledger("ledgerid1", DateTime.Now.AddDays(-29), LedgerType.Withdrawal, currency, 0,
-                0, 0, 1.5, null, null, withdrawId, null, accountId);
+                0, 0, 1.5m, null, null, withdrawId, null, accountId);
             Ledger ledger2 = new Ledger("ledgerid2", DateTime.Now.AddMinutes(-29), LedgerType.Withdrawal, currency, 500 * midpoint,
-                500, 0, 1.5, null, null, withdrawId, null, accountId);
+                500, 0, 1.5m, null, null, withdrawId, null, accountId);
             ledgers.Add(ledger);
             ledgers.Add(ledger2);
             WithdrawLimit withdrawLimit = new WithdrawLimit("Tier0", dailyLimit, monthlyLimit);
@@ -653,22 +653,22 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             Currency currency = new Currency("XBT");
             string withdrawId = "withdrawid123";
             AccountId accountId = new AccountId("accountid123");
-            double bestBid = 580;
-            double bestAsk = 590;
-            double dailyLimit = 1000;
-            double monthlyLimit = 5000;
-            double midpoint = (bestBid + bestAsk) / 2;
+            decimal bestBid = 580;
+            decimal bestAsk = 590;
+            decimal dailyLimit = 1000;
+            decimal monthlyLimit = 5000;
+            decimal midpoint = (bestBid + bestAsk) / 2;
             // Balance is less than the calculated maximum threshold foor the remaining quantity from the daily limit used
-            double availableBalance = (((500 / bestBid) + (500 / bestAsk)) / 2) - 0.09;
-            double currentBalance = (((500 / bestBid) + (500 / bestAsk)) / 2) - 0.09;
+            decimal availableBalance = (((500 / bestBid) + (500 / bestAsk)) / 2) - 0.09m;
+            decimal currentBalance = (((500 / bestBid) + (500 / bestAsk)) / 2) - 0.09m;
             // Amount that can be safely withdrawn
-            double safeAmount = ConvertCurrencyToUsd(bestBid, bestAsk, availableBalance);
+            decimal safeAmount = ConvertCurrencyToUsd(bestBid, bestAsk, availableBalance);
 
             List<Ledger> ledgers = new List<Ledger>();
             Ledger ledger = new Ledger("ledgerid1", DateTime.Now.AddDays(-29), LedgerType.Withdrawal, currency, 4000 * midpoint,
-                4000, 0, 1.5, null, null, withdrawId, null, accountId);
+                4000, 0, 1.5m, null, null, withdrawId, null, accountId);
             Ledger ledger2 = new Ledger("ledgerid2", DateTime.Now.AddMinutes(-29), LedgerType.Withdrawal, currency, 500 * midpoint,
-                500, 0, 1.5, null, null, withdrawId, null, accountId);
+                500, 0, 1.5m, null, null, withdrawId, null, accountId);
             ledgers.Add(ledger);
             ledgers.Add(ledger2);
             WithdrawLimit withdrawLimit = new WithdrawLimit("Tier0", dailyLimit, monthlyLimit);
@@ -708,14 +708,14 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             // Check to see the withheld and withheld converted values
             IWithdrawLimitEvaluationService withdrawLimitEvaluationService = new WithdrawLimitEvaluationService();
 
-            double bestBid = 580;
-            double bestAsk = 590;
-            double dailyLimit = 1000;
-            double monthlyLimit = 5000;
-            double midpoint = (bestBid + bestAsk) / 2;
+            decimal bestBid = 580;
+            decimal bestAsk = 590;
+            decimal dailyLimit = 1000;
+            decimal monthlyLimit = 5000;
+            decimal midpoint = (bestBid + bestAsk) / 2;
             // We have suficient balance for this case
-            double availableBalance = (1000 / midpoint) + 100;
-            double currentBalance = (1000 / midpoint) + 110;
+            decimal availableBalance = (1000 / midpoint) + 100;
+            decimal currentBalance = (1000 / midpoint) + 110;
 
             List<Ledger> ledgers = new List<Ledger>();
             WithdrawLimit withdrawLimit = new WithdrawLimit("Tier0", dailyLimit, monthlyLimit);
@@ -739,14 +739,14 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             // Check to see the withheld and withheld converted values
             IWithdrawLimitEvaluationService withdrawLimitEvaluationService = new WithdrawLimitEvaluationService();
 
-            double bestBid = 580;
-            double bestAsk = 590;
-            double dailyLimit = 1000;
-            double monthlyLimit = 5000;
-            double midpoint = (bestBid + bestAsk) / 2;
+            decimal bestBid = 580;
+            decimal bestAsk = 590;
+            decimal dailyLimit = 1000;
+            decimal monthlyLimit = 5000;
+            decimal midpoint = (bestBid + bestAsk) / 2;
             // We have insufficient balance for this case
-            double availableBalance = (1000 / midpoint) - 1.5;
-            double currentBalance = (1000 / midpoint) - 1;
+            decimal availableBalance = (1000 / midpoint) - 1.5m;
+            decimal currentBalance = (1000 / midpoint) - 1;
 
             List<Ledger> ledgers = new List<Ledger>();
             WithdrawLimit withdrawLimit = new WithdrawLimit("Tier0", dailyLimit, monthlyLimit);
@@ -782,10 +782,10 @@ namespace CoinExchange.Funds.Domain.Model.Tests
 
         #region Private Methods
 
-        private double ConvertCurrencyToUsd(double bestBid, double bestAsk, double currencyAmount)
+        private decimal ConvertCurrencyToUsd(decimal bestBid, decimal bestAsk, decimal currencyAmount)
         {
-            double sum = (currencyAmount * bestBid) + (currencyAmount * bestAsk);
-            double midPoint = sum / 2;
+            decimal sum = (currencyAmount * bestBid) + (currencyAmount * bestAsk);
+            decimal midPoint = sum / 2;
             return midPoint;
         }
 

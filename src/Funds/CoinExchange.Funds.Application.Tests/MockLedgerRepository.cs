@@ -22,6 +22,11 @@ namespace CoinExchange.Funds.Application.Tests
             throw new NotImplementedException();
         }
 
+        public IList<Ledger> GetLedgerByAccountIdAndCurrency(string currency, AccountId accountId)
+        {
+            throw new NotImplementedException();
+        }
+
         public Ledger GetLedgerByLedgerId(string ledgerId)
         {
             throw new NotImplementedException();
@@ -37,7 +42,7 @@ namespace CoinExchange.Funds.Application.Tests
             throw new NotImplementedException();
         }
 
-        public List<Ledger> GetLedgersByWithdrawId(string withdrawId)
+        public Ledger GetLedgersByWithdrawId(string withdrawId)
         {
             throw new NotImplementedException();
         }
@@ -47,7 +52,7 @@ namespace CoinExchange.Funds.Application.Tests
             throw new NotImplementedException();
         }
 
-        public double GetBalanceForCurrency(string currency, AccountId accountId)
+        public decimal GetBalanceForCurrency(string currency, AccountId accountId)
         {
             throw new NotImplementedException();
         }

@@ -43,12 +43,22 @@ namespace CoinExchange.Funds.Infrastructure.Persistence.NHibernate.NHibernate
                 .ToList();
         }
 
+        [Transaction]
+        public IList<Ledger> GetLedgerByAccountIdAndCurrency(string currency, AccountId accountId)
+        {
+            return CurrentSession.Query<Ledger>()
+                .Where(x => x.Currency.Name == currency && x.AccountId.Value == accountId.Value)
+                .AsQueryable()
+                .OrderByDescending(x => x.DateTime)
+                .ToList();
+        }
+
         /// <summary>
         /// Gets the balance for a currency for the specified Account ID
         /// </summary>
         /// <returns></returns>
         [Transaction]
-        public double GetBalanceForCurrency(string currency, AccountId accountId)
+        public decimal GetBalanceForCurrency(string currency, AccountId accountId)
         {
             List<Ledger> ledgers = CurrentSession.Query<Ledger>().
                 Where(x => x.Currency.Name == currency && x.AccountId.Value == accountId.Value).
@@ -86,13 +96,9 @@ namespace CoinExchange.Funds.Infrastructure.Persistence.NHibernate.NHibernate
         }
 
         [Transaction]
-        public List<Ledger> GetLedgersByWithdrawId(string withdrawId)
+        public Ledger GetLedgersByWithdrawId(string withdrawId)
         {
-            return CurrentSession.Query<Ledger>()
-                .Where(x => x.WithdrawId == withdrawId)
-                .AsQueryable()
-                .OrderByDescending(x => x.DateTime)
-                .ToList();
+            return CurrentSession.QueryOver<Ledger>().Where(x => x.WithdrawId == withdrawId).SingleOrDefault();
         }
 
         [Transaction]

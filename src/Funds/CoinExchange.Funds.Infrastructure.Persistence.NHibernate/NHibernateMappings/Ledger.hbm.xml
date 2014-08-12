@@ -17,6 +17,7 @@ assembly="CoinExchange.Funds.Domain.Model" namespace="CoinExchange.Funds.Domain.
     <property name="OrderId" />
     <property name="WithdrawId" />
     <property name="DepositId" />
+    <property name="IsBaseCurrencyInTrade" />
     <component name="Currency">
       <property name="Name" column="Currency"/>
     </component>

@@ -12,14 +12,14 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
     /// </summary>
     public class WithdrawLimitEvaluationService : IWithdrawLimitEvaluationService
     {
-        private double _dailyLimit = 0;
-        private double _dailyLimitUsed = 0;
-        private double _monthlyLimit = 0;
-        private double _monthlyLimitUsed = 0;
-        private double _maximumWithdraw = 0;
-        private double _maximumWithdrawUsd = 0;
-        private double _withheld = 0;
-        private double _withheldConverted = 0;
+        private decimal _dailyLimit = 0;
+        private decimal _dailyLimitUsed = 0;
+        private decimal _monthlyLimit = 0;
+        private decimal _monthlyLimitUsed = 0;
+        private decimal _maximumWithdraw = 0;
+        private decimal _maximumWithdrawUsd = 0;
+        private decimal _withheld = 0;
+        private decimal _withheldConverted = 0;
 
         /// <summary>
         /// Evaluate if the user is eligible to withdraw the desired amount or not
@@ -32,9 +32,9 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
         /// <param name="availableBalance"></param>
         /// <param name="currentBalance"></param>
         /// <returns></returns>
-        public bool EvaluateMaximumWithdrawLimit(double withdrawAmountUsd, IList<Ledger> withdrawLedgers,
-            WithdrawLimit withdrawLimit, double bestBidPrice, double bestAskPrice, double availableBalance, 
-            double currentBalance)
+        public bool EvaluateMaximumWithdrawLimit(decimal withdrawAmountUsd, IList<Ledger> withdrawLedgers,
+            WithdrawLimit withdrawLimit, decimal bestBidPrice, decimal bestAskPrice, decimal availableBalance, 
+            decimal currentBalance)
         {
             // Set Daily and Monthly Limit
             SetLimits(withdrawLimit);
@@ -64,7 +64,7 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
         /// Evaluates the value of Maximum Withdraw
         /// </summary>
         /// <returns></returns>
-        private bool EvaluateMaximumWithdrawUsd(double bestBid, double bestAsk)
+        private bool EvaluateMaximumWithdrawUsd(decimal bestBid, decimal bestAsk)
         {
             // If either the daily limit or monthly limit has been reached, no wihtdraw can be made
             if (!(_monthlyLimit - _monthlyLimitUsed).Equals(0) || !(_dailyLimit - _dailyLimitUsed).Equals(0))
@@ -109,7 +109,7 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
         /// <summary>
         /// Set the value for the Maximum withdraw in currency amount and US Dollars
         /// </summary>
-        private bool SetMaximumWithdraw(double maximumWithdraw, double bestBid, double bestAsk)
+        private bool SetMaximumWithdraw(decimal maximumWithdraw, decimal bestBid, decimal bestAsk)
         {
             _maximumWithdraw = ConvertUsdToCurrency(bestBid, bestAsk, maximumWithdraw);
             _maximumWithdrawUsd = maximumWithdraw;
@@ -119,20 +119,20 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
         /// <summary>
         /// Converts US Dollars to currency amount
         /// </summary>
-        private double ConvertUsdToCurrency(double bestBid, double bestAsk, double usdAmount)
+        private decimal ConvertUsdToCurrency(decimal bestBid, decimal bestAsk, decimal usdAmount)
         {
-            double sum = (usdAmount / bestBid) + (usdAmount / bestAsk);
-            double midPoint = sum / 2;
+            decimal sum = (usdAmount / bestBid) + (usdAmount / bestAsk);
+            decimal midPoint = sum / 2;
             return midPoint;
         }
 
         /// <summary>
         /// Converts US Dollars to currency amount
         /// </summary>
-        private double ConvertCurrencyToUsd(double bestBid, double bestAsk, double currencyAmount)
+        private decimal ConvertCurrencyToUsd(decimal bestBid, decimal bestAsk, decimal currencyAmount)
         {
-            double sum = (currencyAmount * bestBid) + (currencyAmount * bestAsk);
-            double midPoint = sum / 2;
+            decimal sum = (currencyAmount * bestBid) + (currencyAmount * bestAsk);
+            decimal midPoint = sum / 2;
             return midPoint;
         }
 
@@ -151,18 +151,22 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
         /// <returns></returns>
         private void SetUsedLimitsUsd(IList<Ledger> withdrawLedgers)
         {
-            double tempDailyLimitUsed = 0;
-            double tempMonthlyLimitUsed = 0;
-            foreach (var withdrawLedger in withdrawLedgers)
+            decimal tempDailyLimitUsed = 0;
+            decimal tempMonthlyLimitUsed = 0;
+            if (withdrawLedgers != null)
             {
-                if (withdrawLedger.DateTime >= DateTime.Now.AddHours(-24))
+                foreach (var withdrawLedger in withdrawLedgers)
                 {
-                    tempDailyLimitUsed += withdrawLedger.AmountInUsd;
-                    tempMonthlyLimitUsed += withdrawLedger.AmountInUsd;
-                }
-                if (withdrawLedger.DateTime >= DateTime.Now.AddDays(-30) && withdrawLedger.DateTime < DateTime.Now.AddHours(-24))
-                {
-                    tempMonthlyLimitUsed += withdrawLedger.AmountInUsd;
+                    if (withdrawLedger.DateTime >= DateTime.Now.AddHours(-24))
+                    {
+                        tempDailyLimitUsed += withdrawLedger.AmountInUsd;
+                        tempMonthlyLimitUsed += withdrawLedger.AmountInUsd;
+                    }
+                    if (withdrawLedger.DateTime >= DateTime.Now.AddDays(-30) &&
+                        withdrawLedger.DateTime < DateTime.Now.AddHours(-24))
+                    {
+                        tempMonthlyLimitUsed += withdrawLedger.AmountInUsd;
+                    }
                 }
             }
 
@@ -174,38 +178,38 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
         /// <summary>
         /// Daily Limit
         /// </summary>
-        public double DailyLimit { get { return _dailyLimit; } private set { _dailyLimit = value; } }
+        public decimal DailyLimit { get { return _dailyLimit; } private set { _dailyLimit = value; } }
 
         /// <summary>
         /// Daily Limit Used
         /// </summary>
-        public double DailyLimitUsed { get { return _dailyLimitUsed; } private set { _dailyLimitUsed = value; } }
+        public decimal DailyLimitUsed { get { return _dailyLimitUsed; } private set { _dailyLimitUsed = value; } }
 
         /// <summary>
         /// Monthly Limit
         /// </summary>
-        public double MonthlyLimit { get { return _monthlyLimit; } private set { _monthlyLimit = value; } }
+        public decimal MonthlyLimit { get { return _monthlyLimit; } private set { _monthlyLimit = value; } }
 
         /// <summary>
         /// Monthly limit used
         /// </summary>
-        public double MonthlyLimitUsed { get { return _monthlyLimitUsed; } private set { _monthlyLimitUsed = value; } }
+        public decimal MonthlyLimitUsed { get { return _monthlyLimitUsed; } private set { _monthlyLimitUsed = value; } }
 
         /// <summary>
         /// Withheld Amount
         /// </summary>
-        public double WithheldAmount { get { return _withheld; } private set { _withheld = value; } }
+        public decimal WithheldAmount { get { return _withheld; } private set { _withheld = value; } }
 
-        public double WithheldConverted { get { return _withheldConverted; } private set { _withheldConverted = value; } }
+        public decimal WithheldConverted { get { return _withheldConverted; } private set { _withheldConverted = value; } }
 
         /// <summary>
         /// Maximum withdraw amount
         /// </summary>
-        public double MaximumWithdraw { get { return _maximumWithdraw; } private set { _maximumWithdraw = value; } }
+        public decimal MaximumWithdraw { get { return _maximumWithdraw; } private set { _maximumWithdraw = value; } }
 
         /// <summary>
         /// Maximum Withdrawal amount in US Dollars
         /// </summary>
-        public double MaximumWithdrawUsd { get { return _maximumWithdrawUsd; } private set { _maximumWithdrawUsd = value; } }
+        public decimal MaximumWithdrawUsd { get { return _maximumWithdrawUsd; } private set { _maximumWithdrawUsd = value; } }
     }
 }

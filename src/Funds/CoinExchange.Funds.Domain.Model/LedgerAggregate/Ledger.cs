@@ -38,22 +38,22 @@ namespace CoinExchange.Funds.Domain.Model.LedgerAggregate
         /// <summary>
         /// Amount
         /// </summary>
-        public double Amount { get; private set; }
+        public decimal Amount { get; private set; }
 
         /// <summary>
         /// Amount in US Dollars
         /// </summary>
-        public double AmountInUsd { get; private set; }
+        public decimal AmountInUsd { get; private set; }
 
         /// <summary>
         /// Fee
         /// </summary>
-        public double Fee { get; private set; }
+        public decimal Fee { get; private set; }
 
         /// <summary>
         /// Balance
         /// </summary>
-        public double Balance { get; private set; }
+        public decimal Balance { get; private set; }
 
         /// <summary>
         /// TradeId
@@ -81,6 +81,12 @@ namespace CoinExchange.Funds.Domain.Model.LedgerAggregate
         public AccountId AccountId { get; private set; }
 
         /// <summary>
+        /// Indicates if this currency is the quote currency in this case. If it is, it may be used to get the Amount 
+        /// (price * volume) of a trade that has occurred
+        /// </summary>
+        public bool IsBaseCurrencyInTrade { get; private set; }
+
+        /// <summary>
         /// Default constructor
         /// </summary>
         public Ledger()
@@ -103,7 +109,9 @@ namespace CoinExchange.Funds.Domain.Model.LedgerAggregate
         /// <param name="withdrawId"></param>
         /// <param name="depositId"></param>
         /// <param name="accountId"></param>
-        public Ledger(string ledgerId, DateTime dateTime, LedgerType ledgerType, Currency currency, double amount, double fee, double balance, string tradeId, string orderId, string withdrawId, string depositId, AccountId accountId)
+        public Ledger(string ledgerId, DateTime dateTime, LedgerType ledgerType, Currency currency, decimal amount, 
+            decimal fee, decimal balance, string tradeId, string orderId, string withdrawId, string depositId,
+            AccountId accountId)
         {
             LedgerId = ledgerId;
             DateTime = dateTime;
@@ -122,7 +130,9 @@ namespace CoinExchange.Funds.Domain.Model.LedgerAggregate
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
-        public Ledger(string ledgerId, DateTime dateTime, LedgerType ledgerType, Currency currency, double amount, double amountInUsd, double fee, double balance, string tradeId, string orderId, string withdrawId, string depositId, AccountId accountId)
+        public Ledger(string ledgerId, DateTime dateTime, LedgerType ledgerType, Currency currency, decimal amount,
+            decimal amountInUsd, decimal fee, decimal balance, string tradeId, string orderId, string withdrawId, 
+            string depositId, AccountId accountId)
         {
             LedgerId = ledgerId;
             DateTime = dateTime;
@@ -134,6 +144,44 @@ namespace CoinExchange.Funds.Domain.Model.LedgerAggregate
             Balance = balance;
             TradeId = tradeId;
             OrderId = orderId;
+            WithdrawId = withdrawId;
+            DepositId = depositId;
+            AccountId = accountId;
+        }
+
+        /// <summary>
+        /// Initializer for trade ledgers
+        /// </summary>
+        public Ledger(string ledgerId, DateTime dateTime, LedgerType ledgerType, Currency currency, decimal amount, decimal amountInUsd, decimal fee, decimal balance, string tradeId, string orderId, bool isBaseCurrencyInTrade, AccountId accountId)
+        {
+            LedgerId = ledgerId;
+            DateTime = dateTime;
+            LedgerType = ledgerType;
+            Currency = currency;
+            Amount = amount;
+            AmountInUsd = amountInUsd;
+            Fee = fee;
+            Balance = balance;
+            TradeId = tradeId;
+            OrderId = orderId;
+            IsBaseCurrencyInTrade = isBaseCurrencyInTrade;
+            AccountId = accountId;
+        }
+
+        /// <summary>
+        /// Initializer for Deposit or Withdrawal
+        /// </summary>
+        public Ledger(string ledgerId, DateTime dateTime, LedgerType ledgerType, Currency currency, decimal amount,
+            decimal amountInUsd, decimal fee, decimal balance, string withdrawId, string depositId, AccountId accountId)
+        {
+            LedgerId = ledgerId;
+            DateTime = dateTime;
+            LedgerType = ledgerType;
+            Currency = currency;
+            Amount = amount;
+            AmountInUsd = amountInUsd;
+            Fee = fee;
+            Balance = balance;
             WithdrawId = withdrawId;
             DepositId = depositId;
             AccountId = accountId;

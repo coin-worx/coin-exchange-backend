@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CoinExchange.Funds.Domain.Model.CurrencyAggregate;
+using CoinExchange.Funds.Domain.Model.DepositAggregate;
 
 namespace CoinExchange.Funds.Domain.Model.FeeAggregate
 {
@@ -16,9 +17,11 @@ namespace CoinExchange.Funds.Domain.Model.FeeAggregate
         /// Gets the fee for the given currency and the amount
         /// </summary>
         /// <param name="quoteCurrency"> </param>
-        /// <param name="amount"></param>
         /// <param name="baseCurrency"> </param>
+        /// <param name="volume"> </param>
+        /// <param name="price"> </param>
+        /// <param name="accountId"> </param>
         /// <returns></returns>
-        double GetFee(Currency baseCurrency, Currency quoteCurrency, double amount);
+        decimal GetFee(Currency baseCurrency, Currency quoteCurrency, AccountId accountId, decimal volume, decimal price);
     }
 }

@@ -21,7 +21,7 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
         /// <param name="currency"></param>
         /// <param name="minAmount"></param>
         /// <param name="fee"></param>
-        public WithdrawFees(Currency currency, double minAmount, double fee)
+        public WithdrawFees(Currency currency, decimal minAmount, decimal fee)
         {
             Currency = currency;
             MinimumAmount = minAmount;
@@ -41,11 +41,11 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
         /// <summary>
         /// Minimum Amount
         /// </summary>
-        public double MinimumAmount { get; private set; }
+        public decimal MinimumAmount { get; private set; }
 
         /// <summary>
         /// Fee
         /// </summary>
-        public double Fee { get; private set; }
+        public decimal Fee { get; private set; }
     }
 }

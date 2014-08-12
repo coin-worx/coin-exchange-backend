@@ -15,6 +15,6 @@ namespace CoinExchange.Funds.Domain.Model.Services
         /// Gets best bid and best ask. Item 1 = Best Bid, Item 2 = Best Ask
         /// </summary>
         /// <returns></returns>
-        Tuple<double, double> GetBestBidBestAsk(string baseCurrency, string quoteCurrency);
+        Tuple<decimal, decimal> GetBestBidBestAsk(string baseCurrency, string quoteCurrency);
     }
 }

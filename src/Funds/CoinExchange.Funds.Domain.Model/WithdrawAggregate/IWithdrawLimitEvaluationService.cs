@@ -16,47 +16,47 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
         /// Evaluates the Maximum Withdraw amount
         /// </summary>
         /// <returns></returns>
-        bool EvaluateMaximumWithdrawLimit(double withdrawalAmountUsd, IList<Ledger> depositLedgers, WithdrawLimit 
-            withdrawLimit, double bestBidPrice, double bestAskPrice, double balance, double currentBalance);
+        bool EvaluateMaximumWithdrawLimit(decimal withdrawalAmountUsd, IList<Ledger> depositLedgers, WithdrawLimit 
+            withdrawLimit, decimal bestBidPrice, decimal bestAskPrice, decimal balance, decimal currentBalance);
 
         /// <summary>
         /// Daily Limit that the user can use in 24 hours
         /// </summary>
-        double DailyLimit { get; }
+        decimal DailyLimit { get; }
 
         /// <summary>
         /// Daily limit that has been used by the user in the next 24 hours
         /// </summary>
-        double DailyLimitUsed { get; }
+        decimal DailyLimitUsed { get; }
 
         /// <summary>
         /// Monthly Limit that the user can use in 30 days
         /// </summary>
-        double MonthlyLimit { get; }
+        decimal MonthlyLimit { get; }
 
         /// <summary>
         /// Amount that has been used in the last 30 days
         /// </summary>
-        double MonthlyLimitUsed { get; }
+        decimal MonthlyLimitUsed { get; }
 
         /// <summary>
         /// Withheld
         /// </summary>
-        double WithheldAmount { get; }
+        decimal WithheldAmount { get; }
 
         /// <summary>
         /// Withheld amount converted to US Dollars
         /// </summary>
-        double WithheldConverted { get; }
+        decimal WithheldConverted { get; }
 
         /// <summary>
         /// The maximum amount that can be withdrawn
         /// </summary>
-        double MaximumWithdraw { get; }
+        decimal MaximumWithdraw { get; }
 
         /// <summary>
         /// Represents the maximum amount that can be withdrawn in US Dollars
         /// </summary>
-        double MaximumWithdrawUsd { get; }
+        decimal MaximumWithdrawUsd { get; }
     }
 }

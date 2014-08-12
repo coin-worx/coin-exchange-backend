@@ -84,7 +84,7 @@ CREATE TABLE `depositlimit` (
   `DailyLimit` double DEFAULT NULL,
   `MonthlyLimit` double DEFAULT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 /*Table structure for table `fee` */
 
@@ -117,6 +117,7 @@ CREATE TABLE `ledger` (
   `OrderId` varchar(50) DEFAULT NULL,
   `WithdrawId` varchar(50) DEFAULT NULL,
   `DepositId` varchar(50) DEFAULT NULL,
+  `IsBaseCurrencyInTrade` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
@@ -392,7 +393,7 @@ CREATE TABLE `withdrawfees` (
   `MinimumAmount` double DEFAULT NULL,
   `Fee` double DEFAULT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
 /*Table structure for table `withdrawlimit` */
 
@@ -404,7 +405,7 @@ CREATE TABLE `withdrawlimit` (
   `DailyLimit` double DEFAULT NULL,
   `MonthlyLimit` double DEFAULT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

@@ -9,7 +9,7 @@ namespace CoinExchange.Funds.Application.Tests
 {
     public class MockBboRetrievalService : IBboRetrievalService
     {
-        public Tuple<double, double> GetBestBidBestAsk(string baseCurrency, string quoteCurrency)
+        public Tuple<decimal, decimal> GetBestBidBestAsk(string baseCurrency, string quoteCurrency)
         {
             throw new NotImplementedException();
         }

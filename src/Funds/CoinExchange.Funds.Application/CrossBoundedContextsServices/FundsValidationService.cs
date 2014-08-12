@@ -82,7 +82,7 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         /// <returns></returns>
         [Transaction]
         public bool ValidateFundsForOrder(AccountId accountId, Currency baseCurrency, Currency quoteCurrency, 
-            double volume, double price, string orderSide, string orderId)
+            decimal volume, decimal price, string orderSide, string orderId)
         {
             Balance baseCurrencyBalance = GetBalanceForAccountId(accountId, baseCurrency);
             Balance quoteCurrencyBalance = GetBalanceForAccountId(accountId, quoteCurrency);
@@ -127,27 +127,49 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         /// <param name="bitcoinAddress"> </param>
         /// <returns></returns>
         [Transaction]
-        public Withdraw ValidateFundsForWithdrawal(AccountId accountId, Currency currency, double amount, TransactionId
+        public Withdraw ValidateFundsForWithdrawal(AccountId accountId, Currency currency, decimal amount, TransactionId
             transactionId, BitcoinAddress bitcoinAddress)
         {
             WithdrawFees withdrawFees = _withdrawFeesRepository.GetWithdrawFeesByCurrencyName(currency.Name);
             if (withdrawFees != null)
             {
-                // Check if the user has the permission to withdraw this amount
+                // Check if the current withdrawal amount is greater than the amount required mentioned with the Fees
                 if (amount >= withdrawFees.MinimumAmount)
                 {
-                    Balance currencyBalance = GetBalanceForAccountId(accountId, currency);
-                    if (currencyBalance != null)
+                    Balance balance = GetBalanceForAccountId(accountId, currency);
+                    if (balance != null)
                     {
-                        if (currencyBalance.AvailableBalance >= amount)
+                        // Get all the Withdraw Ledgers
+                        IList<Ledger> withdrawLedgers = GetWithdrawalLedgers();
+                        // Get the Current Tier Level for this user using the cross bounded context Tier retrieval service
+                        string currentTierLevel = _tierLevelRetrievalService.GetCurrentTierLevel(accountId.Value);
+                        // Get the Current Withdraw limits for this user
+                        WithdrawLimit withdrawLimit =
+                            _withdrawLimitRepository.GetWithdrawLimitByTierLevel(currentTierLevel);
+
+                        // Get the best bid and best ask form the Trades BC.
+                        // ToDo: Implement and use real implementation later, rather than using the stub implementation being used right now
+                        Tuple<decimal, decimal> bestBidBestAsk = _bboRetrievalService.GetBestBidBestAsk(currency.Name,
+                                                                                                      "USD");
+                        // Convert the amount and the fee to US Dollars, because the evaluation service accepts amounts
+                        // in USD
+                        decimal amountInUsd = ConvertCurrencyToUsd(amount, bestBidBestAsk.Item1, bestBidBestAsk.Item2);
+                        decimal feeInUsd = ConvertCurrencyToUsd(withdrawFees.Fee, bestBidBestAsk.Item1,
+                                                               bestBidBestAsk.Item2);
+                        // Evaluate if the current withdrawal is within the limits of the maximum withdrawal allowed and 
+                        // the balance available
+                        if (_withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(amountInUsd + feeInUsd,
+                            withdrawLedgers, withdrawLimit, bestBidBestAsk.Item1, bestBidBestAsk.Item2,
+                            balance.AvailableBalance, balance.CurrentBalance))
                         {
-                            Withdraw withdraw = new Withdraw(currency, _withdrawIdGeneratorService.GenerateNewId(), 
-                                DateTime.Now, WithdrawType.Default, amount, withdrawFees.Fee, TransactionStatus.Pending, 
-                                accountId, transactionId, bitcoinAddress);
+                            Withdraw withdraw = new Withdraw(currency, _withdrawIdGeneratorService.GenerateNewId(),
+                                                             DateTime.Now, WithdrawType.Default, amount,withdrawFees.Fee,
+                                                             TransactionStatus.Pending, accountId, transactionId, 
+                                                             bitcoinAddress);
                             _fundsPersistenceRepository.SaveOrUpdate(withdraw);
-                            currencyBalance.AddPendingTransaction(withdraw.WithdrawId, PendingTransactionType.Withdraw,
-                                                                  -withdraw.Amount);
-                            _fundsPersistenceRepository.SaveOrUpdate(currencyBalance);
+                            balance.AddPendingTransaction(withdraw.WithdrawId, PendingTransactionType.Withdraw, 
+                                -(withdraw.Amount + withdrawFees.Fee));
+                            _fundsPersistenceRepository.SaveOrUpdate(balance);
                             return withdraw;
                         }
                     }
@@ -166,37 +188,14 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         {
             Balance balance = _balanceRepository.GetBalanceByCurrencyAndAccountId(withdraw.Currency, withdraw.AccountId);
 
-            // Get all the Withdraw Ledgers
-            IList<Ledger> withdrawLedgers = GetDepositLedgers();
-            // Get the Current Tier Level for this user using the cross bounded context Tier retrieval service
-            string currentTierLevel = _tierLevelRetrievalService.GetCurrentTierLevel(withdraw.AccountId.Value);
-            // Get the Current Withdraw limits for this user
-            WithdrawLimit withdrawLimit = _withdrawLimitRepository.GetWithdrawLimitByTierLevel(currentTierLevel);
 
-            // Get the best bid and best ask form the Trades BC.
-            // NOTE: Implement adn use real implementation later, rather than using the stub implementation being used right now
-            Tuple<double, double> bestBidBestAsk = _bboRetrievalService.GetBestBidBestAsk(withdraw.Currency.Name,
-                                                                                          "USD");
-            withdraw.SetAmountInUsd(ConvertCurrencyToUsd(withdraw.Amount, bestBidBestAsk.Item1, bestBidBestAsk.Item2));
-
-            // Evaluate if the current withdrawal is within the limits of the maximum withdrawal allowed and the balance
-            // available
-            if (_withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(withdraw.AmountInUsd, withdrawLedgers,
-                                                                             withdrawLimit, bestBidBestAsk.Item1,
-                                                                             bestBidBestAsk.Item2,
-                                                                             balance.AvailableBalance,
-                                                                             balance.CurrentBalance))
+            bool addResponse = balance.ConfirmPendingTransaction(withdraw.WithdrawId,
+                                                                 PendingTransactionType.Withdraw,
+                                                                 -(withdraw.Amount + withdraw.Fee));
+            if (addResponse)
             {
-                bool addResponse = balance.ConfirmPendingTransaction(withdraw.WithdrawId,
-                                                                     PendingTransactionType.Withdraw,
-                                                                     -withdraw.Amount);
-                if (addResponse)
-                {
-                    balance.AddAvailableBalance(-withdraw.Fee);
-                    balance.AddCurrentBalance(-withdraw.Fee);
-                    _fundsPersistenceRepository.SaveOrUpdate(balance);
-                    return _transactionService.CreateWithdrawTransaction(withdraw, balance.CurrentBalance);
-                }
+                _fundsPersistenceRepository.SaveOrUpdate(balance);
+                return _transactionService.CreateWithdrawTransaction(withdraw, balance.CurrentBalance);
             }
 
             return false;
@@ -222,7 +221,7 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
 
                 // Get the best bid and best ask form the Trades BC.
                 // NOTE: Implement adn use real implementation later, rather than using the stub implementation being used right now
-                Tuple<double, double> bestBidBestAsk = _bboRetrievalService.GetBestBidBestAsk(deposit.Currency.Name,
+                Tuple<decimal, decimal> bestBidBestAsk = _bboRetrievalService.GetBestBidBestAsk(deposit.Currency.Name,
                                                                                               "USD");
 
                 deposit.SetAmountInUsd(ConvertCurrencyToUsd(deposit.Amount, bestBidBestAsk.Item1,
@@ -258,7 +257,7 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         /// Converts the specified currency to US Dollars based on the given Currency - USD best bid and best ask
         /// </summary>
         /// <returns></returns>
-        private double ConvertCurrencyToUsd(double currencyAmount, double bestBid, double bestAsk)
+        private decimal ConvertCurrencyToUsd(decimal currencyAmount, decimal bestBid, decimal bestAsk)
         {
             return (((currencyAmount * bestBid) + (currencyAmount * bestAsk)) / 2);
         }
@@ -307,7 +306,7 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
             return withdrawLedgers;
         }
 
-            /// <summary>
+        /// <summary>
         /// Handles the event that a trade has been executed and performs the necessay steps to update the balance and 
         /// create a transaction record
         /// </summary>
@@ -323,37 +322,38 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         /// <param name="sellOrderId"></param>
         /// <returns></returns>
         [Transaction]
-        public bool TradeExecuted(string baseCurrency, string quoteCurrency, double tradeVolume, double price, DateTime executionDateTime,
+        public bool TradeExecuted(string baseCurrency, string quoteCurrency, decimal tradeVolume, decimal price, DateTime executionDateTime,
             string tradeId, string buyAccountId, string sellAccountId, string buyOrderId, string sellOrderId)
         {
-            // ToDo: Fee is calculated on the total volume traded in the last 30 days, not the individual volume of the 
-            // trade being currently executed
-            double fee = _feeCalculationService.GetFee(new Currency(baseCurrency), new Currency(quoteCurrency), 
-                Math.Abs(tradeVolume*price));
+
+            decimal buySideFee = _feeCalculationService.GetFee(new Currency(baseCurrency), new Currency(quoteCurrency),
+                                                               new AccountId(buyAccountId), tradeVolume, price);
+            decimal sellSideFee = _feeCalculationService.GetFee(new Currency(baseCurrency), new Currency(quoteCurrency),
+                                                               new AccountId(sellAccountId), tradeVolume, price);
             // As in case of buy order, the current and available balances differ in the case of quote currency, we 
             // evaluate the quote currency first
             if (InitializeBalanceLedgerUpdate(new Currency(quoteCurrency), new AccountId(buyAccountId),
-                                          -(tradeVolume * price),
-                                          executionDateTime, buyOrderId, tradeId, true, true, fee))
+                                              -(tradeVolume*price), 0,
+                                              executionDateTime, buyOrderId, tradeId, true, true, buySideFee, true))
             {
                 // Then, we update balance for Buy Account's Base Currency
-                if (InitializeBalanceLedgerUpdate(new Currency(baseCurrency), new AccountId(buyAccountId), tradeVolume,
-                                              executionDateTime, buyOrderId, tradeId, false, false, 0))
+                if (InitializeBalanceLedgerUpdate(new Currency(baseCurrency), new AccountId(buyAccountId), tradeVolume, 0,
+                                                  executionDateTime, buyOrderId, tradeId, false, false, 0, false))
                 {
                     // In case of a sell order, the available balance is deducted from the base currency, so we validate the 
                     // base currency first
                     if (InitializeBalanceLedgerUpdate(new Currency(baseCurrency), new AccountId(sellAccountId),
-                                                        -tradeVolume, executionDateTime, sellOrderId, tradeId, false, true,
-                                                        0))
+                                                      -tradeVolume, 0, executionDateTime, sellOrderId, tradeId, false, true,
+                                                      0, false))
                     {
                         // Lastly, for the seller account's quote currency
                         return InitializeBalanceLedgerUpdate(new Currency(quoteCurrency), new AccountId(sellAccountId),
-                                                      tradeVolume * price, executionDateTime, sellOrderId, tradeId, true, 
-                                                      false, fee);
+                                                             tradeVolume*price, 0, executionDateTime, sellOrderId, tradeId,
+                                                             true, false, sellSideFee, true);
                     }
                 }
             }
-            
+
             return false;
         }
 
@@ -368,9 +368,9 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         /// <param name="price"> </param>
         /// <param name="baseCurrency"> </param>
         /// <returns></returns>
-        public bool OrderCancelled(Currency baseCurrency, Currency quoteCurrency, AccountId accountId, string orderside, string orderId, double openQuantity, double price)
+        public bool OrderCancelled(Currency baseCurrency, Currency quoteCurrency, AccountId accountId, string orderside, string orderId, decimal openQuantity, decimal price)
         {
-            double amount = 0;
+            decimal amount = 0;
             Balance currencyBalance = null;
             // If the order is buy order, then we deducted price * volume from the quote currency. So now we add the 
             // openQuantity*price in the quote currency, as the order may be partially filled
@@ -400,14 +400,15 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         /// Calls methods that update the balance and create a ledger transaction in the database
         /// </summary>
         /// <returns></returns>
-        private bool InitializeBalanceLedgerUpdate(Currency currency, AccountId accountId, double amount, DateTime 
-            executionDateTime, string orderId, string tradeId, bool includeFee, bool isPending, double fee)
+        private bool InitializeBalanceLedgerUpdate(Currency currency, AccountId accountId, decimal amount,
+            decimal amountInUsd, DateTime executionDateTime, string orderId, string tradeId, bool includeFee, 
+            bool isPending, decimal fee, bool isBaseCurrencyInTrade)
         {
             // Update the balance
-            double balance = UpdateBalanceAfterTrade(currency, accountId, amount, orderId, fee, isPending);
+            decimal balance = UpdateBalanceAfterTrade(currency, accountId, amount, orderId, fee, isPending);
             // Create Ledger and save in database
-            return CreatePostTradeTransaction(currency, accountId, amount, balance, executionDateTime, tradeId, orderId,
-                                       includeFee, fee);
+            return CreatePostTradeTransaction(currency, accountId, amount, amountInUsd, balance, executionDateTime,
+                tradeId, orderId, includeFee, fee, isBaseCurrencyInTrade);
         }
 
         /// <summary>
@@ -420,8 +421,8 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         /// <param name="fee"> </param>
         /// <param name="isPending"> </param>
         /// <returns></returns>
-        private double UpdateBalanceAfterTrade(Currency currency, AccountId accountId, double volume, string orderId,
-            double fee, bool isPending)
+        private decimal UpdateBalanceAfterTrade(Currency currency, AccountId accountId, decimal volume, string orderId,
+            decimal fee, bool isPending)
         {
             Balance balance = _balanceRepository.GetBalanceByCurrencyAndAccountId(currency, accountId);
             if (balance != null)
@@ -435,7 +436,7 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
                 {
                     balance.ConfirmPendingTransaction(orderId, PendingTransactionType.Order, volume);
                 }
-                if (fee != 0.0)
+                if (fee != 0.0M)
                 {
                     balance.AddAvailableBalance(-fee);
                     balance.AddCurrentBalance(-fee);
@@ -451,11 +452,12 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         /// TransactionService
         /// </summary>
         /// <returns></returns>
-        private bool CreatePostTradeTransaction(Currency currency, AccountId accountId, double amount, double balance,
-            DateTime executionDateTime, string tradeId, string orderId, bool includeFee, double fee)
+        private bool CreatePostTradeTransaction(Currency currency, AccountId accountId, decimal amount, decimal amountInUsd,
+            decimal balance, DateTime executionDateTime, string tradeId, string orderId, bool includeFee, decimal fee, 
+            bool isBaseCurrencyInTrade)
         {
-            return _transactionService.CreateLedgerEntry(currency, amount, fee, balance, executionDateTime, orderId, tradeId,
-                                                  accountId);
+            return _transactionService.CreateLedgerEntry(currency, amount, amountInUsd, fee, balance, executionDateTime,
+                orderId, tradeId,  accountId, isBaseCurrencyInTrade);
         }
 
         #endregion Methods

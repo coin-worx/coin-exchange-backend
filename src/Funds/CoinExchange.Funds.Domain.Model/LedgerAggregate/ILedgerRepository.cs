@@ -15,12 +15,13 @@ namespace CoinExchange.Funds.Domain.Model.LedgerAggregate
         Ledger GetLedgerById(int id);
         List<Ledger> GetLedgerByAccountId(AccountId accountId);
         List<Ledger> GetLedgerByCurrencyName(string currency);
+        IList<Ledger> GetLedgerByAccountIdAndCurrency(string currency, AccountId accountId);
         Ledger GetLedgerByLedgerId(string ledgerId);
         List<Ledger> GetLedgersByTradeId(string tradeId);
         Ledger GetLedgersByDepositId(string depositId);
-        List<Ledger> GetLedgersByWithdrawId(string withdrawId);
+        Ledger GetLedgersByWithdrawId(string withdrawId);
         List<Ledger> GetLedgersByOrderId(string orderId);
-        double GetBalanceForCurrency(string currency, AccountId accountId);
+        decimal GetBalanceForCurrency(string currency, AccountId accountId);
         IList<Ledger> GetAllLedgers();
     }
 }

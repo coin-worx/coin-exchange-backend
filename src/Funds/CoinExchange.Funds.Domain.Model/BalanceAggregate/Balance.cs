@@ -17,9 +17,9 @@ namespace CoinExchange.Funds.Domain.Model.BalanceAggregate
         private static readonly log4net.ILog Log = log4net.LogManager.GetLogger
         (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private double _availableBalance = 0;
-        private double _currentBalance = 0;
-        private double _pendingBalance = 0;
+        private decimal _availableBalance = 0;
+        private decimal _currentBalance = 0;
+        private decimal _pendingBalance = 0;
         private IList<PendingTransaction> _pendingTransactions;
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace CoinExchange.Funds.Domain.Model.BalanceAggregate
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
-        public Balance(Currency currency, AccountId accountId, double availableBalance, double currentBalance)
+        public Balance(Currency currency, AccountId accountId, decimal availableBalance, decimal currentBalance)
         {
             Currency = currency;
             AccountId = accountId;
@@ -58,7 +58,7 @@ namespace CoinExchange.Funds.Domain.Model.BalanceAggregate
         /// Adds a transaction for either a withdrawal or Order that is yet pending
         /// </summary>
         /// <returns></returns>
-        public bool AddPendingTransaction(string id, PendingTransactionType pendingEntityType, double amount)
+        public bool AddPendingTransaction(string id, PendingTransactionType pendingEntityType, decimal amount)
         {
             // Add this pending transaction to the pending entities list. This entity can only be removed from this list 
             // when the transaction is compelte for this entity(Trade, Withdraw confirmed) or reverted in case of order
@@ -77,9 +77,9 @@ namespace CoinExchange.Funds.Domain.Model.BalanceAggregate
         /// <param name="pendingEntityType"></param>
         /// <param name="amount"></param>
         /// <returns></returns>
-        public bool CancelPendingTransaction(string id, PendingTransactionType pendingEntityType, double amount)
+        public bool CancelPendingTransaction(string id, PendingTransactionType pendingEntityType, decimal amount)
         {
-            PendingTransaction pendingTransaction = GetPendingTransaction(id, pendingEntityType);
+            PendingTransaction pendingTransaction = RemovePendingTransaction(id, pendingEntityType);
             if (pendingTransaction != null)
             {
                 // As the Pending transaction is cancelled for order
@@ -94,9 +94,9 @@ namespace CoinExchange.Funds.Domain.Model.BalanceAggregate
         /// Called when a transaction is confirmed, updates the balance and the Pending Transaction List accordingly 
         /// </summary>
         /// <returns></returns>
-        public bool ConfirmPendingTransaction(string id, PendingTransactionType pendingEntityType, double amount)
+        public bool ConfirmPendingTransaction(string id, PendingTransactionType pendingEntityType, decimal amount)
         {
-            PendingTransaction pendingTransaction = GetPendingTransaction(id, pendingEntityType);
+            PendingTransaction pendingTransaction = RemovePendingTransaction(id, pendingEntityType);
             if (pendingTransaction != null)
             {
                 // As the Pending transaction is confirmed for either withdraw or order
@@ -114,7 +114,7 @@ namespace CoinExchange.Funds.Domain.Model.BalanceAggregate
         /// <param name="id"></param>
         /// <param name="pendingEntityType"></param>
         /// <returns></returns>
-        private PendingTransaction GetPendingTransaction(string id, PendingTransactionType pendingEntityType)
+        private PendingTransaction RemovePendingTransaction(string id, PendingTransactionType pendingEntityType)
         {
             PendingTransaction pendingTransaction = null;
             if (PendingBalance > 0)
@@ -146,7 +146,7 @@ namespace CoinExchange.Funds.Domain.Model.BalanceAggregate
         /// Adds the balance to the CurrentBalance
         /// </summary>
         /// <returns></returns>
-        public bool AddCurrentBalance(double amount)
+        public bool AddCurrentBalance(decimal amount)
         {
             _currentBalance += amount;
             return true;
@@ -156,7 +156,7 @@ namespace CoinExchange.Funds.Domain.Model.BalanceAggregate
         /// Adds the balance to the AvailableBalance
         /// </summary>
         /// <returns></returns>
-        public bool AddAvailableBalance(double amount)
+        public bool AddAvailableBalance(decimal amount)
         {
             _availableBalance += amount;
             return true;
@@ -179,12 +179,12 @@ namespace CoinExchange.Funds.Domain.Model.BalanceAggregate
         /// <summary>
         /// Account Id
         /// </summary>
-        public virtual AccountId AccountId { get; private set; }
+        public AccountId AccountId { get; private set; }
 
         /// <summary>
         /// The balance that is available for transaction and does not include the pending balance
         /// </summary>
-        public virtual double AvailableBalance
+        public decimal AvailableBalance
         {
             get { return _availableBalance; }
             private set { _availableBalance = value; }
@@ -193,7 +193,7 @@ namespace CoinExchange.Funds.Domain.Model.BalanceAggregate
         /// <summary>
         /// The balance that includes the pending balance
         /// </summary>
-        public virtual double CurrentBalance
+        public decimal CurrentBalance
         {
             get { return _currentBalance; }
             private set { _currentBalance = value; }
@@ -202,7 +202,7 @@ namespace CoinExchange.Funds.Domain.Model.BalanceAggregate
         /// <summary>
         /// The balance that is pending confirmation to be subtracted
         /// </summary>
-        public virtual double PendingBalance
+        public decimal PendingBalance
         {
             get { return _currentBalance - _availableBalance; }
             private set { _pendingBalance = value; }

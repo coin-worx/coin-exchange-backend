@@ -5,6 +5,7 @@
   <!-- Services -->
   <object id="FeeCalculationService" type="CoinExchange.Funds.Application.CrossBoundedContextsServices.FeeCalculationService, CoinExchange.Funds.Application">
     <constructor-arg name="feeRepository" ref="FeeRepository"/>
+    <constructor-arg name="ledgerRepository" ref="LedgerRepository"/>
   </object>
 
   <object id="TransactionService" type="CoinExchange.Funds.Application.CrossBoundedContextsServices.TransactionService, CoinExchange.Funds.Application">

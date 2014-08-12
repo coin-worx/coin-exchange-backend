@@ -10,12 +10,12 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
     /// </summary>
     public class DepositLimitEvaluationService : IDepositLimitEvaluationService
     {
-        private double _dailyLimit = 0;
-        private double _dailyLimitUsed = 0;
-        private double _monthlyLimit = 0;
-        private double _monthlyLimitUsed = 0;
-        private double _maximumDeposit = 0;
-        private double _maximumDepositUsd = 0;
+        private decimal _dailyLimit = 0;
+        private decimal _dailyLimitUsed = 0;
+        private decimal _monthlyLimit = 0;
+        private decimal _monthlyLimitUsed = 0;
+        private decimal _maximumDeposit = 0;
+        private decimal _maximumDepositUsd = 0;
 
         /// <summary>
         /// Evaluates if the current deposit transaction is within the maximum deposit limit and is allowed to proceed
@@ -26,8 +26,8 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
         /// <param name="bestBidPrice"></param>
         /// <param name="bestAskPrice"></param>
         /// <returns></returns>
-        public bool EvaluateDepositLimit(double currentDepositAmount, IList<Ledger> depositLedgers, DepositLimit depositLimit, double bestBidPrice,
-            double bestAskPrice)
+        public bool EvaluateDepositLimit(decimal currentDepositAmount, IList<Ledger> depositLedgers, DepositLimit depositLimit, decimal bestBidPrice,
+            decimal bestAskPrice)
         {
             // Set Daily and Monthly Limit
             SetLimits(depositLimit);
@@ -45,7 +45,7 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
         /// Evaluates the value of Maximum Deposit
         /// </summary>
         /// <returns></returns>
-        private bool EvaluateMaximumDepositUsd(double bestBid, double bestAsk)
+        private bool EvaluateMaximumDepositUsd(decimal bestBid, decimal bestAsk)
         {
             // If either the daily limit or monthly limit has been reached, no deposit can be made
             if (!(_monthlyLimit - _monthlyLimitUsed).Equals(0) || !(_dailyLimit - _dailyLimitUsed).Equals(0))
@@ -90,7 +90,7 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
         /// <summary>
         /// Set the value for the Maximum Deposit in currency amount and US Dollars
         /// </summary>
-        private bool SetMaximumDeposit(double maximumDeposit, double bestBid, double bestAsk)
+        private bool SetMaximumDeposit(decimal maximumDeposit, decimal bestBid, decimal bestAsk)
         {
             _maximumDeposit = ConvertUsdToCurrency(bestBid, bestAsk, maximumDeposit);
             _maximumDepositUsd = maximumDeposit;
@@ -100,10 +100,10 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
         /// <summary>
         /// Converts US Dollars to currency amount
         /// </summary>
-        private double ConvertUsdToCurrency(double bestBid, double bestAsk, double usdAmount)
+        private decimal ConvertUsdToCurrency(decimal bestBid, decimal bestAsk, decimal usdAmount)
         {
-            double sum = (usdAmount/bestBid) + (usdAmount/bestAsk);
-            double midPoint = sum/2;
+            decimal sum = (usdAmount/bestBid) + (usdAmount/bestAsk);
+            decimal midPoint = sum/2;
             return midPoint;
         }
 
@@ -122,8 +122,8 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
         /// <returns></returns>
         private void SetUsedLimitsUsd(IList<Ledger> depositLedgers)
         {
-            double tempDailyLimitUsed = 0;
-            double tempMonthlyLimitUsed = 0;
+            decimal tempDailyLimitUsed = 0;
+            decimal tempMonthlyLimitUsed = 0;
 
             if (depositLedgers != null)
             {
@@ -151,7 +151,7 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
         /// <summary>
         /// Daily limit
         /// </summary>
-        public double DailyLimit
+        public decimal DailyLimit
         {
             get { return _dailyLimit; }
             private set { value = _dailyLimit; }
@@ -160,7 +160,7 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
         /// <summary>
         /// Daily limit that has been used in the last 24 hours
         /// </summary>
-        public double DailyLimitUsed
+        public decimal DailyLimitUsed
         {
             get { return _dailyLimitUsed; }
             private set { value = _dailyLimitUsed; }
@@ -169,7 +169,7 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
         /// <summary>
         /// Monthly limit
         /// </summary>
-        public double MonthlyLimit
+        public decimal MonthlyLimit
         {
             get { return _monthlyLimit; }
             private set { value = _monthlyLimit; }
@@ -178,7 +178,7 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
         /// <summary>
         /// Monthly Limit that has been used in the last 30 days
         /// </summary>
-        public double MonthlyLimitUsed
+        public decimal MonthlyLimitUsed
         {
             get { return _monthlyLimitUsed; }
             private set { value = _monthlyLimitUsed; }
@@ -187,7 +187,7 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
         /// <summary>
         /// Maximum Deposit allowed to the user at this moment
         /// </summary>
-        public double MaximumDeposit
+        public decimal MaximumDeposit
         {
             get { return _maximumDeposit; }
             private set { value = _maximumDeposit; }

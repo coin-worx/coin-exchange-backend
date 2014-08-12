@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CoinExchange.Funds.Domain.Model.CurrencyAggregate;
 using CoinExchange.Funds.Domain.Model.WithdrawAggregate;
 
 namespace CoinExchange.Funds.Application.Tests
@@ -16,7 +17,7 @@ namespace CoinExchange.Funds.Application.Tests
 
         public WithdrawFees GetWithdrawFeesByCurrencyName(string currency)
         {
-            throw new NotImplementedException();
+            return new WithdrawFees(new Currency(currency), 0.1m, 0.001m);
         }
     }
 }

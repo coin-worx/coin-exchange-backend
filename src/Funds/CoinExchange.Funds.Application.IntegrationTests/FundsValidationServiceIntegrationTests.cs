@@ -524,7 +524,10 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             Assert.IsTrue(tradeExecutedResponse);
 
             // Get the fee corresponding to the currenct volume of the quote currency
-            double usdFee = feeCalculationService.GetFee(new Currency(baseCurrency), new Currency(quoteCurrency), 400 * 100);
+            decimal buySideFee = feeCalculationService.GetFee(new Currency(baseCurrency), new Currency(quoteCurrency), 
+                new AccountId(buyAccountId), 400, 100);
+            decimal sellSideFee = feeCalculationService.GetFee(new Currency(baseCurrency), new Currency(quoteCurrency),
+                new AccountId(sellAccountId), 400, 100);
 
             buyAccountBaseCurrencyBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(
                 new Currency(baseCurrency), new AccountId(buyAccountId));
@@ -535,8 +538,8 @@ namespace CoinExchange.Funds.Application.IntegrationTests
 
             buyAccountQuoteCurrencyBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(
                 new Currency(quoteCurrency), new AccountId(buyAccountId));
-            Assert.AreEqual(50000-40000-usdFee, buyAccountQuoteCurrencyBalance.CurrentBalance);
-            Assert.AreEqual(50000-40000-usdFee, buyAccountQuoteCurrencyBalance.AvailableBalance);
+            Assert.AreEqual(50000-40000-buySideFee, buyAccountQuoteCurrencyBalance.CurrentBalance);
+            Assert.AreEqual(50000-40000-buySideFee, buyAccountQuoteCurrencyBalance.AvailableBalance);
             Assert.AreEqual(0, buyAccountQuoteCurrencyBalance.PendingBalance);
 
             sellAccountBaseCurrencyBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(
@@ -547,8 +550,8 @@ namespace CoinExchange.Funds.Application.IntegrationTests
 
             sellAccountQuoteCurrencyBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(
                 new Currency(quoteCurrency), new AccountId(sellAccountId));
-            Assert.AreEqual(60000 + (400 * 100) - usdFee, sellAccountQuoteCurrencyBalance.CurrentBalance);
-            Assert.AreEqual(60000 + (400 * 100) - usdFee, sellAccountQuoteCurrencyBalance.AvailableBalance);
+            Assert.AreEqual(60000 + (400 * 100) - sellSideFee, sellAccountQuoteCurrencyBalance.CurrentBalance);
+            Assert.AreEqual(60000 + (400 * 100) - sellSideFee, sellAccountQuoteCurrencyBalance.AvailableBalance);
             Assert.AreEqual(0, sellAccountQuoteCurrencyBalance.PendingBalance);
         }
 
@@ -589,15 +592,18 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             Assert.IsTrue(tradeExecutedResponse);
 
             // Get the fee corresponding to the currenct volume of the quote currency
-            double usdFee = feeCalculationService.GetFee(new Currency(baseCurrency), new Currency(quoteCurrency), 400 * 100);
-            Assert.Greater(usdFee, 0);
+            decimal buySideFee = feeCalculationService.GetFee(new Currency(baseCurrency), new Currency(quoteCurrency), 
+                new AccountId(buyAccountId), 400, 100);
+            decimal sellSideFee = feeCalculationService.GetFee(new Currency(baseCurrency), new Currency(quoteCurrency),
+                new AccountId(sellAccountId), 400, 100);
+            Assert.Greater(buySideFee, 0);
 
             Balance buyXbtBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(new Currency(baseCurrency), new AccountId(buyAccountId));
             Assert.AreEqual(4000 + 400, buyXbtBalance.AvailableBalance);
             Assert.AreEqual(4000 + 400, buyXbtBalance.CurrentBalance);
             Balance buyUsdBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(new Currency(quoteCurrency), new AccountId(buyAccountId));
-            Assert.AreEqual(50000 + (-400 * 100) - usdFee, buyUsdBalance.AvailableBalance);
-            Assert.AreEqual(50000 + (-400 * 100) - usdFee, buyUsdBalance.CurrentBalance);
+            Assert.AreEqual(50000 + (-400 * 100) - buySideFee, buyUsdBalance.AvailableBalance);
+            Assert.AreEqual(50000 + (-400 * 100) - buySideFee, buyUsdBalance.CurrentBalance);
             List<Ledger> ledgerByAccountId = ledgerRepository.GetLedgerByAccountId(new AccountId("buyaccountid123"));
             
             Assert.AreEqual(2, ledgerByAccountId.Count);
@@ -613,16 +619,16 @@ namespace CoinExchange.Funds.Application.IntegrationTests
                 Assert.AreEqual(4000 + 400, ledgerByAccountId[0].Balance);
                 // For USD
                 Assert.AreEqual(-(400 * 100), ledgerByAccountId[1].Amount);
-                Assert.AreEqual(50000 -(400 * 100) - usdFee, ledgerByAccountId[1].Balance);
+                Assert.AreEqual(50000 -(400 * 100) - buySideFee, ledgerByAccountId[1].Balance);
 
-                Assert.AreEqual(usdFee, ledgerByAccountId[1].Fee);
+                Assert.AreEqual(buySideFee, ledgerByAccountId[1].Fee);
             }
             else if (ledgerByAccountId[0].Currency.Name == "USD")
             {
                 // For USD
                 Assert.AreEqual(-(400 * 100), ledgerByAccountId[0].Amount);
-                Assert.AreEqual(50000 -(400 * 100) - usdFee, ledgerByAccountId[0].Balance);
-                Assert.AreEqual(usdFee, ledgerByAccountId[0].Fee);
+                Assert.AreEqual(50000 -(400 * 100) - buySideFee, ledgerByAccountId[0].Balance);
+                Assert.AreEqual(buySideFee, ledgerByAccountId[0].Fee);
 
                 // For XBT
                 Assert.AreEqual(400, ledgerByAccountId[1].Amount);
@@ -646,8 +652,8 @@ namespace CoinExchange.Funds.Application.IntegrationTests
 
             Balance sellUsdBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(new Currency(quoteCurrency),
                 new AccountId(sellAccountId));
-            Assert.AreEqual(60000 + (400 * 100) - usdFee, sellUsdBalance.AvailableBalance);
-            Assert.AreEqual(60000 + (400 * 100) - usdFee, sellUsdBalance.CurrentBalance);
+            Assert.AreEqual(60000 + (400 * 100) - sellSideFee, sellUsdBalance.AvailableBalance);
+            Assert.AreEqual(60000 + (400 * 100) - sellSideFee, sellUsdBalance.CurrentBalance);
 
             ledgerByAccountId = ledgerRepository.GetLedgerByAccountId(new AccountId("sellaccountid123"));            
             Assert.AreEqual(2, ledgerByAccountId.Count);
@@ -660,16 +666,17 @@ namespace CoinExchange.Funds.Application.IntegrationTests
                 Assert.AreEqual(6000 - 400, ledgerByAccountId[0].Balance);
                 // For USD
                 Assert.AreEqual((400 * 100), ledgerByAccountId[1].Amount);
-                Assert.AreEqual(60000 + (400 * 100) - usdFee, ledgerByAccountId[1].Balance);
-                Assert.AreEqual(usdFee, ledgerByAccountId[1].Fee);
+                Assert.AreEqual(60000 + (400 * 100) - sellSideFee, ledgerByAccountId[1].Balance);
+                Assert.AreEqual(sellSideFee, ledgerByAccountId[1].Fee);
             }
             else if (ledgerByAccountId[0].Currency.Name == "USD")
             {
                 // For USD
                 Assert.AreEqual((400 * 100), ledgerByAccountId[0].Amount);
-                Assert.AreEqual(60000 + (400 * 100) - usdFee, ledgerByAccountId[0].Balance);
+                Assert.AreEqual(60000 + (400 * 100) - sellSideFee, ledgerByAccountId[0].Balance);
                 // Get the fee corresponding to the currenct volume of the quote currency
-                double fee = feeCalculationService.GetFee(new Currency(baseCurrency), new Currency(quoteCurrency), 400 * 100);
+                decimal fee = feeCalculationService.GetFee(new Currency(baseCurrency), new Currency(quoteCurrency),
+                    new AccountId(buyAccountId), 400, 100);
                 Assert.AreEqual(fee, ledgerByAccountId[0].Fee);
                 // For XBT
                 Assert.AreEqual(-400, ledgerByAccountId[1].Amount);
@@ -729,19 +736,20 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             Assert.IsTrue(tradeExecutedResponse);
 
             // Get the fee corresponding to the currenct volume of the quote currency
-            double usdFee = feeCalculationService.GetFee(new Currency(baseCurrency), new Currency(quoteCurrency), 100 * 100);
+            decimal usdFee = feeCalculationService.GetFee(new Currency(baseCurrency), new Currency(quoteCurrency),
+                new AccountId(buyAccountId), 100, 100);
             Assert.Greater(usdFee, 0);
 
             buyXbtBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(new Currency(baseCurrency),
                                                                    new AccountId(buyAccountId));
-            double buyerBaseAccountBalance = ledgerRepository.GetBalanceForCurrency(baseCurrency, new AccountId(buyAccountId));
+            decimal buyerBaseAccountBalance = ledgerRepository.GetBalanceForCurrency(baseCurrency, new AccountId(buyAccountId));
             Assert.AreEqual(buyXbtBalance.CurrentBalance, buyerBaseAccountBalance);
             Assert.AreEqual(4000 + 100, buyXbtBalance.CurrentBalance);
             Assert.AreEqual(4000 + 100, buyXbtBalance.AvailableBalance);
 
             buyUsdBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(new Currency(quoteCurrency),
                                                                    new AccountId(buyAccountId));
-            double buyerQuoteAccountBalance = ledgerRepository.GetBalanceForCurrency(quoteCurrency, new AccountId(buyAccountId));
+            decimal buyerQuoteAccountBalance = ledgerRepository.GetBalanceForCurrency(quoteCurrency, new AccountId(buyAccountId));
             Assert.AreEqual(buyUsdBalance.CurrentBalance, buyerQuoteAccountBalance);
             Assert.AreEqual(50000 - (100 * 100) - usdFee, buyUsdBalance.CurrentBalance);
             Assert.AreEqual(50000 - (100 * 100) - usdFee, buyUsdBalance.AvailableBalance);
@@ -768,12 +776,12 @@ namespace CoinExchange.Funds.Application.IntegrationTests
 
             sellXbtBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(new Currency(baseCurrency),
                                                                    new AccountId(sellAccountId));
-            double sellerBaseAccountBalance = ledgerRepository.GetBalanceForCurrency(baseCurrency, new AccountId(sellAccountId));
+            decimal sellerBaseAccountBalance = ledgerRepository.GetBalanceForCurrency(baseCurrency, new AccountId(sellAccountId));
             Assert.AreEqual(sellXbtBalance.CurrentBalance, sellerBaseAccountBalance);
 
             sellUsdBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(new Currency(quoteCurrency),
                                                                    new AccountId(sellAccountId));
-            double sellerQuoteAccountBalance = ledgerRepository.GetBalanceForCurrency(quoteCurrency, new AccountId(sellAccountId));
+            decimal sellerQuoteAccountBalance = ledgerRepository.GetBalanceForCurrency(quoteCurrency, new AccountId(sellAccountId));
             Assert.AreEqual(sellUsdBalance.CurrentBalance, sellerQuoteAccountBalance);
         }
 
@@ -800,7 +808,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             fundsPersistenceRepository.SaveOrUpdate(balance);
 
             Withdraw withdraw = new Withdraw(currency, withdrawIdGeneratorService.GenerateNewId(), DateTime.Now, 
-                WithdrawType.Default, 400, 0.4, TransactionStatus.Confirmed, accountId, new TransactionId("transaction123"),
+                WithdrawType.Default, 400, 0.4m, TransactionStatus.Confirmed, accountId, new TransactionId("transaction123"),
                 new BitcoinAddress("bitcoin123"));
 
             Withdraw validateFundsForWithdrawal = fundsValidationService.ValidateFundsForWithdrawal(accountId, currency, 400, new TransactionId("transaction123"), new BitcoinAddress("bitcoin123"));
@@ -859,7 +867,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             Assert.IsTrue(orderCancelled);
 
             // Get the fee corresponding to the current volume of the quote currency
-            double usdFee = feeCalculationService.GetFee(baseCurrency, quoteCurrency, 100 * 90);
+            decimal usdFee = feeCalculationService.GetFee(baseCurrency, quoteCurrency, accountId, 100, 90);
             Assert.Greater(usdFee, 0);
 
             retrievedXbtBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(baseCurrency, accountId);
@@ -915,7 +923,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             Assert.IsTrue(orderCancelled);
 
             // Get the fee corresponding to the current volume of the quote currency
-            double usdFee = feeCalculationService.GetFee(baseCurrency, quoteCurrency, 100 * 90);
+            decimal usdFee = feeCalculationService.GetFee(baseCurrency, quoteCurrency, accountId, 100, 90);
             Assert.Greater(usdFee, 0);
 
             retrievedXbtBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(baseCurrency, accountId);

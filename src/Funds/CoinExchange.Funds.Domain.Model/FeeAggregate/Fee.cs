@@ -15,7 +15,7 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
-        public Fee(string currencyPair, double percentageFee, int amount)
+        public Fee(string currencyPair, decimal percentageFee, int amount)
         {
             CurrencyPair = currencyPair;
             PercentageFee = percentageFee;
@@ -35,7 +35,7 @@
         /// <summary>
         /// Percentage Fee
         /// </summary>
-        public double PercentageFee { get; private set; }
+        public decimal PercentageFee { get; private set; }
 
         /// <summary>
         /// Amount

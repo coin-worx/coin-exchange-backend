@@ -15,18 +15,18 @@ namespace CoinExchange.Funds.Application.Tests
             throw new NotImplementedException();
         }
 
-        public bool EvaluateMaximumWithdrawLimit(double withdrawalAmountUsd, IList<Ledger> depositLedgers, WithdrawLimit withdrawLimit, double bestBidPrice, double bestAskPrice, double balance, double pendingBalance)
+        public bool EvaluateMaximumWithdrawLimit(decimal withdrawalAmountUsd, IList<Ledger> depositLedgers, WithdrawLimit withdrawLimit, decimal bestBidPrice, decimal bestAskPrice, decimal balance, decimal pendingBalance)
         {
             throw new NotImplementedException();
         }
 
-        public double DailyLimit { get; private set; }
-        public double DailyLimitUsed { get; private set; }
-        public double MonthlyLimit { get; private set; }
-        public double MonthlyLimitUsed { get; private set; }
-        public double WithheldAmount { get; private set; }
-        public double WithheldConverted { get; private set; }
-        public double MaximumWithdraw { get; private set; }
-        public double MaximumWithdrawUsd { get; private set; }
+        public decimal DailyLimit { get; private set; }
+        public decimal DailyLimitUsed { get; private set; }
+        public decimal MonthlyLimit { get; private set; }
+        public decimal MonthlyLimitUsed { get; private set; }
+        public decimal WithheldAmount { get; private set; }
+        public decimal WithheldConverted { get; private set; }
+        public decimal MaximumWithdraw { get; private set; }
+        public decimal MaximumWithdrawUsd { get; private set; }
     }
 }

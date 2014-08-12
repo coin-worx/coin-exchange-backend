@@ -23,7 +23,7 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
-        public Deposit(Currency currency, string depositId, DateTime date, DepositType type, double amount, double fee,
+        public Deposit(Currency currency, string depositId, DateTime date, DepositType type, decimal amount, decimal fee,
             TransactionStatus status, AccountId accountId, TransactionId transactionId, BitcoinAddress bitcoinAddress)
         {
             Currency = currency;
@@ -66,18 +66,18 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
         /// <summary>
         /// Amount
         /// </summary>
-        public double Amount { get; private set; }
+        public decimal Amount { get; private set; }
 
         /// <summary>
         /// Amount in US dollars. THis value is only set in the DepositLimitEvaluationService after the deposit has been 
         /// confirmed, and the best bid and best ask is used for the evaluation
         /// </summary>
-        public double AmountInUsd { get; private set; }
+        public decimal AmountInUsd { get; private set; }
 
         /// <summary>
         /// Fee
         /// </summary>
-        public double Fee { get; private set; }
+        public decimal Fee { get; private set; }
 
         /// <summary>
         /// Status of the Deposit
@@ -107,13 +107,13 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
         /// <summary>
         /// Sets the amount of the currency being deposited
         /// </summary>
-        public void SetAmount(double amount)
+        public void SetAmount(decimal amount)
         {
             Amount = amount;
         }
 
         //?Sets amount in US Dollars
-        public void SetAmountInUsd(double amount)
+        public void SetAmountInUsd(decimal amount)
         {
             AmountInUsd = amount;
         }

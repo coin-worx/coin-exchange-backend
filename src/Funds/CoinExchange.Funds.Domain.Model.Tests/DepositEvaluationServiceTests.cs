@@ -20,12 +20,12 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             Currency currency = new Currency("XBT");
             string depositId = "depositid123";
             AccountId accountId = new AccountId("accountid123");
-            double bestBid = 580;
-            double bestAsk = 590;
-            double dailyLimit = 1000;
-            double monthlyLimit = 5000;
-            double originalMidpoint = ((dailyLimit / bestBid) + (dailyLimit / bestAsk)) / 2;
-            double midpoint = (bestBid + bestAsk)/2;
+            decimal bestBid = 580;
+            decimal bestAsk = 590;
+            decimal dailyLimit = 1000;
+            decimal monthlyLimit = 5000;
+            decimal originalMidpoint = ((dailyLimit / bestBid) + (dailyLimit / bestAsk)) / 2;
+            decimal midpoint = (bestBid + bestAsk)/2;
 
             List<Ledger> ledgers = new List<Ledger>();
             DepositLimit depositLimit = new DepositLimit("Tier 0", dailyLimit, monthlyLimit);
@@ -37,8 +37,8 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             Assert.AreEqual(0, depositLimitEvaluationService.DailyLimitUsed);
             Assert.AreEqual(0, depositLimitEvaluationService.MonthlyLimitUsed);
             Assert.AreEqual(originalMidpoint, depositLimitEvaluationService.MaximumDeposit);
-            Ledger ledger = new Ledger("ledgeris1", DateTime.Now.AddMinutes(-1), LedgerType.Deposit, currency, 1.5,
-                900, 0, 1.5, null, null, null, depositId, accountId);
+            Ledger ledger = new Ledger("ledgeris1", DateTime.Now.AddMinutes(-1), LedgerType.Deposit, currency, 1.5m,
+                900, 0, 1.5m, null, null, null, depositId, accountId);
             ledgers.Add(ledger);
 
             evaluationResponse = depositLimitEvaluationService.EvaluateDepositLimit(200, ledgers, depositLimit, bestBid, bestAsk);
@@ -58,16 +58,16 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             Currency currency = new Currency("XBT");
             string depositId = "depositid123";
             AccountId accountId = new AccountId("accountid123");
-            double bestBid = 580;
-            double bestAsk = 590;
-            double dailyLimit = 1000;
-            double monthlyLimit = 5000;
-            double originalMidpoint = ((dailyLimit / bestBid) + (dailyLimit / bestAsk)) / 2;
-            double midpoint = (bestBid + bestAsk) / 2;
+            decimal bestBid = 580;
+            decimal bestAsk = 590;
+            decimal dailyLimit = 1000;
+            decimal monthlyLimit = 5000;
+            decimal originalMidpoint = ((dailyLimit / bestBid) + (dailyLimit / bestAsk)) / 2;
+            decimal midpoint = (bestBid + bestAsk) / 2;
 
             List<Ledger> ledgers = new List<Ledger>();
-            Ledger ledger = new Ledger("ledgeris1", DateTime.Now.AddDays(-40), LedgerType.Deposit, currency, 1.5,
-                900, 0, 1.5, null, null, null, depositId, accountId);
+            Ledger ledger = new Ledger("ledgeris1", DateTime.Now.AddDays(-40), LedgerType.Deposit, currency, 1.5m,
+                900, 0, 1.5m, null, null, null, depositId, accountId);
             ledgers.Add(ledger);
             DepositLimit depositLimit = new DepositLimit("Tier 0", dailyLimit, monthlyLimit);
             bool evaluationResponse = depositLimitEvaluationService.EvaluateDepositLimit(900, ledgers, depositLimit,
@@ -78,8 +78,8 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             Assert.AreEqual(0, depositLimitEvaluationService.DailyLimitUsed);
             Assert.AreEqual(0, depositLimitEvaluationService.MonthlyLimitUsed);
             Assert.AreEqual(originalMidpoint, depositLimitEvaluationService.MaximumDeposit);
-            Ledger ledger2 = new Ledger("ledgeris1", DateTime.Now.AddMinutes(-1), LedgerType.Deposit, currency, 1.5,
-                900, 0, 1.5, null, null, null, depositId, accountId);
+            Ledger ledger2 = new Ledger("ledgeris1", DateTime.Now.AddMinutes(-1), LedgerType.Deposit, currency, 1.5m,
+                900, 0, 1.5m, null, null, null, depositId, accountId);
             ledgers.Add(ledger2);
 
             evaluationResponse = depositLimitEvaluationService.EvaluateDepositLimit(200, ledgers, depositLimit, bestBid, bestAsk);
@@ -99,16 +99,16 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             Currency currency = new Currency("XBT");
             string depositId = "depositid123";
             AccountId accountId = new AccountId("accountid123");
-            double bestBid = 580;
-            double bestAsk = 590;
-            double dailyLimit = 1000;
-            double monthlyLimit = 5000;
-            double originalMidpoint = ((dailyLimit / bestBid) + (dailyLimit / bestAsk)) / 2;
-            double midpoint = (bestBid + bestAsk) / 2;
+            decimal bestBid = 580;
+            decimal bestAsk = 590;
+            decimal dailyLimit = 1000;
+            decimal monthlyLimit = 5000;
+            decimal originalMidpoint = ((dailyLimit / bestBid) + (dailyLimit / bestAsk)) / 2;
+            decimal midpoint = (bestBid + bestAsk) / 2;
 
             List<Ledger> ledgers = new List<Ledger>();
             Ledger ledger = new Ledger("ledgerid1", DateTime.Now.AddDays(-29), LedgerType.Deposit, currency, 4500/midpoint,
-                4500, 0, 1.5, null, null, null, depositId, accountId);
+                4500, 0, 1.5m, null, null, null, depositId, accountId);
             ledgers.Add(ledger);
 
             DepositLimit depositLimit = new DepositLimit("Tier 0", dailyLimit, monthlyLimit);
@@ -121,7 +121,7 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             Assert.AreEqual(4500, depositLimitEvaluationService.MonthlyLimitUsed);
             Assert.AreEqual(Math.Round(500/midpoint), Math.Round(depositLimitEvaluationService.MaximumDeposit));
             Ledger ledger2 = new Ledger("ledgerid2", DateTime.Now.AddMinutes(-1), LedgerType.Deposit, currency, 500/midpoint,
-                500, 0, 1.5, null, null, null, depositId, accountId);
+                500, 0, 1.5m, null, null, null, depositId, accountId);
             ledgers.Add(ledger2);
 
             evaluationResponse = depositLimitEvaluationService.EvaluateDepositLimit(200, ledgers, depositLimit, bestBid, bestAsk);
@@ -141,17 +141,17 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             Currency currency = new Currency("XBT");
             string depositId = "depositid123";
             AccountId accountId = new AccountId("accountid123");
-            double bestBid = 580;
-            double bestAsk = 590;
-            double dailyLimit = 1000;
-            double monthlyLimit = 5000;
-            double midpoint = (bestBid + bestAsk) / 2;
+            decimal bestBid = 580;
+            decimal bestAsk = 590;
+            decimal dailyLimit = 1000;
+            decimal monthlyLimit = 5000;
+            decimal midpoint = (bestBid + bestAsk) / 2;
 
             List<Ledger> ledgers = new List<Ledger>();
             Ledger ledger = new Ledger("ledgerid1", DateTime.Now.AddDays(-29), LedgerType.Deposit, currency, 4100 / midpoint,
-                4100, 0, 1.5, null, null, null, depositId, accountId);
+                4100, 0, 1.5m, null, null, null, depositId, accountId);
             Ledger ledger2 = new Ledger("ledgerid2", DateTime.Now.AddMinutes(-1), LedgerType.Deposit, currency, 400 / midpoint,
-                400, 0, 1.5, null, null, null, depositId, accountId);            
+                400, 0, 1.5m, null, null, null, depositId, accountId);            
             ledgers.Add(ledger);
             ledgers.Add(ledger2);
 
@@ -182,7 +182,7 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             Assert.AreEqual(ConvertUsdToCurrency(bestBid, bestAsk, 500), depositLimitEvaluationService.MaximumDeposit);
 
             Ledger ledger3 = new Ledger("ledgerid3", DateTime.Now.AddHours(-30), LedgerType.Deposit, currency, 500 / midpoint,
-                500, 0, 1.5, null, null, null, depositId, accountId);
+                500, 0, 1.5m, null, null, null, depositId, accountId);
             ledgers.Add(ledger3);
 
             evaluationResponse = depositLimitEvaluationService.EvaluateDepositLimit(1, ledgers, depositLimit, bestBid, bestAsk);
@@ -202,17 +202,17 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             Currency currency = new Currency("XBT");
             string depositId = "depositid123";
             AccountId accountId = new AccountId("accountid123");
-            double bestBid = 580;
-            double bestAsk = 590;
-            double dailyLimit = 1000;
-            double monthlyLimit = 5000;
-            double midpoint = (bestBid + bestAsk) / 2;
+            decimal bestBid = 580;
+            decimal bestAsk = 590;
+            decimal dailyLimit = 1000;
+            decimal monthlyLimit = 5000;
+            decimal midpoint = (bestBid + bestAsk) / 2;
 
             List<Ledger> ledgers = new List<Ledger>();
             DepositLimit depositLimit = new DepositLimit("Tier 0", dailyLimit, monthlyLimit);
             
             Ledger ledger3 = new Ledger("ledgerid3", DateTime.Now.AddHours(-30), LedgerType.Deposit, currency, 5000 / midpoint,
-                5000, 0, 1.5, null, null, null, depositId, accountId);
+                5000, 0, 1.5m, null, null, null, depositId, accountId);
             ledgers.Add(ledger3);
 
             bool evaluationResponse = depositLimitEvaluationService.EvaluateDepositLimit(1, ledgers, depositLimit, bestBid, bestAsk);
@@ -232,17 +232,17 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             Currency currency = new Currency("XBT");
             string depositId = "depositid123";
             AccountId accountId = new AccountId("accountid123");
-            double bestBid = 580;
-            double bestAsk = 590;
-            double dailyLimit = 1000;
-            double monthlyLimit = 5000;
-            double midpoint = (bestBid + bestAsk) / 2;
+            decimal bestBid = 580;
+            decimal bestAsk = 590;
+            decimal dailyLimit = 1000;
+            decimal monthlyLimit = 5000;
+            decimal midpoint = (bestBid + bestAsk) / 2;
 
             List<Ledger> ledgers = new List<Ledger>();
             Ledger ledger = new Ledger("ledgerid1", DateTime.Now.AddDays(-29), LedgerType.Deposit, currency, 3500 / midpoint,
-                3500, 0, 1.5, null, null, null, depositId, accountId);
+                3500, 0, 1.5m, null, null, null, depositId, accountId);
             Ledger ledger2 = new Ledger("ledgerid2", DateTime.Now.AddMinutes(-1), LedgerType.Deposit, currency, 500 / midpoint,
-                500, 0, 1.5, null, null, null, depositId, accountId);
+                500, 0, 1.5m, null, null, null, depositId, accountId);
             ledgers.Add(ledger);
             ledgers.Add(ledger2);
 
@@ -273,15 +273,15 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             Currency currency = new Currency("XBT");
             string depositId = "depositid123";
             AccountId accountId = new AccountId("accountid123");
-            double bestBid = 580;
-            double bestAsk = 590;
-            double dailyLimit = 1000;
-            double monthlyLimit = 5000;
-            double midpoint = (bestBid + bestAsk) / 2;
+            decimal bestBid = 580;
+            decimal bestAsk = 590;
+            decimal dailyLimit = 1000;
+            decimal monthlyLimit = 5000;
+            decimal midpoint = (bestBid + bestAsk) / 2;
 
             List<Ledger> ledgers = new List<Ledger>();
             Ledger ledger = new Ledger("ledgerid2", DateTime.Now.AddMinutes(-1), LedgerType.Deposit, currency, 500 / midpoint,
-                500, 0, 1.5, null, null, null, depositId, accountId);           
+                500, 0, 1.5m, null, null, null, depositId, accountId);           
             ledgers.Add(ledger);
 
             DepositLimit depositLimit = new DepositLimit("Tier 1", dailyLimit, monthlyLimit);
@@ -313,17 +313,17 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             Currency currency = new Currency("XBT");
             string depositId = "depositid123";
             AccountId accountId = new AccountId("accountid123");
-            double bestBid = 580;
-            double bestAsk = 590;
-            double dailyLimit = 1000;
-            double monthlyLimit = 5000;
-            double midpoint = (bestBid + bestAsk) / 2;
+            decimal bestBid = 580;
+            decimal bestAsk = 590;
+            decimal dailyLimit = 1000;
+            decimal monthlyLimit = 5000;
+            decimal midpoint = (bestBid + bestAsk) / 2;
 
             List<Ledger> ledgers = new List<Ledger>();
             Ledger ledger = new Ledger("ledgerid1", DateTime.Now.AddHours(-25), LedgerType.Deposit, currency, 4000 / midpoint,
-                4000, 0, 1.5, null, null, null, depositId, accountId);
+                4000, 0, 1.5m, null, null, null, depositId, accountId);
             Ledger ledger2 = new Ledger("ledgerid2", DateTime.Now.AddMinutes(-1), LedgerType.Deposit, currency, 500 / midpoint,
-                500, 0, 1.5, null, null, null, depositId, accountId);
+                500, 0, 1.5m, null, null, null, depositId, accountId);
             ledgers.Add(ledger);
             ledgers.Add(ledger2);
 
@@ -348,10 +348,10 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             Assert.AreEqual(ConvertUsdToCurrency(bestBid, bestAsk, 500), depositLimitEvaluationService.MaximumDeposit);
         }
 
-        private double ConvertUsdToCurrency(double bestBid, double bestAsk, double usdAmount)
+        private decimal ConvertUsdToCurrency(decimal bestBid, decimal bestAsk, decimal usdAmount)
         {
-            double sum = (usdAmount / bestBid) + (usdAmount / bestAsk);
-            double midPoint = sum / 2;
+            decimal sum = (usdAmount / bestBid) + (usdAmount / bestAsk);
+            decimal midPoint = sum / 2;
             return midPoint;
         }
     }

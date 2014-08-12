@@ -10,16 +10,16 @@ namespace CoinExchange.Funds.Application.Tests
 {
     public class MockDepositLimitEvaluationService : IDepositLimitEvaluationService
     {
-        public bool EvaluateDepositLimit(double currentDeposit, IList<Ledger> depositLedgers, DepositLimit depositLimit, 
-            double bestBidPrice, double bestAskPrice)
+        public bool EvaluateDepositLimit(decimal currentDeposit, IList<Ledger> depositLedgers, DepositLimit depositLimit, 
+            decimal bestBidPrice, decimal bestAskPrice)
         {
             throw new NotImplementedException();
         }
 
-        public double DailyLimit { get; private set; }
-        public double DailyLimitUsed { get; private set; }
-        public double MonthlyLimit { get; private set; }
-        public double MonthlyLimitUsed { get; private set; }
-        public double MaximumDeposit { get; private set; }
+        public decimal DailyLimit { get; private set; }
+        public decimal DailyLimitUsed { get; private set; }
+        public decimal MonthlyLimit { get; private set; }
+        public decimal MonthlyLimitUsed { get; private set; }
+        public decimal MaximumDeposit { get; private set; }
     }
 }
