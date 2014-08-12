@@ -210,47 +210,60 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         {
             if (deposit != null && deposit.Confirmations >= 7)
             {
-                // Get all the Deposit Ledgers
-                IList<Ledger> depositLedgers = GetDepositLedgers();
-                // Get the Current Tier Level for this user using the corss bounded context Tier retrieval service
-                // ToDo: Using the stub impllementation for now, upgrade to the real cross bounded context service
-                // once completed
-                string currentTierLevel = _tierLevelRetrievalService.GetCurrentTierLevel(deposit.AccountId.Value);
-                // Get the Current Deposit limits for this user
-                DepositLimit depositLimit = _depositLimitRepository.GetDepositLimitByTierLevel(currentTierLevel);
-
-                // Get the best bid and best ask form the Trades BC.
-                // NOTE: Implement adn use real implementation later, rather than using the stub implementation being used right now
-                Tuple<decimal, decimal> bestBidBestAsk = _bboRetrievalService.GetBestBidBestAsk(deposit.Currency.Name,
-                                                                                              "USD");
-
-                deposit.SetAmountInUsd(ConvertCurrencyToUsd(deposit.Amount, bestBidBestAsk.Item1,
-                                                                bestBidBestAsk.Item2));
-                // Check if the current Deposit transaction is within the Deposit limits
-                if (_depositLimitEvaluationService.EvaluateDepositLimit(deposit.AmountInUsd, depositLedgers,
-                                                                        depositLimit, bestBidBestAsk.Item1,
-                                                                        bestBidBestAsk.Item2))
+                if (deposit.Currency.IsCryptoCurrency)
                 {
-                    // Check if balance instance has been created for this user already
-                    Balance balance = GetBalanceForAccountId(deposit.AccountId, deposit.Currency);
+                    // Get all the Deposit Ledgers
+                    IList<Ledger> depositLedgers = GetDepositLedgers();
+                    // Get the Current Tier Level for this user using the corss bounded context Tier retrieval service
+                    // ToDo: Using the stub implementation for now, upgrade to the real cross bounded context service
+                    // once completed
+                    string currentTierLevel = _tierLevelRetrievalService.GetCurrentTierLevel(deposit.AccountId.Value);
+                    // Get the Current Deposit limits for this user
+                    DepositLimit depositLimit = _depositLimitRepository.GetDepositLimitByTierLevel(currentTierLevel);
 
-                    // If balance instance is not initiated for this currency for the current user, create now
-                    if (balance == null)
-                    {
-                        balance = new Balance(deposit.Currency, deposit.AccountId, deposit.Amount, deposit.Amount);
-                    }
-                    // Otherwise, update the balance for the current user's currency
-                    else
-                    {
-                        balance.AddAvailableBalance(deposit.Amount);
-                        balance.AddCurrentBalance(deposit.Amount);
-                    }
-                    _fundsPersistenceRepository.SaveOrUpdate(balance);
+                    // Get the best bid and best ask form the Trades BC.
+                    // NOTE: Implement adn use real implementation later, rather than using the stub implementation being used right now
+                    Tuple<decimal, decimal> bestBidBestAsk =
+                        _bboRetrievalService.GetBestBidBestAsk(deposit.Currency.Name,
+                                                               "USD");
 
-                    return _transactionService.CreateDepositTransaction(deposit, balance.CurrentBalance);
+                    deposit.SetAmountInUsd(ConvertCurrencyToUsd(deposit.Amount, bestBidBestAsk.Item1,
+                                                                bestBidBestAsk.Item2));
+                    // Check if the current Deposit transaction is within the Deposit limits
+                    if (_depositLimitEvaluationService.EvaluateDepositLimit(deposit.AmountInUsd, depositLedgers,
+                                                                            depositLimit, bestBidBestAsk.Item1,
+                                                                            bestBidBestAsk.Item2))
+                    {
+                        return UpdateBalance(deposit);
+                    }
+                }
+                else
+                {
+                    return UpdateBalance(deposit);
                 }
             }
             return false;
+        }
+
+        private bool UpdateBalance(Deposit deposit)
+        {
+            // Check if balance instance has been created for this user already
+            Balance balance = GetBalanceForAccountId(deposit.AccountId, deposit.Currency);
+
+            // If balance instance is not initiated for this currency for the current user, create now
+            if (balance == null)
+            {
+                balance = new Balance(deposit.Currency, deposit.AccountId, deposit.Amount, deposit.Amount);
+            }
+            // Otherwise, update the balance for the current user's currency
+            else
+            {
+                balance.AddAvailableBalance(deposit.Amount);
+                balance.AddCurrentBalance(deposit.Amount);
+            }
+            _fundsPersistenceRepository.SaveOrUpdate(balance);
+
+            return _transactionService.CreateDepositTransaction(deposit, balance.CurrentBalance);
         }
 
         /// <summary>

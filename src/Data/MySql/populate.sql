@@ -71,7 +71,7 @@ insert  into `tier`(`TierLevel`,`TierName`) values ('Tier 0','Tier 0'),('Tier 1'
 
 /*Data for the table `withdrawfees` */
 
-insert  into `withdrawfees`(`Id`,`Currency`,`MinimumAmount`,`Fee`) values (3,'XBT',1,0.01),(4,'USD',1,0.01);
+insert  into `withdrawfees`(`Id`,`Currency`,`MinimumAmount`,`Fee`) values (3,'XBT',0.01,0.001),(4,'USD',1,0.01);
 
 /*Data for the table `withdrawlimit` */
 
