@@ -30,6 +30,7 @@
     <constructor-arg name="withdrawLimitRepository" ref="WithdrawLimitRepository"/>
     <constructor-arg name="tierLevelRetrievalService" ref="StubTierLevelRetrievalService"/>
     <constructor-arg name="bboRetrievalService" ref="StubBboRetrievalService"/>
+    <constructor-arg name="withdrawRepository" ref="WithdrawRepository"/>
   </object>
   
   <tx:attribute-driven/>

@@ -16,7 +16,7 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
         /// Evaluates the Maximum Withdraw amount
         /// </summary>
         /// <returns></returns>
-        bool EvaluateMaximumWithdrawLimit(decimal withdrawalAmountUsd, IList<Ledger> depositLedgers, WithdrawLimit 
+        bool EvaluateMaximumWithdrawLimit(decimal withdrawalAmountUsd, IList<Withdraw> depositLedgers, WithdrawLimit 
             withdrawLimit, decimal bestBidPrice, decimal bestAskPrice, decimal balance, decimal currentBalance);
 
         /// <summary>

@@ -55,7 +55,7 @@ namespace CoinExchange.Funds.Domain.Model.Tests
         {
             // Scenario: DailyLimit = 0/1000, MonthlyLimit = 0/5000 with older deposits present
             IDepositLimitEvaluationService depositLimitEvaluationService = new DepositLimitEvaluationService();
-            Currency currency = new Currency("XBT");
+            Currency currency = new Currency("XBT", true);
             string depositId = "depositid123";
             AccountId accountId = new AccountId("accountid123");
             decimal bestBid = 580;
@@ -96,7 +96,7 @@ namespace CoinExchange.Funds.Domain.Model.Tests
         {
             // Scenario: DailyLimit = 0/1000, MonthlyLimit = 4500/5000 with older deposits present
             IDepositLimitEvaluationService depositLimitEvaluationService = new DepositLimitEvaluationService();
-            Currency currency = new Currency("XBT");
+            Currency currency = new Currency("XBT", true);
             string depositId = "depositid123";
             AccountId accountId = new AccountId("accountid123");
             decimal bestBid = 580;
@@ -138,7 +138,7 @@ namespace CoinExchange.Funds.Domain.Model.Tests
         {
             // Scenario: DailyLimit = 400/1000, MonthlyLimit = 4500/5000 with older deposits present
             IDepositLimitEvaluationService depositLimitEvaluationService = new DepositLimitEvaluationService();
-            Currency currency = new Currency("XBT");
+            Currency currency = new Currency("XBT", true);
             string depositId = "depositid123";
             AccountId accountId = new AccountId("accountid123");
             decimal bestBid = 580;
@@ -199,7 +199,7 @@ namespace CoinExchange.Funds.Domain.Model.Tests
         {
             // Monthly Limit Reached, no more deposits
             IDepositLimitEvaluationService depositLimitEvaluationService = new DepositLimitEvaluationService();
-            Currency currency = new Currency("XBT");
+            Currency currency = new Currency("XBT", true);
             string depositId = "depositid123";
             AccountId accountId = new AccountId("accountid123");
             decimal bestBid = 580;
@@ -229,7 +229,7 @@ namespace CoinExchange.Funds.Domain.Model.Tests
         {
             // Scenario: DailyLimit = 500/1000, MonthlyLimit = 4000/5000 with older deposits present
             IDepositLimitEvaluationService depositLimitEvaluationService = new DepositLimitEvaluationService();
-            Currency currency = new Currency("XBT");
+            Currency currency = new Currency("XBT", true);
             string depositId = "depositid123";
             AccountId accountId = new AccountId("accountid123");
             decimal bestBid = 580;
@@ -270,7 +270,7 @@ namespace CoinExchange.Funds.Domain.Model.Tests
         {
             // Scenario: DailyLimit = 500/1000, MonthlyLimit = 500/5000 with older deposits present
             IDepositLimitEvaluationService depositLimitEvaluationService = new DepositLimitEvaluationService();
-            Currency currency = new Currency("XBT");
+            Currency currency = new Currency("XBT", true);
             string depositId = "depositid123";
             AccountId accountId = new AccountId("accountid123");
             decimal bestBid = 580;
@@ -310,7 +310,7 @@ namespace CoinExchange.Funds.Domain.Model.Tests
         {
             // Scenario: DailyLimit = 500/1000, MonthlyLimit = 4500/5000 with older deposits present
             IDepositLimitEvaluationService depositLimitEvaluationService = new DepositLimitEvaluationService();
-            Currency currency = new Currency("XBT");
+            Currency currency = new Currency("XBT", true);
             string depositId = "depositid123";
             AccountId accountId = new AccountId("accountid123");
             decimal bestBid = 580;

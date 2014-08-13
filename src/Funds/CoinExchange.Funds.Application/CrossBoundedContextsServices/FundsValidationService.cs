@@ -34,6 +34,7 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         private IWithdrawLimitRepository _withdrawLimitRepository = null;
         private ITierLevelRetrievalService _tierLevelRetrievalService = null;
         private IBboRetrievalService _bboRetrievalService = null;
+        private IWithdrawRepository _withdrawRepository = null;
         
         #endregion Private Fields
 
@@ -48,7 +49,8 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
             IWithdrawIdGeneratorService withdrawIdGeneratorService, ILedgerRepository ledgerRepository,
             IDepositLimitEvaluationService depositLimitEvaluationService, IDepositLimitRepository depositLimitRepository,
             IWithdrawLimitEvaluationService withdrawLimitEvaluationService, IWithdrawLimitRepository withdrawLimitRepository,
-            ITierLevelRetrievalService tierLevelRetrievalService, IBboRetrievalService bboRetrievalService)
+            ITierLevelRetrievalService tierLevelRetrievalService, IBboRetrievalService bboRetrievalService,
+            IWithdrawRepository withdrawRepository)
         {
             _transactionService = transactionService;
             _fundsPersistenceRepository = fundsPersistenceRepository;
@@ -63,6 +65,7 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
             _withdrawLimitRepository = withdrawLimitRepository;
             _tierLevelRetrievalService = tierLevelRetrievalService;
             _bboRetrievalService = bboRetrievalService;
+            _withdrawRepository = withdrawRepository;
         }
 
         #endregion Constructors
@@ -130,50 +133,69 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         public Withdraw ValidateFundsForWithdrawal(AccountId accountId, Currency currency, decimal amount, TransactionId
             transactionId, BitcoinAddress bitcoinAddress)
         {
-            WithdrawFees withdrawFees = _withdrawFeesRepository.GetWithdrawFeesByCurrencyName(currency.Name);
-            if (withdrawFees != null)
+            if (currency.IsCryptoCurrency)
             {
-                // Check if the current withdrawal amount is greater than the amount required mentioned with the Fees
-                if (amount >= withdrawFees.MinimumAmount)
+                WithdrawFees withdrawFees = _withdrawFeesRepository.GetWithdrawFeesByCurrencyName(currency.Name);
+                if (withdrawFees != null)
                 {
-                    Balance balance = GetBalanceForAccountId(accountId, currency);
-                    if (balance != null)
+                    // Check if the current withdrawal amount is greater than the amount required mentioned with the Fees
+                    if (amount >= withdrawFees.MinimumAmount)
                     {
-                        // Get all the Withdraw Ledgers
-                        IList<Ledger> withdrawLedgers = GetWithdrawalLedgers();
-                        // Get the Current Tier Level for this user using the cross bounded context Tier retrieval service
-                        string currentTierLevel = _tierLevelRetrievalService.GetCurrentTierLevel(accountId.Value);
-                        // Get the Current Withdraw limits for this user
-                        WithdrawLimit withdrawLimit =
-                            _withdrawLimitRepository.GetWithdrawLimitByTierLevel(currentTierLevel);
-
-                        // Get the best bid and best ask form the Trades BC.
-                        // ToDo: Implement and use real implementation later, rather than using the stub implementation being used right now
-                        Tuple<decimal, decimal> bestBidBestAsk = _bboRetrievalService.GetBestBidBestAsk(currency.Name,
-                                                                                                      "USD");
-                        // Convert the amount and the fee to US Dollars, because the evaluation service accepts amounts
-                        // in USD
-                        decimal amountInUsd = ConvertCurrencyToUsd(amount, bestBidBestAsk.Item1, bestBidBestAsk.Item2);
-                        decimal feeInUsd = ConvertCurrencyToUsd(withdrawFees.Fee, bestBidBestAsk.Item1,
-                                                               bestBidBestAsk.Item2);
-                        // Evaluate if the current withdrawal is within the limits of the maximum withdrawal allowed and 
-                        // the balance available
-                        if (_withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(amountInUsd + feeInUsd,
-                            withdrawLedgers, withdrawLimit, bestBidBestAsk.Item1, bestBidBestAsk.Item2,
-                            balance.AvailableBalance, balance.CurrentBalance))
+                        Balance balance = GetBalanceForAccountId(accountId, currency);
+                        if (balance != null)
                         {
-                            Withdraw withdraw = new Withdraw(currency, _withdrawIdGeneratorService.GenerateNewId(),
-                                                             DateTime.Now, WithdrawType.Default, amount,withdrawFees.Fee,
-                                                             TransactionStatus.Pending, accountId, transactionId, 
-                                                             bitcoinAddress);
-                            _fundsPersistenceRepository.SaveOrUpdate(withdraw);
-                            balance.AddPendingTransaction(withdraw.WithdrawId, PendingTransactionType.Withdraw, 
-                                -(withdraw.Amount + withdrawFees.Fee));
-                            _fundsPersistenceRepository.SaveOrUpdate(balance);
-                            return withdraw;
+                            // Get all the Withdraw Ledgers
+                            IList<Withdraw> withdrawLedgers = GetWithdrawalLedgers(currency, accountId);
+                            // Get the Current Tier Level for this user using the cross bounded context Tier retrieval service
+                            string currentTierLevel = _tierLevelRetrievalService.GetCurrentTierLevel(accountId.Value);
+                            // Get the Current Withdraw limits for this user
+                            WithdrawLimit withdrawLimit =
+                                _withdrawLimitRepository.GetWithdrawLimitByTierLevel(currentTierLevel);
+
+                            // Get the best bid and best ask form the Trades BC.
+                            // ToDo: Implement and use real implementation later, rather than using the stub implementation being used right now
+                            Tuple<decimal, decimal> bestBidBestAsk =
+                                _bboRetrievalService.GetBestBidBestAsk(currency.Name, "USD");
+                            // Convert the amount and the fee to US Dollars, because the evaluation service accepts amounts
+                            // in USD
+                            decimal amountInUsd = ConvertCurrencyToUsd(amount, bestBidBestAsk.Item1,
+                                                                       bestBidBestAsk.Item2);
+                            decimal feeInUsd = ConvertCurrencyToUsd(withdrawFees.Fee, bestBidBestAsk.Item1,
+                                                                    bestBidBestAsk.Item2);
+                            // Evaluate if the current withdrawal is within the limits of the maximum withdrawal allowed and 
+                            // the balance available
+                            if (_withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(amountInUsd + feeInUsd,
+                                                                                             withdrawLedgers,
+                                                                                             withdrawLimit,
+                                                                                             bestBidBestAsk.Item1,
+                                                                                             bestBidBestAsk.Item2,
+                                                                                             balance.AvailableBalance,
+                                                                                             balance.CurrentBalance))
+                            {
+                                Withdraw withdraw = new Withdraw(currency, _withdrawIdGeneratorService.GenerateNewId(),
+                                                                 DateTime.Now, WithdrawType.Default, amount,
+                                                                 withdrawFees.Fee,
+                                                                 TransactionStatus.Pending, accountId, transactionId,
+                                                                 bitcoinAddress);
+                                // Set amount In US Dollars, which will be used in later calculations regarding withdrawals
+                                withdraw.SetAmountInUsd(amountInUsd);
+                                _fundsPersistenceRepository.SaveOrUpdate(withdraw);
+                                balance.AddPendingTransaction(withdraw.WithdrawId, PendingTransactionType.Withdraw,
+                                                              -(withdraw.Amount + withdrawFees.Fee));
+                                _fundsPersistenceRepository.SaveOrUpdate(balance);
+                                return withdraw;
+                            }
+                            else
+                            {
+                                throw new InvalidOperationException("Not enough balance or withdraw limit reached");
+                            }
                         }
                     }
                 }
+            }
+            else
+            {
+                throw new Exception("Only Crypto Currencies can be withdrawn using this service");
             }
             return null;
         }
@@ -192,9 +214,11 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
             bool addResponse = balance.ConfirmPendingTransaction(withdraw.WithdrawId,
                                                                  PendingTransactionType.Withdraw,
                                                                  -(withdraw.Amount + withdraw.Fee));
+            withdraw.StatusConfirmed();
             if (addResponse)
             {
                 _fundsPersistenceRepository.SaveOrUpdate(balance);
+                _fundsPersistenceRepository.SaveOrUpdate(withdraw);
                 return _transactionService.CreateWithdrawTransaction(withdraw, balance.CurrentBalance);
             }
 
@@ -212,8 +236,9 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
             {
                 if (deposit.Currency.IsCryptoCurrency)
                 {
-                    // Get all the Deposit Ledgers
-                    IList<Ledger> depositLedgers = GetDepositLedgers();
+                    deposit.StatusConfirmed();
+                    // Get all the Deposit Ledgers for this currency and account
+                    IList<Ledger> depositLedgers = GetDepositLedgers(deposit.Currency, deposit.AccountId);
                     // Get the Current Tier Level for this user using the corss bounded context Tier retrieval service
                     // ToDo: Using the stub implementation for now, upgrade to the real cross bounded context service
                     // once completed
@@ -236,11 +261,15 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
                     {
                         return UpdateBalance(deposit);
                     }
+                    else
+                    {
+                        // If deposit was over the limit, add amount to pending balance and freeze the account
+                        // ToDo: Implement a way to inform the admin about the threshold crossing and take necessary action
+                        UpdateBalanceAndFreezeAccount(deposit);
+                        throw new InvalidOperationException("Deposit is over the limit. Account Balance will be frozen");
+                    }
                 }
-                else
-                {
-                    return UpdateBalance(deposit);
-                }
+                throw new InvalidOperationException("Only Crypto Currencies can be deposited using Crypto Addresses.");
             }
             return false;
         }
@@ -262,8 +291,36 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
                 balance.AddCurrentBalance(deposit.Amount);
             }
             _fundsPersistenceRepository.SaveOrUpdate(balance);
+            _fundsPersistenceRepository.SaveOrUpdate(deposit);
 
             return _transactionService.CreateDepositTransaction(deposit, balance.CurrentBalance);
+        }
+
+        /// <summary>
+        /// Updates the pending balance and freezes the account because an over the limit deposit was made
+        /// </summary>
+        /// <param name="deposit"></param>
+        /// <returns></returns>
+        private bool UpdateBalanceAndFreezeAccount(Deposit deposit)
+        {
+            // Check if balance instance has been created for this user already
+            Balance balance = GetBalanceForAccountId(deposit.AccountId, deposit.Currency);
+
+            // If balance instance is not initiated for this currency for the current user, create now
+            if (balance == null)
+            {
+                balance = new Balance(deposit.Currency, deposit.AccountId);
+            }
+            // Otherwise, update the balance for the current user's currency
+            else
+            {
+                balance.AddPendingBalance(deposit.Amount);
+            }
+            balance.FreezeAccount();
+            _fundsPersistenceRepository.SaveOrUpdate(balance);
+            _fundsPersistenceRepository.SaveOrUpdate(deposit);
+
+            return true;
         }
 
         /// <summary>
@@ -279,10 +336,10 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         /// Gets all the Deposit Ledger transactions
         /// </summary>
         /// <returns></returns>
-        private IList<Ledger> GetDepositLedgers()
+        private IList<Ledger> GetDepositLedgers(Currency currency, AccountId accountId)
         {
             IList<Ledger> depositLedgers = new List<Ledger>();
-            IList<Ledger> allLedgers = _ledgerRepository.GetAllLedgers();
+            IList<Ledger> allLedgers = _ledgerRepository.GetLedgerByAccountIdAndCurrency(currency.Name, accountId);
             foreach (var ledger in allLedgers)
             {
                 if (ledger.LedgerType == LedgerType.Deposit)
@@ -301,22 +358,22 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         /// Gets all the Withdraw Ledger transactions
         /// </summary>
         /// <returns></returns>
-        private IList<Ledger> GetWithdrawalLedgers()
+        private IList<Withdraw> GetWithdrawalLedgers(Currency currency, AccountId accountId)
         {
-            IList<Ledger> withdrawLedgers = new List<Ledger>();
-            IList<Ledger> allLedgers = _ledgerRepository.GetAllLedgers();
-            foreach (var ledger in allLedgers)
+            IList<Withdraw> withdrawals = new List<Withdraw>();
+            return _withdrawRepository.GetWithdrawByCurrencyAndAccountId(currency.Name, accountId);
+            /*foreach (var ledger in allWithdrawals)
             {
                 if (ledger.LedgerType == LedgerType.Withdrawal)
                 {
-                    withdrawLedgers.Add(ledger);
+                    withdrawals.Add(ledger);
                 }
             }
-            if (!withdrawLedgers.Any())
+            if (!withdrawals.Any())
             {
-                withdrawLedgers = null;
+                withdrawals = null;
             }
-            return withdrawLedgers;
+            return withdrawals;*/
         }
 
         /// <summary>

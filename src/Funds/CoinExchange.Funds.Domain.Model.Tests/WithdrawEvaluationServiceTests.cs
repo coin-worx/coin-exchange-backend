@@ -28,7 +28,7 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             decimal availableBalance = (5000/midpoint) + 100;
             decimal currentBalance = (5000/midpoint) + 100;
 
-            List<Ledger> ledgers = new List<Ledger>();
+            List<Withdraw> ledgers = new List<Withdraw>();
             WithdrawLimit withdrawLimit = new WithdrawLimit("Tier0", dailyLimit, monthlyLimit);
             bool evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(900, ledgers, 
                 withdrawLimit, bestBid, bestAsk, availableBalance, currentBalance);
@@ -58,7 +58,7 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             decimal availableBalance = (((1000 / bestBid) + (1000/bestAsk)) / 2 ) - 0.09m;
             decimal currentBalance = (((1000 / bestBid) + (1000 / bestAsk)) / 2) - 0.09m;
 
-            List<Ledger> ledgers = new List<Ledger>();
+            List<Withdraw> ledgers = new List<Withdraw>();
             WithdrawLimit withdrawLimit = new WithdrawLimit("Tier0", dailyLimit, monthlyLimit);
             bool evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(999, ledgers,
                 withdrawLimit, bestBid, bestAsk, availableBalance, currentBalance);
@@ -89,12 +89,13 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             decimal availableBalance = (((1000 / bestBid) + (1000 / bestAsk)) / 2) - 0.09m;
             decimal currentBalance = (((1000 / bestBid) + (1000 / bestAsk)) / 2) - 0.09m;
 
-            List<Ledger> ledgers = new List<Ledger>();
-            Ledger ledger = new Ledger("ledgerid1", DateTime.Now.AddDays(-40), LedgerType.Withdrawal, currency, 1.5m,
-                900, 0, 1.5m, null, null, withdrawId, null, accountId);
-            ledgers.Add(ledger);
+            List<Withdraw> withdraws = new List<Withdraw>();
+            Withdraw withdraw = new Withdraw(currency, "withdrawid123", DateTime.Now.AddDays(-40), WithdrawType.Default, 1.5m, 900, 
+                0.001m, TransactionStatus.Pending, accountId, new TransactionId("transactionid123"), 
+                new BitcoinAddress("bitcoin123"));
+            withdraws.Add(withdraw);
             WithdrawLimit withdrawLimit = new WithdrawLimit("Tier0", dailyLimit, monthlyLimit);
-            bool evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(999, ledgers,
+            bool evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(999, withdraws,
                 withdrawLimit, bestBid, bestAsk, availableBalance, currentBalance);
             Assert.IsFalse(evaluationResponse);
 
@@ -124,10 +125,11 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             decimal availableBalance = (((1000 / bestBid) + (1000 / bestAsk)) / 2) - 0.09m;
             decimal currentBalance = (((1000 / bestBid) + (1000 / bestAsk)) / 2) - 0.09m;
 
-            List<Ledger> ledgers = new List<Ledger>();
-            Ledger ledger = new Ledger("ledgerid1", DateTime.Now.AddDays(-29), LedgerType.Withdrawal, currency, 4500 * midpoint,
-                4500, 0, 1.5m, null, null, withdrawId, null, accountId);
-            ledgers.Add(ledger);
+            List<Withdraw> ledgers = new List<Withdraw>();
+            Withdraw withdraw = new Withdraw(currency, "withdrawid123", DateTime.Now.AddDays(-29), WithdrawType.Default,
+                4500/midpoint, 4500, 0.001m, TransactionStatus.Pending, accountId, new TransactionId("transactionid123"),
+                new BitcoinAddress("bitcoin123"));
+            ledgers.Add(withdraw);
             WithdrawLimit withdrawLimit = new WithdrawLimit("Tier0", dailyLimit, monthlyLimit);
             bool evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(600, ledgers,
                 withdrawLimit, bestBid, bestAsk, availableBalance, currentBalance);
@@ -174,15 +176,18 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             decimal availableBalance = (((1000 / bestBid) + (1000 / bestAsk)) / 2) - 0.09m;
             decimal currentBalance = (((1000 / bestBid) + (1000 / bestAsk)) / 2) - 0.09m;
 
-            List<Ledger> ledgers = new List<Ledger>();
-            Ledger ledger = new Ledger("ledgerid1", DateTime.Now.AddDays(-29), LedgerType.Withdrawal, currency, 4100 * midpoint,
-                4100, 0, currentBalance, null, null, withdrawId, null, accountId);
-            Ledger ledger2 = new Ledger("ledgerid1", DateTime.Now.AddMinutes(-5), LedgerType.Withdrawal, currency, 400 * midpoint,
-                400, 0, currentBalance, null, null, withdrawId, null, accountId);
-            ledgers.Add(ledger);
-            ledgers.Add(ledger2);
+            List<Withdraw> withdraws = new List<Withdraw>();
+            Withdraw withdraw = new Withdraw(currency, "withdrawid123", DateTime.Now.AddDays(-29), WithdrawType.Default,
+                4100 / midpoint, 4100, 0.001m, TransactionStatus.Pending, accountId, new TransactionId("transactionid123"),
+                new BitcoinAddress("bitcoin123"));
+            Withdraw withdraw2 = new Withdraw(currency, "withdrawid123", DateTime.Now.AddMinutes(-5), WithdrawType.Default,
+                400 / midpoint, 400, 0.001m, TransactionStatus.Pending, accountId, new TransactionId("transactionid123"),
+                new BitcoinAddress("bitcoin123"));
+            withdraws.Add(withdraw);
+            withdraws.Add(withdraw2);
+
             WithdrawLimit withdrawLimit = new WithdrawLimit("Tier0", dailyLimit, monthlyLimit);
-            bool evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(600, ledgers,
+            bool evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(600, withdraws,
                 withdrawLimit, bestBid, bestAsk, availableBalance, currentBalance);
             Assert.IsFalse(evaluationResponse);
 
@@ -196,7 +201,7 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             Assert.AreEqual(0, withdrawLimitEvaluationService.WithheldConverted);
 
             // Withdraw below the threshold limit
-            evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(500, ledgers,
+            evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(500, withdraws,
                 withdrawLimit, bestBid, bestAsk, availableBalance, currentBalance);
             Assert.IsTrue(evaluationResponse);
 
@@ -227,15 +232,18 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             decimal availableBalance = (((1000 / bestBid) + (1000 / bestAsk)) / 2) - 0.09m;
             decimal currentBalance = (((1000 / bestBid) + (1000 / bestAsk)) / 2) - 0.09m;
 
-            List<Ledger> ledgers = new List<Ledger>();
-            Ledger ledger = new Ledger("ledgerid1", DateTime.Now.AddDays(-29), LedgerType.Withdrawal, currency, 4100 * midpoint,
-                4100, 0, currentBalance, null, null, withdrawId, null, accountId);
-            Ledger ledger2 = new Ledger("ledgerid12", DateTime.Now.AddMinutes(-5), LedgerType.Withdrawal, currency, 400 * midpoint,
-                400, 0, currentBalance, null, null, withdrawId, null, accountId);
-            ledgers.Add(ledger);
-            ledgers.Add(ledger2);
+            List<Withdraw> withdraws = new List<Withdraw>();
+            Withdraw withdraw = new Withdraw(currency, "withdrawid123", DateTime.Now.AddDays(-29), WithdrawType.Default,
+                4100 / midpoint, 4100, 0.001m, TransactionStatus.Pending, accountId, new TransactionId("transactionid123"),
+                new BitcoinAddress("bitcoin123"));
+            Withdraw withdraw2 = new Withdraw(currency, "withdrawid123", DateTime.Now.AddMinutes(-5), WithdrawType.Default,
+                400 / midpoint, 400, 0.001m, TransactionStatus.Pending, accountId, new TransactionId("transactionid123"),
+                new BitcoinAddress("bitcoin123"));
+            withdraws.Add(withdraw);
+            withdraws.Add(withdraw2);
+
             WithdrawLimit withdrawLimit = new WithdrawLimit("Tier0", dailyLimit, monthlyLimit);
-            bool evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(600, ledgers,
+            bool evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(600, withdraws,
                 withdrawLimit, bestBid, bestAsk, availableBalance, currentBalance);
             Assert.IsFalse(evaluationResponse);
 
@@ -249,7 +257,7 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             Assert.AreEqual(0, withdrawLimitEvaluationService.WithheldConverted);
 
             // Withdraw below the threshold limit
-            evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(500, ledgers,
+            evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(500, withdraws,
                 withdrawLimit, bestBid, bestAsk, availableBalance, currentBalance);
             Assert.IsTrue(evaluationResponse);
 
@@ -280,15 +288,18 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             decimal availableBalance = (((1000 / bestBid) + (1000 / bestAsk)) / 2) - 0.09m;
             decimal currentBalance = (((1000 / bestBid) + (1000 / bestAsk)) / 2) - 0.09m;
 
-            List<Ledger> ledgers = new List<Ledger>();
-            Ledger ledger = new Ledger("ledgerid1", DateTime.Now.AddDays(-29), LedgerType.Withdrawal, currency, 3500 * midpoint,
-                3500, 0, currentBalance, null, null, withdrawId, null, accountId);
-            Ledger ledger2 = new Ledger("ledgerid2", DateTime.Now.AddMinutes(-5), LedgerType.Withdrawal, currency, 500 * midpoint,
-                500, 0, currentBalance, null, null, withdrawId, null, accountId);
-            ledgers.Add(ledger);
-            ledgers.Add(ledger2);
+            List<Withdraw> withdraws = new List<Withdraw>();
+            Withdraw withdraw = new Withdraw(currency, "withdrawid123", DateTime.Now.AddDays(-29), WithdrawType.Default,
+                3500 / midpoint, 3500, 0.001m, TransactionStatus.Pending, accountId, new TransactionId("transactionid123"),
+                new BitcoinAddress("bitcoin123"));
+            Withdraw withdraw2 = new Withdraw(currency, "withdrawid123", DateTime.Now.AddMinutes(-5), WithdrawType.Default,
+                500 / midpoint, 500, 0.001m, TransactionStatus.Pending, accountId, new TransactionId("transactionid123"),
+                new BitcoinAddress("bitcoin123"));
+            withdraws.Add(withdraw);
+            withdraws.Add(withdraw2);
+
             WithdrawLimit withdrawLimit = new WithdrawLimit("Tier0", dailyLimit, monthlyLimit);
-            bool evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(600, ledgers,
+            bool evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(600, withdraws,
                 withdrawLimit, bestBid, bestAsk, availableBalance, currentBalance);
             Assert.IsFalse(evaluationResponse);
 
@@ -302,7 +313,7 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             Assert.AreEqual(0, withdrawLimitEvaluationService.WithheldConverted);
 
             // Withdraw below the threshold limit
-            evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(500, ledgers,
+            evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(500, withdraws,
                 withdrawLimit, bestBid, bestAsk, availableBalance, currentBalance);
             Assert.IsTrue(evaluationResponse);
 
@@ -333,13 +344,14 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             decimal availableBalance = (((1000 / bestBid) + (1000 / bestAsk)) / 2) - 0.09m;
             decimal currentBalance = (((1000 / bestBid) + (1000 / bestAsk)) / 2) - 0.09m;
 
-            List<Ledger> ledgers = new List<Ledger>();
-            Ledger ledger = new Ledger("ledgerid1", DateTime.Now.AddMinutes(-5), LedgerType.Withdrawal, currency, 500 * midpoint,
-                500, 0, currentBalance, null, null, withdrawId, null, accountId);
-            
-            ledgers.Add(ledger);
+            List<Withdraw> withdraws = new List<Withdraw>();
+            Withdraw withdraw = new Withdraw(currency, "withdrawid123", DateTime.Now.AddMinutes(-5), WithdrawType.Default,
+                500 / midpoint, 500, 0.001m, TransactionStatus.Pending, accountId, new TransactionId("transactionid123"),
+                new BitcoinAddress("bitcoin123"));
+            withdraws.Add(withdraw);
+
             WithdrawLimit withdrawLimit = new WithdrawLimit("Tier0", dailyLimit, monthlyLimit);
-            bool evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(600, ledgers,
+            bool evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(600, withdraws,
                 withdrawLimit, bestBid, bestAsk, availableBalance, currentBalance);
             Assert.IsFalse(evaluationResponse);
 
@@ -353,7 +365,7 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             Assert.AreEqual(0, withdrawLimitEvaluationService.WithheldConverted);
 
             // Withdraw below the threshold limit
-            evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(500, ledgers,
+            evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(500, withdraws,
                 withdrawLimit, bestBid, bestAsk, availableBalance, currentBalance);
             Assert.IsTrue(evaluationResponse);
 
@@ -384,15 +396,18 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             decimal availableBalance = (((1000 / bestBid) + (1000 / bestAsk)) / 2) - 0.09m;
             decimal currentBalance = (((1000 / bestBid) + (1000 / bestAsk)) / 2) - 0.09m;
 
-            List<Ledger> ledgers = new List<Ledger>();
-            Ledger ledger = new Ledger("ledgerid1", DateTime.Now.AddDays(-3), LedgerType.Withdrawal, currency, 4000 * midpoint,
-                4000, 0, currentBalance, null, null, withdrawId, null, accountId);            
-            Ledger ledger2 = new Ledger("ledgerid2", DateTime.Now.AddMinutes(-5), LedgerType.Withdrawal, currency, 500 * midpoint,
-                500, 0, currentBalance, null, null, withdrawId, null, accountId);
-            ledgers.Add(ledger);
-            ledgers.Add(ledger2);
+            List<Withdraw> withdraws = new List<Withdraw>();
+            Withdraw withdraw = new Withdraw(currency, "withdrawid123", DateTime.Now.AddDays(-3), WithdrawType.Default,
+                4000 / midpoint, 4000, 0.001m, TransactionStatus.Pending, accountId, new TransactionId("transactionid123"),
+                new BitcoinAddress("bitcoin123"));
+            Withdraw withdraw2 = new Withdraw(currency, "withdrawid123", DateTime.Now.AddMinutes(-5), WithdrawType.Default,
+                500 / midpoint, 500, 0.001m, TransactionStatus.Pending, accountId, new TransactionId("transactionid123"),
+                new BitcoinAddress("bitcoin123"));
+            withdraws.Add(withdraw);
+            withdraws.Add(withdraw2);
+
             WithdrawLimit withdrawLimit = new WithdrawLimit("Tier0", dailyLimit, monthlyLimit);
-            bool evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(600, ledgers,
+            bool evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(600, withdraws,
                 withdrawLimit, bestBid, bestAsk, availableBalance, currentBalance);
             Assert.IsFalse(evaluationResponse);
 
@@ -406,7 +421,7 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             Assert.AreEqual(0, withdrawLimitEvaluationService.WithheldConverted);
 
             // Withdraw below the threshold limit
-            evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(500, ledgers,
+            evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(500, withdraws,
                 withdrawLimit, bestBid, bestAsk, availableBalance, currentBalance);
             Assert.IsTrue(evaluationResponse);
 
@@ -439,12 +454,14 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             // Amount that can be safely withdrawn
             decimal safeAmount = ConvertCurrencyToUsd(bestBid, bestAsk, availableBalance);
 
-            List<Ledger> ledgers = new List<Ledger>();
-            Ledger ledger = new Ledger("ledgerid1", DateTime.Now.AddDays(-29), LedgerType.Withdrawal, currency, 4500 * midpoint,
-                4500, 0, 1.5m, null, null, withdrawId, null, accountId);
-            ledgers.Add(ledger);
+            List<Withdraw> withdraws = new List<Withdraw>();
+            Withdraw withdraw = new Withdraw(currency, "withdrawid123", DateTime.Now.AddDays(-29), WithdrawType.Default,
+                4500 / midpoint, 4500, 0.001m, TransactionStatus.Pending, accountId, new TransactionId("transactionid123"),
+                new BitcoinAddress("bitcoin123"));
+            withdraws.Add(withdraw);
+
             WithdrawLimit withdrawLimit = new WithdrawLimit("Tier0", dailyLimit, monthlyLimit);
-            bool evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(500, ledgers,
+            bool evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(500, withdraws,
                 withdrawLimit, bestBid, bestAsk, availableBalance, currentBalance);
             Assert.IsFalse(evaluationResponse);
 
@@ -459,7 +476,7 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             Assert.AreEqual(0, withdrawLimitEvaluationService.WithheldConverted);
 
             // Withdraw below the threshold limit
-            evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(safeAmount, ledgers,
+            evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(safeAmount, withdraws,
                 withdrawLimit, bestBid, bestAsk, availableBalance, currentBalance);
             Assert.IsTrue(evaluationResponse);
 
@@ -493,15 +510,18 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             // Amount that can be safely withdrawn
             decimal safeAmount = ConvertCurrencyToUsd(bestBid, bestAsk, availableBalance);
 
-            List<Ledger> ledgers = new List<Ledger>();
-            Ledger ledger = new Ledger("ledgerid1", DateTime.Now.AddDays(-29), LedgerType.Withdrawal, currency, 4100 * midpoint,
-                4100, 0, 1.5m, null, null, withdrawId, null, accountId);
-            Ledger ledger2 = new Ledger("ledgerid2", DateTime.Now.AddMinutes(-29), LedgerType.Withdrawal, currency, 400 * midpoint,
-                400, 0, 1.5m, null, null, withdrawId, null, accountId);
-            ledgers.Add(ledger);
-            ledgers.Add(ledger2);
+            List<Withdraw> withdraws = new List<Withdraw>();
+            Withdraw withdraw = new Withdraw(currency, "withdrawid123", DateTime.Now.AddDays(-29), WithdrawType.Default,
+                4100 / midpoint, 4100, 0.001m, TransactionStatus.Pending, accountId, new TransactionId("transactionid123"),
+                new BitcoinAddress("bitcoin123"));
+            Withdraw withdraw2 = new Withdraw(currency, "withdrawid123", DateTime.Now.AddMinutes(-29), WithdrawType.Default,
+                400 / midpoint, 400, 0.001m, TransactionStatus.Pending, accountId, new TransactionId("transactionid123"),
+                new BitcoinAddress("bitcoin123"));
+            withdraws.Add(withdraw);
+            withdraws.Add(withdraw2);
+
             WithdrawLimit withdrawLimit = new WithdrawLimit("Tier0", dailyLimit, monthlyLimit);
-            bool evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(500, ledgers,
+            bool evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(500, withdraws,
                 withdrawLimit, bestBid, bestAsk, availableBalance, currentBalance);
             Assert.IsFalse(evaluationResponse);
 
@@ -516,7 +536,7 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             Assert.AreEqual(0, withdrawLimitEvaluationService.WithheldConverted);
 
             // Withdraw below the threshold limit
-            evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(safeAmount-10, ledgers,
+            evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(safeAmount-10, withdraws,
                 withdrawLimit, bestBid, bestAsk, availableBalance, currentBalance);
             Assert.IsTrue(evaluationResponse);
 
@@ -550,15 +570,17 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             // Amount that can be safely withdrawn
             decimal safeAmount = ConvertCurrencyToUsd(bestBid, bestAsk, availableBalance);
 
-            List<Ledger> ledgers = new List<Ledger>();
-            Ledger ledger = new Ledger("ledgerid1", DateTime.Now.AddDays(-29), LedgerType.Withdrawal, currency, 3500 * midpoint,
-                3500, 0, 1.5m, null, null, withdrawId, null, accountId);
-            Ledger ledger2 = new Ledger("ledgerid2", DateTime.Now.AddMinutes(-29), LedgerType.Withdrawal, currency, 500 * midpoint,
-                500, 0, 1.5m, null, null, withdrawId, null, accountId);
-            ledgers.Add(ledger);
-            ledgers.Add(ledger2);
+            List<Withdraw> withdraws = new List<Withdraw>();
+            Withdraw withdraw = new Withdraw(currency, "withdrawid123", DateTime.Now.AddDays(-29), WithdrawType.Default,
+                3500 / midpoint, 3500, 0.001m, TransactionStatus.Pending, accountId, new TransactionId("transactionid123"),
+                new BitcoinAddress("bitcoin123"));
+            Withdraw withdraw2 = new Withdraw(currency, "withdrawid123", DateTime.Now.AddMinutes(-29), WithdrawType.Default,
+                500 / midpoint, 500, 0.001m, TransactionStatus.Pending, accountId, new TransactionId("transactionid123"),
+                new BitcoinAddress("bitcoin123"));
+            withdraws.Add(withdraw);
+            withdraws.Add(withdraw2);
             WithdrawLimit withdrawLimit = new WithdrawLimit("Tier0", dailyLimit, monthlyLimit);
-            bool evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(500, ledgers,
+            bool evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(500, withdraws,
                 withdrawLimit, bestBid, bestAsk, availableBalance, currentBalance);
             Assert.IsFalse(evaluationResponse);
 
@@ -573,7 +595,7 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             Assert.AreEqual(0, withdrawLimitEvaluationService.WithheldConverted);
 
             // Withdraw below the threshold limit
-            evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(safeAmount - 10, ledgers,
+            evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(safeAmount - 10, withdraws,
                 withdrawLimit, bestBid, bestAsk, availableBalance, currentBalance);
             Assert.IsTrue(evaluationResponse);
 
@@ -607,15 +629,14 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             // Amount that can be safely withdrawn
             decimal safeAmount = ConvertCurrencyToUsd(bestBid, bestAsk, availableBalance);
 
-            List<Ledger> ledgers = new List<Ledger>();
-            Ledger ledger = new Ledger("ledgerid1", DateTime.Now.AddDays(-29), LedgerType.Withdrawal, currency, 0,
-                0, 0, 1.5m, null, null, withdrawId, null, accountId);
-            Ledger ledger2 = new Ledger("ledgerid2", DateTime.Now.AddMinutes(-29), LedgerType.Withdrawal, currency, 500 * midpoint,
-                500, 0, 1.5m, null, null, withdrawId, null, accountId);
-            ledgers.Add(ledger);
-            ledgers.Add(ledger2);
+            List<Withdraw> withdraws = new List<Withdraw>();
+            Withdraw withdraw = new Withdraw(currency, "withdrawid123", DateTime.Now.AddMinutes(-29), WithdrawType.Default,
+                500 / midpoint, 500, 0.001m, TransactionStatus.Pending, accountId, new TransactionId("transactionid123"),
+                new BitcoinAddress("bitcoin123"));
+            withdraws.Add(withdraw);
+
             WithdrawLimit withdrawLimit = new WithdrawLimit("Tier0", dailyLimit, monthlyLimit);
-            bool evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(500, ledgers,
+            bool evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(500, withdraws,
                 withdrawLimit, bestBid, bestAsk, availableBalance, currentBalance);
             Assert.IsFalse(evaluationResponse);
 
@@ -630,7 +651,7 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             Assert.AreEqual(0, withdrawLimitEvaluationService.WithheldConverted);
 
             // Withdraw below the threshold limit
-            evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(safeAmount - 10, ledgers,
+            evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(safeAmount - 10, withdraws,
                 withdrawLimit, bestBid, bestAsk, availableBalance, currentBalance);
             Assert.IsTrue(evaluationResponse);
 
@@ -664,15 +685,18 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             // Amount that can be safely withdrawn
             decimal safeAmount = ConvertCurrencyToUsd(bestBid, bestAsk, availableBalance);
 
-            List<Ledger> ledgers = new List<Ledger>();
-            Ledger ledger = new Ledger("ledgerid1", DateTime.Now.AddDays(-29), LedgerType.Withdrawal, currency, 4000 * midpoint,
-                4000, 0, 1.5m, null, null, withdrawId, null, accountId);
-            Ledger ledger2 = new Ledger("ledgerid2", DateTime.Now.AddMinutes(-29), LedgerType.Withdrawal, currency, 500 * midpoint,
-                500, 0, 1.5m, null, null, withdrawId, null, accountId);
-            ledgers.Add(ledger);
-            ledgers.Add(ledger2);
+            List<Withdraw> withdraws = new List<Withdraw>();
+            Withdraw withdraw = new Withdraw(currency, "withdrawid123", DateTime.Now.AddDays(-29), WithdrawType.Default,
+                4000 / midpoint, 4000, 0.001m, TransactionStatus.Pending, accountId, new TransactionId("transactionid123"),
+                new BitcoinAddress("bitcoin123"));
+            Withdraw withdraw2 = new Withdraw(currency, "withdrawid123", DateTime.Now.AddMinutes(-29), WithdrawType.Default,
+                500 / midpoint, 500, 0.001m, TransactionStatus.Pending, accountId, new TransactionId("transactionid123"),
+                new BitcoinAddress("bitcoin123"));
+            withdraws.Add(withdraw);
+            withdraws.Add(withdraw2);
+
             WithdrawLimit withdrawLimit = new WithdrawLimit("Tier0", dailyLimit, monthlyLimit);
-            bool evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(500, ledgers,
+            bool evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(500, withdraws,
                 withdrawLimit, bestBid, bestAsk, availableBalance, currentBalance);
             Assert.IsFalse(evaluationResponse);
 
@@ -687,7 +711,7 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             Assert.AreEqual(0, withdrawLimitEvaluationService.WithheldConverted);
 
             // Withdraw below the threshold limit
-            evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(safeAmount - 10, ledgers,
+            evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(safeAmount - 10, withdraws,
                 withdrawLimit, bestBid, bestAsk, availableBalance, currentBalance);
             Assert.IsTrue(evaluationResponse);
 
@@ -717,9 +741,9 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             decimal availableBalance = (1000 / midpoint) + 100;
             decimal currentBalance = (1000 / midpoint) + 110;
 
-            List<Ledger> ledgers = new List<Ledger>();
+            List<Withdraw> withdraws = new List<Withdraw>();
             WithdrawLimit withdrawLimit = new WithdrawLimit("Tier0", dailyLimit, monthlyLimit);
-            bool evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(900, ledgers,
+            bool evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(900, withdraws,
                 withdrawLimit, bestBid, bestAsk, availableBalance, currentBalance);
             Assert.IsTrue(evaluationResponse);
 
@@ -748,11 +772,11 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             decimal availableBalance = (1000 / midpoint) - 1.5m;
             decimal currentBalance = (1000 / midpoint) - 1;
 
-            List<Ledger> ledgers = new List<Ledger>();
+            List<Withdraw> withdrawals = new List<Withdraw>();
             WithdrawLimit withdrawLimit = new WithdrawLimit("Tier0", dailyLimit, monthlyLimit);
 
             bool evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(
-                ConvertCurrencyToUsd(bestBid, bestAsk, currentBalance), ledgers, withdrawLimit, bestBid, bestAsk, 
+                ConvertCurrencyToUsd(bestBid, bestAsk, currentBalance), withdrawals, withdrawLimit, bestBid, bestAsk, 
                 availableBalance, currentBalance);
             Assert.IsFalse(evaluationResponse);
 
@@ -766,7 +790,7 @@ namespace CoinExchange.Funds.Domain.Model.Tests
                 withdrawLimitEvaluationService.WithheldConverted);
 
             evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(
-                ConvertCurrencyToUsd(bestBid, bestAsk, availableBalance), ledgers, withdrawLimit, bestBid, bestAsk, 
+                ConvertCurrencyToUsd(bestBid, bestAsk, availableBalance), withdrawals, withdrawLimit, bestBid, bestAsk, 
                 availableBalance, currentBalance);
             Assert.IsTrue(evaluationResponse);
 

@@ -44,6 +44,16 @@ namespace CoinExchange.Funds.Infrastructure.Persistence.NHibernate.NHibernate
         }
 
         [Transaction]
+        public List<Withdraw> GetWithdrawByCurrencyAndAccountId(string currency, AccountId accountId)
+        {
+            return CurrentSession.Query<Withdraw>()
+                .Where(x => x.Currency.Name == currency && x.AccountId.Value == accountId.Value)
+                .AsQueryable()
+                .OrderByDescending(x => x.DateTime)
+                .ToList();
+        }
+
+        [Transaction]
         public Withdraw GetWithdrawByWithdrawId(string withdrawId)
         {
             return CurrentSession.QueryOver<Withdraw>().Where(x => x.WithdrawId == withdrawId).SingleOrDefault();

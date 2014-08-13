@@ -15,7 +15,7 @@ namespace CoinExchange.Funds.Application.Tests
             throw new NotImplementedException();
         }
 
-        public bool EvaluateMaximumWithdrawLimit(decimal withdrawalAmountUsd, IList<Ledger> depositLedgers, WithdrawLimit withdrawLimit, decimal bestBidPrice, decimal bestAskPrice, decimal balance, decimal pendingBalance)
+        public bool EvaluateMaximumWithdrawLimit(decimal withdrawalAmountUsd, IList<Withdraw> depositLedgers, WithdrawLimit withdrawLimit, decimal bestBidPrice, decimal bestAskPrice, decimal balance, decimal pendingBalance)
         {
             throw new NotImplementedException();
         }

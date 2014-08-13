@@ -162,6 +162,32 @@ namespace CoinExchange.Funds.Domain.Model.BalanceAggregate
             return true;
         }
 
+        /// <summary>
+        /// Adds balance that cannot be added to the available or current balance at th moment, E.g., a deposit that 
+        /// is over the limit
+        /// </summary>
+        /// <param name="amount"></param>
+        /// <returns></returns>
+        public bool AddPendingBalance(decimal amount)
+        {
+            this.PendingBalance += amount;
+            return true;
+        }
+
+        /// <summary>
+        /// Freezes this account balance
+        /// </summary>
+        /// <returns></returns>
+        public bool FreezeAccount()
+        {
+            if (!IsFrozen)
+            {
+                IsFrozen = true;
+                return true;
+            }
+            return false;
+        }
+
         #endregion Methods
 
         #region Properties
@@ -216,6 +242,11 @@ namespace CoinExchange.Funds.Domain.Model.BalanceAggregate
             get { return _pendingTransactions; }
             set { _pendingTransactions = value; }
         }
+
+        /// <summary>
+        /// Whether this account balance is frozen or not
+        /// </summary>
+        public bool IsFrozen { get; private set; }
 
         #endregion Properties
     }

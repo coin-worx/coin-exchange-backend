@@ -32,7 +32,7 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
         /// <param name="availableBalance"></param>
         /// <param name="currentBalance"></param>
         /// <returns></returns>
-        public bool EvaluateMaximumWithdrawLimit(decimal withdrawAmountUsd, IList<Ledger> withdrawLedgers,
+        public bool EvaluateMaximumWithdrawLimit(decimal withdrawAmountUsd, IList<Withdraw> withdrawLedgers,
             WithdrawLimit withdrawLimit, decimal bestBidPrice, decimal bestAskPrice, decimal availableBalance, 
             decimal currentBalance)
         {
@@ -149,7 +149,7 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
         /// Sets the amount that has been used for daily and monthly Withdraw limits
         /// </summary>
         /// <returns></returns>
-        private void SetUsedLimitsUsd(IList<Ledger> withdrawLedgers)
+        private void SetUsedLimitsUsd(IList<Withdraw> withdrawLedgers)
         {
             decimal tempDailyLimitUsed = 0;
             decimal tempMonthlyLimitUsed = 0;

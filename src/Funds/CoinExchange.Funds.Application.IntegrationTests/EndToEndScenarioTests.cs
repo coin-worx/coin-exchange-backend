@@ -223,7 +223,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             // Withdraw will fail because the amount requested is greater than the maximum limit threshold
             validateFundsForWithdrawal = fundsValidationService.ValidateFundsForWithdrawal(user1Account, 
                 baseCurrency, 1.6m, new TransactionId("transaction123"), new BitcoinAddress("bitcoin123"));
-            Assert.IsNotNull(validateFundsForWithdrawal);
+            Assert.IsNull(validateFundsForWithdrawal);
 
             // XBT for User Account 1
             balance = balanceRepository.GetBalanceByCurrencyAndAccountId(baseCurrency, user1Account);
@@ -231,6 +231,217 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             Assert.AreEqual(xbtDepositAmount + volume - withdrawAmount - withdrawFee.Fee, balance.AvailableBalance);
             Assert.AreEqual(xbtDepositAmount + volume - withdrawAmount - withdrawFee.Fee, balance.CurrentBalance);
             Assert.AreEqual(0, balance.PendingBalance);
+        }
+
+        [Test]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void DepositAndWithdrawTest1_TestsByMakingDepositsAndWIthdrawalsRandomly_VerifiesThroughDatabasequeriesAndReturnValues()
+        {
+            // Scenario: Withdraw(fail due to insufficient balance) -->
+            // Deposit(Confirm) --> Withdraw(Pending) --> Withdraw(Fail due to insufficient available and enough 
+            // pending balance) --> Withdraw(Success) --> Deposit(Fail due to over the limit)
+            IFundsValidationService fundsValidationService = (IFundsValidationService)ContextRegistry.GetContext()["FundsValidationService"];
+            IFundsPersistenceRepository fundsPersistenceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];
+            IBalanceRepository balanceRepository = (IBalanceRepository)ContextRegistry.GetContext()["BalanceRepository"];
+            IDepositIdGeneratorService depositIdGeneratorService = (IDepositIdGeneratorService)ContextRegistry.GetContext()["DepositIdGeneratorService"];
+            IWithdrawFeesRepository withdrawFeesRepository = (IWithdrawFeesRepository)ContextRegistry.GetContext()["WithdrawFeesRepository"];
+
+            AccountId accountId = new AccountId("accountid123");
+            Currency currency = new Currency("XBT", true);
+
+            Deposit deposit = new Deposit(currency, depositIdGeneratorService.GenerateId(), DateTime.Now,
+                                          DepositType.Default, 1.4m, 0, TransactionStatus.Pending, accountId,
+                                          new TransactionId("123"), new BitcoinAddress("bitcoin123"));
+            deposit.IncrementConfirmations(7);
+            fundsPersistenceRepository.SaveOrUpdate(deposit);
+
+            // Retrieve balance
+            Balance balance = balanceRepository.GetBalanceByCurrencyAndAccountId(currency, accountId);
+            Assert.IsNull(balance);
+            bool depositResponse = fundsValidationService.DepositConfirmed(deposit);
+            Assert.IsTrue(depositResponse);
+
+            // Check balance
+            balance = balanceRepository.GetBalanceByCurrencyAndAccountId(currency, accountId);
+            Assert.IsNotNull(balance);
+            Assert.AreEqual(deposit.Amount, balance.CurrentBalance);
+            Assert.AreEqual(deposit.Amount, balance.AvailableBalance);
+            Assert.AreEqual(balance.PendingBalance, 0);
+
+            WithdrawFees withdrawFee = withdrawFeesRepository.GetWithdrawFeesByCurrencyName(currency.Name);
+
+            // Withdraw
+            Withdraw withdrawal = fundsValidationService.ValidateFundsForWithdrawal(accountId, currency,
+                1.3M, new TransactionId("transaction123"), new BitcoinAddress("bitcoin123"));
+            Assert.IsNotNull(withdrawal);
+            Assert.AreEqual(TransactionStatus.Pending, withdrawal.Status);
+
+            // Check balance
+            balance = balanceRepository.GetBalanceByCurrencyAndAccountId(currency, accountId);
+            Assert.IsNotNull(balance);
+            Assert.AreEqual(Math.Round(1.4M - 1.3M - withdrawFee.Fee, 5), Math.Round(balance.AvailableBalance, 5));
+            Assert.AreEqual(Math.Round(1.4M, 5), Math.Round(balance.CurrentBalance, 5));
+            Assert.AreEqual(1.3m + withdrawFee.Fee, balance.PendingBalance);
+
+            // Withdraw # 1 Confirmed
+            bool withdrawalExecuted = fundsValidationService.WithdrawalExecuted(withdrawal);
+            Assert.IsTrue(withdrawalExecuted);
+            Assert.AreEqual(TransactionStatus.Confirmed, withdrawal.Status);
+            
+            // Check balance
+            balance = balanceRepository.GetBalanceByCurrencyAndAccountId(currency, accountId);
+            Assert.IsNotNull(balance);
+            Assert.AreEqual(Math.Round(1.4M - 1.3M - withdrawFee.Fee, 5), Math.Round(balance.CurrentBalance, 5));
+            Assert.AreEqual(Math.Round(1.4M - 1.3M - withdrawFee.Fee, 5), Math.Round(balance.AvailableBalance, 5));
+            Assert.AreEqual(0, balance.PendingBalance);
+
+            // Withdraw # 2: Exception Expected
+            withdrawal = fundsValidationService.ValidateFundsForWithdrawal(accountId, currency,
+                0.7M, new TransactionId("transaction123"), new BitcoinAddress("bitcoin123"));
+            Assert.IsNull(withdrawal);
+
+            // Check balance
+            balance = balanceRepository.GetBalanceByCurrencyAndAccountId(currency, accountId);
+            Assert.IsNotNull(balance);
+            Assert.AreEqual(Math.Round(1.4M - 1.3M - withdrawFee.Fee, 5), Math.Round(balance.CurrentBalance, 5));
+            Assert.AreEqual(Math.Round(1.4M - 1.3M - withdrawFee.Fee, 5), Math.Round(balance.AvailableBalance, 5));
+            Assert.AreEqual(0, balance.PendingBalance);
+
+            // Withdraw # 3
+            withdrawal = fundsValidationService.ValidateFundsForWithdrawal(accountId, currency,
+                0.098M, new TransactionId("transaction123"), new BitcoinAddress("bitcoin123"));
+            Assert.IsNotNull(withdrawal);
+            Assert.AreEqual(TransactionStatus.Pending, withdrawal.Status);
+            balance = balanceRepository.GetBalanceByCurrencyAndAccountId(currency, accountId);
+            Assert.IsNotNull(balance);
+            Assert.AreEqual(Math.Round(1.4M - 1.3M - 0.1M - (withdrawFee.Fee*2), 5), Math.Round(balance.AvailableBalance, 5));
+            Assert.AreEqual(Math.Round(1.4M - 1.3M - withdrawFee.Fee, 5), Math.Round(balance.CurrentBalance, 5));
+            Assert.AreEqual(0.1M + withdrawFee.Fee, balance.PendingBalance);
+
+            // Withdraw # 3 Confirmed
+            withdrawalExecuted = fundsValidationService.WithdrawalExecuted(withdrawal);
+            Assert.IsTrue(withdrawalExecuted);
+            Assert.AreEqual(TransactionStatus.Confirmed, withdrawal.Status);
+
+            // Check balance
+            balance = balanceRepository.GetBalanceByCurrencyAndAccountId(currency, accountId);
+            Assert.IsNotNull(balance);
+            Assert.AreEqual(Math.Round(1.4M - 1.3M - 0.1M - (withdrawFee.Fee*2), 5), Math.Round(balance.CurrentBalance, 5));
+            Assert.AreEqual(Math.Round(1.4M - 1.3M - 0.1M - (withdrawFee.Fee*2), 5), Math.Round(balance.AvailableBalance, 5));
+            Assert.AreEqual(0, balance.PendingBalance);
+        }
+
+        [Test]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void DepositAndWithdrawTest2_TestsByMakingDepositsAndWIthdrawalsRandomly_VerifiesThroughDatabasequeriesAndReturnValues()
+        {
+            // Scenario: Withdraw(fail due to insufficient balance) -->
+            // Deposit(Confirm) --> Withdraw(Pending) --> Withdraw(Fail due to insufficient available and enough 
+            // pending balance) --> Withdraw(Success) --> Deposit(Fail due to over the limit)
+            IFundsValidationService fundsValidationService = (IFundsValidationService)ContextRegistry.GetContext()["FundsValidationService"];
+            IFundsPersistenceRepository fundsPersistenceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];
+            IBalanceRepository balanceRepository = (IBalanceRepository)ContextRegistry.GetContext()["BalanceRepository"];
+            IDepositIdGeneratorService depositIdGeneratorService = (IDepositIdGeneratorService)ContextRegistry.GetContext()["DepositIdGeneratorService"];
+            IWithdrawFeesRepository withdrawFeesRepository = (IWithdrawFeesRepository)ContextRegistry.GetContext()["WithdrawFeesRepository"];
+
+            AccountId accountId = new AccountId("accountid123");
+            Currency currency = new Currency("XBT", true);
+
+            Deposit deposit = new Deposit(currency, depositIdGeneratorService.GenerateId(), DateTime.Now,
+                                          DepositType.Default, 1.4m, 0, TransactionStatus.Pending, accountId,
+                                          new TransactionId("123"), new BitcoinAddress("bitcoin123"));
+            deposit.IncrementConfirmations(7);
+            fundsPersistenceRepository.SaveOrUpdate(deposit);
+
+            // Retrieve balance
+            Balance balance = balanceRepository.GetBalanceByCurrencyAndAccountId(currency, accountId);
+            Assert.IsNull(balance);
+            bool depositResponse = fundsValidationService.DepositConfirmed(deposit);
+            Assert.IsTrue(depositResponse);
+
+            // Check balance
+            balance = balanceRepository.GetBalanceByCurrencyAndAccountId(currency, accountId);
+            Assert.IsNotNull(balance);
+            Assert.AreEqual(deposit.Amount, balance.CurrentBalance);
+            Assert.AreEqual(deposit.Amount, balance.AvailableBalance);
+            Assert.AreEqual(balance.PendingBalance, 0);
+
+            WithdrawFees withdrawFee = withdrawFeesRepository.GetWithdrawFeesByCurrencyName(currency.Name);
+
+            // Withdraw
+            Withdraw withdrawal = fundsValidationService.ValidateFundsForWithdrawal(accountId, currency,
+                1.3M, new TransactionId("transaction123"), new BitcoinAddress("bitcoin123"));
+            Assert.IsNotNull(withdrawal);
+            Assert.AreEqual(TransactionStatus.Pending, withdrawal.Status);
+
+            // Check balance
+            balance = balanceRepository.GetBalanceByCurrencyAndAccountId(currency, accountId);
+            Assert.IsNotNull(balance);
+            Assert.AreEqual(Math.Round(1.4M - 1.3M - withdrawFee.Fee, 5), Math.Round(balance.AvailableBalance, 5));
+            Assert.AreEqual(Math.Round(1.4M, 5), Math.Round(balance.CurrentBalance, 5));
+            Assert.AreEqual(1.3m + withdrawFee.Fee, balance.PendingBalance);
+
+            // Withdraw # 1 Confirmed
+            bool withdrawalExecuted = fundsValidationService.WithdrawalExecuted(withdrawal);
+            Assert.IsTrue(withdrawalExecuted);
+            Assert.AreEqual(TransactionStatus.Confirmed, withdrawal.Status);
+
+            // Check balance
+            balance = balanceRepository.GetBalanceByCurrencyAndAccountId(currency, accountId);
+            Assert.IsNotNull(balance);
+            Assert.AreEqual(Math.Round(1.4M - 1.3M - withdrawFee.Fee, 5), Math.Round(balance.CurrentBalance, 5));
+            Assert.AreEqual(Math.Round(1.4M - 1.3M - withdrawFee.Fee, 5), Math.Round(balance.AvailableBalance, 5));
+            Assert.AreEqual(0, balance.PendingBalance);
+
+            // Withdraw # 2: Exception Expected
+            withdrawal = fundsValidationService.ValidateFundsForWithdrawal(accountId, currency,
+                0.7M, new TransactionId("transaction123"), new BitcoinAddress("bitcoin123"));
+            Assert.IsNull(withdrawal);
+
+            // Check balance
+            balance = balanceRepository.GetBalanceByCurrencyAndAccountId(currency, accountId);
+            Assert.IsNotNull(balance);
+            Assert.AreEqual(Math.Round(1.4M - 1.3M - withdrawFee.Fee, 5), Math.Round(balance.CurrentBalance, 5));
+            Assert.AreEqual(Math.Round(1.4M - 1.3M - withdrawFee.Fee, 5), Math.Round(balance.AvailableBalance, 5));
+            Assert.AreEqual(0, balance.PendingBalance);
+
+            // Withdraw # 3
+            withdrawal = fundsValidationService.ValidateFundsForWithdrawal(accountId, currency,
+                0.098M, new TransactionId("transaction123"), new BitcoinAddress("bitcoin123"));
+            Assert.IsNotNull(withdrawal);
+            Assert.AreEqual(TransactionStatus.Pending, withdrawal.Status);
+            balance = balanceRepository.GetBalanceByCurrencyAndAccountId(currency, accountId);
+            Assert.IsNotNull(balance);
+            Assert.AreEqual(Math.Round(1.4M - 1.3M - 0.1M - (withdrawFee.Fee * 2), 5), Math.Round(balance.AvailableBalance, 5));
+            Assert.AreEqual(Math.Round(1.4M - 1.3M - withdrawFee.Fee, 5), Math.Round(balance.CurrentBalance, 5));
+            Assert.AreEqual(0.1M + withdrawFee.Fee, balance.PendingBalance);
+
+            // Withdraw # 3 Confirmed
+            withdrawalExecuted = fundsValidationService.WithdrawalExecuted(withdrawal);
+            Assert.IsTrue(withdrawalExecuted);
+            Assert.AreEqual(TransactionStatus.Confirmed, withdrawal.Status);
+
+            // Check balance
+            balance = balanceRepository.GetBalanceByCurrencyAndAccountId(currency, accountId);
+            Assert.IsNotNull(balance);
+            Assert.AreEqual(Math.Round(1.4M - 1.3M - 0.1M - (withdrawFee.Fee * 2), 5), Math.Round(balance.CurrentBalance, 5));
+            Assert.AreEqual(Math.Round(1.4M - 1.3M - 0.1M - (withdrawFee.Fee * 2), 5), Math.Round(balance.AvailableBalance, 5));
+            Assert.AreEqual(0, balance.PendingBalance);
+
+            // Over the limit Deposit
+            deposit = new Deposit(currency, depositIdGeneratorService.GenerateId(), DateTime.Now,
+                                          DepositType.Default, 1.4m, 0, TransactionStatus.Pending, accountId,
+                                          new TransactionId("123"), new BitcoinAddress("bitcoin123"));
+            deposit.IncrementConfirmations(7);
+            fundsPersistenceRepository.SaveOrUpdate(deposit);
+
+            fundsValidationService.DepositConfirmed(deposit);
+            // Check balance
+            balance = balanceRepository.GetBalanceByCurrencyAndAccountId(currency, accountId);
+            Assert.IsNotNull(balance);
+            Assert.AreEqual(Math.Round(1.4M - 1.3M - 0.1M - (withdrawFee.Fee * 2), 5), Math.Round(balance.CurrentBalance, 5));
+            Assert.AreEqual(Math.Round(1.4M - 1.3M - 0.1M - (withdrawFee.Fee * 2), 5), Math.Round(balance.AvailableBalance, 5));
+            Assert.IsTrue(balance.IsFrozen);
         }
 
         #endregion Complete Mixed Scenario Tests
@@ -289,7 +500,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             IWithdrawFeesRepository withdrawFeesRepository = (IWithdrawFeesRepository)ContextRegistry.GetContext()["WithdrawFeesRepository"];
             
             AccountId accountId = new AccountId("accountid123");
-            Currency currency = new Currency("XBT");
+            Currency currency = new Currency("XBT", true);
 
             // Deposit
             Deposit deposit = new Deposit(currency, depositIdGeneratorService.GenerateId(), DateTime.Now,

@@ -58,6 +58,7 @@
     <Compile Include="MockWithdrawIdGeneratorService.cs" />
     <Compile Include="MockWithdrawLimitEvaluationService.cs" />
     <Compile Include="MockWithdrawLimitRepository.cs" />
+    <Compile Include="MockWithdrawRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
