@@ -9,14 +9,42 @@ namespace CoinExchange.Funds.Application.Tests
 {
     public class MockWithdrawLimitRepository : IWithdrawLimitRepository
     {
+        IList<WithdrawLimit> _withdrawLimits = new List<WithdrawLimit>();
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:System.Object"/> class.
+        /// </summary>
+        public MockWithdrawLimitRepository()
+        {
+            WithdrawLimit withdrawLimit1 = new WithdrawLimit("Tier 0", 1000, 5000);
+            WithdrawLimit withdrawLimit2 = new WithdrawLimit("Tier 1", 1000, 5000);
+
+            _withdrawLimits.Add(withdrawLimit1);
+            _withdrawLimits.Add(withdrawLimit2);
+        }
+
         public WithdrawLimit GetWithdrawLimitByTierLevel(string tierLevel)
         {
-            throw new NotImplementedException();
+            foreach (var withdrawLimit in _withdrawLimits)
+            {
+                if (withdrawLimit.TierLevel == tierLevel)
+                {
+                    return withdrawLimit;
+                }
+            }
+            return null;
         }
 
         public WithdrawLimit GetWithdrawLimitById(int id)
         {
-            throw new NotImplementedException();
+            foreach (var withdrawLimit in _withdrawLimits)
+            {
+                if (withdrawLimit.Id == id)
+                {
+                    return withdrawLimit;
+                }
+            }
+            return null;
         }
     }
 }

@@ -66,7 +66,7 @@ namespace CoinExchange.Funds.Domain.Model.Services
         /// <param name="sellOrderId"></param>
         /// <returns></returns>
         bool TradeExecuted(string baseCurrency, string quoteCurrency, decimal tradeVolume, decimal price,
-            DateTime executionDateTime, string tradeId, string buyAccountId, string sellAccountId, string buyOrderId,
+            DateTime executionDateTime, string tradeId, int buyAccountId, int sellAccountId, string buyOrderId,
             string sellOrderId);
 
         /// <summary>

@@ -7,6 +7,7 @@ namespace CoinExchange.Funds.Application.Tests
 {
     public class MockLedgerRepository : ILedgerRepository
     {
+        private IList<Ledger> _ledgers = new List<Ledger>(); 
         public Ledger GetLedgerById(int id)
         {
             throw new NotImplementedException();
@@ -24,7 +25,15 @@ namespace CoinExchange.Funds.Application.Tests
 
         public IList<Ledger> GetLedgerByAccountIdAndCurrency(string currency, AccountId accountId)
         {
-            throw new NotImplementedException();
+            IList<Ledger> currentLedgers = new List<Ledger>();
+            foreach (var ledger in _ledgers)
+            {
+                if (ledger.Currency.Name == currency && ledger.AccountId.Value == accountId.Value)
+                {
+                    currentLedgers.Add(ledger);
+                }
+            }
+            return currentLedgers;
         }
 
         public Ledger GetLedgerByLedgerId(string ledgerId)
@@ -60,6 +69,11 @@ namespace CoinExchange.Funds.Application.Tests
         public IList<Ledger> GetAllLedgers()
         {
             throw new NotImplementedException();
+        }
+
+        public void AddLedger(Ledger ledger)
+        {
+            _ledgers.Add(ledger);
         }
     }
 }

@@ -7,11 +7,11 @@ using CoinExchange.Funds.Domain.Model.Services;
 
 namespace CoinExchange.Funds.Application.Tests
 {
-    public class MockBboRetrievalService : IBboRetrievalService
+    public class MockBboRetrievalService : IBboCrossContextService
     {
         public Tuple<decimal, decimal> GetBestBidBestAsk(string baseCurrency, string quoteCurrency)
         {
-            throw new NotImplementedException();
+            return new Tuple<decimal, decimal>(580, 590);
         }
     }
 }

@@ -40,7 +40,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             ITransactionService transactionService = (ITransactionService)ContextRegistry.GetContext()["TransactionService"];
             ILedgerRepository ledgerRepository = (ILedgerRepository)ContextRegistry.GetContext()["LedgerRepository"];
             Deposit deposit = new Deposit(new Currency("LTC"), "depositid123", DateTime.Now, DepositType.Default, 300, 0, TransactionStatus.Pending,
-                new AccountId("accountid123"), new TransactionId("transaction123"), new BitcoinAddress("bitcoin123"));
+                new AccountId(123), new TransactionId("transaction123"), new BitcoinAddress("bitcoin123"));
             deposit.IncrementConfirmations();
             deposit.IncrementConfirmations();
             deposit.IncrementConfirmations();
@@ -50,7 +50,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             deposit.IncrementConfirmations();
             bool response = transactionService.CreateDepositTransaction(deposit, 300);
             Assert.IsTrue(response);
-            Ledger depositTransaction1 = ledgerRepository.GetLedgerByAccountId(new AccountId("accountid123")).Single();
+            Ledger depositTransaction1 = ledgerRepository.GetLedgerByAccountId(new AccountId(123)).Single();
             Assert.IsNotNull(depositTransaction1);
             Assert.AreEqual(deposit.Currency.Name, depositTransaction1.Currency.Name);
             Assert.AreEqual(deposit.Amount, depositTransaction1.Amount);
@@ -66,12 +66,12 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             ILedgerRepository ledgerRepository = (ILedgerRepository)ContextRegistry.GetContext()["LedgerRepository"];
             
             Deposit deposit = new Deposit(new Currency("LTC"), "depositid123", DateTime.Now, DepositType.Default, 300, 0, TransactionStatus.Pending, 
-                new AccountId("accountid123"), new TransactionId("transaction123"), new BitcoinAddress("bitcoin123"));
+                new AccountId(123), new TransactionId("transaction123"), new BitcoinAddress("bitcoin123"));
             deposit.IncrementConfirmations(7);
 
             bool response = transactionService.CreateDepositTransaction(deposit, 300);
             Assert.IsTrue(response);
-            Ledger depositTransaction1 = ledgerRepository.GetLedgerByAccountId(new AccountId("accountid123")).Single();
+            Ledger depositTransaction1 = ledgerRepository.GetLedgerByAccountId(new AccountId(123)).Single();
             Assert.IsNotNull(depositTransaction1);
             List<Ledger> ledgerByAccountId = ledgerRepository.GetLedgerByAccountId(deposit.AccountId);
             // There will be no ledgers yet as the deposit did not had 7 confirmations
@@ -80,7 +80,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             Assert.AreEqual(300, ledgerByAccountId.Single().Amount);
             Assert.AreEqual(300, ledgerByAccountId.Single().Balance);
             Assert.AreEqual("depositid123", ledgerByAccountId.Single().DepositId);
-            Assert.AreEqual("accountid123", ledgerByAccountId.Single().AccountId.Value);
+            Assert.AreEqual(123, ledgerByAccountId.Single().AccountId.Value);
         }
     }
 }

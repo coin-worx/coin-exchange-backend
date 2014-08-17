@@ -46,6 +46,8 @@ namespace CoinExchange.Trades.Application.OrderServices
         public NewOrderRepresentation CreateOrder(CreateOrderCommand orderCommand)
         {
             IOrderIdGenerator orderIdGenerator = ContextRegistry.GetContext()["OrderIdGenerator"] as IOrderIdGenerator;
+            // ToDo: Inject the FundsConfirmationService residing in Infrastructure Services here and confirm that the 
+            // user has enough balance present to send the order. Proceed if enough balance present
             Order order = OrderFactory.CreateOrder(orderCommand.TraderId, orderCommand.Pair,
                 orderCommand.Type, orderCommand.Side, orderCommand.Volume, orderCommand.Price, orderIdGenerator);
             

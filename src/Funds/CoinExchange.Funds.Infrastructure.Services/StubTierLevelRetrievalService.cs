@@ -16,7 +16,7 @@ namespace CoinExchange.Funds.Infrastructure.Services
         /// Gets the Highest Tier Level for the user
         /// </summary>
         /// <returns></returns>
-        public string GetCurrentTierLevel(string userId)
+        public string GetCurrentTierLevel(int userId)
         {
             return "Tier 1";
         }

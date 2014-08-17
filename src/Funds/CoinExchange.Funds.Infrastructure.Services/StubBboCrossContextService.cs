@@ -10,7 +10,7 @@ namespace CoinExchange.Funds.Infrastructure.Services
     /// <summary>
     /// Gets the best bid and best ask
     /// </summary>
-    public class StubBboRetrievalService : IBboRetrievalService
+    public class StubBboCrossContextService : IBboCrossContextService
     {
         /// <summary>
         /// Gets the best bid and best ask. Item 1 = Best Bid, Item 2 = Best Ask

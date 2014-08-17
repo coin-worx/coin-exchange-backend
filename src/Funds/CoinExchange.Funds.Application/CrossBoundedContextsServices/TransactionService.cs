@@ -138,11 +138,13 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         }
 
 */
+
         /// <summary>
         /// Creates a ledger entry for one currency of one of the two order sids of a trade
         /// </summary>
         /// <param name="currency"></param>
         /// <param name="amount"></param>
+        /// <param name="amountInUsd"> </param>
         /// <param name="fee"></param>
         /// <param name="balance"></param>
         /// <param name="executionDate"></param>

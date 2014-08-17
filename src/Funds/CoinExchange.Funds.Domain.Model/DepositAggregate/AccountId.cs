@@ -21,7 +21,7 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
-        public AccountId(string value)
+        public AccountId(int value)
         {
             Value = value;
         }
@@ -29,6 +29,6 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
         /// <summary>
         /// Value of the AccountID
         /// </summary>
-        public string Value { get; set; }
+        public int Value { get; private set; }
     }
 }

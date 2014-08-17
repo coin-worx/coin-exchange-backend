@@ -19,7 +19,7 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             IDepositLimitEvaluationService depositLimitEvaluationService = new DepositLimitEvaluationService();
             Currency currency = new Currency("XBT");
             string depositId = "depositid123";
-            AccountId accountId = new AccountId("accountid123");
+            AccountId accountId = new AccountId(123);
             decimal bestBid = 580;
             decimal bestAsk = 590;
             decimal dailyLimit = 1000;
@@ -57,7 +57,7 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             IDepositLimitEvaluationService depositLimitEvaluationService = new DepositLimitEvaluationService();
             Currency currency = new Currency("XBT", true);
             string depositId = "depositid123";
-            AccountId accountId = new AccountId("accountid123");
+            AccountId accountId = new AccountId(123);
             decimal bestBid = 580;
             decimal bestAsk = 590;
             decimal dailyLimit = 1000;
@@ -98,7 +98,7 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             IDepositLimitEvaluationService depositLimitEvaluationService = new DepositLimitEvaluationService();
             Currency currency = new Currency("XBT", true);
             string depositId = "depositid123";
-            AccountId accountId = new AccountId("accountid123");
+            AccountId accountId = new AccountId(123);
             decimal bestBid = 580;
             decimal bestAsk = 590;
             decimal dailyLimit = 1000;
@@ -140,7 +140,7 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             IDepositLimitEvaluationService depositLimitEvaluationService = new DepositLimitEvaluationService();
             Currency currency = new Currency("XBT", true);
             string depositId = "depositid123";
-            AccountId accountId = new AccountId("accountid123");
+            AccountId accountId = new AccountId(123);
             decimal bestBid = 580;
             decimal bestAsk = 590;
             decimal dailyLimit = 1000;
@@ -201,7 +201,7 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             IDepositLimitEvaluationService depositLimitEvaluationService = new DepositLimitEvaluationService();
             Currency currency = new Currency("XBT", true);
             string depositId = "depositid123";
-            AccountId accountId = new AccountId("accountid123");
+            AccountId accountId = new AccountId(123);
             decimal bestBid = 580;
             decimal bestAsk = 590;
             decimal dailyLimit = 1000;
@@ -231,7 +231,7 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             IDepositLimitEvaluationService depositLimitEvaluationService = new DepositLimitEvaluationService();
             Currency currency = new Currency("XBT", true);
             string depositId = "depositid123";
-            AccountId accountId = new AccountId("accountid123");
+            AccountId accountId = new AccountId(123);
             decimal bestBid = 580;
             decimal bestAsk = 590;
             decimal dailyLimit = 1000;
@@ -272,7 +272,7 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             IDepositLimitEvaluationService depositLimitEvaluationService = new DepositLimitEvaluationService();
             Currency currency = new Currency("XBT", true);
             string depositId = "depositid123";
-            AccountId accountId = new AccountId("accountid123");
+            AccountId accountId = new AccountId(123);
             decimal bestBid = 580;
             decimal bestAsk = 590;
             decimal dailyLimit = 1000;
@@ -312,7 +312,7 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             IDepositLimitEvaluationService depositLimitEvaluationService = new DepositLimitEvaluationService();
             Currency currency = new Currency("XBT", true);
             string depositId = "depositid123";
-            AccountId accountId = new AccountId("accountid123");
+            AccountId accountId = new AccountId(123);
             decimal bestBid = 580;
             decimal bestAsk = 590;
             decimal dailyLimit = 1000;

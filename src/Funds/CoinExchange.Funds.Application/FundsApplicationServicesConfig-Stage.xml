@@ -28,9 +28,13 @@
     <constructor-arg name="depositLimitRepository" ref="DepositLimitRepository"/>
     <constructor-arg name="withdrawLimitEvaluationService" ref="WithdrawLimitEvaluationService"/>
     <constructor-arg name="withdrawLimitRepository" ref="WithdrawLimitRepository"/>
-    <constructor-arg name="tierLevelRetrievalService" ref="StubTierLevelRetrievalService"/>
-    <constructor-arg name="bboRetrievalService" ref="StubBboRetrievalService"/>
+    <constructor-arg name="tierLevelRetrievalService" ref="TierLevelRetrievalService"/>
+    <constructor-arg name="bboCrossContextService" ref="BboCrossContextService"/>
     <constructor-arg name="withdrawRepository" ref="WithdrawRepository"/>
+  </object>
+  
+  <object id="OrderValidationApplicationService" type="CoinExchange.Funds.Application.OrderValidationServices.OrderValidationApplicationService, CoinExchange.Funds.Application">
+    <constructor-arg name="fundsValidationService" ref="FundsValidationService"/>
   </object>
   
   <tx:attribute-driven/>

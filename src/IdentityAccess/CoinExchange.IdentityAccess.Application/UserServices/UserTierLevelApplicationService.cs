@@ -101,6 +101,18 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
         }
 
         /// <summary>
+        /// Gets the current highest Tier level for the user
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public UserTierStatusRepresentation GetTierLevel(int userId)
+        {
+            User user = _userRepository.GetUserById(userId);
+            UserTierLevelStatus userTierLevelStatus = user.GetAllTiersStatus().Last();
+            return new UserTierStatusRepresentation(userTierLevelStatus.Status.ToString(), userTierLevelStatus.Tier);
+        }
+
+        /// <summary>
         /// Get user tier status
         /// </summary>
         /// <param name="apiKey"></param>

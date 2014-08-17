@@ -41,6 +41,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
         #region Complete Mixed Scenario Tests
 
         [Test]
+        [ExpectedException(typeof(InvalidOperationException))]
         public void Scenario1Test_TestsFundsValidationServiceOperationsInaRandomOrderToProceedInTheDesiredExpectenacy_VerifiesThroughDatabaseQuery()
         {
             // Deposit --> Order Validations --> Trade --> Withdraw
@@ -52,11 +53,16 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             IFeeCalculationService feeCalculationService = (IFeeCalculationService)ContextRegistry.GetContext()["FeeCalculationService"];
 
             Currency baseCurrency = new Currency("XBT", true);
-            Currency quoteCurrency = new Currency("USD", false);
-            AccountId user1Account = new AccountId("accountid1");
-            AccountId user2Account = new AccountId("accountid2");
+            Currency quoteCurrency = new Currency("USD", false);            
+            AccountId user1Account = new AccountId(1);
+            AccountId user2Account = new AccountId(2);
             decimal xbtDepositAmount = 1.4m;
             decimal usdDepositAmount = 1000;
+
+            Balance user1UsdInitialBalance = new Balance(quoteCurrency, user1Account, usdDepositAmount, usdDepositAmount);
+            Balance user2UsdInitialBalance = new Balance(quoteCurrency, user2Account, usdDepositAmount, usdDepositAmount);
+            fundsPersistenceRepository.SaveOrUpdate(user1UsdInitialBalance);
+            fundsPersistenceRepository.SaveOrUpdate(user2UsdInitialBalance);
 
             // Deposit
             Deposit deposit1 = new Deposit(baseCurrency, depositIdGeneratorService.GenerateId(), DateTime.Now,
@@ -64,21 +70,21 @@ namespace CoinExchange.Funds.Application.IntegrationTests
                                           new TransactionId("1"), new BitcoinAddress("bitcoin1"));
             deposit1.IncrementConfirmations(7);
             fundsPersistenceRepository.SaveOrUpdate(deposit1);
-            Deposit deposit2 = new Deposit(quoteCurrency, depositIdGeneratorService.GenerateId(), DateTime.Now,
+            /*Deposit deposit2 = new Deposit(quoteCurrency, depositIdGeneratorService.GenerateId(), DateTime.Now,
                                           DepositType.Default, usdDepositAmount, 0, TransactionStatus.Pending, user1Account,
                                           new TransactionId("2"), new BitcoinAddress("bitcoin2"));                
             deposit2.IncrementConfirmations(7);
-            fundsPersistenceRepository.SaveOrUpdate(deposit2);
+            fundsPersistenceRepository.SaveOrUpdate(deposit2);*/
             Deposit deposit3 = new Deposit(baseCurrency, depositIdGeneratorService.GenerateId(), DateTime.Now,
                                           DepositType.Default, xbtDepositAmount, 0, TransactionStatus.Pending, user2Account,
                                           new TransactionId("3"), new BitcoinAddress("bitcoin3"));
             deposit3.IncrementConfirmations(7);
             fundsPersistenceRepository.SaveOrUpdate(deposit3);
-            Deposit deposit4 = new Deposit(quoteCurrency, depositIdGeneratorService.GenerateId(), DateTime.Now,
+            /*Deposit deposit4 = new Deposit(quoteCurrency, depositIdGeneratorService.GenerateId(), DateTime.Now,
                                           DepositType.Default, usdDepositAmount, 0, TransactionStatus.Pending, user2Account,
                                           new TransactionId("4"), new BitcoinAddress("bitcoin4"));
             deposit4.IncrementConfirmations(7);
-            fundsPersistenceRepository.SaveOrUpdate(deposit4);
+            fundsPersistenceRepository.SaveOrUpdate(deposit4);*/
 
             // Retrieve XBT balance for user 1
             bool depositResponse = fundsValidationService.DepositConfirmed(deposit1);
@@ -90,13 +96,13 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             Assert.AreEqual(balance.PendingBalance, 0);
 
             // Retrieve USD balance for user 1
-            depositResponse = fundsValidationService.DepositConfirmed(deposit2);
+           // depositResponse = fundsValidationService.DepositConfirmed(deposit2);
             Assert.IsTrue(depositResponse);
             balance = balanceRepository.GetBalanceByCurrencyAndAccountId(quoteCurrency, user1Account);
             Assert.IsNotNull(balance);
-            Assert.AreEqual(deposit2.Amount, balance.CurrentBalance);
-            Assert.AreEqual(deposit2.Amount, balance.AvailableBalance);
-            Assert.AreEqual(balance.PendingBalance, 0);
+            Assert.AreEqual(user1UsdInitialBalance.CurrentBalance, balance.CurrentBalance);
+            Assert.AreEqual(user1UsdInitialBalance.AvailableBalance, balance.AvailableBalance);
+            Assert.AreEqual(0, balance.PendingBalance);
 
             // Retrieve XBT balance for user 2
             depositResponse = fundsValidationService.DepositConfirmed(deposit3);
@@ -108,13 +114,13 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             Assert.AreEqual(balance.PendingBalance, 0);
 
             // Retrieve USD balance for user 2
-            depositResponse = fundsValidationService.DepositConfirmed(deposit4);
+            //depositResponse = fundsValidationService.DepositConfirmed(deposit4);
             Assert.IsTrue(depositResponse);
             balance = balanceRepository.GetBalanceByCurrencyAndAccountId(quoteCurrency, user2Account);
             Assert.IsNotNull(balance);
-            Assert.AreEqual(deposit4.Amount, balance.CurrentBalance);
-            Assert.AreEqual(deposit4.Amount, balance.AvailableBalance);
-            Assert.AreEqual(balance.PendingBalance, 0);
+            Assert.AreEqual(user2UsdInitialBalance.CurrentBalance, balance.CurrentBalance);
+            Assert.AreEqual(user2UsdInitialBalance.AvailableBalance, balance.AvailableBalance);
+            Assert.AreEqual(0, balance.PendingBalance);
 
             // Order Validation for User 1's Account
             decimal volume = 1.2m;
@@ -246,7 +252,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             IDepositIdGeneratorService depositIdGeneratorService = (IDepositIdGeneratorService)ContextRegistry.GetContext()["DepositIdGeneratorService"];
             IWithdrawFeesRepository withdrawFeesRepository = (IWithdrawFeesRepository)ContextRegistry.GetContext()["WithdrawFeesRepository"];
 
-            AccountId accountId = new AccountId("accountid123");
+            AccountId accountId = new AccountId(123);
             Currency currency = new Currency("XBT", true);
 
             Deposit deposit = new Deposit(currency, depositIdGeneratorService.GenerateId(), DateTime.Now,
@@ -344,7 +350,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             IDepositIdGeneratorService depositIdGeneratorService = (IDepositIdGeneratorService)ContextRegistry.GetContext()["DepositIdGeneratorService"];
             IWithdrawFeesRepository withdrawFeesRepository = (IWithdrawFeesRepository)ContextRegistry.GetContext()["WithdrawFeesRepository"];
 
-            AccountId accountId = new AccountId("accountid123");
+            AccountId accountId = new AccountId(123);
             Currency currency = new Currency("XBT", true);
 
             Deposit deposit = new Deposit(currency, depositIdGeneratorService.GenerateId(), DateTime.Now,
@@ -456,7 +462,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             IBalanceRepository balanceRepository = (IBalanceRepository)ContextRegistry.GetContext()["BalanceRepository"];
             IFeeCalculationService feeCalculationService = (IFeeCalculationService)ContextRegistry.GetContext()["FeeCalculationService"];
 
-            AccountId accountId = new AccountId("accountid123");
+            AccountId accountId = new AccountId(123);
             Currency baseCurrency = new Currency("XBT");
             Currency quoteCurrency = new Currency("USD");
             Balance baseCurrencyBalance = new Balance(baseCurrency, accountId, 400, 400);
@@ -479,10 +485,9 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             Assert.AreEqual(0, baseCurrencyBalance.PendingBalance);
 
             quoteCurrencyBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(quoteCurrency, accountId);
-            Assert.AreEqual(40000 - (40 * 100), quoteCurrencyBalance.CurrentBalance);
-            Assert.AreEqual(400, quoteCurrencyBalance.AvailableBalance);
-            Assert.AreEqual(0, quoteCurrencyBalance.PendingBalance);
-            
+            Assert.AreEqual(40000 - (40 * 100), quoteCurrencyBalance.AvailableBalance);
+            Assert.AreEqual(40000, quoteCurrencyBalance.CurrentBalance);
+            Assert.AreEqual(40 * 100, quoteCurrencyBalance.PendingBalance);            
         }
 
         #endregion Order Scenario Tests
@@ -499,7 +504,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             IDepositIdGeneratorService depositIdGeneratorService = (IDepositIdGeneratorService)ContextRegistry.GetContext()["DepositIdGeneratorService"];
             IWithdrawFeesRepository withdrawFeesRepository = (IWithdrawFeesRepository)ContextRegistry.GetContext()["WithdrawFeesRepository"];
             
-            AccountId accountId = new AccountId("accountid123");
+            AccountId accountId = new AccountId(123);
             Currency currency = new Currency("XBT", true);
 
             // Deposit
@@ -562,8 +567,8 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             string sellOrderId = "sell123";
             string buy = "buy";
             string sell = "sell";
-            AccountId buyAccountId = new AccountId("buyaccountid123");
-            AccountId sellAccountId = new AccountId("sellaccountid123");
+            AccountId buyAccountId = new AccountId(1);
+            AccountId sellAccountId = new AccountId(2);
             Balance buyBaseBalance = new Balance(baseCurrency, buyAccountId, 20, 20);
             Balance buyQuoteBalance = new Balance(quoteCurrency, buyAccountId, 15000, 15000);
             Balance sellBaseBalance = new Balance(baseCurrency, sellAccountId, 20, 20);

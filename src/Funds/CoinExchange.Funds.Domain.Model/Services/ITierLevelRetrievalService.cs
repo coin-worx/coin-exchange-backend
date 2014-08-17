@@ -15,6 +15,6 @@ namespace CoinExchange.Funds.Domain.Model.Services
         /// Gets the most highest User Tier Level
         /// </summary>
         /// <returns></returns>
-        string GetCurrentTierLevel(string userId);
+        string GetCurrentTierLevel(int userId);
     }
 }

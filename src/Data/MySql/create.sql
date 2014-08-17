@@ -22,12 +22,12 @@ DROP TABLE IF EXISTS `balance`;
 CREATE TABLE `balance` (
   `BalanceId` int(10) NOT NULL AUTO_INCREMENT,
   `Currency` varchar(10) DEFAULT NULL,
-  `AccountId` varchar(50) DEFAULT NULL,
+  `AccountId` int(11) DEFAULT NULL,
   `AvailableBalance` double DEFAULT NULL,
   `CurrentBalance` double DEFAULT NULL,
   `PendingBalance` double DEFAULT NULL,
   PRIMARY KEY (`BalanceId`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
 /*Table structure for table `currencypair` */
 
@@ -47,7 +47,7 @@ DROP TABLE IF EXISTS `deposit`;
 CREATE TABLE `deposit` (
   `Id` int(11) NOT NULL AUTO_INCREMENT,
   `Currency` varchar(7) DEFAULT NULL,
-  `AccountId` varchar(50) DEFAULT NULL,
+  `AccountId` int(11) DEFAULT NULL,
   `DepositId` varchar(50) DEFAULT NULL,
   `Date` datetime(6) DEFAULT NULL,
   `Amount` double DEFAULT NULL,
@@ -67,7 +67,7 @@ DROP TABLE IF EXISTS `depositaddress`;
 
 CREATE TABLE `depositaddress` (
   `Id` int(11) NOT NULL AUTO_INCREMENT,
-  `AccountId` varchar(50) DEFAULT NULL,
+  `AccountId` int(11) DEFAULT NULL,
   `BitcoinAddress` varchar(50) DEFAULT NULL,
   `Status` varchar(20) DEFAULT NULL,
   `CreationDateTime` datetime DEFAULT NULL,
@@ -108,7 +108,7 @@ CREATE TABLE `ledger` (
   `DateTime` datetime(6) DEFAULT NULL,
   `LedgerType` varchar(15) DEFAULT NULL,
   `Currency` varchar(15) DEFAULT NULL,
-  `AccountId` varchar(50) DEFAULT NULL,
+  `AccountId` int(11) DEFAULT NULL,
   `Amount` double DEFAULT NULL,
   `AmountInUsd` double DEFAULT NULL,
   `Fee` double DEFAULT NULL,
@@ -361,7 +361,7 @@ CREATE TABLE `withdraw` (
   `DateTime` datetime DEFAULT NULL,
   `Type` varchar(15) DEFAULT NULL,
   `Status` varchar(15) DEFAULT NULL,
-  `AccountId` varchar(50) DEFAULT NULL,
+  `AccountId` int(11) DEFAULT NULL,
   `BankName` varchar(20) DEFAULT NULL,
   `BankAccountAddress` varchar(20) DEFAULT NULL,
   `BankAccountSwiftCode` varchar(20) DEFAULT NULL,
@@ -376,7 +376,7 @@ DROP TABLE IF EXISTS `withdrawaddress`;
 
 CREATE TABLE `withdrawaddress` (
   `Id` int(10) NOT NULL AUTO_INCREMENT,
-  `AccountId` varchar(50) DEFAULT NULL,
+  `AccountId` int(11) DEFAULT NULL,
   `BitcoinAddress` varchar(50) DEFAULT NULL,
   `Description` varchar(140) DEFAULT NULL,
   `CreationDateTime` datetime DEFAULT NULL,

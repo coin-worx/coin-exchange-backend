@@ -171,6 +171,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinExchange.Funds.Port.Ada
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests", "Funds\CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests\CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests.csproj", "{37BCBC65-4B80-4023-A450-B10A32DA2D10}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinExchange.Trades.Infrastructure.Services.IntegrationTests", "Trades\CoinExchange.Trades.Infrastructure.Services.IntegrationTests\CoinExchange.Trades.Infrastructure.Services.IntegrationTests.csproj", "{2B7BC1BA-840B-4154-B479-1DD6E75A8565}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -393,6 +395,10 @@ Global
 		{37BCBC65-4B80-4023-A450-B10A32DA2D10}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{37BCBC65-4B80-4023-A450-B10A32DA2D10}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{37BCBC65-4B80-4023-A450-B10A32DA2D10}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B7BC1BA-840B-4154-B479-1DD6E75A8565}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B7BC1BA-840B-4154-B479-1DD6E75A8565}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B7BC1BA-840B-4154-B479-1DD6E75A8565}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B7BC1BA-840B-4154-B479-1DD6E75A8565}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -412,6 +418,7 @@ Global
 		{2247DD67-1747-430F-B93F-C5538A6DDA1E} = {C9D03C79-C7C6-4EAD-AD9B-5A9BBC3312D6}
 		{549E911D-9534-49E3-AF19-19D06B697083} = {C9D03C79-C7C6-4EAD-AD9B-5A9BBC3312D6}
 		{1FE04E5F-951E-408F-9172-87B259CBBF94} = {C9D03C79-C7C6-4EAD-AD9B-5A9BBC3312D6}
+		{2B7BC1BA-840B-4154-B479-1DD6E75A8565} = {C9D03C79-C7C6-4EAD-AD9B-5A9BBC3312D6}
 		{69F83B70-0759-4C16-A4C4-6D17D50F4256} = {CD14932B-B0A0-40D8-A683-4598B5415FE2}
 		{288BCB69-1B33-41B5-B1FD-46C03761B514} = {CD14932B-B0A0-40D8-A683-4598B5415FE2}
 		{F8C44C6A-135B-4753-982B-9507E7899327} = {CD14932B-B0A0-40D8-A683-4598B5415FE2}

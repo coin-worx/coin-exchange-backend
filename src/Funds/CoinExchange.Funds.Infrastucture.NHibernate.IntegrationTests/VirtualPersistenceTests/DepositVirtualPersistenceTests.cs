@@ -38,7 +38,7 @@ namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests.VirtualPe
         public void SaveDepositAndRetreiveByIdTest_SavesAnObjectToDatabaseAndManipulatesIt_ChecksIfItIsUpdatedAsExpected()
         {
             Deposit deposit = new Deposit(new Currency("LTC", true), "1234", DateTime.Now, DepositType.Default, 2000, 0.005m, TransactionStatus.Pending,
-                new AccountId("123"), new TransactionId("transact123"), new BitcoinAddress("address123"));
+                new AccountId(1), new TransactionId("transact123"), new BitcoinAddress("address123"));
 
             _persistanceRepository.SaveOrUpdate(deposit);
 
@@ -62,7 +62,7 @@ namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests.VirtualPe
         public void SaveDepositAndRetreiveByDepositIdTest_SavesAnObjectToDatabaseAndManipulatesIt_ChecksIfItIsUpdatedAsExpected()
         {
             Deposit deposit = new Deposit(new Currency("LTC", true), "1234", DateTime.Now, DepositType.Default, 2000, 0.005m, TransactionStatus.Pending,
-                new AccountId("123"), new TransactionId("transact123"), new BitcoinAddress("address123"));
+                new AccountId(1), new TransactionId("transact123"), new BitcoinAddress("address123"));
 
             _persistanceRepository.SaveOrUpdate(deposit);
 
@@ -85,7 +85,7 @@ namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests.VirtualPe
         public void SaveDepositAndRetreiveByCurrencyNameTest_SavesAnObjectToDatabaseAndManipulatesIt_ChecksIfItIsUpdatedAsExpected()
         {
             Deposit deposit = new Deposit(new Currency("LTC", true), "1234", DateTime.Now, DepositType.Default, 2000, 0.005m, TransactionStatus.Pending,
-                new AccountId("123"), new TransactionId("transact123"), new BitcoinAddress("address123"));
+                new AccountId(1), new TransactionId("transact123"), new BitcoinAddress("address123"));
 
             _persistanceRepository.SaveOrUpdate(deposit);
 
@@ -108,17 +108,17 @@ namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests.VirtualPe
         public void SaveDepositsAndRetreiveByAccountIdTest_SavesMultipleObjectsToDatabase_ChecksIfTheyAreAsExpected()
         {
             Deposit deposit = new Deposit(new Currency("LTC", true), "1234", DateTime.Now, DepositType.Default, 2000, 0.005m, TransactionStatus.Pending,
-                new AccountId("123"), new TransactionId("transact123"), new BitcoinAddress("address123"));
+                new AccountId(1), new TransactionId("transact123"), new BitcoinAddress("address123"));
 
             _persistanceRepository.SaveOrUpdate(deposit);
 
             Deposit deposit2 = new Deposit(new Currency("BTC", true), "123", DateTime.Now, DepositType.Default, 1000, 0.010m, TransactionStatus.Pending,
-                new AccountId("123"), new TransactionId("transact123"), new BitcoinAddress("address123"));
+                new AccountId(1), new TransactionId("transact123"), new BitcoinAddress("address123"));
             Thread.Sleep(500);
 
             _persistanceRepository.SaveOrUpdate(deposit2);
 
-            List<Deposit> retrievedDepositList = _depositRepository.GetDepositByAccountId(new AccountId("123"));
+            List<Deposit> retrievedDepositList = _depositRepository.GetDepositByAccountId(new AccountId(1));
             Assert.IsNotNull(retrievedDepositList);
             Assert.AreEqual(2, retrievedDepositList.Count);
 
@@ -143,7 +143,7 @@ namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests.VirtualPe
         public void SaveDepositAndRetreiveByTransacitonIdTest_SavesAnObjectToDatabaseAndManipulatesIt_ChecksIfItIsUpdatedAsExpected()
         {
             Deposit deposit = new Deposit(new Currency("LTC", true), "1234", DateTime.Now, DepositType.Default, 2000, 0.005m, TransactionStatus.Pending,
-                new AccountId("123"), new TransactionId("transact123"), new BitcoinAddress("address123"));
+                new AccountId(1), new TransactionId("transact123"), new BitcoinAddress("address123"));
 
             _persistanceRepository.SaveOrUpdate(deposit);
 
@@ -166,12 +166,12 @@ namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests.VirtualPe
         public void SaveDepositsAndRetreiveByBitcoinAddressTest_SavesMultipleObjectsToDatabase_ChecksIfTheyAreAsExpected()
         {
             Deposit deposit = new Deposit(new Currency("LTC", true), "1234", DateTime.Now, DepositType.Default, 2000, 0.005m, TransactionStatus.Pending,
-                new AccountId("123"), new TransactionId("transact123"), new BitcoinAddress("address123"));
+                new AccountId(1), new TransactionId("transact123"), new BitcoinAddress("address123"));
 
             _persistanceRepository.SaveOrUpdate(deposit);
             Thread.Sleep(1000);
             Deposit deposit2 = new Deposit(new Currency("BTC", true), "123", DateTime.Now, DepositType.Default, 1000, 0.010m, TransactionStatus.Pending,
-                new AccountId("123"), new TransactionId("transact123"), new BitcoinAddress("address123"));
+                new AccountId(1), new TransactionId("transact123"), new BitcoinAddress("address123"));
             _persistanceRepository.SaveOrUpdate(deposit2);
 
             List<Deposit> retrievedDepositList = _depositRepository.GetDepositsByBitcoinAddress(new BitcoinAddress("address123"));

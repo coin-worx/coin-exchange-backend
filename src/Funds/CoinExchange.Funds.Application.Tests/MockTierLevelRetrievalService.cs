@@ -9,9 +9,9 @@ namespace CoinExchange.Funds.Application.Tests
 {
     public class MockTierLevelRetrievalService : ITierLevelRetrievalService
     {
-        public string GetCurrentTierLevel(string userId)
+        public string GetCurrentTierLevel(int userId)
         {
-            throw new NotImplementedException();
+            return "Tier 1";
         }
     }
 }

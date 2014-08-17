@@ -33,7 +33,7 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         private IWithdrawLimitEvaluationService _withdrawLimitEvaluationService = null;
         private IWithdrawLimitRepository _withdrawLimitRepository = null;
         private ITierLevelRetrievalService _tierLevelRetrievalService = null;
-        private IBboRetrievalService _bboRetrievalService = null;
+        private IBboCrossContextService _bboCrossContextService = null;
         private IWithdrawRepository _withdrawRepository = null;
         
         #endregion Private Fields
@@ -49,7 +49,7 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
             IWithdrawIdGeneratorService withdrawIdGeneratorService, ILedgerRepository ledgerRepository,
             IDepositLimitEvaluationService depositLimitEvaluationService, IDepositLimitRepository depositLimitRepository,
             IWithdrawLimitEvaluationService withdrawLimitEvaluationService, IWithdrawLimitRepository withdrawLimitRepository,
-            ITierLevelRetrievalService tierLevelRetrievalService, IBboRetrievalService bboRetrievalService,
+            ITierLevelRetrievalService tierLevelRetrievalService, IBboCrossContextService bboCrossContextService,
             IWithdrawRepository withdrawRepository)
         {
             _transactionService = transactionService;
@@ -64,7 +64,7 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
             _withdrawLimitEvaluationService = withdrawLimitEvaluationService;
             _withdrawLimitRepository = withdrawLimitRepository;
             _tierLevelRetrievalService = tierLevelRetrievalService;
-            _bboRetrievalService = bboRetrievalService;
+            _bboCrossContextService = bboCrossContextService;
             _withdrawRepository = withdrawRepository;
         }
 
@@ -147,15 +147,18 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
                             // Get all the Withdraw Ledgers
                             IList<Withdraw> withdrawLedgers = GetWithdrawalLedgers(currency, accountId);
                             // Get the Current Tier Level for this user using the cross bounded context Tier retrieval service
+                            // ToDo: Assign the AccountId's value after refactoring the AccountIds value to int
                             string currentTierLevel = _tierLevelRetrievalService.GetCurrentTierLevel(accountId.Value);
                             // Get the Current Withdraw limits for this user
                             WithdrawLimit withdrawLimit =
                                 _withdrawLimitRepository.GetWithdrawLimitByTierLevel(currentTierLevel);
 
                             // Get the best bid and best ask form the Trades BC.
-                            // ToDo: Implement and use real implementation later, rather than using the stub implementation being used right now
+                            // ToDo: Implement and use real implementation when Funds BC is deployed on the Web Host,
+                            // rather than using the stub implementation which is the only option for integration adn unit
+                            // tests, because there is no bid or ask in the Trade BC when running tests in the Funds BC
                             Tuple<decimal, decimal> bestBidBestAsk =
-                                _bboRetrievalService.GetBestBidBestAsk(currency.Name, "USD");
+                                _bboCrossContextService.GetBestBidBestAsk(currency.Name, "USD");
                             // Convert the amount and the fee to US Dollars, because the evaluation service accepts amounts
                             // in USD
                             decimal amountInUsd = ConvertCurrencyToUsd(amount, bestBidBestAsk.Item1,
@@ -210,7 +213,6 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         {
             Balance balance = _balanceRepository.GetBalanceByCurrencyAndAccountId(withdraw.Currency, withdraw.AccountId);
 
-
             bool addResponse = balance.ConfirmPendingTransaction(withdraw.WithdrawId,
                                                                  PendingTransactionType.Withdraw,
                                                                  -(withdraw.Amount + withdraw.Fee));
@@ -242,15 +244,16 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
                     // Get the Current Tier Level for this user using the corss bounded context Tier retrieval service
                     // ToDo: Using the stub implementation for now, upgrade to the real cross bounded context service
                     // once completed
+                    // ToDo: Assign the AccountId's value after refactoring the AccountIds value to int
                     string currentTierLevel = _tierLevelRetrievalService.GetCurrentTierLevel(deposit.AccountId.Value);
                     // Get the Current Deposit limits for this user
                     DepositLimit depositLimit = _depositLimitRepository.GetDepositLimitByTierLevel(currentTierLevel);
 
                     // Get the best bid and best ask form the Trades BC.
-                    // NOTE: Implement adn use real implementation later, rather than using the stub implementation being used right now
+                    // NOTE: Implement adn use real implementation later, rather than using the stub implementation being
+                    // used right now
                     Tuple<decimal, decimal> bestBidBestAsk =
-                        _bboRetrievalService.GetBestBidBestAsk(deposit.Currency.Name,
-                                                               "USD");
+                        _bboCrossContextService.GetBestBidBestAsk(deposit.Currency.Name, "USD");
 
                     deposit.SetAmountInUsd(ConvertCurrencyToUsd(deposit.Amount, bestBidBestAsk.Item1,
                                                                 bestBidBestAsk.Item2));
@@ -360,20 +363,7 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         /// <returns></returns>
         private IList<Withdraw> GetWithdrawalLedgers(Currency currency, AccountId accountId)
         {
-            IList<Withdraw> withdrawals = new List<Withdraw>();
             return _withdrawRepository.GetWithdrawByCurrencyAndAccountId(currency.Name, accountId);
-            /*foreach (var ledger in allWithdrawals)
-            {
-                if (ledger.LedgerType == LedgerType.Withdrawal)
-                {
-                    withdrawals.Add(ledger);
-                }
-            }
-            if (!withdrawals.Any())
-            {
-                withdrawals = null;
-            }
-            return withdrawals;*/
         }
 
         /// <summary>
@@ -393,7 +383,7 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         /// <returns></returns>
         [Transaction]
         public bool TradeExecuted(string baseCurrency, string quoteCurrency, decimal tradeVolume, decimal price, DateTime executionDateTime,
-            string tradeId, string buyAccountId, string sellAccountId, string buyOrderId, string sellOrderId)
+            string tradeId, int buyAccountId, int sellAccountId, string buyOrderId, string sellOrderId)
         {
 
             decimal buySideFee = _feeCalculationService.GetFee(new Currency(baseCurrency), new Currency(quoteCurrency),

@@ -43,7 +43,7 @@ namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests.DatabaseP
         [Test]
         public void SaveDepositAddressesAndRetreiveByAccountIdTest_SavesObjectsToDatabase_ChecksIfTheyAreAsExpected()
         {
-            Balance balance = new Balance(new Currency("LTC", true), new AccountId("123"), 5000, 4000);
+            Balance balance = new Balance(new Currency("LTC", true), new AccountId(1), 5000, 4000);
 
             _persistanceRepository.SaveOrUpdate(balance);
 
@@ -58,7 +58,7 @@ namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests.DatabaseP
         [Test]
         public void SavePendingTransactionsTest_SavesObjectsToPendingTransactionsList_ChecksIfTheyAreAsExpected()
         {
-            Balance balance = new Balance(new Currency("LTC", true), new AccountId("123"), 5000, 5000);
+            Balance balance = new Balance(new Currency("LTC", true), new AccountId(1), 5000, 5000);
             _persistanceRepository.SaveOrUpdate(balance);
             bool addPendingTransaction = balance.AddPendingTransaction("withdrawid123", PendingTransactionType.Withdraw, -500);
             Assert.IsTrue(addPendingTransaction);

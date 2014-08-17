@@ -19,7 +19,7 @@ USE `coinexchangedev`;
 
 /*Data for the table `currencypair` */
 
-insert  into `currencypair`(`CurrencyPairName`,`BaseCurrency`,`QuoteCurrency`) values ('XBTUSD','USD','XBT');
+insert  into `currencypair`(`CurrencyPairName`,`BaseCurrency`,`QuoteCurrency`) values ('XBTUSD','XBT','USD');
 
 /*Data for the table `deposit` */
 

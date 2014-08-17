@@ -5,17 +5,19 @@
 
   <object id="LedgerIdGeneratorService" type="CoinExchange.Funds.Infrastructure.Services.LedgerIdGeneratorService, CoinExchange.Funds.Infrastructure.Services">
   </object>
-  
+
   <object id="DepositIdGeneratorService" type="CoinExchange.Funds.Infrastructure.Services.DepositIdGeneratorService, CoinExchange.Funds.Infrastructure.Services">
   </object>
-  
+
   <object id="WithdrawIdGeneratorService" type="CoinExchange.Funds.Infrastructure.Services.WithdrawIdGeneratorService, CoinExchange.Funds.Infrastructure.Services">
   </object>
 
-  <object id="TierLevelRetrievalService" type="CoinExchange.Funds.Infrastructure.Services.StubTierLevelRetrievalService, CoinExchange.Funds.Infrastructure.Services">
+  <object id="BboCrossContextService" type="CoinExchange.Funds.Infrastructure.Services.BboCrossContextService, CoinExchange.Funds.Infrastructure.Services">
+    <constructor-arg name="marketDataQueryService" ref="MarketDataQueryService" />
   </object>
-  
-  <object id="BboCrossContextService" type="CoinExchange.Funds.Infrastructure.Services.StubBboCrossContextService, CoinExchange.Funds.Infrastructure.Services">
+
+  <object id="TierLevelRetrievalService" type="CoinExchange.Funds.Infrastructure.Services.TierLevelRetrievalService, CoinExchange.Funds.Infrastructure.Services">
+    <constructor-arg name="userTierLevelApplicationService" ref="UserTierLevelApplicationService" />
   </object>
 
 </objects>

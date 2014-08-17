@@ -4,12 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CoinExchange.Funds.Domain.Model.DepositAggregate;
+using CoinExchange.Funds.Domain.Model.LedgerAggregate;
 using CoinExchange.Funds.Domain.Model.WithdrawAggregate;
 
 namespace CoinExchange.Funds.Application.Tests
 {
     public class MockWithdrawRepository : IWithdrawRepository
     {
+        private List<Withdraw> _withdrawawls = new List<Withdraw>();
+
         public Withdraw GetWithdrawById(int id)
         {
             throw new NotImplementedException();
@@ -27,7 +30,15 @@ namespace CoinExchange.Funds.Application.Tests
 
         public List<Withdraw> GetWithdrawByCurrencyAndAccountId(string currency, AccountId accountId)
         {
-            throw new NotImplementedException();
+            List<Withdraw> currentWithdrawals = new List<Withdraw>();
+            foreach (var ledger in _withdrawawls)
+            {
+                if (ledger.Currency.Name == currency && ledger.AccountId.Value == accountId.Value)
+                {
+                    currentWithdrawals.Add(ledger);
+                }
+            }
+            return currentWithdrawals;
         }
 
         public Withdraw GetWithdrawByWithdrawId(string withdrawId)
@@ -43,6 +54,11 @@ namespace CoinExchange.Funds.Application.Tests
         public List<Withdraw> GetWithdrawByBitcoinAddress(BitcoinAddress bitcoinAddress)
         {
             throw new NotImplementedException();
+        }
+
+        public void AddLedger(Withdraw withdraw)
+        {
+            _withdrawawls.Add(withdraw);
         }
     }
 }

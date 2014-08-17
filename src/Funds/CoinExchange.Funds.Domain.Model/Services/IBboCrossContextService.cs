@@ -9,7 +9,7 @@ namespace CoinExchange.Funds.Domain.Model.Services
     /// <summary>
     /// Retrieves the Best Bid and Best Ask from the Trades BC
     /// </summary>
-    public interface IBboRetrievalService
+    public interface IBboCrossContextService
     {
         /// <summary>
         /// Gets best bid and best ask. Item 1 = Best Bid, Item 2 = Best Ask

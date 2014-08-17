@@ -41,17 +41,17 @@ namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests.VirtualPe
         public void SaveWithdrawAddressesAndRetreiveByAccountIdTest_SavesMultipleObjectsToDatabase_ChecksIfRetreivedOutputIsAsExpected()
         {
             WithdrawAddress withdrawAddress = new WithdrawAddress(new BitcoinAddress("iambitcoin123"), "Description is for dummies",
-                new AccountId("123"));
+                new AccountId(1));
 
             _persistanceRepository.SaveOrUpdate(withdrawAddress);
 
             WithdrawAddress deposit2 = new WithdrawAddress(new BitcoinAddress("321nioctibmai"), "Description is for champs",
-                new AccountId("123"));
+                new AccountId(1));
             Thread.Sleep(500);
 
             _persistanceRepository.SaveOrUpdate(deposit2);
 
-            List<WithdrawAddress> retrievedWithdrawAddressList = _withdrawAddressRepository.GetWithdrawAddressByAccountId(new AccountId("123"));
+            List<WithdrawAddress> retrievedWithdrawAddressList = _withdrawAddressRepository.GetWithdrawAddressByAccountId(new AccountId(1));
             Assert.IsNotNull(retrievedWithdrawAddressList);
             Assert.AreEqual(2, retrievedWithdrawAddressList.Count);
 

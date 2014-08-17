@@ -40,17 +40,17 @@ namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests.VirtualPe
         public void SaveDepositAddressesAndRetreiveByAccountIdTest_SavesObjectsToDatabase_ChecksIfTheyAreAsExpected()
         {
             DepositAddress deposit = new DepositAddress(new BitcoinAddress("iambitcoin123"), AddressStatus.New, DateTime.Now,
-                new AccountId("123"));
+                new AccountId(1));
 
             _persistanceRepository.SaveOrUpdate(deposit);
 
             DepositAddress deposit2 = new DepositAddress(new BitcoinAddress("iambitcoin123"), AddressStatus.New, DateTime.Now,
-                new AccountId("123"));
+                new AccountId(1));
             Thread.Sleep(500);
 
             _persistanceRepository.SaveOrUpdate(deposit2);
 
-            List<DepositAddress> retrievedDepositAddressList = _depositAddressRepository.GetDepositAddressByAccountId(new AccountId("123"));
+            List<DepositAddress> retrievedDepositAddressList = _depositAddressRepository.GetDepositAddressByAccountId(new AccountId(1));
             Assert.IsNotNull(retrievedDepositAddressList);
             Assert.AreEqual(2, retrievedDepositAddressList.Count);
 

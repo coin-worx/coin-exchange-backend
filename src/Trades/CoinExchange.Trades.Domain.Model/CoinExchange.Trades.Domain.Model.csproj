@@ -86,6 +86,7 @@
     <Compile Include="OrderMatchingEngine\ExchangeEssentialsList.cs" />
     <Compile Include="OrderMatchingEngine\LimitOrderBookReplayService.cs" />
     <Compile Include="OrderMatchingEngine\ReplayService.cs" />
+    <Compile Include="Services\IFundsConfirmationService.cs" />
     <Compile Include="TradeAggregate\ITradeIdGenerator.cs" />
     <Compile Include="TradeAggregate\TradeEvent.cs" />
     <Compile Include="OrderAggregate\InputDisruptorPublisher.cs" />
