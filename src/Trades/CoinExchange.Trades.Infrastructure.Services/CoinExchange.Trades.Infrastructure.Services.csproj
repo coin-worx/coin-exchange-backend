@@ -43,8 +43,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FundsConfirmationService.cs" />
+    <Compile Include="BalanceValidationService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StubBalanceValidationService.cs" />
     <Compile Include="StubbedOrderIdGenerator.cs" />
     <Compile Include="StubbedTradeIdGenerator.cs" />
   </ItemGroup>
@@ -66,9 +67,12 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Config\TradesInfrastructureServicesConfig.xml">
+    <EmbeddedResource Include="Config\TradesInfrastructureServicesConfig-Stage.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Config\TradesInfrastructureServicesConfig-Test.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

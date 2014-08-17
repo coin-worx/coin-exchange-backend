@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using CoinExchange.Common.Utility;
 using CoinExchange.Trades.Domain.Model.OrderAggregate;
+using CoinExchange.Trades.Domain.Model.Services;
 using CoinExchange.Trades.Domain.Model.TradeAggregate;
 using CoinExchange.Trades.ReadModel.DTO;
 using CoinExchange.Trades.ReadModel.Repositories;
@@ -20,13 +22,24 @@ namespace CoinExchange.Trades.ReadModel.EventHandlers
         private IPersistanceRepository _persistanceRepository;
         private OhlcCalculation _ohlcCalculation;
         private TickerInfoCalculation _tickerInfoCalculation;
+        private IBalanceValidationService _balanceValidationService;
 
-        public TradeEventListener(IPersistanceRepository persistanceRepository,OhlcCalculation ohlcCalculation,TickerInfoCalculation tickerInfoCalculation)
+        /// <summary>
+        /// Default Constructor
+        /// </summary>
+        /// <param name="persistanceRepository"></param>
+        /// <param name="ohlcCalculation"></param>
+        /// <param name="tickerInfoCalculation"></param>
+        /// <param name="balanceValidationService"></param>
+        public TradeEventListener(IPersistanceRepository persistanceRepository,
+            OhlcCalculation ohlcCalculation, TickerInfoCalculation tickerInfoCalculation,
+            IBalanceValidationService balanceValidationService)
         {
             _persistanceRepository = persistanceRepository;
             _ohlcCalculation = ohlcCalculation;
             _tickerInfoCalculation = tickerInfoCalculation;
-            TradeEvent.TradeOccured += OnTradeArrived;
+            _balanceValidationService = balanceValidationService;
+            TradeEvent.TradeOccured += OnTradeArrived;            
         }
 
         /// <summary>
@@ -38,6 +51,10 @@ namespace CoinExchange.Trades.ReadModel.EventHandlers
             _persistanceRepository.SaveOrUpdate(ReadModelAdapter.GetTradeReadModel(trade));
             _ohlcCalculation.CalculateAndPersistOhlc(trade);
             _tickerInfoCalculation.CalculateTickerInfo(trade);
+            Tuple<string, string> currencies = CurrencySplitterService.SplitCurrencyPair(trade.CurrencyPair);
+            _balanceValidationService.TradeExecuted(currencies.Item1, currencies.Item2, trade.ExecutedVolume.Value,
+                trade.ExecutionPrice.Value, trade.ExecutionTime, trade.TradeId.Id, trade.BuyOrder.TraderId.Id, 
+                trade.SellOrder.TraderId.Id, trade.BuyOrder.OrderId.Id, trade.SellOrder.OrderId.Id);
         }
     }
 }

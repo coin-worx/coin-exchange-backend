@@ -4,7 +4,8 @@
                 xsi:schemaLocation="http://www.springframework.net http://www.springframework.net/xsd/spring-objects.xsd">
 
   <object id="OrderApplicationService" type="CoinExchange.Trades.Application.OrderServices.OrderApplicationService, CoinExchange.Trades.Application">
-    <constructor-arg name="cancelOrderCommandValidation" ref="CancelOrderValidation"/> 
+    <constructor-arg name="cancelOrderCommandValidation" ref="CancelOrderValidation"/>
+    <constructor-arg name="balanceValidationService" ref="BalanceValidationService"/>
   </object>
   <object id="CancelOrderValidation" type="CoinExchange.Trades.Application.OrderServices.StubbedCancelOrderCommandValidation, CoinExchange.Trades.Application" singleton="true">
   </object>

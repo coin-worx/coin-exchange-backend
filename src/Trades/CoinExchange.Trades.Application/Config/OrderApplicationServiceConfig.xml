@@ -5,6 +5,7 @@
 
   <object id="OrderApplicationService" type="CoinExchange.Trades.Application.OrderServices.OrderApplicationService, CoinExchange.Trades.Application">
     <constructor-arg name="cancelOrderCommandValidation" ref="CancelOrderValidation"/>
+    <constructor-arg name="balanceValidationService" ref="BalanceValidationService"/>
   </object>
   <object id="CancelOrderValidation" type="CoinExchange.Trades.Application.OrderServices.CancelOrderCommandValidation, CoinExchange.Trades.Application" singleton="true">
     <constructor-arg name="orderRepository" ref="OrderRepository" />

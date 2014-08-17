@@ -7,14 +7,14 @@ using CoinExchange.Trades.Domain.Model.Services;
 
 namespace CoinExchange.Trades.Infrastructure.Services
 {
-    public class FundsConfirmationService : IFundsConfirmationService
+    public class BalanceValidationService : IBalanceValidationService
     {
         private dynamic _orderValidationApplicationService = null;
 
         /// <summary>
         /// Parameterized Constructor
         /// </summary>
-        public FundsConfirmationService(dynamic orderValidationApplicationService)
+        public BalanceValidationService(dynamic orderValidationApplicationService)
         {
             _orderValidationApplicationService = orderValidationApplicationService;
         }
@@ -34,9 +34,7 @@ namespace CoinExchange.Trades.Infrastructure.Services
         /// Informs the Funds BC that a trade has executed which in turn updates the balancefor the involving currrencies
         /// </summary>
         /// <param name="baseCurrency"></param>
-        /// <param name="baseCurrencyIsCrypto"></param>
         /// <param name="quoteCurrency"></param>
-        /// <param name="quoteCurrencyIsCrypto"></param>
         /// <param name="tradeVolume"></param>
         /// <param name="price"></param>
         /// <param name="executionDateTime"></param>
@@ -45,14 +43,15 @@ namespace CoinExchange.Trades.Infrastructure.Services
         /// <param name="sellAccountId"></param>
         /// <param name="buyOrderId"></param>
         /// <param name="sellOrderId"></param>
-        public void TradeExecuted(string baseCurrency, bool baseCurrencyIsCrypto, string quoteCurrency, 
-            bool quoteCurrencyIsCrypto, decimal tradeVolume, decimal price, DateTime executionDateTime, 
-            string tradeId, string buyAccountId, string sellAccountId, string buyOrderId, string sellOrderId)
+        public bool TradeExecuted(string baseCurrency, string quoteCurrency, decimal tradeVolume, decimal price, 
+            DateTime executionDateTime, string tradeId, string buyAccountId, string sellAccountId, string buyOrderId, 
+            string sellOrderId)
         {
-            _orderValidationApplicationService.TradeExecuted(baseCurrency, baseCurrencyIsCrypto,
-                                                                    quoteCurrency, quoteCurrencyIsCrypto, tradeVolume,
-                                                                    price, executionDateTime, tradeId, buyAccountId,
-                                                                    sellAccountId, buyOrderId, sellOrderId);
+            return _orderValidationApplicationService.TradeExecuted(baseCurrency, true/*Default Base Currency = Crypto*/,
+                                                                    quoteCurrency, false/*Default Quote CUrrency = Fiat*/,
+                                                                    tradeVolume, price, executionDateTime, tradeId, 
+                                                                    int.Parse(buyAccountId), int.Parse(sellAccountId),
+                                                                    buyOrderId, sellOrderId);
         }
     }
 }

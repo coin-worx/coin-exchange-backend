@@ -9,7 +9,7 @@ namespace CoinExchange.Trades.Domain.Model.Services
     /// <summary>
     /// Interface for the service interacting with the Funds BC for validating the funds before sending an order
     /// </summary>
-    public interface IFundsConfirmationService
+    public interface IBalanceValidationService
     {
         /// <summary>
         /// Checks and confirms if enough funds are present in the user's account for this currency
@@ -21,8 +21,8 @@ namespace CoinExchange.Trades.Domain.Model.Services
         /// <summary>
         /// Informs the Funds BC that a trade has executed, which in turn updates the balance
         /// </summary>
-        void TradeExecuted(string baseCurrency, bool baseCurrencyIsCrypto, string quoteCurrency,
-            bool quoteCurrencyIsCrypto, decimal tradeVolume, decimal price, DateTime executionDateTime, string tradeId,
-            string buyAccountId, string sellAccountId, string buyOrderId, string sellOrderId);
+        bool TradeExecuted(string baseCurrency, string quoteCurrency, decimal tradeVolume, decimal price,
+            DateTime executionDateTime, string tradeId, string buyAccountId, string sellAccountId, string buyOrderId, 
+            string sellOrderId);
     }
 }

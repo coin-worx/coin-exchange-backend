@@ -3,7 +3,7 @@
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xsi:schemaLocation="http://www.springframework.net http://www.springframework.net/xsd/spring-objects.xsd">
 
-  <object id="FundsConfirmationService" type="CoinExchange.Trades.Infrastructure.Services.FundsConfirmationService, CoinExchange.Trades.Infrastructure.Services">
+  <object id="BalanceValidationService" type="CoinExchange.Trades.Infrastructure.Services.BalanceValidationService, CoinExchange.Trades.Infrastructure.Services">
     <constructor-arg name="orderValidationApplicationService" ref="OrderValidationApplicationService" />
   </object>
 
