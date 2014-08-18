@@ -83,6 +83,7 @@
     <Compile Include="NHibernate\FeeRepository.cs" />
     <Compile Include="NHibernate\FundsPersistenceRepository.cs" />
     <Compile Include="NHibernate\LedgerRepository.cs" />
+    <Compile Include="NHibernate\StubFundsApiKeyAccess.cs" />
     <Compile Include="NHibernate\WithdrawAddressRepository.cs" />
     <Compile Include="NHibernate\WithdrawFeesRepository.cs" />
     <Compile Include="NHibernate\WithdrawLimitRepository.cs" />
@@ -94,6 +95,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Common\CoinExchange.Common\CoinExchange.Common.csproj">
+      <Project>{d61dbd04-95dc-4eb1-ad54-1ff929ac2814}</Project>
+      <Name>CoinExchange.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CoinExchange.Funds.Domain.Model\CoinExchange.Funds.Domain.Model.csproj">
       <Project>{4c4f167d-3339-45f1-9a85-71159ef0d806}</Project>
       <Name>CoinExchange.Funds.Domain.Model</Name>
@@ -107,6 +112,7 @@
   <ItemGroup>
     <EmbeddedResource Include="FundsPersistenceConfig.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

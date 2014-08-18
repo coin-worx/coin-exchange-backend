@@ -5,7 +5,7 @@
 
   <object id="DepositController" type="CoinExchange.Funds.Port.Adapter.Rest.Resources.DepositController, CoinExchange.Funds.Port.Adapter.Rest" singleton="false">
     <constructor-arg name="depositApplicationService" ref="DepositApplicationService"/>
-  <constructor-arg name="apiKeyInfoAccess" ref="SecurityKeysPairRepository"/>
+    <constructor-arg name="apiKeyInfoAccess" ref="StubFundsApiKeyAccess"/>  
   </object>
 
 </objects>

@@ -84,5 +84,9 @@
   <object id="WithdrawFeesRepository" type="CoinExchange.Funds.Infrastructure.Persistence.NHibernate.NHibernate.WithdrawFeesRepository, CoinExchange.Funds.Infrastructure.Persistence.NHibernate">
     <property name="SessionFactory" ref="NHibernateSessionFactory"/>
   </object>
+  
+<object id="StubFundsApiKeyAccess" type="CoinExchange.Funds.Infrastructure.Persistence.NHibernate.NHibernate.StubFundsApiKeyAccess, CoinExchange.Funds.Infrastructure.Persistence.NHibernate">
+    <property name="SessionFactory" ref="NHibernateSessionFactory"/>
+  </object>
   <tx:attribute-driven/>
 </objects>
