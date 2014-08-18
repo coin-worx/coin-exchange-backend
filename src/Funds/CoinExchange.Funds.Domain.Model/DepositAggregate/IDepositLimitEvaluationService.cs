@@ -9,11 +9,23 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
     public interface IDepositLimitEvaluationService
     {
         /// <summary>
-        /// Evaluate the limit for deposit and signify if current transaction is within the deposit limits
+        /// Evaluate the limit for deposit and signify if current transaction is within the deposit limits by comapring 
+        /// it with the threshold limits
         /// </summary>
         /// <returns></returns>
         bool EvaluateDepositLimit(decimal amountInUsd, IList<Ledger> depositLedgers, DepositLimit depositLimit,
             decimal bestBidPrice, decimal bestAskPrice);
+
+        /// <summary>
+        /// Assigns the deposit limits without comparing them to a given deposit value
+        /// </summary>
+        /// <param name="depositLedgers"></param>
+        /// <param name="depositLimit"></param>
+        /// <param name="bestBidPrice"></param>
+        /// <param name="bestAskPrice"></param>
+        /// <returns></returns>
+        bool AssignDepositLimits(IList<Ledger> depositLedgers, DepositLimit depositLimit, decimal bestBidPrice,
+                                 decimal bestAskPrice);
 
         /// <summary>
         /// Daily Deposit Limit

@@ -67,6 +67,8 @@ DROP TABLE IF EXISTS `depositaddress`;
 
 CREATE TABLE `depositaddress` (
   `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `Currency` varchar(15) DEFAULT NULL,
+  `IsCryptoCurrency` tinyint(1) DEFAULT NULL,
   `AccountId` int(11) DEFAULT NULL,
   `BitcoinAddress` varchar(50) DEFAULT NULL,
   `Status` varchar(20) DEFAULT NULL,
@@ -376,6 +378,8 @@ DROP TABLE IF EXISTS `withdrawaddress`;
 
 CREATE TABLE `withdrawaddress` (
   `Id` int(10) NOT NULL AUTO_INCREMENT,
+  `Currency` varchar(15) DEFAULT NULL,
+  `IsCryptoCurrency` tinyint(1) DEFAULT NULL,
   `AccountId` int(11) DEFAULT NULL,
   `BitcoinAddress` varchar(50) DEFAULT NULL,
   `Description` varchar(140) DEFAULT NULL,

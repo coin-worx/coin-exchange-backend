@@ -5,6 +5,7 @@ using System.Threading;
 using CoinExchange.Common.Tests;
 using CoinExchange.Funds.Domain.Model.DepositAggregate;
 using CoinExchange.Funds.Domain.Model.Repositories;
+using CoinExchange.Funds.Domain.Model.CurrencyAggregate;
 using NUnit.Framework;
 using Spring.Context.Support;
 
@@ -41,12 +42,12 @@ namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests.DatabaseP
         [Test]
         public void SaveDepositAddressesAndRetreiveByAccountIdTest_SavesObjectsToDatabase_ChecksIfTheyAreAsExpected()
         {
-            DepositAddress deposit = new DepositAddress(new BitcoinAddress("iambitcoin123"), AddressStatus.New, DateTime.Now,
+            DepositAddress deposit = new DepositAddress(new Currency("XBT", true), new BitcoinAddress("iambitcoin123"), AddressStatus.New, DateTime.Now,
                 new AccountId(1));
 
             _persistanceRepository.SaveOrUpdate(deposit);
 
-            DepositAddress deposit2 = new DepositAddress(new BitcoinAddress("iambitcoin123"), AddressStatus.New, DateTime.Now,
+            DepositAddress deposit2 = new DepositAddress(new Currency("XBT", true), new BitcoinAddress("iambitcoin123"), AddressStatus.New, DateTime.Now,
                 new AccountId(1));
             Thread.Sleep(500);
 

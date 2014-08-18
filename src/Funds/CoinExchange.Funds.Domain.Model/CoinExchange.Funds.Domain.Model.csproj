@@ -48,6 +48,7 @@
     <Compile Include="BalanceAggregate\PendingTransaction.cs" />
     <Compile Include="CurrencyAggregate\Currency.cs" />
     <Compile Include="CurrencyAggregate\CurrencyPair.cs" />
+    <Compile Include="DepositAggregate\AccountDepositLimits.cs" />
     <Compile Include="DepositAggregate\DepositLimit.cs" />
     <Compile Include="DepositAggregate\DepositLimitEvaluationService.cs" />
     <Compile Include="DepositAggregate\DepositType.cs" />
@@ -72,10 +73,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\IFundsPersistenceRepository.cs" />
     <Compile Include="Services\IBboCrossContextService.cs" />
+    <Compile Include="Services\IBitcoinClientService.cs" />
     <Compile Include="Services\IFundsValidationService.cs" />
     <Compile Include="Services\ILedgerIdGeneraterService.cs" />
     <Compile Include="Services\ITransactionService.cs" />
     <Compile Include="Services\ITierLevelRetrievalService.cs" />
+    <Compile Include="WithdrawAggregate\AccountWithdrawLimits.cs" />
     <Compile Include="WithdrawAggregate\BankAccount.cs" />
     <Compile Include="WithdrawAggregate\IWithdrawAddressRepository.cs" />
     <Compile Include="WithdrawAggregate\IWithdrawFeesRepository.cs" />

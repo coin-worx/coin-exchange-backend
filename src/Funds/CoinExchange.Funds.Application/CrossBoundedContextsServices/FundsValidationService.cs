@@ -35,6 +35,11 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         private ITierLevelRetrievalService _tierLevelRetrievalService = null;
         private IBboCrossContextService _bboCrossContextService = null;
         private IWithdrawRepository _withdrawRepository = null;
+        /// <summary>
+        /// Used to convert a currency to the USD amount, we use this symbol to get the best bid and ask from the
+        /// currency/USD order book
+        /// </summary>
+        private const string Usd = "USD";
         
         #endregion Private Fields
 
@@ -158,7 +163,7 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
                             // rather than using the stub implementation which is the only option for integration adn unit
                             // tests, because there is no bid or ask in the Trade BC when running tests in the Funds BC
                             Tuple<decimal, decimal> bestBidBestAsk =
-                                _bboCrossContextService.GetBestBidBestAsk(currency.Name, "USD");
+                                _bboCrossContextService.GetBestBidBestAsk(currency.Name, Usd);
                             // Convert the amount and the fee to US Dollars, because the evaluation service accepts amounts
                             // in USD
                             decimal amountInUsd = ConvertCurrencyToUsd(amount, bestBidBestAsk.Item1,
@@ -277,95 +282,6 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
             return false;
         }
 
-        private bool UpdateBalance(Deposit deposit)
-        {
-            // Check if balance instance has been created for this user already
-            Balance balance = GetBalanceForAccountId(deposit.AccountId, deposit.Currency);
-
-            // If balance instance is not initiated for this currency for the current user, create now
-            if (balance == null)
-            {
-                balance = new Balance(deposit.Currency, deposit.AccountId, deposit.Amount, deposit.Amount);
-            }
-            // Otherwise, update the balance for the current user's currency
-            else
-            {
-                balance.AddAvailableBalance(deposit.Amount);
-                balance.AddCurrentBalance(deposit.Amount);
-            }
-            _fundsPersistenceRepository.SaveOrUpdate(balance);
-            _fundsPersistenceRepository.SaveOrUpdate(deposit);
-
-            return _transactionService.CreateDepositTransaction(deposit, balance.CurrentBalance);
-        }
-
-        /// <summary>
-        /// Updates the pending balance and freezes the account because an over the limit deposit was made
-        /// </summary>
-        /// <param name="deposit"></param>
-        /// <returns></returns>
-        private bool UpdateBalanceAndFreezeAccount(Deposit deposit)
-        {
-            // Check if balance instance has been created for this user already
-            Balance balance = GetBalanceForAccountId(deposit.AccountId, deposit.Currency);
-
-            // If balance instance is not initiated for this currency for the current user, create now
-            if (balance == null)
-            {
-                balance = new Balance(deposit.Currency, deposit.AccountId);
-            }
-            // Otherwise, update the balance for the current user's currency
-            else
-            {
-                balance.AddPendingBalance(deposit.Amount);
-            }
-            balance.FreezeAccount();
-            _fundsPersistenceRepository.SaveOrUpdate(balance);
-            _fundsPersistenceRepository.SaveOrUpdate(deposit);
-
-            return true;
-        }
-
-        /// <summary>
-        /// Converts the specified currency to US Dollars based on the given Currency - USD best bid and best ask
-        /// </summary>
-        /// <returns></returns>
-        private decimal ConvertCurrencyToUsd(decimal currencyAmount, decimal bestBid, decimal bestAsk)
-        {
-            return (((currencyAmount * bestBid) + (currencyAmount * bestAsk)) / 2);
-        }
-
-        /// <summary>
-        /// Gets all the Deposit Ledger transactions
-        /// </summary>
-        /// <returns></returns>
-        private IList<Ledger> GetDepositLedgers(Currency currency, AccountId accountId)
-        {
-            IList<Ledger> depositLedgers = new List<Ledger>();
-            IList<Ledger> allLedgers = _ledgerRepository.GetLedgerByAccountIdAndCurrency(currency.Name, accountId);
-            foreach (var ledger in allLedgers)
-            {
-                if (ledger.LedgerType == LedgerType.Deposit)
-                {
-                    depositLedgers.Add(ledger);
-                }
-            }
-            if (!depositLedgers.Any())
-            {
-                depositLedgers = null;
-            }
-            return depositLedgers;
-        }
-
-        /// <summary>
-        /// Gets all the Withdraw Ledger transactions
-        /// </summary>
-        /// <returns></returns>
-        private IList<Withdraw> GetWithdrawalLedgers(Currency currency, AccountId accountId)
-        {
-            return _withdrawRepository.GetWithdrawByCurrencyAndAccountId(currency.Name, accountId);
-        }
-
         /// <summary>
         /// Handles the event that a trade has been executed and performs the necessay steps to update the balance and 
         /// create a transaction record
@@ -457,11 +373,103 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         }
 
         /// <summary>
+        /// Gets the limits of deposit thresholds for the account
+        /// </summary>
+        /// <param name="currency"> </param>
+        /// <param name="accountId"> </param>
+        /// <returns></returns>
+        public AccountDepositLimits GetDepositLimitThresholds(AccountId accountId, Currency currency)
+        {
+            Balance balance = GetBalanceForAccountId(accountId, currency);
+            // Get all the Deposit Ledgers for this currency and account
+            IList<Ledger> depositLedgers = GetDepositLedgers(currency, accountId);
+            // Get the Current Tier Level for this user using the corss bounded context Tier retrieval service
+            // ToDo: Using the stub implementation for now, upgrade to the real cross bounded context service
+            // once completed
+            // ToDo: Assign the AccountId's value after refactoring the AccountIds value to int
+            string currentTierLevel = _tierLevelRetrievalService.GetCurrentTierLevel(accountId.Value);
+            // Get the Current Deposit limits for this user
+            DepositLimit depositLimit = _depositLimitRepository.GetDepositLimitByTierLevel(currentTierLevel);
+
+            // Get the best bid and best ask form the Trades BC.
+            // NOTE: Implement and use real implementation later, rather than using the stub implementation being
+            // used right now
+            Tuple<decimal, decimal> bestBidBestAsk =
+                _bboCrossContextService.GetBestBidBestAsk(currency.Name, "USD");
+
+            // Check if the current Deposit transaction is within the Deposit limits
+            if (_depositLimitEvaluationService.AssignDepositLimits(depositLedgers,
+                                                                   depositLimit, bestBidBestAsk.Item1,
+                                                                   bestBidBestAsk.Item2))
+            {
+                return new AccountDepositLimits(
+                    currency, accountId, _depositLimitEvaluationService.DailyLimit, _depositLimitEvaluationService.DailyLimitUsed,
+                    _depositLimitEvaluationService.MonthlyLimit, _depositLimitEvaluationService.MonthlyLimitUsed,
+                    balance.CurrentBalance, _depositLimitEvaluationService.MaximumDeposit);
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Gets the limits allowed for the withdrawal, along with the amount that has been used by the user
+        /// </summary>
+        /// <param name="accountId"></param>
+        /// <param name="currency"></param>
+        /// <returns></returns>
+        public AccountWithdrawLimits GetWithdrawThresholds(AccountId accountId, Currency currency)
+        {
+            Balance balance = GetBalanceForAccountId(accountId, currency);
+            if (balance != null)
+            {
+                WithdrawFees withdrawFees = _withdrawFeesRepository.GetWithdrawFeesByCurrencyName(currency.Name);
+                // Get all the Withdraw Ledgers
+                IList<Withdraw> withdrawLedgers = GetWithdrawalLedgers(currency, accountId);
+                // Get the Current Tier Level for this user using the cross bounded context Tier retrieval service                
+                string currentTierLevel = _tierLevelRetrievalService.GetCurrentTierLevel(accountId.Value);
+                // Get the Current Withdraw limits for this user
+                WithdrawLimit withdrawLimit =
+                    _withdrawLimitRepository.GetWithdrawLimitByTierLevel(currentTierLevel);
+
+                // Get the best bid and best ask form the Trades BC.
+                // ToDo: Implement and use real implementation when Funds BC is deployed on the Web Host,
+                // rather than using the stub implementation which is the only option for integration and unit
+                // tests, because there is no bid or ask in the Trade BC when running tests in the Funds BC
+                Tuple<decimal, decimal> bestBidBestAsk = _bboCrossContextService.GetBestBidBestAsk(currency.Name, Usd);
+                
+                // Evaluate if the current withdrawal is within the limits of the maximum withdrawal allowed and 
+                // the balance available
+                if (_withdrawLimitEvaluationService.AssignWithdrawLimits(withdrawLedgers,
+                                                                         withdrawLimit,
+                                                                         bestBidBestAsk.Item1,
+                                                                         bestBidBestAsk.Item2,
+                                                                         balance.AvailableBalance,
+                                                                         balance.CurrentBalance))
+                {
+                    return new AccountWithdrawLimits(currency, accountId, _withdrawLimitEvaluationService.DailyLimit,
+                                                     _withdrawLimitEvaluationService.DailyLimitUsed,
+                                                     _withdrawLimitEvaluationService.MonthlyLimit,
+                                                     _withdrawLimitEvaluationService.MonthlyLimitUsed,
+                                                     balance.CurrentBalance,
+                                                     _withdrawLimitEvaluationService.MaximumWithdraw,
+                                                     _withdrawLimitEvaluationService.MaximumWithdrawUsd,
+                                                     _withdrawLimitEvaluationService.WithheldAmount,
+                                                     _withdrawLimitEvaluationService.WithheldConverted,
+                                                     withdrawFees.Fee);
+                }
+            }
+            return null;
+        }
+
+        #endregion Methods
+
+        #region Helper Methods
+
+        /// <summary>
         /// Calls methods that update the balance and create a ledger transaction in the database
         /// </summary>
         /// <returns></returns>
         private bool InitializeBalanceLedgerUpdate(Currency currency, AccountId accountId, decimal amount,
-            decimal amountInUsd, DateTime executionDateTime, string orderId, string tradeId, bool includeFee, 
+            decimal amountInUsd, DateTime executionDateTime, string orderId, string tradeId, bool includeFee,
             bool isPending, decimal fee, bool isBaseCurrencyInTrade)
         {
             // Update the balance
@@ -513,16 +521,12 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         /// </summary>
         /// <returns></returns>
         private bool CreatePostTradeTransaction(Currency currency, AccountId accountId, decimal amount, decimal amountInUsd,
-            decimal balance, DateTime executionDateTime, string tradeId, string orderId, bool includeFee, decimal fee, 
+            decimal balance, DateTime executionDateTime, string tradeId, string orderId, bool includeFee, decimal fee,
             bool isBaseCurrencyInTrade)
         {
             return _transactionService.CreateLedgerEntry(currency, amount, amountInUsd, fee, balance, executionDateTime,
-                orderId, tradeId,  accountId, isBaseCurrencyInTrade);
+                orderId, tradeId, accountId, isBaseCurrencyInTrade);
         }
-
-        #endregion Methods
-
-        #region Helper Methods
 
         /// <summary>
         /// Checks if the balance for the Account Id is already present in the record kept by this service
@@ -542,6 +546,95 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         private Balance CreateNewBalanceRecord(AccountId accountId, Currency currency)
         {
             return new Balance(currency, accountId);
+        }
+
+        private bool UpdateBalance(Deposit deposit)
+        {
+            // Check if balance instance has been created for this user already
+            Balance balance = GetBalanceForAccountId(deposit.AccountId, deposit.Currency);
+
+            // If balance instance is not initiated for this currency for the current user, create now
+            if (balance == null)
+            {
+                balance = new Balance(deposit.Currency, deposit.AccountId, deposit.Amount, deposit.Amount);
+            }
+            // Otherwise, update the balance for the current user's currency
+            else
+            {
+                balance.AddAvailableBalance(deposit.Amount);
+                balance.AddCurrentBalance(deposit.Amount);
+            }
+            _fundsPersistenceRepository.SaveOrUpdate(balance);
+            _fundsPersistenceRepository.SaveOrUpdate(deposit);
+
+            return _transactionService.CreateDepositTransaction(deposit, balance.CurrentBalance);
+        }
+
+        /// <summary>
+        /// Updates the pending balance and freezes the account because an over the limit deposit was made
+        /// </summary>
+        /// <param name="deposit"></param>
+        /// <returns></returns>
+        private bool UpdateBalanceAndFreezeAccount(Deposit deposit)
+        {
+            // Check if balance instance has been created for this user already
+            Balance balance = GetBalanceForAccountId(deposit.AccountId, deposit.Currency);
+
+            // If balance instance is not initiated for this currency for the current user, create now
+            if (balance == null)
+            {
+                balance = new Balance(deposit.Currency, deposit.AccountId);
+            }
+            // Otherwise, update the balance for the current user's currency
+            else
+            {
+                balance.AddPendingBalance(deposit.Amount);
+            }
+            balance.FreezeAccount();
+            _fundsPersistenceRepository.SaveOrUpdate(balance);
+            _fundsPersistenceRepository.SaveOrUpdate(deposit);
+
+            return true;
+        }
+
+        /// <summary>
+        /// Converts the specified currency to US Dollars based on the given Currency - USD best bid and best ask
+        /// </summary>
+        /// <returns></returns>
+        private decimal ConvertCurrencyToUsd(decimal currencyAmount, decimal bestBid, decimal bestAsk)
+        {
+            return (((currencyAmount * bestBid) + (currencyAmount * bestAsk)) / 2);
+        }
+
+        /// <summary>
+        /// Gets all the Deposit Ledger transactions
+        /// </summary>
+        /// <returns></returns>
+        private IList<Ledger> GetDepositLedgers(Currency currency, AccountId accountId)
+        {
+            IList<Ledger> depositLedgers = new List<Ledger>();
+            IList<Ledger> allLedgers = _ledgerRepository.GetLedgerByAccountIdAndCurrency(currency.Name, accountId);
+            foreach (var ledger in allLedgers)
+            {
+                if (ledger.LedgerType == LedgerType.Deposit)
+                {
+                    depositLedgers.Add(ledger);
+                }
+            }
+            if (!depositLedgers.Any())
+            {
+                depositLedgers = null;
+            }
+            return depositLedgers;
+        }
+
+        /// <summary>
+        /// Gets all the Withdraw Ledger transactions
+        /// </summary>
+        /// <returns></returns>
+        private IList<Withdraw> GetWithdrawalLedgers(Currency currency, AccountId accountId)
+        {
+            return _withdrawRepository.GetWithdrawByCurrencyAndAccountId(currency.Name, accountId);
         }
 
         #endregion Helper Methods

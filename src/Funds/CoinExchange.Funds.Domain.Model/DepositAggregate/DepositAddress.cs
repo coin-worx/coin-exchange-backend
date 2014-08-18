@@ -17,8 +17,10 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
-        public DepositAddress(BitcoinAddress bitcoinAddress, AddressStatus status, DateTime creationDateTime, AccountId accountId)
+        public DepositAddress(CurrencyAggregate.Currency currency, BitcoinAddress bitcoinAddress, AddressStatus status, 
+            DateTime creationDateTime, AccountId accountId)
         {
+            Currency = currency;
             BitcoinAddress = bitcoinAddress;
             Status = status;
             CreationDateTime = creationDateTime;
@@ -29,6 +31,11 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
         /// Database primary key
         /// </summary>
         public int Id { get; private set; }
+
+        /// <summary>
+        /// Currency
+        /// </summary>
+        public CurrencyAggregate.Currency Currency { get; private set; }
 
         /// <summary>
         /// Bitcoin Address

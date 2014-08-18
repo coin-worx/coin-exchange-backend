@@ -42,6 +42,29 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
         }
 
         /// <summary>
+        /// Assigns the Threshold Limits without comparing them with a given value
+        /// </summary>
+        /// <param name="depositLedgers"></param>
+        /// <param name="depositLimit"></param>
+        /// <param name="bestBidPrice"></param>
+        /// <param name="bestAskPrice"></param>
+        /// <returns></returns>
+        public bool AssignDepositLimits(IList<Ledger> depositLedgers, DepositLimit depositLimit, decimal bestBidPrice,
+            decimal bestAskPrice)
+        {
+            // Set Daily and Monthly Limit
+            SetLimits(depositLimit);
+            // Set the amount used in the Daily and Monthly limit
+            SetUsedLimitsUsd(depositLedgers);
+            // Evaluate the Maximum Deposit, set it, and return response whether it went successfully or not
+            if (EvaluateMaximumDepositUsd(bestBidPrice, bestAskPrice))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
         /// Evaluates the value of Maximum Deposit
         /// </summary>
         /// <returns></returns>

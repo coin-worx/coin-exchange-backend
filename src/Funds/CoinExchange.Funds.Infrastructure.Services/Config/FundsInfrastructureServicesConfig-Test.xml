@@ -18,4 +18,7 @@
   <object id="BboCrossContextService" type="CoinExchange.Funds.Infrastructure.Services.StubBboCrossContextService, CoinExchange.Funds.Infrastructure.Services">
   </object>
 
+  <object id="BitcoinClientService" type="CoinExchange.Funds.Infrastructure.Services.StubBitcoinClientService, CoinExchange.Funds.Infrastructure.Services">
+  </object>
+  
 </objects>

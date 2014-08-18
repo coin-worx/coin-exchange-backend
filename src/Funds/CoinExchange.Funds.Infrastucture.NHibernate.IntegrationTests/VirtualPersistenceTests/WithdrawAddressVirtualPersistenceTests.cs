@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using CoinExchange.Funds.Domain.Model.DepositAggregate;
 using CoinExchange.Funds.Domain.Model.Repositories;
 using CoinExchange.Funds.Domain.Model.WithdrawAggregate;
+using CoinExchange.Funds.Domain.Model.CurrencyAggregate;
 using NUnit.Framework;
 
 namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests.VirtualPersistenceTests
@@ -40,13 +41,13 @@ namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests.VirtualPe
         [Test]
         public void SaveWithdrawAddressesAndRetreiveByAccountIdTest_SavesMultipleObjectsToDatabase_ChecksIfRetreivedOutputIsAsExpected()
         {
-            WithdrawAddress withdrawAddress = new WithdrawAddress(new BitcoinAddress("iambitcoin123"), "Description is for dummies",
-                new AccountId(1));
+            WithdrawAddress withdrawAddress = new WithdrawAddress(new Currency("XBT", true), new BitcoinAddress("iambitcoin123"), "Description is for dummies",
+                new AccountId(1), DateTime.Now);
 
             _persistanceRepository.SaveOrUpdate(withdrawAddress);
 
-            WithdrawAddress deposit2 = new WithdrawAddress(new BitcoinAddress("321nioctibmai"), "Description is for champs",
-                new AccountId(1));
+            WithdrawAddress deposit2 = new WithdrawAddress(new Currency("XBT", true), new BitcoinAddress("321nioctibmai"), "Description is for champs",
+                new AccountId(1), DateTime.Now);
             Thread.Sleep(500);
 
             _persistanceRepository.SaveOrUpdate(deposit2);

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using CoinExchange.Funds.Domain.Model.DepositAggregate;
+using CoinExchange.Funds.Domain.Model.LedgerAggregate;
 using CoinExchange.Funds.Domain.Model.WithdrawAggregate;
 using CoinExchange.Funds.Domain.Model.CurrencyAggregate;
 
@@ -82,5 +84,21 @@ namespace CoinExchange.Funds.Domain.Model.Services
         /// <returns></returns>
         bool OrderCancelled(Currency baseCurrency, Currency quoteCurrency, AccountId accountId, string orderside,
             string orderId, decimal openQuantity, decimal price);
+
+        /// <summary>
+        /// Evaluates and returns the original threshold limits and the threshold limits used
+        /// </summary>
+        /// <param name="accountId"> </param>
+        /// <param name="currency"> </param>
+        /// <returns></returns>
+        AccountDepositLimits GetDepositLimitThresholds(AccountId accountId, Currency currency);
+
+        /// <summary>
+        /// Gets the original threashld for day and month, alon with the limits that have been used by the user
+        /// </summary>
+        /// <param name="accountId"></param>
+        /// <param name="currency"></param>
+        /// <returns></returns>
+        AccountWithdrawLimits GetWithdrawThresholds(AccountId accountId, Currency currency);
     }
 }

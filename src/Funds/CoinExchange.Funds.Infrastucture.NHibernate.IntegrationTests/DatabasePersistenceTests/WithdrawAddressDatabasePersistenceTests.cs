@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Threading;
 using CoinExchange.Common.Tests;
+using CoinExchange.Funds.Domain.Model.CurrencyAggregate;
 using CoinExchange.Funds.Domain.Model.DepositAggregate;
 using CoinExchange.Funds.Domain.Model.Repositories;
 using CoinExchange.Funds.Domain.Model.WithdrawAggregate;
@@ -41,13 +43,13 @@ namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests.DatabaseP
         [Test]
         public void SaveWithdrawAddressesAndRetreiveByAccountIdTest_SavesMultipleObjectsToDatabase_ChecksIfRetreivedOutputIsAsExpected()
         {
-            WithdrawAddress withdrawAddress = new WithdrawAddress(new BitcoinAddress("iambitcoin123"), "Description is for dummies",
-                new AccountId(1));
+            WithdrawAddress withdrawAddress = new WithdrawAddress(new Currency("XBT", true), new BitcoinAddress("iambitcoin123"), "Description is for dummies",
+                new AccountId(1), DateTime.Now);
 
             _persistanceRepository.SaveOrUpdate(withdrawAddress);
 
-            WithdrawAddress deposit2 = new WithdrawAddress(new BitcoinAddress("321nioctibmai"), "Description is for champs",
-                new AccountId(1));
+            WithdrawAddress deposit2 = new WithdrawAddress(new Currency("XBT", true), new BitcoinAddress("321nioctibmai"), "Description is for champs",
+                new AccountId(1), DateTime.Now);
             Thread.Sleep(500);
 
             _persistanceRepository.SaveOrUpdate(deposit2);

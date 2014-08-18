@@ -40,10 +40,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BboCrossContextService.cs" />
+    <Compile Include="BitcoinClientService.cs" />
     <Compile Include="StubBboCrossContextService.cs" />
     <Compile Include="DepositIdGeneratorService.cs" />
     <Compile Include="LedgerIdGeneratorService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StubBitcoinClientService.cs" />
     <Compile Include="StubTierLevelRetrievalService.cs" />
     <Compile Include="TierLevelRetrievalService.cs" />
     <Compile Include="WithdrawIdGeneratorService.cs" />

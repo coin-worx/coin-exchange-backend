@@ -16,6 +16,11 @@ namespace CoinExchange.Funds.Application.Tests
             throw new NotImplementedException();
         }
 
+        public bool AssignDepositLimits(IList<Ledger> depositLedgers, DepositLimit depositLimit, decimal bestBidPrice, decimal bestAskPrice)
+        {
+            throw new NotImplementedException();
+        }
+
         public decimal DailyLimit { get; private set; }
         public decimal DailyLimitUsed { get; private set; }
         public decimal MonthlyLimit { get; private set; }

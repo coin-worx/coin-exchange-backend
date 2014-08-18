@@ -22,17 +22,25 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
-        public WithdrawAddress(BitcoinAddress bitcoinAddress, string description, AccountId accountId)
+        public WithdrawAddress(CurrencyAggregate.Currency currency, BitcoinAddress bitcoinAddress, string description, 
+            AccountId accountId, DateTime creationDateTime)
         {
+            Currency = currency;
             BitcoinAddress = bitcoinAddress;
             Description = description;
             AccountId = accountId;
+            CreationDateTime = creationDateTime;
         }
 
         /// <summary>
         /// Primary key for database
         /// </summary>
         public int Id { get; private set; }
+
+        /// <summary>
+        /// Currency
+        /// </summary>
+        public CurrencyAggregate.Currency Currency { get; private set; }
 
         /// <summary>
         /// Bitcoin Address

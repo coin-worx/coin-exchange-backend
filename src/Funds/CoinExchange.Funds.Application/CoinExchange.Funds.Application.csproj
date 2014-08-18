@@ -58,9 +58,20 @@
     <Compile Include="CrossBoundedContextsServices\FeeCalculationService.cs" />
     <Compile Include="CrossBoundedContextsServices\FundsValidationService.cs" />
     <Compile Include="CrossBoundedContextsServices\TransactionService.cs" />
+    <Compile Include="DepositServices\Commands\GenerateNewAddressCommand.cs" />
+    <Compile Include="DepositServices\DepositApplicationService.cs" />
+    <Compile Include="DepositServices\IDepositApplicationService.cs" />
+    <Compile Include="DepositServices\Representations\DepositAddressRepresentation.cs" />
+    <Compile Include="DepositServices\Representations\DepositLimitRepresentation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="OrderValidationServices\IOrderValidationApplicationService.cs" />
     <Compile Include="OrderValidationServices\OrderValidationApplicationService.cs" />
+    <Compile Include="WithdrawServices\Commands\AddAddressCommand.cs" />
+    <Compile Include="WithdrawServices\Commands\CommitWithdrawCommand.cs" />
+    <Compile Include="WithdrawServices\Representations\WithdrawAddressRepresentation.cs" />
+    <Compile Include="WithdrawServices\Representations\WithdrawLimitRepresentation.cs" />
+    <Compile Include="WithdrawServices\IWithdrawApplicationService.cs" />
+    <Compile Include="WithdrawServices\WithdrawApplicationService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -80,16 +91,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="FundsApplicationServicesConfig-Stage.xml" />
-    <Content Include="FundsApplicationServicesConfig-Test.xml">
+    <Content Include="FundsApplicationServicesConfig.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="DepositServices\" />
-    <Folder Include="WithdrawServices\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

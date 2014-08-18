@@ -6,6 +6,10 @@ assembly="CoinExchange.Funds.Domain.Model" namespace="CoinExchange.Funds.Domain.
       <generator class="native" />
     </id>
 
+    <component name="Currency">
+      <property name="Name" column="Currency"/>
+      <property name="IsCryptoCurrency" column="IsCryptoCurrency"/>
+    </component>
     <property name="CreationDateTime" />
     <property name="Description" />
     <component name="BitcoinAddress">
