@@ -41,7 +41,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
         }
 
         [Test]
-        public void WIthdrawApplciationServiceInitializationTest_ChecksIfTheServiceGetsInitializedAsExpected_VerifiesThroughInstanceValue()
+        public void WithdrawApplicationServiceInitializationTest_ChecksIfTheServiceGetsInitializedAsExpected_VerifiesThroughInstanceValue()
         {
             IWithdrawApplicationService withdrawApplicationService = (IWithdrawApplicationService)ContextRegistry.GetContext()["WithdrawApplicationService"];
             Assert.IsNotNull(withdrawApplicationService);

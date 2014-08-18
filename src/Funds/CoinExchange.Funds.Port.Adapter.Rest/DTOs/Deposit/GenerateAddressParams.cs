@@ -4,17 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoinExchange.Funds.Application.DepositServices.Commands
+namespace CoinExchange.Funds.Port.Adapter.Rest.DTOs.Deposit
 {
     /// <summary>
-    /// Command for generatin new address
+    /// Parameters for generating a new address for deposit
     /// </summary>
-    public class GenerateNewAddressCommand
+    public class GenerateAddressParams
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
-        public GenerateNewAddressCommand(int accountId, string currency)
+        public GenerateAddressParams(int accountId, string currency)
         {
             AccountId = accountId;
             Currency = currency;
