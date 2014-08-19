@@ -8,4 +8,14 @@
     <constructor-arg name="apiKeyInfoAccess" ref="SecurityKeysPairRepository"/>
   </object>
 
+  <object id="WithdrawController" type="CoinExchange.Funds.Port.Adapter.Rest.Resources.WithdrawController, CoinExchange.Funds.Port.Adapter.Rest" singleton="false">
+    <constructor-arg name="withdrawApplicationService" ref="WithdrawApplicationService"/>
+    <constructor-arg name="apiKeyInfoAccess" ref="SecurityKeysPairRepository"/>
+  </object>
+
+  <object id="LedgerController" type="CoinExchange.Funds.Port.Adapter.Rest.Resources.LedgerController, CoinExchange.Funds.Port.Adapter.Rest" singleton="false">
+    <constructor-arg name="ledgerQueryService" ref="LedgerQueryService"/>
+    <constructor-arg name="apiKeyInfoAccess" ref="SecurityKeysPairRepository"/>
+  </object>
+  
 </objects>

@@ -63,6 +63,9 @@
     <Compile Include="DepositServices\IDepositApplicationService.cs" />
     <Compile Include="DepositServices\Representations\DepositAddressRepresentation.cs" />
     <Compile Include="DepositServices\Representations\DepositLimitRepresentation.cs" />
+    <Compile Include="LedgerServices\ILedgerQueryService.cs" />
+    <Compile Include="LedgerServices\LedgerQueryService.cs" />
+    <Compile Include="LedgerServices\Representations\LedgerRepresentation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="OrderValidationServices\IOrderValidationApplicationService.cs" />
     <Compile Include="OrderValidationServices\OrderValidationApplicationService.cs" />

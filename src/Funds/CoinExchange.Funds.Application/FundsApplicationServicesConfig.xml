@@ -50,6 +50,10 @@
     <constructor-arg name="bitcoinClientService" ref="BitcoinClientService"/>
     <constructor-arg name="fundsValidationService" ref="FundsValidationService"/>
   </object>
+
+  <object id="LedgerQueryService" type="CoinExchange.Funds.Application.LedgerServices.LedgerQueryService, CoinExchange.Funds.Application">
+    <constructor-arg name="ledgerRepository" ref="LedgerRepository"/>
+  </object>
   
   <tx:attribute-driven/>
 </objects>

@@ -76,6 +76,8 @@
   <ItemGroup>
     <Compile Include="DTOs\Deposit\GenerateAddressParams.cs" />
     <Compile Include="DTOs\Deposit\GetDepositAddressesParams.cs" />
+    <Compile Include="DTOs\Withdraw\AddWithdrawAddressParams.cs" />
+    <Compile Include="DTOs\Withdraw\CommitWithdrawParams.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\DepositController.cs" />
     <Compile Include="Resources\LedgerController.cs" />
@@ -100,6 +102,7 @@
       <Name>CoinExchange.Funds.Application</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
