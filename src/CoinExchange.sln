@@ -173,6 +173,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinExchange.Funds.Infrastu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinExchange.Trades.Infrastructure.Services.IntegrationTests", "Trades\CoinExchange.Trades.Infrastructure.Services.IntegrationTests\CoinExchange.Trades.Infrastructure.Services.IntegrationTests.csproj", "{2B7BC1BA-840B-4154-B479-1DD6E75A8565}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinExchange.Funds.Infrastructure.Services.IntegrationTests", "Funds\CoinExchange.Funds.Infrastructure.Services.IntegrationTests\CoinExchange.Funds.Infrastructure.Services.IntegrationTests.csproj", "{7A268116-1003-42C8-B728-21DE44345589}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -399,6 +401,10 @@ Global
 		{2B7BC1BA-840B-4154-B479-1DD6E75A8565}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2B7BC1BA-840B-4154-B479-1DD6E75A8565}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2B7BC1BA-840B-4154-B479-1DD6E75A8565}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A268116-1003-42C8-B728-21DE44345589}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A268116-1003-42C8-B728-21DE44345589}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A268116-1003-42C8-B728-21DE44345589}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A268116-1003-42C8-B728-21DE44345589}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -437,6 +443,7 @@ Global
 		{27301EBA-3E81-4091-B877-DA0BE0BAE158} = {8DF74568-2852-41F1-A25C-1FAFB34C0DEF}
 		{4ED67F1A-B775-4C35-A175-E1E316955E6D} = {8DF74568-2852-41F1-A25C-1FAFB34C0DEF}
 		{37BCBC65-4B80-4023-A450-B10A32DA2D10} = {8DF74568-2852-41F1-A25C-1FAFB34C0DEF}
+		{7A268116-1003-42C8-B728-21DE44345589} = {8DF74568-2852-41F1-A25C-1FAFB34C0DEF}
 		{8DB1B3EB-5262-4208-ACC5-8ACF284C5977} = {1631B2D7-CE93-46FA-9C7C-754415AC5E47}
 		{B96CB3A4-B8CC-49A5-93B9-34255F801A7F} = {1631B2D7-CE93-46FA-9C7C-754415AC5E47}
 		{ED90B5C6-71F0-46F6-A2A5-806997104121} = {1631B2D7-CE93-46FA-9C7C-754415AC5E47}

@@ -84,7 +84,9 @@
     <Compile Include="Resources\WithdrawController.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="FundsRestServicesConfig-Stage.xml" />
+    <Content Include="FundsRestServicesConfig-Stage.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="FundsRestServicesConfig-Test.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

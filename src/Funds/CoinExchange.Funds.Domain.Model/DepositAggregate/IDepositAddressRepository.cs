@@ -13,5 +13,7 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
     {
         DepositAddress GetDepositAddressById(int id);
         List<DepositAddress> GetDepositAddressByAccountId(AccountId accountId);
+        DepositAddress GetDepositAddressByAddress(BitcoinAddress bitcoinAddress);
+        List<DepositAddress> GetAllDepositAddresses();
     }
 }

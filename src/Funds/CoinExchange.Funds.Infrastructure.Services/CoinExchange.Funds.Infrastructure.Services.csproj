@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BitcoinLib">
+      <HintPath>..\..\packages\BitcoinLib\BitcoinLib.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -40,23 +43,33 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BboCrossContextService.cs" />
-    <Compile Include="BitcoinClientService.cs" />
+    <Compile Include="CoinClientService.cs" />
     <Compile Include="StubBboCrossContextService.cs" />
     <Compile Include="DepositIdGeneratorService.cs" />
     <Compile Include="LedgerIdGeneratorService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StubBitcoinClientService.cs" />
+    <Compile Include="StubCoinClientService.cs" />
     <Compile Include="StubTierLevelRetrievalService.cs" />
     <Compile Include="TierLevelRetrievalService.cs" />
     <Compile Include="WithdrawIdGeneratorService.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Common\CoinExchange.Common\CoinExchange.Common.csproj">
+      <Project>{d61dbd04-95dc-4eb1-ad54-1ff929ac2814}</Project>
+      <Name>CoinExchange.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CoinExchange.Funds.Domain.Model\CoinExchange.Funds.Domain.Model.csproj">
       <Project>{4c4f167d-3339-45f1-9a85-71159ef0d806}</Project>
       <Name>CoinExchange.Funds.Domain.Model</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Config\CoinClientServiceConfig-Stage.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Config\CoinClientServiceConfig-Test.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Config\FundsInfrastructureServicesConfig-Stage.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

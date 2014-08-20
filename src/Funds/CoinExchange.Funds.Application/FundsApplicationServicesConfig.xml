@@ -39,7 +39,7 @@
 
   <object id="DepositApplicationService" type="CoinExchange.Funds.Application.DepositServices.DepositApplicationService, CoinExchange.Funds.Application">
     <constructor-arg name="fundsValidationService" ref="FundsValidationService"/>
-    <constructor-arg name="bitcoinClientService" ref="BitcoinClientService"/>
+    <constructor-arg name="coinClientService" ref="CoinClientService"/>
     <constructor-arg name="fundsPersistenceRepository" ref="FundsPersistenceRepository"/>
     <constructor-arg name="depositAddressRepository" ref="DepositAddressRepository"/>
   </object>
@@ -47,7 +47,7 @@
   <object id="WithdrawApplicationService" type="CoinExchange.Funds.Application.WithdrawServices.WithdrawApplicationService, CoinExchange.Funds.Application">
     <constructor-arg name="fundsPersistenceRepository" ref="FundsPersistenceRepository"/>
     <constructor-arg name="withdrawAddressRepository" ref="WithdrawAddressRepository"/>
-    <constructor-arg name="bitcoinClientService" ref="BitcoinClientService"/>
+    <constructor-arg name="coinClientService" ref="CoinClientService"/>
     <constructor-arg name="fundsValidationService" ref="FundsValidationService"/>
   </object>
 

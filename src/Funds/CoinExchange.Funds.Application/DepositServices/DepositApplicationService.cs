@@ -18,18 +18,18 @@ namespace CoinExchange.Funds.Application.DepositServices
     public class DepositApplicationService : IDepositApplicationService
     {
         private IFundsValidationService _fundsValidationService;
-        private IBitcoinClientService _bitcoinClientService;
+        private ICoinClientService _coinClientService;
         private IFundsPersistenceRepository _fundsPersistenceRepository;
         private IDepositAddressRepository _depositAddressRepository;
 
         /// <summary>
         /// Default Constructor
         /// </summary>
-        private DepositApplicationService(IFundsValidationService fundsValidationService, IBitcoinClientService bitcoinClientService,
+        private DepositApplicationService(IFundsValidationService fundsValidationService, ICoinClientService coinClientService,
             IFundsPersistenceRepository fundsPersistenceRepository, IDepositAddressRepository depositAddressRepository)
         {
             _fundsValidationService = fundsValidationService;
-            _bitcoinClientService = bitcoinClientService;
+            _coinClientService = coinClientService;
             _fundsPersistenceRepository = fundsPersistenceRepository;
             _depositAddressRepository = depositAddressRepository;
         }
@@ -41,7 +41,7 @@ namespace CoinExchange.Funds.Application.DepositServices
         /// <returns></returns>
         public DepositAddressRepresentation GenarateNewAddress(GenerateNewAddressCommand generateNewAddressCommand)
         {
-            string address = _bitcoinClientService.CreateNewAddress();
+            string address = _coinClientService.CreateNewAddress(generateNewAddressCommand.Currency);
             DepositAddress depositAddress = new DepositAddress(new Currency(generateNewAddressCommand.Currency), 
                 new BitcoinAddress(address), AddressStatus.New, DateTime.Now, 
                 new AccountId(generateNewAddressCommand.AccountId));

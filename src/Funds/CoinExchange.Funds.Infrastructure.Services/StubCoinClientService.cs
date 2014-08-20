@@ -4,27 +4,35 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CoinExchange.Funds.Domain.Model.Services;
+using CoinExchange.Funds.Domain.Model.WithdrawAggregate;
 
 namespace CoinExchange.Funds.Infrastructure.Services
 {
     /// <summary>
     /// Stub Implementation for the Bitcoin Client Service
     /// </summary>
-    public class StubBitcoinClientService : IBitcoinClientService
+    public class StubCoinClientService : ICoinClientService
     {
-        public string CreateNewAddress()
+        public event Action DepositArrived;
+
+        public string CreateNewAddress(string currency)
         {
             return Guid.NewGuid().ToString();
         }
 
-        public bool MakeWithdrawal(string address, string currency, decimal amount)
+        public bool CommitWithdraw(Withdraw withdraw)
         {
             return true;
         }
 
-        public bool DepositMade(string currency, decimal amount)
+        public bool DepositMade(string address, string currency, decimal amount)
         {
             return true;
+        }
+
+        public decimal CheckBalance(string currency)
+        {
+            return 0;
         }
     }
 }

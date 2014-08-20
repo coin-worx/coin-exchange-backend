@@ -20,19 +20,19 @@ namespace CoinExchange.Funds.Application.WithdrawServices
     {
         private IFundsPersistenceRepository _fundsPersistenceRepository;
         private IWithdrawAddressRepository _withdrawAddressRepository;
-        private IBitcoinClientService _bitcoinClientService;
+        private ICoinClientService _coinClientService;
         private IFundsValidationService _fundsValidationService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
         public WithdrawApplicationService(IFundsPersistenceRepository fundsPersistenceRepository, 
-            IWithdrawAddressRepository withdrawAddressRepository, IBitcoinClientService bitcoinClientService, 
+            IWithdrawAddressRepository withdrawAddressRepository, ICoinClientService coinClientService, 
             IFundsValidationService fundsValidationService)
         {
             _fundsPersistenceRepository = fundsPersistenceRepository;
             _withdrawAddressRepository = withdrawAddressRepository;
-            _bitcoinClientService = bitcoinClientService;
+            _coinClientService = coinClientService;
             _fundsValidationService = fundsValidationService;
         }
 
@@ -90,8 +90,9 @@ namespace CoinExchange.Funds.Application.WithdrawServices
 
             if (withdrawal != null)
             {
-                return _bitcoinClientService.MakeWithdrawal(withdrawal.BitcoinAddress.Value, withdrawal.Currency.Name,
-                                                     withdrawal.Amount);
+                // Commit the withdraw to the network, if successful, create transaction ledger using 
+                // IFundsValidationService
+                return _coinClientService.CommitWithdraw(withdrawal);
             }
             return false;
         }

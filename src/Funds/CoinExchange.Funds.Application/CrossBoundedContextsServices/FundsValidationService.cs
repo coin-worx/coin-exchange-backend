@@ -239,7 +239,7 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         [Transaction]
         public bool DepositConfirmed(Deposit deposit)
         {
-            if (deposit != null && deposit.Confirmations >= 7)
+            if (deposit != null && deposit.Confirmations == 7)
             {
                 if (deposit.Currency.IsCryptoCurrency)
                 {

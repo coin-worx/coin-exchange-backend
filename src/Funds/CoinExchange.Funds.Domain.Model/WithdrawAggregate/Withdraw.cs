@@ -39,7 +39,7 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
         public Withdraw(Currency currency, string withdrawId, DateTime dateTime, WithdrawType type, decimal amount, 
-            decimal amountInUsd, decimal fee, TransactionStatus status, AccountId accountId, TransactionId transactionId, BitcoinAddress bitcoinAddress)
+            decimal amountInUsd, decimal fee, TransactionStatus status, AccountId accountId, BitcoinAddress bitcoinAddress)
         {
             Currency = currency;
             WithdrawId = withdrawId;
@@ -50,7 +50,6 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
             Fee = fee;
             Status = status;
             AccountId = accountId;
-            TransactionId = transactionId;
             BitcoinAddress = bitcoinAddress;
         }
 
@@ -166,6 +165,14 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
         public void SetAmountInUsd(decimal amountInUsd)
         {
             AmountInUsd = amountInUsd;
+        }
+
+        /// <summary>
+        /// Assigns the Transaction ID to this withdraw instance
+        /// </summary>
+        public void SetTransactionId(string transactionId)
+        {
+            this.TransactionId = new TransactionId(transactionId);
         }
     }
 }

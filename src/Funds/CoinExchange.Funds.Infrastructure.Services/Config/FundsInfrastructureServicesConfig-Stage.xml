@@ -20,7 +20,4 @@
     <constructor-arg name="userTierLevelApplicationService" ref="UserTierLevelApplicationService" />
   </object>
 
-  <object id="BitcoinClientService" type="CoinExchange.Funds.Infrastructure.Services.BitcoinClientService, CoinExchange.Funds.Infrastructure.Services">
-  </object>
-
 </objects>
