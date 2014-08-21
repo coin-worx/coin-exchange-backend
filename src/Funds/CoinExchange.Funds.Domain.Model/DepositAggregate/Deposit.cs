@@ -140,6 +140,19 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
         }
 
         /// <summary>
+        /// Set the number of confirmations
+        /// </summary>
+        /// <param name="confirmations"></param>
+        public void SetConfirmations(int confirmations)
+        {
+            Confirmations = confirmations;
+            if (confirmations >= 7)
+            {
+                StatusConfirmed();
+            }
+        }
+
+        /// <summary>
         /// Sets the status to Confirmed
         /// </summary>
         public void StatusConfirmed()

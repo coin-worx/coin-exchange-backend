@@ -48,6 +48,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Iesi.Collections.1.0.1\lib\Iesi.Collections.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="NHibernate, Version=3.0.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\NHibernate.3.0.0.4000\lib\NHibernate.dll</HintPath>
@@ -75,6 +78,7 @@
       <HintPath>..\..\packages\Spring.Data.NHibernate30.1.3.2\lib\net40\Spring.Data.NHibernate30.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -83,7 +87,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CoinClientServiceTest.cs" />
+    <Compile Include="CoinClientServiceIntegrationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -91,6 +95,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\common\CoinExchange.Common.Tests\CoinExchange.Common.Tests.csproj">
+      <Project>{bbf58888-03cd-47f4-aeb9-bc6070d97920}</Project>
+      <Name>CoinExchange.Common.Tests</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CoinExchange.Funds.Application\CoinExchange.Funds.Application.csproj">
       <Project>{f6edd751-080b-4c4e-8216-2e1ed3ed0a66}</Project>
       <Name>CoinExchange.Funds.Application</Name>

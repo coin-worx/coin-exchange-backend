@@ -8,6 +8,7 @@
     <constructor-arg name="depositRepository" ref="DepositRepository" />
     <constructor-arg name="depositAddressRepository" ref="DepositAddressRepository" />
     <constructor-arg name="depositIdGeneratorService" ref="DepositIdGeneratorService" />
+    <constructor-arg name="fundsPersistenceRepository" ref="FundsPersistenceRepository" />
   </object>
 
 </objects>

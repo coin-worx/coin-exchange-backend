@@ -230,7 +230,10 @@ namespace CoinExchange.Funds.Domain.Model.BalanceAggregate
         /// </summary>
         public decimal PendingBalance
         {
-            get { return _currentBalance - _availableBalance; }
+            get
+            {
+                return Math.Abs(_currentBalance - _availableBalance);
+            }
             private set { _pendingBalance = value; }
         }
 

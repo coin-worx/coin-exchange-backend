@@ -55,6 +55,15 @@ namespace CoinExchange.Funds.Infrastructure.Persistence.NHibernate.NHibernate
         }
 
         [Transaction]
+        public List<Deposit> GetAllDeposits()
+        {
+            return CurrentSession.Query<Deposit>()
+                .AsQueryable()
+                .OrderByDescending(x => x.Date)
+                .ToList();
+        }
+
+        [Transaction]
         public List<Deposit> GetDepositByAccountId(AccountId accountId)
         {
             return CurrentSession.Query<Deposit>()

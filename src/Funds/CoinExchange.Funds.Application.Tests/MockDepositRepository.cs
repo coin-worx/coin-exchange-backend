@@ -52,5 +52,10 @@ namespace CoinExchange.Funds.Application.Tests
         {
             throw new NotImplementedException();
         }
+
+        public List<Deposit> GetAllDeposits()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
