@@ -134,11 +134,11 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Resources
         [Route("funds/getdepositlimits")]
         [Authorize]
         [HttpPost]
-        public IHttpActionResult GetDepositLimits([FromBody]string currency)
+        public IHttpActionResult GetDepositLimits([FromBody]GetDepositLimitsParams getDepositLimitsParams)
         {
             if (log.IsDebugEnabled)
             {
-                log.Debug(string.Format("Get Deposit Limits call"));
+                log.Debug(string.Format("Get Deposit Limits call: Currency = {0}", getDepositLimitsParams.Currency));
             }
             try
             {
@@ -155,10 +155,10 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Resources
                 {
                     log.Debug(string.Format("Get Deposit Limits Call: ApiKey = {0}", apikey));
                 }
-                if (!string.IsNullOrEmpty(apikey) && !string.IsNullOrEmpty(currency))
+                if (!string.IsNullOrEmpty(apikey) && !string.IsNullOrEmpty(getDepositLimitsParams.Currency))
                 {
                     int accountId = _apiKeyInfoAccess.GetUserIdFromApiKey(apikey);
-                    return Ok(_depositApplicationService.GetThresholdLimits(accountId, currency));
+                    return Ok(_depositApplicationService.GetThresholdLimits(accountId, getDepositLimitsParams.Currency));
                 }
                 return BadRequest("Currency is not provided or API key not found with request");
             }
@@ -167,6 +167,52 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Resources
                 if (log.IsErrorEnabled)
                 {
                     log.Error(string.Format("Get Deposit Limits Call Error: {0}", exception));
+                }
+                return InternalServerError();
+            }
+        }
+
+        /// <summary>
+        /// Call to get Deposit Limits
+        /// </summary>
+        /// <returns></returns>
+        [Route("funds/makedeposit")]
+        [Authorize]
+        [HttpPost]
+        public IHttpActionResult MakeDeposit([FromBody]MakeDepositParams makeDepositParams)
+        {
+            if (log.IsDebugEnabled)
+            {
+                log.Debug(string.Format("Make Deposit call: Currency = {0}", makeDepositParams.Currency));
+            }
+            try
+            {
+                // Get api key from header
+                var headers = Request.Headers;
+                string apikey = "";
+                IEnumerable<string> headerParams;
+                if (headers.TryGetValues("Auth", out headerParams))
+                {
+                    string[] auth = headerParams.ToList()[0].Split(',');
+                    apikey = auth[0];
+                }
+                if (log.IsDebugEnabled)
+                {
+                    log.Debug(string.Format("Make Deposit Call: ApiKey = {0}", apikey));
+                }
+                if (!string.IsNullOrEmpty(apikey) && !string.IsNullOrEmpty(makeDepositParams.Currency))
+                {
+                    int accountId = _apiKeyInfoAccess.GetUserIdFromApiKey(apikey);
+                    return Ok(_depositApplicationService.MakeDeposit(new MakeDepositCommand(
+                        accountId, makeDepositParams.Currency, makeDepositParams.Amount)));
+                }
+                return BadRequest("Currency is not provided or API key not found with request");
+            }
+            catch (Exception exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error(string.Format("Make Deposit Call Error: {0}", exception));
                 }
                 return InternalServerError();
             }

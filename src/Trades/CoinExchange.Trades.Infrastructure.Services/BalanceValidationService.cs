@@ -26,7 +26,7 @@ namespace CoinExchange.Trades.Infrastructure.Services
         public bool FundsConfirmation(string accountId, string baseCurrency, string quoteCurrency,
             decimal volume, decimal price, string orderSide, string orderId)
         {
-            return _orderValidationApplicationService.ValidateFundsForOrder(accountId, baseCurrency, true/*Default: CryptoCurrency*/, 
+            return _orderValidationApplicationService.ValidateFundsForOrder(Convert.ToInt32(accountId), baseCurrency, true/*Default: CryptoCurrency*/, 
             quoteCurrency, false/*Default: Fiat Currency*/, volume, price, orderSide, orderId);
         }
 

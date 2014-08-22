@@ -15,13 +15,16 @@ namespace CoinExchange.Client.Console
         {
             string baseUrl = "http://rockblanc.cloudapp.net/test/v1";
             baseUrl = "http://localhost:51780/v1";
-            ApiClient client = new ApiClient(baseUrl);
+            //ApiClient client = new ApiClient(baseUrl);
             //System.Console.WriteLine(client.QueryTrades("6e8b5195-0e7f-402f-87e7-80eb92a96c85"));
             //Scenario1(client);
             //ScenarioResults(client);
             //System.Console.WriteLine(client.GetTradeHistory("",""));
-            Login(baseUrl);
-            Scenario1(client);
+            //Login(baseUrl);
+            //Scenario1(client);
+
+            AllBoundedContextsIntegrationTests allBoundedContexts = new AllBoundedContextsIntegrationTests();
+            allBoundedContexts.Initialization();
             System.Console.ReadKey();
         }
 
@@ -117,7 +120,7 @@ namespace CoinExchange.Client.Console
             Thread.Sleep(2000);
             System.Console.WriteLine(client.CreateOrder(currencyPair, "limit", "sell", 5, 252));
             Thread.Sleep(2000);
-            System.Console.WriteLine(client.CreateOrder(currencyPair, "limit", "buy", 3,250));
+            System.Console.WriteLine(client.CreateOrder(currencyPair, "limit", "buy", 3, 250));
             Thread.Sleep(2000);
             System.Console.WriteLine(client.CreateOrder(currencyPair, "limit", "sell", 2, 253));
             Thread.Sleep(2000);

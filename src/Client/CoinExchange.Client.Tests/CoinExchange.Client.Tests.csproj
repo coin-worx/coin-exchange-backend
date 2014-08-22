@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="AccessControl.cs" />
     <Compile Include="IdentityAccessClient.cs" />
+    <Compile Include="FundsClient.cs" />
     <Compile Include="Permission.cs" />
     <Compile Include="PermissionRepresentation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

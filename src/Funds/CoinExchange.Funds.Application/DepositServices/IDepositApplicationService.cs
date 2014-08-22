@@ -33,5 +33,12 @@ namespace CoinExchange.Funds.Application.DepositServices
         /// <param name="accountId"></param>
         /// <returns></returns>
         IList<DepositAddressRepresentation> GetAddressesForAccount(int accountId);
+
+        /// <summary>
+        /// Make a deposit for a currency. This feature is not present to be called by front end
+        /// </summary>
+        /// <param name="makeDepositCommand"> </param>
+        /// <returns></returns>
+        bool MakeDeposit(MakeDepositCommand makeDepositCommand);
     }
 }

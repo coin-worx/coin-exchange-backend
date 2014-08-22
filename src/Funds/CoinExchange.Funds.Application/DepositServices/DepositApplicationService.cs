@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CoinExchange.Funds.Application.DepositServices.Commands;
 using CoinExchange.Funds.Application.DepositServices.Representations;
+using CoinExchange.Funds.Domain.Model.BalanceAggregate;
 using CoinExchange.Funds.Domain.Model.CurrencyAggregate;
 using CoinExchange.Funds.Domain.Model.DepositAggregate;
 using CoinExchange.Funds.Domain.Model.Repositories;
@@ -21,17 +22,22 @@ namespace CoinExchange.Funds.Application.DepositServices
         private ICoinClientService _coinClientService;
         private IFundsPersistenceRepository _fundsPersistenceRepository;
         private IDepositAddressRepository _depositAddressRepository;
+        // NOTE: The balanceRepository is here for initial testing of Funds, it must be removed once the Exchange is
+        // in link with the bank accounts to deposit USD
+        private IBalanceRepository _balanceRepository;
 
         /// <summary>
         /// Default Constructor
         /// </summary>
         private DepositApplicationService(IFundsValidationService fundsValidationService, ICoinClientService coinClientService,
-            IFundsPersistenceRepository fundsPersistenceRepository, IDepositAddressRepository depositAddressRepository)
+            IFundsPersistenceRepository fundsPersistenceRepository, IDepositAddressRepository depositAddressRepository,
+            IBalanceRepository balanceRepository)
         {
             _fundsValidationService = fundsValidationService;
             _coinClientService = coinClientService;
             _fundsPersistenceRepository = fundsPersistenceRepository;
             _depositAddressRepository = depositAddressRepository;
+            _balanceRepository = balanceRepository;
         }
 
         /// <summary>
@@ -83,6 +89,28 @@ namespace CoinExchange.Funds.Application.DepositServices
                     depositAddress.Status.ToString()));
             }
             return depositAddressRepresentations;
+        }
+
+        /// <summary>
+        /// Make the deposit
+        /// </summary>
+        /// <param name="makeDepositCommand"> </param>
+        /// <returns></returns>
+        public bool MakeDeposit(MakeDepositCommand makeDepositCommand)
+        {
+            Balance balance = _balanceRepository.GetBalanceByCurrencyAndAccountId(new Currency(makeDepositCommand.Currency), new AccountId(makeDepositCommand.AccountId));
+            if (balance == null)
+            {
+                balance = new Balance(new Currency(makeDepositCommand.Currency), 
+                    new AccountId(makeDepositCommand.AccountId), makeDepositCommand.Amount, makeDepositCommand.Amount);
+            }
+            else
+            {
+                balance.AddAvailableBalance(makeDepositCommand.Amount);
+                balance.AddCurrentBalance(makeDepositCommand.Amount);
+            }
+            _fundsPersistenceRepository.SaveOrUpdate(balance);
+            return true;
         }
     }
 }

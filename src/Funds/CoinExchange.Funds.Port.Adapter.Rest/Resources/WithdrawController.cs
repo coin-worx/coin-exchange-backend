@@ -177,16 +177,16 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Resources
         /// <summary>
         /// Call to get all the withdrawal limits and funds information for this user
         /// </summary>
-        /// <param name="currency"> </param>
+        /// <param name="getWithdrawLimitsParams"> </param>
         /// <returns></returns>
         [Route("funds/getwithdrawlimits")]
         [Authorize]
         [HttpPost]
-        public IHttpActionResult GetWithdrawLimits([FromBody]string currency)
+        public IHttpActionResult GetWithdrawLimits([FromBody]GetWithdrawLimitsParams getWithdrawLimitsParams)
         {
             if (log.IsDebugEnabled)
             {
-                log.Debug(string.Format("Get Withdrawal Limits call: Currency = {0}", currency));
+                log.Debug(string.Format("Get Withdrawal Limits call: Currency = {0}", getWithdrawLimitsParams.Currency));
             }
             try
             {
@@ -203,10 +203,10 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Resources
                 {
                     log.Debug(string.Format("Get Withdrawal Limits Call: ApiKey = {0}", apikey));
                 }
-                if (!string.IsNullOrEmpty(currency))
+                if (!string.IsNullOrEmpty(getWithdrawLimitsParams.Currency))
                 {
                     int accountId = _apiKeyInfoAccess.GetUserIdFromApiKey(apikey);
-                    return Ok(_withdrawApplicationService.GetWithdrawLimitThresholds(accountId, currency));
+                    return Ok(_withdrawApplicationService.GetWithdrawLimitThresholds(accountId, getWithdrawLimitsParams.Currency));
                 }
                 return BadRequest("Currency is not provided.");
             }

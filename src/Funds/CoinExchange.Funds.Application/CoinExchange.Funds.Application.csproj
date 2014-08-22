@@ -60,6 +60,7 @@
     <Compile Include="CrossBoundedContextsServices\StubFundsValidationService.cs" />
     <Compile Include="CrossBoundedContextsServices\TransactionService.cs" />
     <Compile Include="DepositServices\Commands\GenerateNewAddressCommand.cs" />
+    <Compile Include="DepositServices\Commands\MakeDepositCommand.cs" />
     <Compile Include="DepositServices\DepositApplicationService.cs" />
     <Compile Include="DepositServices\IDepositApplicationService.cs" />
     <Compile Include="DepositServices\Representations\DepositAddressRepresentation.cs" />
