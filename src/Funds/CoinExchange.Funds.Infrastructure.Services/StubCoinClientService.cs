@@ -25,6 +25,16 @@ namespace CoinExchange.Funds.Infrastructure.Services
             return true;
         }
 
+        public void PopulateCurrencies()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void PopulateServices()
+        {
+            throw new NotImplementedException();
+        }
+
         public bool DepositMade(string address, string currency, decimal amount)
         {
             return true;
@@ -34,5 +44,7 @@ namespace CoinExchange.Funds.Infrastructure.Services
         {
             return 0;
         }
+
+        public double PollingInterval { get; private set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Timers;
 
 namespace CoinExchange.Funds.Domain.Model.Services
 {
@@ -19,8 +20,6 @@ namespace CoinExchange.Funds.Domain.Model.Services
         /// <returns></returns>
         string CreateNewAddress(string currency);
 
-        // ToDo: If withdraw can be confirmed as soon as it is accepted by the Client Service, then this method will call
-        // the IFundsValidationService to update the balance
         /// <summary>
         /// Receives Withdraw, forwards to Bitcoin Client to proceed. Returns true if withdraw made
         /// </summary>
@@ -28,11 +27,14 @@ namespace CoinExchange.Funds.Domain.Model.Services
         bool CommitWithdraw(WithdrawAggregate.Withdraw withdraw);
 
         /// <summary>
-        /// Handles the deposit from the Bitcoin Client, creates new Deposit instance if not already present, if already 
-        /// present, forwards to the FundsValidationService to verify enough confirmations
+        /// Populate the list of tradable currencies
         /// </summary>
-        /// <returns></returns>
-        bool DepositMade(string address, string currency, decimal amount);
+        void PopulateCurrencies();
+
+        /// <summary>
+        /// Populate all the services that will talk to the crypto currency client daemons
+        /// </summary>
+        void PopulateServices();
 
         /// <summary>
         /// Check the balance for the wallet held by the Exchange
@@ -40,5 +42,10 @@ namespace CoinExchange.Funds.Domain.Model.Services
         /// <param name="currency"></param>
         /// <returns></returns>
         decimal CheckBalance(string currency);
+
+        /// <summary>
+        /// Interval for polling
+        /// </summary>
+        double PollingInterval { get; }
     }
 }

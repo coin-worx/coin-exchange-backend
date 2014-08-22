@@ -45,13 +45,9 @@ namespace CoinExchange.Funds.Infrastructure.Persistence.NHibernate.NHibernate
         }
 
         [Transaction]
-        public List<Deposit> GetDepositsByBitcoinAddress(BitcoinAddress bitcoinAddress)
+        public Deposit GetDepositsByBitcoinAddress(BitcoinAddress bitcoinAddress)
         {
-            return CurrentSession.Query<Deposit>()
-                .Where(x => x.BitcoinAddress.Value == bitcoinAddress.Value)
-                .AsQueryable()
-                .OrderByDescending(x => x.Date)
-                .ToList();
+            return CurrentSession.QueryOver<Deposit>().Where(x => x.BitcoinAddress.Value == bitcoinAddress.Value).SingleOrDefault();
         }
 
         [Transaction]

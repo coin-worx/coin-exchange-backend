@@ -48,7 +48,7 @@ CREATE TABLE `deposit` (
   `Id` int(11) NOT NULL AUTO_INCREMENT,
   `Currency` varchar(7) DEFAULT NULL,
   `AccountId` int(11) DEFAULT NULL,
-  `DepositId` varchar(50) DEFAULT NULL,
+  `DepositId` varchar(100) DEFAULT NULL,
   `Date` datetime(6) DEFAULT NULL,
   `Amount` double DEFAULT NULL,
   `AmountInUsd` double DEFAULT NULL,
@@ -56,10 +56,10 @@ CREATE TABLE `deposit` (
   `Confirmations` int(11) DEFAULT NULL,
   `Status` varchar(15) DEFAULT NULL,
   `Type` varchar(15) DEFAULT NULL,
-  `TransactionId` varchar(50) DEFAULT NULL,
-  `BitcoinAddress` varchar(30) DEFAULT NULL,
+  `TransactionId` varchar(100) DEFAULT NULL,
+  `BitcoinAddress` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
 /*Table structure for table `depositaddress` */
 
@@ -74,7 +74,7 @@ CREATE TABLE `depositaddress` (
   `Status` varchar(20) DEFAULT NULL,
   `CreationDateTime` datetime DEFAULT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
 /*Table structure for table `depositlimit` */
 

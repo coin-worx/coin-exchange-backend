@@ -15,12 +15,13 @@ namespace CoinExchange.Client.Console
         {
             string baseUrl = "http://rockblanc.cloudapp.net/test/v1";
             baseUrl = "http://localhost:51780/v1";
-            //ApiClient client = new ApiClient(baseUrl);
+            ApiClient client = new ApiClient(baseUrl);
             //System.Console.WriteLine(client.QueryTrades("6e8b5195-0e7f-402f-87e7-80eb92a96c85"));
             //Scenario1(client);
             //ScenarioResults(client);
             //System.Console.WriteLine(client.GetTradeHistory("",""));
             Login(baseUrl);
+            Scenario1(client);
             System.Console.ReadKey();
         }
 
