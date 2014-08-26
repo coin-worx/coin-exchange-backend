@@ -52,6 +52,7 @@ namespace CoinExchange.Trades.ReadModel.EventHandlers
             _ohlcCalculation.CalculateAndPersistOhlc(trade);
             _tickerInfoCalculation.CalculateTickerInfo(trade);
             Tuple<string, string> currencies = CurrencySplitterService.SplitCurrencyPair(trade.CurrencyPair);
+            // Update the balance on hte Funds BC
             _balanceValidationService.TradeExecuted(currencies.Item1, currencies.Item2, trade.ExecutedVolume.Value,
                 trade.ExecutionPrice.Value, trade.ExecutionTime, trade.TradeId.Id, trade.BuyOrder.TraderId.Id, 
                 trade.SellOrder.TraderId.Id, trade.BuyOrder.OrderId.Id, trade.SellOrder.OrderId.Id);

@@ -38,7 +38,7 @@ namespace CoinExchange.Client.Tests
             JObject jsonObject = new JObject();
             jsonObject.Add("Currency", currency);
             string url = _baseUrl + "/funds/getwithdrawlimits";
-            return HttpPostRequest(currency, url);
+            return HttpPostRequest(jsonObject, url);
         }
 
         public string ApiKey { get; set; }

@@ -39,7 +39,7 @@ namespace CoinExchange.Funds.Application.OrderValidationServices
         /// <param name="buyOrderId"></param>
         /// <param name="sellOrderId"></param>
         /// <returns></returns>
-        void TradeExecuted(string baseCurrency, bool baseCurrencyIsCrypto, string quoteCurrency, bool quoteCurrencyIsCrypto, 
+        bool TradeExecuted(string baseCurrency, bool baseCurrencyIsCrypto, string quoteCurrency, bool quoteCurrencyIsCrypto, 
                         decimal tradeVolume, decimal price, DateTime executionDateTime, string tradeId, int buyAccountId, 
                         int sellAccountId, string buyOrderId, string sellOrderId);
     }

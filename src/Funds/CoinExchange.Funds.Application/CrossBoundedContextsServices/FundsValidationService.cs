@@ -310,22 +310,22 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
             // evaluate the quote currency first
             if (InitializeBalanceLedgerUpdate(new Currency(quoteCurrency), new AccountId(buyAccountId),
                                               -(tradeVolume*price), 0,
-                                              executionDateTime, buyOrderId, tradeId, true, true, buySideFee, true))
+                                              executionDateTime, buyOrderId, tradeId, true, true, buySideFee, false))
             {
                 // Then, we update balance for Buy Account's Base Currency
                 if (InitializeBalanceLedgerUpdate(new Currency(baseCurrency), new AccountId(buyAccountId), tradeVolume, 0,
-                                                  executionDateTime, buyOrderId, tradeId, false, false, 0, false))
+                                                  executionDateTime, buyOrderId, tradeId, false, false, 0, true))
                 {
                     // In case of a sell order, the available balance is deducted from the base currency, so we validate the 
                     // base currency first
                     if (InitializeBalanceLedgerUpdate(new Currency(baseCurrency), new AccountId(sellAccountId),
                                                       -tradeVolume, 0, executionDateTime, sellOrderId, tradeId, false, true,
-                                                      0, false))
+                                                      0, true))
                     {
                         // Lastly, for the seller account's quote currency
                         return InitializeBalanceLedgerUpdate(new Currency(quoteCurrency), new AccountId(sellAccountId),
                                                              tradeVolume*price, 0, executionDateTime, sellOrderId, tradeId,
-                                                             true, false, sellSideFee, true);
+                                                             true, false, sellSideFee, false);
                     }
                 }
             }
