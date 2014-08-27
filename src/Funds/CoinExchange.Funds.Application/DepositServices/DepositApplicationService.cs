@@ -25,19 +25,43 @@ namespace CoinExchange.Funds.Application.DepositServices
         // NOTE: The balanceRepository is here for initial testing of Funds, it must be removed once the Exchange is
         // in link with the bank accounts to deposit USD
         private IBalanceRepository _balanceRepository;
+        private IDepositRepository _depositRepository;
 
         /// <summary>
         /// Default Constructor
         /// </summary>
         private DepositApplicationService(IFundsValidationService fundsValidationService, ICoinClientService coinClientService,
             IFundsPersistenceRepository fundsPersistenceRepository, IDepositAddressRepository depositAddressRepository,
-            IBalanceRepository balanceRepository)
+            IBalanceRepository balanceRepository, IDepositRepository depositRepository)
         {
             _fundsValidationService = fundsValidationService;
             _coinClientService = coinClientService;
             _fundsPersistenceRepository = fundsPersistenceRepository;
             _depositAddressRepository = depositAddressRepository;
             _balanceRepository = balanceRepository;
+            _depositRepository = depositRepository;
+        }
+
+        /// <summary>
+        /// Get deposits for the given currency
+        /// </summary>
+        /// <param name="currency"></param>
+        /// <param name="accountId"> </param>
+        /// <returns></returns>
+        public List<DepositRepresentation> GetRecentDeposits(string currency, int accountId)
+        {
+            List<DepositRepresentation> depositRepresentations = null;
+            List<Deposit> deposits = _depositRepository.GetDepositByCurrencyAndAccountId(currency, new AccountId(accountId));
+            if (deposits != null && deposits.Any())
+            {
+                foreach (var deposit in deposits)
+                {
+                    depositRepresentations = new List<DepositRepresentation>();
+                    depositRepresentations.Add(new DepositRepresentation("", deposit.DepositId, deposit.Date, deposit.Amount,
+                        deposit.Status.ToString()));
+                }
+            }
+            return depositRepresentations;
         }
 
         /// <summary>
@@ -110,6 +134,14 @@ namespace CoinExchange.Funds.Application.DepositServices
                 balance.AddCurrentBalance(makeDepositCommand.Amount);
             }
             _fundsPersistenceRepository.SaveOrUpdate(balance);
+
+            if (makeDepositCommand.IsCryptoCurrency)
+            {
+                Deposit deposit = new Deposit(new Currency(makeDepositCommand.Currency, true), Guid.NewGuid().ToString(),
+                    DateTime.Now, DepositType.Default, makeDepositCommand.Amount, 0, TransactionStatus.Confirmed, 
+                    new AccountId(makeDepositCommand.AccountId), null, null);
+                _fundsPersistenceRepository.SaveOrUpdate(deposit);
+            }
             return true;
         }
     }

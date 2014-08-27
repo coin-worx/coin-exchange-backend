@@ -391,21 +391,34 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
             // Get the Current Deposit limits for this user
             DepositLimit depositLimit = _depositLimitRepository.GetDepositLimitByTierLevel(currentTierLevel);
 
-            // Get the best bid and best ask form the Trades BC.
-            // NOTE: Implement and use real implementation later, rather than using the stub implementation being
-            // used right now
-            Tuple<decimal, decimal> bestBidBestAsk =
-                _bboCrossContextService.GetBestBidBestAsk(currency.Name, "USD");
+            if (balance != null && depositLimit != null)
+            {
+                // Get the best bid and best ask form the Trades BC.
+                // NOTE: Implement and use real implementation later, rather than using the stub implementation being
+                // used right now
+                Tuple<decimal, decimal> bestBidBestAsk =
+                    _bboCrossContextService.GetBestBidBestAsk(currency.Name, "USD");
 
-            // Check if the current Deposit transaction is within the Deposit limits
-            if (_depositLimitEvaluationService.AssignDepositLimits(depositLedgers,
-                                                                   depositLimit, bestBidBestAsk.Item1,
-                                                                   bestBidBestAsk.Item2))
+                // Check if the current Deposit transaction is within the Deposit limits
+                if (_depositLimitEvaluationService.AssignDepositLimits(depositLedgers,
+                                                                       depositLimit, bestBidBestAsk.Item1,
+                                                                       bestBidBestAsk.Item2))
+                {
+                    return new AccountDepositLimits(
+                        currency, accountId, _depositLimitEvaluationService.DailyLimit,
+                        _depositLimitEvaluationService.DailyLimitUsed,
+                        _depositLimitEvaluationService.MonthlyLimit, _depositLimitEvaluationService.MonthlyLimitUsed,
+                        balance.CurrentBalance, _depositLimitEvaluationService.MaximumDeposit);
+                }
+            }
+            else if (balance == null && depositLimit != null)
             {
                 return new AccountDepositLimits(
-                    currency, accountId, _depositLimitEvaluationService.DailyLimit, _depositLimitEvaluationService.DailyLimitUsed,
-                    _depositLimitEvaluationService.MonthlyLimit, _depositLimitEvaluationService.MonthlyLimitUsed,
-                    balance.CurrentBalance, _depositLimitEvaluationService.MaximumDeposit);
+                        currency, accountId, depositLimit.DailyLimit, 0, depositLimit.MonthlyLimit, 0, 0, 0);
+            }
+            else
+            {
+                return new AccountDepositLimits(currency, accountId, 0, 0, 0, 0, 0, 0);
             }
             return null;
         }

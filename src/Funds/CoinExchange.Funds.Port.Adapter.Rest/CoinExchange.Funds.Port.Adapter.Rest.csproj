@@ -77,6 +77,7 @@
   <ItemGroup>
     <Compile Include="DTOs\Deposit\GenerateAddressParams.cs" />
     <Compile Include="DTOs\Deposit\GetDepositAddressesParams.cs" />
+    <Compile Include="DTOs\Deposit\GetRecentDepositParams.cs" />
     <Compile Include="DTOs\Deposit\GetDepositLimitsParams.cs" />
     <Compile Include="DTOs\Deposit\MakeDepositParams.cs" />
     <Compile Include="DTOs\Withdraw\AddWithdrawAddressParams.cs" />

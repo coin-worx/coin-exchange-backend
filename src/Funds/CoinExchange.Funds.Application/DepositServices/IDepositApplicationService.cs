@@ -14,6 +14,12 @@ namespace CoinExchange.Funds.Application.DepositServices
     public interface IDepositApplicationService
     {
         /// <summary>
+        /// Get recent deposits for a given currency and account ID
+        /// </summary>
+        /// <returns></returns>
+        List<DepositRepresentation> GetRecentDeposits(string currency, int accountId);
+
+        /// <summary>
         /// Gets new address from the BitcoinD Service for making a deposit
         /// </summary>
         /// <returns></returns>

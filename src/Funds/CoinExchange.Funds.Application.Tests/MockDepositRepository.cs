@@ -31,6 +31,11 @@ namespace CoinExchange.Funds.Application.Tests
             throw new NotImplementedException();
         }
 
+        public List<Deposit> GetDepositByCurrencyAndAccountId(string currency, AccountId accountId)
+        {
+            throw new NotImplementedException();
+        }
+
         public Deposit GetDepositByDepositId(string depositId)
         {
             throw new NotImplementedException();

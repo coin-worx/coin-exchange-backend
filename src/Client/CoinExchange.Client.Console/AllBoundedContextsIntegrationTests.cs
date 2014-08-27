@@ -40,7 +40,7 @@ namespace CoinExchange.Client.Console
 
         public void Initialization()
         {
-            ClearDatabase();
+            //ClearDatabase();
             UserLogin();
 
             _fundsClient.key = _identityAccessClient.key;
@@ -66,7 +66,7 @@ namespace CoinExchange.Client.Console
         private void UserLogin()
         {
             System.Console.WriteLine("User sign up start");
-            _accessControl.CreateAndActivateUser(_username, _password, _email);
+            //_accessControl.CreateAndActivateUser(_username, _password, _email);
             System.Console.WriteLine("User sign up end");
 
             System.Console.WriteLine("User log in start");
@@ -77,10 +77,12 @@ namespace CoinExchange.Client.Console
         private void MakeDeposit()
         {
             System.Console.WriteLine("Deposit start");
-            _fundsClient.MakeDeposit(_baseCurrency, 1000);
-            _fundsClient.MakeDeposit(_quoteCurrency, 100000);
+            _fundsClient.MakeDeposit(_baseCurrency, 1000, true);
+            _fundsClient.MakeDeposit(_quoteCurrency, 100000, false);
             System.Console.WriteLine("Deposit end");
         }
+
+        
 
         private void ApplyForTier1()
         {

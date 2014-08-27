@@ -33,6 +33,16 @@ namespace CoinExchange.Funds.Infrastructure.Persistence.NHibernate.NHibernate
         }
 
         [Transaction]
+        public List<Deposit> GetDepositByCurrencyAndAccountId(string currency, AccountId accountId)
+        {
+            return CurrentSession.Query<Deposit>()
+                .Where(x => x.Currency.Name == currency && x.AccountId.Value == accountId.Value)
+                .AsQueryable()
+                .OrderByDescending(x => x.Date)
+                .ToList();
+        }
+
+        [Transaction]
         public Deposit GetDepositByDepositId(string depositId)
         {
             return CurrentSession.QueryOver<Deposit>().Where(x => x.DepositId == depositId).SingleOrDefault();

@@ -125,9 +125,14 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
         /// </summary>
         private decimal ConvertUsdToCurrency(decimal bestBid, decimal bestAsk, decimal usdAmount)
         {
-            decimal sum = (usdAmount/bestBid) + (usdAmount/bestAsk);
-            decimal midPoint = sum/2;
-            return midPoint;
+            // ToDo: What to do if the best bid and/or best ask is 0?
+            if (bestBid > 0 && bestAsk > 0)
+            {
+                decimal sum = (usdAmount/bestBid) + (usdAmount/bestAsk);
+                decimal midPoint = sum/2;
+                return midPoint;
+            }
+            return 0;
         }
 
         /// <summary>

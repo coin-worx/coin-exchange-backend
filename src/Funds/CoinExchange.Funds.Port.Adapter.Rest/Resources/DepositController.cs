@@ -34,6 +34,48 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Resources
             _apiKeyInfoAccess = apiKeyInfoAccess;
         }
 
+        [Route("funds/getrecentdeposits")]
+        [Authorize]
+        [HttpPost]
+        public IHttpActionResult GetRecentDeposits([FromBody]GetRecentDepositParams getRecentDepositParams)
+        {
+            if (log.IsDebugEnabled)
+            {
+                log.Debug(string.Format("Get Recent Deposits call: Currency = {0}",
+                    getRecentDepositParams.Currency));
+            }
+            try
+            {
+                // Get api key from header
+                var headers = Request.Headers;
+                string apikey = "";
+                IEnumerable<string> headerParams;
+                if (headers.TryGetValues("Auth", out headerParams))
+                {
+                    string[] auth = headerParams.ToList()[0].Split(',');
+                    apikey = auth[0];
+                }
+                if (log.IsDebugEnabled)
+                {
+                    log.Debug(string.Format("Get Recent Deposits Call: ApiKey = {0}", apikey));
+                }
+                if (getRecentDepositParams != null && !string.IsNullOrEmpty(getRecentDepositParams.Currency))
+                {
+                    int accountId = _apiKeyInfoAccess.GetUserIdFromApiKey(apikey);
+                    return Ok(_depositApplicationService.GetRecentDeposits(getRecentDepositParams.Currency, accountId));
+                }
+                return BadRequest("Currency is not provided.");
+            }
+            catch (Exception exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error(string.Format("Get Recent Deposits Call Error: {0}", exception));
+                }
+                return InternalServerError();
+            }
+        }
+
         /// <summary>
         /// Call to generate a new address
         /// </summary>
@@ -64,7 +106,7 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Resources
                 {
                     log.Debug(string.Format("Generate Deposit Address Call: ApiKey = {0}", apikey));
                 }
-                if (generateAddressParams != null && generateAddressParams.Currency != string.Empty)
+                if (generateAddressParams != null && !string.IsNullOrEmpty(generateAddressParams.Currency))
                 {
                     int accountId = _apiKeyInfoAccess.GetUserIdFromApiKey(apikey);
                     return Ok(_depositApplicationService.GenarateNewAddress(new GenerateNewAddressCommand(
@@ -110,7 +152,7 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Resources
                 {
                     log.Debug(string.Format("Get Deposit Addresses Call: ApiKey = {0}", apikey));
                 }
-                if (string.IsNullOrEmpty(apikey))
+                if (!string.IsNullOrEmpty(apikey))
                 {
                     int accountId = _apiKeyInfoAccess.GetUserIdFromApiKey(apikey);
                     return Ok(_depositApplicationService.GetAddressesForAccount(accountId));
@@ -204,7 +246,7 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Resources
                 {
                     int accountId = _apiKeyInfoAccess.GetUserIdFromApiKey(apikey);
                     return Ok(_depositApplicationService.MakeDeposit(new MakeDepositCommand(
-                        accountId, makeDepositParams.Currency, makeDepositParams.Amount)));
+                        accountId, makeDepositParams.Currency, makeDepositParams.Amount, makeDepositParams.IsCryptoCurrency)));
                 }
                 return BadRequest("Currency is not provided or API key not found with request");
             }

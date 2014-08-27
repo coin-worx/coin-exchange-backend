@@ -14,11 +14,12 @@ namespace CoinExchange.Funds.Application.DepositServices.Commands
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
-        public MakeDepositCommand(int accountId, string currency, decimal amount)
+        public MakeDepositCommand(int accountId, string currency, decimal amount, bool isCryptoCurrency)
         {
             AccountId = accountId;
             Currency = currency;
             Amount = amount;
+            IsCryptoCurrency = isCryptoCurrency;
         }
 
         /// <summary>
@@ -35,5 +36,10 @@ namespace CoinExchange.Funds.Application.DepositServices.Commands
         /// Amount
         /// </summary>
         public decimal Amount { get; private set; }
+
+        /// <summary>
+        /// Is this currency Crypto Currency or Fiat
+        /// </summary>
+        public bool IsCryptoCurrency { get; private set; }
     }
 }
