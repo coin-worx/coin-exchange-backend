@@ -14,6 +14,14 @@ namespace CoinExchange.Funds.Application.WithdrawServices
     public interface IWithdrawApplicationService
     {
         /// <summary>
+        /// Get recent withdrawals for the given currency and account ID
+        /// </summary>
+        /// <param name="accountId"></param>
+        /// <param name="currency"></param>
+        /// <returns></returns>
+        List<WithdrawRepresentation> GetRecentWithdrawals(int accountId, string currency); 
+
+        /// <summary>
         /// Adds a new Bitcoin address with description
         /// </summary>
         /// <returns></returns>

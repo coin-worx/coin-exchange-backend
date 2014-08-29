@@ -46,8 +46,8 @@ namespace CoinExchange.Client.Console
             _fundsClient.key = _identityAccessClient.key;
             _fundsClient.secretkey = _identityAccessClient.secretkey;
 
-            MakeDeposit();
-            SendOrders();
+           // MakeDeposit();
+            //SendOrders();
             ApplyForTier1();
             GetLimits();
             TradeExecuted();

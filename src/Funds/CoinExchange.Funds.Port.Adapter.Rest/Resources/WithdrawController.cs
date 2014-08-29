@@ -34,6 +34,47 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Resources
             _apiKeyInfoAccess = apiKeyInfoAccess;
         }
 
+        [Route("funds/getrecentwithdrawals")]
+        [Authorize]
+        [HttpPost]
+        public IHttpActionResult GetRecentWithdrawals([FromBody]GetRecentWithdrawalsParams recentWithdrawalsParams)
+        {
+            if (log.IsDebugEnabled)
+            {
+                log.Debug(string.Format("Get Recent Withdrawals call: Currency = {0}", recentWithdrawalsParams.Currency));
+            }
+            try
+            {
+                //get api key from header
+                var headers = Request.Headers;
+                string apikey = "";
+                IEnumerable<string> headerParams;
+                if (headers.TryGetValues("Auth", out headerParams))
+                {
+                    string[] auth = headerParams.ToList()[0].Split(',');
+                    apikey = auth[0];
+                }
+                if (log.IsDebugEnabled)
+                {
+                    log.Debug(string.Format("Get Recent Withdrawals Call: ApiKey = {0}", apikey));
+                }
+                if (recentWithdrawalsParams != null && !string.IsNullOrEmpty(recentWithdrawalsParams.Currency))
+                {
+                    int accountId = _apiKeyInfoAccess.GetUserIdFromApiKey(apikey);
+                    return Ok(_withdrawApplicationService.GetRecentWithdrawals(accountId, recentWithdrawalsParams.Currency));
+                }
+                return BadRequest("Currency is not provided.");
+            }
+            catch (Exception exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error(string.Format("Get Recent Withdrawals Call Error: {0}", exception));
+                }
+                return InternalServerError();
+            }
+        }
+
         /// <summary>
         /// Call to add a new withdraw address
         /// </summary>
@@ -84,16 +125,16 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Resources
         /// <summary>
         /// Call to get all the withdrawal addresses  of the given currency for this user
         /// </summary>
-        /// <param name="currency"> </param>
+        /// <param name="getWithdrawAddressesParams"> </param>
         /// <returns></returns>
         [Route("funds/getwithdrawaddresses")]
         [Authorize]
         [HttpPost]
-        public IHttpActionResult GetWithdrawAddresses([FromBody]string currency)
+        public IHttpActionResult GetWithdrawAddresses([FromBody]GetWithdrawAddressesParams getWithdrawAddressesParams)
         {
             if (log.IsDebugEnabled)
             {
-                log.Debug(string.Format("Get Withdraw Addresses call: Currency = {0}", currency));
+                log.Debug(string.Format("Get Withdraw Addresses call: Currency = {0}", getWithdrawAddressesParams.Currency));
             }
             try
             {
@@ -110,10 +151,10 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Resources
                 {
                     log.Debug(string.Format("Get Withdraw Addresses Call: ApiKey = {0}", apikey));
                 }
-                if (!string.IsNullOrEmpty(currency))
+                if (!string.IsNullOrEmpty(getWithdrawAddressesParams.Currency))
                 {
                     int accountId = _apiKeyInfoAccess.GetUserIdFromApiKey(apikey);
-                    return Ok(_withdrawApplicationService.GetWithdrawalAddresses(accountId, currency));
+                    return Ok(_withdrawApplicationService.GetWithdrawalAddresses(accountId, getWithdrawAddressesParams.Currency));
                 }
                 return BadRequest("Currency is not provided.");
             }

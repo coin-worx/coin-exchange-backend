@@ -107,13 +107,12 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
         /// <returns></returns>
         public UserTierStatusRepresentation GetTierLevel(int userId)
         {
-            // ToDo: Verify this method
             User user = _userRepository.GetUserById(userId);
             UserTierLevelStatus[] userTierLevelStatuses = user.GetAllTiersStatus();
             UserTierLevelStatus currentTierLevelStatus = userTierLevelStatuses.First();
             foreach (var status in userTierLevelStatuses)
             {
-                if (status.Status != Status.NonVerified)
+                if (status.Status == Status.Verified)
                 {
                     currentTierLevelStatus = status;
                 }

@@ -22,18 +22,44 @@ namespace CoinExchange.Funds.Application.WithdrawServices
         private IWithdrawAddressRepository _withdrawAddressRepository;
         private ICoinClientService _coinClientService;
         private IFundsValidationService _fundsValidationService;
+        private IWithdrawRepository _withdrawRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
         public WithdrawApplicationService(IFundsPersistenceRepository fundsPersistenceRepository, 
             IWithdrawAddressRepository withdrawAddressRepository, ICoinClientService coinClientService, 
-            IFundsValidationService fundsValidationService)
+            IFundsValidationService fundsValidationService, IWithdrawRepository withdrawRepository)
         {
             _fundsPersistenceRepository = fundsPersistenceRepository;
             _withdrawAddressRepository = withdrawAddressRepository;
             _coinClientService = coinClientService;
             _fundsValidationService = fundsValidationService;
+            _withdrawRepository = withdrawRepository;
+        }
+
+        /// <summary>
+        /// Get recent withdrawals for hte given currency and account id
+        /// </summary>
+        /// <param name="accountId"></param>
+        /// <param name="currency"></param>
+        /// <returns></returns>
+        public List<WithdrawRepresentation> GetRecentWithdrawals(int accountId, string currency)
+        {
+            List<WithdrawRepresentation> withdrawRepresentations = null;
+            List<Withdraw> withdrawals = _withdrawRepository.GetWithdrawByCurrencyAndAccountId(currency, new AccountId(accountId));
+            if (withdrawals != null && withdrawals.Any())
+            {
+                withdrawRepresentations = new List<WithdrawRepresentation>();
+                foreach (var withdrawal in withdrawals)
+                {
+                    withdrawRepresentations.Add(new WithdrawRepresentation(withdrawal.Currency.Name, withdrawal.WithdrawId,
+                        withdrawal.DateTime, withdrawal.Type.ToString(), withdrawal.Amount, withdrawal.Fee,
+                        withdrawal.Status.ToString()));
+                }
+            }
+
+            return withdrawRepresentations;
         }
 
         /// <summary>
