@@ -17,7 +17,7 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
         /// </summary>
         public AccountWithdrawLimits(CurrencyAggregate.Currency currency, AccountId accountId, decimal dailyLimit, decimal dailyLimitUsed, 
             decimal monthlyLimit, decimal monthlyLimitUsed, decimal currentBalance, decimal maximumWithdraw,
-            decimal maximumWithdrawInUsd, decimal withHeld, decimal withheldInUsd, decimal fee)
+            decimal maximumWithdrawInUsd, decimal withHeld, decimal withheldInUsd, decimal fee, decimal minimumAmount)
         {
             Currency = currency;
             AccountId = accountId;
@@ -31,6 +31,7 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
             Withheld = withHeld;
             WithheldInUsd = withheldInUsd;
             Fee = fee;
+            MinimumAmount = minimumAmount;
         }
 
         /// <summary>
@@ -92,5 +93,10 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
         /// Fee for the withdrawal
         /// </summary>
         public decimal Fee { get; private set; }
+
+        /// <summary>
+        /// Minimum amount that can be withdrawn
+        /// </summary>
+        public decimal MinimumAmount { get; private set; }
     }
 }

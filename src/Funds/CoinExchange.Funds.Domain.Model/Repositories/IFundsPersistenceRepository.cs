@@ -12,5 +12,7 @@ namespace CoinExchange.Funds.Domain.Model.Repositories
     public interface IFundsPersistenceRepository
     {
         void SaveOrUpdate(object domainObject);
+
+        void Delete(object domainObject);
     }
 }

@@ -234,17 +234,13 @@ namespace CoinExchange.Funds.Infrastructure.Services
         /// <summary>
         /// Commits the withdraw and forwards to the bitcoin network.
         /// </summary>
-        /// <param name="withdraw"></param>
+        /// <param name="bitcoinAddress"> </param>
+        /// <param name="amount"> </param>
         /// <returns></returns>
-        public bool CommitWithdraw(Withdraw withdraw)
+        public string CommitWithdraw(string bitcoinAddress, decimal amount)
         {
-            string transactionId = _bitcoinService.SendToAddress(withdraw.BitcoinAddress.Value, withdraw.Amount);
-            if (!string.IsNullOrEmpty(transactionId))
-            {
-                withdraw.SetTransactionId(transactionId);
-                return _fundsValidationService.WithdrawalExecuted(withdraw);
-            }
-            return true;
+            string transactionId = _bitcoinService.SendToAddress(bitcoinAddress, amount);
+            return transactionId;
         }
 
         /// <summary>

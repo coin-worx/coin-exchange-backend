@@ -25,7 +25,7 @@ namespace CoinExchange.Funds.Application.WithdrawServices
         /// Adds a new Bitcoin address with description
         /// </summary>
         /// <returns></returns>
-        bool AddAddress(AddAddressCommand addAddressCommand);
+        WithdrawAddressResponse AddAddress(AddAddressCommand addAddressCommand);
 
         /// <summary>
         /// Get the list of all the withdrawawl addresses associated with this account for this currency
@@ -49,5 +49,12 @@ namespace CoinExchange.Funds.Application.WithdrawServices
         /// <param name="currency"></param>
         /// <returns></returns>
         WithdrawLimitRepresentation GetWithdrawLimitThresholds(int accountId, string currency);
+
+        /// <summary>
+        /// Deletes the given bitcoin address from the database
+        /// </summary>
+        /// <param name="deleteWithdrawAddressCommand"></param>
+        /// <returns></returns>
+        DeleteWithdrawAddressResponse DeleteAddress(DeleteWithdrawAddressCommand deleteWithdrawAddressCommand);
     }
 }

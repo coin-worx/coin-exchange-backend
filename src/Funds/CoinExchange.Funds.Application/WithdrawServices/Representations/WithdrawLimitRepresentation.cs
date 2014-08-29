@@ -20,9 +20,10 @@
         /// <param name="withheld"> </param>
         /// <param name="withheldInUsd"> </param>
         /// <param name="fee"> </param>
+        /// <param name="minimumAmount"> </param>
         public WithdrawLimitRepresentation(string currency, int accountId, decimal dailyLimit, decimal dailyLimitUsed,
             decimal monthlyLimit, decimal monthlyLimitUsed, decimal currentBalance, decimal maximumWithdraw,
-            decimal maximumWithdrawInUsd, decimal withheld, decimal withheldInUsd, decimal fee)
+            decimal maximumWithdrawInUsd, decimal withheld, decimal withheldInUsd, decimal fee, decimal minimumAmount)
         {
             Currency = currency;
             AccountId = accountId;
@@ -36,6 +37,7 @@
             Withheld = withheld;
             WithheldInUsd = withheldInUsd;
             Fee = fee;
+            MinimumAmount = minimumAmount;
         }
 
         /// <summary>
@@ -97,5 +99,10 @@
         /// Fee for the withdrawal
         /// </summary>
         public decimal Fee { get; private set; }
+
+        /// <summary>
+        /// Minimum Amount
+        /// </summary>
+        public decimal MinimumAmount { get; private set; }
     }
 }

@@ -201,7 +201,8 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Resources
                 {
                     int accountId = _apiKeyInfoAccess.GetUserIdFromApiKey(apikey);
                     return Ok(_withdrawApplicationService.CommitWithdrawal(new CommitWithdrawCommand(accountId,
-                        commitWithdrawParams.Currency, commitWithdrawParams.BitcoinAddress, commitWithdrawParams.Amount)));
+                        commitWithdrawParams.Currency, commitWithdrawParams.IsCryptoCurrency, commitWithdrawParams.BitcoinAddress,
+                        commitWithdrawParams.Amount)));
                 }
                 return BadRequest("Currency is not provided.");
             }
@@ -256,6 +257,48 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Resources
                 if (log.IsErrorEnabled)
                 {
                     log.Error(string.Format("Get Withdrawal Limits Call Error: {0}", exception));
+                }
+                return InternalServerError();
+            }
+        }
+
+        [Route("funds/deletewithdrawaddress")]
+        [Authorize]
+        [HttpPost]
+        public IHttpActionResult DeleteWithdrawAddress([FromBody]DeleteWithdrawAddressParams deleteWithdrawAddressParams)
+        {
+            if (log.IsDebugEnabled)
+            {
+                log.Debug(string.Format("Delete Withdraw Address call."));
+            }
+            try
+            {
+                //get api key from header
+                var headers = Request.Headers;
+                string apikey = "";
+                IEnumerable<string> headerParams;
+                if (headers.TryGetValues("Auth", out headerParams))
+                {
+                    string[] auth = headerParams.ToList()[0].Split(',');
+                    apikey = auth[0];
+                }
+                if (log.IsDebugEnabled)
+                {
+                    log.Debug(string.Format("Delete Withdraw Address Call: ApiKey = {0}", apikey));
+                }
+                if (!string.IsNullOrEmpty(apikey))
+                {
+                    int accountId = _apiKeyInfoAccess.GetUserIdFromApiKey(apikey);
+                    return Ok(_withdrawApplicationService.DeleteAddress(new DeleteWithdrawAddressCommand(
+                        accountId, deleteWithdrawAddressParams.BitcoinAddress)));
+                }
+                return BadRequest("Currency is not provided.");
+            }
+            catch (Exception exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error(string.Format("Delete Withdraw Address Call Error: {0}", exception));
                 }
                 return InternalServerError();
             }

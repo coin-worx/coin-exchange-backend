@@ -67,15 +67,27 @@ namespace CoinExchange.Funds.Application.WithdrawServices
         /// </summary>
         /// <param name="addAddressCommand"></param>
         /// <returns></returns>
-        public bool AddAddress(AddAddressCommand addAddressCommand)
+        public WithdrawAddressResponse AddAddress(AddAddressCommand addAddressCommand)
         {
+            if (addAddressCommand.BitcoinAddress.Length < 26 || addAddressCommand.BitcoinAddress.Length > 34)
+            {
+                return new WithdrawAddressResponse(false, "Invalid address");
+            }
+            List<WithdrawAddress> withdrawAddresses = _withdrawAddressRepository.GetWithdrawAddressByAccountId(new AccountId(addAddressCommand.AccountId));
+            foreach (var address in withdrawAddresses)
+            {
+                if (address.BitcoinAddress.Value == addAddressCommand.BitcoinAddress)
+                {
+                    return new WithdrawAddressResponse(false, "Duplicate Entry");
+                }
+            }
             // Create a new address and save in the database
             WithdrawAddress withdrawAddress = new WithdrawAddress(new Currency(addAddressCommand.Currency), 
                 new BitcoinAddress(addAddressCommand.BitcoinAddress), addAddressCommand.Description,
                 new AccountId(addAddressCommand.AccountId), DateTime.Now);
 
             _fundsPersistenceRepository.SaveOrUpdate(withdrawAddress);
-            return true;
+            return new WithdrawAddressResponse(true, "Address Saved");
         }
 
         /// <summary>
@@ -105,20 +117,22 @@ namespace CoinExchange.Funds.Application.WithdrawServices
         /// <returns></returns>
         public bool CommitWithdrawal(CommitWithdrawCommand commitWithdrawCommand)
         {
-            // ToDo: Call fundsValidationService, confirm the withdrawal, get the withdrawal, send to BitcoinClient Service
-            // and pass the withdrawal to Bitcoin Network
-            // ToDo: Get TransactionID from the bitcoin Network. Confirm whether the transaction ID can be retreived
-            // before making the withdrawal, or is assigned after the withdrawal is made
             Withdraw withdrawal = _fundsValidationService.ValidateFundsForWithdrawal(
-                new AccountId(commitWithdrawCommand.AccountId), new Currency(commitWithdrawCommand.Currency), 
-                commitWithdrawCommand.Amount, null/*Null until confirmation of what to use*/, 
+                new AccountId(commitWithdrawCommand.AccountId), new Currency(commitWithdrawCommand.Currency, 
+                    commitWithdrawCommand.IsCryptoCurrency), commitWithdrawCommand.Amount, null/*Null until confirmation of what to use*/, 
                 new BitcoinAddress(commitWithdrawCommand.BitcoinAddress));
 
             if (withdrawal != null)
             {
                 // Commit the withdraw to the network, if successful, create transaction ledger using 
                 // IFundsValidationService
-                return _coinClientService.CommitWithdraw(withdrawal);
+                string transactionId = _coinClientService.CommitWithdraw(commitWithdrawCommand.BitcoinAddress, 
+                    commitWithdrawCommand.Amount);
+                if (!string.IsNullOrEmpty(transactionId))
+                {
+                    withdrawal.SetTransactionId(transactionId);
+                    return _fundsValidationService.WithdrawalExecuted(withdrawal);
+                }
             }
             return false;
         }
@@ -141,9 +155,29 @@ namespace CoinExchange.Funds.Application.WithdrawServices
                     accountWithdrawLimits.DailyLimitUsed, accountWithdrawLimits.MonthlyLimit, 
                     accountWithdrawLimits.MonthlyLimitUsed, accountWithdrawLimits.CurrentBalance, 
                     accountWithdrawLimits.MaximumWithdraw, accountWithdrawLimits.MaximumWithdrawInUsd,
-                    accountWithdrawLimits.Withheld, accountWithdrawLimits.WithheldInUsd, accountWithdrawLimits.Fee);
+                    accountWithdrawLimits.Withheld, accountWithdrawLimits.WithheldInUsd, accountWithdrawLimits.Fee,
+                    accountWithdrawLimits.MinimumAmount);
             }
             return null;
+        }
+
+        /// <summary>
+        /// Deletes the given address from the database
+        /// </summary>
+        /// <param name="deleteWithdrawAddressCommand"></param>
+        /// <returns></returns>
+        public DeleteWithdrawAddressResponse DeleteAddress(DeleteWithdrawAddressCommand deleteWithdrawAddressCommand)
+        {
+            List<WithdrawAddress> withdrawAddresses = _withdrawAddressRepository.GetWithdrawAddressByAccountId(new AccountId(deleteWithdrawAddressCommand.AccountId));
+            foreach (var withdrawAddress in withdrawAddresses)
+            {
+                if (withdrawAddress.BitcoinAddress.Value == deleteWithdrawAddressCommand.BitcoinAddress)
+                {
+                    _fundsPersistenceRepository.Delete(withdrawAddress);
+                    return new DeleteWithdrawAddressResponse(true, "Deletion successful");
+                }
+            }
+            return new DeleteWithdrawAddressResponse(false, "Address not found");
         }
     }
 }

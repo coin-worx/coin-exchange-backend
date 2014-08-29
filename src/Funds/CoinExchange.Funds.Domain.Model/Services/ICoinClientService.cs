@@ -24,7 +24,7 @@ namespace CoinExchange.Funds.Domain.Model.Services
         /// Receives Withdraw, forwards to Bitcoin Client to proceed. Returns true if withdraw made
         /// </summary>
         /// <returns></returns>
-        bool CommitWithdraw(WithdrawAggregate.Withdraw withdraw);
+        string CommitWithdraw(string bitcoinAddress, decimal amount);
 
         /// <summary>
         /// Populate the list of tradable currencies

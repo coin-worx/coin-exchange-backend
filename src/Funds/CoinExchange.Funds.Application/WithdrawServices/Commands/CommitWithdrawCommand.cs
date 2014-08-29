@@ -14,10 +14,11 @@ namespace CoinExchange.Funds.Application.WithdrawServices.Commands
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
-        public CommitWithdrawCommand(int accountId, string currency, string bitcoinAddress, decimal amount)
+        public CommitWithdrawCommand(int accountId, string currency, bool isCryptoCurrency, string bitcoinAddress, decimal amount)
         {
             AccountId = accountId;
             Currency = currency;
+            IsCryptoCurrency = isCryptoCurrency;
             BitcoinAddress = bitcoinAddress;
             Amount = amount;
         }
@@ -31,6 +32,11 @@ namespace CoinExchange.Funds.Application.WithdrawServices.Commands
         /// Currency
         /// </summary>
         public string Currency { get; private set; }
+
+        /// <summary>
+        /// IsCryptoCurrency
+        /// </summary>
+        public bool IsCryptoCurrency { get; private set; }
 
         /// <summary>
         /// Bitcoin Address

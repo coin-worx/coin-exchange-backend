@@ -30,5 +30,18 @@ namespace CoinExchange.Funds.Infrastructure.Persistence.NHibernate.NHibernate
                 Log.Error(exception.Message);
             }
         }
+
+        [Transaction(TransactionPropagation.Required, ReadOnly = false)]
+        public void Delete(object domainObject)
+        {
+            try
+            {
+                CurrentSession.Delete(domainObject);
+            }
+            catch (Exception exception)
+            {
+                Log.Error(exception.Message);
+            }
+        }
     }
 }

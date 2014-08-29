@@ -74,7 +74,10 @@
     <Compile Include="OrderValidationServices\OrderValidationApplicationService.cs" />
     <Compile Include="WithdrawServices\Commands\AddAddressCommand.cs" />
     <Compile Include="WithdrawServices\Commands\CommitWithdrawCommand.cs" />
+    <Compile Include="WithdrawServices\Commands\DeleteWithdrawAddressCommand.cs" />
+    <Compile Include="WithdrawServices\Representations\DeleteWithdrawAddressResponse.cs" />
     <Compile Include="WithdrawServices\Representations\WithdrawAddressRepresentation.cs" />
+    <Compile Include="WithdrawServices\Representations\WithdrawAddressResponse.cs" />
     <Compile Include="WithdrawServices\Representations\WithdrawLimitRepresentation.cs" />
     <Compile Include="WithdrawServices\IWithdrawApplicationService.cs" />
     <Compile Include="WithdrawServices\Representations\WithdrawRepresentation.cs" />

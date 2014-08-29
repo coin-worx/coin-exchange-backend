@@ -82,6 +82,7 @@
     <Compile Include="DTOs\Deposit\MakeDepositParams.cs" />
     <Compile Include="DTOs\Withdraw\AddWithdrawAddressParams.cs" />
     <Compile Include="DTOs\Withdraw\CommitWithdrawParams.cs" />
+    <Compile Include="DTOs\Withdraw\DeleteWithdrawAddressParams.cs" />
     <Compile Include="DTOs\Withdraw\GetRecentWithdrawalsParams.cs" />
     <Compile Include="DTOs\Withdraw\GetWithdrawAddressesParams.cs" />
     <Compile Include="DTOs\Withdraw\GetWithdrawLimitsParams.cs" />

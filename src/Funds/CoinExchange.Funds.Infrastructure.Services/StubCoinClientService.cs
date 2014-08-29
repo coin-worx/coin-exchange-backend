@@ -20,9 +20,9 @@ namespace CoinExchange.Funds.Infrastructure.Services
             return Guid.NewGuid().ToString();
         }
 
-        public bool CommitWithdraw(Withdraw withdraw)
+        public string CommitWithdraw(string bitcoinAddress, decimal amount)
         {
-            return true;
+            return "123";
         }
 
         public void PopulateCurrencies()

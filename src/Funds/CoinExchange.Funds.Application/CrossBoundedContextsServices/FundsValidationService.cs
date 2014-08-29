@@ -439,9 +439,11 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
                 _withdrawLimitRepository.GetWithdrawLimitByTierLevel(currentTierLevel);
 
             decimal withdrawFee = 0;
+            decimal minimumAmount = 0;
             if (withdrawFees != null)
             {
                 withdrawFee = withdrawFees.Fee;
+                minimumAmount = withdrawFees.MinimumAmount;
             }
 
             if (balance != null && withdrawLimit != null)
@@ -470,14 +472,14 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
                                                  _withdrawLimitEvaluationService.MaximumWithdrawUsd,
                                                  _withdrawLimitEvaluationService.WithheldAmount,
                                                  _withdrawLimitEvaluationService.WithheldConverted,
-                                                 withdrawFee);
+                                                 withdrawFee, minimumAmount);
             }
             else if (balance == null && withdrawLimit != null)
             {
                 return new AccountWithdrawLimits(currency, accountId, withdrawLimit.DailyLimit, 0, withdrawLimit.MonthlyLimit, 0,
-                    0, 0, 0, 0, 0, withdrawFee);
+                    0, 0, 0, 0, 0, withdrawFee, minimumAmount);
             }
-            return new AccountWithdrawLimits(currency, accountId, 0, 0, 0, 0, 0, 0, 0, 0, 0, withdrawFee);
+            return new AccountWithdrawLimits(currency, accountId, 0, 0, 0, 0, 0, 0, 0, 0, 0, withdrawFee, minimumAmount);
         }
 
         #endregion Methods
