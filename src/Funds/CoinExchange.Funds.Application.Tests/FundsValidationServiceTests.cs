@@ -315,7 +315,7 @@ namespace CoinExchange.Funds.Application.Tests
                 mockWithdrawIdGeneratorService, mockLedgerRepository, depositLimitEvaluationService,
                 mockDepositLimitRepository, mockWithdrawLimitEvaluationService, mockWithdrawLimitRepository,
                 mockTierLevelRetrievalService, mockBboRetrievalService, mockWithdrawRepository);
-            Withdraw withdraw = new Withdraw(new Currency("XBT", true), "123", DateTime.Now, WithdrawType.Default, 0.4m, 
+            Withdraw withdraw = new Withdraw(new Currency("XBT", true), "123", DateTime.Now, WithdrawType.Bitcoin, 0.4m, 
                 0.001m, TransactionStatus.Pending, 
                 new AccountId(123), new TransactionId("123"), new BitcoinAddress("bitcoin123"));
 

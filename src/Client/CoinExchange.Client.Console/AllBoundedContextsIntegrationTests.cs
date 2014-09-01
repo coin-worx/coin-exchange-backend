@@ -46,11 +46,11 @@ namespace CoinExchange.Client.Console
             _fundsClient.key = _identityAccessClient.key;
             _fundsClient.secretkey = _identityAccessClient.secretkey;
 
-           // MakeDeposit();
+            MakeDeposit();
             //SendOrders();
             ApplyForTier1();
             GetLimits();
-            TradeExecuted();
+            //TradeExecuted();
         }
 
         private  void ClearDatabase()

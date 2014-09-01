@@ -15,6 +15,11 @@ namespace CoinExchange.Funds.Application.Tests
             _objectsList.Add(domainObject);
         }
 
+        public void Delete(object domainObject)
+        {
+            _objectsList.Remove(domainObject);
+        }
+
         public int GetNumberOfObjects()
         {
             return _objectsList.Count;

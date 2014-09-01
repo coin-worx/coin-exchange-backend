@@ -78,6 +78,7 @@
     <Compile Include="Services\ILedgerIdGeneraterService.cs" />
     <Compile Include="Services\ITransactionService.cs" />
     <Compile Include="Services\ITierLevelRetrievalService.cs" />
+    <Compile Include="Services\IWithdrawSubmissionService.cs" />
     <Compile Include="WithdrawAggregate\AccountWithdrawLimits.cs" />
     <Compile Include="WithdrawAggregate\BankAccount.cs" />
     <Compile Include="WithdrawAggregate\IWithdrawAddressRepository.cs" />

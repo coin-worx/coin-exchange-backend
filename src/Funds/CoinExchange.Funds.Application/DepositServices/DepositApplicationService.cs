@@ -57,8 +57,9 @@ namespace CoinExchange.Funds.Application.DepositServices
                 foreach (var deposit in deposits)
                 {
                     depositRepresentations = new List<DepositRepresentation>();
-                    depositRepresentations.Add(new DepositRepresentation("", deposit.DepositId, deposit.Date, deposit.Amount,
-                        deposit.Status.ToString()));
+                    depositRepresentations.Add(new DepositRepresentation(deposit.Currency.Name, "", deposit.DepositId, 
+                        deposit.Date, deposit.Amount, deposit.Status.ToString(), (deposit.BitcoinAddress == null) ? null : 
+                        deposit.BitcoinAddress.Value, (deposit.TransactionId == null) ? null : deposit.TransactionId.Value));
                 }
             }
             return depositRepresentations;
@@ -102,11 +103,13 @@ namespace CoinExchange.Funds.Application.DepositServices
         /// Get the Bitcoin addresses saved against this user
         /// </summary>
         /// <param name="accountId"></param>
+        /// <param name="currency"> </param>
         /// <returns></returns>
-        public IList<DepositAddressRepresentation> GetAddressesForAccount(int accountId)
+        public IList<DepositAddressRepresentation> GetAddressesForAccount(int accountId, string currency)
         {
             List<DepositAddressRepresentation> depositAddressRepresentations = new List<DepositAddressRepresentation>();
-            List<DepositAddress> depositAddresses = _depositAddressRepository.GetDepositAddressByAccountId(new AccountId(accountId));
+            List<DepositAddress> depositAddresses = _depositAddressRepository.GetDepositAddressByAccountIdAndCurrency(
+                new AccountId(accountId), currency);
             foreach (var depositAddress in depositAddresses)
             {
                 depositAddressRepresentations.Add(new DepositAddressRepresentation(depositAddress.BitcoinAddress.Value,

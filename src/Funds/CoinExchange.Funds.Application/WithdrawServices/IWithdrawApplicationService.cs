@@ -33,14 +33,14 @@ namespace CoinExchange.Funds.Application.WithdrawServices
         /// <param name="accountId"></param>
         /// <param name="currency"></param>
         /// <returns></returns>
-        List<WithdrawAddressRepresentation> GetWithdrawalAddresses(int accountId, string currency);
+        List<WithdrawAddressRepresentation> GetWithdrawalAddresses(int accountId);
 
         /// <summary>
         /// Commits a withdraw on the user's request
         /// </summary>
         /// <param name="commitWithdrawCommand"></param>
         /// <returns></returns>
-        bool CommitWithdrawal(CommitWithdrawCommand commitWithdrawCommand);
+        CommitWithdrawResponse CommitWithdrawal(CommitWithdrawCommand commitWithdrawCommand);
 
         /// <summary>
         /// Retreives the Withdraw Limits for the given account and currency
@@ -56,5 +56,12 @@ namespace CoinExchange.Funds.Application.WithdrawServices
         /// <param name="deleteWithdrawAddressCommand"></param>
         /// <returns></returns>
         DeleteWithdrawAddressResponse DeleteAddress(DeleteWithdrawAddressCommand deleteWithdrawAddressCommand);
+
+        /// <summary>
+        /// Cancels the withdraw from being sent to the network. Returns the boolean result and the message as a tuple
+        /// </summary>
+        /// <param name="cancelWithdrawCommand"></param>
+        /// <returns></returns>
+        CancelWithdrawResponse CancelWithdraw(CancelWithdrawCommand cancelWithdrawCommand);
     }
 }

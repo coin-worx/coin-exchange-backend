@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Management.Instrumentation;
+using System.Threading;
 using CoinExchange.Common.Tests;
 using CoinExchange.Funds.Application.CrossBoundedContextsServices;
+using CoinExchange.Funds.Application.WithdrawServices;
 using CoinExchange.Funds.Domain.Model.BalanceAggregate;
 using CoinExchange.Funds.Domain.Model.CurrencyAggregate;
 using CoinExchange.Funds.Domain.Model.DepositAggregate;

@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CoinExchange.Funds.Application.WithdrawServices.Representations
 {
@@ -14,7 +10,8 @@ namespace CoinExchange.Funds.Application.WithdrawServices.Representations
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
-        public WithdrawRepresentation(string currency, string withdrawId, DateTime dateTime, string type, decimal amount, decimal fee, string status)
+        public WithdrawRepresentation(string currency, string withdrawId, DateTime dateTime, string type, decimal amount, 
+            decimal fee, string status, string bitcoinAddress, string transacitonId)
         {
             Currency = currency;
             WithdrawId = withdrawId;
@@ -23,6 +20,8 @@ namespace CoinExchange.Funds.Application.WithdrawServices.Representations
             Amount = amount;
             Fee = fee;
             Status = status;
+            BitcoinAddress = bitcoinAddress;
+            TransactionId = transacitonId;
         }
 
         /// <summary>
@@ -59,5 +58,15 @@ namespace CoinExchange.Funds.Application.WithdrawServices.Representations
         /// Status of the Deposit
         /// </summary>
         public string Status { get; private set; }
+
+        /// <summary>
+        /// Address
+        /// </summary>
+        public string BitcoinAddress { get; private set; }
+
+        /// <summary>
+        /// Transaction ID
+        /// </summary>
+        public string TransactionId { get; private set; }
     }
 }

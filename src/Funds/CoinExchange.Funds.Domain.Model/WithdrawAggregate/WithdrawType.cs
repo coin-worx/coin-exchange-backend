@@ -11,6 +11,6 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
     /// </summary>
     public enum WithdrawType
     {
-        Default
+        Bitcoin
     }
 }

@@ -131,7 +131,7 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Resources
         [Route("funds/getdepositaddresses")]
         [Authorize]
         [HttpPost]
-        public IHttpActionResult GetDepositAddresses()
+        public IHttpActionResult GetDepositAddresses([FromBody]GetDepositAddressesParams depositAddressesParams)
         {
             if (log.IsDebugEnabled)
             {
@@ -155,7 +155,7 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Resources
                 if (!string.IsNullOrEmpty(apikey))
                 {
                     int accountId = _apiKeyInfoAccess.GetUserIdFromApiKey(apikey);
-                    return Ok(_depositApplicationService.GetAddressesForAccount(accountId));
+                    return Ok(_depositApplicationService.GetAddressesForAccount(accountId, depositAddressesParams.Currency));
                 }
                 return BadRequest("API key not found.");
             }

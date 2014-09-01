@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Threading;
 using CoinExchange.Common.Tests;
+using CoinExchange.Funds.Application.WithdrawServices.Representations;
 using CoinExchange.Funds.Domain.Model.BalanceAggregate;
 using CoinExchange.Funds.Domain.Model.CurrencyAggregate;
 using CoinExchange.Funds.Domain.Model.DepositAggregate;
@@ -64,12 +65,11 @@ namespace CoinExchange.Funds.Infrastructure.Services.IntegrationTests
                 AccountId accountId = new AccountId(1);
                 string newAddress = coinClientService.CreateNewAddress("BTC");
                 Withdraw withdraw = new Withdraw(new Currency("BTC", true), Guid.NewGuid().ToString(), DateTime.Now,
-                                                 WithdrawType.Default, Amount, Amount*585, fee,
+                                                 WithdrawType.Bitcoin, Amount, Amount*585, fee,
                                                  TransactionStatus.Pending, accountId,
                                                  new BitcoinAddress(newAddress));
-                bool commitWithdraw = coinClientService.CommitWithdraw(withdraw);
-                Assert.IsTrue(commitWithdraw);
-                Assert.IsNotNull(withdraw.TransactionId);
+                string transactionId = coinClientService.CommitWithdraw(withdraw.BitcoinAddress.Value, withdraw.Amount);
+                Assert.IsNotNull(transactionId);
             }
         }
 
@@ -154,11 +154,11 @@ namespace CoinExchange.Funds.Infrastructure.Services.IntegrationTests
                 // Wait for hte first interval to elapse, and then withdraw, because ony then we will be able to figure if a 
                 // new transaction has been received
                 manualResetEvent.WaitOne(Convert.ToInt32(coinClientService.PollingInterval + 3000));
-                Withdraw withdraw = new Withdraw(currency, Guid.NewGuid().ToString(), DateTime.Now, WithdrawType.Default,
+                Withdraw withdraw = new Withdraw(currency, Guid.NewGuid().ToString(), DateTime.Now, WithdrawType.Bitcoin,
                                                  Amount, Amount*585, 0.001m, TransactionStatus.Pending, accountId,
                                                  new BitcoinAddress(newAddress));
-                bool commitWithdraw = coinClientService.CommitWithdraw(withdraw);
-                Assert.IsTrue(commitWithdraw);
+                string commitWithdraw = coinClientService.CommitWithdraw(withdraw.BitcoinAddress.Value, withdraw.Amount);
+                Assert.IsNotNull(commitWithdraw);
 
                 manualResetEvent.Reset();
                 bool eventFired = false;
@@ -212,11 +212,11 @@ namespace CoinExchange.Funds.Infrastructure.Services.IntegrationTests
                 // Wait for the first interval to elapse, and then withdraw, because ony then we will be able to figure if a 
                 // new transaction has been received
                 manualResetEvent.WaitOne(Convert.ToInt32(coinClientService.PollingInterval + 3000));
-                Withdraw withdraw = new Withdraw(currency, Guid.NewGuid().ToString(), DateTime.Now, WithdrawType.Default,
+                Withdraw withdraw = new Withdraw(currency, Guid.NewGuid().ToString(), DateTime.Now, WithdrawType.Bitcoin,
                                                  Amount, Amount*585, 0.001m, TransactionStatus.Pending, accountId,
                                                  new BitcoinAddress(newAddress));
-                bool commitWithdraw = coinClientService.CommitWithdraw(withdraw);
-                Assert.IsTrue(commitWithdraw);
+                string commitWithdraw = coinClientService.CommitWithdraw(withdraw.BitcoinAddress.Value, withdraw.Amount);
+                Assert.IsTrue(!string.IsNullOrEmpty(commitWithdraw));
 
                 manualResetEvent.Reset();
                 bool eventFired = false;

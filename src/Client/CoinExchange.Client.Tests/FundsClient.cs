@@ -16,7 +16,7 @@ namespace CoinExchange.Client.Tests
             _baseUrl = baseUrl;
         }
 
-        public string MakeDeposit(string currency, int amount, bool isCryptoCurrency)
+        public string MakeDeposit(string currency, decimal amount, bool isCryptoCurrency)
         {
             JObject jsonObject = new JObject();
             jsonObject.Add("Currency", currency);

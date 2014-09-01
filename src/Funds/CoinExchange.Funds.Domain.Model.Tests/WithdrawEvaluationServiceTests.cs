@@ -90,7 +90,7 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             decimal currentBalance = (((1000 / bestBid) + (1000 / bestAsk)) / 2) - 0.09m;
 
             List<Withdraw> withdraws = new List<Withdraw>();
-            Withdraw withdraw = new Withdraw(currency, "withdrawid123", DateTime.Now.AddDays(-40), WithdrawType.Default, 1.5m, 900, 
+            Withdraw withdraw = new Withdraw(currency, "withdrawid123", DateTime.Now.AddDays(-40), WithdrawType.Bitcoin, 1.5m, 900, 
                 0.001m, TransactionStatus.Pending, accountId, 
                 new BitcoinAddress("bitcoin123"));
             withdraws.Add(withdraw);
@@ -126,7 +126,7 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             decimal currentBalance = (((1000 / bestBid) + (1000 / bestAsk)) / 2) - 0.09m;
 
             List<Withdraw> ledgers = new List<Withdraw>();
-            Withdraw withdraw = new Withdraw(currency, "withdrawid123", DateTime.Now.AddDays(-29), WithdrawType.Default,
+            Withdraw withdraw = new Withdraw(currency, "withdrawid123", DateTime.Now.AddDays(-29), WithdrawType.Bitcoin,
                 4500/midpoint, 4500, 0.001m, TransactionStatus.Pending, accountId,
                 new BitcoinAddress("bitcoin123"));
             ledgers.Add(withdraw);
@@ -177,10 +177,10 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             decimal currentBalance = (((1000 / bestBid) + (1000 / bestAsk)) / 2) - 0.09m;
 
             List<Withdraw> withdraws = new List<Withdraw>();
-            Withdraw withdraw = new Withdraw(currency, "withdrawid123", DateTime.Now.AddDays(-29), WithdrawType.Default,
+            Withdraw withdraw = new Withdraw(currency, "withdrawid123", DateTime.Now.AddDays(-29), WithdrawType.Bitcoin,
                 4100 / midpoint, 4100, 0.001m, TransactionStatus.Pending, accountId,
                 new BitcoinAddress("bitcoin123"));
-            Withdraw withdraw2 = new Withdraw(currency, "withdrawid123", DateTime.Now.AddMinutes(-5), WithdrawType.Default,
+            Withdraw withdraw2 = new Withdraw(currency, "withdrawid123", DateTime.Now.AddMinutes(-5), WithdrawType.Bitcoin,
                 400 / midpoint, 400, 0.001m, TransactionStatus.Pending, accountId,
                 new BitcoinAddress("bitcoin123"));
             withdraws.Add(withdraw);
@@ -233,10 +233,10 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             decimal currentBalance = (((1000 / bestBid) + (1000 / bestAsk)) / 2) - 0.09m;
 
             List<Withdraw> withdraws = new List<Withdraw>();
-            Withdraw withdraw = new Withdraw(currency, "withdrawid123", DateTime.Now.AddDays(-29), WithdrawType.Default,
+            Withdraw withdraw = new Withdraw(currency, "withdrawid123", DateTime.Now.AddDays(-29), WithdrawType.Bitcoin,
                 4100 / midpoint, 4100, 0.001m, TransactionStatus.Pending, accountId,
                 new BitcoinAddress("bitcoin123"));
-            Withdraw withdraw2 = new Withdraw(currency, "withdrawid123", DateTime.Now.AddMinutes(-5), WithdrawType.Default,
+            Withdraw withdraw2 = new Withdraw(currency, "withdrawid123", DateTime.Now.AddMinutes(-5), WithdrawType.Bitcoin,
                 400 / midpoint, 400, 0.001m, TransactionStatus.Pending, accountId,
                 new BitcoinAddress("bitcoin123"));
             withdraws.Add(withdraw);
@@ -289,10 +289,10 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             decimal currentBalance = (((1000 / bestBid) + (1000 / bestAsk)) / 2) - 0.09m;
 
             List<Withdraw> withdraws = new List<Withdraw>();
-            Withdraw withdraw = new Withdraw(currency, "withdrawid123", DateTime.Now.AddDays(-29), WithdrawType.Default,
+            Withdraw withdraw = new Withdraw(currency, "withdrawid123", DateTime.Now.AddDays(-29), WithdrawType.Bitcoin,
                 3500 / midpoint, 3500, 0.001m, TransactionStatus.Pending, accountId,
                 new BitcoinAddress("bitcoin123"));
-            Withdraw withdraw2 = new Withdraw(currency, "withdrawid123", DateTime.Now.AddMinutes(-5), WithdrawType.Default,
+            Withdraw withdraw2 = new Withdraw(currency, "withdrawid123", DateTime.Now.AddMinutes(-5), WithdrawType.Bitcoin,
                 500 / midpoint, 500, 0.001m, TransactionStatus.Pending, accountId,
                 new BitcoinAddress("bitcoin123"));
             withdraws.Add(withdraw);
@@ -345,7 +345,7 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             decimal currentBalance = (((1000 / bestBid) + (1000 / bestAsk)) / 2) - 0.09m;
 
             List<Withdraw> withdraws = new List<Withdraw>();
-            Withdraw withdraw = new Withdraw(currency, "withdrawid123", DateTime.Now.AddMinutes(-5), WithdrawType.Default,
+            Withdraw withdraw = new Withdraw(currency, "withdrawid123", DateTime.Now.AddMinutes(-5), WithdrawType.Bitcoin,
                 500 / midpoint, 500, 0.001m, TransactionStatus.Pending, accountId,
                 new BitcoinAddress("bitcoin123"));
             withdraws.Add(withdraw);
@@ -397,10 +397,10 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             decimal currentBalance = (((1000 / bestBid) + (1000 / bestAsk)) / 2) - 0.09m;
 
             List<Withdraw> withdraws = new List<Withdraw>();
-            Withdraw withdraw = new Withdraw(currency, "withdrawid123", DateTime.Now.AddDays(-3), WithdrawType.Default,
+            Withdraw withdraw = new Withdraw(currency, "withdrawid123", DateTime.Now.AddDays(-3), WithdrawType.Bitcoin,
                 4000 / midpoint, 4000, 0.001m, TransactionStatus.Pending, accountId,
                 new BitcoinAddress("bitcoin123"));
-            Withdraw withdraw2 = new Withdraw(currency, "withdrawid123", DateTime.Now.AddMinutes(-5), WithdrawType.Default,
+            Withdraw withdraw2 = new Withdraw(currency, "withdrawid123", DateTime.Now.AddMinutes(-5), WithdrawType.Bitcoin,
                 500 / midpoint, 500, 0.001m, TransactionStatus.Pending, accountId,
                 new BitcoinAddress("bitcoin123"));
             withdraws.Add(withdraw);
@@ -455,7 +455,7 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             decimal safeAmount = ConvertCurrencyToUsd(bestBid, bestAsk, availableBalance);
 
             List<Withdraw> withdraws = new List<Withdraw>();
-            Withdraw withdraw = new Withdraw(currency, "withdrawid123", DateTime.Now.AddDays(-29), WithdrawType.Default,
+            Withdraw withdraw = new Withdraw(currency, "withdrawid123", DateTime.Now.AddDays(-29), WithdrawType.Bitcoin,
                 4500 / midpoint, 4500, 0.001m, TransactionStatus.Pending, accountId,
                 new BitcoinAddress("bitcoin123"));
             withdraws.Add(withdraw);
@@ -511,10 +511,10 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             decimal safeAmount = ConvertCurrencyToUsd(bestBid, bestAsk, availableBalance);
 
             List<Withdraw> withdraws = new List<Withdraw>();
-            Withdraw withdraw = new Withdraw(currency, "withdrawid123", DateTime.Now.AddDays(-29), WithdrawType.Default,
+            Withdraw withdraw = new Withdraw(currency, "withdrawid123", DateTime.Now.AddDays(-29), WithdrawType.Bitcoin,
                 4100 / midpoint, 4100, 0.001m, TransactionStatus.Pending, accountId,
                 new BitcoinAddress("bitcoin123"));
-            Withdraw withdraw2 = new Withdraw(currency, "withdrawid123", DateTime.Now.AddMinutes(-29), WithdrawType.Default,
+            Withdraw withdraw2 = new Withdraw(currency, "withdrawid123", DateTime.Now.AddMinutes(-29), WithdrawType.Bitcoin,
                 400 / midpoint, 400, 0.001m, TransactionStatus.Pending, accountId,
                 new BitcoinAddress("bitcoin123"));
             withdraws.Add(withdraw);
@@ -571,10 +571,10 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             decimal safeAmount = ConvertCurrencyToUsd(bestBid, bestAsk, availableBalance);
 
             List<Withdraw> withdraws = new List<Withdraw>();
-            Withdraw withdraw = new Withdraw(currency, "withdrawid123", DateTime.Now.AddDays(-29), WithdrawType.Default,
+            Withdraw withdraw = new Withdraw(currency, "withdrawid123", DateTime.Now.AddDays(-29), WithdrawType.Bitcoin,
                 3500 / midpoint, 3500, 0.001m, TransactionStatus.Pending, accountId,
                 new BitcoinAddress("bitcoin123"));
-            Withdraw withdraw2 = new Withdraw(currency, "withdrawid123", DateTime.Now.AddMinutes(-29), WithdrawType.Default,
+            Withdraw withdraw2 = new Withdraw(currency, "withdrawid123", DateTime.Now.AddMinutes(-29), WithdrawType.Bitcoin,
                 500 / midpoint, 500, 0.001m, TransactionStatus.Pending, accountId,
                 new BitcoinAddress("bitcoin123"));
             withdraws.Add(withdraw);
@@ -630,7 +630,7 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             decimal safeAmount = ConvertCurrencyToUsd(bestBid, bestAsk, availableBalance);
 
             List<Withdraw> withdraws = new List<Withdraw>();
-            Withdraw withdraw = new Withdraw(currency, "withdrawid123", DateTime.Now.AddMinutes(-29), WithdrawType.Default,
+            Withdraw withdraw = new Withdraw(currency, "withdrawid123", DateTime.Now.AddMinutes(-29), WithdrawType.Bitcoin,
                 500 / midpoint, 500, 0.001m, TransactionStatus.Pending, accountId,
                 new BitcoinAddress("bitcoin123"));
             withdraws.Add(withdraw);
@@ -686,10 +686,10 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             decimal safeAmount = ConvertCurrencyToUsd(bestBid, bestAsk, availableBalance);
 
             List<Withdraw> withdraws = new List<Withdraw>();
-            Withdraw withdraw = new Withdraw(currency, "withdrawid123", DateTime.Now.AddDays(-29), WithdrawType.Default,
+            Withdraw withdraw = new Withdraw(currency, "withdrawid123", DateTime.Now.AddDays(-29), WithdrawType.Bitcoin,
                 4000 / midpoint, 4000, 0.001m, TransactionStatus.Pending, accountId,
                 new BitcoinAddress("bitcoin123"));
-            Withdraw withdraw2 = new Withdraw(currency, "withdrawid123", DateTime.Now.AddMinutes(-29), WithdrawType.Default,
+            Withdraw withdraw2 = new Withdraw(currency, "withdrawid123", DateTime.Now.AddMinutes(-29), WithdrawType.Bitcoin,
                 500 / midpoint, 500, 0.001m, TransactionStatus.Pending, accountId,
                 new BitcoinAddress("bitcoin123"));
             withdraws.Add(withdraw);

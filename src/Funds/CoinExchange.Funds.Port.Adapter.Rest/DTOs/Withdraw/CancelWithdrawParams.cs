@@ -4,24 +4,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoinExchange.Funds.Port.Adapter.Rest.DTOs.Deposit
+namespace CoinExchange.Funds.Port.Adapter.Rest.DTOs.Withdraw
 {
     /// <summary>
-    /// Parameters for getting deposit addresses
+    /// Parameters to cancel withdraw
     /// </summary>
-    public class GetDepositAddressesParams
+    public class CancelWithdrawParams
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
-        public GetDepositAddressesParams(string currency)
+        public CancelWithdrawParams(string withdrawId)
         {
-            Currency = currency;
+            WithdrawId = withdrawId;
         }
 
         /// <summary>
-        /// Currency
+        /// WithdrawId
         /// </summary>
-        public string Currency { get; private set; }
+        public string WithdrawId;
     }
 }

@@ -33,6 +33,16 @@ namespace CoinExchange.Funds.Infrastructure.Persistence.NHibernate.NHibernate
         }
 
         [Transaction]
+        public List<DepositAddress> GetDepositAddressByAccountIdAndCurrency(AccountId accountId, string currency)
+        {
+            return CurrentSession.Query<DepositAddress>()
+                .Where(x => x.AccountId.Value == accountId.Value && x.Currency.Name == currency)
+                .AsQueryable()
+                .OrderByDescending(x => x.CreationDateTime)
+                .ToList();
+        }
+
+        [Transaction]
         public DepositAddress GetDepositAddressByAddress(BitcoinAddress bitcoinAddress)
         {
             return CurrentSession.QueryOver<DepositAddress>().Where(x => x.BitcoinAddress.Value == bitcoinAddress.Value).SingleOrDefault();

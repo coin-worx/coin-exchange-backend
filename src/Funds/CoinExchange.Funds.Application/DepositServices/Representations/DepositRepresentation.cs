@@ -14,14 +14,23 @@ namespace CoinExchange.Funds.Application.DepositServices.Representations
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
-        public DepositRepresentation(string description, string depositId, DateTime date, decimal amount, string status)
+        public DepositRepresentation(string currency, string description, string depositId, DateTime date, decimal amount, string status,
+            string bitcoinAddress, string transactionId)
         {
+            Currency = currency;
             Description = description;
             DepositId = depositId;
             Date = date;
             Amount = amount;
             Status = status;
+            BitcoinAddress = bitcoinAddress;
+            TransactionId = transactionId;
         }
+
+        /// <summary>
+        /// Currency
+        /// </summary>
+        public string Currency { get; private set; }
 
         /// <summary>
         /// Currency
@@ -47,5 +56,15 @@ namespace CoinExchange.Funds.Application.DepositServices.Representations
         /// Status of the Deposit
         /// </summary>
         public string Status { get; private set; }
+
+        /// <summary>
+        /// Bitcoin Address
+        /// </summary>
+        public string BitcoinAddress { get; private set; }
+
+        /// <summary>
+        /// Transaction ID
+        /// </summary>
+        public string TransactionId { get; private set; }
     }
 }

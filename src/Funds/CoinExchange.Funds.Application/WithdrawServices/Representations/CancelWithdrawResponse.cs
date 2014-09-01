@@ -4,24 +4,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoinExchange.Funds.Port.Adapter.Rest.DTOs.Deposit
+namespace CoinExchange.Funds.Application.WithdrawServices.Representations
 {
     /// <summary>
-    /// Parameters for getting deposit addresses
+    /// Response after CancelWithdraw request
     /// </summary>
-    public class GetDepositAddressesParams
+    public class CancelWithdrawResponse
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
-        public GetDepositAddressesParams(string currency)
+        public CancelWithdrawResponse(bool commitSuccessful)
         {
-            Currency = currency;
+            CancelSuccessful = commitSuccessful;
         }
 
         /// <summary>
-        /// Currency
+        /// Cancel Successful or not
         /// </summary>
-        public string Currency { get; private set; }
+        public bool CancelSuccessful { get; private set; }
     }
 }

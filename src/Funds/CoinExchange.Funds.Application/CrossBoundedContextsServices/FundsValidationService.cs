@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Management.Instrumentation;
 using CoinExchange.Funds.Domain.Model.BalanceAggregate;
 using CoinExchange.Funds.Domain.Model.CurrencyAggregate;
 using CoinExchange.Funds.Domain.Model.DepositAggregate;
@@ -181,7 +182,7 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
                                                                                              balance.CurrentBalance))
                             {
                                 Withdraw withdraw = new Withdraw(currency, _withdrawIdGeneratorService.GenerateNewId(),
-                                                                 DateTime.Now, WithdrawType.Default, amount,
+                                                                 DateTime.Now, WithdrawType.Bitcoin, amount,
                                                                  withdrawFees.Fee,
                                                                  TransactionStatus.Pending, accountId, transactionId,
                                                                  bitcoinAddress);
@@ -218,16 +219,20 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         {
             Balance balance = _balanceRepository.GetBalanceByCurrencyAndAccountId(withdraw.Currency, withdraw.AccountId);
 
-            bool addResponse = balance.ConfirmPendingTransaction(withdraw.WithdrawId,
-                                                                 PendingTransactionType.Withdraw,
-                                                                 -(withdraw.Amount + withdraw.Fee));
-            withdraw.StatusConfirmed();
-            if (addResponse)
+            if (balance != null)
             {
-                _fundsPersistenceRepository.SaveOrUpdate(balance);
-                _fundsPersistenceRepository.SaveOrUpdate(withdraw);
-                return _transactionService.CreateWithdrawTransaction(withdraw, balance.CurrentBalance);
+                bool addResponse = balance.ConfirmPendingTransaction(withdraw.WithdrawId,
+                                                                     PendingTransactionType.Withdraw,
+                                                                     -(withdraw.Amount + withdraw.Fee));
+                withdraw.StatusConfirmed();
+                if (addResponse)
+                {
+                    _fundsPersistenceRepository.SaveOrUpdate(balance);
+                    _fundsPersistenceRepository.SaveOrUpdate(withdraw);
+                    return _transactionService.CreateWithdrawTransaction(withdraw, balance.CurrentBalance);
+                }
             }
+            throw new InvalidOperationException("Balance not found for the given withdraw");
 
             return false;
         }
@@ -384,39 +389,43 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
             // Get all the Deposit Ledgers for this currency and account
             IList<Ledger> depositLedgers = GetDepositLedgers(currency, accountId);
             // Get the Current Tier Level for this user using the corss bounded context Tier retrieval service
-            // ToDo: Using the stub implementation for now, upgrade to the real cross bounded context service
-            // once completed
-            // ToDo: Assign the AccountId's value after refactoring the AccountIds value to int
             string currentTierLevel = _tierLevelRetrievalService.GetCurrentTierLevel(accountId.Value);
-            // Get the Current Deposit limits for this user
-            DepositLimit depositLimit = _depositLimitRepository.GetDepositLimitByTierLevel(currentTierLevel);
 
-            if (balance != null && depositLimit != null)
+            // ToDo: Check permissions of the Tier Level: Tier 0 cannot deposit/withdraw, Tier 1 can deposit/withdraw Digital
+            // Currencies. Tier 3 can deposit/withdraw both digital/FIAT currencies
+            if (!string.IsNullOrEmpty(currentTierLevel))
             {
-                // Get the best bid and best ask form the Trades BC.
-                // NOTE: Implement and use real implementation later, rather than using the stub implementation being
-                // used right now
-                Tuple<decimal, decimal> bestBidBestAsk =
-                    _bboCrossContextService.GetBestBidBestAsk(currency.Name, "USD");
+                // Get the Current Deposit limits for this user
+                DepositLimit depositLimit = _depositLimitRepository.GetDepositLimitByTierLevel(currentTierLevel);
 
-                // Check if the current Deposit transaction is within the Deposit limits
-                if (_depositLimitEvaluationService.AssignDepositLimits(depositLedgers,
-                                                                       depositLimit, bestBidBestAsk.Item1,
-                                                                       bestBidBestAsk.Item2))
+                if (balance != null && depositLimit != null)
+                {
+                    // Get the best bid and best ask form the Trades BC.
+                    // NOTE: Implement and use real implementation later, rather than using the stub implementation being
+                    // used right now
+                    Tuple<decimal, decimal> bestBidBestAsk =
+                        _bboCrossContextService.GetBestBidBestAsk(currency.Name, "USD");
+
+                    // Check if the current Deposit transaction is within the Deposit limits
+                    if (_depositLimitEvaluationService.AssignDepositLimits(depositLedgers,
+                                                                           depositLimit, bestBidBestAsk.Item1,
+                                                                           bestBidBestAsk.Item2))
+                    {
+                        return new AccountDepositLimits(
+                            currency, accountId, _depositLimitEvaluationService.DailyLimit,
+                            _depositLimitEvaluationService.DailyLimitUsed,
+                            _depositLimitEvaluationService.MonthlyLimit, _depositLimitEvaluationService.MonthlyLimitUsed,
+                            balance.CurrentBalance, _depositLimitEvaluationService.MaximumDeposit);
+                    }
+                }
+                else if (balance == null && depositLimit != null)
                 {
                     return new AccountDepositLimits(
-                        currency, accountId, _depositLimitEvaluationService.DailyLimit,
-                        _depositLimitEvaluationService.DailyLimitUsed,
-                        _depositLimitEvaluationService.MonthlyLimit, _depositLimitEvaluationService.MonthlyLimitUsed,
-                        balance.CurrentBalance, _depositLimitEvaluationService.MaximumDeposit);
-                }
-            }
-            else if (balance == null && depositLimit != null)
-            {
-                return new AccountDepositLimits(
                         currency, accountId, depositLimit.DailyLimit, 0, depositLimit.MonthlyLimit, 0, 0, 0);
+                }
+                return new AccountDepositLimits(currency, accountId, 0, 0, 0, 0, 0, 0);
             }
-            return new AccountDepositLimits(currency, accountId, 0, 0, 0, 0, 0, 0);
+            throw new InstanceNotFoundException(string.Format("No TierLevel Found for the user: AccountId = {0}", accountId.Value));
         }
 
         /// <summary>

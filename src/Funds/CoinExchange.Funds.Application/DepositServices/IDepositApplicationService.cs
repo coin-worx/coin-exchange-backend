@@ -37,8 +37,9 @@ namespace CoinExchange.Funds.Application.DepositServices
         /// Get the list of addresses for the current user
         /// </summary>
         /// <param name="accountId"></param>
+        /// <param name="currency"> </param>
         /// <returns></returns>
-        IList<DepositAddressRepresentation> GetAddressesForAccount(int accountId);
+        IList<DepositAddressRepresentation> GetAddressesForAccount(int accountId, string currency);
 
         /// <summary>
         /// Make a deposit for a currency. This feature is not present to be called by front end

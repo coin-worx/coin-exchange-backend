@@ -23,19 +23,33 @@ namespace CoinExchange.Funds.Application.WithdrawServices
         private ICoinClientService _coinClientService;
         private IFundsValidationService _fundsValidationService;
         private IWithdrawRepository _withdrawRepository;
+        private IWithdrawSubmissionService _withdrawSubmissionService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
         public WithdrawApplicationService(IFundsPersistenceRepository fundsPersistenceRepository, 
             IWithdrawAddressRepository withdrawAddressRepository, ICoinClientService coinClientService, 
-            IFundsValidationService fundsValidationService, IWithdrawRepository withdrawRepository)
+            IFundsValidationService fundsValidationService, IWithdrawRepository withdrawRepository, 
+            IWithdrawSubmissionService withdrawSubmissionService)
         {
             _fundsPersistenceRepository = fundsPersistenceRepository;
             _withdrawAddressRepository = withdrawAddressRepository;
             _coinClientService = coinClientService;
             _fundsValidationService = fundsValidationService;
             _withdrawRepository = withdrawRepository;
+            _withdrawSubmissionService = withdrawSubmissionService;
+
+            _withdrawSubmissionService.WithdrawExecuted += this.WithdrawExecuted;
+        }
+
+        /// <summary>
+        /// Invoked when a withdraw is committed to the network
+        /// </summary>
+        /// <param name="withdraw"></param>
+        private void WithdrawExecuted(Withdraw withdraw)
+        {
+            _fundsValidationService.WithdrawalExecuted(withdraw);
         }
 
         /// <summary>
@@ -55,7 +69,8 @@ namespace CoinExchange.Funds.Application.WithdrawServices
                 {
                     withdrawRepresentations.Add(new WithdrawRepresentation(withdrawal.Currency.Name, withdrawal.WithdrawId,
                         withdrawal.DateTime, withdrawal.Type.ToString(), withdrawal.Amount, withdrawal.Fee,
-                        withdrawal.Status.ToString()));
+                        withdrawal.Status.ToString(), (withdrawal.BitcoinAddress == null) ? null : withdrawal.BitcoinAddress.Value, 
+                        (withdrawal.TransactionId == null) ? null : withdrawal.TransactionId.Value));
                 }
             }
 
@@ -94,9 +109,8 @@ namespace CoinExchange.Funds.Application.WithdrawServices
         /// Gets the list of withdrawaal addresses
         /// </summary>
         /// <param name="accountId"></param>
-        /// <param name="currency"></param>
         /// <returns></returns>
-        public List<WithdrawAddressRepresentation> GetWithdrawalAddresses(int accountId, string currency)
+        public List<WithdrawAddressRepresentation> GetWithdrawalAddresses(int accountId)
         {
             // Get the list of withdraw addresses, extract the information into the withdraw address representation list and 
             // return 
@@ -115,26 +129,30 @@ namespace CoinExchange.Funds.Application.WithdrawServices
         /// </summary>
         /// <param name="commitWithdrawCommand"></param>
         /// <returns></returns>
-        public bool CommitWithdrawal(CommitWithdrawCommand commitWithdrawCommand)
+        public CommitWithdrawResponse CommitWithdrawal(CommitWithdrawCommand commitWithdrawCommand)
         {
-            Withdraw withdrawal = _fundsValidationService.ValidateFundsForWithdrawal(
+            Withdraw withdraw = _fundsValidationService.ValidateFundsForWithdrawal(
                 new AccountId(commitWithdrawCommand.AccountId), new Currency(commitWithdrawCommand.Currency, 
                     commitWithdrawCommand.IsCryptoCurrency), commitWithdrawCommand.Amount, null/*Null until confirmation of what to use*/, 
                 new BitcoinAddress(commitWithdrawCommand.BitcoinAddress));
 
-            if (withdrawal != null)
+            if (withdraw != null)
             {
-                // Commit the withdraw to the network, if successful, create transaction ledger using 
+                bool commitWithdrawResponse = _withdrawSubmissionService.CommitWithdraw(withdraw.WithdrawId);
+                return new CommitWithdrawResponse(commitWithdrawResponse, withdraw.WithdrawId, null);
+
+                /*// Commit the withdraw to the network, if successful, create transaction ledger using 
                 // IFundsValidationService
                 string transactionId = _coinClientService.CommitWithdraw(commitWithdrawCommand.BitcoinAddress, 
                     commitWithdrawCommand.Amount);
                 if (!string.IsNullOrEmpty(transactionId))
                 {
-                    withdrawal.SetTransactionId(transactionId);
-                    return _fundsValidationService.WithdrawalExecuted(withdrawal);
-                }
+                    withdraw.SetTransactionId(transactionId);
+                    return new CommitWithdrawResponse(_fundsValidationService.WithdrawalExecuted(withdraw), withdraw.WithdrawId,
+                        "");
+                }*/
             }
-            return false;
+            return new CommitWithdrawResponse(false, null, "Could not commit withdraw");
         }
 
         /// <summary>
@@ -178,6 +196,16 @@ namespace CoinExchange.Funds.Application.WithdrawServices
                 }
             }
             return new DeleteWithdrawAddressResponse(false, "Address not found");
+        }
+
+        /// <summary>
+        /// Cancel the withdraw with the given WithdrawID
+        /// </summary>
+        /// <param name="cancelWithdrawCommand"> </param>
+        /// <returns></returns>
+        public CancelWithdrawResponse CancelWithdraw(CancelWithdrawCommand cancelWithdrawCommand)
+        {
+            return new CancelWithdrawResponse(_withdrawSubmissionService.CancelWithdraw(cancelWithdrawCommand.WithdrawId));
         }
     }
 }

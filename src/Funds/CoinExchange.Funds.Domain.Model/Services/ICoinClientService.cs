@@ -21,7 +21,7 @@ namespace CoinExchange.Funds.Domain.Model.Services
         string CreateNewAddress(string currency);
 
         /// <summary>
-        /// Receives Withdraw, forwards to Bitcoin Client to proceed. Returns true if withdraw made
+        /// Receives Withdraw, forwards to Bitcoin Client to proceed. Returns Transaction ID if commit is made
         /// </summary>
         /// <returns></returns>
         string CommitWithdraw(string bitcoinAddress, decimal amount);

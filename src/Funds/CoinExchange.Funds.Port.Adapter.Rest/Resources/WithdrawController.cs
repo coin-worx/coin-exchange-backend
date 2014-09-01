@@ -154,7 +154,7 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Resources
                 if (!string.IsNullOrEmpty(getWithdrawAddressesParams.Currency))
                 {
                     int accountId = _apiKeyInfoAccess.GetUserIdFromApiKey(apikey);
-                    return Ok(_withdrawApplicationService.GetWithdrawalAddresses(accountId, getWithdrawAddressesParams.Currency));
+                    return Ok(_withdrawApplicationService.GetWithdrawalAddresses(accountId));
                 }
                 return BadRequest("Currency is not provided.");
             }
@@ -299,6 +299,46 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Resources
                 if (log.IsErrorEnabled)
                 {
                     log.Error(string.Format("Delete Withdraw Address Call Error: {0}", exception));
+                }
+                return InternalServerError();
+            }
+        }
+
+        [Route("funds/cancelWithdraw")]
+        [Authorize]
+        [HttpPost]
+        public IHttpActionResult CancelWithdraw([FromBody]CancelWithdrawParams cancelWithdrawParams)
+        {
+            if (log.IsDebugEnabled)
+            {
+                log.Debug(string.Format("Cancel Withdraw call."));
+            }
+            try
+            {
+                //get api key from header
+                var headers = Request.Headers;
+                string apikey = "";
+                IEnumerable<string> headerParams;
+                if (headers.TryGetValues("Auth", out headerParams))
+                {
+                    string[] auth = headerParams.ToList()[0].Split(',');
+                    apikey = auth[0];
+                }
+                if (log.IsDebugEnabled)
+                {
+                    log.Debug(string.Format("Cancel Withdraw Call: ApiKey = {0}", apikey));
+                }
+                if (!string.IsNullOrEmpty(apikey))
+                {
+                    return Ok(_withdrawApplicationService.CancelWithdraw(new CancelWithdrawCommand(cancelWithdrawParams.WithdrawId)));
+                }
+                return BadRequest("Currency is not provided.");
+            }
+            catch (Exception exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error(string.Format("Cancel Withdraw Call Error: {0}", exception));
                 }
                 return InternalServerError();
             }
