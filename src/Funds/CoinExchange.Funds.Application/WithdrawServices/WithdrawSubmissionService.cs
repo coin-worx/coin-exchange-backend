@@ -52,7 +52,7 @@ namespace CoinExchange.Funds.Application.WithdrawServices
                 _withdrawTimersDictionary.Add(timer, withdraw);
                 return true;
             }
-            return false;
+            throw new InstanceNotFoundException(string.Format("No withdraw found for Withdraw ID = {0}", withdrawId));
         }
 
         /// <summary>
