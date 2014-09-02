@@ -45,5 +45,18 @@ namespace CoinExchange.Funds.Application.LedgerServices
 
             return ledgerRepresentations;
         }
+
+        /// <summary>
+        /// Get the details for the given ledger ID
+        /// </summary>
+        /// <param name="ledgerId"></param>
+        /// <returns></returns>
+        public LedgerRepresentation GetLedgerDetails(string ledgerId)
+        {
+            Ledger ledger = _ledgerRepository.GetLedgerByLedgerId(ledgerId);
+            return new LedgerRepresentation(ledger.LedgerId, ledger.DateTime, ledger.LedgerType.ToString(), ledger.Currency.Name,
+                ledger.Amount, ledger.AmountInUsd, ledger.Fee, ledger.Balance, ledger.TradeId, ledger.OrderId, ledger.WithdrawId,
+                ledger.DepositId, ledger.AccountId.Value);
+        }
     }
 }

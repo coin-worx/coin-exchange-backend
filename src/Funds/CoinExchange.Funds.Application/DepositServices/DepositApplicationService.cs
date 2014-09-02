@@ -40,7 +40,104 @@ namespace CoinExchange.Funds.Application.DepositServices
             _depositAddressRepository = depositAddressRepository;
             _balanceRepository = balanceRepository;
             _depositRepository = depositRepository;
+
+            _coinClientService.DepositArrived += OnDepositArrival;
+            _coinClientService.DepositConfirmed += OnDepositConfirmed;
         }
+
+        /// <summary>
+        /// Event handler for event raised in the result of a new confirmation for a deposit
+        /// </summary>
+        /// <param name="transactionId"></param>
+        /// <param name="confirmations"></param>
+        private void OnDepositConfirmed(string transactionId, int confirmations)
+        {
+            // Get all deposits
+            List<Deposit> allDeposits = _depositRepository.GetAllDeposits();
+            foreach (var deposit in allDeposits)
+            {
+                deposit.SetConfirmations(confirmations);
+                // If enough confirmations are not available for the current deposit yet
+                if (deposit.Confirmations < 7)
+                {
+                    // Set the confirmations
+                    deposit.SetConfirmations(confirmations);
+                    // Save in database
+                    _fundsPersistenceRepository.SaveOrUpdate(deposit);
+                }
+                // If enough confirmations are available, forward to the FundsValidationService to proceed with the 
+                // ledger transation of this deposit
+                else if (deposit.Confirmations >= 7)
+                {
+                    _fundsValidationService.DepositConfirmed(deposit);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Handles event raised in result when new transacitons are available. 
+        /// Item1 = Address, Item2 = TransactionId, Item3 = Amount, Item4 = Category
+        /// </summary>
+        /// <param name="currency"></param>
+        /// <param name="newTransactions"></param>
+        private void OnDepositArrival(string currency, List<Tuple<string, string, decimal, string>> newTransactions)
+        {
+            // Get all the deposit addresses to get the AccountId of the user who created this address. These
+            // addresses are created whenever a new address is requested from the bitcoin network
+            List<DepositAddress> allDepositAddresses = _depositAddressRepository.GetAllDepositAddresses();
+            for (int i = 0; i < newTransactions.Count; i++)
+            {
+                Deposit deposit = _depositRepository.GetDepositByTransactionId(new TransactionId(newTransactions[i].Item2));
+                if (deposit != null)
+                {
+                    continue;
+                }
+                if (newTransactions[i].Item4 == "receive")
+                {
+                    foreach (var depositAddress in allDepositAddresses)
+                    {
+                        // If any of the new transactions' addresses matches any deposit addresses
+                        if (depositAddress.BitcoinAddress.Value == newTransactions[i].Item1)
+                        {
+                            // Make sure this address hasn't been used earlier
+                            if (depositAddress.Status != AddressStatus.Used &&
+                                depositAddress.Status != AddressStatus.Expired)
+                            {
+                                // Create a new deposit for this transaction
+                                ValidateDeposit(currency, newTransactions[i].Item1, newTransactions[i].Item3,
+                                                depositAddress.AccountId.Value, newTransactions[i].Item2,
+                                                TransactionStatus.Pending);
+
+                                // Change the status of the deposit address to Used and save
+                                depositAddress.StatusUsed();
+                                _fundsPersistenceRepository.SaveOrUpdate(depositAddress);
+                            }
+                            else
+                            {
+                                // Create a new deposit for this transaction but mark it suspended
+                                ValidateDeposit(currency, newTransactions[i].Item1, newTransactions[i].Item3,
+                                                depositAddress.AccountId.Value, newTransactions[i].Item2,
+                                                TransactionStatus.Suspended);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Creates a new Deposit instance if not already present, or updates the deposit confirmations otherwise and 
+        /// sends to FundsValidationService for further validation
+        /// </summary>
+        public void ValidateDeposit(string currency, string address, decimal amount, int accountId, string transactionId, 
+            TransactionStatus transactionStatus)
+        {
+            Deposit deposit = new Deposit(new Currency(currency, true), Guid.NewGuid().ToString(),
+                    DateTime.Now, DepositType.Default, amount, 0, transactionStatus, new AccountId(accountId),
+                    new TransactionId(transactionId), new BitcoinAddress(address));
+            _fundsPersistenceRepository.SaveOrUpdate(deposit);
+        }
+
 
         /// <summary>
         /// Get deposits for the given currency
@@ -54,9 +151,9 @@ namespace CoinExchange.Funds.Application.DepositServices
             List<Deposit> deposits = _depositRepository.GetDepositByCurrencyAndAccountId(currency, new AccountId(accountId));
             if (deposits != null && deposits.Any())
             {
+                depositRepresentations = new List<DepositRepresentation>();
                 foreach (var deposit in deposits)
                 {
-                    depositRepresentations = new List<DepositRepresentation>();
                     depositRepresentations.Add(new DepositRepresentation(deposit.Currency.Name, "", deposit.DepositId, 
                         deposit.Date, deposit.Amount, deposit.Status.ToString(), (deposit.BitcoinAddress == null) ? null : 
                         deposit.BitcoinAddress.Value, (deposit.TransactionId == null) ? null : deposit.TransactionId.Value));
@@ -72,6 +169,13 @@ namespace CoinExchange.Funds.Application.DepositServices
         /// <returns></returns>
         public DepositAddressRepresentation GenarateNewAddress(GenerateNewAddressCommand generateNewAddressCommand)
         {
+            List<DepositAddress> depositAddresses = _depositAddressRepository.GetDepositAddressByAccountIdAndCurrency(
+                new AccountId(generateNewAddressCommand.AccountId), generateNewAddressCommand.Currency);
+
+            if (depositAddresses != null && depositAddresses.Any() && depositAddresses.Count >= 5)
+            {
+                throw new InvalidOperationException("Too many addresses");
+            }
             string address = _coinClientService.CreateNewAddress(generateNewAddressCommand.Currency);
             DepositAddress depositAddress = new DepositAddress(new Currency(generateNewAddressCommand.Currency), 
                 new BitcoinAddress(address), AddressStatus.New, DateTime.Now, 

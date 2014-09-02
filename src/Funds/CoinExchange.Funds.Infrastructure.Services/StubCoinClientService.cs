@@ -13,7 +13,13 @@ namespace CoinExchange.Funds.Infrastructure.Services
     /// </summary>
     public class StubCoinClientService : ICoinClientService
     {
-        public event Action DepositArrived;
+        public event Action<string, int> DepositConfirmed;
+
+        event Action<string, List<Tuple<string, string, decimal, string>>> ICoinClientService.DepositArrived
+        {
+            add { throw new NotImplementedException(); }
+            remove { throw new NotImplementedException(); }
+        }
 
         public string CreateNewAddress(string currency)
         {

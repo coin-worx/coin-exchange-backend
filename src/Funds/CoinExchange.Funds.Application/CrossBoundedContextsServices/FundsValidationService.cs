@@ -244,17 +244,15 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         [Transaction]
         public bool DepositConfirmed(Deposit deposit)
         {
-            if (deposit != null && deposit.Confirmations == 7)
+            if (deposit != null && deposit.Confirmations >= 7 && deposit.Status == TransactionStatus.Pending)
             {
                 if (deposit.Currency.IsCryptoCurrency)
                 {
                     deposit.StatusConfirmed();
                     // Get all the Deposit Ledgers for this currency and account
                     IList<Ledger> depositLedgers = GetDepositLedgers(deposit.Currency, deposit.AccountId);
+                    // ToDo: Update the code according to Tier level permissions once the Tier screen has been implemented
                     // Get the Current Tier Level for this user using the corss bounded context Tier retrieval service
-                    // ToDo: Using the stub implementation for now, upgrade to the real cross bounded context service
-                    // once completed
-                    // ToDo: Assign the AccountId's value after refactoring the AccountIds value to int
                     string currentTierLevel = _tierLevelRetrievalService.GetCurrentTierLevel(deposit.AccountId.Value);
                     // Get the Current Deposit limits for this user
                     DepositLimit depositLimit = _depositLimitRepository.GetDepositLimitByTierLevel(currentTierLevel);
@@ -592,8 +590,11 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
             // Otherwise, update the balance for the current user's currency
             else
             {
-                balance.AddAvailableBalance(deposit.Amount);
-                balance.AddCurrentBalance(deposit.Amount);
+                if (!balance.IsFrozen)
+                {
+                    balance.AddAvailableBalance(deposit.Amount);
+                    balance.AddCurrentBalance(deposit.Amount);
+                }
             }
             _fundsPersistenceRepository.SaveOrUpdate(balance);
             _fundsPersistenceRepository.SaveOrUpdate(deposit);

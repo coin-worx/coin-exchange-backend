@@ -133,10 +133,6 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
         public void IncrementConfirmations(int confirmations)
         {
             Confirmations += confirmations;
-            if (confirmations >= 7)
-            {
-                StatusConfirmed();
-            }
         }
 
         /// <summary>
@@ -146,10 +142,6 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
         public void SetConfirmations(int confirmations)
         {
             Confirmations = confirmations;
-            if (confirmations >= 7)
-            {
-                StatusConfirmed();
-            }
         }
 
         /// <summary>

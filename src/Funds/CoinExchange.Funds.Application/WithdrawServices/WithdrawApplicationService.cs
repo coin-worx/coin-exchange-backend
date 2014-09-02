@@ -24,6 +24,7 @@ namespace CoinExchange.Funds.Application.WithdrawServices
         private IFundsValidationService _fundsValidationService;
         private IWithdrawRepository _withdrawRepository;
         private IWithdrawSubmissionService _withdrawSubmissionService;
+        private IDepositAddressRepository _depositAddressRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
@@ -31,7 +32,7 @@ namespace CoinExchange.Funds.Application.WithdrawServices
         public WithdrawApplicationService(IFundsPersistenceRepository fundsPersistenceRepository, 
             IWithdrawAddressRepository withdrawAddressRepository, ICoinClientService coinClientService, 
             IFundsValidationService fundsValidationService, IWithdrawRepository withdrawRepository, 
-            IWithdrawSubmissionService withdrawSubmissionService)
+            IWithdrawSubmissionService withdrawSubmissionService, IDepositAddressRepository depositAddressRepository)
         {
             _fundsPersistenceRepository = fundsPersistenceRepository;
             _withdrawAddressRepository = withdrawAddressRepository;
@@ -39,6 +40,7 @@ namespace CoinExchange.Funds.Application.WithdrawServices
             _fundsValidationService = fundsValidationService;
             _withdrawRepository = withdrawRepository;
             _withdrawSubmissionService = withdrawSubmissionService;
+            _depositAddressRepository = depositAddressRepository;
 
             _withdrawSubmissionService.WithdrawExecuted += this.WithdrawExecuted;
         }
@@ -102,6 +104,13 @@ namespace CoinExchange.Funds.Application.WithdrawServices
                 new AccountId(addAddressCommand.AccountId), DateTime.Now);
 
             _fundsPersistenceRepository.SaveOrUpdate(withdrawAddress);
+
+            DepositAddress depositAddress = _depositAddressRepository.GetDepositAddressByAddress(new BitcoinAddress(addAddressCommand.BitcoinAddress));
+            if (depositAddress != null)
+            {
+                depositAddress.StatusUsed();
+                _fundsPersistenceRepository.SaveOrUpdate(depositAddress);
+            }
             return new WithdrawAddressResponse(true, "Address Saved");
         }
 

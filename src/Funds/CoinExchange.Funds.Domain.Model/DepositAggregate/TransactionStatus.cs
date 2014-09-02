@@ -7,6 +7,7 @@
     {
         Pending,
         Confirmed,
-        Cancelled
+        Cancelled,
+        Suspended
     }
 }

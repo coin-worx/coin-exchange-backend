@@ -24,7 +24,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.IntegrationTests
 
         // As these tests need bitcoins to run from the test account, or may be even real bitcoins, this flag is for 
         // safety and must be set to true to run tests related to deposits and withdrawals
-        private bool _shouldRunTests = false;
+        private bool _shouldRunTests = true;
 
         private DatabaseUtility _databaseUtility;
 
@@ -99,31 +99,59 @@ namespace CoinExchange.Funds.Infrastructure.Services.IntegrationTests
                     (IFundsPersistenceRepository) ContextRegistry.GetContext()["FundsPersistenceRepository"];
                 IDepositRepository depositRepository =
                     (IDepositRepository) ContextRegistry.GetContext()["DepositRepository"];
+                IDepositAddressRepository depositAddressRepository =
+                    (IDepositAddressRepository)ContextRegistry.GetContext()["DepositAddressRepository"];
 
-                string newAddress = coinClientService.CreateNewAddress("BTC");
                 Currency currency = new Currency("BTC", true);
                 AccountId accountId = new AccountId(1);
+                string newAddress = coinClientService.CreateNewAddress("BTC");
                 BitcoinAddress bitcoinAddress = new BitcoinAddress(newAddress);
-                TransactionId transactionId =
-                    new TransactionId("9c67cd6b30b1f5a83d640877ea454f72db9c86837ce857d1591fc401796c3011");
-
-                DepositAddress depositAddress = new DepositAddress(currency, bitcoinAddress, AddressStatus.New,
-                                                                   DateTime.Now,
-                                                                   accountId);
+                DepositAddress depositAddress = new DepositAddress(currency, bitcoinAddress,
+                                                                   AddressStatus.New, DateTime.Now, accountId);
                 fundsPersistenceRepository.SaveOrUpdate(depositAddress);
-                Deposit deposit = new Deposit(currency, "123",
-                                              DateTime.Now, DepositType.Default, 0.0008m, 0, TransactionStatus.Pending,
-                                              accountId, transactionId,
-                                              new BitcoinAddress("123"));
-                fundsPersistenceRepository.SaveOrUpdate(deposit);
+
+                // Check that there is no deposit with htis address present
+                Deposit deposit = depositRepository.GetDepositsByBitcoinAddress(bitcoinAddress);
+                Assert.IsNull(deposit);
 
                 ManualResetEvent manualResetEvent = new ManualResetEvent(false);
 
+                // Wait for hte first interval to elapse, and then withdraw, because ony then we will be able to figure if a 
+                // new transaction has been received
+                manualResetEvent.WaitOne(Convert.ToInt32(coinClientService.PollingInterval + 3000));
+                Withdraw withdraw = new Withdraw(currency, Guid.NewGuid().ToString(), DateTime.Now, WithdrawType.Bitcoin,
+                                                 Amount, Amount * 585, 0.001m, TransactionStatus.Pending, accountId,
+                                                 new BitcoinAddress(newAddress));
+                string commitWithdraw = coinClientService.CommitWithdraw(withdraw.BitcoinAddress.Value, withdraw.Amount);
+                Assert.IsNotNull(commitWithdraw);
+                Assert.IsFalse(string.IsNullOrEmpty(commitWithdraw));
+
+                manualResetEvent.Reset();
+                bool eventFired = false;
+                coinClientService.DepositArrived += delegate(string arg1, List<Tuple<string, string, decimal, string>> arg2)
+                {
+                    eventFired = true;
+                    manualResetEvent.Set();
+                };
+                // Wait for a safe span of time taking the polling intervazl into consideration
+                manualResetEvent.WaitOne();
+
+                Assert.IsTrue(eventFired);
+
+                depositAddress = depositAddressRepository.GetDepositAddressByAddress(bitcoinAddress);
+                Assert.IsNotNull(depositAddress);
+                Assert.AreEqual(AddressStatus.Used, depositAddress.Status);
+
+                deposit = depositRepository.GetDepositsByBitcoinAddress(bitcoinAddress);
+                Assert.IsNotNull(deposit);
+                Assert.AreEqual(Amount, deposit.Amount);
+                Assert.AreEqual(currency.Name, deposit.Currency.Name);
+                Assert.AreEqual(TransactionStatus.Pending, deposit.Status);
+
+                manualResetEvent.Reset();
+
                 // Poll checks for confirmations in the second interval
                 manualResetEvent.WaitOne(Convert.ToInt32((coinClientService.PollingInterval)*2) + 10000);
-                Deposit depositByTransactionId = depositRepository.GetDepositByTransactionId(transactionId);
-                Assert.IsNotNull(depositByTransactionId);
-                Assert.Greater(depositByTransactionId.Confirmations, 7);
             }
         }
 
@@ -149,6 +177,10 @@ namespace CoinExchange.Funds.Infrastructure.Services.IntegrationTests
                                                                    AddressStatus.New, DateTime.Now, accountId);
                 fundsPersistenceRepository.SaveOrUpdate(depositAddress);
 
+                // Check that there is no deposit with htis address present
+                Deposit deposit = depositRepository.GetDepositsByBitcoinAddress(bitcoinAddress);
+                Assert.IsNull(deposit);
+
                 ManualResetEvent manualResetEvent = new ManualResetEvent(false);
 
                 // Wait for hte first interval to elapse, and then withdraw, because ony then we will be able to figure if a 
@@ -159,10 +191,11 @@ namespace CoinExchange.Funds.Infrastructure.Services.IntegrationTests
                                                  new BitcoinAddress(newAddress));
                 string commitWithdraw = coinClientService.CommitWithdraw(withdraw.BitcoinAddress.Value, withdraw.Amount);
                 Assert.IsNotNull(commitWithdraw);
+                Assert.IsFalse(string.IsNullOrEmpty(commitWithdraw));
 
                 manualResetEvent.Reset();
                 bool eventFired = false;
-                coinClientService.DepositArrived += delegate()
+                coinClientService.DepositArrived += delegate(string arg1, List<Tuple<string, string, decimal, string>> arg2)
                                                         {
                                                             eventFired = true;
                                                             manualResetEvent.Set();
@@ -172,12 +205,11 @@ namespace CoinExchange.Funds.Infrastructure.Services.IntegrationTests
 
                 Assert.IsTrue(eventFired);
 
-                Assert.IsFalse(string.IsNullOrEmpty(withdraw.TransactionId.Value));
                 depositAddress = depositAddressRepository.GetDepositAddressByAddress(bitcoinAddress);
                 Assert.IsNotNull(depositAddress);
                 Assert.AreEqual(AddressStatus.Used, depositAddress.Status);
 
-                Deposit deposit = depositRepository.GetDepositsByBitcoinAddress(bitcoinAddress);
+                deposit = depositRepository.GetDepositsByBitcoinAddress(bitcoinAddress);
                 Assert.IsNotNull(deposit);
                 Assert.AreEqual(Amount, deposit.Amount);
                 Assert.AreEqual(currency.Name, deposit.Currency.Name);
@@ -220,7 +252,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.IntegrationTests
 
                 manualResetEvent.Reset();
                 bool eventFired = false;
-                coinClientService.DepositArrived += delegate()
+                coinClientService.DepositArrived += delegate(string arg1, List<Tuple<string, string, decimal, string>> arg2)
                                                         {
                                                             eventFired = true;
                                                             manualResetEvent.Set();

@@ -17,5 +17,12 @@ namespace CoinExchange.Funds.Application.LedgerServices
         /// </summary>
         /// <returns></returns>
         IList<LedgerRepresentation> GetAllLedgers(int acocuntId, string currency);
+
+        /// <summary>
+        /// Get the details for the given ledger ID
+        /// </summary>
+        /// <param name="ledgerId"></param>
+        /// <returns></returns>
+        LedgerRepresentation GetLedgerDetails(string ledgerId);
     }
 }

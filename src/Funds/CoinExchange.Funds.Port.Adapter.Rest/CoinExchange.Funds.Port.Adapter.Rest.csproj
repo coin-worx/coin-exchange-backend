@@ -80,6 +80,8 @@
     <Compile Include="DTOs\Deposit\GetRecentDepositParams.cs" />
     <Compile Include="DTOs\Deposit\GetDepositLimitsParams.cs" />
     <Compile Include="DTOs\Deposit\MakeDepositParams.cs" />
+    <Compile Include="DTOs\Ledgers\GetLedgerDetailsParams.cs" />
+    <Compile Include="DTOs\Ledgers\GetLedgersParams.cs" />
     <Compile Include="DTOs\Withdraw\AddWithdrawAddressParams.cs" />
     <Compile Include="DTOs\Withdraw\CancelWithdrawParams.cs" />
     <Compile Include="DTOs\Withdraw\CommitWithdrawParams.cs" />

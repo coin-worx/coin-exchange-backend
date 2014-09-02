@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
 using System.Timers;
 using BitcoinLib.Responses;
 using BitcoinLib.Services.Coins.Base;
@@ -28,7 +29,17 @@ namespace CoinExchange.Funds.Infrastructure.Services
         private List<string> _currencies; 
         private Timer _timer = null;        
         private Dictionary<ICoinService, string> _serviceToBlockHashDictionary = new Dictionary<ICoinService, string>();
-        
+
+        /// <summary>
+        /// Dictionary to add CoinService against the pending Transaction's TxId and No. of Confirmations
+        /// List: Item1 = TxId, Item2 = No. Of Confirmations
+        /// </summary>
+        private Dictionary<ICoinService, List<Tuple<string, int>>> _coinServiceToPendingDepositsDict = 
+            new Dictionary<ICoinService, List<Tuple<string, int>>>();
+
+        public event Action<string, List<Tuple<string, string, decimal, string>>> DepositArrived;
+        public event Action<string, int> DepositConfirmed;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
@@ -121,7 +132,7 @@ namespace CoinExchange.Funds.Infrastructure.Services
                 ListSinceBlockResponse blocksList = coinService.ListSinceBlock(blockHash, 1);
 
                 // Check for new transactions
-                CheckNewTransactions(currency, blocksList.Transactions);
+                CheckNewTransactions(coinService, currency, blocksList.Transactions);
 
                 // Poll for confirmations of all the deposits that have else than 7 confirmations yet. If enough 
                 // confirmations are available, then forwards the deposit to FundsValidationService
@@ -136,43 +147,63 @@ namespace CoinExchange.Funds.Infrastructure.Services
         }
 
         /// <summary>
-        /// Check for new Transactions on any of the addresses that this Exchange provided
+        /// Raises event in case new transactions arrive. 
+        /// Item1 = Address, Item2 = TransactionId, Item3 = Amount, Item4 = Category
         /// </summary>
+        /// <param name="coinService"> </param>
         /// <param name="currency"></param>
         /// <param name="newTransactions"></param>
-        private void CheckNewTransactions(string currency, List<TransactionSinceBlock> newTransactions)
+        private void CheckNewTransactions(ICoinService coinService, string currency, List<TransactionSinceBlock> newTransactions)
         {
-            // Get all the deposit addresses to get the AccountId of the user who created this address. These
-            // addresses are created whenever a new address is requested from the bitcoin network
-            List<DepositAddress> allDepositAddresses = _depositAddressRepository.GetAllDepositAddresses();
-            for (int i = 0; i < newTransactions.Count; i++)
+            List<Tuple<string, string, decimal, string>> transactionAddressList = null;
+            if (newTransactions != null && newTransactions.Any())
             {
-                if (newTransactions[i].Category == "receive")
+                transactionAddressList = new List<Tuple<string, string, decimal, string>>();
+                foreach (TransactionSinceBlock transactionSinceBlock in newTransactions)
                 {
-                    foreach (var depositAddress in allDepositAddresses)
+                    if (transactionSinceBlock.Category == "receive")
                     {
-                        // If any of the new transactions' addresses matches any deposit addresses
-                        if (depositAddress.BitcoinAddress.Value == newTransactions[i].Address)
-                        {
-                            // Make sure this address hasn't been used earlier
-                            if (depositAddress.Status != AddressStatus.Used &&
-                                depositAddress.Status != AddressStatus.Expired)
-                            {
-                                // Create a new deposit for this transaction
-                                ValidateDeposit(currency, newTransactions[i].Address, newTransactions[i].Amount,
-                                                depositAddress.AccountId.Value, newTransactions[i].TxId);
+                        transactionAddressList.Add(
+                            new Tuple<string, string, decimal, string>(transactionSinceBlock.Address,
+                                                                       transactionSinceBlock.TxId,
+                                                                       transactionSinceBlock.Amount,
+                                                                       transactionSinceBlock.Category));
 
-                                // Change the status of the deposit address to Used and save
-                                depositAddress.StatusUsed();
-                                _fundsPersistenceRepository.SaveOrUpdate(depositAddress);
-                                // If any object is waiting for the deposit event, raise it.
-                                if (DepositArrived != null)
+                        List<Tuple<string, int>> pendingDeposits = null;
+                        if (_coinServiceToPendingDepositsDict.TryGetValue(coinService, out pendingDeposits))
+                        {
+                            bool txIdExists = false;
+                            foreach (Tuple<string, int> pendingDeposit in pendingDeposits)
+                            {
+                                // Make sure that one transaciton ID does not get saved twice
+                                if (pendingDeposit.Item1 == transactionSinceBlock.TxId)
                                 {
-                                    DepositArrived();
+                                    txIdExists = true;
                                 }
                             }
+                            if (txIdExists)
+                            {
+                                continue;
+                            }
+                            // If the ICoinService exists already, add to the list of pending confirmations(Deposits)
+                            pendingDeposits.Add(new Tuple<string, int>(transactionSinceBlock.TxId, 0));
+                            _coinServiceToPendingDepositsDict[coinService] = pendingDeposits;
+                            if (DepositArrived != null)
+                            {
+                                DepositArrived(currency, transactionAddressList);
+                            }
                         }
-
+                        else
+                        {
+                            // If the ICoinService does not exist, add it and a new list of Pending Confirmations(Deposist)
+                            pendingDeposits = new List<Tuple<string, int>>();
+                            pendingDeposits.Add(new Tuple<string, int>(transactionSinceBlock.TxId, 0));
+                            _coinServiceToPendingDepositsDict.Add(coinService, pendingDeposits);
+                            if (DepositArrived != null)
+                            {
+                                DepositArrived(currency, transactionAddressList);
+                            }
+                        }
                     }
                 }
             }
@@ -183,43 +214,41 @@ namespace CoinExchange.Funds.Infrastructure.Services
         /// </summary>
         public void PollConfirmations(ICoinService coinService)
         {
-            // get all deposits
-            List<Deposit> allDeposits = _depositRepository.GetAllDeposits();            
-            foreach (var deposit in allDeposits)
+            List<Tuple<string, int>> depositsConfirmed = null;
+            List<Tuple<string, int>> pendingDeposits = null;
+            if (_coinServiceToPendingDepositsDict.TryGetValue(coinService, out pendingDeposits))
             {
-                // If enough confirmations are not available for the current deposit yet
-                if (deposit.Confirmations < 7)
+                depositsConfirmed = new List<Tuple<string, int>>();
+                for (int i = 0; i < pendingDeposits.Count; i++)
                 {
-                    // Get the information about this transation
-                    GetTransactionResponse getTransactionResponse = coinService.GetTransaction(deposit.TransactionId.Value);
-                    // Set the confirmations
-                    deposit.SetConfirmations(getTransactionResponse.Confirmations);
-                    // Save in database
-                    _fundsPersistenceRepository.SaveOrUpdate(deposit);
+                    // Get the number of confirmations of each pending confirmation (deposit)
+                    GetTransactionResponse getTransactionResponse = coinService.GetTransaction(pendingDeposits[i].Item1);
+                    pendingDeposits[i] = new Tuple<string, int>(pendingDeposits[i].Item1, getTransactionResponse.Confirmations);
 
-                    // If enough confirmations are available, forward to the FundsValidationService to proceed with the 
-                    // ledger transation of this deposit
-                    if (deposit.Confirmations >= 7)
+                    // If the no of confirmations is >= 7, send this information to the DepositApplicationService
+                    if (pendingDeposits[i].Item2 >= 7)
                     {
-                        _fundsValidationService.DepositConfirmed(deposit);
-                    }                    
+                        if (DepositConfirmed != null)
+                        {
+                            // Raise the event and sned the TransacitonID and the no. of confirmation respectively
+                            DepositConfirmed(pendingDeposits[i].Item1, getTransactionResponse.Confirmations);
+                        }
+                        // Add the confirmed trnasactions into the list of confirmed deposits
+                        depositsConfirmed.Add(pendingDeposits[i]);
+                    }
+                }
+
+                // Remove the confirmed deposits from the list of pending deposits. Do it here as we cannot do that when iterating
+                // the pendingDeposits list above
+                if (depositsConfirmed.Any())
+                {
+                    foreach (Tuple<string, int> deposit in depositsConfirmed)
+                    {
+                        pendingDeposits.Remove(deposit);
+                    }
                 }
             }
         }
-
-        /// <summary>
-        /// Creates a new Deposit instance if not already present, or updates the deposit confirmations otherwise and 
-        /// sends to FundsValidationService for further validation
-        /// </summary>
-        public void ValidateDeposit(string currency, string address, decimal amount, int accountId, string transactionId)
-        {
-            Deposit deposit = new Deposit(new Currency(currency, true), _depositIdGeneratorService.GenerateId(),
-                    DateTime.Now, DepositType.Default, amount, 0, TransactionStatus.Pending, new AccountId(accountId),
-                    new TransactionId(transactionId), new BitcoinAddress(address));
-            _fundsPersistenceRepository.SaveOrUpdate(deposit);
-        }
-
-        public event Action DepositArrived;
 
         /// <summary>
         /// Gets a new address from the client for either a Deposit or Withdrawal
