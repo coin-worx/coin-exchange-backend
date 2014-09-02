@@ -172,9 +172,21 @@ namespace CoinExchange.Funds.Application.DepositServices
             List<DepositAddress> depositAddresses = _depositAddressRepository.GetDepositAddressByAccountIdAndCurrency(
                 new AccountId(generateNewAddressCommand.AccountId), generateNewAddressCommand.Currency);
 
-            if (depositAddresses != null && depositAddresses.Any() && depositAddresses.Count >= 5)
+            if (depositAddresses != null && depositAddresses.Any())
             {
-                throw new InvalidOperationException("Too many addresses");
+                // Cannot allow more than 5 New Unused addresses at a time, so will raise exception if count exceeds or reaches 5
+                int counter = 0;
+                foreach (DepositAddress depositAddress1 in depositAddresses)
+                {
+                    if (depositAddress1.Status == AddressStatus.New)
+                    {
+                        counter++;
+                    }
+                }
+                if (counter >= 5)
+                {
+                    throw new InvalidOperationException("Too many addresses");
+                }
             }
             string address = _coinClientService.CreateNewAddress(generateNewAddressCommand.Currency);
             DepositAddress depositAddress = new DepositAddress(new Currency(generateNewAddressCommand.Currency), 
