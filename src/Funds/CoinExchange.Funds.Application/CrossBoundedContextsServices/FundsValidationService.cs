@@ -233,8 +233,6 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
                 }
             }
             throw new InvalidOperationException("Balance not found for the given withdraw");
-
-            return false;
         }
 
         /// <summary>
@@ -413,7 +411,7 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
                             currency, accountId, _depositLimitEvaluationService.DailyLimit,
                             _depositLimitEvaluationService.DailyLimitUsed,
                             _depositLimitEvaluationService.MonthlyLimit, _depositLimitEvaluationService.MonthlyLimitUsed,
-                            balance.CurrentBalance, _depositLimitEvaluationService.MaximumDeposit);
+                            balance.AvailableBalance, _depositLimitEvaluationService.MaximumDeposit);
                     }
                 }
                 else if (balance == null && depositLimit != null)
@@ -474,7 +472,7 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
                                                  _withdrawLimitEvaluationService.DailyLimitUsed,
                                                  _withdrawLimitEvaluationService.MonthlyLimit,
                                                  _withdrawLimitEvaluationService.MonthlyLimitUsed,
-                                                 balance.CurrentBalance,
+                                                 balance.AvailableBalance,
                                                  _withdrawLimitEvaluationService.MaximumWithdraw,
                                                  _withdrawLimitEvaluationService.MaximumWithdrawUsd,
                                                  _withdrawLimitEvaluationService.WithheldAmount,

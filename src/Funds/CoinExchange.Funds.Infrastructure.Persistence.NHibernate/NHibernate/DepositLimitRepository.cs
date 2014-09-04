@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CoinExchange.Funds.Domain.Model.DepositAggregate;
+using NHibernate.Linq;
 using Spring.Transaction.Interceptor;
 
 namespace CoinExchange.Funds.Infrastructure.Persistence.NHibernate.NHibernate
@@ -33,6 +34,15 @@ namespace CoinExchange.Funds.Infrastructure.Persistence.NHibernate.NHibernate
         public DepositLimit GetDepositLimitById(int id)
         {
             return CurrentSession.QueryOver<DepositLimit>().Where(x => x.Id == id).SingleOrDefault();
+        }
+
+        [Transaction]
+        public IList<DepositLimit> GetAllDepositLimits()
+        {
+            return CurrentSession.Query<DepositLimit>()
+                .AsQueryable()
+                .OrderBy(x => x.Id)
+                .ToList();
         }
     }
 }

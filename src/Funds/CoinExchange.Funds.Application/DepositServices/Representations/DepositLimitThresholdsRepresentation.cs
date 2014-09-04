@@ -9,12 +9,12 @@ namespace CoinExchange.Funds.Application.DepositServices.Representations
     /// <summary>
     /// Representation for Dpeosit limit thresholds
     /// </summary>
-    public class DepositLimitRepresentation
+    public class DepositLimitThresholdsRepresentation
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
-        public DepositLimitRepresentation(string currency, int accountId, decimal dailyLimit, decimal dailyLimitUsed, decimal monthlyLimit, decimal monthlyLimitUsed, decimal currentBalance, decimal maximumDeposit)
+        public DepositLimitThresholdsRepresentation(string currency, int accountId, decimal dailyLimit, decimal dailyLimitUsed, decimal monthlyLimit, decimal monthlyLimitUsed, decimal currentBalance, decimal maximumDeposit)
         {
             Currency = currency;
             DailyLimit = dailyLimit;

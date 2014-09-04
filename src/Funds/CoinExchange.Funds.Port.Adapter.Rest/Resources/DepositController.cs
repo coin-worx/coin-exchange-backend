@@ -259,5 +259,49 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Resources
                 return InternalServerError();
             }
         }
+
+        /// <summary>
+        /// Call to get Deposit Limits
+        /// </summary>
+        /// <returns></returns>
+        [Route("funds/getDepositTierLimits")]
+        [Authorize]
+        [HttpPost]
+        public IHttpActionResult GetDepositTierLimits()
+        {
+            if (log.IsDebugEnabled)
+            {
+                log.Debug(string.Format("Get Deposit Tier Limits call"));
+            }
+            try
+            {
+                // Get api key from header
+                var headers = Request.Headers;
+                string apikey = "";
+                IEnumerable<string> headerParams;
+                if (headers.TryGetValues("Auth", out headerParams))
+                {
+                    string[] auth = headerParams.ToList()[0].Split(',');
+                    apikey = auth[0];
+                }
+                if (log.IsDebugEnabled)
+                {
+                    log.Debug(string.Format("Get Deposit Tier Limits Call: ApiKey = {0}", apikey));
+                }
+                if (!string.IsNullOrEmpty(apikey))
+                {
+                    return Ok(_depositApplicationService.GetDepositTiersLimits());
+                }
+                return BadRequest("Currency is not provided or API key not found with request");
+            }
+            catch (Exception exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error(string.Format("Make Deposit Call Error: {0}", exception));
+                }
+                return InternalServerError();
+            }
+        }
     }
 }

@@ -44,11 +44,25 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
         {
             SecurityKeysPair securityKeysPair = _securityKeysRepository.GetByApiKey(command.SystemGeneratedApiKey);
             User user = _userRepository.GetUserById(securityKeysPair.UserId);
-            //add user phone number
-            user.UpdateTier1Information(command.FullName,command.DateOfBirth,command.PhoneNumber);
-            //update user tier 1 status
-            user.UpdateTierStatus(TierLevelConstant.Tier1, Status.Preverified);
-            _persistenceRepository.SaveUpdate(user);
+            if (user.GetTierLevelStatus(new Tier(TierLevelConstant.Tier0, TierLevelConstant.Tier0)) == Status.Verified.ToString())
+            {
+                if (user.GetTierLevelStatus(new Tier(TierLevelConstant.Tier1, TierLevelConstant.Tier1)) == Status.NonVerified.ToString())
+                {
+                    //add user phone number
+                    user.UpdateTier1Information(command.FullName, command.DateOfBirth, command.PhoneNumber);
+                    //update user tier 1 status
+                    user.UpdateTierStatus(TierLevelConstant.Tier1, Status.Preverified);
+                    _persistenceRepository.SaveUpdate(user);
+                }
+                else
+                {
+                    throw new InvalidOperationException("Tier 1 already verified or applied for verification");
+                }
+            }
+            else
+            {
+                throw new InvalidOperationException("Verify Tier Level 0 First");
+            }
         }
 
         /// <summary>
@@ -61,12 +75,28 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
             {
                 SecurityKeysPair securityKeysPair = _securityKeysRepository.GetByApiKey(command.SystemGeneratedApiKey);
                 User user = _userRepository.GetUserById(securityKeysPair.UserId);
-                //update info
-                user.UpdateTier2Information(command.City,command.State,command.AddressLine1,command.AddressLine2,command.ZipCode);
-                //update tier status
-                user.UpdateTierStatus(TierLevelConstant.Tier2, Status.Preverified);
-                //update user
-                _persistenceRepository.SaveUpdate(user);
+                if (user.GetTierLevelStatus(new Tier(TierLevelConstant.Tier1, TierLevelConstant.Tier1)) == Status.Verified.ToString())
+                {
+                    if (user.GetTierLevelStatus(new Tier(TierLevelConstant.Tier2, TierLevelConstant.Tier2)) == Status.NonVerified.ToString())
+                    {
+                        //update info
+                        user.UpdateTier2Information(command.City, command.State, command.AddressLine1,
+                                                    command.AddressLine2,
+                                                    command.ZipCode);
+                        //update tier status
+                        user.UpdateTierStatus(TierLevelConstant.Tier2, Status.Preverified);
+                        //update user
+                        _persistenceRepository.SaveUpdate(user);
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException("Tier 2 already verified or applied for verification");
+                    }
+                }
+                else
+                {
+                    throw new InvalidOperationException("Verify Tier Level 1 First");
+                }
             }
         }
 
@@ -80,15 +110,34 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
             {
                 SecurityKeysPair securityKeysPair = _securityKeysRepository.GetByApiKey(command.SystemGeneratedApiKey);
                 User user = _userRepository.GetUserById(securityKeysPair.UserId);
-                //update info
-                user.UpdateTier3Information(command.SocialSecurityNumber,command.Nin);
-                //update tier status
-                user.UpdateTierStatus(TierLevelConstant.Tier3, Status.Preverified);
-                UserDocument document = _documentPersistence.PersistDocument(command.FileName,
-                    Constants.USER_DOCUMENT_PATH, command.DocumentStream, command.DocumentType, user.Id);
-                //update user
-                _persistenceRepository.SaveUpdate(user);
-                _persistenceRepository.SaveUpdate(document);
+                if (user.GetTierLevelStatus(new Tier(TierLevelConstant.Tier2, TierLevelConstant.Tier2)) == Status.Verified.ToString())
+                {
+                    if (user.GetTierLevelStatus(new Tier(TierLevelConstant.Tier3, TierLevelConstant.Tier3)) == Status.NonVerified.ToString())
+                    {
+                        //update info
+                        user.UpdateTier3Information(command.SocialSecurityNumber, command.Nin);
+                        //update tier status
+                        user.UpdateTierStatus(TierLevelConstant.Tier3, Status.Preverified);
+                        UserDocument document = _documentPersistence.PersistDocument(command.FileName,
+                                                                                     Constants.USER_DOCUMENT_PATH,
+                                                                                     command.DocumentStream,
+                                                                                     command.DocumentType, user.Id);
+                        //update user
+                        _persistenceRepository.SaveUpdate(user);
+                        if (document != null)
+                        {
+                            _persistenceRepository.SaveUpdate(document);
+                        }
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException("Tier 1 already verified or applied for verification");
+                    }
+                }
+                else
+                {
+                    throw new InvalidOperationException("Verify Tier Level 2 First");
+                }
             }
         }
 
@@ -153,13 +202,14 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
             if (keysPair != null)
             {
                 User user = _userRepository.GetUserById(keysPair.UserId);
-                if (user.GetTierLevelStatus(new Tier(TierLevelConstant.Tier1, TierLevelConstant.Tier1)) ==
-                    Status.NonVerified.ToString())
-                {
-                    throw new InvalidOperationException("Tier 1 details are not submitted yet.");
-                }
+                
                 if (user.GetTierLevelStatus(new Tier(TierLevelConstant.Tier0, TierLevelConstant.Tier0)) == Status.Verified.ToString())
                 {
+                    if (user.GetTierLevelStatus(new Tier(TierLevelConstant.Tier1, TierLevelConstant.Tier1)) ==
+                    Status.NonVerified.ToString())
+                    {
+                        throw new InvalidOperationException("Tier 1 details are not submitted yet.");
+                    }
                     return new Tier1Details(user.PhoneNumber, user.FullName, user.DateOfBirth, user.Country);
                 }
                 throw new InvalidOperationException("First verify Tier 0");
@@ -178,13 +228,14 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
             if (keysPair != null)
             {
                 User user = _userRepository.GetUserById(keysPair.UserId);
-                if (user.GetTierLevelStatus(new Tier(TierLevelConstant.Tier2, TierLevelConstant.Tier2)) ==
+                
+                if (user.GetTierLevelStatus(new Tier(TierLevelConstant.Tier1, TierLevelConstant.Tier1)) == Status.Verified.ToString())
+                {
+                    if (user.GetTierLevelStatus(new Tier(TierLevelConstant.Tier2, TierLevelConstant.Tier2)) ==
                     Status.NonVerified.ToString())
-                {
-                    throw new InvalidOperationException("Tier 2 details are not submitted yet.");
-                }
-                if (user.GetTierLevelStatus(new Tier(TierLevelConstant.Tier1, TierLevelConstant.Tier1)) != Status.NonVerified.ToString())
-                {
+                    {
+                        throw new InvalidOperationException("Tier 2 details are not submitted yet.");
+                    }
                     return new Tier2Details(user.Country, user.Address1, user.Address2, "", user.State, user.City,
                         user.ZipCode.ToString());
                 }
@@ -204,13 +255,14 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
             if (keysPair != null)
             {
                 User user = _userRepository.GetUserById(keysPair.UserId);
-                if (user.GetTierLevelStatus(new Tier(TierLevelConstant.Tier3, TierLevelConstant.Tier3)) ==
+                
+                if (user.GetTierLevelStatus(new Tier(TierLevelConstant.Tier2, TierLevelConstant.Tier2)) == Status.Verified.ToString())
+                {
+                    if (user.GetTierLevelStatus(new Tier(TierLevelConstant.Tier3, TierLevelConstant.Tier3)) ==
                     Status.NonVerified.ToString())
-                {
-                    throw new InvalidOperationException("Tier 3 details are not submitted yet.");
-                }
-                if (user.GetTierLevelStatus(new Tier(TierLevelConstant.Tier2, TierLevelConstant.Tier2)) != Status.NonVerified.ToString())
-                {
+                    {
+                        throw new InvalidOperationException("Tier 3 details are not submitted yet.");
+                    }
                     return new Tier3Details(user.SocialSecurityNumber, user.NationalIdentificationNumber);
                 }
                 throw new InvalidOperationException("First verify Tier 2");

@@ -24,5 +24,7 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
         /// <param name="id"></param>
         /// <returns></returns>
         WithdrawLimit GetWithdrawLimitById(int id);
+
+        IList<WithdrawLimit> GetAllWithdrawLimits();
     }
 }

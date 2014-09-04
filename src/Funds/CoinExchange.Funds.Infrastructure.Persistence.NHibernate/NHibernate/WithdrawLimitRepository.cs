@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CoinExchange.Funds.Domain.Model.WithdrawAggregate;
+using NHibernate.Linq;
 using Spring.Stereotype;
 using Spring.Transaction.Interceptor;
 
@@ -35,6 +36,15 @@ namespace CoinExchange.Funds.Infrastructure.Persistence.NHibernate.NHibernate
         public WithdrawLimit GetWithdrawLimitById(int id)
         {
             return CurrentSession.QueryOver<WithdrawLimit>().Where(x => x.Id == id).SingleOrDefault();
+        }
+
+        [Transaction]
+        public IList<WithdrawLimit> GetAllWithdrawLimits()
+        {
+            return CurrentSession.Query<WithdrawLimit>()
+                .AsQueryable()
+                .OrderBy(x => x.Id)
+                .ToList();
         }
     }
 }

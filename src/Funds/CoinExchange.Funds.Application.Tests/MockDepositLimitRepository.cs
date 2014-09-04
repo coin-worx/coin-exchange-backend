@@ -46,5 +46,10 @@ namespace CoinExchange.Funds.Application.Tests
             }
             return null;
         }
+
+        public IList<DepositLimit> GetAllDepositLimits()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

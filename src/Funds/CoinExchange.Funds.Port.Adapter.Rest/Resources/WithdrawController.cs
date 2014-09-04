@@ -343,5 +343,45 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Resources
                 return InternalServerError();
             }
         }
+
+        [Route("funds/getWithdrawTierLimits")]
+        [Authorize]
+        [HttpPost]
+        public IHttpActionResult GetWithdrawTierLimits()
+        {
+            if (log.IsDebugEnabled)
+            {
+                log.Debug(string.Format("Get Withdraw Tier Limits call."));
+            }
+            try
+            {
+                //get api key from header
+                var headers = Request.Headers;
+                string apikey = "";
+                IEnumerable<string> headerParams;
+                if (headers.TryGetValues("Auth", out headerParams))
+                {
+                    string[] auth = headerParams.ToList()[0].Split(',');
+                    apikey = auth[0];
+                }
+                if (log.IsDebugEnabled)
+                {
+                    log.Debug(string.Format("Get Withdraw Tier Limits Call: ApiKey = {0}", apikey));
+                }
+                if (!string.IsNullOrEmpty(apikey))
+                {
+                    return Ok(_withdrawApplicationService.GetWithdrawTierLimits());
+                }
+                return BadRequest("Currency is not provided.");
+            }
+            catch (Exception exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error(string.Format("Get Withdraw Tier Limits Call Error: {0}", exception));
+                }
+                return InternalServerError();
+            }
+        }
     }
 }

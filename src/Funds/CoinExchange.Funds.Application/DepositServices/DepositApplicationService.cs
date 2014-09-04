@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,13 +27,14 @@ namespace CoinExchange.Funds.Application.DepositServices
         // in link with the bank accounts to deposit USD
         private IBalanceRepository _balanceRepository;
         private IDepositRepository _depositRepository;
+        private IDepositLimitRepository _depositLimitRepository;
 
         /// <summary>
         /// Default Constructor
         /// </summary>
         private DepositApplicationService(IFundsValidationService fundsValidationService, ICoinClientService coinClientService,
             IFundsPersistenceRepository fundsPersistenceRepository, IDepositAddressRepository depositAddressRepository,
-            IBalanceRepository balanceRepository, IDepositRepository depositRepository)
+            IBalanceRepository balanceRepository, IDepositRepository depositRepository, IDepositLimitRepository depositLimitRepository)
         {
             _fundsValidationService = fundsValidationService;
             _coinClientService = coinClientService;
@@ -40,6 +42,7 @@ namespace CoinExchange.Funds.Application.DepositServices
             _depositAddressRepository = depositAddressRepository;
             _balanceRepository = balanceRepository;
             _depositRepository = depositRepository;
+            _depositLimitRepository = depositLimitRepository;
 
             _coinClientService.DepositArrived += OnDepositArrival;
             _coinClientService.DepositConfirmed += OnDepositConfirmed;
@@ -202,10 +205,10 @@ namespace CoinExchange.Funds.Application.DepositServices
         /// <param name="accountId"></param>
         /// <param name="currency"></param>
         /// <returns></returns>
-        public DepositLimitRepresentation GetThresholdLimits(int accountId, string currency)
+        public DepositLimitThresholdsRepresentation GetThresholdLimits(int accountId, string currency)
         {
             AccountDepositLimits depositLimitThresholds = _fundsValidationService.GetDepositLimitThresholds(new AccountId(accountId), new Currency(currency));
-            return new DepositLimitRepresentation(depositLimitThresholds.Currency.Name,
+            return new DepositLimitThresholdsRepresentation(depositLimitThresholds.Currency.Name,
                                                   depositLimitThresholds.AccountId.Value,
                                                   depositLimitThresholds.DailyLimit,
                                                   depositLimitThresholds.DailyLimitUsed,
@@ -262,6 +265,66 @@ namespace CoinExchange.Funds.Application.DepositServices
                 _fundsPersistenceRepository.SaveOrUpdate(deposit);
             }
             return true;
+        }
+
+        /// <summary>
+        /// Get the Daily and Monthly Tier limits for Deposit
+        /// </summary>
+        /// <returns></returns>
+        public DepositTierLimitRepresentation GetDepositTiersLimits()
+        {
+            decimal tier0DailyLimit = 0;
+            decimal tier0MonthlyLimit = 0;
+
+            decimal tier1DailyLimit = 0;
+            decimal tier1MonthlyLimit = 0;
+
+            decimal tier2DailyLimit = 0;
+            decimal tier2MonthlyLimit = 0;
+
+            decimal tier3DailyLimit = 0;
+            decimal tier3MonthlyLimit = 0;
+
+            decimal tier4DailyLimit = 0;
+            decimal tier4MonthlyLimit = 0;
+
+            IList<DepositLimit> allDepositLimits = _depositLimitRepository.GetAllDepositLimits();
+            if (allDepositLimits != null && allDepositLimits.Any())
+            {
+                foreach (DepositLimit depositLimit in allDepositLimits)
+                {
+                    if (depositLimit.TierLevel.Equals("Tier 0"))
+                    {
+                        tier0DailyLimit = depositLimit.DailyLimit;
+                        tier0MonthlyLimit = depositLimit.MonthlyLimit;
+                    }
+                    if (depositLimit.TierLevel.Equals("Tier 1"))
+                    {
+                        tier1DailyLimit = depositLimit.DailyLimit;
+                        tier1MonthlyLimit = depositLimit.MonthlyLimit;
+                    }
+                    if (depositLimit.TierLevel.Equals("Tier 2"))
+                    {
+                        tier2DailyLimit = depositLimit.DailyLimit;
+                        tier2MonthlyLimit = depositLimit.MonthlyLimit;
+                    }
+                    if (depositLimit.TierLevel.Equals("Tier 3"))
+                    {
+                        tier3DailyLimit = depositLimit.DailyLimit;
+                        tier3MonthlyLimit = depositLimit.MonthlyLimit;
+                    }
+                    if (depositLimit.TierLevel.Equals("Tier 4"))
+                    {
+                        tier4DailyLimit = depositLimit.DailyLimit;
+                        tier4MonthlyLimit = depositLimit.MonthlyLimit;
+                    }
+                }
+                return new DepositTierLimitRepresentation(
+                    tier0DailyLimit, tier0MonthlyLimit, tier1DailyLimit, tier1MonthlyLimit, tier2DailyLimit, tier2MonthlyLimit,
+                    tier3DailyLimit, tier3MonthlyLimit, tier4DailyLimit, tier4MonthlyLimit);
+
+            }
+            return null;
         }
     }
 }

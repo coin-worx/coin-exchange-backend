@@ -46,5 +46,10 @@ namespace CoinExchange.Funds.Application.Tests
             }
             return null;
         }
+
+        public IList<WithdrawLimit> GetAllWithdrawLimits()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

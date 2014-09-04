@@ -31,7 +31,7 @@ namespace CoinExchange.Funds.Application.DepositServices
         /// <param name="accountId"></param>
         /// <param name="currency"></param>
         /// <returns></returns>
-        DepositLimitRepresentation GetThresholdLimits(int accountId, string currency);
+        DepositLimitThresholdsRepresentation GetThresholdLimits(int accountId, string currency);
 
         /// <summary>
         /// Get the list of addresses for the current user
@@ -47,5 +47,11 @@ namespace CoinExchange.Funds.Application.DepositServices
         /// <param name="makeDepositCommand"> </param>
         /// <returns></returns>
         bool MakeDeposit(MakeDepositCommand makeDepositCommand);
+
+        /// <summary>
+        /// Get the Monthly and daily Tier Limits for Deposit
+        /// </summary>
+        /// <returns></returns>
+        DepositTierLimitRepresentation GetDepositTiersLimits();
     }
 }

@@ -24,5 +24,11 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
         /// <param name="id"></param>
         /// <returns></returns>
         DepositLimit GetDepositLimitById(int id);
+
+        /// <summary>
+        /// Get all the deposit limits master data
+        /// </summary>
+        /// <returns></returns>
+        IList<DepositLimit> GetAllDepositLimits();
     }
 }

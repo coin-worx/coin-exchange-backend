@@ -43,7 +43,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         /// <param name="param"> </param>
         /// <returns></returns>
         [HttpPost]
-        [Route("private/user/tier1")]
+        [Route("private/user/applyfortier1")]
         [FilterIP]
         [Authorize]
         public IHttpActionResult GetVerifyForTier1([FromBody]Tier1Param param)
@@ -97,7 +97,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        [Route("private/user/tier2")]
+        [Route("private/user/applyfortier2")]
         [FilterIP]
         [Authorize]
         public IHttpActionResult GetVerifyForTier2([FromBody]Tier2Param param)
@@ -152,7 +152,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        [Route("private/user/tier3")]
+        [Route("private/user/applyfortier3")]
         [FilterIP]
         [Authorize]
         public async Task<IHttpActionResult> GetVerifyForTier3([FromBody]Tier3Param param)
@@ -163,15 +163,19 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
                 {
                     log.Debug("GetVerifyForTier2 Call Recevied, parameters:"+param);
                 }
-                MemoryStream memoryStream = new MemoryStream();
-                var provider = new MultipartFormDataStreamProvider(ServerUploadFolder);
-                await Request.Content.ReadAsMultipartAsync(provider);
-                foreach (var file in provider.Contents)
+                MemoryStream memoryStream = null;
+                if (!string.IsNullOrEmpty(param.FileName))
                 {
-                    file.CopyToAsync(memoryStream);
-                    if (log.IsDebugEnabled)
+                    memoryStream = new MemoryStream();
+                    var provider = new MultipartFormDataStreamProvider(ServerUploadFolder);
+                    await Request.Content.ReadAsMultipartAsync(provider);
+                    foreach (var file in provider.Contents)
                     {
-                        log.Debug("GetVerifyForTier2 File Recevied");
+                        file.CopyToAsync(memoryStream);
+                        if (log.IsDebugEnabled)
+                        {
+                            log.Debug("GetVerifyForTier2 File Recevied");
+                        }
                     }
                 }
                 _userTierLevelApplicationService.ApplyForTier3Verification(

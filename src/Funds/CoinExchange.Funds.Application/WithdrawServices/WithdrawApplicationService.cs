@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,27 +21,28 @@ namespace CoinExchange.Funds.Application.WithdrawServices
     {
         private IFundsPersistenceRepository _fundsPersistenceRepository;
         private IWithdrawAddressRepository _withdrawAddressRepository;
-        private ICoinClientService _coinClientService;
         private IFundsValidationService _fundsValidationService;
         private IWithdrawRepository _withdrawRepository;
         private IWithdrawSubmissionService _withdrawSubmissionService;
         private IDepositAddressRepository _depositAddressRepository;
+        private IWithdrawLimitRepository _withdrawLimitRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
         public WithdrawApplicationService(IFundsPersistenceRepository fundsPersistenceRepository, 
-            IWithdrawAddressRepository withdrawAddressRepository, ICoinClientService coinClientService, 
+            IWithdrawAddressRepository withdrawAddressRepository, 
             IFundsValidationService fundsValidationService, IWithdrawRepository withdrawRepository, 
-            IWithdrawSubmissionService withdrawSubmissionService, IDepositAddressRepository depositAddressRepository)
+            IWithdrawSubmissionService withdrawSubmissionService, IDepositAddressRepository depositAddressRepository, 
+            IWithdrawLimitRepository withdrawLimitRepository)
         {
             _fundsPersistenceRepository = fundsPersistenceRepository;
             _withdrawAddressRepository = withdrawAddressRepository;
-            _coinClientService = coinClientService;
             _fundsValidationService = fundsValidationService;
             _withdrawRepository = withdrawRepository;
             _withdrawSubmissionService = withdrawSubmissionService;
             _depositAddressRepository = depositAddressRepository;
+            _withdrawLimitRepository = withdrawLimitRepository;
 
             _withdrawSubmissionService.WithdrawExecuted += this.WithdrawExecuted;
         }
@@ -215,6 +217,66 @@ namespace CoinExchange.Funds.Application.WithdrawServices
         public CancelWithdrawResponse CancelWithdraw(CancelWithdrawCommand cancelWithdrawCommand)
         {
             return new CancelWithdrawResponse(_withdrawSubmissionService.CancelWithdraw(cancelWithdrawCommand.WithdrawId));
+        }
+
+        /// <summary>
+        /// Get the WIthdraw Tier Limits
+        /// </summary>
+        /// <returns></returns>
+        public WithdrawTierLimitRepresentation GetWithdrawTierLimits()
+        {
+            decimal tier0DailyLimit = 0;
+            decimal tier0MonthlyLimit = 0;
+
+            decimal tier1DailyLimit = 0;
+            decimal tier1MonthlyLimit = 0;
+
+            decimal tier2DailyLimit = 0;
+            decimal tier2MonthlyLimit = 0;
+
+            decimal tier3DailyLimit = 0;
+            decimal tier3MonthlyLimit = 0;
+
+            decimal tier4DailyLimit = 0;
+            decimal tier4MonthlyLimit = 0;
+
+            IList<WithdrawLimit> allWithdrawLimits = _withdrawLimitRepository.GetAllWithdrawLimits();
+            if (allWithdrawLimits != null && allWithdrawLimits.Any())
+            {
+                foreach (WithdrawLimit withdrawLimit in allWithdrawLimits)
+                {
+                    if (withdrawLimit.TierLevel.Equals("Tier 0"))
+                    {
+                        tier0DailyLimit = withdrawLimit.DailyLimit;
+                        tier0MonthlyLimit = withdrawLimit.MonthlyLimit;
+                    }
+                    if (withdrawLimit.TierLevel.Equals("Tier 1"))
+                    {
+                        tier1DailyLimit = withdrawLimit.DailyLimit;
+                        tier1MonthlyLimit = withdrawLimit.MonthlyLimit;
+                    }
+                    if (withdrawLimit.TierLevel.Equals("Tier 2"))
+                    {
+                        tier2DailyLimit = withdrawLimit.DailyLimit;
+                        tier2MonthlyLimit = withdrawLimit.MonthlyLimit;
+                    }
+                    if (withdrawLimit.TierLevel.Equals("Tier 3"))
+                    {
+                        tier3DailyLimit = withdrawLimit.DailyLimit;
+                        tier3MonthlyLimit = withdrawLimit.MonthlyLimit;
+                    }
+                    if (withdrawLimit.TierLevel.Equals("Tier 4"))
+                    {
+                        tier4DailyLimit = withdrawLimit.DailyLimit;
+                        tier4MonthlyLimit = withdrawLimit.MonthlyLimit;
+                    }
+                }
+                return new WithdrawTierLimitRepresentation(
+                    tier0DailyLimit, tier0MonthlyLimit, tier1DailyLimit, tier1MonthlyLimit, tier2DailyLimit, tier2MonthlyLimit,
+                    tier3DailyLimit, tier3MonthlyLimit, tier4DailyLimit, tier4MonthlyLimit);
+
+            }
+            return null;
         }
     }
 }

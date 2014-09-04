@@ -66,7 +66,8 @@
     <Compile Include="DepositServices\IDepositApplicationService.cs" />
     <Compile Include="DepositServices\Representations\DepositAddressRepresentation.cs" />
     <Compile Include="DepositServices\Representations\DepositRepresentation.cs" />
-    <Compile Include="DepositServices\Representations\DepositLimitRepresentation.cs" />
+    <Compile Include="DepositServices\Representations\DepositLimitThresholdsRepresentation.cs" />
+    <Compile Include="DepositServices\Representations\DepositTierLimitRepresentation.cs" />
     <Compile Include="LedgerServices\ILedgerQueryService.cs" />
     <Compile Include="LedgerServices\LedgerQueryService.cs" />
     <Compile Include="LedgerServices\Representations\LedgerRepresentation.cs" />
@@ -85,6 +86,7 @@
     <Compile Include="WithdrawServices\Representations\WithdrawLimitRepresentation.cs" />
     <Compile Include="WithdrawServices\IWithdrawApplicationService.cs" />
     <Compile Include="WithdrawServices\Representations\WithdrawRepresentation.cs" />
+    <Compile Include="WithdrawServices\Representations\WithdrawTierLimitRepresentation.cs" />
     <Compile Include="WithdrawServices\WithdrawApplicationService.cs" />
     <Compile Include="WithdrawServices\WithdrawSubmissionService.cs" />
   </ItemGroup>

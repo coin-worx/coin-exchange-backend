@@ -31,7 +31,6 @@ namespace CoinExchange.Funds.Application.WithdrawServices
         /// Get the list of all the withdrawawl addresses associated with this account for this currency
         /// </summary>
         /// <param name="accountId"></param>
-        /// <param name="currency"></param>
         /// <returns></returns>
         List<WithdrawAddressRepresentation> GetWithdrawalAddresses(int accountId);
 
@@ -63,5 +62,11 @@ namespace CoinExchange.Funds.Application.WithdrawServices
         /// <param name="cancelWithdrawCommand"></param>
         /// <returns></returns>
         CancelWithdrawResponse CancelWithdraw(CancelWithdrawCommand cancelWithdrawCommand);
+
+        /// <summary>
+        /// Get the TIer limits for Withdraw
+        /// </summary>
+        /// <returns></returns>
+        WithdrawTierLimitRepresentation GetWithdrawTierLimits();
     }
 }

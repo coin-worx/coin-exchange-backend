@@ -31,16 +31,17 @@
     <constructor-arg name="depositAddressRepository" ref="DepositAddressRepository"/>
     <constructor-arg name="balanceRepository" ref="BalanceRepository"/>
     <constructor-arg name="depositRepository" ref="DepositRepository"/>
+    <constructor-arg name="depositLimitRepository" ref="DepositLimitRepository"/>
   </object>
   
   <object id="WithdrawApplicationService" type="CoinExchange.Funds.Application.WithdrawServices.WithdrawApplicationService, CoinExchange.Funds.Application">
     <constructor-arg name="fundsPersistenceRepository" ref="FundsPersistenceRepository"/>
     <constructor-arg name="withdrawAddressRepository" ref="WithdrawAddressRepository"/>
-    <constructor-arg name="coinClientService" ref="CoinClientService"/>
     <constructor-arg name="fundsValidationService" ref="FundsValidationService"/>
     <constructor-arg name="withdrawRepository" ref="WithdrawRepository"/>
     <constructor-arg name="withdrawSubmissionService" ref="WithdrawSubmissionService"/>
     <constructor-arg name="depositAddressRepository" ref="DepositAddressRepository"/>
+    <constructor-arg name="withdrawLimitRepository" ref="WithdrawLimitRepository"/>
   </object>
   
   <object id="WithdrawSubmissionService" type="CoinExchange.Funds.Application.WithdrawServices.WithdrawSubmissionService, CoinExchange.Funds.Application">
