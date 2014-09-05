@@ -329,7 +329,7 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
         /// </summary>
         /// <param name="changeSettingsCommand"></param>
         /// <returns></returns>
-        public bool ChangeSettings(ChangeSettingsCommand changeSettingsCommand)
+        public ChangeSettingsResponse ChangeSettings(ChangeSettingsCommand changeSettingsCommand)
         {
             if (changeSettingsCommand != null)
             {
@@ -346,7 +346,7 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
                                             changeSettingsCommand.AutoLogoutMinutes);
 
                         _persistenceRepository.SaveUpdate(user);
-                        return true;
+                        return new ChangeSettingsResponse(true, "Change Successful");
                     }
                     else
                     {

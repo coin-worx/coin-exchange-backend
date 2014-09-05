@@ -66,7 +66,7 @@ namespace CoinExchange.Client.Console
         private void UserLogin()
         {
             System.Console.WriteLine("User sign up start");
-            //_accessControl.CreateAndActivateUser(_username, _password, _email);
+            _accessControl.CreateAndActivateUser(_username, _password, _email);
             System.Console.WriteLine("User sign up end");
 
             System.Console.WriteLine("User log in start");

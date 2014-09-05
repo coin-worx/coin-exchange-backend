@@ -61,7 +61,7 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
         /// </summary>
         /// <param name="changeSettingsCommand"></param>
         /// <returns></returns>
-        bool ChangeSettings(ChangeSettingsCommand changeSettingsCommand);
+        ChangeSettingsResponse ChangeSettings(ChangeSettingsCommand changeSettingsCommand);
 
         /// <summary>
         /// Get settings for an account

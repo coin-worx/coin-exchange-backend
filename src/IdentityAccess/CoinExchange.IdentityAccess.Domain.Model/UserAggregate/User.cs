@@ -290,8 +290,14 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         public bool ChangeSettings(string email, string pgpPublicKey, Language language, TimeZone timeZone, 
             bool isDefaultAutoLogout, int autoLogoutMinutes)
         {
-            this._email = email;
-            this._pgpPublicKey = pgpPublicKey;
+            if (!string.IsNullOrEmpty(email))
+            {
+                this._email = email;
+            }
+            if (!string.IsNullOrEmpty(pgpPublicKey))
+            {
+                this._pgpPublicKey = pgpPublicKey;
+            }
             _language = language;
             _timeZone = timeZone;
             if (isDefaultAutoLogout)
@@ -302,10 +308,14 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
             }
             else
             {
-                // Else, assign the custom user defined time
-                this.AssignAutoLogoutTime(autoLogoutMinutes);
-                return true;
+                if (autoLogoutMinutes > 0)
+                {
+                    // Else, assign the custom user defined time
+                    this.AssignAutoLogoutTime(autoLogoutMinutes);
+                    return true;
+                }
             }
+            return false;
         }
 
         /// <summary>
