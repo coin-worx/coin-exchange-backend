@@ -62,13 +62,22 @@ namespace CoinExchange.IdentityAccess.Application.SecurityKeysServices
                 }
                 var keys = _securityKeysGenerationService.GenerateNewSecurityKeys();
                 List<SecurityKeysPermission> permissions = new List<SecurityKeysPermission>();
-                for (int i = 0; i < command.SecurityKeyPermissions.Length; i++)
+                SecurityKeyPermissionsRepresentation[] securityKeyPermissionsRepresentations = this.GetPermissions();
+                foreach (SecurityKeyPermissionsRepresentation securityKeyPermissionsRepresentation in securityKeyPermissionsRepresentations)
                 {
-                    permissions.Add(new SecurityKeysPermission(keys.Item1, command.SecurityKeyPermissions[i].Permission,
-                        command.SecurityKeyPermissions[i].Allowed));
+                    // Check which permissions have been sent from the frontend that must be included with this User Generated Key
+                    if (command.SecurityKeyPermissions.Contains(securityKeyPermissionsRepresentation.Permission.PermissionId))
+                    {
+                        securityKeyPermissionsRepresentation.Allowed = true;
+                    }
+                }
+                for (int i = 0; i < securityKeyPermissionsRepresentations.Length; i++)
+                {
+                    permissions.Add(new SecurityKeysPermission(keys.Item1, securityKeyPermissionsRepresentations[i].Permission,
+                        securityKeyPermissionsRepresentations[i].Allowed));
                 }
                 var keysPair = SecurityKeysPairFactory.UserGeneratedSecurityPair(getSecurityKeyPair.UserId,
-                    command.KeyDescritpion,
+                    command.KeyDescription,
                     keys.Item1, keys.Item2, command.EnableExpirationDate, command.ExpirationDateTime,
                     command.EnableStartDate, command.StartDateTime, command.EnableEndDate, command.EndDateTime,
                     permissions,

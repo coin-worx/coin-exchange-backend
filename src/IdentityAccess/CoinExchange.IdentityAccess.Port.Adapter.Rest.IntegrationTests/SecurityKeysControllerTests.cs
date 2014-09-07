@@ -50,14 +50,14 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
                 _applicationContext["SecurityKeyPairController"] as SecurityKeyPairController;
             IPermissionRepository permissionRepository = _applicationContext["PermissionRespository"] as IPermissionRepository;
             IList<Permission> permissions = permissionRepository.GetAllPermissions();
-            List<SecurityKeyPermissionsRepresentation> securityKeyPermissions=new List<SecurityKeyPermissionsRepresentation>();
+            List<string> securityKeyPermissions=new List<string>();
             for (int i = 0; i < permissions.Count; i++)
             {
-                securityKeyPermissions.Add(new SecurityKeyPermissionsRepresentation(true,permissions[i]));
+                securityKeyPermissions.Add(permissions[i].PermissionId);
             }
             securityKeyPairController.Request = new HttpRequestMessage(HttpMethod.Post, "");
             securityKeyPairController.Request.Headers.Add("Auth", essentials.ApiKey);
-            CreateUserGeneratedSecurityKeyPair command=new CreateUserGeneratedSecurityKeyPair(securityKeyPermissions.ToArray(),"","","",false,false,false,"#1");
+            CreateUserGeneratedSecurityKeyPair command=new CreateUserGeneratedSecurityKeyPair(securityKeyPermissions,"","","",false,false,false,"#1");
             IHttpActionResult httpActionResult=securityKeyPairController.CreateSecurityKey(command);
             OkNegotiatedContentResult<SecurityKeyPair> result = (OkNegotiatedContentResult<SecurityKeyPair>)httpActionResult;
             Assert.IsNotNullOrEmpty(result.Content.ApiKey);
@@ -87,14 +87,14 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
                 _applicationContext["SecurityKeyPairController"] as SecurityKeyPairController;
             IPermissionRepository permissionRepository = _applicationContext["PermissionRespository"] as IPermissionRepository;
             IList<Permission> permissions = permissionRepository.GetAllPermissions();
-            List<SecurityKeyPermissionsRepresentation> securityKeyPermissions = new List<SecurityKeyPermissionsRepresentation>();
+            List<string> securityKeyPermissions = new List<string>();
             for (int i = 0; i < permissions.Count; i++)
             {
-                securityKeyPermissions.Add(new SecurityKeyPermissionsRepresentation(true, permissions[i]));
+                securityKeyPermissions.Add(permissions[i].PermissionId);
             }
             securityKeyPairController.Request = new HttpRequestMessage(HttpMethod.Post, "");
             securityKeyPairController.Request.Headers.Add("Auth", essentials.ApiKey);
-            CreateUserGeneratedSecurityKeyPair command = new CreateUserGeneratedSecurityKeyPair(securityKeyPermissions.ToArray(), "", "", "", false, false, false, "#1");
+            CreateUserGeneratedSecurityKeyPair command = new CreateUserGeneratedSecurityKeyPair(securityKeyPermissions, "", "", "", false, false, false, "#1");
             IHttpActionResult httpActionResult = securityKeyPairController.CreateSecurityKey(command);
             OkNegotiatedContentResult<SecurityKeyPair> result = (OkNegotiatedContentResult<SecurityKeyPair>)httpActionResult;
             Assert.IsNotNullOrEmpty(result.Content.ApiKey);
@@ -114,21 +114,21 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             Assert.AreEqual(securityKey.Content.EnableExpirationDate, false);
             Assert.AreEqual(securityKey.Content.EnableStartDate, false);
 
+            List<SecurityKeyPermissionsRepresentation> permissionsRepresentations = new List<SecurityKeyPermissionsRepresentation>();
             for (int i = 0; i < securityKeyPermissions.Count; i++)
             {
-                if (securityKeyPermissions[i].Permission.PermissionId == PermissionsConstant.Cancel_Order)
-                    securityKeyPermissions[i]=new SecurityKeyPermissionsRepresentation(false,securityKeyPermissions[i].Permission);
-                if (securityKeyPermissions[i].Permission.PermissionId == PermissionsConstant.Query_Open_Orders)
-                    securityKeyPermissions[i] = new SecurityKeyPermissionsRepresentation(false, securityKeyPermissions[i].Permission);
-                if (securityKeyPermissions[i].Permission.PermissionId == PermissionsConstant.Place_Order)
-                    securityKeyPermissions[i] = new SecurityKeyPermissionsRepresentation(false, securityKeyPermissions[i].Permission);
-                if (securityKeyPermissions[i].Permission.PermissionId == PermissionsConstant.Withdraw_Funds)
-                    securityKeyPermissions[i] = new SecurityKeyPermissionsRepresentation(false, securityKeyPermissions[i].Permission);
-
+                if (securityKeyPermissions[i] == PermissionsConstant.Cancel_Order)
+                    permissionsRepresentations.Add(new SecurityKeyPermissionsRepresentation(false, new Permission(securityKeyPermissions[i], "Cancel Order")));
+                if (securityKeyPermissions[i] == PermissionsConstant.Query_Open_Orders)
+                    permissionsRepresentations.Add(new SecurityKeyPermissionsRepresentation(false, new Permission(securityKeyPermissions[i], "Query Open Orders")));
+                if (securityKeyPermissions[i] == PermissionsConstant.Place_Order)
+                    permissionsRepresentations.Add(new SecurityKeyPermissionsRepresentation(false, new Permission(securityKeyPermissions[i], "Place Order")));
+                if (securityKeyPermissions[i] == PermissionsConstant.Withdraw_Funds)
+                    permissionsRepresentations.Add(new SecurityKeyPermissionsRepresentation(false, new Permission(securityKeyPermissions[i], "Withdraw Funds")));
             }
             UpdateUserGeneratedSecurityKeyPair updateKeyPair =
                 new UpdateUserGeneratedSecurityKeyPair(securityKey.Content.ApiKey, "#2", true, false, false, "",
-                    DateTime.Today.AddDays(-2).ToString(), securityKeyPermissions.ToArray(), "");
+                    DateTime.Today.AddDays(-2).ToString(), permissionsRepresentations.ToArray(), "");
             httpActionResult = securityKeyPairController.UpdateSecurityKey(updateKeyPair);
 
             httpActionResult = securityKeyPairController.GetSecurityKeyDetail("#2");
@@ -150,14 +150,14 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
                 _applicationContext["SecurityKeyPairController"] as SecurityKeyPairController;
             IPermissionRepository permissionRepository = _applicationContext["PermissionRespository"] as IPermissionRepository;
             IList<Permission> permissions = permissionRepository.GetAllPermissions();
-            List<SecurityKeyPermissionsRepresentation> securityKeyPermissions = new List<SecurityKeyPermissionsRepresentation>();
+            List<string> securityKeyPermissions = new List<string>();
             for (int i = 0; i < permissions.Count; i++)
             {
-                securityKeyPermissions.Add(new SecurityKeyPermissionsRepresentation(true, permissions[i]));
+                securityKeyPermissions.Add(permissions[i].PermissionId);
             }
             securityKeyPairController.Request = new HttpRequestMessage(HttpMethod.Post, "");
             securityKeyPairController.Request.Headers.Add("Auth", essentials.ApiKey);
-            CreateUserGeneratedSecurityKeyPair command = new CreateUserGeneratedSecurityKeyPair(securityKeyPermissions.ToArray(), "", "", "", false, false, false, "#1");
+            CreateUserGeneratedSecurityKeyPair command = new CreateUserGeneratedSecurityKeyPair(securityKeyPermissions, "", "", "", false, false, false, "#1");
             IHttpActionResult httpActionResult = securityKeyPairController.CreateSecurityKey(command);
             OkNegotiatedContentResult<SecurityKeyPair> result = (OkNegotiatedContentResult<SecurityKeyPair>)httpActionResult;
             Assert.IsNotNullOrEmpty(result.Content.ApiKey);
@@ -177,14 +177,15 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             Assert.AreEqual(securityKey.Content.EnableExpirationDate, false);
             Assert.AreEqual(securityKey.Content.EnableStartDate, false);
 
+            List<SecurityKeyPermissionsRepresentation> permissionsRepresentations = new List<SecurityKeyPermissionsRepresentation>();
             for (int i = 0; i < securityKeyPermissions.Count; i++)
             {
-                securityKeyPermissions[i] = new SecurityKeyPermissionsRepresentation(false, securityKeyPermissions[i].Permission);
+                permissionsRepresentations.Add(new SecurityKeyPermissionsRepresentation(false, new Permission(securityKeyPermissions[i], "")));
 
             }
             UpdateUserGeneratedSecurityKeyPair updateKeyPair =
                 new UpdateUserGeneratedSecurityKeyPair(securityKey.Content.ApiKey, "#2", true, false, false, "",
-                    DateTime.Today.AddDays(-2).ToString(), securityKeyPermissions.ToArray(), "");
+                    DateTime.Today.AddDays(-2).ToString(), permissionsRepresentations.ToArray(), "");
             httpActionResult = securityKeyPairController.UpdateSecurityKey(updateKeyPair);
             BadRequestErrorMessageResult errorMessage = (BadRequestErrorMessageResult) httpActionResult;
             Assert.AreEqual(errorMessage.Message,"Please assign atleast one permission.");

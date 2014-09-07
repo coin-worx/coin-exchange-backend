@@ -449,5 +449,65 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
                 return InternalServerError();
             }
         }
+
+        /// <summary>
+        /// Get available permissions
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("private/user/api/submitemailsettings")]
+        [FilterIP]
+        [Authorize]
+        public IHttpActionResult SubmitEmailSettings(EmailSettingsParams emailSettingsParams)
+        {
+            try
+            {
+                if (log.IsDebugEnabled)
+                {
+                    log.Debug("Submit Email Settings Call Recevied");
+                }
+                string apikey = HeaderParamUtility.GetApikey(Request);
+                if (!string.IsNullOrEmpty(apikey))
+                {
+                    return null;
+                }
+                else
+                {
+                    throw new Exception("API Key not recieved");
+                }
+            }
+            catch (InvalidOperationException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Submit Email Settings Call Exception ", exception);
+                }
+                return BadRequest(exception.Message);
+            }
+            catch (InvalidCredentialException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Submit Email Settings Call Exception ", exception);
+                }
+                return BadRequest(exception.Message);
+            }
+            catch (InvalidDataException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Submit Email Settings Call Exception ", exception);
+                }
+                return BadRequest(exception.Message);
+            }
+            catch (Exception exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Submit Email Settings Call Exception ", exception);
+                }
+                return InternalServerError();
+            }
+        }
     }
 }

@@ -36,52 +36,79 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
             WithdrawLimit withdrawLimit, decimal bestBidPrice, decimal bestAskPrice, decimal availableBalance, 
             decimal currentBalance)
         {
-            // Set Daily and Monthly Limit
-            SetLimits(withdrawLimit);
-            // Set the amount used in the Daily and Monthly limit
-            SetUsedLimitsUsd(withdrawLedgers);
-            // Evaluate the Maximum Withdraw, set it, and return response whether it went successfully or not
-            if (EvaluateMaximumWithdrawUsd(bestBidPrice, bestAskPrice))
+            if (withdrawLimit.DailyLimit != 0 && withdrawLimit.MonthlyLimit != 0)
             {
-                // If we do not have sufficient balance, then the maximum withdrawal amount is the balance that we have 
-                // at our disposal
-                if (availableBalance < _maximumWithdraw)
+                // Set Daily and Monthly Limit
+                SetLimits(withdrawLimit);
+                // Set the amount used in the Daily and Monthly limit
+                SetUsedLimitsUsd(withdrawLedgers);
+                // Evaluate the Maximum Withdraw, set it, and return response whether it went successfully or not
+                if (EvaluateMaximumWithdrawUsd(bestBidPrice, bestAskPrice))
                 {
-                    _maximumWithdraw = Math.Round(availableBalance, 5);
-                    _maximumWithdrawUsd = Math.Round(ConvertCurrencyToUsd(bestBidPrice, bestAskPrice, availableBalance), 5);                   
-                }
-                _withheld = Math.Round(currentBalance - availableBalance, 5);
-                _withheldConverted = Math.Round(ConvertCurrencyToUsd(bestBidPrice, bestAskPrice,
-                    currentBalance - availableBalance), 5);
+                    // If we do not have sufficient balance, then the maximum withdrawal amount is the balance that we have 
+                    // at our disposal
+                    if (availableBalance < _maximumWithdraw)
+                    {
+                        _maximumWithdraw = Math.Round(availableBalance, 5);
+                        _maximumWithdrawUsd =
+                            Math.Round(ConvertCurrencyToUsd(bestBidPrice, bestAskPrice, availableBalance), 5);
+                    }
+                    _withheld = Math.Round(currentBalance - availableBalance, 5);
+                    _withheldConverted = Math.Round(ConvertCurrencyToUsd(bestBidPrice, bestAskPrice,
+                                                                         currentBalance - availableBalance), 5);
 
-                // If the current withdraw amount is less than the maximum withdraw
-                return withdrawAmountUsd <= _maximumWithdrawUsd;
+                    // If the current withdraw amount is less than the maximum withdraw
+                    return withdrawAmountUsd <= _maximumWithdrawUsd;
+                }
             }
+
+            _maximumWithdraw = 0;
+            _maximumWithdrawUsd = 0;
+            _dailyLimit = 0;
+            _dailyLimitUsed = 0;
+            _monthlyLimit = 0;
+            _monthlyLimitUsed = 0;
+
             return false;
         }
 
         public bool AssignWithdrawLimits(IList<Withdraw> withdrawLedgers, WithdrawLimit withdrawLimit, decimal bestBidPrice, 
             decimal bestAskPrice, decimal availableBalance, decimal currentBalance)
         {
-            // Set Daily and Monthly Limit
-            SetLimits(withdrawLimit);
-            // Set the amount used in the Daily and Monthly limit
-            SetUsedLimitsUsd(withdrawLedgers);
-            // Evaluate the Maximum Withdraw, set it, and return response whether it went successfully or not
-            if (EvaluateMaximumWithdrawUsd(bestBidPrice, bestAskPrice))
+            if (withdrawLimit.DailyLimit != 0 && withdrawLimit.MonthlyLimit != 0)
             {
-                // If we do not have sufficient balance, then the maximum withdrawal amount is the balance that we have 
-                // at our disposal
-                if (availableBalance < _maximumWithdraw)
+                // Set Daily and Monthly Limit
+                SetLimits(withdrawLimit);
+                // Set the amount used in the Daily and Monthly limit
+                SetUsedLimitsUsd(withdrawLedgers);
+                // Evaluate the Maximum Withdraw, set it, and return response whether it went successfully or not
+                if (EvaluateMaximumWithdrawUsd(bestBidPrice, bestAskPrice))
                 {
-                    _maximumWithdraw = Math.Round(availableBalance, 5);
-                    _maximumWithdrawUsd = Math.Round(ConvertCurrencyToUsd(bestBidPrice, bestAskPrice, availableBalance), 5);
+                    // If we do not have sufficient balance, then the maximum withdrawal amount is the balance that we have 
+                    // at our disposal
+                    if (availableBalance < _maximumWithdraw)
+                    {
+                        _maximumWithdraw = Math.Round(availableBalance, 5);
+                        _maximumWithdrawUsd =
+                            Math.Round(ConvertCurrencyToUsd(bestBidPrice, bestAskPrice, availableBalance), 5);
+                    }
+                    _withheld = Math.Round(currentBalance - availableBalance, 5);
+                    _withheldConverted = Math.Round(ConvertCurrencyToUsd(bestBidPrice, bestAskPrice,
+                                                                         currentBalance - availableBalance), 5);
+                    return true;
                 }
-                _withheld = Math.Round(currentBalance - availableBalance, 5);
-                _withheldConverted = Math.Round(ConvertCurrencyToUsd(bestBidPrice, bestAskPrice,
-                    currentBalance - availableBalance), 5);
-                return true;
             }
+            _maximumWithdraw = 0;
+            _maximumWithdrawUsd = 0;
+            _dailyLimit = 0;
+            _dailyLimitUsed = 0;
+            _monthlyLimit = 0;
+            _monthlyLimitUsed = 0;
+
+            _withheld = Math.Round(currentBalance - availableBalance, 5);
+            _withheldConverted = Math.Round(ConvertCurrencyToUsd(bestBidPrice, bestAskPrice,
+                                                                 currentBalance - availableBalance), 5);
+
             return false;
         }
 

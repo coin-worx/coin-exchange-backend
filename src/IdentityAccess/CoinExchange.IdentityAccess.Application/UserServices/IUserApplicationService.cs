@@ -76,5 +76,14 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
         /// <param name="apiKey"></param>
         /// <returns></returns>
         DateTime LastLogin(string apiKey);
+
+        /// <summary>
+        /// Submit settings for notifications by email
+        /// </summary>
+        /// <param name="sendAdminEmails"></param>
+        /// <param name="sendNewsletterEmails"></param>
+        /// <param name="apiKey"> </param>
+        /// <returns></returns>
+        SubmitEmailSettingsResponse SubmitEmailSettings(bool sendAdminEmails, bool sendNewsletterEmails, string apiKey);
     }
 }

@@ -29,15 +29,25 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
         public bool EvaluateDepositLimit(decimal currentDepositAmount, IList<Ledger> depositLedgers, DepositLimit depositLimit, decimal bestBidPrice,
             decimal bestAskPrice)
         {
-            // Set Daily and Monthly Limit
-            SetLimits(depositLimit);
-            // Set the amount used in the Daily and Monthly limit
-            SetUsedLimitsUsd(depositLedgers);
-            // Evaluate the Maximum Deposit, set it, and return response whether it went successfully or not
-            if (EvaluateMaximumDepositUsd(bestBidPrice, bestAskPrice))
+            if (depositLimit.DailyLimit != 0 && depositLimit.MonthlyLimit != 0)
             {
-                return currentDepositAmount <= _maximumDepositUsd;
+                // Set Daily and Monthly Limit
+                SetLimits(depositLimit);
+                // Set the amount used in the Daily and Monthly limit
+                SetUsedLimitsUsd(depositLedgers);
+                // Evaluate the Maximum Deposit, set it, and return response whether it went successfully or not
+                if (EvaluateMaximumDepositUsd(bestBidPrice, bestAskPrice))
+                {
+                    return currentDepositAmount <= _maximumDepositUsd;
+                }
             }
+            _maximumDeposit = 0;
+            _maximumDepositUsd = 0;
+            _dailyLimit = 0;
+            _dailyLimitUsed = 0;
+            _monthlyLimit = 0;
+            _monthlyLimitUsed = 0;
+
             return false;
         }
 
@@ -52,15 +62,25 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
         public bool AssignDepositLimits(IList<Ledger> depositLedgers, DepositLimit depositLimit, decimal bestBidPrice,
             decimal bestAskPrice)
         {
-            // Set Daily and Monthly Limit
-            SetLimits(depositLimit);
-            // Set the amount used in the Daily and Monthly limit
-            SetUsedLimitsUsd(depositLedgers);
-            // Evaluate the Maximum Deposit, set it, and return response whether it went successfully or not
-            if (EvaluateMaximumDepositUsd(bestBidPrice, bestAskPrice))
+            if (depositLimit.DailyLimit != 0 && depositLimit.MonthlyLimit != 0)
             {
-                return true;
+                // Set Daily and Monthly Limit
+                SetLimits(depositLimit);
+                // Set the amount used in the Daily and Monthly limit
+                SetUsedLimitsUsd(depositLedgers);
+                // Evaluate the Maximum Deposit, set it, and return response whether it went successfully or not
+                if (EvaluateMaximumDepositUsd(bestBidPrice, bestAskPrice))
+                {
+                    return true;
+                }
             }
+            _maximumDeposit = 0;
+            _maximumDepositUsd = 0;
+            _dailyLimit = 0;
+            _dailyLimitUsed = 0;
+            _monthlyLimit = 0;
+            _monthlyLimitUsed = 0;
+
             return false;
         }
 

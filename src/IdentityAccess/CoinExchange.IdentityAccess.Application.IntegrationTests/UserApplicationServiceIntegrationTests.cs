@@ -751,9 +751,9 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             Assert.IsNotNull(userValidationEssentials.SessionLogoutTime);
 
             string newEmail = "newdummyemail@dumbstatus.com";
-            bool resetPasswordReponse = userApplicationService.ChangeSettings(new ChangeSettingsCommand(
+            var resetPasswordReponse = userApplicationService.ChangeSettings(new ChangeSettingsCommand(
                 userValidationEssentials.ApiKey, newEmail, "", Language.Arabic, TimeZone.CurrentTimeZone, false, 67));
-            Assert.IsTrue(resetPasswordReponse);
+            Assert.IsTrue(resetPasswordReponse.ChangeSuccessful);
 
             userByUserName = userRepository.GetUserByUserName(username);
             Assert.IsNotNull(userByUserName);

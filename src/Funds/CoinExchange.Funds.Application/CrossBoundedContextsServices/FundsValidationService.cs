@@ -403,16 +403,15 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
                         _bboCrossContextService.GetBestBidBestAsk(currency.Name, "USD");
 
                     // Check if the current Deposit transaction is within the Deposit limits
-                    if (_depositLimitEvaluationService.AssignDepositLimits(depositLedgers,
-                                                                           depositLimit, bestBidBestAsk.Item1,
-                                                                           bestBidBestAsk.Item2))
-                    {
-                        return new AccountDepositLimits(
-                            currency, accountId, _depositLimitEvaluationService.DailyLimit,
-                            _depositLimitEvaluationService.DailyLimitUsed,
-                            _depositLimitEvaluationService.MonthlyLimit, _depositLimitEvaluationService.MonthlyLimitUsed,
-                            balance.AvailableBalance, _depositLimitEvaluationService.MaximumDeposit);
-                    }
+                    _depositLimitEvaluationService.AssignDepositLimits(depositLedgers,
+                                                                       depositLimit, bestBidBestAsk.Item1,
+                                                                       bestBidBestAsk.Item2);
+
+                    return new AccountDepositLimits(
+                        currency, accountId, _depositLimitEvaluationService.DailyLimit,
+                        _depositLimitEvaluationService.DailyLimitUsed,
+                        _depositLimitEvaluationService.MonthlyLimit, _depositLimitEvaluationService.MonthlyLimitUsed,
+                        balance.AvailableBalance, _depositLimitEvaluationService.MaximumDeposit);
                 }
                 else if (balance == null && depositLimit != null)
                 {

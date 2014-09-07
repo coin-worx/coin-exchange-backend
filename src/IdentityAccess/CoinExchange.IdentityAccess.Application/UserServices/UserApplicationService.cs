@@ -400,5 +400,27 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
         {
             return _securityKeysRepository.GetByApiKey(apiKey).CreationDateTime;
         }
+
+        public SubmitEmailSettingsResponse SubmitEmailSettings(bool sendAdminEmails, bool sendNewsletterEmails, string apiKey)
+        {
+            SecurityKeysPair securityKeysPair = _securityKeysRepository.GetByApiKey(apiKey);
+            if (securityKeysPair != null)
+            {
+                User user = _userRepository.GetUserById(securityKeysPair.UserId);
+                if (user != null)
+                {
+                    // ToDo: Start from here for user's notifications
+                    return null;
+                }
+                else
+                {
+                    throw new InstanceNotFoundException("No User instance found for the UserId associated with SecurityKeysPair");
+                }
+            }
+            else
+            {
+                throw new InstanceNotFoundException("No SecurityKeysPair instance found for the given API key");
+            }
+        }
     }
 }
