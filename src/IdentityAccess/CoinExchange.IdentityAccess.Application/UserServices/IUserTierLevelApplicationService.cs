@@ -23,5 +23,12 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
         Tier1Details GetTier1Details(string apiKey);
         Tier2Details GetTier2Details(string apiKey);
         Tier3Details GetTier3Details(string apiKey);
+
+        /// <summary>
+        /// Used by the admin interface to verify a Tier level for a certain user
+        /// </summary>
+        /// <param name="verifyTierLevelCommand"> </param>
+        /// <returns></returns>
+        VerifyTierLevelResponse VerifyTierLevel(VerifyTierLevelCommand verifyTierLevelCommand);
     }
 }

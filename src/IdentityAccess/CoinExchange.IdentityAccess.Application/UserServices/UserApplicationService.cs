@@ -74,7 +74,7 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
                                 _passwordEncryptionService.EncryptPassword(changePasswordCommand.NewPassword);
                             user.Password = newEncryptedPassword;
                             _persistenceRepository.SaveUpdate(user);
-                            _emailService.SendPasswordChangedEmail(user.Email, user.Username);
+                            _emailService.SendPasswordChangedEmail(user.Email, user.Username, user.AdminEmailsSubscribed);
                             return true;
                         }
                         else
@@ -130,12 +130,12 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
 
                             // Update the user instance in repository
                             _persistenceRepository.SaveUpdate(user);
-                            _emailService.SendWelcomeEmail(user.Email, user.Username);
+                            _emailService.SendWelcomeEmail(user.Email, user.Username, user.AdminEmailsSubscribed);
                             return true;
                         }
                         else
                         {
-                            _emailService.SendReactivaitonNotificationEmail(user.Email, user.Username);
+                            _emailService.SendReactivaitonNotificationEmail(user.Email, user.Username, user.AdminEmailsSubscribed);
                             throw new InvalidOperationException("The activation key has already been used ");
                         }
                     }
@@ -177,7 +177,7 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
                     {
                         throw new InvalidOperationException("This account has already been activated. Operation aborted.");
                     }
-                    _emailService.SendCancelActivationEmail(user.Email, user.Username);
+                    _emailService.SendCancelActivationEmail(user.Email, user.Username, user.AdminEmailsSubscribed);
                     _userRepository.DeleteUser(user);
                     return true;
                 }
@@ -401,16 +401,23 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
             return _securityKeysRepository.GetByApiKey(apiKey).CreationDateTime;
         }
 
-        public SubmitEmailSettingsResponse SubmitEmailSettings(bool sendAdminEmails, bool sendNewsletterEmails, string apiKey)
+        /// <summary>
+        /// Submit notification settings for a user
+        /// </summary>
+        /// <param name="emailSettingsCommandy"> </param>
+        /// <returns></returns>
+        public SubmitEmailSettingsResponse SubmitEmailSettings(EmailSettingsCommand emailSettingsCommandy)
         {
-            SecurityKeysPair securityKeysPair = _securityKeysRepository.GetByApiKey(apiKey);
+            SecurityKeysPair securityKeysPair = _securityKeysRepository.GetByApiKey(emailSettingsCommandy.ApiKey);
             if (securityKeysPair != null)
             {
                 User user = _userRepository.GetUserById(securityKeysPair.UserId);
                 if (user != null)
                 {
-                    // ToDo: Start from here for user's notifications
-                    return null;
+                    user.SetAdminEmailSubscription(emailSettingsCommandy.AdminEmailsSubscribed);
+                    user.SetNewsletterEmailSubscription(emailSettingsCommandy.NewsLetterEmailsSubscribed);
+                    _persistenceRepository.SaveUpdate(user);
+                    return new SubmitEmailSettingsResponse(true);
                 }
                 else
                 {

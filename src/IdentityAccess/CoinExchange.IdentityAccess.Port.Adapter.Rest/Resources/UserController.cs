@@ -454,7 +454,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         /// Get available permissions
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
+        [HttpPost]
         [Route("private/user/api/submitemailsettings")]
         [FilterIP]
         [Authorize]
@@ -469,7 +469,8 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
                 string apikey = HeaderParamUtility.GetApikey(Request);
                 if (!string.IsNullOrEmpty(apikey))
                 {
-                    return null;
+                    return Ok(_userApplicationService.SubmitEmailSettings(new EmailSettingsCommand(apikey,
+                        emailSettingsParams.AdministrativeEmails, emailSettingsParams.NewsLetterEmails)));
                 }
                 else
                 {

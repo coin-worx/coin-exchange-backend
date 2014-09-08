@@ -424,5 +424,54 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
                 return InternalServerError();
             }
         }
+
+        [HttpPost]
+        [Route("private/user/verifytierlevel")]
+        [FilterIP]
+        [Authorize]
+        public IHttpActionResult VerifyTierLevel(VerifyTierLevelParams verifyTierLevelParams)
+        {
+            try
+            {
+                if (log.IsDebugEnabled)
+                {
+                    log.Debug("Verify Tier Level Call Recevied");
+                }
+                return Ok(_userTierLevelApplicationService.VerifyTierLevel(new VerifyTierLevelCommand(
+                    HeaderParamUtility.GetApikey(Request), verifyTierLevelParams.TierLevel)));
+            }
+            catch (InvalidOperationException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Verify Tier Level Call Exception ", exception);
+                }
+                return BadRequest(exception.Message);
+            }
+            catch (InvalidCredentialException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Verify Tier Level Call Exception ", exception);
+                }
+                return BadRequest(exception.Message);
+            }
+            catch (ArgumentNullException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Verify Tier Level Call Exception ", exception);
+                }
+                return BadRequest(exception.Message);
+            }
+            catch (Exception exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Verify Tier Level Call Exception ", exception);
+                }
+                return InternalServerError();
+            }
+        }
     }
 }

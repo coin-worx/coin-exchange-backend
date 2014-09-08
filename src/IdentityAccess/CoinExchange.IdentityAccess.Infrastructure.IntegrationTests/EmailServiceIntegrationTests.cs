@@ -19,7 +19,7 @@ namespace CoinExchange.IdentityAccess.Infrastructure.IntegrationTests
             IEmailService emailService = (IEmailService)ContextRegistry.GetContext()["EmailService"];
             ManualResetEvent manualResetEvent = new ManualResetEvent(false);
             bool sendMail = emailService.SendMail("waqasshah047@gmail.com", "BlancRock", EmailContents.GetActivationKeyMessage(
-                "Bruce Wayne", "123456787654"));
+                "Bruce Wayne", "123456787654"), true);
             manualResetEvent.WaitOne(5000);
 
             Assert.IsTrue(sendMail);
@@ -31,7 +31,7 @@ namespace CoinExchange.IdentityAccess.Infrastructure.IntegrationTests
         {
             IEmailService emailService = (IEmailService)ContextRegistry.GetContext()["EmailService"];
             ManualResetEvent manualResetEvent = new ManualResetEvent(false);
-            bool sendPostSignUpEmail = emailService.SendPostSignUpEmail("waqasshah047@gmail.com", "Bruce Wayne", "123456789");
+            bool sendPostSignUpEmail = emailService.SendPostSignUpEmail("waqasshah047@gmail.com", "Bruce Wayne", "123456789", true);
             manualResetEvent.WaitOne(6000);
 
             Assert.IsTrue(sendPostSignUpEmail);
@@ -44,7 +44,7 @@ namespace CoinExchange.IdentityAccess.Infrastructure.IntegrationTests
             IEmailService emailService = (IEmailService)ContextRegistry.GetContext()["EmailService"];
             ManualResetEvent manualResetEvent = new ManualResetEvent(false);
             bool sendForgotUsernameEmail = emailService.SendForgotUsernameEmail("waqasshah047@gmail.com",
-                "Bruce Wayne");
+                "Bruce Wayne", true);
             manualResetEvent.WaitOne(5000);
 
             Assert.IsTrue(sendForgotUsernameEmail);
@@ -57,7 +57,7 @@ namespace CoinExchange.IdentityAccess.Infrastructure.IntegrationTests
             IEmailService emailService = (IEmailService)ContextRegistry.GetContext()["EmailService"];
             ManualResetEvent manualResetEvent = new ManualResetEvent(false);
             bool sendForgotUsernameEmail = emailService.SendReactivaitonNotificationEmail("waqasshah047@gmail.com", 
-                "Tony Stark");
+                "Tony Stark", true);
             manualResetEvent.WaitOne(6000);
 
             Assert.IsTrue(sendForgotUsernameEmail);
@@ -70,7 +70,7 @@ namespace CoinExchange.IdentityAccess.Infrastructure.IntegrationTests
             IEmailService emailService = (IEmailService)ContextRegistry.GetContext()["EmailService"];
             ManualResetEvent manualResetEvent = new ManualResetEvent(false);
             bool sendForgotUsernameEmail = emailService.SendCancelActivationEmail("waqasshah047@gmail.com",
-                "Peter Parker");
+                "Peter Parker", true);
             manualResetEvent.WaitOne(6000);
 
             Assert.IsTrue(sendForgotUsernameEmail);
@@ -81,22 +81,22 @@ namespace CoinExchange.IdentityAccess.Infrastructure.IntegrationTests
         public void MultipleEmailAsyncCheckTest_ChecksWhetherTheAsyncOperationsOfSendingEmailsBackToBackDontCauseException_SendsEmailSuccessfully()
         {
             IEmailService emailService = (IEmailService)ContextRegistry.GetContext()["EmailService"];
-            bool sendForgotUsernameEmail = emailService.SendForgotUsernameEmail("waqasshah047@gmail.com", "Waqas Shah");
+            bool sendForgotUsernameEmail = emailService.SendForgotUsernameEmail("waqasshah047@gmail.com", "Waqas Shah", true);
             Assert.IsTrue(sendForgotUsernameEmail);
 
-            bool sendForgotUsernameEmail2 = emailService.SendForgotUsernameEmail("waqasshah047@gmail.com", "Waqas Shah");
+            bool sendForgotUsernameEmail2 = emailService.SendForgotUsernameEmail("waqasshah047@gmail.com", "Waqas Shah", true);
             Assert.IsTrue(sendForgotUsernameEmail2);
 
-            bool activationEmail = emailService.SendCancelActivationEmail("waqasshah047@gmail.com", "Waqas Shah");
+            bool activationEmail = emailService.SendCancelActivationEmail("waqasshah047@gmail.com", "Waqas Shah", true);
             Assert.IsTrue(activationEmail);
 
-            bool passwordChangedEmail = emailService.SendPasswordChangedEmail("waqasshah047@gmail.com", "Waqas Shah");
+            bool passwordChangedEmail = emailService.SendPasswordChangedEmail("waqasshah047@gmail.com", "Waqas Shah", true);
             Assert.IsTrue(passwordChangedEmail);
 
-            bool welcomeEmail = emailService.SendWelcomeEmail("waqasshah047@gmail.com", "Waqas Shah");
+            bool welcomeEmail = emailService.SendWelcomeEmail("waqasshah047@gmail.com", "Waqas Shah", true);
             Assert.IsTrue(welcomeEmail);
 
-            bool postSignUpEmail = emailService.SendPostSignUpEmail("waqasshah047@gmail.com", "Waqas Shah", "123");
+            bool postSignUpEmail = emailService.SendPostSignUpEmail("waqasshah047@gmail.com", "Waqas Shah", "123", true);
             Assert.IsTrue(postSignUpEmail);
 
             ManualResetEvent manualResetEvent = new ManualResetEvent(false);

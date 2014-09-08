@@ -110,10 +110,10 @@ namespace CoinExchange.Funds.Application.DepositServices
                             // If any of the new transactions' addresses matches any deposit addresses
                             if (depositAddress.BitcoinAddress.Value == newTransactions[i].Item1)
                             {
-                                // Make sure this address hasn't been used earlier
+                                /*// Make sure this address hasn't been used earlier
                                 if (depositAddress.Status != AddressStatus.Used &&
                                     depositAddress.Status != AddressStatus.Expired)
-                                {
+                                {*/
                                     // Create a new deposit for this transaction
                                     ValidateDeposit(currency, newTransactions[i].Item1, newTransactions[i].Item3,
                                                     depositAddress.AccountId.Value, newTransactions[i].Item2,
@@ -122,14 +122,14 @@ namespace CoinExchange.Funds.Application.DepositServices
                                     // Change the status of the deposit address to Used and save
                                     depositAddress.StatusUsed();
                                     _fundsPersistenceRepository.SaveOrUpdate(depositAddress);
-                                }
+                                /*}
                                 else
                                 {
                                     // Create a new deposit for this transaction but mark it suspended
                                     ValidateDeposit(currency, newTransactions[i].Item1, newTransactions[i].Item3,
                                                     depositAddress.AccountId.Value, newTransactions[i].Item2,
                                                     TransactionStatus.Suspended);
-                                }
+                                }*/
                             }
                         }
                         else

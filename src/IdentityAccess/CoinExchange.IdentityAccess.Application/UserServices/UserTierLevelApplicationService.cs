@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Management.Instrumentation;
 using System.Text;
 using System.Threading.Tasks;
 using CoinExchange.Common.Domain.Model;
@@ -15,7 +16,7 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
     /// <summary>
     /// Implementation of user tier level application service
     /// </summary>
-    public class UserTierLevelApplicationService:IUserTierLevelApplicationService
+    public class UserTierLevelApplicationService : IUserTierLevelApplicationService
     {
         private IUserRepository _userRepository;
         private ISecurityKeysRepository _securityKeysRepository;
@@ -267,7 +268,45 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
                 }
                 throw new InvalidOperationException("First verify Tier 2");
             }
-            throw new InvalidOperationException("key doesnot exist");
+            throw new InvalidOperationException("Key doesnot exist");
+        }
+
+        /// <summary>
+        /// Verify the Tier level for a certain user
+        /// </summary>
+        /// <param name="tierLevelCommand"> </param>
+        /// <returns></returns>
+        public VerifyTierLevelResponse VerifyTierLevel(VerifyTierLevelCommand tierLevelCommand)
+        {
+             SecurityKeysPair keysPair = _securityKeysRepository.GetByApiKey(tierLevelCommand.ApiKey);
+             if (keysPair != null)
+             {
+                 User user = _userRepository.GetUserById(keysPair.UserId);
+                 if (user != null)
+                 {
+                     foreach (UserTierLevelStatus userTierLevelStatuse in user.GetAllTiersStatus())
+                     {
+                         if (userTierLevelStatuse.Tier.TierLevel == tierLevelCommand.TierLevel)
+                         {
+                             userTierLevelStatuse.Status = Status.Verified;
+                             _persistenceRepository.SaveUpdate(user);
+                             return new VerifyTierLevelResponse(true, "Tier level " + tierLevelCommand.TierLevel + " verified");
+                         }
+                     }
+                     throw new InstanceNotFoundException(string.Format("The provided Tier Level not found. Account ID = {0}, " +
+                                                                       "Tier Level = {1}",  tierLevelCommand.ApiKey, 
+                                                                       tierLevelCommand.TierLevel));
+                 }
+                 else
+                 {
+                     throw new InstanceNotFoundException(string.Format("No user found for the user ID"));
+                 }
+             }
+             else
+             {
+                 throw new InstanceNotFoundException(string.Format("No Security Key found for the API key: {0}", 
+                     tierLevelCommand.TierLevel));
+             }
         }
     }
 }

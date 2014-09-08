@@ -76,6 +76,7 @@
     <Compile Include="DTO\Tier2Param.cs" />
     <Compile Include="DTO\Tier3Param.cs" />
     <Compile Include="DTO\UserActivationParam.cs" />
+    <Compile Include="DTO\VerifyTierLevelParams.cs" />
     <Compile Include="FilterIP.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\LoginController.cs" />

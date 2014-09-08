@@ -329,6 +329,28 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
             return true;
         }
 
+        /// <summary>
+        /// Admin emails subscription
+        /// </summary>
+        /// <param name="adminEmailsSubcribed"></param>
+        /// <returns></returns>
+        public bool SetAdminEmailSubscription(bool adminEmailsSubcribed)
+        {
+            AdminEmailsSubscribed = adminEmailsSubcribed;
+            return true;
+        }
+
+        /// <summary>
+        /// NewsLetter email subscription
+        /// </summary>
+        /// <param name="adminEmailsSubcribed"></param>
+        /// <returns></returns>
+        public bool SetNewsletterEmailSubscription(bool adminEmailsSubcribed)
+        {
+            AdminEmailsSubscribed = adminEmailsSubcribed;
+            return true;
+        }
+
         #endregion Methods
 
         /// <summary>
@@ -521,5 +543,15 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         /// PGP Public Key
         /// </summary>
         public string PgpPublicKey { get { return _pgpPublicKey; } private set { _pgpPublicKey = value; } }
+
+        /// <summary>
+        /// Are Administrative emails subscribed
+        /// </summary>
+        public bool AdminEmailsSubscribed { get; private set; }
+
+        /// <summary>
+        /// Are Newsletter emails subscribed
+        /// </summary>
+        public bool NewsletterEmailsSubscribed { get; private set; }
     }
 }

@@ -323,6 +323,8 @@ CREATE TABLE `user` (
   `NationalIdentificationNumber` varchar(50) DEFAULT NULL,
   `FullName` varchar(50) DEFAULT NULL,
   `DateOfBirth` date DEFAULT NULL,
+  `AdminEmailsSubscribed` tinyint(1) DEFAULT NULL,
+  `NewsletterEmailsSubscribed` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`Id`),
   UNIQUE KEY `NewIndex1` (`UserName`,`Email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;

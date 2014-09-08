@@ -67,6 +67,8 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             IWithdrawApplicationService withdrawApplicationService = (IWithdrawApplicationService)ContextRegistry.GetContext()["WithdrawApplicationService"];
             IWithdrawRepository withdrawRepository = (IWithdrawRepository)ContextRegistry.GetContext()["WithdrawRepository"];
             IFundsPersistenceRepository fundsPersistenceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];
+            IBalanceRepository balanceRepository = (IBalanceRepository)ContextRegistry.GetContext()["BalanceRepository"];
+            IWithdrawFeesRepository withdrawFeesRepository = (IWithdrawFeesRepository)ContextRegistry.GetContext()["WithdrawFeesRepository"];
             StubTierLevelRetrievalService tierLevelRetrievalService = (ITierLevelRetrievalService)ContextRegistry.GetContext()["TierLevelRetrievalService"] as StubTierLevelRetrievalService;
 
             Assert.IsNotNull(tierLevelRetrievalService);
@@ -90,6 +92,15 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             Assert.AreEqual(currency.IsCryptoCurrency, withdraw.Currency.IsCryptoCurrency);
             Assert.AreEqual(amount, withdraw.Amount);
             Assert.AreEqual(TransactionStatus.Pending, withdraw.Status);
+
+            WithdrawFees withdrawFees = withdrawFeesRepository.GetWithdrawFeesByCurrencyName(currency.Name);
+            Assert.IsNotNull(withdrawFees);
+
+            balance = balanceRepository.GetBalanceByCurrencyAndAccountId(currency, accountId);
+            Assert.IsNotNull(balance);
+            Assert.AreEqual((amount + 1) - (amount + withdrawFees.Fee), balance.AvailableBalance);
+            Assert.AreEqual(amount + 1, balance.CurrentBalance);
+            Assert.AreEqual(amount + withdrawFees.Fee, balance.PendingBalance);
         }
     }
 }

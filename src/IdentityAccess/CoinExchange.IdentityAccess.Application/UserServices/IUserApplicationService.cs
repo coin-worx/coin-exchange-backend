@@ -80,10 +80,8 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
         /// <summary>
         /// Submit settings for notifications by email
         /// </summary>
-        /// <param name="sendAdminEmails"></param>
-        /// <param name="sendNewsletterEmails"></param>
-        /// <param name="apiKey"> </param>
+        /// <param name="emailSettingsCommand"></param>
         /// <returns></returns>
-        SubmitEmailSettingsResponse SubmitEmailSettings(bool sendAdminEmails, bool sendNewsletterEmails, string apiKey);
+        SubmitEmailSettingsResponse SubmitEmailSettings(EmailSettingsCommand emailSettingsCommand);
     }
 }
