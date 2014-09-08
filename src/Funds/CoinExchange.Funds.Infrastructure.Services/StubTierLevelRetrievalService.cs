@@ -12,13 +12,24 @@ namespace CoinExchange.Funds.Infrastructure.Services
     /// </summary>
     public class StubTierLevelRetrievalService : ITierLevelRetrievalService
     {
+        private string _currentTierLevel = "";
+
         /// <summary>
         /// Gets the Highest Tier Level for the user
         /// </summary>
         /// <returns></returns>
         public string GetCurrentTierLevel(int userId)
         {
-            return "Tier 1";
+            if (string.IsNullOrEmpty(_currentTierLevel))
+            {
+                return "Tier 1";
+            }
+            return _currentTierLevel;
+        }
+
+        public void SetTierLevel(string tierLevel)
+        {
+            _currentTierLevel = tierLevel;
         }
     }
 }

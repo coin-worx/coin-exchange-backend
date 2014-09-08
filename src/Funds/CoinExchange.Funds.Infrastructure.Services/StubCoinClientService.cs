@@ -13,12 +13,13 @@ namespace CoinExchange.Funds.Infrastructure.Services
     /// </summary>
     public class StubCoinClientService : ICoinClientService
     {
+        private List<Tuple<string, string, decimal, string>> _transactionList = new List<Tuple<string, string, decimal, string>>();
         public event Action<string, int> DepositConfirmed;
 
         event Action<string, List<Tuple<string, string, decimal, string>>> ICoinClientService.DepositArrived
         {
-            add { throw new NotImplementedException(); }
-            remove { throw new NotImplementedException(); }
+            add { _transactionList.Add(new Tuple<string, string, decimal, string>("","",0,"")); }
+            remove { _transactionList.Remove(new Tuple<string, string, decimal, string>("", "", 0, "")); }
         }
 
         public string CreateNewAddress(string currency)

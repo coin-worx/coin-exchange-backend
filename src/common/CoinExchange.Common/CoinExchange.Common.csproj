@@ -36,11 +36,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Domain.Model\AssertionConcern.cs" />
+    <Compile Include="Domain.Model\BitcoinConstants.cs" />
     <Compile Include="Domain.Model\Constants.cs" />
     <Compile Include="Domain.Model\CurrencyConstants.cs" />
     <Compile Include="Domain.Model\HashCodeHelper.cs" />
     <Compile Include="Domain.Model\Identity.cs" />
     <Compile Include="Domain.Model\IIdentity.cs" />
+    <Compile Include="Domain.Model\TierConstants.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\IApiKeyInfoAccess.cs" />
     <Compile Include="Specifications\ISpecification.cs" />

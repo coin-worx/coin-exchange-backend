@@ -142,28 +142,24 @@ namespace CoinExchange.Funds.Application.WithdrawServices
         /// <returns></returns>
         public CommitWithdrawResponse CommitWithdrawal(CommitWithdrawCommand commitWithdrawCommand)
         {
-            Withdraw withdraw = _fundsValidationService.ValidateFundsForWithdrawal(
-                new AccountId(commitWithdrawCommand.AccountId), new Currency(commitWithdrawCommand.Currency, 
-                    commitWithdrawCommand.IsCryptoCurrency), commitWithdrawCommand.Amount, null/*Null until confirmation of what to use*/, 
-                new BitcoinAddress(commitWithdrawCommand.BitcoinAddress));
-
-            if (withdraw != null)
+            if (_fundsValidationService.IsTierVerified(commitWithdrawCommand.AccountId, commitWithdrawCommand.IsCryptoCurrency))
             {
-                bool commitWithdrawResponse = _withdrawSubmissionService.CommitWithdraw(withdraw.WithdrawId);
-                return new CommitWithdrawResponse(commitWithdrawResponse, withdraw.WithdrawId, null);
+                Withdraw withdraw = _fundsValidationService.ValidateFundsForWithdrawal(
+                    new AccountId(commitWithdrawCommand.AccountId), new Currency(commitWithdrawCommand.Currency,
+                                                                                 commitWithdrawCommand.IsCryptoCurrency),
+                    commitWithdrawCommand.Amount, null /*Null until confirmation of what to use*/,
+                    new BitcoinAddress(commitWithdrawCommand.BitcoinAddress));
 
-                /*// Commit the withdraw to the network, if successful, create transaction ledger using 
-                // IFundsValidationService
-                string transactionId = _coinClientService.CommitWithdraw(commitWithdrawCommand.BitcoinAddress, 
-                    commitWithdrawCommand.Amount);
-                if (!string.IsNullOrEmpty(transactionId))
+                if (withdraw != null)
                 {
-                    withdraw.SetTransactionId(transactionId);
-                    return new CommitWithdrawResponse(_fundsValidationService.WithdrawalExecuted(withdraw), withdraw.WithdrawId,
-                        "");
-                }*/
+                    bool commitWithdrawResponse = _withdrawSubmissionService.CommitWithdraw(withdraw.WithdrawId);
+                    return new CommitWithdrawResponse(commitWithdrawResponse, withdraw.WithdrawId, null);
+                }
+                throw new InvalidOperationException(string.Format("Could not commit withdraw: AccountId = {0}",
+                                                                  commitWithdrawCommand.AccountId));
             }
-            return new CommitWithdrawResponse(false, null, "Could not commit withdraw");
+            throw new InvalidOperationException(string.Format("Withdraw Failed after Funds Validation: Account ID = {0}",
+                                                commitWithdrawCommand.AccountId));
         }
 
         /// <summary>

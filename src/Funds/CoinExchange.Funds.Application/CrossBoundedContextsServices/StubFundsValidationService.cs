@@ -54,5 +54,10 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         {
             throw new NotImplementedException();
         }
+
+        public bool IsTierVerified(int accountId, bool isCrypto)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

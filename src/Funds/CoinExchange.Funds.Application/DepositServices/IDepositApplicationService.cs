@@ -14,6 +14,21 @@ namespace CoinExchange.Funds.Application.DepositServices
     public interface IDepositApplicationService
     {
         /// <summary>
+        /// Invoked when a deposit transaction is confirmed
+        /// </summary>
+        /// <param name="transactionId"></param>
+        /// <param name="confirmations"></param>
+        void OnDepositConfirmed(string transactionId, int confirmations);
+
+        /// <summary>
+        /// Invoked when a new Deposit Transaction arrives. Tuple in the list argument contains:
+        /// Item1 = Address, Item2 = TransactionId, Item3 = Amount, Item4 = Category
+        /// </summary>
+        /// <param name="currency"></param>
+        /// <param name="newTransactions"></param>
+        void OnDepositArrival(string currency, List<Tuple<string, string, decimal, string>> newTransactions);
+
+        /// <summary>
         /// Get recent deposits for a given currency and account ID
         /// </summary>
         /// <returns></returns>

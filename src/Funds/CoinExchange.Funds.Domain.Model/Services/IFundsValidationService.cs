@@ -100,5 +100,11 @@ namespace CoinExchange.Funds.Domain.Model.Services
         /// <param name="currency"></param>
         /// <returns></returns>
         AccountWithdrawLimits GetWithdrawThresholds(AccountId accountId, Currency currency);
+
+        /// <summary>
+        /// Confirms if the user has been verified for the transaction on the current tier level
+        /// </summary>
+        /// <returns></returns>
+        bool IsTierVerified(int accountId, bool isCrypto);
     }
 }

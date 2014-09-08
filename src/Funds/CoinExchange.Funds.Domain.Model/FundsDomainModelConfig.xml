@@ -9,5 +9,8 @@
   <object id="WithdrawLimitEvaluationService" type="CoinExchange.Funds.Domain.Model.WithdrawAggregate.WithdrawLimitEvaluationService, CoinExchange.Funds.Domain.Model">
   </object>
 
+  <object id="TierValidationService" type="CoinExchange.Funds.Domain.Model.Services.TierValidationService, CoinExchange.Funds.Domain.Model">
+  </object>
+
   <tx:attribute-driven/>
 </objects>

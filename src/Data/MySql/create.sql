@@ -26,6 +26,7 @@ CREATE TABLE `balance` (
   `AvailableBalance` double DEFAULT NULL,
   `CurrentBalance` double DEFAULT NULL,
   `PendingBalance` double DEFAULT NULL,
+  `IsFrozen` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`BalanceId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
@@ -47,6 +48,7 @@ DROP TABLE IF EXISTS `deposit`;
 CREATE TABLE `deposit` (
   `Id` int(11) NOT NULL AUTO_INCREMENT,
   `Currency` varchar(7) DEFAULT NULL,
+  `IsCryptoCurrency` tinyint(1) DEFAULT NULL,
   `AccountId` int(11) DEFAULT NULL,
   `DepositId` varchar(100) DEFAULT NULL,
   `Date` datetime(6) DEFAULT NULL,
@@ -59,7 +61,7 @@ CREATE TABLE `deposit` (
   `TransactionId` varchar(100) DEFAULT NULL,
   `BitcoinAddress` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 /*Table structure for table `depositaddress` */
 
@@ -74,7 +76,7 @@ CREATE TABLE `depositaddress` (
   `Status` varchar(20) DEFAULT NULL,
   `CreationDateTime` datetime DEFAULT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 /*Table structure for table `depositlimit` */
 
@@ -86,7 +88,7 @@ CREATE TABLE `depositlimit` (
   `DailyLimit` double DEFAULT NULL,
   `MonthlyLimit` double DEFAULT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
 /*Table structure for table `fee` */
 
@@ -98,7 +100,7 @@ CREATE TABLE `fee` (
   `PercentageFee` double DEFAULT NULL,
   `Amount` double DEFAULT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=latin1;
 
 /*Table structure for table `ledger` */
 
@@ -357,6 +359,7 @@ CREATE TABLE `withdraw` (
   `Id` int(11) NOT NULL AUTO_INCREMENT,
   `WithdrawId` varchar(50) DEFAULT NULL,
   `Currency` varchar(10) DEFAULT NULL,
+  `IsCryptoCurrency` tinyint(1) DEFAULT NULL,
   `Amount` double DEFAULT NULL,
   `AmountInUsd` double DEFAULT NULL,
   `Fee` double DEFAULT NULL,
@@ -409,7 +412,7 @@ CREATE TABLE `withdrawlimit` (
   `DailyLimit` double DEFAULT NULL,
   `MonthlyLimit` double DEFAULT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

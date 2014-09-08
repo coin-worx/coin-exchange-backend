@@ -1000,6 +1000,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             ITierLevelRetrievalService tierLevelRetrievalService = (ITierLevelRetrievalService)ContextRegistry.GetContext()["StubTierLevelRetrievalService"];
             IBboCrossContextService bboRetrievalService = (IBboCrossContextService)ContextRegistry.GetContext()["StubBboCrossContextService"];
             IWithdrawRepository withdrawRepository = (IWithdrawRepository)ContextRegistry.GetContext()["WithdrawRepository"];
+            ITierValidationService tierValidationService = (ITierValidationService)ContextRegistry.GetContext()["TierValidationService"];
 
             AccountId accountId = new AccountId(123);
             Currency baseCurrency = new Currency("XBT");
@@ -1017,7 +1018,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
                 fundsPersistenceRepository, balanceRepository, feeCalculationService, 
                 withdrawFeesRepository, withdrawIdGeneratorService, ledgerRepository, depositLimitEvaluationService,
                 depositLimitRepository, withdrawLimitEvaluationService, withdrawLimitRepository, tierLevelRetrievalService,
-                bboRetrievalService, withdrawRepository);
+                bboRetrievalService, withdrawRepository, tierValidationService);
             fundsValidationService2.ValidateFundsForOrder(accountId, baseCurrency, quoteCurrency, 100, 101, "sell", "order123");
             Balance balance = balanceRepository.GetBalanceByCurrencyAndAccountId(baseCurrency, accountId);
             Assert.IsNotNull(balance);
@@ -1043,6 +1044,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             ITierLevelRetrievalService tierLevelRetrievalService = (ITierLevelRetrievalService)ContextRegistry.GetContext()["StubTierLevelRetrievalService"];
             IBboCrossContextService bboRetrievalService = (IBboCrossContextService)ContextRegistry.GetContext()["StubBboCrossContextService"];
             IWithdrawRepository withdrawRepository = (IWithdrawRepository)ContextRegistry.GetContext()["WithdrawRepository"];
+            ITierValidationService tierValidationService = (ITierValidationService)ContextRegistry.GetContext()["TierValidationService"];
             
             AccountId accountId = new AccountId(123);
             Currency baseCurrency = new Currency("XBT", true);
@@ -1056,7 +1058,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
                 fundsPersistenceRepository, balanceRepository, feeCalculationService, withdrawFeesRepository,
                 withdrawIdGeneratorService, ledgerRepository, depositLimitEvaluationService, depositLimitRepository, 
                 withdrawLimitEvaluationService, withdrawLimitRepository, tierLevelRetrievalService, bboRetrievalService,
-                withdrawRepository);
+                withdrawRepository, tierValidationService);
             fundsValidationService2.ValidateFundsForWithdrawal(accountId, baseCurrency, 0.1m, new TransactionId("transaction123"), new BitcoinAddress("bitcoinid123"));
 
             WithdrawFees withdrawFees = withdrawFeesRepository.GetWithdrawFeesByCurrencyName(baseCurrency.Name);

@@ -15,6 +15,7 @@ assembly="CoinExchange.Funds.Domain.Model" namespace="CoinExchange.Funds.Domain.
     <property name="AvailableBalance" />
     <property name="CurrentBalance" />
     <property name="PendingBalance" />
+    <property name="IsFrozen" />
     <bag name="PendingTransactions" table="PendingTransaction" cascade="save-update" inverse="true" lazy="false">
       <key column="BalanceId" />
       <one-to-many class="PendingTransaction" />

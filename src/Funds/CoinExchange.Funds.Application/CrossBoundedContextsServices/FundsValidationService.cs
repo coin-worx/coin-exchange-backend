@@ -36,6 +36,8 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         private ITierLevelRetrievalService _tierLevelRetrievalService = null;
         private IBboCrossContextService _bboCrossContextService = null;
         private IWithdrawRepository _withdrawRepository = null;
+        private ITierValidationService _tierValidationService = null;
+
         /// <summary>
         /// Used to convert a currency to the USD amount, we use this symbol to get the best bid and ask from the
         /// currency/USD order book
@@ -56,7 +58,7 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
             IDepositLimitEvaluationService depositLimitEvaluationService, IDepositLimitRepository depositLimitRepository,
             IWithdrawLimitEvaluationService withdrawLimitEvaluationService, IWithdrawLimitRepository withdrawLimitRepository,
             ITierLevelRetrievalService tierLevelRetrievalService, IBboCrossContextService bboCrossContextService,
-            IWithdrawRepository withdrawRepository)
+            IWithdrawRepository withdrawRepository, ITierValidationService tierValidationService)
         {
             _transactionService = transactionService;
             _fundsPersistenceRepository = fundsPersistenceRepository;
@@ -72,6 +74,7 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
             _tierLevelRetrievalService = tierLevelRetrievalService;
             _bboCrossContextService = bboCrossContextService;
             _withdrawRepository = withdrawRepository;
+            _tierValidationService = tierValidationService;
         }
 
         #endregion Constructors
@@ -151,7 +154,7 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
                         if (balance != null)
                         {
                             // Get all the Withdraw Ledgers
-                            IList<Withdraw> withdrawLedgers = GetWithdrawalLedgers(currency, accountId);
+                            IList<Withdraw> withdrawals = GetWithdrawalLedgers(currency, accountId);
                             // Get the Current Tier Level for this user using the cross bounded context Tier retrieval service
                             // ToDo: Assign the AccountId's value after refactoring the AccountIds value to int
                             string currentTierLevel = _tierLevelRetrievalService.GetCurrentTierLevel(accountId.Value);
@@ -174,7 +177,7 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
                             // Evaluate if the current withdrawal is within the limits of the maximum withdrawal allowed and 
                             // the balance available
                             if (_withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(amountInUsd + feeInUsd,
-                                                                                             withdrawLedgers,
+                                                                                             withdrawals,
                                                                                              withdrawLimit,
                                                                                              bestBidBestAsk.Item1,
                                                                                              bestBidBestAsk.Item2,
@@ -484,6 +487,18 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
                     0, 0, 0, 0, 0, withdrawFee, minimumAmount);
             }
             return new AccountWithdrawLimits(currency, accountId, 0, 0, 0, 0, 0, 0, 0, 0, 0, withdrawFee, minimumAmount);
+        }
+
+        /// <summary>
+        /// Confirms if the user is eligible for the current transaction or not
+        /// </summary>
+        /// <param name="accountId"> </param>
+        /// <param name="isCrypto"></param>
+        /// <returns></returns>
+        public bool IsTierVerified(int accountId, bool isCrypto)
+        {
+            string currentTierLevel = _tierLevelRetrievalService.GetCurrentTierLevel(accountId);
+            return _tierValidationService.IsTierVerified(currentTierLevel, isCrypto);
         }
 
         #endregion Methods
