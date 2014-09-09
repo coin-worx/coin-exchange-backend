@@ -74,6 +74,16 @@ namespace CoinExchange.Funds.Infrastructure.Persistence.NHibernate.NHibernate
         }
 
         [Transaction]
+        public IList<Ledger> GetAllLedgers(int accountId)
+        {
+            return CurrentSession.Query<Ledger>()
+                .Where(x => x.AccountId.Value == accountId)
+                .AsQueryable()
+                .OrderByDescending(x => x.DateTime)
+                .ToList();
+        }
+
+        [Transaction]
         public Ledger GetLedgerByLedgerId(string ledgerId)
         {
             return CurrentSession.QueryOver<Ledger>().Where(x => x.LedgerId == ledgerId).SingleOrDefault();

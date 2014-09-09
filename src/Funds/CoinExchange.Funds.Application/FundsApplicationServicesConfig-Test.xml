@@ -42,6 +42,7 @@
     <constructor-arg name="withdrawSubmissionService" ref="WithdrawSubmissionService"/>
     <constructor-arg name="depositAddressRepository" ref="DepositAddressRepository"/>
     <constructor-arg name="withdrawLimitRepository" ref="WithdrawLimitRepository"/>
+    <constructor-arg name="balanceRepository" ref="BalanceRepository"/>
   </object>
   
   <object id="WithdrawSubmissionService" type="CoinExchange.Funds.Application.WithdrawServices.WithdrawSubmissionService, CoinExchange.Funds.Application">

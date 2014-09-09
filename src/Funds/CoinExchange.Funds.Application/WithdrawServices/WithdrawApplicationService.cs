@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CoinExchange.Funds.Application.WithdrawServices.Commands;
 using CoinExchange.Funds.Application.WithdrawServices.Representations;
+using CoinExchange.Funds.Domain.Model.BalanceAggregate;
 using CoinExchange.Funds.Domain.Model.CurrencyAggregate;
 using CoinExchange.Funds.Domain.Model.DepositAggregate;
 using CoinExchange.Funds.Domain.Model.Repositories;
@@ -26,6 +27,7 @@ namespace CoinExchange.Funds.Application.WithdrawServices
         private IWithdrawSubmissionService _withdrawSubmissionService;
         private IDepositAddressRepository _depositAddressRepository;
         private IWithdrawLimitRepository _withdrawLimitRepository;
+        private IBalanceRepository _balanceRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
@@ -34,7 +36,7 @@ namespace CoinExchange.Funds.Application.WithdrawServices
             IWithdrawAddressRepository withdrawAddressRepository, 
             IFundsValidationService fundsValidationService, IWithdrawRepository withdrawRepository, 
             IWithdrawSubmissionService withdrawSubmissionService, IDepositAddressRepository depositAddressRepository, 
-            IWithdrawLimitRepository withdrawLimitRepository)
+            IWithdrawLimitRepository withdrawLimitRepository, IBalanceRepository balanceRepository)
         {
             _fundsPersistenceRepository = fundsPersistenceRepository;
             _withdrawAddressRepository = withdrawAddressRepository;
@@ -43,6 +45,7 @@ namespace CoinExchange.Funds.Application.WithdrawServices
             _withdrawSubmissionService = withdrawSubmissionService;
             _depositAddressRepository = depositAddressRepository;
             _withdrawLimitRepository = withdrawLimitRepository;
+            _balanceRepository = balanceRepository;
 
             _withdrawSubmissionService.WithdrawExecuted += this.WithdrawExecuted;
         }
@@ -142,6 +145,16 @@ namespace CoinExchange.Funds.Application.WithdrawServices
         /// <returns></returns>
         public CommitWithdrawResponse CommitWithdrawal(CommitWithdrawCommand commitWithdrawCommand)
         {
+            Balance balance = _balanceRepository.GetBalanceByCurrencyAndAccountId(new Currency(commitWithdrawCommand.Currency),
+                new AccountId(commitWithdrawCommand.AccountId));
+            if (balance != null)
+            {
+                if (balance.IsFrozen)
+                {
+                    throw new InvalidOperationException(string.Format("Account balance Frozen for Account ID = {0}, Currency = {1}",
+                        commitWithdrawCommand.Currency, commitWithdrawCommand.AccountId));
+                }
+            }
             if (_fundsValidationService.IsTierVerified(commitWithdrawCommand.AccountId, commitWithdrawCommand.IsCryptoCurrency))
             {
                 Withdraw withdraw = _fundsValidationService.ValidateFundsForWithdrawal(

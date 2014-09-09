@@ -22,6 +22,7 @@ namespace CoinExchange.Funds.Domain.Model.LedgerAggregate
         Ledger GetLedgersByWithdrawId(string withdrawId);
         List<Ledger> GetLedgersByOrderId(string orderId);
         decimal GetBalanceForCurrency(string currency, AccountId accountId);
+        IList<Ledger> GetAllLedgers(int accountId);
         IList<Ledger> GetAllLedgers();
     }
 }

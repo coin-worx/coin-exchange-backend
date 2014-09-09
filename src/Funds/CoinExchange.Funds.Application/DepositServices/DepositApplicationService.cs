@@ -177,11 +177,10 @@ namespace CoinExchange.Funds.Application.DepositServices
         /// <returns></returns>
         public List<DepositRepresentation> GetRecentDeposits(string currency, int accountId)
         {
-            List<DepositRepresentation> depositRepresentations = null;
+            List<DepositRepresentation> depositRepresentations = new List<DepositRepresentation>(); ;
             List<Deposit> deposits = _depositRepository.GetDepositByCurrencyAndAccountId(currency, new AccountId(accountId));
             if (deposits != null && deposits.Any())
             {
-                depositRepresentations = new List<DepositRepresentation>();
                 foreach (var deposit in deposits)
                 {
                     depositRepresentations.Add(new DepositRepresentation(deposit.Currency.Name, "", deposit.DepositId, 
@@ -199,6 +198,16 @@ namespace CoinExchange.Funds.Application.DepositServices
         /// <returns></returns>
         public DepositAddressRepresentation GenarateNewAddress(GenerateNewAddressCommand generateNewAddressCommand)
         {
+            Balance balance = _balanceRepository.GetBalanceByCurrencyAndAccountId(new Currency(generateNewAddressCommand.Currency),
+                new AccountId(generateNewAddressCommand.AccountId));
+            if (balance != null)
+            {
+                if (balance.IsFrozen)
+                {
+                    throw new InvalidOperationException(string.Format("Account balance Frozen for Account ID = {0}, Currency = {1}",
+                        generateNewAddressCommand.AccountId, generateNewAddressCommand.Currency));
+                }
+            }
             //Check if the required Tier Level for this operation is verified i.e., Tier 1
             if (_fundsValidationService.IsTierVerified(generateNewAddressCommand.AccountId, true))
             {
@@ -219,7 +228,7 @@ namespace CoinExchange.Funds.Application.DepositServices
                     }
                     if (counter >= 5)
                     {
-                        throw new InvalidOperationException("Too many addresses");
+                        throw new InvalidOperationException("Too many New addresses");
                     }
                 }
                 string address = _coinClientService.CreateNewAddress(generateNewAddressCommand.Currency);
@@ -266,8 +275,22 @@ namespace CoinExchange.Funds.Application.DepositServices
                 new AccountId(accountId), currency);
             foreach (var depositAddress in depositAddresses)
             {
-                depositAddressRepresentations.Add(new DepositAddressRepresentation(depositAddress.BitcoinAddress.Value,
-                    depositAddress.Status.ToString()));
+                // If the address has been used, there is a 7 day limit for its expiration from first use
+                if (depositAddress.Status == AddressStatus.Used)
+                {
+                    if (depositAddress.DateUsed.AddDays(7) < DateTime.Now)
+                    {
+                        // If 7 dayshave passed after first use, mark this address expired
+                        depositAddress.StatusExpired();
+                        continue;
+                    }
+                }
+                // Only pick addresses that are either New or Used, but not expired
+                if (depositAddress.Status != AddressStatus.Expired)
+                {
+                    depositAddressRepresentations.Add(new DepositAddressRepresentation(depositAddress.BitcoinAddress.Value,
+                                                         depositAddress.Status.ToString()));
+                }
             }
             return depositAddressRepresentations;
         }

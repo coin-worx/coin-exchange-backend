@@ -24,10 +24,28 @@ namespace CoinExchange.Funds.Application.LedgerServices
         /// <summary>
         /// Gets all the ledgers
         /// </summary>
+        /// <returns></returns>
+        public IList<LedgerRepresentation> GetAllLedgers(int accountId)
+        {
+            IList<LedgerRepresentation> ledgerRepresentations = new List<LedgerRepresentation>();
+            IList<Ledger> ledgers = _ledgerRepository.GetAllLedgers(accountId);
+            foreach (var ledger in ledgers)
+            {
+                ledgerRepresentations.Add(new LedgerRepresentation(ledger.LedgerId, ledger.DateTime,
+                    ledger.LedgerType.ToString(), ledger.Currency.Name, ledger.Amount, ledger.AmountInUsd, ledger.Fee, ledger.Balance,
+                    ledger.TradeId, ledger.OrderId, ledger.WithdrawId, ledger.DepositId, ledger.AccountId.Value));
+            }
+
+            return ledgerRepresentations;
+        }
+
+        /// <summary>
+        /// Get ledgers for the given currency
+        /// </summary>
         /// <param name="accountId"></param>
         /// <param name="currency"></param>
         /// <returns></returns>
-        public IList<LedgerRepresentation> GetAllLedgers(int accountId, string currency)
+        public IList<LedgerRepresentation> GetLedgersForCurrency(int accountId, string currency)
         {
             IList<LedgerRepresentation> ledgerRepresentations = new List<LedgerRepresentation>();
             IList<Ledger> ledgers = _ledgerRepository.GetLedgerByAccountIdAndCurrency(currency, new AccountId(accountId));
@@ -36,11 +54,6 @@ namespace CoinExchange.Funds.Application.LedgerServices
                 ledgerRepresentations.Add(new LedgerRepresentation(ledger.LedgerId, ledger.DateTime,
                     ledger.LedgerType.ToString(), ledger.Currency.Name, ledger.Amount, ledger.AmountInUsd, ledger.Fee, ledger.Balance,
                     ledger.TradeId, ledger.OrderId, ledger.WithdrawId, ledger.DepositId, ledger.AccountId.Value));
-            }
-
-            if (!ledgerRepresentations.Any())
-            {
-                ledgerRepresentations = null;
             }
 
             return ledgerRepresentations;

@@ -58,6 +58,11 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
         public AccountId AccountId { get; set; }
 
         /// <summary>
+        /// DateTime when this address is first used
+        /// </summary>
+        public DateTime DateUsed { get; private set; }
+
+        /// <summary>
         /// Sets the Status set to Expired
         /// </summary>
         public void StatusExpired()
@@ -76,6 +81,8 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
             if (Status == AddressStatus.New)
             {
                 Status = AddressStatus.Used;
+                // DateTime when this address is first used
+                DateUsed = DateTime.Now;
             }
         }
     }

@@ -13,11 +13,19 @@ namespace CoinExchange.Funds.Application.LedgerServices
     public interface ILedgerQueryService
     {
         /// <summary>
-        /// Gets all the Ledgers for the given Account ID and currency
+        /// Get all ledgers for this user
         /// </summary>
         /// <returns></returns>
-        IList<LedgerRepresentation> GetAllLedgers(int acocuntId, string currency);
+        IList<LedgerRepresentation> GetAllLedgers(int accountId);
 
+        /// <summary>
+        /// Gets Ledgers for the given Account ID and currency
+        /// </summary>
+        /// <param name="acccuntId"></param>
+        /// <param name="currency"></param>
+        /// <returns></returns>
+        IList<LedgerRepresentation> GetLedgersForCurrency(int acccuntId, string currency);
+            
         /// <summary>
         /// Get the details for the given ledger ID
         /// </summary>

@@ -66,6 +66,11 @@ namespace CoinExchange.Funds.Application.Tests
             throw new NotImplementedException();
         }
 
+        public IList<Ledger> GetAllLedgers(int accountId)
+        {
+            throw new NotImplementedException();
+        }
+
         public IList<Ledger> GetAllLedgers()
         {
             throw new NotImplementedException();

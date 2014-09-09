@@ -48,7 +48,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             IFundsPersistenceRepository fundsPersistenceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];
             
             AccountId accountId = new AccountId(123);
-            Currency baseCurrency = new Currency("XBT");
+            Currency baseCurrency = new Currency("BTC");
             Currency quoteCurrency = new Currency("USD");
             Balance baseCurrencyBalance = new Balance(baseCurrency, accountId, 400, 400);
             fundsPersistenceRepository.SaveOrUpdate(baseCurrencyBalance);
@@ -68,7 +68,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             IFundsPersistenceRepository fundsPersistenceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];
 
             AccountId accountId = new AccountId(123);
-            Currency baseCurrency = new Currency("XBT");
+            Currency baseCurrency = new Currency("BTC");
             Currency quoteCurrency = new Currency("USD");
             Balance baseCurrencyBalance = new Balance(baseCurrency, accountId, 400, 400);
             fundsPersistenceRepository.SaveOrUpdate(baseCurrencyBalance);
@@ -88,7 +88,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             IBalanceRepository balanceRepository = (IBalanceRepository)ContextRegistry.GetContext()["BalanceRepository"];
 
             AccountId accountId = new AccountId(123);
-            Currency baseCurrency = new Currency("XBT");
+            Currency baseCurrency = new Currency("BTC");
             Currency quoteCurrency = new Currency("USD");
             Balance baseCurrencyBalance = new Balance(baseCurrency, accountId, 400, 400);
             fundsPersistenceRepository.SaveOrUpdate(baseCurrencyBalance);
@@ -118,7 +118,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             IBalanceRepository balanceRepository = (IBalanceRepository)ContextRegistry.GetContext()["BalanceRepository"];
 
             AccountId accountId = new AccountId(123);
-            Currency baseCurrency = new Currency("XBT");
+            Currency baseCurrency = new Currency("BTC");
             Currency quoteCurrency = new Currency("USD");
             Balance baseCurrencyBalance = new Balance(baseCurrency, accountId, 400, 400);
             fundsPersistenceRepository.SaveOrUpdate(baseCurrencyBalance);
@@ -146,7 +146,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             IFundsPersistenceRepository fundsPersistenceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];
 
             AccountId accountId = new AccountId(123);
-            Currency baseCurrency = new Currency("XBT");
+            Currency baseCurrency = new Currency("BTC");
             Currency quoteCurrency = new Currency("USD");
             Balance baseCurrencyBalance = new Balance(baseCurrency, accountId, 400, 400);
             fundsPersistenceRepository.SaveOrUpdate(baseCurrencyBalance);
@@ -166,7 +166,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             IFundsPersistenceRepository fundsPersistenceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];
 
             AccountId accountId = new AccountId(123);
-            Currency baseCurrency = new Currency("XBT");
+            Currency baseCurrency = new Currency("BTC");
             Currency quoteCurrency = new Currency("USD");
             Balance baseCurrencyBalance = new Balance(baseCurrency, accountId, 400, 400);
             fundsPersistenceRepository.SaveOrUpdate(baseCurrencyBalance);
@@ -187,7 +187,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             IBalanceRepository balanceRepository = (IBalanceRepository)ContextRegistry.GetContext()["BalanceRepository"];
 
             AccountId accountId = new AccountId(123);
-            Currency baseCurrency = new Currency("XBT");
+            Currency baseCurrency = new Currency("BTC");
             Currency quoteCurrency = new Currency("USD");
             Balance baseCurrencyBalance = new Balance(baseCurrency, accountId, 400, 400);
             fundsPersistenceRepository.SaveOrUpdate(baseCurrencyBalance);
@@ -217,7 +217,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             IFundsPersistenceRepository fundsPersistenceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];
 
             AccountId accountId = new AccountId(123);
-            Currency baseCurrency = new Currency("XBT");
+            Currency baseCurrency = new Currency("BTC");
             Currency quoteCurrency = new Currency("USD");
             Balance baseCurrencyBalance = new Balance(baseCurrency, accountId, 400, 400);
             fundsPersistenceRepository.SaveOrUpdate(baseCurrencyBalance);
@@ -257,7 +257,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             IFundsPersistenceRepository fundsPersistenceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];
 
             AccountId accountId = new AccountId(123);
-            Currency baseCurrency = new Currency("XBT", true);
+            Currency baseCurrency = new Currency("BTC", true);
             Balance baseCurrencyBalance = new Balance(baseCurrency, accountId, 20, 20);
             fundsPersistenceRepository.SaveOrUpdate(baseCurrencyBalance);
 
@@ -277,7 +277,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             IFundsPersistenceRepository fundsPersistenceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];
 
             AccountId accountId = new AccountId(123);
-            Currency baseCurrency = new Currency("XBT", true);
+            Currency baseCurrency = new Currency("BTC", true);
             Balance baseCurrencyBalance = new Balance(baseCurrency, accountId, 20, 20);
             fundsPersistenceRepository.SaveOrUpdate(baseCurrencyBalance);
 
@@ -302,7 +302,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             IWithdrawFeesRepository withdrawFeesRepository = (IWithdrawFeesRepository)ContextRegistry.GetContext()["WithdrawFeesRepository"];
 
             AccountId accountId = new AccountId(123);
-            Currency currency = new Currency("XBT", true);
+            Currency currency = new Currency("BTC", true);
             Balance balance = new Balance(currency, accountId, 20, 20);
             fundsPersistenceRepository.SaveOrUpdate(balance);
             WithdrawFees withdrawFee = withdrawFeesRepository.GetWithdrawFeesByCurrencyName(currency.Name);
@@ -330,7 +330,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             IWithdrawFeesRepository withdrawFeesRepository = (IWithdrawFeesRepository)ContextRegistry.GetContext()["WithdrawFeesRepository"];
 
             AccountId accountId = new AccountId(123);
-            Currency currency = new Currency("XBT", true);
+            Currency currency = new Currency("BTC", true);
             Balance balance = new Balance(currency, accountId, 20, 20);
             fundsPersistenceRepository.SaveOrUpdate(balance);
 
@@ -362,7 +362,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             IBalanceRepository balanceRepository = (IBalanceRepository)ContextRegistry.GetContext()["BalanceRepository"];
 
             AccountId accountId = new AccountId(123);
-            Currency currency = new Currency("XBT", true);
+            Currency currency = new Currency("BTC", true);
 
             Deposit deposit = new Deposit(currency, depositIdGeneratorService.GenerateId(), DateTime.Now,
                                           DepositType.Default, 1.5m, 0, TransactionStatus.Pending, accountId,
@@ -395,7 +395,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             IBalanceRepository balanceRepository = (IBalanceRepository)ContextRegistry.GetContext()["BalanceRepository"];
            
             AccountId accountId = new AccountId(123);
-            Currency currency = new Currency("XBT", true);
+            Currency currency = new Currency("BTC", true);
 
             Deposit deposit = new Deposit(currency, depositIdGeneratorService.GenerateId(), DateTime.Now,
                                           DepositType.Default, 1.2m, 0, TransactionStatus.Pending, accountId,
@@ -431,7 +431,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             IBalanceRepository balanceRepository = (IBalanceRepository)ContextRegistry.GetContext()["BalanceRepository"];
 
             AccountId accountId = new AccountId(123);
-            Currency currency = new Currency("XBT", true);
+            Currency currency = new Currency("BTC", true);
 
             Deposit deposit = new Deposit(currency, depositIdGeneratorService.GenerateId(), DateTime.Now,
                                           DepositType.Default, 1.5m, 0, TransactionStatus.Pending, accountId,
@@ -483,7 +483,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             IFundsPersistenceRepository fundsPersistenceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];
 
             AccountId accountId = new AccountId(123);
-            Currency currency = new Currency("XBT", true);
+            Currency currency = new Currency("BTC", true);
 
             Balance balance = new Balance(currency, accountId, 2.5m, 4);
             fundsPersistenceRepository.SaveOrUpdate(balance);
@@ -539,7 +539,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             IFundsPersistenceRepository fundsPersistenceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];
             IFeeCalculationService feeCalculationService = (IFeeCalculationService)ContextRegistry.GetContext()["FeeCalculationService"];
 
-            string baseCurrency = "XBT";
+            string baseCurrency = "BTC";
             string quoteCurrency = "USD";
             string tradeId = "tradeid123";
             string buyOrderId = "buyorderid123";
@@ -607,7 +607,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             IFeeCalculationService feeCalculationService = (IFeeCalculationService)ContextRegistry.GetContext()["FeeCalculationService"];
             IBalanceRepository balanceRepository = (IBalanceRepository)ContextRegistry.GetContext()["BalanceRepository"];
 
-            string baseCurrency = "XBT";
+            string baseCurrency = "BTC";
             string quoteCurrency = "USD";
             string tradeId = "tradeid123";
             string buyOrderId = "buyorderid123";
@@ -655,7 +655,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             // same second, so we check which one is fetched first
 
             // First, buy side order's ledger will be verified
-            if (ledgerByAccountId[0].Currency.Name == "XBT")
+            if (ledgerByAccountId[0].Currency.Name == "BTC")
             {
                 // For XBT
                 Assert.AreEqual(400, ledgerByAccountId[0].Amount);
@@ -702,7 +702,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             Assert.AreEqual(2, ledgerByAccountId.Count);
 
             // Secondly, wee verify for the sell order side's ledgers
-            if (ledgerByAccountId[0].Currency.Name == "XBT")
+            if (ledgerByAccountId[0].Currency.Name == "BTC")
             {
                 // For XBT
                 Assert.AreEqual(-400, ledgerByAccountId[0].Amount);
@@ -747,7 +747,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             ILedgerRepository ledgerRepository = (ILedgerRepository)ContextRegistry.GetContext()["LedgerRepository"];
             IFeeCalculationService feeCalculationService = (IFeeCalculationService)ContextRegistry.GetContext()["FeeCalculationService"];
 
-            string baseCurrency = "XBT";
+            string baseCurrency = "BTC";
             string quoteCurrency = "USD";
             string tradeId = "tradeid123";
             string buyOrderId = "buyorderid123";
@@ -841,7 +841,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             IWithdrawFeesRepository withdrawFeesRepository = (IWithdrawFeesRepository)ContextRegistry.GetContext()["WithdrawFeesRepository"];
 
             AccountId accountId = new AccountId(123);
-            Currency currency = new Currency("XBT", true);
+            Currency currency = new Currency("BTC", true);
 
             Balance balance = new Balance(currency, accountId, 20, 20);
             fundsPersistenceRepository.SaveOrUpdate(balance);
@@ -874,7 +874,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             IFeeCalculationService feeCalculationService = (IFeeCalculationService)ContextRegistry.GetContext()["FeeCalculationService"];
 
             AccountId accountId = new AccountId(123);
-            Currency baseCurrency = new Currency("XBT");
+            Currency baseCurrency = new Currency("BTC");
             Currency quoteCurrency = new Currency("USD");
             Balance baseCurrencyBalance = new Balance(baseCurrency, accountId, 5000, 5000);
             Balance quoteCurrencyBalance = new Balance(quoteCurrency, accountId, 20000, 20000);
@@ -930,7 +930,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             IFeeCalculationService feeCalculationService = (IFeeCalculationService)ContextRegistry.GetContext()["FeeCalculationService"];
 
             AccountId accountId = new AccountId(123);
-            Currency baseCurrency = new Currency("XBT");
+            Currency baseCurrency = new Currency("BTC");
             Currency quoteCurrency = new Currency("USD");
             Balance baseCurrencyBalance = new Balance(baseCurrency, accountId, 5000, 5000);
             Balance quoteCurrencyBalance = new Balance(quoteCurrency, accountId, 20000, 20000);
@@ -1003,7 +1003,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             ITierValidationService tierValidationService = (ITierValidationService)ContextRegistry.GetContext()["TierValidationService"];
 
             AccountId accountId = new AccountId(123);
-            Currency baseCurrency = new Currency("XBT");
+            Currency baseCurrency = new Currency("BTC");
             Currency quoteCurrency = new Currency("USD");
             Balance baseCurrencyBalance = new Balance(baseCurrency, accountId, 1000, 1000);
             fundsPersistenceRepository.SaveOrUpdate(baseCurrencyBalance);
@@ -1047,7 +1047,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             ITierValidationService tierValidationService = (ITierValidationService)ContextRegistry.GetContext()["TierValidationService"];
             
             AccountId accountId = new AccountId(123);
-            Currency baseCurrency = new Currency("XBT", true);
+            Currency baseCurrency = new Currency("BTC", true);
             Balance baseCurrencyBalance = new Balance(baseCurrency, accountId, 20, 20);
             fundsPersistenceRepository.SaveOrUpdate(baseCurrencyBalance);
 

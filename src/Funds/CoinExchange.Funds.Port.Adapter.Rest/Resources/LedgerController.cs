@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Management.Instrumentation;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -42,11 +43,56 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Resources
         [Route("funds/getledgers")]
         [Authorize]
         [HttpPost]
-        public IHttpActionResult GetAllLedgers([FromBody]GetLedgersParams getLedgersParams)
+        public IHttpActionResult GetLedgersForCurrency([FromBody]GetLedgersParams getLedgersParams)
         {
             if (log.IsDebugEnabled)
             {
-                log.Debug(string.Format("Get All Ledgers call: Currency = {0}", getLedgersParams.Currency));
+                log.Debug(string.Format("Get Ledgers for a Currency call: Currency = {0}", getLedgersParams.Currency));
+            }
+            try
+            {
+                //get api key from header
+                var headers = Request.Headers;
+                string apikey = "";
+                IEnumerable<string> headerParams;
+                if (headers.TryGetValues("Auth", out headerParams))
+                {
+                    string[] auth = headerParams.ToList()[0].Split(',');
+                    apikey = auth[0];
+                }
+                if (log.IsDebugEnabled)
+                {
+                    log.Debug(string.Format("Get Ledgers for a Currency Call: ApiKey = {0}", apikey));
+                }
+                if (!string.IsNullOrEmpty(getLedgersParams.Currency) && !string.IsNullOrEmpty(apikey))
+                {
+                    int accountId = _apiKeyInfoAccess.GetUserIdFromApiKey(apikey);
+                    return Ok(_ledgerQueryService.GetLedgersForCurrency(accountId, getLedgersParams.Currency));
+                }
+                return BadRequest("Currency is not provided.");
+            }
+            catch (Exception exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error(string.Format("Get Ledgers for a Currency Call Error: {0}", exception));
+                }
+                return InternalServerError();
+            }
+        }
+
+        /// <summary>
+        /// Get all the ledgers for the provided currency for this user
+        /// </summary>
+        /// <returns></returns>
+        [Route("funds/getallledgers")]
+        [Authorize]
+        [HttpGet]
+        public IHttpActionResult GetAllLedgers()
+        {
+            if (log.IsDebugEnabled)
+            {
+                log.Debug(string.Format("Get All Ledgers call"));
             }
             try
             {
@@ -63,12 +109,12 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Resources
                 {
                     log.Debug(string.Format("Get All Ledgers Call: ApiKey = {0}", apikey));
                 }
-                if (!string.IsNullOrEmpty(getLedgersParams.Currency) && !string.IsNullOrEmpty(apikey))
+                if (!string.IsNullOrEmpty(apikey))
                 {
                     int accountId = _apiKeyInfoAccess.GetUserIdFromApiKey(apikey);
-                    return Ok(_ledgerQueryService.GetAllLedgers(accountId, getLedgersParams.Currency));
+                    return Ok(_ledgerQueryService.GetAllLedgers(accountId));
                 }
-                return BadRequest("Currency is not provided.");
+                throw new InstanceNotFoundException("No API key found.");
             }
             catch (Exception exception)
             {

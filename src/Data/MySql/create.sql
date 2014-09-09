@@ -75,6 +75,7 @@ CREATE TABLE `depositaddress` (
   `BitcoinAddress` varchar(50) DEFAULT NULL,
   `Status` varchar(20) DEFAULT NULL,
   `CreationDateTime` datetime DEFAULT NULL,
+  `DateUsed` datetime DEFAULT NULL,
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 

@@ -11,6 +11,7 @@ assembly="CoinExchange.Funds.Domain.Model" namespace="CoinExchange.Funds.Domain.
       <property name="IsCryptoCurrency" column="IsCryptoCurrency"/>
     </component>
     <property name="CreationDateTime" />
+    <property name="DateUsed" />
     <property name="Status" />
     <component name="BitcoinAddress">
       <property name="Value" column="BitcoinAddress"/>

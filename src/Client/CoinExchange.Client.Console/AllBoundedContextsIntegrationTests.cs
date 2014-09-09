@@ -24,9 +24,9 @@ namespace CoinExchange.Client.Console
         private string _baseUrlCloud = "http://rockblanc.cloudapp.net/test/v1";
         private string _baseUrlLocalhost = "http://localhost:51780/v1";
         private FundsClient _fundsClient;
-        private string _username = "rodholt";
+        private string _username = "rodholt2";
         private string _password = "mclaren";
-        private string _email = "rodholt@mclaren.com";
+        private string _email = "rodholt2@mclaren.com";
         private string _baseCurrency = "BTC";
         private string _quoteCurrency = "USD";
 
@@ -46,10 +46,10 @@ namespace CoinExchange.Client.Console
             _fundsClient.key = _identityAccessClient.key;
             _fundsClient.secretkey = _identityAccessClient.secretkey;
 
-            MakeDeposit();
+            //MakeDeposit();
             //SendOrders();
             ApplyForTier1();
-            GetLimits();
+            //GetLimits();
             //TradeExecuted();
         }
 
