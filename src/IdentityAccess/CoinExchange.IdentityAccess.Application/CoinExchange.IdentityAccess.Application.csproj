@@ -74,6 +74,7 @@
     <Compile Include="UserServices\IUserApplicationService.cs" />
     <Compile Include="UserServices\IUserTierLevelApplicationService.cs" />
     <Compile Include="UserServices\Representations\AccountSettingsRepresentation.cs" />
+    <Compile Include="UserServices\Representations\ChangePasswordResponse.cs" />
     <Compile Include="UserServices\Representations\ChangeSettingsResponse.cs" />
     <Compile Include="UserServices\Representations\SubmitEmailSettingsResponse.cs" />
     <Compile Include="UserServices\Representations\Tier1Details.cs" />

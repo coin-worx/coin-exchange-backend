@@ -14,6 +14,7 @@ using CoinExchange.IdentityAccess.Application.RegistrationServices;
 using CoinExchange.IdentityAccess.Application.RegistrationServices.Commands;
 using CoinExchange.IdentityAccess.Application.UserServices;
 using CoinExchange.IdentityAccess.Application.UserServices.Commands;
+using CoinExchange.IdentityAccess.Application.UserServices.Representations;
 using CoinExchange.IdentityAccess.Domain.Model.Repositories;
 using CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate;
 using CoinExchange.IdentityAccess.Domain.Model.UserAggregate;
@@ -68,10 +69,10 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             User userBeforePasswordChange = userRepository.GetUserByUserName("linkinpark");
             string passwordBeforeChange = userBeforePasswordChange.Password;
 
-            bool changeSuccessful = userApplicationService.ChangePassword(new ChangePasswordCommand(
+            ChangePasswordResponse changePasswordResponse = userApplicationService.ChangePassword(new ChangePasswordCommand(
                 validationEssentials.ApiKey, "burnitdown", "burnitdowntwice"));
 
-            Assert.IsTrue(changeSuccessful);
+            Assert.IsTrue(changePasswordResponse.ChangeSuccessful);
             User userAfterPasswordChange = userRepository.GetUserByUserName("linkinpark");
             string passwordAfterChange = userAfterPasswordChange.Password;
 

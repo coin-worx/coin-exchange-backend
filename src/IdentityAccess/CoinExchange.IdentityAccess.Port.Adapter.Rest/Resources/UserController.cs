@@ -148,10 +148,9 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
                 {
                     log.Debug("ChangePassword Call Recevied, parameters:" + changePasswordParams);
                 }
-                _userApplicationService.ChangePassword(new ChangePasswordCommand(
+                return Ok(_userApplicationService.ChangePassword(new ChangePasswordCommand(
                     HeaderParamUtility.GetApikey(Request), changePasswordParams.OldPassword,
-                    changePasswordParams.NewPassword));
-                return Ok("changed");
+                    changePasswordParams.NewPassword)));
             }
             catch (InvalidOperationException exception)
             {

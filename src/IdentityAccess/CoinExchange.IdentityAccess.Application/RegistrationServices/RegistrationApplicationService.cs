@@ -87,6 +87,8 @@ namespace CoinExchange.IdentityAccess.Application.RegistrationServices
 
                      // Save to persistence
                     _persistenceRepository.SaveUpdate(user);
+                    _emailService.SendPostSignUpEmail(user.Email, user.Username, user.ActivationKey,
+                                                      user.AdminEmailsSubscribed);
                     // return Activation Key
                     return activationKey;
                 }

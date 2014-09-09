@@ -223,18 +223,24 @@ namespace CoinExchange.Funds.Infrastructure.Services
                 {
                     // Get the number of confirmations of each pending confirmation (deposit)
                     GetTransactionResponse getTransactionResponse = coinService.GetTransaction(pendingDeposits[i].Item1);
-                    pendingDeposits[i] = new Tuple<string, int>(pendingDeposits[i].Item1, getTransactionResponse.Confirmations);
-
-                    // If the no of confirmations is >= 7, send this information to the DepositApplicationService
-                    if (pendingDeposits[i].Item2 >= 7)
+                    
+                    // If the current confirmation count in the block chain is greater than the one we have stored, update 
+                    // confirmations
+                    if (getTransactionResponse.Confirmations > pendingDeposits[i].Item2)
                     {
+                        pendingDeposits[i] = new Tuple<string, int>(pendingDeposits[i].Item1, getTransactionResponse.Confirmations);
                         if (DepositConfirmed != null)
                         {
                             // Raise the event and sned the TransacitonID and the no. of confirmation respectively
                             DepositConfirmed(pendingDeposits[i].Item1, getTransactionResponse.Confirmations);
                         }
-                        // Add the confirmed trnasactions into the list of confirmed deposits
-                        depositsConfirmed.Add(pendingDeposits[i]);
+                        // If the no of confirmations is >= 7, add to the list of confirmed deposits to be deleted outside this 
+                        // loop
+                        if (pendingDeposits[i].Item2 >= 7)
+                        {
+                            // Add the confirmed trnasactions into the list of confirmed deposits
+                            depositsConfirmed.Add(pendingDeposits[i]);
+                        }
                     }
                 }
 

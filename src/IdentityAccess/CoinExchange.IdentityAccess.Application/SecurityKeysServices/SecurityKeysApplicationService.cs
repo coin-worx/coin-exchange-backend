@@ -194,7 +194,39 @@ namespace CoinExchange.IdentityAccess.Application.SecurityKeysServices
         {
             //get security key pair for user name
             var getSecurityKeyPair = _securityKeysRepository.GetByApiKey(apiKey);
-            return _securityKeysRepository.GetByUserId(getSecurityKeyPair.UserId);
+            dynamic securityKeys = _securityKeysRepository.GetByUserId(getSecurityKeyPair.UserId);
+            List<object> activeKeys = new List<object>();
+            List<object> expiredKeys = new List<object>();
+            foreach (dynamic securityKey in securityKeys)
+            {
+                if (securityKey.ExpirationDate != null)
+                {
+                    // If the key has not expired, addto the lsit that will be returned to the controller
+                    if (securityKey.ExpirationDate >= DateTime.Now)
+                    {
+                        activeKeys.Add(securityKey);
+                    }
+                    // If key is expired, add to the list of expired keys that will be deleted
+                    else
+                    {
+                        expiredKeys.Add(securityKey);
+                    }
+                }
+                else
+                {
+                    activeKeys.Add(securityKey);
+                }
+            }
+
+            foreach (dynamic expiredKey in expiredKeys)
+            {
+                SecurityKeysPair keyToDelete = _securityKeysRepository.GetByKeyDescriptionAndUserId(expiredKey.KeyDescription, getSecurityKeyPair.UserId);
+                if (keyToDelete != null)
+                {
+                    _securityKeysRepository.DeleteSecurityKeysPair(keyToDelete);
+                }
+            }
+            return activeKeys;
         }
 
         /// <summary>

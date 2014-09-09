@@ -50,7 +50,7 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
         /// </summary>
         /// <param name="changePasswordCommand"> </param>
         /// <returns></returns>
-        public bool ChangePassword(ChangePasswordCommand changePasswordCommand)
+        public ChangePasswordResponse ChangePassword(ChangePasswordCommand changePasswordCommand)
         {
             // Get the SecurityKeyspair instance related to this API Key
             SecurityKeysPair securityKeysPair = _securityKeysRepository.GetByApiKey(changePasswordCommand.ApiKey.Value);
@@ -65,22 +65,22 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
                     //// Make sure the session has not expired
                     //if (securityKeysPair.CreationDateTime.Add(user.AutoLogout) > DateTime.Now)
                     //{
-                        // Check if the old password is the same as new one
-                        if (_passwordEncryptionService.VerifyPassword(changePasswordCommand.OldPassword,
-                                                                      user.Password))
-                        {
-                            // Create new password and save for the user in the database
-                            string newEncryptedPassword =
-                                _passwordEncryptionService.EncryptPassword(changePasswordCommand.NewPassword);
-                            user.Password = newEncryptedPassword;
-                            _persistenceRepository.SaveUpdate(user);
-                            _emailService.SendPasswordChangedEmail(user.Email, user.Username, user.AdminEmailsSubscribed);
-                            return true;
-                        }
-                        else
-                        {
-                            throw new InvalidCredentialException(string.Format("Current password incorrect."));
-                        }
+                    // Check if the old password is the same as new one
+                    if (_passwordEncryptionService.VerifyPassword(changePasswordCommand.OldPassword,
+                                                                  user.Password))
+                    {
+                        // Create new password and save for the user in the database
+                        string newEncryptedPassword =
+                            _passwordEncryptionService.EncryptPassword(changePasswordCommand.NewPassword);
+                        user.Password = newEncryptedPassword;
+                        _persistenceRepository.SaveUpdate(user);
+                        _emailService.SendPasswordChangedEmail(user.Email, user.Username, user.AdminEmailsSubscribed);
+                        return new ChangePasswordResponse(true, "Password Change Successful");
+                    }
+                    else
+                    {
+                        throw new InvalidCredentialException(string.Format("Current password incorrect."));
+                    }
                     //}
                     //else
                     //{

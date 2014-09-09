@@ -19,7 +19,7 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
         /// </summary>
         /// <param name="changePasswordCommand"> </param>
         /// <returns></returns>
-        bool ChangePassword(ChangePasswordCommand changePasswordCommand);
+        ChangePasswordResponse ChangePassword(ChangePasswordCommand changePasswordCommand);
 
         /// <summary>
         /// Request to activate account for which the user has already signed up

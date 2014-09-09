@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Management.Instrumentation;
+using CoinExchange.Common.Domain.Model;
 using CoinExchange.Funds.Domain.Model.BalanceAggregate;
 using CoinExchange.Funds.Domain.Model.CurrencyAggregate;
 using CoinExchange.Funds.Domain.Model.DepositAggregate;
@@ -245,7 +246,7 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         [Transaction]
         public bool DepositConfirmed(Deposit deposit)
         {
-            if (deposit != null && deposit.Confirmations >= 7 && deposit.Status == TransactionStatus.Pending)
+            if (deposit != null && deposit.Status == TransactionStatus.Pending)
             {
                 if (deposit.Currency.IsCryptoCurrency)
                 {
@@ -262,7 +263,7 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
                     // NOTE: Implement adn use real implementation later, rather than using the stub implementation being
                     // used right now
                     Tuple<decimal, decimal> bestBidBestAsk =
-                        _bboCrossContextService.GetBestBidBestAsk(deposit.Currency.Name, "USD");
+                        _bboCrossContextService.GetBestBidBestAsk(deposit.Currency.Name, CurrencyConstants.Usd);
 
                     deposit.SetAmountInUsd(ConvertCurrencyToUsd(deposit.Amount, bestBidBestAsk.Item1,
                                                                 bestBidBestAsk.Item2));
