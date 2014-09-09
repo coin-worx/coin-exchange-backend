@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
 using System.Threading;
 using CoinExchange.Common.Tests;
 using CoinExchange.Funds.Application.WithdrawServices.Representations;
@@ -111,7 +112,8 @@ namespace CoinExchange.Funds.Infrastructure.Services.IntegrationTests
                 fundsPersistenceRepository.SaveOrUpdate(depositAddress);
 
                 // Check that there is no deposit with htis address present
-                Deposit deposit = depositRepository.GetDepositsByBitcoinAddress(bitcoinAddress);
+                List<Deposit> deposits = depositRepository.GetDepositsByBitcoinAddress(bitcoinAddress);
+                Deposit deposit = deposits.Single();
                 Assert.IsNull(deposit);
 
                 ManualResetEvent manualResetEvent = new ManualResetEvent(false);
@@ -142,7 +144,8 @@ namespace CoinExchange.Funds.Infrastructure.Services.IntegrationTests
                 Assert.IsNotNull(depositAddress);
                 Assert.AreEqual(AddressStatus.Used, depositAddress.Status);
 
-                deposit = depositRepository.GetDepositsByBitcoinAddress(bitcoinAddress);
+                deposits = depositRepository.GetDepositsByBitcoinAddress(bitcoinAddress);
+                deposit = deposits.Single();
                 Assert.IsNotNull(deposit);
                 Assert.AreEqual(Amount, deposit.Amount);
                 Assert.AreEqual(currency.Name, deposit.Currency.Name);
@@ -178,7 +181,8 @@ namespace CoinExchange.Funds.Infrastructure.Services.IntegrationTests
                 fundsPersistenceRepository.SaveOrUpdate(depositAddress);
 
                 // Check that there is no deposit with htis address present
-                Deposit deposit = depositRepository.GetDepositsByBitcoinAddress(bitcoinAddress);
+                List<Deposit> deposits = depositRepository.GetDepositsByBitcoinAddress(bitcoinAddress);
+                Deposit deposit = deposits.Single();
                 Assert.IsNull(deposit);
 
                 ManualResetEvent manualResetEvent = new ManualResetEvent(false);
@@ -209,7 +213,8 @@ namespace CoinExchange.Funds.Infrastructure.Services.IntegrationTests
                 Assert.IsNotNull(depositAddress);
                 Assert.AreEqual(AddressStatus.Used, depositAddress.Status);
 
-                deposit = depositRepository.GetDepositsByBitcoinAddress(bitcoinAddress);
+                deposits = depositRepository.GetDepositsByBitcoinAddress(bitcoinAddress);
+                deposit = deposits.Single();
                 Assert.IsNotNull(deposit);
                 Assert.AreEqual(Amount, deposit.Amount);
                 Assert.AreEqual(currency.Name, deposit.Currency.Name);
@@ -267,7 +272,8 @@ namespace CoinExchange.Funds.Infrastructure.Services.IntegrationTests
                 Assert.IsNotNull(depositAddress);
                 Assert.AreEqual(AddressStatus.Used, depositAddress.Status);
 
-                Deposit deposit = depositRepository.GetDepositsByBitcoinAddress(bitcoinAddress);
+                List<Deposit> deposits = depositRepository.GetDepositsByBitcoinAddress(bitcoinAddress);
+                Deposit deposit = deposits.Single();
                 Assert.IsNotNull(deposit);
                 Assert.AreEqual(Amount, deposit.Amount);
                 Assert.AreEqual(currency.Name, deposit.Currency.Name);

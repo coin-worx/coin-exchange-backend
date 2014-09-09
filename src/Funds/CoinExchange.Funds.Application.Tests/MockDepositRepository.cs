@@ -53,7 +53,7 @@ namespace CoinExchange.Funds.Application.Tests
             return null;
         }
 
-        public Deposit GetDepositsByBitcoinAddress(BitcoinAddress bitcoinAddress)
+        public List<Deposit> GetDepositsByBitcoinAddress(BitcoinAddress bitcoinAddress)
         {
             throw new NotImplementedException();
         }

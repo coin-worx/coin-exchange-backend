@@ -63,18 +63,40 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             Assert.IsNotNullOrEmpty(result.Content.ApiKey);
             Assert.IsNotNullOrEmpty(result.Content.SecretKey);
 
+            CreateUserGeneratedSecurityKeyPair command2 = new CreateUserGeneratedSecurityKeyPair(securityKeyPermissions, "", "", "", false, false, false, "#2");
+            httpActionResult = securityKeyPairController.CreateSecurityKey(command2);
+            result = (OkNegotiatedContentResult<SecurityKeyPair>)httpActionResult;
+            Assert.IsNotNullOrEmpty(result.Content.ApiKey);
+            Assert.IsNotNullOrEmpty(result.Content.SecretKey);
+
             httpActionResult = securityKeyPairController.GetUserSecurityKeys();
             OkNegotiatedContentResult<object> result1 = (OkNegotiatedContentResult<object>)httpActionResult;
-            IList<SecurityKeyPairList> pairs = result1.Content as IList<SecurityKeyPairList>;
-            Assert.AreEqual(pairs.Count,1);
-            Assert.AreEqual(pairs[0].KeyDescription, "#1");
-            Assert.IsNull(pairs[0].ExpirationDate);
+            List<object> objectPairs = result1.Content as List<object>;
+            List<SecurityKeyPairList> pairs = new List<SecurityKeyPairList>();
+            foreach (object objectPair in objectPairs)
+            {
+                pairs.Add(objectPair as SecurityKeyPairList);
+            }
+
+            Assert.AreEqual(pairs.Count,2);
+            Assert.AreEqual(pairs[1].KeyDescription, "#1");
+            Assert.IsNull(pairs[1].ExpirationDate);
 
             httpActionResult = securityKeyPairController.GetSecurityKeyDetail("#1");
             OkNegotiatedContentResult<SecurityKeyRepresentation> securityKey = (OkNegotiatedContentResult<SecurityKeyRepresentation>)httpActionResult;
             Assert.AreEqual(securityKey.Content.KeyDescritpion,"#1");
             Assert.AreEqual(securityKey.Content.EnableEndDate, false);
             Assert.AreEqual(securityKey.Content.EnableExpirationDate,false); 
+            Assert.AreEqual(securityKey.Content.EnableStartDate, false);
+
+            Assert.AreEqual(pairs[0].KeyDescription, "#2");
+            Assert.IsNull(pairs[0].ExpirationDate);
+
+            httpActionResult = securityKeyPairController.GetSecurityKeyDetail("#2");
+            securityKey = (OkNegotiatedContentResult<SecurityKeyRepresentation>)httpActionResult;
+            Assert.AreEqual(securityKey.Content.KeyDescritpion, "#2");
+            Assert.AreEqual(securityKey.Content.EnableEndDate, false);
+            Assert.AreEqual(securityKey.Content.EnableExpirationDate, false);
             Assert.AreEqual(securityKey.Content.EnableStartDate, false);
         }
 
@@ -102,7 +124,13 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
 
             httpActionResult = securityKeyPairController.GetUserSecurityKeys();
             OkNegotiatedContentResult<object> result1 = (OkNegotiatedContentResult<object>)httpActionResult;
-            IList<SecurityKeyPairList> pairs = result1.Content as IList<SecurityKeyPairList>;
+            List<object> objectPairs = result1.Content as List<object>;
+            Assert.IsNotNull(objectPairs);
+            List<SecurityKeyPairList> pairs = new List<SecurityKeyPairList>();
+            foreach (object objectPair in objectPairs)
+            {
+                pairs.Add(objectPair as SecurityKeyPairList);
+            }
             Assert.AreEqual(pairs.Count, 1);
             Assert.AreEqual(pairs[0].KeyDescription, "#1");
             Assert.IsNull(pairs[0].ExpirationDate);
@@ -119,12 +147,16 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             {
                 if (securityKeyPermissions[i] == PermissionsConstant.Cancel_Order)
                     permissionsRepresentations.Add(new SecurityKeyPermissionsRepresentation(false, new Permission(securityKeyPermissions[i], "Cancel Order")));
-                if (securityKeyPermissions[i] == PermissionsConstant.Query_Open_Orders)
+                else if (securityKeyPermissions[i] == PermissionsConstant.Query_Open_Orders)
                     permissionsRepresentations.Add(new SecurityKeyPermissionsRepresentation(false, new Permission(securityKeyPermissions[i], "Query Open Orders")));
-                if (securityKeyPermissions[i] == PermissionsConstant.Place_Order)
+                else if (securityKeyPermissions[i] == PermissionsConstant.Place_Order)
                     permissionsRepresentations.Add(new SecurityKeyPermissionsRepresentation(false, new Permission(securityKeyPermissions[i], "Place Order")));
-                if (securityKeyPermissions[i] == PermissionsConstant.Withdraw_Funds)
+                else if (securityKeyPermissions[i] == PermissionsConstant.Withdraw_Funds)
                     permissionsRepresentations.Add(new SecurityKeyPermissionsRepresentation(false, new Permission(securityKeyPermissions[i], "Withdraw Funds")));
+                else
+                {
+                    permissionsRepresentations.Add(new SecurityKeyPermissionsRepresentation(true, new Permission(securityKeyPermissions[i], securityKeyPermissions[i])));
+                }
             }
             UpdateUserGeneratedSecurityKeyPair updateKeyPair =
                 new UpdateUserGeneratedSecurityKeyPair(securityKey.Content.ApiKey, "#2", true, false, false, "",
@@ -165,7 +197,13 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
 
             httpActionResult = securityKeyPairController.GetUserSecurityKeys();
             OkNegotiatedContentResult<object> result1 = (OkNegotiatedContentResult<object>)httpActionResult;
-            IList<SecurityKeyPairList> pairs = result1.Content as IList<SecurityKeyPairList>;
+            List<object> objectPairs = result1.Content as List<object>;
+            Assert.IsNotNull(objectPairs);
+            List<SecurityKeyPairList> pairs = new List<SecurityKeyPairList>();
+            foreach (object objectPair in objectPairs)
+            {
+                pairs.Add(objectPair as SecurityKeyPairList);
+            }
             Assert.AreEqual(pairs.Count, 1);
             Assert.AreEqual(pairs[0].KeyDescription, "#1");
             Assert.IsNull(pairs[0].ExpirationDate);

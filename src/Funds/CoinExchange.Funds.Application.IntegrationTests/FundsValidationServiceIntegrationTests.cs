@@ -393,6 +393,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             IFundsPersistenceRepository fundsPersistenceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];
             IDepositIdGeneratorService depositIdGeneratorService = (IDepositIdGeneratorService)ContextRegistry.GetContext()["DepositIdGeneratorService"];
             IBalanceRepository balanceRepository = (IBalanceRepository)ContextRegistry.GetContext()["BalanceRepository"];
+            IDepositRepository depositRepository = (IDepositRepository)ContextRegistry.GetContext()["DepositRepository"];
            
             AccountId accountId = new AccountId(123);
             Currency currency = new Currency("BTC", true);
@@ -400,22 +401,23 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             Deposit deposit = new Deposit(currency, depositIdGeneratorService.GenerateId(), DateTime.Now,
                                           DepositType.Default, 1.2m, 0, TransactionStatus.Pending, accountId,
                                           new TransactionId("123"), new BitcoinAddress("bitcoin123"));
-            deposit.IncrementConfirmations(5);
+            deposit.IncrementConfirmations(7);
             fundsPersistenceRepository.SaveOrUpdate(deposit);
 
             Balance balance = balanceRepository.GetBalanceByCurrencyAndAccountId(currency, accountId);
             Assert.IsNull(balance);
             bool depositResponse = fundsValidationService.DepositConfirmed(deposit);
-            Assert.IsFalse(depositResponse);
-            deposit.IncrementConfirmations(2);
-
-            depositResponse = fundsValidationService.DepositConfirmed(deposit);
             Assert.IsTrue(depositResponse);
+
             balance = balanceRepository.GetBalanceByCurrencyAndAccountId(currency, accountId);
             Assert.IsNotNull(balance);
             Assert.AreEqual(balance.CurrentBalance, deposit.Amount);
             Assert.AreEqual(balance.AvailableBalance, deposit.Amount);
             Assert.AreEqual(balance.PendingBalance, 0);
+
+            deposit = depositRepository.GetDepositByTransactionId(deposit.TransactionId);
+            Assert.IsNotNull(deposit);
+            Assert.AreEqual(TransactionStatus.Confirmed, deposit.Status);
         }
 
         [Test]
@@ -552,6 +554,12 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             Balance buyAccountQuoteCurrencyBalance = new Balance(new Currency(quoteCurrency), new AccountId(buyAccountId), 50000, 50000);
             fundsPersistenceRepository.SaveOrUpdate(buyAccountQuoteCurrencyBalance);
 
+            // Get the fee corresponding to the currenct volume of the quote currency
+            decimal buySideFee = feeCalculationService.GetFee(new Currency(baseCurrency), new Currency(quoteCurrency),
+                new AccountId(buyAccountId), 400, 100);
+            decimal sellSideFee = feeCalculationService.GetFee(new Currency(baseCurrency), new Currency(quoteCurrency),
+                new AccountId(sellAccountId), 400, 100);
+
             Balance sellAccountBaseCurrencyBalance = new Balance(new Currency(baseCurrency), new AccountId(sellAccountId), 6000, 6000);
             fundsPersistenceRepository.SaveOrUpdate(sellAccountBaseCurrencyBalance);
             Balance sellAccountQuoteCurrencyBalance = new Balance(new Currency(quoteCurrency), new AccountId(sellAccountId), 60000, 60000);
@@ -565,12 +573,6 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             bool tradeExecutedResponse = fundsValidationService.TradeExecuted(baseCurrency, quoteCurrency, 400, 100,
                 DateTime.Now, tradeId, buyAccountId, sellAccountId, buyOrderId, sellOrderId);
             Assert.IsTrue(tradeExecutedResponse);
-
-            // Get the fee corresponding to the currenct volume of the quote currency
-            decimal buySideFee = feeCalculationService.GetFee(new Currency(baseCurrency), new Currency(quoteCurrency), 
-                new AccountId(buyAccountId), 400, 100);
-            decimal sellSideFee = feeCalculationService.GetFee(new Currency(baseCurrency), new Currency(quoteCurrency),
-                new AccountId(sellAccountId), 400, 100);
 
             buyAccountBaseCurrencyBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(
                 new Currency(baseCurrency), new AccountId(buyAccountId));
@@ -620,6 +622,13 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             Balance buyAccountQuoteCurrencyBalance = new Balance(new Currency(quoteCurrency), new AccountId(buyAccountId), 50000, 50000);
             fundsPersistenceRepository.SaveOrUpdate(buyAccountQuoteCurrencyBalance);
 
+            // Get the fee corresponding to the currenct volume of the quote currency
+            decimal buySideFee = feeCalculationService.GetFee(new Currency(baseCurrency), new Currency(quoteCurrency),
+                new AccountId(buyAccountId), 400, 100);
+            decimal sellSideFee = feeCalculationService.GetFee(new Currency(baseCurrency), new Currency(quoteCurrency),
+                new AccountId(sellAccountId), 400, 100);
+            Assert.Greater(buySideFee, 0);
+
             Balance sellAccountBaseCurrencyBalance = new Balance(new Currency(baseCurrency), new AccountId(sellAccountId), 6000, 6000);
             fundsPersistenceRepository.SaveOrUpdate(sellAccountBaseCurrencyBalance);
             Balance sellAccountQuoteCurrencyBalance = new Balance(new Currency(quoteCurrency), new AccountId(sellAccountId), 60000, 60000);
@@ -633,13 +642,6 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             bool tradeExecutedResponse = fundsValidationService.TradeExecuted(baseCurrency, quoteCurrency, 400, 100,
                 DateTime.Now, tradeId, buyAccountId, sellAccountId, buyOrderId, sellOrderId);
             Assert.IsTrue(tradeExecutedResponse);
-
-            // Get the fee corresponding to the currenct volume of the quote currency
-            decimal buySideFee = feeCalculationService.GetFee(new Currency(baseCurrency), new Currency(quoteCurrency), 
-                new AccountId(buyAccountId), 400, 100);
-            decimal sellSideFee = feeCalculationService.GetFee(new Currency(baseCurrency), new Currency(quoteCurrency),
-                new AccountId(sellAccountId), 400, 100);
-            Assert.Greater(buySideFee, 0);
 
             Balance buyXbtBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(new Currency(baseCurrency), new AccountId(buyAccountId));
             Assert.AreEqual(4000 + 400, buyXbtBalance.AvailableBalance);
@@ -765,6 +767,11 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             Balance sellUsdBalance = new Balance(new Currency(quoteCurrency), new AccountId(sellAccountId), 50000, 50000);
             fundsPersistenceRepository.SaveOrUpdate(sellUsdBalance);
 
+            // Get the fee corresponding to the currenct volume of the quote currency
+            decimal usdFee = feeCalculationService.GetFee(new Currency(baseCurrency), new Currency(quoteCurrency),
+                new AccountId(buyAccountId), 100, 100);
+            Assert.Greater(usdFee, 0);
+
             // ----- Trade 1-----
             bool validateFundsForOrder = fundsValidationService.ValidateFundsForOrder(new AccountId(buyAccountId), 
                 new Currency(baseCurrency), new Currency(quoteCurrency), 100, 100, "buy", buyOrderId + "1");
@@ -778,10 +785,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
                 DateTime.Now, tradeId, buyAccountId, sellAccountId, buyOrderId + "1", sellOrderId + "1");
             Assert.IsTrue(tradeExecutedResponse);
 
-            // Get the fee corresponding to the currenct volume of the quote currency
-            decimal usdFee = feeCalculationService.GetFee(new Currency(baseCurrency), new Currency(quoteCurrency),
-                new AccountId(buyAccountId), 100, 100);
-            Assert.Greater(usdFee, 0);
+            
 
             buyXbtBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(new Currency(baseCurrency),
                                                                    new AccountId(buyAccountId));
@@ -997,8 +1001,8 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             IDepositLimitRepository depositLimitRepository = (IDepositLimitRepository)ContextRegistry.GetContext()["DepositLimitRepository"];
             IWithdrawLimitEvaluationService withdrawLimitEvaluationService = (IWithdrawLimitEvaluationService)ContextRegistry.GetContext()["WithdrawLimitEvaluationService"];
             IWithdrawLimitRepository withdrawLimitRepository = (IWithdrawLimitRepository)ContextRegistry.GetContext()["WithdrawLimitRepository"];
-            ITierLevelRetrievalService tierLevelRetrievalService = (ITierLevelRetrievalService)ContextRegistry.GetContext()["StubTierLevelRetrievalService"];
-            IBboCrossContextService bboRetrievalService = (IBboCrossContextService)ContextRegistry.GetContext()["StubBboCrossContextService"];
+            ITierLevelRetrievalService tierLevelRetrievalService = (ITierLevelRetrievalService)ContextRegistry.GetContext()["TierLevelRetrievalService"];
+            IBboCrossContextService bboRetrievalService = (IBboCrossContextService)ContextRegistry.GetContext()["BboCrossContextService"];
             IWithdrawRepository withdrawRepository = (IWithdrawRepository)ContextRegistry.GetContext()["WithdrawRepository"];
             ITierValidationService tierValidationService = (ITierValidationService)ContextRegistry.GetContext()["TierValidationService"];
 
@@ -1041,8 +1045,8 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             IDepositLimitRepository depositLimitRepository = (IDepositLimitRepository)ContextRegistry.GetContext()["DepositLimitRepository"];
             IWithdrawLimitEvaluationService withdrawLimitEvaluationService = (IWithdrawLimitEvaluationService)ContextRegistry.GetContext()["WithdrawLimitEvaluationService"];
             IWithdrawLimitRepository withdrawLimitRepository = (IWithdrawLimitRepository)ContextRegistry.GetContext()["WithdrawLimitRepository"];
-            ITierLevelRetrievalService tierLevelRetrievalService = (ITierLevelRetrievalService)ContextRegistry.GetContext()["StubTierLevelRetrievalService"];
-            IBboCrossContextService bboRetrievalService = (IBboCrossContextService)ContextRegistry.GetContext()["StubBboCrossContextService"];
+            ITierLevelRetrievalService tierLevelRetrievalService = (ITierLevelRetrievalService)ContextRegistry.GetContext()["TierLevelRetrievalService"];
+            IBboCrossContextService bboRetrievalService = (IBboCrossContextService)ContextRegistry.GetContext()["BboCrossContextService"];
             IWithdrawRepository withdrawRepository = (IWithdrawRepository)ContextRegistry.GetContext()["WithdrawRepository"];
             ITierValidationService tierValidationService = (ITierValidationService)ContextRegistry.GetContext()["TierValidationService"];
             

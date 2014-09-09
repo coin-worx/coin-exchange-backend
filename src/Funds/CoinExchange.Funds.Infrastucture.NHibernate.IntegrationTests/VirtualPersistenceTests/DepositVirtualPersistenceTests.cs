@@ -174,24 +174,24 @@ namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests.VirtualPe
                 new AccountId(1), new TransactionId("transact123"), new BitcoinAddress("address123"));
             _persistanceRepository.SaveOrUpdate(deposit2);
 
-            Deposit retrievedDepositList = _depositRepository.GetDepositsByBitcoinAddress(new BitcoinAddress("address123"));
+            List<Deposit> retrievedDepositList = _depositRepository.GetDepositsByBitcoinAddress(new BitcoinAddress("address123"));
             Assert.IsNotNull(retrievedDepositList);
 
-            Assert.AreEqual(deposit.Currency.Name, retrievedDepositList.Currency.Name);
-            Assert.AreEqual(deposit.DepositId, retrievedDepositList.DepositId);
-            Assert.AreEqual(deposit.Type, retrievedDepositList.Type);
-            Assert.AreEqual(deposit.Amount, retrievedDepositList.Amount);
-            Assert.AreEqual(deposit.Fee, retrievedDepositList.Fee);
-            Assert.AreEqual(deposit.Status, retrievedDepositList.Status);
-            Assert.AreEqual(deposit.AccountId.Value, retrievedDepositList.AccountId.Value);
+            Assert.AreEqual(deposit.Currency.Name, retrievedDepositList[1].Currency.Name);
+            Assert.AreEqual(deposit.DepositId, retrievedDepositList[1].DepositId);
+            Assert.AreEqual(deposit.Type, retrievedDepositList[1].Type);
+            Assert.AreEqual(deposit.Amount, retrievedDepositList[1].Amount);
+            Assert.AreEqual(deposit.Fee, retrievedDepositList[1].Fee);
+            Assert.AreEqual(deposit.Status, retrievedDepositList[1].Status);
+            Assert.AreEqual(deposit.AccountId.Value, retrievedDepositList[1].AccountId.Value);
 
-            Assert.AreEqual(deposit2.Currency.Name, retrievedDepositList.Currency.Name);
-            Assert.AreEqual(deposit2.DepositId, retrievedDepositList.DepositId);
-            Assert.AreEqual(deposit2.Type, retrievedDepositList.Type);
-            Assert.AreEqual(deposit2.Amount, retrievedDepositList.Amount);
-            Assert.AreEqual(deposit2.Fee, retrievedDepositList.Fee);
-            Assert.AreEqual(deposit2.Status, retrievedDepositList.Status);
-            Assert.AreEqual(deposit2.AccountId.Value, retrievedDepositList.AccountId.Value);
+            Assert.AreEqual(deposit2.Currency.Name, retrievedDepositList[0].Currency.Name);
+            Assert.AreEqual(deposit2.DepositId, retrievedDepositList[0].DepositId);
+            Assert.AreEqual(deposit2.Type, retrievedDepositList[0].Type);
+            Assert.AreEqual(deposit2.Amount, retrievedDepositList[0].Amount);
+            Assert.AreEqual(deposit2.Fee, retrievedDepositList[0].Fee);
+            Assert.AreEqual(deposit2.Status, retrievedDepositList[0].Status);
+            Assert.AreEqual(deposit2.AccountId.Value, retrievedDepositList[0].AccountId.Value);
         }
     }
 }

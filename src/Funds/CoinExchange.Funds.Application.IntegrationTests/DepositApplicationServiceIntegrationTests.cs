@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using CoinExchange.Common.Domain.Model;
 using CoinExchange.Common.Tests;
@@ -153,6 +154,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             transactionsList.Add(new Tuple<string, string, decimal, string>(bitcoinAddress.Value, transactionId.Value, amount, category));
             depositApplicationService.OnDepositArrival(currency.Name, transactionsList);
 
+            Thread.Sleep(1000);
             Deposit deposit = depositRepository.GetDepositByTransactionId(transactionId);
             Assert.IsNotNull(deposit);
             Assert.AreEqual(deposit.Amount, amount);
