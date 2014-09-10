@@ -212,7 +212,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             Assert.AreEqual(statuses.Content[1].Status, Status.Preverified.ToString());
             Assert.AreEqual(statuses.Content[2].Status, Status.NonVerified.ToString());
 
-            IHttpActionResult verifyTierLevelResult = tierController.VerifyTierLevel(new VerifyTierLevelParams("Tier 1"));
+            IHttpActionResult verifyTierLevelResult = tierController.VerifyTierLevel(new VerifyTierLevelParams("Tier 1", essentials.ApiKey));
             OkNegotiatedContentResult<VerifyTierLevelResponse> verificationResponse = (OkNegotiatedContentResult<VerifyTierLevelResponse>)verifyTierLevelResult;
             Assert.IsTrue(verificationResponse.Content.VerificationSuccessful);
 
@@ -232,7 +232,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             Assert.AreEqual(statuses.Content[1].Status, Status.Verified.ToString());
             Assert.AreEqual(statuses.Content[2].Status, Status.Preverified.ToString());
 
-            verifyTierLevelResult = tierController.VerifyTierLevel(new VerifyTierLevelParams("Tier 2"));
+            verifyTierLevelResult = tierController.VerifyTierLevel(new VerifyTierLevelParams("Tier 2", essentials.ApiKey));
             verificationResponse = (OkNegotiatedContentResult<VerifyTierLevelResponse>)verifyTierLevelResult;
             Assert.IsTrue(verificationResponse.Content.VerificationSuccessful);
 

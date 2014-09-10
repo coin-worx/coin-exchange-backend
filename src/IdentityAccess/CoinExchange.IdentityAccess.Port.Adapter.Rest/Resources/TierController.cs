@@ -425,6 +425,11 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
             }
         }
 
+        /// <summary>
+        /// FOR ADMIN INTERFACE USE ONLY: Admin can verify a Tier from here for a user. May need a special authorization filter
+        /// </summary>
+        /// <param name="verifyTierLevelParams"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("private/user/verifytierlevel")]
         [FilterIP]
@@ -438,7 +443,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
                     log.Debug("Verify Tier Level Call Recevied");
                 }
                 return Ok(_userTierLevelApplicationService.VerifyTierLevel(new VerifyTierLevelCommand(
-                    HeaderParamUtility.GetApikey(Request), verifyTierLevelParams.TierLevel)));
+                    verifyTierLevelParams.ApiKey, verifyTierLevelParams.TierLevel)));
             }
             catch (InvalidOperationException exception)
             {

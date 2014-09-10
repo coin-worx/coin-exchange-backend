@@ -40,15 +40,19 @@ namespace CoinExchange.Client.Console
 
         public void Initialization()
         {
-            //ClearDatabase();
+            ClearDatabase();
             UserLogin();
 
             _fundsClient.key = _identityAccessClient.key;
             _fundsClient.secretkey = _identityAccessClient.secretkey;
 
-            //MakeDeposit();
             //SendOrders();
-            ApplyForTier1();
+            ApplyForTier1();            
+            VerifyTier1();
+
+            ApplyForTier2();
+            VerifyTier2();
+            MakeDeposit();
             //GetLimits();
             //TradeExecuted();
         }
@@ -77,8 +81,8 @@ namespace CoinExchange.Client.Console
         private void MakeDeposit()
         {
             System.Console.WriteLine("Deposit start");
-            _fundsClient.MakeDeposit(_baseCurrency, 1000, true);
-            _fundsClient.MakeDeposit(_quoteCurrency, 100000, false);
+            _fundsClient.MakeDeposit(_baseCurrency, 100, true);
+            _fundsClient.MakeDeposit(_quoteCurrency, 30000, false);
             System.Console.WriteLine("Deposit end");
         }
 
@@ -86,11 +90,35 @@ namespace CoinExchange.Client.Console
 
         private void ApplyForTier1()
         {
-            System.Console.WriteLine("Tier apply start");
+            System.Console.WriteLine("Tier 1 apply start");
             System.Console.WriteLine(_identityAccessClient.ApplyForTierLevel1("Rod Holt", DateTime.Now.AddYears(57).ToShortDateString(), 
                 "+1244322222"));
 
-            System.Console.WriteLine("Tier Apply end");
+            System.Console.WriteLine("Tier 1 Apply end");
+        }
+
+        private void ApplyForTier2()
+        {
+            System.Console.WriteLine("Tier 2 apply start");
+            System.Console.WriteLine(_identityAccessClient.ApplyForTierLevel2("H 757", "H 675", "H 980", "Punjab", "Rwp", "46000"));
+
+            System.Console.WriteLine("Tier 2 Apply end");
+        }
+
+        private void VerifyTier1()
+        {
+            System.Console.WriteLine("Tier 1 Verification Start");
+            System.Console.WriteLine(_identityAccessClient.VerifyTierLevel(_identityAccessClient.key, "Tier 1"));
+
+            System.Console.WriteLine("Tier 1 Verification End");
+        }
+
+        private void VerifyTier2()
+        {
+            System.Console.WriteLine("Tier 2 Verification Start");
+            System.Console.WriteLine(_identityAccessClient.VerifyTierLevel(_identityAccessClient.key, "Tier 2"));
+
+            System.Console.WriteLine("Tier 2 Verification End");
         }
 
         private void GetLimits()

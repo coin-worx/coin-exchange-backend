@@ -80,7 +80,7 @@ namespace CoinExchange.Client.Tests
             jsonObject.Add("FullName", fullName);
             jsonObject.Add("DateOfBirth", dateOfBirth);
             jsonObject.Add("PhoneNumber", phoneNumber);
-            string url = _baseUrl + "/private/user/tier1";
+            string url = _baseUrl + "/private/user/applyfortier1";
             return HttpPostRequest(jsonObject, url);
         }
 
@@ -94,7 +94,16 @@ namespace CoinExchange.Client.Tests
             jsonObject.Add("State", state);
             jsonObject.Add("City", city);
             jsonObject.Add("ZipCode", zipCode);
-            string url = _baseUrl + "/private/user/tier2";
+            string url = _baseUrl + "/private/user/applyfortier2";
+            return HttpPostRequest(jsonObject, url);
+        }
+
+        public string VerifyTierLevel(string apiKey, string tierLevel)
+        {
+            JObject jsonObject = new JObject();
+            jsonObject.Add("ApiKey", apiKey);
+            jsonObject.Add("TierLevel", tierLevel);
+            string url = _baseUrl + "/private/user/verifytierlevel";
             return HttpPostRequest(jsonObject, url);
         }
     }

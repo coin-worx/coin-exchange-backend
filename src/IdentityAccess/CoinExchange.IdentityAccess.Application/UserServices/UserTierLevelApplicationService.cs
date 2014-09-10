@@ -288,9 +288,27 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
                      {
                          if (userTierLevelStatuse.Tier.TierLevel == tierLevelCommand.TierLevel)
                          {
-                             userTierLevelStatuse.Status = Status.Verified;
-                             _persistenceRepository.SaveUpdate(user);
-                             return new VerifyTierLevelResponse(true, "Tier level " + tierLevelCommand.TierLevel + " verified");
+                             if (userTierLevelStatuse.Status == Status.Preverified)
+                             {
+                                 userTierLevelStatuse.Status = Status.Verified;
+                                 _persistenceRepository.SaveUpdate(user);
+                                 return new VerifyTierLevelResponse(true,
+                                                                    "Tier level " + tierLevelCommand.TierLevel +
+                                                                    " verified");
+                             }
+                             else
+                             {
+                                 if (userTierLevelStatuse.Status == Status.NonVerified)
+                                 {
+                                     throw new InvalidOperationException(string.Format("Please apply for {0} first",
+                                         tierLevelCommand.TierLevel));
+                                 }
+                                 else
+                                 {
+                                     throw new InvalidOperationException(string.Format("{0} is already verified.", 
+                                         tierLevelCommand.TierLevel));
+                                 }
+                             }
                          }
                      }
                      throw new InstanceNotFoundException(string.Format("The provided Tier Level not found. Account ID = {0}, " +
