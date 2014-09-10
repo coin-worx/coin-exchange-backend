@@ -113,6 +113,7 @@
   <ItemGroup>
     <None Include="Config\StubCancelOrderValidation.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </None>
   </ItemGroup>
   <ItemGroup>

@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="nunit.framework">
+      <HintPath>..\..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -39,7 +42,37 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FundsValidationServiceTests.cs" />
+    <Compile Include="MockBalanceRepository.cs" />
+    <Compile Include="MockBboRetrievalService.cs" />
+    <Compile Include="MockDepositIdGeneratorService.cs" />
+    <Compile Include="MockDepositLimitEvaluationService.cs" />
+    <Compile Include="MockDepositLimitRepository.cs" />
+    <Compile Include="MockDepositRepository.cs" />
+    <Compile Include="MockFeeCalculationService.cs" />
+    <Compile Include="MockFundsRepository.cs" />
+    <Compile Include="MockLedgerGeneratorService.cs" />
+    <Compile Include="MockLedgerRepository.cs" />
+    <Compile Include="MockTierLevelRetrievalService.cs" />
+    <Compile Include="MockWithdrawFeesRepository.cs" />
+    <Compile Include="MockWithdrawIdGeneratorService.cs" />
+    <Compile Include="MockWithdrawLimitEvaluationService.cs" />
+    <Compile Include="MockWithdrawLimitRepository.cs" />
+    <Compile Include="MockWithdrawRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CoinExchange.Funds.Application\CoinExchange.Funds.Application.csproj">
+      <Project>{f6edd751-080b-4c4e-8216-2e1ed3ed0a66}</Project>
+      <Name>CoinExchange.Funds.Application</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CoinExchange.Funds.Domain.Model\CoinExchange.Funds.Domain.Model.csproj">
+      <Project>{4c4f167d-3339-45f1-9a85-71159ef0d806}</Project>
+      <Name>CoinExchange.Funds.Domain.Model</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

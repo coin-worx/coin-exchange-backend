@@ -50,7 +50,7 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
         /// </summary>
         /// <param name="changePasswordCommand"> </param>
         /// <returns></returns>
-        public bool ChangePassword(ChangePasswordCommand changePasswordCommand)
+        public ChangePasswordResponse ChangePassword(ChangePasswordCommand changePasswordCommand)
         {
             // Get the SecurityKeyspair instance related to this API Key
             SecurityKeysPair securityKeysPair = _securityKeysRepository.GetByApiKey(changePasswordCommand.ApiKey.Value);
@@ -65,22 +65,22 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
                     //// Make sure the session has not expired
                     //if (securityKeysPair.CreationDateTime.Add(user.AutoLogout) > DateTime.Now)
                     //{
-                        // Check if the old password is the same as new one
-                        if (_passwordEncryptionService.VerifyPassword(changePasswordCommand.OldPassword,
-                                                                      user.Password))
-                        {
-                            // Create new password and save for the user in the database
-                            string newEncryptedPassword =
-                                _passwordEncryptionService.EncryptPassword(changePasswordCommand.NewPassword);
-                            user.Password = newEncryptedPassword;
-                            _persistenceRepository.SaveUpdate(user);
-                            _emailService.SendPasswordChangedEmail(user.Email, user.Username);
-                            return true;
-                        }
-                        else
-                        {
-                            throw new InvalidCredentialException(string.Format("Current password incorrect."));
-                        }
+                    // Check if the old password is the same as new one
+                    if (_passwordEncryptionService.VerifyPassword(changePasswordCommand.OldPassword,
+                                                                  user.Password))
+                    {
+                        // Create new password and save for the user in the database
+                        string newEncryptedPassword =
+                            _passwordEncryptionService.EncryptPassword(changePasswordCommand.NewPassword);
+                        user.Password = newEncryptedPassword;
+                        _persistenceRepository.SaveUpdate(user);
+                        _emailService.SendPasswordChangedEmail(user.Email, user.Username, user.AdminEmailsSubscribed);
+                        return new ChangePasswordResponse(true, "Password Change Successful");
+                    }
+                    else
+                    {
+                        throw new InvalidCredentialException(string.Format("Current password incorrect."));
+                    }
                     //}
                     //else
                     //{
@@ -130,12 +130,12 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
 
                             // Update the user instance in repository
                             _persistenceRepository.SaveUpdate(user);
-                            _emailService.SendWelcomeEmail(user.Email, user.Username);
+                            _emailService.SendWelcomeEmail(user.Email, user.Username, user.AdminEmailsSubscribed);
                             return true;
                         }
                         else
                         {
-                            _emailService.SendReactivaitonNotificationEmail(user.Email, user.Username);
+                            _emailService.SendReactivaitonNotificationEmail(user.Email, user.Username, user.AdminEmailsSubscribed);
                             throw new InvalidOperationException("The activation key has already been used ");
                         }
                     }
@@ -177,7 +177,7 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
                     {
                         throw new InvalidOperationException("This account has already been activated. Operation aborted.");
                     }
-                    _emailService.SendCancelActivationEmail(user.Email, user.Username);
+                    _emailService.SendCancelActivationEmail(user.Email, user.Username, user.AdminEmailsSubscribed);
                     _userRepository.DeleteUser(user);
                     return true;
                 }
@@ -329,7 +329,7 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
         /// </summary>
         /// <param name="changeSettingsCommand"></param>
         /// <returns></returns>
-        public bool ChangeSettings(ChangeSettingsCommand changeSettingsCommand)
+        public ChangeSettingsResponse ChangeSettings(ChangeSettingsCommand changeSettingsCommand)
         {
             if (changeSettingsCommand != null)
             {
@@ -346,7 +346,7 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
                                             changeSettingsCommand.AutoLogoutMinutes);
 
                         _persistenceRepository.SaveUpdate(user);
-                        return true;
+                        return new ChangeSettingsResponse(true, "Change Successful");
                     }
                     else
                     {
@@ -399,6 +399,35 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
         public DateTime LastLogin(string apiKey)
         {
             return _securityKeysRepository.GetByApiKey(apiKey).CreationDateTime;
+        }
+
+        /// <summary>
+        /// Submit notification settings for a user
+        /// </summary>
+        /// <param name="emailSettingsCommandy"> </param>
+        /// <returns></returns>
+        public SubmitEmailSettingsResponse SubmitEmailSettings(EmailSettingsCommand emailSettingsCommandy)
+        {
+            SecurityKeysPair securityKeysPair = _securityKeysRepository.GetByApiKey(emailSettingsCommandy.ApiKey);
+            if (securityKeysPair != null)
+            {
+                User user = _userRepository.GetUserById(securityKeysPair.UserId);
+                if (user != null)
+                {
+                    user.SetAdminEmailSubscription(emailSettingsCommandy.AdminEmailsSubscribed);
+                    user.SetNewsletterEmailSubscription(emailSettingsCommandy.NewsLetterEmailsSubscribed);
+                    _persistenceRepository.SaveUpdate(user);
+                    return new SubmitEmailSettingsResponse(true);
+                }
+                else
+                {
+                    throw new InstanceNotFoundException("No User instance found for the UserId associated with SecurityKeysPair");
+                }
+            }
+            else
+            {
+                throw new InstanceNotFoundException("No SecurityKeysPair instance found for the given API key");
+            }
         }
     }
 }

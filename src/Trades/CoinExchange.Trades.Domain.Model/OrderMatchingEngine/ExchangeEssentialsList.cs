@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,6 +20,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private List<ExchangeEssentials> _orderBooksList = new List<ExchangeEssentials>();
+        public DateTime LastSnapshotDateTime = DateTime.Now;
 
         /// <summary>
         /// Default Constructor

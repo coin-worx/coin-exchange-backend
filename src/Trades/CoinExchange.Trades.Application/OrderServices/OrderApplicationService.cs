@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using CoinExchange.Common.Domain.Model;
+using CoinExchange.Common.Utility;
 using CoinExchange.Trades.Application.OrderServices.Commands;
 using CoinExchange.Trades.Application.OrderServices.Representation;
 using CoinExchange.Trades.Domain.Model.OrderAggregate;
@@ -16,10 +17,13 @@ namespace CoinExchange.Trades.Application.OrderServices
     public class OrderApplicationService : IOrderApplicationService
     {
         private ICancelOrderCommandValidation _commandValidationService;
-        
-        public OrderApplicationService(ICancelOrderCommandValidation cancelOrderCommandValidation)
+        private IBalanceValidationService _balanceValidationService;
+
+        public OrderApplicationService(ICancelOrderCommandValidation cancelOrderCommandValidation, 
+            dynamic balanceValidationService)
         {
             _commandValidationService = cancelOrderCommandValidation;
+            _balanceValidationService = balanceValidationService;
         }
 
         public CancelOrderResponse CancelOrder(CancelOrderCommand cancelOrderCommand)
@@ -46,11 +50,20 @@ namespace CoinExchange.Trades.Application.OrderServices
         public NewOrderRepresentation CreateOrder(CreateOrderCommand orderCommand)
         {
             IOrderIdGenerator orderIdGenerator = ContextRegistry.GetContext()["OrderIdGenerator"] as IOrderIdGenerator;
+
+            Tuple<string, string> splittedCurrencyPairs = CurrencySplitterService.SplitCurrencyPair(orderCommand.Pair);
+            
             Order order = OrderFactory.CreateOrder(orderCommand.TraderId, orderCommand.Pair,
                 orderCommand.Type, orderCommand.Side, orderCommand.Volume, orderCommand.Price, orderIdGenerator);
-            
-            InputDisruptorPublisher.Publish(InputPayload.CreatePayload(order));
-            return new NewOrderRepresentation(order);
+
+            if (_balanceValidationService.FundsConfirmation(order.TraderId.Id, splittedCurrencyPairs.Item1,
+                splittedCurrencyPairs.Item2, order.Volume.Value, order.Price.Value, order.OrderSide.ToString(),
+                order.OrderId.Id))
+            {
+                InputDisruptorPublisher.Publish(InputPayload.CreatePayload(order));
+                return new NewOrderRepresentation(order);
+            }
+            throw new InvalidOperationException("Not Enough Balance for Trader with ID: " + orderCommand.TraderId);
         }
     }
 }

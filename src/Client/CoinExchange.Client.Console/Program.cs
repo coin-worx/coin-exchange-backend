@@ -13,14 +13,18 @@ namespace CoinExchange.Client.Console
     {
         static void Main(string[] args)
         {
-            string baseUrl = "http://rockblanc.cloudapp.net/dev/v1";
-            //baseUrl = "http://localhost:51780/v1";
+            string baseUrl = "http://rockblanc.cloudapp.net/test/v1";
+            baseUrl = "http://localhost:51780/v1";
             //ApiClient client = new ApiClient(baseUrl);
             //System.Console.WriteLine(client.QueryTrades("6e8b5195-0e7f-402f-87e7-80eb92a96c85"));
             //Scenario1(client);
             //ScenarioResults(client);
             //System.Console.WriteLine(client.GetTradeHistory("",""));
-            Login(baseUrl);
+            //Login(baseUrl);
+            //Scenario1(client);
+
+            AllBoundedContextsIntegrationTests allBoundedContexts = new AllBoundedContextsIntegrationTests();
+            allBoundedContexts.Initialization();
             System.Console.ReadKey();
         }
 
@@ -116,7 +120,7 @@ namespace CoinExchange.Client.Console
             Thread.Sleep(2000);
             System.Console.WriteLine(client.CreateOrder(currencyPair, "limit", "sell", 5, 252));
             Thread.Sleep(2000);
-            System.Console.WriteLine(client.CreateOrder(currencyPair, "limit", "buy", 3,250));
+            System.Console.WriteLine(client.CreateOrder(currencyPair, "limit", "buy", 3, 250));
             Thread.Sleep(2000);
             System.Console.WriteLine(client.CreateOrder(currencyPair, "limit", "sell", 2, 253));
             Thread.Sleep(2000);
@@ -131,10 +135,10 @@ namespace CoinExchange.Client.Console
         {
             IdentityAccessClient client=new IdentityAccessClient(baseUrl);
             AccessControl control=new AccessControl(client,"123","user1");
-            control.CreateAndActivateUser("jonsnow", "p@ssword", "jonsnow@user.com");
-            //control.Login("user1", "123");
+            //control.CreateAndActivateUser("user1", "123", "jonsnow@user.com");
+            control.Login("user1", "123");
             //Scenario1(client);
-            //OrderBookGenerator(client);
+            OrderBookGenerator(client);
             //ScenarioResults(client);
             //System.Console.WriteLine(control.GetSecurityPairs());
             //PermissionRepresentation[] rep = control.ListPermissions();

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CoinExchange.Trades.Domain.Model.OrderAggregate;
+using CoinExchange.Trades.Domain.Model.OrderMatchingEngine;
 using CoinExchange.Trades.Domain.Model.TradeAggregate;
 
 namespace CoinExchange.Trades.Domain.Model.Services
@@ -20,5 +21,8 @@ namespace CoinExchange.Trades.Domain.Model.Services
         List<Order> GetOrdersByCurrencyPair(string currencyPair);
         IList<Trade> GetTradeEventsFromOrderId(string id);
         IList<object> GetAllEvents();
+        void ShutDown();
+        void SaveSnapshot(ExchangeEssentialsList exchangeEssentials);
+        ExchangeEssentialsList LoadLastSnapshot();
     }
 }

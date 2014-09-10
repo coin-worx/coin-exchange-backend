@@ -1,0 +1,769 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DirectedGraph GraphDirection="LeftToRight" xmlns="http://schemas.microsoft.com/vs/2009/dgml">
+  <Nodes>
+    <Node Id="Client\CoinExchange.Client.Console" Label="CoinExchange.Client.Console" Category="Project" />
+    <Node Id="Disruptor 1.1.0" Label="Disruptor 1.1.0" Category="Package" />
+    <Node Id="NEventStore 4.0.0.15" Label="NEventStore 4.0.0.15" Category="Package" />
+    <Node Id="Newtonsoft.Json 4.5.11" Label="Newtonsoft.Json 4.5.11" Category="Package" />
+    <Node Id="NUnit 2.6.3" Label="NUnit 2.6.3" Category="Package" />
+    <Node Id="Client\CoinExchange.Client" Label="CoinExchange.Client" Category="Project" />
+    <Node Id="Newtonsoft.Json 4.5.11" Label="Newtonsoft.Json 4.5.11" Category="Package" />
+    <Node Id="IdentityAccess\Ports\CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests" Label="CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests" Category="Project" />
+    <Node Id="Antlr 3.1.3.42154" Label="Antlr 3.1.3.42154" Category="Package" />
+    <Node Id="Castle.Core 2.5.2" Label="Castle.Core 2.5.2" Category="Package" />
+    <Node Id="Common.Logging 1.2.0" Label="Common.Logging 1.2.0" Category="Package" />
+    <Node Id="Iesi.Collections 1.0.1" Label="Iesi.Collections 1.0.1" Category="Package" />
+    <Node Id="Microsoft.AspNet.WebApi.Client 5.1.2" Label="Microsoft.AspNet.WebApi.Client 5.1.2" Category="Package" />
+    <Node Id="Microsoft.AspNet.WebApi.Core 5.1.2" Label="Microsoft.AspNet.WebApi.Core 5.1.2" Category="Package" />
+    <Node Id="Microsoft.AspNet.WebApi.WebHost 5.1.1" Label="Microsoft.AspNet.WebApi.WebHost 5.1.1" Category="Package" />
+    <Node Id="Newtonsoft.Json 4.5.11" Label="Newtonsoft.Json 4.5.11" Category="Package" />
+    <Node Id="NHibernate 3.0.0.4000" Label="NHibernate 3.0.0.4000" Category="Package" />
+    <Node Id="NUnit 2.6.3" Label="NUnit 2.6.3" Category="Package" />
+    <Node Id="Spring.Aop 1.3.2" Label="Spring.Aop 1.3.2" Category="Package" />
+    <Node Id="Spring.Core 1.3.2" Label="Spring.Core 1.3.2" Category="Package" />
+    <Node Id="Spring.Data 1.3.2" Label="Spring.Data 1.3.2" Category="Package" />
+    <Node Id="Spring.Data.NHibernate30 1.3.2" Label="Spring.Data.NHibernate30 1.3.2" Category="Package" />
+    <Node Id="IdentityAccess\Ports\CoinExchange.IdentityAccess.Port.Adapter.Rest.Tests" Label="CoinExchange.IdentityAccess.Port.Adapter.Rest.Tests" Category="Project" />
+    <Node Id="NUnit 2.6.3" Label="NUnit 2.6.3" Category="Package" />
+    <Node Id="IdentityAccess\Ports\CoinExchange.IdentityAccess.Port.Adapter.Rest" Label="CoinExchange.IdentityAccess.Port.Adapter.Rest" Category="Project" />
+    <Node Id="log4net 1.2.10" Label="log4net 1.2.10" Category="Package" />
+    <Node Id="Microsoft.AspNet.WebApi 4.0.20710.0" Label="Microsoft.AspNet.WebApi 4.0.20710.0" Category="Package" />
+    <Node Id="Microsoft.AspNet.WebApi.Client 5.1.2" Label="Microsoft.AspNet.WebApi.Client 5.1.2" Category="Package" />
+    <Node Id="Microsoft.AspNet.WebApi.Core 5.1.2" Label="Microsoft.AspNet.WebApi.Core 5.1.2" Category="Package" />
+    <Node Id="Microsoft.AspNet.WebApi.WebHost 5.1.1" Label="Microsoft.AspNet.WebApi.WebHost 5.1.1" Category="Package" />
+    <Node Id="Microsoft.Net.Http 2.0.20710.0" Label="Microsoft.Net.Http 2.0.20710.0" Category="Package" />
+    <Node Id="Newtonsoft.Json 4.5.11" Label="Newtonsoft.Json 4.5.11" Category="Package" />
+    <Node Id="IdentityAccess\Domain\CoinExchange.IdentityAccess.Domain.Model.IntegrationTests" Label="CoinExchange.IdentityAccess.Domain.Model.IntegrationTests" Category="Project" />
+    <Node Id="Antlr 3.1.3.42154" Label="Antlr 3.1.3.42154" Category="Package" />
+    <Node Id="Castle.Core 2.5.2" Label="Castle.Core 2.5.2" Category="Package" />
+    <Node Id="Common.Logging 1.2.0" Label="Common.Logging 1.2.0" Category="Package" />
+    <Node Id="Iesi.Collections 1.0.1" Label="Iesi.Collections 1.0.1" Category="Package" />
+    <Node Id="NHibernate 3.0.0.4000" Label="NHibernate 3.0.0.4000" Category="Package" />
+    <Node Id="NUnit 2.6.3" Label="NUnit 2.6.3" Category="Package" />
+    <Node Id="Spring.Aop 1.3.2" Label="Spring.Aop 1.3.2" Category="Package" />
+    <Node Id="Spring.Core 1.3.2" Label="Spring.Core 1.3.2" Category="Package" />
+    <Node Id="Spring.Data 1.3.2" Label="Spring.Data 1.3.2" Category="Package" />
+    <Node Id="Spring.Data.NHibernate30 1.3.2" Label="Spring.Data.NHibernate30 1.3.2" Category="Package" />
+    <Node Id="IdentityAccess\Domain\CoinExchange.IdentityAccess.Domain.Model.Tests" Label="CoinExchange.IdentityAccess.Domain.Model.Tests" Category="Project" />
+    <Node Id="NUnit 2.6.3" Label="NUnit 2.6.3" Category="Package" />
+    <Node Id="IdentityAccess\Domain\CoinExchange.IdentityAccess.Domain.Model" Label="CoinExchange.IdentityAccess.Domain.Model" Category="Project" />
+    <Node Id="log4net 1.2.10" Label="log4net 1.2.10" Category="Package" />
+    <Node Id="IdentityAccess\Infrastructure\CoinExchange.IdentityAccess.Infrastructure.Persistence" Label="CoinExchange.IdentityAccess.Infrastructure.Persistence" Category="Project" />
+    <Node Id="Antlr 3.1.3.42154" Label="Antlr 3.1.3.42154" Category="Package" />
+    <Node Id="Castle.Core 2.5.2" Label="Castle.Core 2.5.2" Category="Package" />
+    <Node Id="Common.Logging 1.2.0" Label="Common.Logging 1.2.0" Category="Package" />
+    <Node Id="Iesi.Collections 1.0.1" Label="Iesi.Collections 1.0.1" Category="Package" />
+    <Node Id="NHibernate 3.0.0.4000" Label="NHibernate 3.0.0.4000" Category="Package" />
+    <Node Id="Spring.Aop 1.3.2" Label="Spring.Aop 1.3.2" Category="Package" />
+    <Node Id="Spring.Core 1.3.2" Label="Spring.Core 1.3.2" Category="Package" />
+    <Node Id="Spring.Data 1.3.2" Label="Spring.Data 1.3.2" Category="Package" />
+    <Node Id="Spring.Data.NHibernate30 1.3.2" Label="Spring.Data.NHibernate30 1.3.2" Category="Package" />
+    <Node Id="IdentityAccess\Infrastructure\CoinExchange.IdentityAccess.Infrastructure.Services" Label="CoinExchange.IdentityAccess.Infrastructure.Services" Category="Project" />
+    <Node Id="BCrypt.Net 0.1.0" Label="BCrypt.Net 0.1.0" Category="Package" />
+    <Node Id="log4net 1.2.10" Label="log4net 1.2.10" Category="Package" />
+    <Node Id="IdentityAccess\Infrastructure\CoinExchange.IdentityAccess.Infrastructure.IntegrationTests" Label="CoinExchange.IdentityAccess.Infrastructure.IntegrationTests" Category="Project" />
+    <Node Id="Antlr 3.1.3.42154" Label="Antlr 3.1.3.42154" Category="Package" />
+    <Node Id="Castle.Core 2.5.2" Label="Castle.Core 2.5.2" Category="Package" />
+    <Node Id="Common.Logging 1.2.0" Label="Common.Logging 1.2.0" Category="Package" />
+    <Node Id="Iesi.Collections 1.0.1" Label="Iesi.Collections 1.0.1" Category="Package" />
+    <Node Id="NHibernate 3.0.0.4000" Label="NHibernate 3.0.0.4000" Category="Package" />
+    <Node Id="Spring.Aop 1.3.2" Label="Spring.Aop 1.3.2" Category="Package" />
+    <Node Id="Spring.Core 1.3.2" Label="Spring.Core 1.3.2" Category="Package" />
+    <Node Id="Spring.Data 1.3.2" Label="Spring.Data 1.3.2" Category="Package" />
+    <Node Id="Spring.Data.NHibernate30 1.3.2" Label="Spring.Data.NHibernate30 1.3.2" Category="Package" />
+    <Node Id="Spring.Testing.NUnit 1.3.2" Label="Spring.Testing.NUnit 1.3.2" Category="Package" />
+    <Node Id="IdentityAccess\Infrastructure\CoinExchange.IdentityAccess.Infrastructure.Tests" Label="CoinExchange.IdentityAccess.Infrastructure.Tests" Category="Project" />
+    <Node Id="NUnit 2.6.3" Label="NUnit 2.6.3" Category="Package" />
+    <Node Id="IdentityAccess\Application\CoinExchange.IdentityAccess.Application.IntegrationTests" Label="CoinExchange.IdentityAccess.Application.IntegrationTests" Category="Project" />
+    <Node Id="Antlr 3.1.3.42154" Label="Antlr 3.1.3.42154" Category="Package" />
+    <Node Id="Castle.Core 2.5.2" Label="Castle.Core 2.5.2" Category="Package" />
+    <Node Id="Common.Logging 1.2.0" Label="Common.Logging 1.2.0" Category="Package" />
+    <Node Id="Iesi.Collections 1.0.1" Label="Iesi.Collections 1.0.1" Category="Package" />
+    <Node Id="NHibernate 3.0.0.4000" Label="NHibernate 3.0.0.4000" Category="Package" />
+    <Node Id="NUnit 2.6.3" Label="NUnit 2.6.3" Category="Package" />
+    <Node Id="Spring.Aop 1.3.2" Label="Spring.Aop 1.3.2" Category="Package" />
+    <Node Id="Spring.Core 1.3.2" Label="Spring.Core 1.3.2" Category="Package" />
+    <Node Id="Spring.Data 1.3.2" Label="Spring.Data 1.3.2" Category="Package" />
+    <Node Id="Spring.Data.NHibernate30 1.3.2" Label="Spring.Data.NHibernate30 1.3.2" Category="Package" />
+    <Node Id="IdentityAccess\Application\CoinExchange.IdentityAccess.Application.Tests" Label="CoinExchange.IdentityAccess.Application.Tests" Category="Project" />
+    <Node Id="Antlr 3.1.3.42154" Label="Antlr 3.1.3.42154" Category="Package" />
+    <Node Id="Castle.Core 2.5.2" Label="Castle.Core 2.5.2" Category="Package" />
+    <Node Id="Common.Logging 1.2.0" Label="Common.Logging 1.2.0" Category="Package" />
+    <Node Id="Iesi.Collections 1.0.1" Label="Iesi.Collections 1.0.1" Category="Package" />
+    <Node Id="NHibernate 3.0.0.4000" Label="NHibernate 3.0.0.4000" Category="Package" />
+    <Node Id="NUnit 2.6.3" Label="NUnit 2.6.3" Category="Package" />
+    <Node Id="Spring.Aop 1.3.2" Label="Spring.Aop 1.3.2" Category="Package" />
+    <Node Id="Spring.Core 1.3.2" Label="Spring.Core 1.3.2" Category="Package" />
+    <Node Id="Spring.Data 1.3.2" Label="Spring.Data 1.3.2" Category="Package" />
+    <Node Id="Spring.Data.NHibernate30 1.3.2" Label="Spring.Data.NHibernate30 1.3.2" Category="Package" />
+    <Node Id="IdentityAccess\Application\CoinExchange.IdentityAccess.Application" Label="CoinExchange.IdentityAccess.Application" Category="Project" />
+    <Node Id="log4net 1.2.10" Label="log4net 1.2.10" Category="Package" />
+    <Node Id="Common\CoinExchange.Common.Tests" Label="CoinExchange.Common.Tests" Category="Project" />
+    <Node Id="log4net 1.2.10" Label="log4net 1.2.10" Category="Package" />
+    <Node Id="Common\CoinExchange.Rest.WebHost.Tests" Label="CoinExchange.Rest.WebHost.Tests" Category="Project" />
+    <Node Id="Common.Logging 1.2.0" Label="Common.Logging 1.2.0" Category="Package" />
+    <Node Id="NUnit 2.6.3" Label="NUnit 2.6.3" Category="Package" />
+    <Node Id="Spring.Core 1.3.2" Label="Spring.Core 1.3.2" Category="Package" />
+    <Node Id="Common\CoinExchange.Rest.WebHost" Label="CoinExchange.Rest.WebHost" Category="Project" />
+    <Node Id="Antlr 3.1.3.42154" Label="Antlr 3.1.3.42154" Category="Package" />
+    <Node Id="Castle.Core 2.5.2" Label="Castle.Core 2.5.2" Category="Package" />
+    <Node Id="Common.Logging 2.1.2" Label="Common.Logging 2.1.2" Category="Package" />
+    <Node Id="Common.Logging.Log4Net 2.0.1" Label="Common.Logging.Log4Net 2.0.1" Category="Package" />
+    <Node Id="Disruptor 1.1.0" Label="Disruptor 1.1.0" Category="Package" />
+    <Node Id="Iesi.Collections 1.0.1" Label="Iesi.Collections 1.0.1" Category="Package" />
+    <Node Id="log4net 1.2.10" Label="log4net 1.2.10" Category="Package" />
+    <Node Id="Microsoft.AspNet.WebApi 4.0.20710.0" Label="Microsoft.AspNet.WebApi 4.0.20710.0" Category="Package" />
+    <Node Id="Microsoft.AspNet.WebApi.Client 5.1.1" Label="Microsoft.AspNet.WebApi.Client 5.1.1" Category="Package" />
+    <Node Id="Microsoft.AspNet.WebApi.Core 5.1.1" Label="Microsoft.AspNet.WebApi.Core 5.1.1" Category="Package" />
+    <Node Id="Microsoft.AspNet.WebApi.WebHost 5.1.1" Label="Microsoft.AspNet.WebApi.WebHost 5.1.1" Category="Package" />
+    <Node Id="Microsoft.Net.Http 2.0.20710.0" Label="Microsoft.Net.Http 2.0.20710.0" Category="Package" />
+    <Node Id="NEventStore 4.0.0.15" Label="NEventStore 4.0.0.15" Category="Package" />
+    <Node Id="Newtonsoft.Json 4.5.11" Label="Newtonsoft.Json 4.5.11" Category="Package" />
+    <Node Id="NHibernate 3.0.0.4000" Label="NHibernate 3.0.0.4000" Category="Package" />
+    <Node Id="Spring.Aop 1.3.2" Label="Spring.Aop 1.3.2" Category="Package" />
+    <Node Id="Spring.Core 1.3.2" Label="Spring.Core 1.3.2" Category="Package" />
+    <Node Id="Spring.Data 1.3.2" Label="Spring.Data 1.3.2" Category="Package" />
+    <Node Id="Spring.Data.NHibernate30 1.3.2" Label="Spring.Data.NHibernate30 1.3.2" Category="Package" />
+    <Node Id="Funds\Ports\CoinExchange.Funds.Port.Adapter.Rest.Tests" Label="CoinExchange.Funds.Port.Adapter.Rest.Tests" Category="Project" />
+    <Node Id="Common.Logging 1.2.0" Label="Common.Logging 1.2.0" Category="Package" />
+    <Node Id="Microsoft.AspNet.WebApi.Client 5.1.1" Label="Microsoft.AspNet.WebApi.Client 5.1.1" Category="Package" />
+    <Node Id="Microsoft.AspNet.WebApi.Core 5.1.1" Label="Microsoft.AspNet.WebApi.Core 5.1.1" Category="Package" />
+    <Node Id="Microsoft.AspNet.WebApi.WebHost 5.1.1" Label="Microsoft.AspNet.WebApi.WebHost 5.1.1" Category="Package" />
+    <Node Id="Newtonsoft.Json 4.5.11" Label="Newtonsoft.Json 4.5.11" Category="Package" />
+    <Node Id="NUnit 2.6.3" Label="NUnit 2.6.3" Category="Package" />
+    <Node Id="Spring.Core 1.3.2" Label="Spring.Core 1.3.2" Category="Package" />
+    <Node Id="Funds\Ports\CoinExchange.Funds.Port.Adapter.Rest.IntegrationTests" Label="CoinExchange.Funds.Port.Adapter.Rest.IntegrationTests" Category="Project" />
+    <Node Id="Common.Logging 1.2.0" Label="Common.Logging 1.2.0" Category="Package" />
+    <Node Id="Microsoft.AspNet.WebApi.Client 5.1.1" Label="Microsoft.AspNet.WebApi.Client 5.1.1" Category="Package" />
+    <Node Id="Microsoft.AspNet.WebApi.Core 5.1.1" Label="Microsoft.AspNet.WebApi.Core 5.1.1" Category="Package" />
+    <Node Id="Microsoft.AspNet.WebApi.WebHost 5.1.1" Label="Microsoft.AspNet.WebApi.WebHost 5.1.1" Category="Package" />
+    <Node Id="Newtonsoft.Json 4.5.11" Label="Newtonsoft.Json 4.5.11" Category="Package" />
+    <Node Id="NUnit 2.6.3" Label="NUnit 2.6.3" Category="Package" />
+    <Node Id="Spring.Core 1.3.2" Label="Spring.Core 1.3.2" Category="Package" />
+    <Node Id="Funds\Infrastructure\CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests" Label="CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests" Category="Project" />
+    <Node Id="Antlr 3.1.3.42154" Label="Antlr 3.1.3.42154" Category="Package" />
+    <Node Id="Castle.Core 2.5.2" Label="Castle.Core 2.5.2" Category="Package" />
+    <Node Id="Common.Logging 1.2.0" Label="Common.Logging 1.2.0" Category="Package" />
+    <Node Id="Iesi.Collections 1.0.1" Label="Iesi.Collections 1.0.1" Category="Package" />
+    <Node Id="log4net 1.2.10" Label="log4net 1.2.10" Category="Package" />
+    <Node Id="NHibernate 3.0.0.4000" Label="NHibernate 3.0.0.4000" Category="Package" />
+    <Node Id="NUnit 2.5.10.11092" Label="NUnit 2.5.10.11092" Category="Package" />
+    <Node Id="Spring.Aop 1.3.2" Label="Spring.Aop 1.3.2" Category="Package" />
+    <Node Id="Spring.Core 1.3.2" Label="Spring.Core 1.3.2" Category="Package" />
+    <Node Id="Spring.Data 1.3.2" Label="Spring.Data 1.3.2" Category="Package" />
+    <Node Id="Spring.Data.NHibernate30 1.3.2" Label="Spring.Data.NHibernate30 1.3.2" Category="Package" />
+    <Node Id="Spring.Testing.NUnit 1.3.2" Label="Spring.Testing.NUnit 1.3.2" Category="Package" />
+    <Node Id="Funds\Infrastructure\CoinExchange.Funds.Infrastructure.Persistence.NHibernate" Label="CoinExchange.Funds.Infrastructure.Persistence.NHibernate" Category="Project" />
+    <Node Id="Antlr 3.1.3.42154" Label="Antlr 3.1.3.42154" Category="Package" />
+    <Node Id="Castle.Core 2.5.2" Label="Castle.Core 2.5.2" Category="Package" />
+    <Node Id="Common.Logging 1.2.0" Label="Common.Logging 1.2.0" Category="Package" />
+    <Node Id="Iesi.Collections 1.0.1" Label="Iesi.Collections 1.0.1" Category="Package" />
+    <Node Id="log4net 1.2.10" Label="log4net 1.2.10" Category="Package" />
+    <Node Id="NHibernate 3.0.0.4000" Label="NHibernate 3.0.0.4000" Category="Package" />
+    <Node Id="Spring.Aop 1.3.2" Label="Spring.Aop 1.3.2" Category="Package" />
+    <Node Id="Spring.Core 1.3.2" Label="Spring.Core 1.3.2" Category="Package" />
+    <Node Id="Spring.Data 1.3.2" Label="Spring.Data 1.3.2" Category="Package" />
+    <Node Id="Spring.Data.NHibernate30 1.3.2" Label="Spring.Data.NHibernate30 1.3.2" Category="Package" />
+    <Node Id="Funds\Application\CoinExchange.Funds.Application.IntegrationTests" Label="CoinExchange.Funds.Application.IntegrationTests" Category="Project" />
+    <Node Id="Antlr 3.1.3.42154" Label="Antlr 3.1.3.42154" Category="Package" />
+    <Node Id="Castle.Core 2.5.2" Label="Castle.Core 2.5.2" Category="Package" />
+    <Node Id="Common.Logging 1.2.0" Label="Common.Logging 1.2.0" Category="Package" />
+    <Node Id="Iesi.Collections 1.0.1" Label="Iesi.Collections 1.0.1" Category="Package" />
+    <Node Id="NHibernate 3.0.0.4000" Label="NHibernate 3.0.0.4000" Category="Package" />
+    <Node Id="NUnit 2.6.3" Label="NUnit 2.6.3" Category="Package" />
+    <Node Id="Spring.Aop 1.3.2" Label="Spring.Aop 1.3.2" Category="Package" />
+    <Node Id="Spring.Core 1.3.2" Label="Spring.Core 1.3.2" Category="Package" />
+    <Node Id="Spring.Data 1.3.2" Label="Spring.Data 1.3.2" Category="Package" />
+    <Node Id="Spring.Data.NHibernate30 1.3.2" Label="Spring.Data.NHibernate30 1.3.2" Category="Package" />
+    <Node Id="Funds\Application\CoinExchange.Funds.Application.Tests" Label="CoinExchange.Funds.Application.Tests" Category="Project" />
+    <Node Id="NUnit 2.6.3" Label="NUnit 2.6.3" Category="Package" />
+    <Node Id="Funds\Application\CoinExchange.Funds.Application" Label="CoinExchange.Funds.Application" Category="Project" />
+    <Node Id="log4net 1.2.10" Label="log4net 1.2.10" Category="Package" />
+    <Node Id="Funds\Domain\CoinExchange.Funds.Domain.Model.Tests" Label="CoinExchange.Funds.Domain.Model.Tests" Category="Project" />
+    <Node Id="NUnit 2.6.3" Label="NUnit 2.6.3" Category="Package" />
+    <Node Id="Funds\Domain\CoinExchange.Funds.Domain.Model.IntegrationTests" Label="CoinExchange.Funds.Domain.Model.IntegrationTests" Category="Project" />
+    <Node Id="Antlr 3.1.3.42154" Label="Antlr 3.1.3.42154" Category="Package" />
+    <Node Id="Castle.Core 2.5.2" Label="Castle.Core 2.5.2" Category="Package" />
+    <Node Id="Common.Logging 1.2.0" Label="Common.Logging 1.2.0" Category="Package" />
+    <Node Id="Iesi.Collections 1.0.1" Label="Iesi.Collections 1.0.1" Category="Package" />
+    <Node Id="NHibernate 3.0.0.4000" Label="NHibernate 3.0.0.4000" Category="Package" />
+    <Node Id="NUnit 2.6.3" Label="NUnit 2.6.3" Category="Package" />
+    <Node Id="Spring.Aop 1.3.2" Label="Spring.Aop 1.3.2" Category="Package" />
+    <Node Id="Spring.Core 1.3.2" Label="Spring.Core 1.3.2" Category="Package" />
+    <Node Id="Spring.Data 1.3.2" Label="Spring.Data 1.3.2" Category="Package" />
+    <Node Id="Spring.Data.NHibernate30 1.3.2" Label="Spring.Data.NHibernate30 1.3.2" Category="Package" />
+    <Node Id="Funds\Domain\CoinExchange.Funds.Domain.Model" Label="CoinExchange.Funds.Domain.Model" Category="Project" />
+    <Node Id="log4net 1.2.10" Label="log4net 1.2.10" Category="Package" />
+    <Node Id="Trades\ReadModel\CoinExchange.Trades.ReadModel.IntegrationTests" Label="CoinExchange.Trades.ReadModel.IntegrationTests" Category="Project" />
+    <Node Id="Common.Logging 1.2.0" Label="Common.Logging 1.2.0" Category="Package" />
+    <Node Id="Disruptor 1.1.0" Label="Disruptor 1.1.0" Category="Package" />
+    <Node Id="log4net 1.2.10" Label="log4net 1.2.10" Category="Package" />
+    <Node Id="NEventStore 4.0.0.15" Label="NEventStore 4.0.0.15" Category="Package" />
+    <Node Id="NUnit 2.6.3" Label="NUnit 2.6.3" Category="Package" />
+    <Node Id="RavenDB.Client 2.5.2874" Label="RavenDB.Client 2.5.2874" Category="Package" />
+    <Node Id="Spring.Aop 1.3.2" Label="Spring.Aop 1.3.2" Category="Package" />
+    <Node Id="Spring.Core 1.3.2" Label="Spring.Core 1.3.2" Category="Package" />
+    <Node Id="Spring.Data 1.3.2" Label="Spring.Data 1.3.2" Category="Package" />
+    <Node Id="Trades\ReadModel\CoinExchange.Trades.ReadModel.Tests" Label="CoinExchange.Trades.ReadModel.Tests" Category="Project" />
+    <Node Id="Common.Logging 1.2.0" Label="Common.Logging 1.2.0" Category="Package" />
+    <Node Id="Disruptor 1.1.0" Label="Disruptor 1.1.0" Category="Package" />
+    <Node Id="log4net 1.2.10" Label="log4net 1.2.10" Category="Package" />
+    <Node Id="NEventStore 4.0.0.15" Label="NEventStore 4.0.0.15" Category="Package" />
+    <Node Id="NUnit 2.6.3" Label="NUnit 2.6.3" Category="Package" />
+    <Node Id="RavenDB.Client 2.5.2874" Label="RavenDB.Client 2.5.2874" Category="Package" />
+    <Node Id="Spring.Aop 1.3.2" Label="Spring.Aop 1.3.2" Category="Package" />
+    <Node Id="Spring.Core 1.3.2" Label="Spring.Core 1.3.2" Category="Package" />
+    <Node Id="Spring.Data 1.3.2" Label="Spring.Data 1.3.2" Category="Package" />
+    <Node Id="Trades\ReadModel\CoinExchange.Trades.ReadModel.Persistence.Tests" Label="CoinExchange.Trades.ReadModel.Persistence.Tests" Category="Project" />
+    <Node Id="Antlr 3.1.3.42154" Label="Antlr 3.1.3.42154" Category="Package" />
+    <Node Id="Castle.Core 2.5.2" Label="Castle.Core 2.5.2" Category="Package" />
+    <Node Id="Common.Logging 1.2.0" Label="Common.Logging 1.2.0" Category="Package" />
+    <Node Id="Disruptor 1.1.0" Label="Disruptor 1.1.0" Category="Package" />
+    <Node Id="Iesi.Collections 1.0.1" Label="Iesi.Collections 1.0.1" Category="Package" />
+    <Node Id="log4net 1.2.10" Label="log4net 1.2.10" Category="Package" />
+    <Node Id="NEventStore 4.0.0.15" Label="NEventStore 4.0.0.15" Category="Package" />
+    <Node Id="NEventStore.Persistence.RavenPersistence 4.1.0.10" Label="NEventStore.Persistence.RavenPersistence 4.1.0.10" Category="Package" />
+    <Node Id="NHibernate 3.0.0.4000" Label="NHibernate 3.0.0.4000" Category="Package" />
+    <Node Id="RavenDB.Client 2.5.2874" Label="RavenDB.Client 2.5.2874" Category="Package" />
+    <Node Id="Spring.Aop 1.3.2" Label="Spring.Aop 1.3.2" Category="Package" />
+    <Node Id="Spring.Core 1.3.2" Label="Spring.Core 1.3.2" Category="Package" />
+    <Node Id="Spring.Data 1.3.2" Label="Spring.Data 1.3.2" Category="Package" />
+    <Node Id="Spring.Data.NHibernate30 1.3.2" Label="Spring.Data.NHibernate30 1.3.2" Category="Package" />
+    <Node Id="Spring.Testing.NUnit 1.3.2" Label="Spring.Testing.NUnit 1.3.2" Category="Package" />
+    <Node Id="Trades\ReadModel\CoinExchange.Trades.ReadModel.Persistence" Label="CoinExchange.Trades.ReadModel.Persistence" Category="Project" />
+    <Node Id="Antlr 3.1.3.42154" Label="Antlr 3.1.3.42154" Category="Package" />
+    <Node Id="Castle.Core 2.5.2" Label="Castle.Core 2.5.2" Category="Package" />
+    <Node Id="Common.Logging 1.2.0" Label="Common.Logging 1.2.0" Category="Package" />
+    <Node Id="Iesi.Collections 1.0.1" Label="Iesi.Collections 1.0.1" Category="Package" />
+    <Node Id="log4net 1.2.10" Label="log4net 1.2.10" Category="Package" />
+    <Node Id="NHibernate 3.0.0.4000" Label="NHibernate 3.0.0.4000" Category="Package" />
+    <Node Id="Spring.Aop 1.3.2" Label="Spring.Aop 1.3.2" Category="Package" />
+    <Node Id="Spring.Core 1.3.2" Label="Spring.Core 1.3.2" Category="Package" />
+    <Node Id="Spring.Data 1.3.2" Label="Spring.Data 1.3.2" Category="Package" />
+    <Node Id="Spring.Data.NHibernate30 1.3.2" Label="Spring.Data.NHibernate30 1.3.2" Category="Package" />
+    <Node Id="Trades\ReadModel\CoinExchange.Trades.ReadModel" Label="CoinExchange.Trades.ReadModel" Category="Project" />
+    <Node Id="Disruptor 1.1.0" Label="Disruptor 1.1.0" Category="Package" />
+    <Node Id="log4net 1.2.10" Label="log4net 1.2.10" Category="Package" />
+    <Node Id="Newtonsoft.Json 4.5.11" Label="Newtonsoft.Json 4.5.11" Category="Package" />
+    <Node Id="Trades\Ports\CoinExchange.Trades.Port.Adapter.Rest" Label="CoinExchange.Trades.Port.Adapter.Rest" Category="Project" />
+    <Node Id="Common.Logging 1.2.0" Label="Common.Logging 1.2.0" Category="Package" />
+    <Node Id="log4net 1.2.10" Label="log4net 1.2.10" Category="Package" />
+    <Node Id="Microsoft.AspNet.WebApi.Client 5.1.1" Label="Microsoft.AspNet.WebApi.Client 5.1.1" Category="Package" />
+    <Node Id="Microsoft.AspNet.WebApi.Core 5.1.1" Label="Microsoft.AspNet.WebApi.Core 5.1.1" Category="Package" />
+    <Node Id="Microsoft.AspNet.WebApi.WebHost 5.1.1" Label="Microsoft.AspNet.WebApi.WebHost 5.1.1" Category="Package" />
+    <Node Id="Newtonsoft.Json 4.5.11" Label="Newtonsoft.Json 4.5.11" Category="Package" />
+    <Node Id="Spring.Aop 1.3.2" Label="Spring.Aop 1.3.2" Category="Package" />
+    <Node Id="Spring.Core 1.3.2" Label="Spring.Core 1.3.2" Category="Package" />
+    <Node Id="Spring.Data 1.3.2" Label="Spring.Data 1.3.2" Category="Package" />
+    <Node Id="Trades\Ports\CoinExchange.Trades.Port.Adapter.Rest.Tests" Label="CoinExchange.Trades.Port.Adapter.Rest.Tests" Category="Project" />
+    <Node Id="Common.Logging 1.2.0" Label="Common.Logging 1.2.0" Category="Package" />
+    <Node Id="log4net 1.2.10" Label="log4net 1.2.10" Category="Package" />
+    <Node Id="NUnit 2.6.3" Label="NUnit 2.6.3" Category="Package" />
+    <Node Id="Spring.Core 1.3.2" Label="Spring.Core 1.3.2" Category="Package" />
+    <Node Id="Trades\Ports\CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests" Label="CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests" Category="Project" />
+    <Node Id="Antlr 3.1.3.42154" Label="Antlr 3.1.3.42154" Category="Package" />
+    <Node Id="Castle.Core 2.5.2" Label="Castle.Core 2.5.2" Category="Package" />
+    <Node Id="Common.Logging 2.1.2" Label="Common.Logging 2.1.2" Category="Package" />
+    <Node Id="Common.Logging.Log4Net 2.0.1" Label="Common.Logging.Log4Net 2.0.1" Category="Package" />
+    <Node Id="Disruptor 1.1.0" Label="Disruptor 1.1.0" Category="Package" />
+    <Node Id="Iesi.Collections 1.0.1" Label="Iesi.Collections 1.0.1" Category="Package" />
+    <Node Id="log4net 1.2.10" Label="log4net 1.2.10" Category="Package" />
+    <Node Id="Microsoft.AspNet.WebApi.Client 5.1.1" Label="Microsoft.AspNet.WebApi.Client 5.1.1" Category="Package" />
+    <Node Id="Microsoft.AspNet.WebApi.Core 5.1.1" Label="Microsoft.AspNet.WebApi.Core 5.1.1" Category="Package" />
+    <Node Id="Microsoft.AspNet.WebApi.WebHost 5.1.1" Label="Microsoft.AspNet.WebApi.WebHost 5.1.1" Category="Package" />
+    <Node Id="Microsoft.Net.Http 2.0.20710.0" Label="Microsoft.Net.Http 2.0.20710.0" Category="Package" />
+    <Node Id="NEventStore 4.0.0.15" Label="NEventStore 4.0.0.15" Category="Package" />
+    <Node Id="Newtonsoft.Json 4.5.11" Label="Newtonsoft.Json 4.5.11" Category="Package" />
+    <Node Id="NHibernate 3.0.0.4000" Label="NHibernate 3.0.0.4000" Category="Package" />
+    <Node Id="Spring.Aop 1.3.2" Label="Spring.Aop 1.3.2" Category="Package" />
+    <Node Id="Spring.Core 1.3.2" Label="Spring.Core 1.3.2" Category="Package" />
+    <Node Id="Spring.Data 1.3.2" Label="Spring.Data 1.3.2" Category="Package" />
+    <Node Id="Spring.Data.NHibernate30 1.3.2" Label="Spring.Data.NHibernate30 1.3.2" Category="Package" />
+    <Node Id="Trades\Ports\CoinExchange.Trades.Port.Adapter.Messaging" Label="CoinExchange.Trades.Port.Adapter.Messaging" Category="Project" />
+    <Node Id="log4net 1.2.10" Label="log4net 1.2.10" Category="Package" />
+    <Node Id="Trades\Infrastructure\CoinExchange.Trades.Infrastructure.Persistence" Label="CoinExchange.Trades.Infrastructure.Persistence" Category="Project" />
+    <Node Id="log4net 1.2.10" Label="log4net 1.2.10" Category="Package" />
+    <Node Id="NEventStore 4.0.0.15" Label="NEventStore 4.0.0.15" Category="Package" />
+    <Node Id="NEventStore.Persistence.RavenPersistence 4.1.0.10" Label="NEventStore.Persistence.RavenPersistence 4.1.0.10" Category="Package" />
+    <Node Id="Newtonsoft.Json 4.5.11" Label="Newtonsoft.Json 4.5.11" Category="Package" />
+    <Node Id="RavenDB.Client 2.5.2874" Label="RavenDB.Client 2.5.2874" Category="Package" />
+    <Node Id="Trades\Infrastructure\CoinExchange.Trades.Infrastructure.Common" Label="CoinExchange.Trades.Infrastructure.Common" Category="Project" />
+    <Node Id="log4net 1.2.10" Label="log4net 1.2.10" Category="Package" />
+    <Node Id="Trades\Infrastructure\CoinExchange.Trades.Infrastructure.Services" Label="CoinExchange.Trades.Infrastructure.Services" Category="Project" />
+    <Node Id="log4net 1.2.10" Label="log4net 1.2.10" Category="Package" />
+    <Node Id="Trades\Application\CoinExchange.Trades.Application.Tests" Label="CoinExchange.Trades.Application.Tests" Category="Project" />
+    <Node Id="log4net 1.2.10" Label="log4net 1.2.10" Category="Package" />
+    <Node Id="NUnit 2.6.3" Label="NUnit 2.6.3" Category="Package" />
+    <Node Id="RavenDB.Client 2.5.2874" Label="RavenDB.Client 2.5.2874" Category="Package" />
+    <Node Id="Trades\Application\CoinExchange.Trades.Application.IntegrationTests" Label="CoinExchange.Trades.Application.IntegrationTests" Category="Project" />
+    <Node Id="Disruptor 1.1.0" Label="Disruptor 1.1.0" Category="Package" />
+    <Node Id="log4net 1.2.10" Label="log4net 1.2.10" Category="Package" />
+    <Node Id="NEventStore 4.0.0.15" Label="NEventStore 4.0.0.15" Category="Package" />
+    <Node Id="NUnit 2.6.3" Label="NUnit 2.6.3" Category="Package" />
+    <Node Id="RavenDB.Client 2.5.2874" Label="RavenDB.Client 2.5.2874" Category="Package" />
+    <Node Id="Trades\Application\CoinExchange.Trades.Application" Label="CoinExchange.Trades.Application" Category="Project" />
+    <Node Id="Common.Logging 1.2.0" Label="Common.Logging 1.2.0" Category="Package" />
+    <Node Id="Disruptor 1.1.0" Label="Disruptor 1.1.0" Category="Package" />
+    <Node Id="log4net 1.2.10" Label="log4net 1.2.10" Category="Package" />
+    <Node Id="RavenDB.Client 2.5.2874" Label="RavenDB.Client 2.5.2874" Category="Package" />
+    <Node Id="Spring.Core 1.3.2" Label="Spring.Core 1.3.2" Category="Package" />
+    <Node Id="Trades\Domain\CoinExchange.Trades.Domain.Model.Tests" Label="CoinExchange.Trades.Domain.Model.Tests" Category="Project" />
+    <Node Id="Common.Logging 1.2.0" Label="Common.Logging 1.2.0" Category="Package" />
+    <Node Id="Disruptor 1.1.0" Label="Disruptor 1.1.0" Category="Package" />
+    <Node Id="log4net 1.2.10" Label="log4net 1.2.10" Category="Package" />
+    <Node Id="NEventStore 4.0.0.15" Label="NEventStore 4.0.0.15" Category="Package" />
+    <Node Id="NUnit 2.6.3" Label="NUnit 2.6.3" Category="Package" />
+    <Node Id="Spring.Aop 1.3.2" Label="Spring.Aop 1.3.2" Category="Package" />
+    <Node Id="Spring.Core 1.3.2" Label="Spring.Core 1.3.2" Category="Package" />
+    <Node Id="Spring.Data 1.3.2" Label="Spring.Data 1.3.2" Category="Package" />
+    <Node Id="Trades\Domain\CoinExchange.Trades.Domain.Model.IntegrationTests" Label="CoinExchange.Trades.Domain.Model.IntegrationTests" Category="Project" />
+    <Node Id="Common.Logging 1.2.0" Label="Common.Logging 1.2.0" Category="Package" />
+    <Node Id="Disruptor 1.1.0" Label="Disruptor 1.1.0" Category="Package" />
+    <Node Id="log4net 1.2.10" Label="log4net 1.2.10" Category="Package" />
+    <Node Id="NEventStore 4.0.0.15" Label="NEventStore 4.0.0.15" Category="Package" />
+    <Node Id="Newtonsoft.Json 4.5.11" Label="Newtonsoft.Json 4.5.11" Category="Package" />
+    <Node Id="NUnit 2.6.3" Label="NUnit 2.6.3" Category="Package" />
+    <Node Id="Spring.Aop 1.3.2" Label="Spring.Aop 1.3.2" Category="Package" />
+    <Node Id="Spring.Core 1.3.2" Label="Spring.Core 1.3.2" Category="Package" />
+    <Node Id="Spring.Data 1.3.2" Label="Spring.Data 1.3.2" Category="Package" />
+    <Node Id="Trades\Domain\CoinExchange.Trades.Domain.Model" Label="CoinExchange.Trades.Domain.Model" Category="Project" />
+    <Node Id="Common.Logging 2.1.2" Label="Common.Logging 2.1.2" Category="Package" />
+    <Node Id="Disruptor 1.1.0" Label="Disruptor 1.1.0" Category="Package" />
+    <Node Id="log4net 1.2.10" Label="log4net 1.2.10" Category="Package" />
+    <Node Id="Newtonsoft.Json 4.5.11" Label="Newtonsoft.Json 4.5.11" Category="Package" />
+    <Node Id="Spring.Aop 1.3.2" Label="Spring.Aop 1.3.2" Category="Package" />
+    <Node Id="Spring.Core 2.0.0-RC1" Label="Spring.Core 2.0.0-RC1" Category="Package" />
+    <Node Id="Spring.Data 1.3.2" Label="Spring.Data 1.3.2" Category="Package" />
+    <Node Id="Spring.Web 2.0.0-RC1" Label="Spring.Web 2.0.0-RC1" Category="Package" />
+    <Node Id="Spring.Web.Mvc4 2.0.0-RC1" Label="Spring.Web.Mvc4 2.0.0-RC1" Category="Package" />
+  </Nodes>
+  <Links>
+    <Link Source="Client\CoinExchange.Client.Console" Target="Disruptor 1.1.0" Category="Installed Package" />
+    <Link Source="Client\CoinExchange.Client.Console" Target="NEventStore 4.0.0.15" Category="Installed Package" />
+    <Link Source="Client\CoinExchange.Client.Console" Target="Newtonsoft.Json 4.5.11" Category="Installed Package" />
+    <Link Source="Client\CoinExchange.Client.Console" Target="NUnit 2.6.3" Category="Installed Package" />
+    <Link Source="Client\CoinExchange.Client" Target="Newtonsoft.Json 4.5.11" Category="Installed Package" />
+    <Link Source="Microsoft.AspNet.WebApi.Client 5.1.2" Target="Newtonsoft.Json 4.5.11" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.WebApi.Client 5.1.2" Target="Newtonsoft.Json 4.5.11" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.WebApi.Core 5.1.2" Target="Microsoft.AspNet.WebApi.Client 5.1.2" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.WebApi.WebHost 5.1.1" Target="Microsoft.AspNet.WebApi.Core 5.1.2" Category="Package Dependency" />
+    <Link Source="NHibernate 3.0.0.4000" Target="Iesi.Collections 1.0.1" Category="Package Dependency" />
+    <Link Source="NHibernate 3.0.0.4000" Target="Antlr 3.1.3.42154" Category="Package Dependency" />
+    <Link Source="NHibernate 3.0.0.4000" Target="Castle.Core 2.5.2" Category="Package Dependency" />
+    <Link Source="Spring.Aop 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Aop 1.3.2" Target="Spring.Core 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Core 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Spring.Aop 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Spring.Core 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="NHibernate 3.0.0.4000" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="Spring.Aop 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="Spring.Core 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="Spring.Data 1.3.2" Category="Package Dependency" />
+    <Link Source="IdentityAccess\Ports\CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests" Target="Microsoft.AspNet.WebApi.WebHost 5.1.1" Category="Installed Package" />
+    <Link Source="IdentityAccess\Ports\CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests" Target="NUnit 2.6.3" Category="Installed Package" />
+    <Link Source="IdentityAccess\Ports\CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests" Target="Spring.Data.NHibernate30 1.3.2" Category="Installed Package" />
+    <Link Source="IdentityAccess\Ports\CoinExchange.IdentityAccess.Port.Adapter.Rest.Tests" Target="NUnit 2.6.3" Category="Installed Package" />
+    <Link Source="Microsoft.AspNet.WebApi 4.0.20710.0" Target="Microsoft.AspNet.WebApi.WebHost 5.1.1" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.WebApi.Client 5.1.2" Target="Newtonsoft.Json 4.5.11" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.WebApi.Client 5.1.2" Target="Newtonsoft.Json 4.5.11" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.WebApi.Client 5.1.2" Target="Microsoft.Net.Http 2.0.20710.0" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.WebApi.Core 5.1.2" Target="Microsoft.AspNet.WebApi.Client 5.1.2" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.WebApi.WebHost 5.1.1" Target="Microsoft.AspNet.WebApi.Core 5.1.2" Category="Package Dependency" />
+    <Link Source="IdentityAccess\Ports\CoinExchange.IdentityAccess.Port.Adapter.Rest" Target="log4net 1.2.10" Category="Installed Package" />
+    <Link Source="IdentityAccess\Ports\CoinExchange.IdentityAccess.Port.Adapter.Rest" Target="Microsoft.AspNet.WebApi 4.0.20710.0" Category="Installed Package" />
+    <Link Source="NHibernate 3.0.0.4000" Target="Iesi.Collections 1.0.1" Category="Package Dependency" />
+    <Link Source="NHibernate 3.0.0.4000" Target="Antlr 3.1.3.42154" Category="Package Dependency" />
+    <Link Source="NHibernate 3.0.0.4000" Target="Castle.Core 2.5.2" Category="Package Dependency" />
+    <Link Source="Spring.Aop 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Aop 1.3.2" Target="Spring.Core 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Core 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Spring.Aop 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Spring.Core 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="NHibernate 3.0.0.4000" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="Spring.Aop 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="Spring.Core 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="Spring.Data 1.3.2" Category="Package Dependency" />
+    <Link Source="IdentityAccess\Domain\CoinExchange.IdentityAccess.Domain.Model.IntegrationTests" Target="NUnit 2.6.3" Category="Installed Package" />
+    <Link Source="IdentityAccess\Domain\CoinExchange.IdentityAccess.Domain.Model.IntegrationTests" Target="Spring.Data.NHibernate30 1.3.2" Category="Installed Package" />
+    <Link Source="IdentityAccess\Domain\CoinExchange.IdentityAccess.Domain.Model.Tests" Target="NUnit 2.6.3" Category="Installed Package" />
+    <Link Source="IdentityAccess\Domain\CoinExchange.IdentityAccess.Domain.Model" Target="log4net 1.2.10" Category="Installed Package" />
+    <Link Source="NHibernate 3.0.0.4000" Target="Iesi.Collections 1.0.1" Category="Package Dependency" />
+    <Link Source="NHibernate 3.0.0.4000" Target="Antlr 3.1.3.42154" Category="Package Dependency" />
+    <Link Source="NHibernate 3.0.0.4000" Target="Castle.Core 2.5.2" Category="Package Dependency" />
+    <Link Source="Spring.Aop 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Aop 1.3.2" Target="Spring.Core 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Core 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Spring.Aop 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Spring.Core 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="NHibernate 3.0.0.4000" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="Spring.Aop 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="Spring.Core 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="Spring.Data 1.3.2" Category="Package Dependency" />
+    <Link Source="IdentityAccess\Infrastructure\CoinExchange.IdentityAccess.Infrastructure.Persistence" Target="Spring.Data.NHibernate30 1.3.2" Category="Installed Package" />
+    <Link Source="IdentityAccess\Infrastructure\CoinExchange.IdentityAccess.Infrastructure.Services" Target="BCrypt.Net 0.1.0" Category="Installed Package" />
+    <Link Source="IdentityAccess\Infrastructure\CoinExchange.IdentityAccess.Infrastructure.Services" Target="log4net 1.2.10" Category="Installed Package" />
+    <Link Source="NHibernate 3.0.0.4000" Target="Iesi.Collections 1.0.1" Category="Package Dependency" />
+    <Link Source="NHibernate 3.0.0.4000" Target="Antlr 3.1.3.42154" Category="Package Dependency" />
+    <Link Source="NHibernate 3.0.0.4000" Target="Castle.Core 2.5.2" Category="Package Dependency" />
+    <Link Source="Spring.Aop 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Aop 1.3.2" Target="Spring.Core 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Core 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Spring.Aop 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Spring.Core 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="NHibernate 3.0.0.4000" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="Spring.Aop 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="Spring.Core 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="Spring.Data 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Testing.NUnit 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Testing.NUnit 1.3.2" Target="Spring.Core 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Testing.NUnit 1.3.2" Target="Spring.Data 1.3.2" Category="Package Dependency" />
+    <Link Source="IdentityAccess\Infrastructure\CoinExchange.IdentityAccess.Infrastructure.IntegrationTests" Target="Spring.Data.NHibernate30 1.3.2" Category="Installed Package" />
+    <Link Source="IdentityAccess\Infrastructure\CoinExchange.IdentityAccess.Infrastructure.IntegrationTests" Target="Spring.Testing.NUnit 1.3.2" Category="Installed Package" />
+    <Link Source="IdentityAccess\Infrastructure\CoinExchange.IdentityAccess.Infrastructure.Tests" Target="NUnit 2.6.3" Category="Installed Package" />
+    <Link Source="NHibernate 3.0.0.4000" Target="Iesi.Collections 1.0.1" Category="Package Dependency" />
+    <Link Source="NHibernate 3.0.0.4000" Target="Antlr 3.1.3.42154" Category="Package Dependency" />
+    <Link Source="NHibernate 3.0.0.4000" Target="Castle.Core 2.5.2" Category="Package Dependency" />
+    <Link Source="Spring.Aop 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Aop 1.3.2" Target="Spring.Core 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Core 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Spring.Aop 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Spring.Core 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="NHibernate 3.0.0.4000" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="Spring.Aop 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="Spring.Core 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="Spring.Data 1.3.2" Category="Package Dependency" />
+    <Link Source="IdentityAccess\Application\CoinExchange.IdentityAccess.Application.IntegrationTests" Target="NUnit 2.6.3" Category="Installed Package" />
+    <Link Source="IdentityAccess\Application\CoinExchange.IdentityAccess.Application.IntegrationTests" Target="Spring.Data.NHibernate30 1.3.2" Category="Installed Package" />
+    <Link Source="NHibernate 3.0.0.4000" Target="Iesi.Collections 1.0.1" Category="Package Dependency" />
+    <Link Source="NHibernate 3.0.0.4000" Target="Antlr 3.1.3.42154" Category="Package Dependency" />
+    <Link Source="NHibernate 3.0.0.4000" Target="Castle.Core 2.5.2" Category="Package Dependency" />
+    <Link Source="Spring.Aop 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Aop 1.3.2" Target="Spring.Core 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Core 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Spring.Aop 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Spring.Core 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="NHibernate 3.0.0.4000" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="Spring.Aop 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="Spring.Core 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="Spring.Data 1.3.2" Category="Package Dependency" />
+    <Link Source="IdentityAccess\Application\CoinExchange.IdentityAccess.Application.Tests" Target="NUnit 2.6.3" Category="Installed Package" />
+    <Link Source="IdentityAccess\Application\CoinExchange.IdentityAccess.Application.Tests" Target="Spring.Data.NHibernate30 1.3.2" Category="Installed Package" />
+    <Link Source="IdentityAccess\Application\CoinExchange.IdentityAccess.Application" Target="log4net 1.2.10" Category="Installed Package" />
+    <Link Source="Common\CoinExchange.Common.Tests" Target="log4net 1.2.10" Category="Installed Package" />
+    <Link Source="Spring.Core 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Common\CoinExchange.Rest.WebHost.Tests" Target="NUnit 2.6.3" Category="Installed Package" />
+    <Link Source="Common\CoinExchange.Rest.WebHost.Tests" Target="Spring.Core 1.3.2" Category="Installed Package" />
+    <Link Source="Common.Logging.Log4Net 2.0.1" Target="Common.Logging 2.1.2" Category="Package Dependency" />
+    <Link Source="Common.Logging.Log4Net 2.0.1" Target="log4net 1.2.10" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.WebApi 4.0.20710.0" Target="Microsoft.AspNet.WebApi.WebHost 5.1.1" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.WebApi.Client 5.1.1" Target="Newtonsoft.Json 4.5.11" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.WebApi.Client 5.1.1" Target="Newtonsoft.Json 4.5.11" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.WebApi.Client 5.1.1" Target="Microsoft.Net.Http 2.0.20710.0" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.WebApi.Core 5.1.1" Target="Microsoft.AspNet.WebApi.Client 5.1.1" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.WebApi.WebHost 5.1.1" Target="Microsoft.AspNet.WebApi.Core 5.1.1" Category="Package Dependency" />
+    <Link Source="NHibernate 3.0.0.4000" Target="Iesi.Collections 1.0.1" Category="Package Dependency" />
+    <Link Source="NHibernate 3.0.0.4000" Target="Antlr 3.1.3.42154" Category="Package Dependency" />
+    <Link Source="NHibernate 3.0.0.4000" Target="Castle.Core 2.5.2" Category="Package Dependency" />
+    <Link Source="Spring.Aop 1.3.2" Target="Common.Logging 2.1.2" Category="Package Dependency" />
+    <Link Source="Spring.Aop 1.3.2" Target="Spring.Core 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Core 1.3.2" Target="Common.Logging 2.1.2" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Common.Logging 2.1.2" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Spring.Aop 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Spring.Core 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="Common.Logging 2.1.2" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="NHibernate 3.0.0.4000" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="Spring.Aop 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="Spring.Core 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="Spring.Data 1.3.2" Category="Package Dependency" />
+    <Link Source="Common\CoinExchange.Rest.WebHost" Target="Common.Logging.Log4Net 2.0.1" Category="Installed Package" />
+    <Link Source="Common\CoinExchange.Rest.WebHost" Target="Disruptor 1.1.0" Category="Installed Package" />
+    <Link Source="Common\CoinExchange.Rest.WebHost" Target="Microsoft.AspNet.WebApi 4.0.20710.0" Category="Installed Package" />
+    <Link Source="Common\CoinExchange.Rest.WebHost" Target="NEventStore 4.0.0.15" Category="Installed Package" />
+    <Link Source="Common\CoinExchange.Rest.WebHost" Target="Spring.Data.NHibernate30 1.3.2" Category="Installed Package" />
+    <Link Source="Microsoft.AspNet.WebApi.Client 5.1.1" Target="Newtonsoft.Json 4.5.11" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.WebApi.Client 5.1.1" Target="Newtonsoft.Json 4.5.11" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.WebApi.Core 5.1.1" Target="Microsoft.AspNet.WebApi.Client 5.1.1" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.WebApi.WebHost 5.1.1" Target="Microsoft.AspNet.WebApi.Core 5.1.1" Category="Package Dependency" />
+    <Link Source="Spring.Core 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Funds\Ports\CoinExchange.Funds.Port.Adapter.Rest.Tests" Target="Microsoft.AspNet.WebApi.WebHost 5.1.1" Category="Installed Package" />
+    <Link Source="Funds\Ports\CoinExchange.Funds.Port.Adapter.Rest.Tests" Target="NUnit 2.6.3" Category="Installed Package" />
+    <Link Source="Funds\Ports\CoinExchange.Funds.Port.Adapter.Rest.Tests" Target="Spring.Core 1.3.2" Category="Installed Package" />
+    <Link Source="Microsoft.AspNet.WebApi.Client 5.1.1" Target="Newtonsoft.Json 4.5.11" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.WebApi.Client 5.1.1" Target="Newtonsoft.Json 4.5.11" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.WebApi.Core 5.1.1" Target="Microsoft.AspNet.WebApi.Client 5.1.1" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.WebApi.WebHost 5.1.1" Target="Microsoft.AspNet.WebApi.Core 5.1.1" Category="Package Dependency" />
+    <Link Source="Spring.Core 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Funds\Ports\CoinExchange.Funds.Port.Adapter.Rest.IntegrationTests" Target="Microsoft.AspNet.WebApi.WebHost 5.1.1" Category="Installed Package" />
+    <Link Source="Funds\Ports\CoinExchange.Funds.Port.Adapter.Rest.IntegrationTests" Target="NUnit 2.6.3" Category="Installed Package" />
+    <Link Source="Funds\Ports\CoinExchange.Funds.Port.Adapter.Rest.IntegrationTests" Target="Spring.Core 1.3.2" Category="Installed Package" />
+    <Link Source="NHibernate 3.0.0.4000" Target="Iesi.Collections 1.0.1" Category="Package Dependency" />
+    <Link Source="NHibernate 3.0.0.4000" Target="Antlr 3.1.3.42154" Category="Package Dependency" />
+    <Link Source="NHibernate 3.0.0.4000" Target="Castle.Core 2.5.2" Category="Package Dependency" />
+    <Link Source="Spring.Aop 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Aop 1.3.2" Target="Spring.Core 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Core 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Spring.Aop 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Spring.Core 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="NHibernate 3.0.0.4000" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="Spring.Aop 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="Spring.Core 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="Spring.Data 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Testing.NUnit 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Testing.NUnit 1.3.2" Target="NUnit 2.5.10.11092" Category="Package Dependency" />
+    <Link Source="Spring.Testing.NUnit 1.3.2" Target="Spring.Core 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Testing.NUnit 1.3.2" Target="Spring.Data 1.3.2" Category="Package Dependency" />
+    <Link Source="Funds\Infrastructure\CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests" Target="log4net 1.2.10" Category="Installed Package" />
+    <Link Source="Funds\Infrastructure\CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests" Target="Spring.Data.NHibernate30 1.3.2" Category="Installed Package" />
+    <Link Source="Funds\Infrastructure\CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests" Target="Spring.Testing.NUnit 1.3.2" Category="Installed Package" />
+    <Link Source="NHibernate 3.0.0.4000" Target="Iesi.Collections 1.0.1" Category="Package Dependency" />
+    <Link Source="NHibernate 3.0.0.4000" Target="Antlr 3.1.3.42154" Category="Package Dependency" />
+    <Link Source="NHibernate 3.0.0.4000" Target="Castle.Core 2.5.2" Category="Package Dependency" />
+    <Link Source="Spring.Aop 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Aop 1.3.2" Target="Spring.Core 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Core 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Spring.Aop 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Spring.Core 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="NHibernate 3.0.0.4000" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="Spring.Aop 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="Spring.Core 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="Spring.Data 1.3.2" Category="Package Dependency" />
+    <Link Source="Funds\Infrastructure\CoinExchange.Funds.Infrastructure.Persistence.NHibernate" Target="log4net 1.2.10" Category="Installed Package" />
+    <Link Source="Funds\Infrastructure\CoinExchange.Funds.Infrastructure.Persistence.NHibernate" Target="Spring.Data.NHibernate30 1.3.2" Category="Installed Package" />
+    <Link Source="NHibernate 3.0.0.4000" Target="Iesi.Collections 1.0.1" Category="Package Dependency" />
+    <Link Source="NHibernate 3.0.0.4000" Target="Antlr 3.1.3.42154" Category="Package Dependency" />
+    <Link Source="NHibernate 3.0.0.4000" Target="Castle.Core 2.5.2" Category="Package Dependency" />
+    <Link Source="Spring.Aop 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Aop 1.3.2" Target="Spring.Core 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Core 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Spring.Aop 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Spring.Core 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="NHibernate 3.0.0.4000" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="Spring.Aop 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="Spring.Core 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="Spring.Data 1.3.2" Category="Package Dependency" />
+    <Link Source="Funds\Application\CoinExchange.Funds.Application.IntegrationTests" Target="NUnit 2.6.3" Category="Installed Package" />
+    <Link Source="Funds\Application\CoinExchange.Funds.Application.IntegrationTests" Target="Spring.Data.NHibernate30 1.3.2" Category="Installed Package" />
+    <Link Source="Funds\Application\CoinExchange.Funds.Application.Tests" Target="NUnit 2.6.3" Category="Installed Package" />
+    <Link Source="Funds\Application\CoinExchange.Funds.Application" Target="log4net 1.2.10" Category="Installed Package" />
+    <Link Source="Funds\Domain\CoinExchange.Funds.Domain.Model.Tests" Target="NUnit 2.6.3" Category="Installed Package" />
+    <Link Source="NHibernate 3.0.0.4000" Target="Iesi.Collections 1.0.1" Category="Package Dependency" />
+    <Link Source="NHibernate 3.0.0.4000" Target="Antlr 3.1.3.42154" Category="Package Dependency" />
+    <Link Source="NHibernate 3.0.0.4000" Target="Castle.Core 2.5.2" Category="Package Dependency" />
+    <Link Source="Spring.Aop 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Aop 1.3.2" Target="Spring.Core 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Core 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Spring.Aop 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Spring.Core 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="NHibernate 3.0.0.4000" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="Spring.Aop 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="Spring.Core 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="Spring.Data 1.3.2" Category="Package Dependency" />
+    <Link Source="Funds\Domain\CoinExchange.Funds.Domain.Model.IntegrationTests" Target="NUnit 2.6.3" Category="Installed Package" />
+    <Link Source="Funds\Domain\CoinExchange.Funds.Domain.Model.IntegrationTests" Target="Spring.Data.NHibernate30 1.3.2" Category="Installed Package" />
+    <Link Source="Funds\Domain\CoinExchange.Funds.Domain.Model" Target="log4net 1.2.10" Category="Installed Package" />
+    <Link Source="Spring.Aop 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Aop 1.3.2" Target="Spring.Core 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Core 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Spring.Aop 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Spring.Core 1.3.2" Category="Package Dependency" />
+    <Link Source="Trades\ReadModel\CoinExchange.Trades.ReadModel.IntegrationTests" Target="Disruptor 1.1.0" Category="Installed Package" />
+    <Link Source="Trades\ReadModel\CoinExchange.Trades.ReadModel.IntegrationTests" Target="log4net 1.2.10" Category="Installed Package" />
+    <Link Source="Trades\ReadModel\CoinExchange.Trades.ReadModel.IntegrationTests" Target="NEventStore 4.0.0.15" Category="Installed Package" />
+    <Link Source="Trades\ReadModel\CoinExchange.Trades.ReadModel.IntegrationTests" Target="NUnit 2.6.3" Category="Installed Package" />
+    <Link Source="Trades\ReadModel\CoinExchange.Trades.ReadModel.IntegrationTests" Target="RavenDB.Client 2.5.2874" Category="Installed Package" />
+    <Link Source="Trades\ReadModel\CoinExchange.Trades.ReadModel.IntegrationTests" Target="Spring.Data 1.3.2" Category="Installed Package" />
+    <Link Source="Spring.Aop 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Aop 1.3.2" Target="Spring.Core 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Core 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Spring.Aop 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Spring.Core 1.3.2" Category="Package Dependency" />
+    <Link Source="Trades\ReadModel\CoinExchange.Trades.ReadModel.Tests" Target="Disruptor 1.1.0" Category="Installed Package" />
+    <Link Source="Trades\ReadModel\CoinExchange.Trades.ReadModel.Tests" Target="log4net 1.2.10" Category="Installed Package" />
+    <Link Source="Trades\ReadModel\CoinExchange.Trades.ReadModel.Tests" Target="NEventStore 4.0.0.15" Category="Installed Package" />
+    <Link Source="Trades\ReadModel\CoinExchange.Trades.ReadModel.Tests" Target="NUnit 2.6.3" Category="Installed Package" />
+    <Link Source="Trades\ReadModel\CoinExchange.Trades.ReadModel.Tests" Target="RavenDB.Client 2.5.2874" Category="Installed Package" />
+    <Link Source="Trades\ReadModel\CoinExchange.Trades.ReadModel.Tests" Target="Spring.Data 1.3.2" Category="Installed Package" />
+    <Link Source="NEventStore.Persistence.RavenPersistence 4.1.0.10" Target="NEventStore 4.0.0.15" Category="Package Dependency" />
+    <Link Source="NEventStore.Persistence.RavenPersistence 4.1.0.10" Target="RavenDB.Client 2.5.2874" Category="Package Dependency" />
+    <Link Source="NHibernate 3.0.0.4000" Target="Iesi.Collections 1.0.1" Category="Package Dependency" />
+    <Link Source="NHibernate 3.0.0.4000" Target="Antlr 3.1.3.42154" Category="Package Dependency" />
+    <Link Source="NHibernate 3.0.0.4000" Target="Castle.Core 2.5.2" Category="Package Dependency" />
+    <Link Source="Spring.Aop 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Aop 1.3.2" Target="Spring.Core 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Core 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Spring.Aop 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Spring.Core 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="NHibernate 3.0.0.4000" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="Spring.Aop 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="Spring.Core 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="Spring.Data 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Testing.NUnit 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Testing.NUnit 1.3.2" Target="Spring.Core 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Testing.NUnit 1.3.2" Target="Spring.Data 1.3.2" Category="Package Dependency" />
+    <Link Source="Trades\ReadModel\CoinExchange.Trades.ReadModel.Persistence.Tests" Target="Disruptor 1.1.0" Category="Installed Package" />
+    <Link Source="Trades\ReadModel\CoinExchange.Trades.ReadModel.Persistence.Tests" Target="log4net 1.2.10" Category="Installed Package" />
+    <Link Source="Trades\ReadModel\CoinExchange.Trades.ReadModel.Persistence.Tests" Target="NEventStore.Persistence.RavenPersistence 4.1.0.10" Category="Installed Package" />
+    <Link Source="Trades\ReadModel\CoinExchange.Trades.ReadModel.Persistence.Tests" Target="Spring.Data.NHibernate30 1.3.2" Category="Installed Package" />
+    <Link Source="Trades\ReadModel\CoinExchange.Trades.ReadModel.Persistence.Tests" Target="Spring.Testing.NUnit 1.3.2" Category="Installed Package" />
+    <Link Source="NHibernate 3.0.0.4000" Target="Iesi.Collections 1.0.1" Category="Package Dependency" />
+    <Link Source="NHibernate 3.0.0.4000" Target="Antlr 3.1.3.42154" Category="Package Dependency" />
+    <Link Source="NHibernate 3.0.0.4000" Target="Castle.Core 2.5.2" Category="Package Dependency" />
+    <Link Source="Spring.Aop 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Aop 1.3.2" Target="Spring.Core 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Core 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Spring.Aop 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Spring.Core 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="NHibernate 3.0.0.4000" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="Spring.Aop 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="Spring.Core 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="Spring.Data 1.3.2" Category="Package Dependency" />
+    <Link Source="Trades\ReadModel\CoinExchange.Trades.ReadModel.Persistence" Target="log4net 1.2.10" Category="Installed Package" />
+    <Link Source="Trades\ReadModel\CoinExchange.Trades.ReadModel.Persistence" Target="Spring.Data.NHibernate30 1.3.2" Category="Installed Package" />
+    <Link Source="Trades\ReadModel\CoinExchange.Trades.ReadModel" Target="Disruptor 1.1.0" Category="Installed Package" />
+    <Link Source="Trades\ReadModel\CoinExchange.Trades.ReadModel" Target="log4net 1.2.10" Category="Installed Package" />
+    <Link Source="Trades\ReadModel\CoinExchange.Trades.ReadModel" Target="Newtonsoft.Json 4.5.11" Category="Installed Package" />
+    <Link Source="Microsoft.AspNet.WebApi.Client 5.1.1" Target="Newtonsoft.Json 4.5.11" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.WebApi.Client 5.1.1" Target="Newtonsoft.Json 4.5.11" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.WebApi.Core 5.1.1" Target="Microsoft.AspNet.WebApi.Client 5.1.1" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.WebApi.WebHost 5.1.1" Target="Microsoft.AspNet.WebApi.Core 5.1.1" Category="Package Dependency" />
+    <Link Source="Spring.Aop 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Aop 1.3.2" Target="Spring.Core 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Core 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Spring.Aop 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Spring.Core 1.3.2" Category="Package Dependency" />
+    <Link Source="Trades\Ports\CoinExchange.Trades.Port.Adapter.Rest" Target="log4net 1.2.10" Category="Installed Package" />
+    <Link Source="Trades\Ports\CoinExchange.Trades.Port.Adapter.Rest" Target="Microsoft.AspNet.WebApi.WebHost 5.1.1" Category="Installed Package" />
+    <Link Source="Trades\Ports\CoinExchange.Trades.Port.Adapter.Rest" Target="Spring.Data 1.3.2" Category="Installed Package" />
+    <Link Source="Spring.Core 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Trades\Ports\CoinExchange.Trades.Port.Adapter.Rest.Tests" Target="log4net 1.2.10" Category="Installed Package" />
+    <Link Source="Trades\Ports\CoinExchange.Trades.Port.Adapter.Rest.Tests" Target="NUnit 2.6.3" Category="Installed Package" />
+    <Link Source="Trades\Ports\CoinExchange.Trades.Port.Adapter.Rest.Tests" Target="Spring.Core 1.3.2" Category="Installed Package" />
+    <Link Source="Common.Logging.Log4Net 2.0.1" Target="Common.Logging 2.1.2" Category="Package Dependency" />
+    <Link Source="Common.Logging.Log4Net 2.0.1" Target="log4net 1.2.10" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.WebApi.Client 5.1.1" Target="Newtonsoft.Json 4.5.11" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.WebApi.Client 5.1.1" Target="Newtonsoft.Json 4.5.11" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.WebApi.Client 5.1.1" Target="Microsoft.Net.Http 2.0.20710.0" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.WebApi.Core 5.1.1" Target="Microsoft.AspNet.WebApi.Client 5.1.1" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.WebApi.WebHost 5.1.1" Target="Microsoft.AspNet.WebApi.Core 5.1.1" Category="Package Dependency" />
+    <Link Source="NHibernate 3.0.0.4000" Target="Iesi.Collections 1.0.1" Category="Package Dependency" />
+    <Link Source="NHibernate 3.0.0.4000" Target="Antlr 3.1.3.42154" Category="Package Dependency" />
+    <Link Source="NHibernate 3.0.0.4000" Target="Castle.Core 2.5.2" Category="Package Dependency" />
+    <Link Source="Spring.Aop 1.3.2" Target="Common.Logging 2.1.2" Category="Package Dependency" />
+    <Link Source="Spring.Aop 1.3.2" Target="Spring.Core 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Core 1.3.2" Target="Common.Logging 2.1.2" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Common.Logging 2.1.2" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Spring.Aop 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Spring.Core 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="Common.Logging 2.1.2" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="NHibernate 3.0.0.4000" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="Spring.Aop 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="Spring.Core 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data.NHibernate30 1.3.2" Target="Spring.Data 1.3.2" Category="Package Dependency" />
+    <Link Source="Trades\Ports\CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests" Target="Common.Logging.Log4Net 2.0.1" Category="Installed Package" />
+    <Link Source="Trades\Ports\CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests" Target="Disruptor 1.1.0" Category="Installed Package" />
+    <Link Source="Trades\Ports\CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests" Target="Microsoft.AspNet.WebApi.WebHost 5.1.1" Category="Installed Package" />
+    <Link Source="Trades\Ports\CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests" Target="NEventStore 4.0.0.15" Category="Installed Package" />
+    <Link Source="Trades\Ports\CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests" Target="Spring.Data.NHibernate30 1.3.2" Category="Installed Package" />
+    <Link Source="Trades\Ports\CoinExchange.Trades.Port.Adapter.Messaging" Target="log4net 1.2.10" Category="Installed Package" />
+    <Link Source="NEventStore.Persistence.RavenPersistence 4.1.0.10" Target="NEventStore 4.0.0.15" Category="Package Dependency" />
+    <Link Source="NEventStore.Persistence.RavenPersistence 4.1.0.10" Target="RavenDB.Client 2.5.2874" Category="Package Dependency" />
+    <Link Source="Trades\Infrastructure\CoinExchange.Trades.Infrastructure.Persistence" Target="log4net 1.2.10" Category="Installed Package" />
+    <Link Source="Trades\Infrastructure\CoinExchange.Trades.Infrastructure.Persistence" Target="NEventStore.Persistence.RavenPersistence 4.1.0.10" Category="Installed Package" />
+    <Link Source="Trades\Infrastructure\CoinExchange.Trades.Infrastructure.Persistence" Target="Newtonsoft.Json 4.5.11" Category="Installed Package" />
+    <Link Source="Trades\Infrastructure\CoinExchange.Trades.Infrastructure.Common" Target="log4net 1.2.10" Category="Installed Package" />
+    <Link Source="Trades\Infrastructure\CoinExchange.Trades.Infrastructure.Services" Target="log4net 1.2.10" Category="Installed Package" />
+    <Link Source="Trades\Application\CoinExchange.Trades.Application.Tests" Target="log4net 1.2.10" Category="Installed Package" />
+    <Link Source="Trades\Application\CoinExchange.Trades.Application.Tests" Target="NUnit 2.6.3" Category="Installed Package" />
+    <Link Source="Trades\Application\CoinExchange.Trades.Application.Tests" Target="RavenDB.Client 2.5.2874" Category="Installed Package" />
+    <Link Source="Trades\Application\CoinExchange.Trades.Application.IntegrationTests" Target="Disruptor 1.1.0" Category="Installed Package" />
+    <Link Source="Trades\Application\CoinExchange.Trades.Application.IntegrationTests" Target="log4net 1.2.10" Category="Installed Package" />
+    <Link Source="Trades\Application\CoinExchange.Trades.Application.IntegrationTests" Target="NEventStore 4.0.0.15" Category="Installed Package" />
+    <Link Source="Trades\Application\CoinExchange.Trades.Application.IntegrationTests" Target="NUnit 2.6.3" Category="Installed Package" />
+    <Link Source="Trades\Application\CoinExchange.Trades.Application.IntegrationTests" Target="RavenDB.Client 2.5.2874" Category="Installed Package" />
+    <Link Source="Spring.Core 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Trades\Application\CoinExchange.Trades.Application" Target="Disruptor 1.1.0" Category="Installed Package" />
+    <Link Source="Trades\Application\CoinExchange.Trades.Application" Target="log4net 1.2.10" Category="Installed Package" />
+    <Link Source="Trades\Application\CoinExchange.Trades.Application" Target="RavenDB.Client 2.5.2874" Category="Installed Package" />
+    <Link Source="Trades\Application\CoinExchange.Trades.Application" Target="Spring.Core 1.3.2" Category="Installed Package" />
+    <Link Source="Spring.Aop 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Aop 1.3.2" Target="Spring.Core 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Core 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Spring.Aop 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Spring.Core 1.3.2" Category="Package Dependency" />
+    <Link Source="Trades\Domain\CoinExchange.Trades.Domain.Model.Tests" Target="Disruptor 1.1.0" Category="Installed Package" />
+    <Link Source="Trades\Domain\CoinExchange.Trades.Domain.Model.Tests" Target="log4net 1.2.10" Category="Installed Package" />
+    <Link Source="Trades\Domain\CoinExchange.Trades.Domain.Model.Tests" Target="NEventStore 4.0.0.15" Category="Installed Package" />
+    <Link Source="Trades\Domain\CoinExchange.Trades.Domain.Model.Tests" Target="NUnit 2.6.3" Category="Installed Package" />
+    <Link Source="Trades\Domain\CoinExchange.Trades.Domain.Model.Tests" Target="Spring.Data 1.3.2" Category="Installed Package" />
+    <Link Source="Spring.Aop 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Aop 1.3.2" Target="Spring.Core 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Core 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Common.Logging 1.2.0" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Spring.Aop 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Spring.Core 1.3.2" Category="Package Dependency" />
+    <Link Source="Trades\Domain\CoinExchange.Trades.Domain.Model.IntegrationTests" Target="Disruptor 1.1.0" Category="Installed Package" />
+    <Link Source="Trades\Domain\CoinExchange.Trades.Domain.Model.IntegrationTests" Target="log4net 1.2.10" Category="Installed Package" />
+    <Link Source="Trades\Domain\CoinExchange.Trades.Domain.Model.IntegrationTests" Target="NEventStore 4.0.0.15" Category="Installed Package" />
+    <Link Source="Trades\Domain\CoinExchange.Trades.Domain.Model.IntegrationTests" Target="Newtonsoft.Json 4.5.11" Category="Installed Package" />
+    <Link Source="Trades\Domain\CoinExchange.Trades.Domain.Model.IntegrationTests" Target="NUnit 2.6.3" Category="Installed Package" />
+    <Link Source="Trades\Domain\CoinExchange.Trades.Domain.Model.IntegrationTests" Target="Spring.Data 1.3.2" Category="Installed Package" />
+    <Link Source="Spring.Aop 1.3.2" Target="Common.Logging 2.1.2" Category="Package Dependency" />
+    <Link Source="Spring.Aop 1.3.2" Target="Spring.Core 2.0.0-RC1" Category="Package Dependency" />
+    <Link Source="Spring.Core 2.0.0-RC1" Target="Common.Logging 2.1.2" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Common.Logging 2.1.2" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Spring.Aop 1.3.2" Category="Package Dependency" />
+    <Link Source="Spring.Data 1.3.2" Target="Spring.Core 2.0.0-RC1" Category="Package Dependency" />
+    <Link Source="Spring.Web 2.0.0-RC1" Target="Common.Logging 2.1.2" Category="Package Dependency" />
+    <Link Source="Spring.Web 2.0.0-RC1" Target="Spring.Core 2.0.0-RC1" Category="Package Dependency" />
+    <Link Source="Spring.Web.Mvc4 2.0.0-RC1" Target="Common.Logging 2.1.2" Category="Package Dependency" />
+    <Link Source="Spring.Web.Mvc4 2.0.0-RC1" Target="Spring.Core 2.0.0-RC1" Category="Package Dependency" />
+    <Link Source="Spring.Web.Mvc4 2.0.0-RC1" Target="Spring.Web 2.0.0-RC1" Category="Package Dependency" />
+    <Link Source="Trades\Domain\CoinExchange.Trades.Domain.Model" Target="Disruptor 1.1.0" Category="Installed Package" />
+    <Link Source="Trades\Domain\CoinExchange.Trades.Domain.Model" Target="log4net 1.2.10" Category="Installed Package" />
+    <Link Source="Trades\Domain\CoinExchange.Trades.Domain.Model" Target="Newtonsoft.Json 4.5.11" Category="Installed Package" />
+    <Link Source="Trades\Domain\CoinExchange.Trades.Domain.Model" Target="Spring.Data 1.3.2" Category="Installed Package" />
+    <Link Source="Trades\Domain\CoinExchange.Trades.Domain.Model" Target="Spring.Web.Mvc4 2.0.0-RC1" Category="Installed Package" />
+  </Links>
+  <Categories>
+    <Category Id="Project" />
+    <Category Id="Package" />
+  </Categories>
+  <Styles>
+    <Style TargetType="Node" GroupLabel="Project" ValueLabel="True">
+      <Condition Expression="HasCategory('Project')" />
+      <Setter Property="Background" Value="Blue" />
+    </Style>
+    <Style TargetType="Link" GroupLabel="Package Dependency" ValueLabel="True">
+      <Condition Expression="HasCategory('Package Dependency')" />
+      <Setter Property="Background" Value="Yellow" />
+    </Style>
+  </Styles>
+</DirectedGraph>

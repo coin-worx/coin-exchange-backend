@@ -19,8 +19,10 @@ namespace CoinExchange.IdentityAccess.Application.Tests
         /// <param name="to"></param>
         /// <param name="subject"></param>
         /// <param name="content"></param>
+        /// <param name="adminEmailsAllowed"></param>
+        /// <param name="newsletterEmailsAllowed"></param>
         /// <returns></returns>
-        public bool SendMail(string to, string subject, string content)
+        public bool SendMail(string to, string subject, string content, bool adminEmailsAllowed)
         {
             return true;
         }
@@ -31,8 +33,10 @@ namespace CoinExchange.IdentityAccess.Application.Tests
         /// <param name="to"></param>
         /// <param name="username"> </param>
         /// <param name="activationKey"></param>
+        /// <param name="adminEmailsAllowed"> </param>
+        /// <param name="newsletterEmailsAllowed"> </param>
         /// <returns></returns>
-        public bool SendPostSignUpEmail(string to, string username, string activationKey)
+        public bool SendPostSignUpEmail(string to, string username, string activationKey, bool adminEmailsAllowed)
         {
             return true;
         }
@@ -42,8 +46,10 @@ namespace CoinExchange.IdentityAccess.Application.Tests
         /// </summary>
         /// <param name="to"></param>
         /// <param name="username"></param>
+        /// <param name="adminEmailsAllowed"> </param>
+        /// <param name="newsletterEmailsAllowed"> </param>
         /// <returns></returns>
-        public bool SendForgotUsernameEmail(string to, string username)
+        public bool SendForgotUsernameEmail(string to, string username, bool adminEmailsAllowed)
         {
             return true;
         }
@@ -53,8 +59,10 @@ namespace CoinExchange.IdentityAccess.Application.Tests
         /// </summary>
         /// <param name="to"></param>
         /// <param name="username"></param>
+        /// <param name="adminEmailsAllowed"> </param>
+        /// <param name="newsletterEmailsAllowed"> </param>
         /// <returns></returns>
-        public bool SendWelcomeEmail(string to, string username)
+        public bool SendWelcomeEmail(string to, string username, bool adminEmailsAllowed)
         {
             return true;
         }
@@ -64,8 +72,10 @@ namespace CoinExchange.IdentityAccess.Application.Tests
         /// </summary>
         /// <param name="to"></param>
         /// <param name="username"></param>
+        /// <param name="adminEmailsAllowed"> </param>
+        /// <param name="newsletterEmailsAllowed"> </param>
         /// <returns></returns>
-        public bool SendPasswordChangedEmail(string to, string username)
+        public bool SendPasswordChangedEmail(string to, string username, bool adminEmailsAllowed)
         {
             return true;
         }
@@ -75,8 +85,10 @@ namespace CoinExchange.IdentityAccess.Application.Tests
         /// </summary>
         /// <param name="to"></param>
         /// <param name="username"></param>
+        /// <param name="adminEmailsAllowed"> </param>
+        /// <param name="newsletterEmailsAllowed"> </param>
         /// <returns></returns>
-        public bool SendReactivaitonNotificationEmail(string to, string username)
+        public bool SendReactivaitonNotificationEmail(string to, string username, bool adminEmailsAllowed)
         {
             return true;
         }
@@ -86,8 +98,10 @@ namespace CoinExchange.IdentityAccess.Application.Tests
         /// </summary>
         /// <param name="to"></param>
         /// <param name="username"></param>
+        /// <param name="adminEmailsAllowed"> </param>
+        /// <param name="newsletterEmailsAllowed"> </param>
         /// <returns></returns>
-        public bool SendCancelActivationEmail(string to, string username)
+        public bool SendCancelActivationEmail(string to, string username, bool adminEmailsAllowed)
         {
             return true;
         }

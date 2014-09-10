@@ -9,6 +9,7 @@ using CoinExchange.Common.Tests;
 using CoinExchange.IdentityAccess.Application.AccessControlServices;
 using CoinExchange.IdentityAccess.Application.AccessControlServices.Commands;
 using CoinExchange.IdentityAccess.Application.SecurityKeysServices;
+using CoinExchange.IdentityAccess.Application.UserServices.Representations;
 using CoinExchange.IdentityAccess.Domain.Model.Repositories;
 using CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate;
 using CoinExchange.IdentityAccess.Infrastructure.Persistence.Repositories;

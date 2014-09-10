@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<objects xmlns="http://www.springframework.net"
+         xmlns:tx="http://www.springframework.net/tx">
+  
+  <!-- Services -->
+  <object id="FeeCalculationService" type="CoinExchange.Funds.Application.CrossBoundedContextsServices.FeeCalculationService, CoinExchange.Funds.Application">
+    <constructor-arg name="feeRepository" ref="FeeRepository"/>
+    <constructor-arg name="ledgerRepository" ref="LedgerRepository"/>
+  </object>
+
+  <object id="TransactionService" type="CoinExchange.Funds.Application.CrossBoundedContextsServices.TransactionService, CoinExchange.Funds.Application">
+    <constructor-arg name="fundsPersistenceRepository" ref="FundsPersistenceRepository"/>
+    <constructor-arg name="ledgerIdGeneratorService" ref="LedgerIdGeneratorService"/>
+    <constructor-arg name="ledgerRepository" ref="LedgerRepository"/>
+    <constructor-arg name="feeCalculationService" ref="FeeCalculationService"/>
+  <constructor-arg name="balanceRepository" ref="BalanceRepository"/>
+  </object>
+
+  <object id="FundsValidationService" type="CoinExchange.Funds.Application.CrossBoundedContextsServices.FundsValidationService, CoinExchange.Funds.Application">
+    <constructor-arg name="transactionService" ref="TransactionService"/>
+    <constructor-arg name="fundsPersistenceRepository" ref="FundsPersistenceRepository"/>
+    <constructor-arg name="balanceRepository" ref="BalanceRepository"/>
+    <constructor-arg name="feeCalculationService" ref="FeeCalculationService"/>
+    <constructor-arg name="withdrawFeesRepository" ref="WithdrawFeesRepository"/>
+    <constructor-arg name="withdrawIdGeneratorService" ref="WithdrawIdGeneratorService"/>
+    <constructor-arg name="LedgerRepository" ref="LedgerRepository"/>
+    <constructor-arg name="depositLimitEvaluationService" ref="DepositLimitEvaluationService"/>
+    <constructor-arg name="depositLimitRepository" ref="DepositLimitRepository"/>
+    <constructor-arg name="withdrawLimitEvaluationService" ref="WithdrawLimitEvaluationService"/>
+    <constructor-arg name="withdrawLimitRepository" ref="WithdrawLimitRepository"/>
+    <constructor-arg name="tierLevelRetrievalService" ref="TierLevelRetrievalService"/>
+    <constructor-arg name="bboCrossContextService" ref="BboCrossContextService"/>
+    <constructor-arg name="withdrawRepository" ref="WithdrawRepository"/>
+    <constructor-arg name="tierValidationService" ref="TierValidationService"/>
+  </object>
+  
+  <object id="OrderValidationApplicationService" type="CoinExchange.Funds.Application.OrderValidationServices.OrderValidationApplicationService, CoinExchange.Funds.Application">
+    <constructor-arg name="fundsValidationService" ref="FundsValidationService"/>
+  </object>
+
+  <object id="DepositApplicationService" type="CoinExchange.Funds.Application.DepositServices.DepositApplicationService, CoinExchange.Funds.Application">
+    <constructor-arg name="fundsValidationService" ref="FundsValidationService"/>
+    <constructor-arg name="coinClientService" ref="CoinClientService"/>
+    <constructor-arg name="fundsPersistenceRepository" ref="FundsPersistenceRepository"/>
+    <constructor-arg name="depositAddressRepository" ref="DepositAddressRepository"/>
+    <constructor-arg name="balanceRepository" ref="BalanceRepository"/>
+    <constructor-arg name="depositRepository" ref="DepositRepository"/>
+    <constructor-arg name="depositLimitRepository" ref="DepositLimitRepository"/>
+  </object>
+  
+  <object id="WithdrawApplicationService" type="CoinExchange.Funds.Application.WithdrawServices.WithdrawApplicationService, CoinExchange.Funds.Application">
+    <constructor-arg name="fundsPersistenceRepository" ref="FundsPersistenceRepository"/>
+    <constructor-arg name="withdrawAddressRepository" ref="WithdrawAddressRepository"/>
+    <constructor-arg name="fundsValidationService" ref="FundsValidationService"/>
+    <constructor-arg name="withdrawRepository" ref="WithdrawRepository"/>
+    <constructor-arg name="withdrawSubmissionService" ref="WithdrawSubmissionService"/>
+    <constructor-arg name="depositAddressRepository" ref="DepositAddressRepository"/>
+    <constructor-arg name="withdrawLimitRepository" ref="WithdrawLimitRepository"/>
+    <constructor-arg name="balanceRepository" ref="BalanceRepository"/>
+  </object>
+
+  <object id="WithdrawSubmissionService" type="CoinExchange.Funds.Application.WithdrawServices.WithdrawSubmissionService, CoinExchange.Funds.Application">
+    <constructor-arg name="fundsPersistenceRepository" ref="FundsPersistenceRepository"/>
+    <constructor-arg name="withdrawRepository" ref="WithdrawRepository"/>
+    <constructor-arg name="coinClientService" ref="CoinClientService"/>
+  </object>
+
+  <object id="LedgerQueryService" type="CoinExchange.Funds.Application.LedgerServices.LedgerQueryService, CoinExchange.Funds.Application">
+    <constructor-arg name="ledgerRepository" ref="LedgerRepository"/>
+  </object>
+  
+  <tx:attribute-driven/>
+</objects>

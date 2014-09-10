@@ -14,6 +14,10 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
     [Serializable]
     public class DepthOrderBook : IOrderListener, IOrderBookListener
     {
+        public DepthOrderBook()
+        {
+            
+        }
         private string _currencyPair = string.Empty;
         private int _size = 0;
         private Depth _depth = null;
@@ -31,6 +35,24 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             _currencyPair = currencyPair;
             _size = size;
             _depth = new Depth(currencyPair, size);
+        }
+
+        /// <summary>
+        /// publish depth (to be used after reloading from snapshot)
+        /// </summary>
+        public void PublishDepth()
+        {
+            //publish depth
+            if (DepthChanged != null)
+            {
+                DepthChanged(_depth);
+            }
+            //publish bbo
+            if (BboChanged != null)
+            {
+                BBO bbo = new BBO(_currencyPair, _depth.BidLevels.First(), _depth.AskLevels.First());
+                BboChanged(bbo);
+            }
         }
 
         #region Methods
@@ -185,7 +207,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
                 _depth.Published();
             }
         }
-
+        
         /// <summary>
         /// The Depth contained by this DepthOrderBook
         /// </summary>

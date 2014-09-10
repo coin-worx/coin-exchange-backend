@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using CoinExchange.IdentityAccess.Domain.Model.UserAggregate;
 
 namespace CoinExchange.IdentityAccess.Application.UserServices.Representations
@@ -20,6 +22,8 @@ namespace CoinExchange.IdentityAccess.Application.UserServices.Representations
             TimeZone = timeZone;
             IsDefaultAutoLogout = isDefaultAutoLogout;
             AutoLogoutMinutes = autoLogoutMinutes;
+
+            LanguagesAvailable = Enum.GetNames(typeof (Language));
         }
 
         /// <summary>
@@ -56,5 +60,10 @@ namespace CoinExchange.IdentityAccess.Application.UserServices.Representations
         /// The minutes after which the User will logout automatically
         /// </summary>
         public int AutoLogoutMinutes { get; private set; }
+
+        /// <summary>
+        /// The list of languages availabel to offer
+        /// </summary>
+        public string[] LanguagesAvailable { get; private set; }
     }
 }

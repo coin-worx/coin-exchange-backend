@@ -33,8 +33,9 @@
     <Reference Include="log4net">
       <HintPath>..\..\packages\log4net.1.2.10\lib\2.0\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -64,6 +65,7 @@
     <Compile Include="DTO\CancelActivationParams.cs" />
     <Compile Include="DTO\ChangePasswordParams.cs" />
     <Compile Include="DTO\ChangeSettingsParams.cs" />
+    <Compile Include="DTO\EmailSettingsParams.cs" />
     <Compile Include="DTO\ForgotPasswordParams.cs" />
     <Compile Include="DTO\ForgotUsernameParams.cs" />
     <Compile Include="DTO\LoginParams.cs" />
@@ -74,6 +76,7 @@
     <Compile Include="DTO\Tier2Param.cs" />
     <Compile Include="DTO\Tier3Param.cs" />
     <Compile Include="DTO\UserActivationParam.cs" />
+    <Compile Include="DTO\VerifyTierLevelParams.cs" />
     <Compile Include="FilterIP.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\LoginController.cs" />

@@ -148,10 +148,9 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
                 {
                     log.Debug("ChangePassword Call Recevied, parameters:" + changePasswordParams);
                 }
-                _userApplicationService.ChangePassword(new ChangePasswordCommand(
+                return Ok(_userApplicationService.ChangePassword(new ChangePasswordCommand(
                     HeaderParamUtility.GetApikey(Request), changePasswordParams.OldPassword,
-                    changePasswordParams.NewPassword));
-                return Ok("changed");
+                    changePasswordParams.NewPassword)));
             }
             catch (InvalidOperationException exception)
             {
@@ -378,12 +377,11 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
                 {
                     log.Debug("ChangeSettings Call Recevied, parameters:" + changeSettingsParams);
                 }
-                _userApplicationService.ChangeSettings(new ChangeSettingsCommand(HeaderParamUtility.GetApikey(Request),
+                ;
+                return Ok(_userApplicationService.ChangeSettings(new ChangeSettingsCommand(HeaderParamUtility.GetApikey(Request),
                     changeSettingsParams.Email, changeSettingsParams.PgpPublicKey, changeSettingsParams.Language,
                     changeSettingsParams.TimeZone, changeSettingsParams.IsDefaultAutoLogout,
-                    changeSettingsParams.AutoLogoutMinutes));
-                return
-                    Ok("changed");
+                    changeSettingsParams.AutoLogoutMinutes)));
             }
             catch (InstanceNotFoundException exception)
             {
@@ -446,6 +444,67 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
                 if (log.IsErrorEnabled)
                 {
                     log.Error("ChangeSettings Call Exception ", exception);
+                }
+                return InternalServerError();
+            }
+        }
+
+        /// <summary>
+        /// Get available permissions
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("private/user/api/submitemailsettings")]
+        [FilterIP]
+        [Authorize]
+        public IHttpActionResult SubmitEmailSettings(EmailSettingsParams emailSettingsParams)
+        {
+            try
+            {
+                if (log.IsDebugEnabled)
+                {
+                    log.Debug("Submit Email Settings Call Recevied");
+                }
+                string apikey = HeaderParamUtility.GetApikey(Request);
+                if (!string.IsNullOrEmpty(apikey))
+                {
+                    return Ok(_userApplicationService.SubmitEmailSettings(new EmailSettingsCommand(apikey,
+                        emailSettingsParams.AdministrativeEmails, emailSettingsParams.NewsLetterEmails)));
+                }
+                else
+                {
+                    throw new Exception("API Key not recieved");
+                }
+            }
+            catch (InvalidOperationException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Submit Email Settings Call Exception ", exception);
+                }
+                return BadRequest(exception.Message);
+            }
+            catch (InvalidCredentialException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Submit Email Settings Call Exception ", exception);
+                }
+                return BadRequest(exception.Message);
+            }
+            catch (InvalidDataException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Submit Email Settings Call Exception ", exception);
+                }
+                return BadRequest(exception.Message);
+            }
+            catch (Exception exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Submit Email Settings Call Exception ", exception);
                 }
                 return InternalServerError();
             }

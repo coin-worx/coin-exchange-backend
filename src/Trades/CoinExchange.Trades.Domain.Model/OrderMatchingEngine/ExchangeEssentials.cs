@@ -13,6 +13,10 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
     [Serializable]
     public class ExchangeEssentials
     {
+        public ExchangeEssentials()
+        {
+            
+        }
         /// <summary>
         /// Default Constructor
         /// </summary>
@@ -27,6 +31,15 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         {
             this.LimitOrderBook = limitOrderBook;
             this.DepthOrderBook = depthOrderBook;
+            this.TradeListener = tradeListener;
+            this.OrderListener = orderListener;
+            this.DepthListener = depthListener;
+            this.BBOListener = bboListener;
+        }
+
+        public void Update(ITradeListener tradeListener,
+            IOrderListener orderListener, IDepthListener depthListener, IBBOListener bboListener)
+        {
             this.TradeListener = tradeListener;
             this.OrderListener = orderListener;
             this.DepthListener = depthListener;

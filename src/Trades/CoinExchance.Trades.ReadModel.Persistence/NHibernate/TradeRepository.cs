@@ -80,7 +80,7 @@ namespace CoinExchange.Trades.ReadModel.Persistence.NHibernate
         [Transaction(ReadOnly = true)]
         public object GetCustomDataBetweenDates(DateTime end, DateTime start,string currencyPair)
         {
-            string sqlQuery = string.Format("SELECT COUNT(TradeId) as NumberOfTrades,max(Price) as high, min(Price)as low, SUM(Volume)as Volume, SUM(Volume*Price)/SUM(Volume) as vwap FROM coinexchange.trade WHERE ExecutionDateTime >='{0}' AND ExecutionDateTime <='{1}' AND CurrencyPair='{2}'", start.ToString("u"), end.ToString("u"),currencyPair);
+            string sqlQuery = string.Format("SELECT COUNT(TradeId) as NumberOfTrades,max(Price) as high, min(Price)as low, SUM(Volume)as Volume, SUM(Volume*Price)/SUM(Volume) as vwap FROM trade WHERE ExecutionDateTime >='{0}' AND ExecutionDateTime <='{1}' AND CurrencyPair='{2}'", start.ToString("u"), end.ToString("u"),currencyPair);
             var result = CurrentSession.CreateSQLQuery(sqlQuery).List();
             return result[0];
         }
@@ -102,6 +102,12 @@ namespace CoinExchange.Trades.ReadModel.Persistence.NHibernate
                 return model;
             }
             throw new InvalidOperationException("Not Authorized");
+        }
+
+        [Transaction(ReadOnly = true)]
+        public IList<TradeReadModel> GetAll()
+        {
+            return CurrentSession.QueryOver<TradeReadModel>().List<TradeReadModel>();
         }
     }
 }

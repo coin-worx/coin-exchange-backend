@@ -19,7 +19,7 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
         /// </summary>
         /// <param name="changePasswordCommand"> </param>
         /// <returns></returns>
-        bool ChangePassword(ChangePasswordCommand changePasswordCommand);
+        ChangePasswordResponse ChangePassword(ChangePasswordCommand changePasswordCommand);
 
         /// <summary>
         /// Request to activate account for which the user has already signed up
@@ -61,7 +61,7 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
         /// </summary>
         /// <param name="changeSettingsCommand"></param>
         /// <returns></returns>
-        bool ChangeSettings(ChangeSettingsCommand changeSettingsCommand);
+        ChangeSettingsResponse ChangeSettings(ChangeSettingsCommand changeSettingsCommand);
 
         /// <summary>
         /// Get settings for an account
@@ -76,5 +76,12 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
         /// <param name="apiKey"></param>
         /// <returns></returns>
         DateTime LastLogin(string apiKey);
+
+        /// <summary>
+        /// Submit settings for notifications by email
+        /// </summary>
+        /// <param name="emailSettingsCommand"></param>
+        /// <returns></returns>
+        SubmitEmailSettingsResponse SubmitEmailSettings(EmailSettingsCommand emailSettingsCommand);
     }
 }

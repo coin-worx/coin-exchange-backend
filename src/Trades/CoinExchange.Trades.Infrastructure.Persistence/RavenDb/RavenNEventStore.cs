@@ -2,12 +2,21 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using CoinExchange.Common.Domain.Model;
+using CoinExchange.Common.Utility;
 using CoinExchange.Trades.Domain.Model.OrderAggregate;
+using CoinExchange.Trades.Domain.Model.OrderMatchingEngine;
 using CoinExchange.Trades.Domain.Model.Services;
 using CoinExchange.Trades.Domain.Model.TradeAggregate;
 using NEventStore;
 using NEventStore.Dispatcher;
+//using NEventStore.Persistence.RavenPersistence;
+//using Raven.Abstractions.Linq;
+//using Raven.Imports.Newtonsoft.Json;
+//using Raven.Imports.Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Linq;
+
 
 namespace CoinExchange.Trades.Infrastructure.Persistence.RavenDb
 {
@@ -22,12 +31,17 @@ namespace CoinExchange.Trades.Infrastructure.Persistence.RavenDb
         private  Guid _streamId;
         private  IStoreEvents _store;
         private  IEventStream _stream;
-
+        private int _snaphost = 0;
+        private Snapshot _lastSnaphot=null;
+        private DateTime _loadFrom = Constants.LoadEventsFrom;
+        private string _eventStore;
+        
         /// <summary>
         /// Default Constructor
         /// </summary>
         public RavenNEventStore(string eventStore)
         {
+            _eventStore = eventStore;
             _streamId=Guid.NewGuid();
             _store = GetInitializedEventStore(new ReceiveCommit(),eventStore);
             _stream = _store.OpenStream(_streamId, 0, int.MaxValue);
@@ -80,13 +94,17 @@ namespace CoinExchange.Trades.Infrastructure.Persistence.RavenDb
         /// <param name="event"></param>
         private void OpenOrCreateStream(object @event)
         {
-            _stream.Add(new EventMessage {Body = @event});
-            _stream.CommitChanges(Guid.NewGuid());
-            if (@event is Order)
-            {
-                Log.Debug("New order stored in Event Store. ID: " + (@event as Order).OrderId.Id + " | Order state: "
-                          + (@event as Order).OrderState);
-            }
+            //if (!ReplayService.ReplayMode)
+            //{
+                _stream.Add(new EventMessage {Body = @event});
+                _stream.CommitChanges(Guid.NewGuid());
+                if (@event is Order)
+                {
+                    Log.Debug("New order stored in Event Store. ID: " + (@event as Order).OrderId.Id +
+                              " | Order state: "
+                              + (@event as Order).OrderState);
+                }
+            //}
         }
 
         /// <summary>
@@ -156,18 +174,19 @@ namespace CoinExchange.Trades.Infrastructure.Persistence.RavenDb
         {
             List<Order> orders = new List<Order>();
             List<EventMessage> collection;
-            collection = _stream.CommittedEvents.ToList();
-            for (int i = 0; i < collection.Count; i++)
-            {
-                if (collection[i].Body is Order)
+                //collection = _stream.CommittedEvents.ToList();
+                var events = _store.Advanced.GetFrom(_loadFrom).ToList();
+                for (int i = 0; i < events.Count; i++)
                 {
-                    Order order = collection[i].Body as Order;
-                    if (order.CurrencyPair == currencyPair)
+                    if (events[i].Events[0].Body is Order)
                     {
-                        orders.Add(order);
+                        Order order = events[i].Events[0].Body as Order;
+                        if (order.CurrencyPair == currencyPair)
+                        {
+                            orders.Add(order);
+                        }
                     }
                 }
-            }
             Log.Debug("Number of orders fetched from Event Store: " + orders.Count);
             if (!orders.Any())
             {
@@ -205,14 +224,68 @@ namespace CoinExchange.Trades.Infrastructure.Persistence.RavenDb
         
         public IList<object> GetAllEvents()
         {
-            List<object> events=new List<object>();
-            List<EventMessage> collection;
-            collection = _stream.CommittedEvents.ToList();
-            for (int i = 0; i < collection.Count; i++)
+            List<object> readEvents=new List<object>();
+            var events = _store.Advanced.GetFrom(DateTime.MinValue).ToList();
+            for (int i = 0; i < events.Count; i++)
             {
-                events.Add(collection[i].Body);
+                readEvents.Add(events[i].Events[0].Body);
             }
-            return events;
+            return readEvents;
+        }
+
+
+        public void ShutDown()
+        {
+            _stream.Dispose();
+            _store.Dispose();
+        }
+
+        /// <summary>
+        /// Save Exchange snapshot
+        /// </summary>
+        /// <param name="exchangeEssentials"></param>
+        public void SaveSnapshot(ExchangeEssentialsList exchangeEssentials)
+        {
+            if (_eventStore == Constants.OUTPUT_EVENT_STORE)
+            {
+                try
+                {
+                    _store.Advanced.AddSnapshot(new Snapshot(_streamId, _snaphost++,
+                        StreamConversion.ObjectToByteArray(exchangeEssentials)));
+                }
+                catch (Exception exception)
+                {
+                    if (Log.IsErrorEnabled)
+                    {
+                        Log.Error("Snapshot Saving error:",exception);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Load last snaphost
+        /// </summary>
+        /// <returns></returns>
+        public ExchangeEssentialsList LoadLastSnapshot()
+        {
+            Snapshot snapshot=null;
+            var initialize = _store.Advanced.GetFrom(Constants.LastSnapshotSearch).GroupBy(i => i.StreamId).Select(g => g.First()).ToList();
+            for (int i = 0; i < initialize.Count; i++)
+            {
+                snapshot = _store.Advanced.GetSnapshot(initialize[i].StreamId, int.MaxValue);
+            }
+            _lastSnaphot = snapshot;
+            if (snapshot != null)
+            {
+                JObject jObject = JObject.Parse(snapshot.Payload.ToString());
+                byte[] array= jObject["$value"].ToObject<byte[]>();
+                object list = StreamConversion.ByteArrayToObject(array);
+                ExchangeEssentialsList exchangeEssentialsList = list as ExchangeEssentialsList;
+                _loadFrom = exchangeEssentialsList.LastSnapshotDateTime;
+                return exchangeEssentialsList;
+            }
+            return null;
         }
     }
 }

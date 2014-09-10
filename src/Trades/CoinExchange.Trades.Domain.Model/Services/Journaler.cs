@@ -25,6 +25,12 @@ namespace CoinExchange.Trades.Domain.Model.Services
         public Journaler(IEventStore eventStore)
         {
             _eventStore = eventStore;
+            ExchangeEssentialsSnapshortEvent.ExchangeSnapshot += SnapshotArrived;
+        }
+
+        void SnapshotArrived(ExchangeEssentialsList exchangeEssentials)
+        {
+            _eventStore.SaveSnapshot(exchangeEssentials);
         }
 
         /// <summary>
@@ -141,6 +147,11 @@ namespace CoinExchange.Trades.Domain.Model.Services
         public List<Order> GetAllOrders()
         {
             return _eventStore.GetAllOrders();
+        }
+
+        public void ShutDown()
+        {
+            ExchangeEssentialsSnapshortEvent.ExchangeSnapshot -= SnapshotArrived;
         }
     }
 }

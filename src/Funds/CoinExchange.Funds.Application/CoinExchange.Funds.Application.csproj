@@ -30,7 +30,24 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Common.Logging">
+      <HintPath>..\..\packages\Common.Logging.1.2.0\lib\1.0\Common.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\log4net.1.2.10\lib\2.0\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Spring.Aop">
+      <HintPath>..\..\packages\Spring.Aop.1.3.2\lib\net40\Spring.Aop.dll</HintPath>
+    </Reference>
+    <Reference Include="Spring.Core">
+      <HintPath>..\..\packages\Spring.Core.1.3.2\lib\net40\Spring.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Spring.Data">
+      <HintPath>..\..\packages\Spring.Data.1.3.2\lib\net40\Spring.Data.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -39,12 +56,42 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Funds\FundsApplicationService.cs" />
+    <Compile Include="CrossBoundedContextsServices\FeeCalculationService.cs" />
+    <Compile Include="CrossBoundedContextsServices\FundsValidationService.cs" />
+    <Compile Include="CrossBoundedContextsServices\StubFundsValidationService.cs" />
+    <Compile Include="CrossBoundedContextsServices\TransactionService.cs" />
+    <Compile Include="DepositServices\Commands\GenerateNewAddressCommand.cs" />
+    <Compile Include="DepositServices\Commands\MakeDepositCommand.cs" />
+    <Compile Include="DepositServices\DepositApplicationService.cs" />
+    <Compile Include="DepositServices\IDepositApplicationService.cs" />
+    <Compile Include="DepositServices\Representations\DepositAddressRepresentation.cs" />
+    <Compile Include="DepositServices\Representations\DepositRepresentation.cs" />
+    <Compile Include="DepositServices\Representations\DepositLimitThresholdsRepresentation.cs" />
+    <Compile Include="DepositServices\Representations\DepositTierLimitRepresentation.cs" />
+    <Compile Include="LedgerServices\ILedgerQueryService.cs" />
+    <Compile Include="LedgerServices\LedgerQueryService.cs" />
+    <Compile Include="LedgerServices\Representations\LedgerRepresentation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="OrderValidationServices\IOrderValidationApplicationService.cs" />
+    <Compile Include="OrderValidationServices\OrderValidationApplicationService.cs" />
+    <Compile Include="WithdrawServices\Commands\AddAddressCommand.cs" />
+    <Compile Include="WithdrawServices\Commands\CancelWithdrawCommand.cs" />
+    <Compile Include="WithdrawServices\Commands\CommitWithdrawCommand.cs" />
+    <Compile Include="WithdrawServices\Commands\DeleteWithdrawAddressCommand.cs" />
+    <Compile Include="WithdrawServices\Representations\CancelWithdrawResponse.cs" />
+    <Compile Include="WithdrawServices\Representations\CommitWithdrawResponse.cs" />
+    <Compile Include="WithdrawServices\Representations\DeleteWithdrawAddressResponse.cs" />
+    <Compile Include="WithdrawServices\Representations\WithdrawAddressRepresentation.cs" />
+    <Compile Include="WithdrawServices\Representations\WithdrawAddressResponse.cs" />
+    <Compile Include="WithdrawServices\Representations\WithdrawLimitRepresentation.cs" />
+    <Compile Include="WithdrawServices\IWithdrawApplicationService.cs" />
+    <Compile Include="WithdrawServices\Representations\WithdrawRepresentation.cs" />
+    <Compile Include="WithdrawServices\Representations\WithdrawTierLimitRepresentation.cs" />
+    <Compile Include="WithdrawServices\WithdrawApplicationService.cs" />
+    <Compile Include="WithdrawServices\WithdrawSubmissionService.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Funds\Commands\" />
-    <Folder Include="Funds\Representation\" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Common\CoinExchange.Common\CoinExchange.Common.csproj">
@@ -55,7 +102,20 @@
       <Project>{4c4f167d-3339-45f1-9a85-71159ef0d806}</Project>
       <Name>CoinExchange.Funds.Domain.Model</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CoinExchange.Funds.Infrastructure.Persistence.NHibernate\CoinExchange.Funds.Infrastructure.Persistence.NHibernate.csproj">
+      <Project>{4cba757a-c25f-49bf-bd1d-693a98a7c175}</Project>
+      <Name>CoinExchange.Funds.Infrastructure.Persistence.NHibernate</Name>
+    </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="FundsApplicationServicesConfig-Test.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FundsApplicationServicesConfig.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

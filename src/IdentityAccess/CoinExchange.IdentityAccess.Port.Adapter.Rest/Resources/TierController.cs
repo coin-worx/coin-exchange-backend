@@ -43,7 +43,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         /// <param name="param"> </param>
         /// <returns></returns>
         [HttpPost]
-        [Route("private/user/tier1")]
+        [Route("private/user/applyfortier1")]
         [FilterIP]
         [Authorize]
         public IHttpActionResult GetVerifyForTier1([FromBody]Tier1Param param)
@@ -97,7 +97,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        [Route("private/user/tier2")]
+        [Route("private/user/applyfortier2")]
         [FilterIP]
         [Authorize]
         public IHttpActionResult GetVerifyForTier2([FromBody]Tier2Param param)
@@ -152,7 +152,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        [Route("private/user/tier3")]
+        [Route("private/user/applyfortier3")]
         [FilterIP]
         [Authorize]
         public async Task<IHttpActionResult> GetVerifyForTier3([FromBody]Tier3Param param)
@@ -163,15 +163,19 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
                 {
                     log.Debug("GetVerifyForTier2 Call Recevied, parameters:"+param);
                 }
-                MemoryStream memoryStream = new MemoryStream();
-                var provider = new MultipartFormDataStreamProvider(ServerUploadFolder);
-                await Request.Content.ReadAsMultipartAsync(provider);
-                foreach (var file in provider.Contents)
+                MemoryStream memoryStream = null;
+                if (!string.IsNullOrEmpty(param.FileName))
                 {
-                    file.CopyToAsync(memoryStream);
-                    if (log.IsDebugEnabled)
+                    memoryStream = new MemoryStream();
+                    var provider = new MultipartFormDataStreamProvider(ServerUploadFolder);
+                    await Request.Content.ReadAsMultipartAsync(provider);
+                    foreach (var file in provider.Contents)
                     {
-                        log.Debug("GetVerifyForTier2 File Recevied");
+                        file.CopyToAsync(memoryStream);
+                        if (log.IsDebugEnabled)
+                        {
+                            log.Debug("GetVerifyForTier2 File Recevied");
+                        }
                     }
                 }
                 _userTierLevelApplicationService.ApplyForTier3Verification(
@@ -416,6 +420,60 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
                 if (log.IsErrorEnabled)
                 {
                     log.Error("GetTier2Details Call Exception ", exception);
+                }
+                return InternalServerError();
+            }
+        }
+
+        /// <summary>
+        /// FOR ADMIN INTERFACE USE ONLY: Admin can verify a Tier from here for a user. May need a special authorization filter
+        /// </summary>
+        /// <param name="verifyTierLevelParams"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("private/user/verifytierlevel")]
+        [FilterIP]
+        [Authorize]
+        public IHttpActionResult VerifyTierLevel(VerifyTierLevelParams verifyTierLevelParams)
+        {
+            try
+            {
+                if (log.IsDebugEnabled)
+                {
+                    log.Debug("Verify Tier Level Call Recevied");
+                }
+                return Ok(_userTierLevelApplicationService.VerifyTierLevel(new VerifyTierLevelCommand(
+                    verifyTierLevelParams.ApiKey, verifyTierLevelParams.TierLevel)));
+            }
+            catch (InvalidOperationException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Verify Tier Level Call Exception ", exception);
+                }
+                return BadRequest(exception.Message);
+            }
+            catch (InvalidCredentialException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Verify Tier Level Call Exception ", exception);
+                }
+                return BadRequest(exception.Message);
+            }
+            catch (ArgumentNullException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Verify Tier Level Call Exception ", exception);
+                }
+                return BadRequest(exception.Message);
+            }
+            catch (Exception exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Verify Tier Level Call Exception ", exception);
                 }
                 return InternalServerError();
             }

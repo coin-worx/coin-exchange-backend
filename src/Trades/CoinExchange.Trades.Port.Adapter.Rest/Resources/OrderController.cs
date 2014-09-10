@@ -73,7 +73,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                         new CancelOrderCommand(new OrderId(orderId), traderId)));
 
                 }
-                return BadRequest();
+                return BadRequest("OrderId is not provided.");
             }
             catch (Exception exception)
             {
@@ -81,7 +81,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                 {
                     log.Error("Cancel Order Call Error", exception);
                 }
-                return InternalServerError(exception);
+                return InternalServerError();
             }
         }
 
@@ -198,7 +198,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                 {
                     log.Error("Query Open Orders Call Error", exception);
                 }
-                return InternalServerError(exception);
+                return InternalServerError();
             }
         }
 
@@ -284,9 +284,18 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                 {
                     log.Debug("Query Orders Call: ApiKey=" + apikey);
                 }
+                AssertionConcern.AssertNullOrEmptyString(orderId, "OrderId cannot be null or empty");
                 TraderId traderId = new TraderId(_apiKeyInfoAccess.GetUserIdFromApiKey(apikey).ToString());
-                object orders = _orderQueryService.GetOrderById(traderId,new OrderId(orderId) );
+                object orders = _orderQueryService.GetOrderById(traderId, new OrderId(orderId));
                 return Ok(orders);
+            }
+            catch (ArgumentNullException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Query Orders Call Error", exception);
+                }
+                return BadRequest(exception.Message);
             }
             catch (Exception exception)
             {
@@ -294,7 +303,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                 {
                     log.Error("Query Orders Call Error", exception);
                 }
-                return InternalServerError(exception);
+                return InternalServerError();
             }
         }
     }

@@ -47,21 +47,27 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Services.Email
         /// <param name="to"></param>
         /// <param name="subject"></param>
         /// <param name="content"></param>
+        /// <param name="adminEmailsAllowed"> </param>
+        /// <param name="newsletterEmailsAllowed"> </param>
         /// <returns></returns>
-        public bool SendMail(string to, string subject, string content)
+        public bool SendMail(string to, string subject, string content, bool adminEmailsAllowed)
         {
-            _mailMessage = new MailMessage(_from, to);
-            _mailMessage.Subject = subject;
-            _mailMessage.Body = content;
-
-            // Until the previous email sending operation is in process, wait otherwise exception will be thrown.
-            while (_sendingInProgress)
+            if (adminEmailsAllowed)
             {
-                Thread.Sleep(500);
+                _mailMessage = new MailMessage(_from, to);
+                _mailMessage.Subject = subject;
+                _mailMessage.Body = content;
+
+                // Until the previous email sending operation is in process, wait otherwise exception will be thrown.
+                while (_sendingInProgress)
+                {
+                    Thread.Sleep(500);
+                }
+                _smtpClient.SendAsync(_mailMessage, null);
+                _sendingInProgress = true;
+                return true;
             }
-            _smtpClient.SendAsync(_mailMessage, null);
-            _sendingInProgress = true;
-            return true;
+            return false;
         }
 
         /// <summary>
@@ -70,21 +76,27 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Services.Email
         /// <param name="to"></param>
         /// <param name="username"> </param>
         /// <param name="activationKey"></param>
+        /// <param name="adminEmailsAllowed"> </param>
+        /// <param name="newsletterEmailsAllowed"> </param>
         /// <returns></returns>
-        public bool SendPostSignUpEmail(string to, string username, string activationKey)
+        public bool SendPostSignUpEmail(string to, string username, string activationKey, bool adminEmailsAllowed)
         {
-            _mailMessage = new MailMessage(_from, to);
-            _mailMessage.Subject = EmailContents.ActivationKeySubject;
-            _mailMessage.Body = EmailContents.GetActivationKeyMessage(username, activationKey);
-
-            // Until the previous email sending operation is in process, wait otherwise exception will be thrown.
-            while (_sendingInProgress)
+            if (adminEmailsAllowed)
             {
-                Thread.Sleep(500);
+                _mailMessage = new MailMessage(_from, to);
+                _mailMessage.Subject = EmailContents.ActivationKeySubject;
+                _mailMessage.Body = EmailContents.GetActivationKeyMessage(username, activationKey);
+
+                // Until the previous email sending operation is in process, wait otherwise exception will be thrown.
+                while (_sendingInProgress)
+                {
+                    Thread.Sleep(500);
+                }
+                _smtpClient.SendAsync(_mailMessage, null);
+                _sendingInProgress = true;
+                return true;
             }
-            _smtpClient.SendAsync(_mailMessage, null);
-            _sendingInProgress = true;
-            return true;
+            return false;
         }
 
         /// <summary>
@@ -92,21 +104,27 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Services.Email
         /// </summary>
         /// <param name="to"></param>
         /// <param name="username"></param>
+        /// <param name="adminEmailsAllowed"> </param>
+        /// <param name="newsletterEmailsAllowed"> </param>
         /// <returns></returns>
-        public bool SendForgotUsernameEmail(string to, string username)
+        public bool SendForgotUsernameEmail(string to, string username, bool adminEmailsAllowed)
         {
-            _mailMessage = new MailMessage(_from, to);
-            _mailMessage.Subject = EmailContents.ForgotUsernameSubject;
-            _mailMessage.Body = EmailContents.GetForgotUsernameMessage(username);
-            
-            // Until the previous email sending operation is in process, wait otherwise exception will be thrown.
-            while (_sendingInProgress)
+            if (adminEmailsAllowed)
             {
-                Thread.Sleep(500);                
+                _mailMessage = new MailMessage(_from, to);
+                _mailMessage.Subject = EmailContents.ForgotUsernameSubject;
+                _mailMessage.Body = EmailContents.GetForgotUsernameMessage(username);
+
+                // Until the previous email sending operation is in process, wait otherwise exception will be thrown.
+                while (_sendingInProgress)
+                {
+                    Thread.Sleep(500);
+                }
+                _smtpClient.SendAsync(_mailMessage, null);
+                _sendingInProgress = true;
+                return true;
             }
-            _smtpClient.SendAsync(_mailMessage, null);
-            _sendingInProgress = true;
-            return true;
+            return false;
         }
 
         /// <summary>
@@ -114,21 +132,27 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Services.Email
         /// </summary>
         /// <param name="to"></param>
         /// <param name="username"></param>
+        /// <param name="adminEmailsAllowed"> </param>
+        /// <param name="newsletterEmailsAllowed"> </param>
         /// <returns></returns>
-        public bool SendWelcomeEmail(string to, string username)
+        public bool SendWelcomeEmail(string to, string username, bool adminEmailsAllowed)
         {
-            _mailMessage = new MailMessage(_from, to);
-            _mailMessage.Subject = EmailContents.WelcomeSubject;
-            _mailMessage.Body = EmailContents.GetWelcomEmailmessage(username);
-
-            // Until the previous email sending operation is in process, wait otherwise exception will be thrown.
-            while (_sendingInProgress)
+            if (adminEmailsAllowed)
             {
-                Thread.Sleep(500);
+                _mailMessage = new MailMessage(_from, to);
+                _mailMessage.Subject = EmailContents.WelcomeSubject;
+                _mailMessage.Body = EmailContents.GetWelcomEmailmessage(username);
+
+                // Until the previous email sending operation is in process, wait otherwise exception will be thrown.
+                while (_sendingInProgress)
+                {
+                    Thread.Sleep(500);
+                }
+                _smtpClient.SendAsync(_mailMessage, null);
+                _sendingInProgress = true;
+                return true;
             }
-            _smtpClient.SendAsync(_mailMessage, null);
-            _sendingInProgress = true;
-            return true;
+            return false;
         }
 
         /// <summary>
@@ -136,21 +160,27 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Services.Email
         /// </summary>
         /// <param name="to"></param>
         /// <param name="username"></param>
+        /// <param name="adminEmailsAllowed"> </param>
+        /// <param name="newsletterEmailsAllowed"> </param>
         /// <returns></returns>
-        public bool SendPasswordChangedEmail(string to, string username)
+        public bool SendPasswordChangedEmail(string to, string username, bool adminEmailsAllowed)
         {
-            _mailMessage = new MailMessage(_from, to);
-            _mailMessage.Subject = EmailContents.PasswordChangedSubject;
-            _mailMessage.Body = EmailContents.GetPasswordChangedEmail(username);
-
-            // Until the previous email sending operation is in process, wait otherwise exception will be thrown.
-            while (_sendingInProgress)
+            if (adminEmailsAllowed)
             {
-                Thread.Sleep(500);
+                _mailMessage = new MailMessage(_from, to);
+                _mailMessage.Subject = EmailContents.PasswordChangedSubject;
+                _mailMessage.Body = EmailContents.GetPasswordChangedEmail(username);
+
+                // Until the previous email sending operation is in process, wait otherwise exception will be thrown.
+                while (_sendingInProgress)
+                {
+                    Thread.Sleep(500);
+                }
+                _smtpClient.SendAsync(_mailMessage, null);
+                _sendingInProgress = true;
+                return true;
             }
-            _smtpClient.SendAsync(_mailMessage, null);
-            _sendingInProgress = true;
-            return true;
+            return false;
         }
 
         /// <summary>
@@ -158,15 +188,21 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Services.Email
         /// </summary>
         /// <param name="to"></param>
         /// <param name="username"></param>
+        /// <param name="adminEmailsAllowed"> </param>
+        /// <param name="newsletterEmailsAllowed"> </param>
         /// <returns></returns>
-        public bool SendReactivaitonNotificationEmail(string to, string username)
+        public bool SendReactivaitonNotificationEmail(string to, string username, bool adminEmailsAllowed)
         {
-            _mailMessage = new MailMessage(_from, to);
-            _mailMessage.Subject = EmailContents.ReactivationNotificationSubject;
-            _mailMessage.Body = EmailContents.GetReactivationNotificationEmail(username);
+            if (adminEmailsAllowed)
+            {
+                _mailMessage = new MailMessage(_from, to);
+                _mailMessage.Subject = EmailContents.ReactivationNotificationSubject;
+                _mailMessage.Body = EmailContents.GetReactivationNotificationEmail(username);
 
-            _smtpClient.SendAsync(_mailMessage, null);
-            return true;
+                _smtpClient.SendAsync(_mailMessage, null);
+                return true;
+            }
+            return false;
         }
 
         /// <summary>
@@ -174,21 +210,27 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Services.Email
         /// </summary>
         /// <param name="to"></param>
         /// <param name="username"></param>
+        /// <param name="adminEmailsAllowed"> </param>
+        /// <param name="newsletterEmailsAllowed"> </param>
         /// <returns></returns>
-        public bool SendCancelActivationEmail(string to, string username)
+        public bool SendCancelActivationEmail(string to, string username, bool adminEmailsAllowed)
         {
-            _mailMessage = new MailMessage(_from, to);
-            _mailMessage.Subject = EmailContents.CancelActivationSubject;
-            _mailMessage.Body = EmailContents.GetCancelActivationEmail(username);
-
-            // Until the previous email sending operation is in process, wait otherwise exception will be thrown.
-            while (_sendingInProgress)
+            if (adminEmailsAllowed)
             {
-                Thread.Sleep(500);
+                _mailMessage = new MailMessage(_from, to);
+                _mailMessage.Subject = EmailContents.CancelActivationSubject;
+                _mailMessage.Body = EmailContents.GetCancelActivationEmail(username);
+
+                // Until the previous email sending operation is in process, wait otherwise exception will be thrown.
+                while (_sendingInProgress)
+                {
+                    Thread.Sleep(500);
+                }
+                _smtpClient.SendAsync(_mailMessage, null);
+                _sendingInProgress = true;
+                return true;
             }
-            _smtpClient.SendAsync(_mailMessage, null);
-            _sendingInProgress = true;
-            return true;
+            return false;
         }
 
         /// <summary>

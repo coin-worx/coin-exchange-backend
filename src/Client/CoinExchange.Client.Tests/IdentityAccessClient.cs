@@ -73,5 +73,38 @@ namespace CoinExchange.Client.Tests
             string url = _baseUrl + "/private/admin/logout";
             return HttpGetRequest(url);
         }
+
+        public string ApplyForTierLevel1(string fullName, string dateOfBirth, string phoneNumber)
+        {
+            JObject jsonObject = new JObject();
+            jsonObject.Add("FullName", fullName);
+            jsonObject.Add("DateOfBirth", dateOfBirth);
+            jsonObject.Add("PhoneNumber", phoneNumber);
+            string url = _baseUrl + "/private/user/applyfortier1";
+            return HttpPostRequest(jsonObject, url);
+        }
+
+        public string ApplyForTierLevel2(string addressLin1, string addressLine2, string addressLine3, string state,
+            string city, string zipCode)
+        {
+            JObject jsonObject = new JObject();
+            jsonObject.Add("AddressLine1", addressLin1);
+            jsonObject.Add("AddressLine2", addressLine2);
+            jsonObject.Add("AddressLine3", addressLine3);
+            jsonObject.Add("State", state);
+            jsonObject.Add("City", city);
+            jsonObject.Add("ZipCode", zipCode);
+            string url = _baseUrl + "/private/user/applyfortier2";
+            return HttpPostRequest(jsonObject, url);
+        }
+
+        public string VerifyTierLevel(string apiKey, string tierLevel)
+        {
+            JObject jsonObject = new JObject();
+            jsonObject.Add("ApiKey", apiKey);
+            jsonObject.Add("TierLevel", tierLevel);
+            string url = _baseUrl + "/private/user/verifytierlevel";
+            return HttpPostRequest(jsonObject, url);
+        }
     }
 }

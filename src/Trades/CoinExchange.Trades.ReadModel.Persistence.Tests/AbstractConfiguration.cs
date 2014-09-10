@@ -24,7 +24,8 @@ namespace CoinExchange.Trades.ReadModel.Persistence.Tests
                     {
                         "assembly://CoinExchange.Trades.ReadModel.Persistence/CoinExchange.Trades.ReadModel.Persistence/SpringConfig.xml",
                         "assembly://CoinExchange.Trades.Infrastructure.Services/CoinExchange.Trades.Infrastructure.Services.Config/StubTradeIdGenerator.xml",
-                        "assembly://CoinExchange.Trades.ReadModel/CoinExchange.Trades.ReadModel.Config/TradeEventListenerConfig.xml"
+                        "assembly://CoinExchange.Trades.Infrastructure.Services/CoinExchange.Trades.Infrastructure.Services.Config/TradesInfrastructureServicesConfig-Test.xml",
+                        "assembly://CoinExchange.Trades.ReadModel/CoinExchange.Trades.ReadModel.Config/TradeEventListenerConfig.xml"                        
                     };
             }
         }

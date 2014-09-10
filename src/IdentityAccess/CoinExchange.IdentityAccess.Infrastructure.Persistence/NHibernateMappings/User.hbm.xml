@@ -20,6 +20,8 @@ assembly="CoinExchange.IdentityAccess.Domain.Model" namespace="CoinExchange.Iden
     <property name="Address1" column="Address1"/>
     <property name="Address2" column="Address2"/>
     <property name="Deleted" column="Deleted"/>
+    <property name="AdminEmailsSubscribed" column="AdminEmailsSubscribed"/>
+    <property name="NewsletterEmailsSubscribed" column="NewsletterEmailsSubscribed"/>
     <property name="ForgotPasswordCode" column="ForgotPasswordCode"/>
     <property name="ForgotPasswordCodeExpiration" column="ForgotPasswordCodeExpiration"/>
     <property name="City" column="City"/>

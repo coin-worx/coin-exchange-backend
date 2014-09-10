@@ -18,14 +18,14 @@ namespace CoinExchange.IdentityAccess.Application.SecurityKeysServices.Commands
             
         }
 
-        public string KeyDescritpion { get; set; }
+        public string KeyDescription { get; set; }
         public bool EnableStartDate { get; set; }
         public bool EnableEndDate { get; set; }
         public bool EnableExpirationDate { get; set; }
         public string EndDateTime { get; set; }
         public string StartDateTime { get; set; }
         public string ExpirationDateTime { get; set; }
-        public SecurityKeyPermissionsRepresentation[] SecurityKeyPermissions { get; set; }
+        public List<string> SecurityKeyPermissions { get; set; }
 
         /// <summary>
         /// Default constructor
@@ -38,7 +38,7 @@ namespace CoinExchange.IdentityAccess.Application.SecurityKeysServices.Commands
         /// <param name="enableEndDate"></param>
         /// <param name="enableStartDate"></param>
         /// <param name="keyDescritpion"></param>
-        public CreateUserGeneratedSecurityKeyPair(SecurityKeyPermissionsRepresentation[] securityKeyPermissions, string expirationDateTime, string startDateTime, string endDateTime, bool enableExpirationDate, bool enableEndDate, bool enableStartDate, string keyDescritpion)
+        public CreateUserGeneratedSecurityKeyPair(List<string> securityKeyPermissions, string expirationDateTime, string startDateTime, string endDateTime, bool enableExpirationDate, bool enableEndDate, bool enableStartDate, string keyDescritpion)
         {
             SecurityKeyPermissions = securityKeyPermissions;
             ExpirationDateTime = expirationDateTime;
@@ -47,7 +47,7 @@ namespace CoinExchange.IdentityAccess.Application.SecurityKeysServices.Commands
             EnableExpirationDate = enableExpirationDate;
             EnableEndDate = enableEndDate;
             EnableStartDate = enableStartDate;
-            KeyDescritpion = keyDescritpion;
+            KeyDescription = keyDescritpion;
            // SystemGeneratedApiKey = systemgeneratedApiKey;
         }
 
@@ -57,13 +57,9 @@ namespace CoinExchange.IdentityAccess.Application.SecurityKeysServices.Commands
         /// <returns></returns>
         public bool Validate()
         {
-            for (int i = 0; i < SecurityKeyPermissions.Length; i++)
+            if (SecurityKeyPermissions.Count > 0)
             {
-                //validate atleast one permission is assigned
-                if (SecurityKeyPermissions[i].Allowed)
-                {
-                    return true;
-                }
+                return true;
             }
             return false;
         }

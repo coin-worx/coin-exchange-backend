@@ -1,6 +1,6 @@
 /*
 SQLyog Enterprise - MySQL GUI v6.5
-MySQL - 5.6.14 : Database - coinexchange
+MySQL - 5.6.14 : Database - coinexchangedev
 *********************************************************************
 */
 
@@ -11,9 +11,24 @@ MySQL - 5.6.14 : Database - coinexchange
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
-create database if not exists `coinexchange`;
+create database if not exists `coinexchangedev`;
 
-USE `coinexchange`;
+USE `coinexchangedev`;
+
+/*Table structure for table `balance` */
+
+DROP TABLE IF EXISTS `balance`;
+
+CREATE TABLE `balance` (
+  `BalanceId` int(10) NOT NULL AUTO_INCREMENT,
+  `Currency` varchar(10) DEFAULT NULL,
+  `AccountId` int(11) DEFAULT NULL,
+  `AvailableBalance` double DEFAULT NULL,
+  `CurrentBalance` double DEFAULT NULL,
+  `PendingBalance` double DEFAULT NULL,
+  `IsFrozen` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`BalanceId`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
 /*Table structure for table `currencypair` */
 
@@ -25,6 +40,91 @@ CREATE TABLE `currencypair` (
   `QuoteCurrency` varchar(10) DEFAULT NULL,
   PRIMARY KEY (`CurrencyPairName`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
+
+/*Table structure for table `deposit` */
+
+DROP TABLE IF EXISTS `deposit`;
+
+CREATE TABLE `deposit` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `Currency` varchar(7) DEFAULT NULL,
+  `IsCryptoCurrency` tinyint(1) DEFAULT NULL,
+  `AccountId` int(11) DEFAULT NULL,
+  `DepositId` varchar(100) DEFAULT NULL,
+  `Date` datetime(6) DEFAULT NULL,
+  `Amount` double DEFAULT NULL,
+  `AmountInUsd` double DEFAULT NULL,
+  `Fee` double DEFAULT NULL,
+  `Confirmations` int(11) DEFAULT NULL,
+  `Status` varchar(15) DEFAULT NULL,
+  `Type` varchar(15) DEFAULT NULL,
+  `TransactionId` varchar(100) DEFAULT NULL,
+  `BitcoinAddress` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+
+/*Table structure for table `depositaddress` */
+
+DROP TABLE IF EXISTS `depositaddress`;
+
+CREATE TABLE `depositaddress` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `Currency` varchar(15) DEFAULT NULL,
+  `IsCryptoCurrency` tinyint(1) DEFAULT NULL,
+  `AccountId` int(11) DEFAULT NULL,
+  `BitcoinAddress` varchar(50) DEFAULT NULL,
+  `Status` varchar(20) DEFAULT NULL,
+  `CreationDateTime` datetime DEFAULT NULL,
+  `DateUsed` datetime DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+
+/*Table structure for table `depositlimit` */
+
+DROP TABLE IF EXISTS `depositlimit`;
+
+CREATE TABLE `depositlimit` (
+  `Id` int(10) NOT NULL AUTO_INCREMENT,
+  `TierLevel` varchar(15) DEFAULT NULL,
+  `DailyLimit` double DEFAULT NULL,
+  `MonthlyLimit` double DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+
+/*Table structure for table `fee` */
+
+DROP TABLE IF EXISTS `fee`;
+
+CREATE TABLE `fee` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `CurrencyPair` varchar(15) DEFAULT NULL,
+  `PercentageFee` double DEFAULT NULL,
+  `Amount` double DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=latin1;
+
+/*Table structure for table `ledger` */
+
+DROP TABLE IF EXISTS `ledger`;
+
+CREATE TABLE `ledger` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `LedgerId` varchar(50) DEFAULT NULL,
+  `DateTime` datetime(6) DEFAULT NULL,
+  `LedgerType` varchar(15) DEFAULT NULL,
+  `Currency` varchar(15) DEFAULT NULL,
+  `AccountId` int(11) DEFAULT NULL,
+  `Amount` double DEFAULT NULL,
+  `AmountInUsd` double DEFAULT NULL,
+  `Fee` double DEFAULT NULL,
+  `Balance` double DEFAULT NULL,
+  `TradeId` varchar(50) DEFAULT NULL,
+  `OrderId` varchar(50) DEFAULT NULL,
+  `WithdrawId` varchar(50) DEFAULT NULL,
+  `DepositId` varchar(50) DEFAULT NULL,
+  `IsBaseCurrencyInTrade` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
 /*Table structure for table `ohlc` */
 
@@ -39,8 +139,10 @@ CREATE TABLE `ohlc` (
   `Close` decimal(10,5) DEFAULT NULL,
   `Volume` decimal(10,5) DEFAULT NULL,
   `CurrencyPair` varchar(100) DEFAULT NULL,
+  `AveragePrice` decimal(10,5) DEFAULT NULL,
+  `TotalWeight` decimal(10,5) DEFAULT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Table structure for table `order` */
 
@@ -76,6 +178,20 @@ CREATE TABLE `passwordcoderecord` (
   `UserId` int(11) DEFAULT NULL,
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Table structure for table `pendingtransaction` */
+
+DROP TABLE IF EXISTS `pendingtransaction`;
+
+CREATE TABLE `pendingtransaction` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `BalanceId` int(10) DEFAULT NULL,
+  `Currency` varchar(20) DEFAULT NULL,
+  `InstanceId` varchar(50) DEFAULT NULL,
+  `PendingTransactionType` int(11) DEFAULT NULL,
+  `Amount` double DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 
 /*Table structure for table `permission` */
 
@@ -121,7 +237,7 @@ CREATE TABLE `securitykeyspermission` (
   PRIMARY KEY (`Id`),
   KEY `FK_apikeypermission` (`PermissionId`),
   CONSTRAINT `FK_apikeypermission` FOREIGN KEY (`PermissionId`) REFERENCES `permission` (`PermissionId`)
-) ENGINE=InnoDB AUTO_INCREMENT=191 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Table structure for table `tickerinfo` */
 
@@ -148,7 +264,7 @@ CREATE TABLE `tickerinfo` (
   `Last24HourVolume` decimal(10,5) DEFAULT NULL,
   `CurrencyPair` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
 
 /*Table structure for table `tier` */
 
@@ -208,9 +324,11 @@ CREATE TABLE `user` (
   `NationalIdentificationNumber` varchar(50) DEFAULT NULL,
   `FullName` varchar(50) DEFAULT NULL,
   `DateOfBirth` date DEFAULT NULL,
+  `AdminEmailsSubscribed` tinyint(1) DEFAULT NULL,
+  `NewsletterEmailsSubscribed` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`Id`),
   UNIQUE KEY `NewIndex1` (`UserName`,`Email`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Table structure for table `userdocument` */
 
@@ -222,7 +340,7 @@ CREATE TABLE `userdocument` (
   `DocumentPath` varchar(200) DEFAULT NULL,
   `UserId` int(11) DEFAULT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Table structure for table `usertierlevelstatus` */
 
@@ -234,7 +352,70 @@ CREATE TABLE `usertierlevelstatus` (
   `Status` varchar(50) DEFAULT NULL,
   `UserId` int(11) DEFAULT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Table structure for table `withdraw` */
+
+DROP TABLE IF EXISTS `withdraw`;
+
+CREATE TABLE `withdraw` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `WithdrawId` varchar(50) DEFAULT NULL,
+  `Currency` varchar(10) DEFAULT NULL,
+  `IsCryptoCurrency` tinyint(1) DEFAULT NULL,
+  `Amount` double DEFAULT NULL,
+  `AmountInUsd` double DEFAULT NULL,
+  `Fee` double DEFAULT NULL,
+  `DateTime` datetime DEFAULT NULL,
+  `Type` varchar(15) DEFAULT NULL,
+  `Status` varchar(15) DEFAULT NULL,
+  `AccountId` int(11) DEFAULT NULL,
+  `BankName` varchar(20) DEFAULT NULL,
+  `BankAccountAddress` varchar(20) DEFAULT NULL,
+  `BankAccountSwiftCode` varchar(20) DEFAULT NULL,
+  `TransactionId` varchar(50) DEFAULT NULL,
+  `BitcoinAddress` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Table structure for table `withdrawaddress` */
+
+DROP TABLE IF EXISTS `withdrawaddress`;
+
+CREATE TABLE `withdrawaddress` (
+  `Id` int(10) NOT NULL AUTO_INCREMENT,
+  `Currency` varchar(15) DEFAULT NULL,
+  `IsCryptoCurrency` tinyint(1) DEFAULT NULL,
+  `AccountId` int(11) DEFAULT NULL,
+  `BitcoinAddress` varchar(50) DEFAULT NULL,
+  `Description` varchar(140) DEFAULT NULL,
+  `CreationDateTime` datetime DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Table structure for table `withdrawfees` */
+
+DROP TABLE IF EXISTS `withdrawfees`;
+
+CREATE TABLE `withdrawfees` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `Currency` varchar(15) DEFAULT NULL,
+  `MinimumAmount` double DEFAULT NULL,
+  `Fee` double DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+
+/*Table structure for table `withdrawlimit` */
+
+DROP TABLE IF EXISTS `withdrawlimit`;
+
+CREATE TABLE `withdrawlimit` (
+  `Id` int(10) NOT NULL AUTO_INCREMENT,
+  `TierLevel` varchar(15) DEFAULT NULL,
+  `DailyLimit` double DEFAULT NULL,
+  `MonthlyLimit` double DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

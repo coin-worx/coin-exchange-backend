@@ -76,8 +76,9 @@
     <Reference Include="NEventStore">
       <HintPath>..\..\packages\NEventStore.4.0.0.15\lib\net40\NEventStore.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NHibernate, Version=3.0.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -151,7 +152,9 @@
     <Compile Include="SpringDependencyResolver.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="packages.config" />
+    <Content Include="packages.config">
+      <SubType>Designer</SubType>
+    </Content>
     <None Include="Properties\PublishProfiles\Bilal.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -165,12 +168,24 @@
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Funds\CoinExchange.Funds.Application\CoinExchange.Funds.Application.csproj">
+      <Project>{f6edd751-080b-4c4e-8216-2e1ed3ed0a66}</Project>
+      <Name>CoinExchange.Funds.Application</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Funds\CoinExchange.Funds.Domain.Model\CoinExchange.Funds.Domain.Model.csproj">
       <Project>{4c4f167d-3339-45f1-9a85-71159ef0d806}</Project>
       <Name>CoinExchange.Funds.Domain.Model</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Funds\CoinExchange.Funds.Infrastructure.Persistence.NHibernate\CoinExchange.Funds.Infrastructure.Persistence.NHibernate.csproj">
+      <Project>{4cba757a-c25f-49bf-bd1d-693a98a7c175}</Project>
+      <Name>CoinExchange.Funds.Infrastructure.Persistence.NHibernate</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Funds\CoinExchange.Funds.Infrastructure.Services\CoinExchange.Funds.Infrastructure.Services.csproj">
+      <Project>{27301eba-3e81-4091-b877-da0be0bae158}</Project>
+      <Name>CoinExchange.Funds.Infrastructure.Services</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Funds\CoinExchange.Funds.Port.Adapter.Rest\CoinExchange.Funds.Port.Adapter.Rest.csproj">
-      <Project>{62d77a23-3f0f-4481-a7d7-773d63d9917a}</Project>
+      <Project>{d234ea72-f051-461c-b417-1d45e8674881}</Project>
       <Name>CoinExchange.Funds.Port.Adapter.Rest</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\IdentityAccess\CoinExchange.IdentityAccess.Application\CoinExchange.IdentityAccess.Application.csproj">

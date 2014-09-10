@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CoinExchange.IdentityAccess.Application.UserServices;
 using CoinExchange.IdentityAccess.Application.UserServices.Commands;
+using CoinExchange.IdentityAccess.Application.UserServices.Representations;
 using CoinExchange.IdentityAccess.Domain.Model.Repositories;
 using CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate;
 using CoinExchange.IdentityAccess.Domain.Model.UserAggregate;
@@ -49,10 +50,10 @@ namespace CoinExchange.IdentityAccess.Application.Tests
             //UserValidationEssentials userValidationEssentials = new UserValidationEssentials(new Tuple<ApiKey, SecretKey>(
             //    new ApiKey("123456789"), new SecretKey("987654321")), new TimeSpan(0,0,10,0));
 
-            bool changeSuccessful = userApplicationService.ChangePassword(new ChangePasswordCommand(
+            ChangePasswordResponse changePasswordResponse = userApplicationService.ChangePassword(new ChangePasswordCommand(
                 "123456789", "burnitdown", "burnitdowntwice"));
 
-            Assert.IsTrue(changeSuccessful);
+            Assert.IsTrue(changePasswordResponse.ChangeSuccessful);
             User userAfterPasswordChange = userRepository.GetUserByUserName("linkinpark");
             string passwordAfterChange = userAfterPasswordChange.Password;
 

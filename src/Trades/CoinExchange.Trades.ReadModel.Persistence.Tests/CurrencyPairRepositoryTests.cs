@@ -28,11 +28,11 @@ namespace CoinExchange.Trades.ReadModel.Persistence.Tests
             _databaseUtility = new DatabaseUtility(connection);
             _databaseUtility.Create();
             _databaseUtility.Populate();
-            CurrencyPair pair = _currencyPairRepository.GetById("BTC/USD");
+            CurrencyPair pair = _currencyPairRepository.GetById("XBTUSD");
             Assert.NotNull(pair);
-            Assert.AreEqual(pair.CurrencyPairName,"BTC/USD");
-            Assert.AreEqual(pair.BaseCurrency,"USD");
-            Assert.AreEqual(pair.QuoteCurrency,"BTC");
+            Assert.AreEqual(pair.CurrencyPairName,"XBTUSD");
+            Assert.AreEqual(pair.BaseCurrency,"XBT");
+            Assert.AreEqual(pair.QuoteCurrency,"USD");
         }
     }
 }

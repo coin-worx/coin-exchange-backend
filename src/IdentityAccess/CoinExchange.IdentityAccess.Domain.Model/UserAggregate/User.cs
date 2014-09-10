@@ -290,8 +290,14 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         public bool ChangeSettings(string email, string pgpPublicKey, Language language, TimeZone timeZone, 
             bool isDefaultAutoLogout, int autoLogoutMinutes)
         {
-            this._email = email;
-            this._pgpPublicKey = pgpPublicKey;
+            if (!string.IsNullOrEmpty(email))
+            {
+                this._email = email;
+            }
+            if (!string.IsNullOrEmpty(pgpPublicKey))
+            {
+                this._pgpPublicKey = pgpPublicKey;
+            }
             _language = language;
             _timeZone = timeZone;
             if (isDefaultAutoLogout)
@@ -302,10 +308,14 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
             }
             else
             {
-                // Else, assign the custom user defined time
-                this.AssignAutoLogoutTime(autoLogoutMinutes);
-                return true;
+                if (autoLogoutMinutes > 0)
+                {
+                    // Else, assign the custom user defined time
+                    this.AssignAutoLogoutTime(autoLogoutMinutes);
+                    return true;
+                }
             }
+            return false;
         }
 
         /// <summary>
@@ -316,6 +326,28 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         private bool AssignAutoLogoutTime(int minutes)
         {
             _autoLogout = new TimeSpan(0, 0, minutes, 0);
+            return true;
+        }
+
+        /// <summary>
+        /// Admin emails subscription
+        /// </summary>
+        /// <param name="adminEmailsSubcribed"></param>
+        /// <returns></returns>
+        public bool SetAdminEmailSubscription(bool adminEmailsSubcribed)
+        {
+            AdminEmailsSubscribed = adminEmailsSubcribed;
+            return true;
+        }
+
+        /// <summary>
+        /// NewsLetter email subscription
+        /// </summary>
+        /// <param name="adminEmailsSubcribed"></param>
+        /// <returns></returns>
+        public bool SetNewsletterEmailSubscription(bool adminEmailsSubcribed)
+        {
+            AdminEmailsSubscribed = adminEmailsSubcribed;
             return true;
         }
 
@@ -511,5 +543,15 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         /// PGP Public Key
         /// </summary>
         public string PgpPublicKey { get { return _pgpPublicKey; } private set { _pgpPublicKey = value; } }
+
+        /// <summary>
+        /// Are Administrative emails subscribed
+        /// </summary>
+        public bool AdminEmailsSubscribed { get; private set; }
+
+        /// <summary>
+        /// Are Newsletter emails subscribed
+        /// </summary>
+        public bool NewsletterEmailsSubscribed { get; private set; }
     }
 }

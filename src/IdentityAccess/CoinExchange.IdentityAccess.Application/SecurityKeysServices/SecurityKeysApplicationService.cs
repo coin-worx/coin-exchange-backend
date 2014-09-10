@@ -62,13 +62,22 @@ namespace CoinExchange.IdentityAccess.Application.SecurityKeysServices
                 }
                 var keys = _securityKeysGenerationService.GenerateNewSecurityKeys();
                 List<SecurityKeysPermission> permissions = new List<SecurityKeysPermission>();
-                for (int i = 0; i < command.SecurityKeyPermissions.Length; i++)
+                SecurityKeyPermissionsRepresentation[] securityKeyPermissionsRepresentations = this.GetPermissions();
+                foreach (SecurityKeyPermissionsRepresentation securityKeyPermissionsRepresentation in securityKeyPermissionsRepresentations)
                 {
-                    permissions.Add(new SecurityKeysPermission(keys.Item1, command.SecurityKeyPermissions[i].Permission,
-                        command.SecurityKeyPermissions[i].Allowed));
+                    // Check which permissions have been sent from the frontend that must be included with this User Generated Key
+                    if (command.SecurityKeyPermissions.Contains(securityKeyPermissionsRepresentation.Permission.PermissionId))
+                    {
+                        securityKeyPermissionsRepresentation.Allowed = true;
+                    }
+                }
+                for (int i = 0; i < securityKeyPermissionsRepresentations.Length; i++)
+                {
+                    permissions.Add(new SecurityKeysPermission(keys.Item1, securityKeyPermissionsRepresentations[i].Permission,
+                        securityKeyPermissionsRepresentations[i].Allowed));
                 }
                 var keysPair = SecurityKeysPairFactory.UserGeneratedSecurityPair(getSecurityKeyPair.UserId,
-                    command.KeyDescritpion,
+                    command.KeyDescription,
                     keys.Item1, keys.Item2, command.EnableExpirationDate, command.ExpirationDateTime,
                     command.EnableStartDate, command.StartDateTime, command.EnableEndDate, command.EndDateTime,
                     permissions,
@@ -185,7 +194,39 @@ namespace CoinExchange.IdentityAccess.Application.SecurityKeysServices
         {
             //get security key pair for user name
             var getSecurityKeyPair = _securityKeysRepository.GetByApiKey(apiKey);
-            return _securityKeysRepository.GetByUserId(getSecurityKeyPair.UserId);
+            dynamic securityKeys = _securityKeysRepository.GetByUserId(getSecurityKeyPair.UserId);
+            List<object> activeKeys = new List<object>();
+            List<object> expiredKeys = new List<object>();
+            foreach (dynamic securityKey in securityKeys)
+            {
+                if (securityKey.ExpirationDate != null)
+                {
+                    // If the key has not expired, addto the lsit that will be returned to the controller
+                    if (securityKey.ExpirationDate >= DateTime.Now)
+                    {
+                        activeKeys.Add(securityKey);
+                    }
+                    // If key is expired, add to the list of expired keys that will be deleted
+                    else
+                    {
+                        expiredKeys.Add(securityKey);
+                    }
+                }
+                else
+                {
+                    activeKeys.Add(securityKey);
+                }
+            }
+
+            foreach (dynamic expiredKey in expiredKeys)
+            {
+                SecurityKeysPair keyToDelete = _securityKeysRepository.GetByKeyDescriptionAndUserId(expiredKey.KeyDescription, getSecurityKeyPair.UserId);
+                if (keyToDelete != null)
+                {
+                    _securityKeysRepository.DeleteSecurityKeysPair(keyToDelete);
+                }
+            }
+            return activeKeys;
         }
 
         /// <summary>

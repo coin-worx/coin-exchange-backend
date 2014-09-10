@@ -11,6 +11,7 @@ using System.Web.Http;
 using System.Web.Http.Results;
 using CoinExchange.Common.Tests;
 using CoinExchange.IdentityAccess.Application.UserServices.Representations;
+using CoinExchange.IdentityAccess.Domain.Model.Repositories;
 using CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate;
 using CoinExchange.IdentityAccess.Domain.Model.UserAggregate;
 using CoinExchange.IdentityAccess.Port.Adapter.Rest.DTO;
@@ -187,6 +188,60 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             IHttpActionResult httpActionResult = tierController.GetTier3Details();
             BadRequestErrorMessageResult result = httpActionResult as BadRequestErrorMessageResult;
             Assert.AreEqual(result.Message, "Tier 3 details are not submitted yet.");
+        }
+
+        [Test]
+        [Category("Integration")]
+        public void VerifyTierLevelTest_TestsIfTheTierLevelIsVerifiedAsExpected_QueriesDatabaseToConfirm()
+        {
+            UserValidationEssentials essentials = AccessControlUtility.RegisterAndLogin("user", "user@user.com", "123", _applicationContext);
+            TierController tierController = _applicationContext["TierController"] as TierController;            
+            Assert.IsNotNull(tierController);
+
+            tierController.Request = new HttpRequestMessage(HttpMethod.Post, "");
+            tierController.Request.Headers.Add("Auth", essentials.ApiKey);
+
+            tierController.GetVerifyForTier1(new Tier1Param("User", DateTime.Now.AddDays(-10).ToShortDateString(), "656667"));
+            // Tier 2 will not be considered for verification because Tier 1 is not yet verified
+            tierController.GetVerifyForTier2(new Tier2Param("asd", "", "", "punjab", "Isb", "123"));
+
+            IHttpActionResult httpActionResult = tierController.GetTierStatuses();
+            OkNegotiatedContentResult<UserTierStatusRepresentation[]> statuses = (OkNegotiatedContentResult<UserTierStatusRepresentation[]>)httpActionResult;
+            Assert.AreEqual(statuses.Content.Length, 5);
+            Assert.AreEqual(statuses.Content[0].Status, Status.Verified.ToString());
+            Assert.AreEqual(statuses.Content[1].Status, Status.Preverified.ToString());
+            Assert.AreEqual(statuses.Content[2].Status, Status.NonVerified.ToString());
+
+            IHttpActionResult verifyTierLevelResult = tierController.VerifyTierLevel(new VerifyTierLevelParams("Tier 1", essentials.ApiKey));
+            OkNegotiatedContentResult<VerifyTierLevelResponse> verificationResponse = (OkNegotiatedContentResult<VerifyTierLevelResponse>)verifyTierLevelResult;
+            Assert.IsTrue(verificationResponse.Content.VerificationSuccessful);
+
+            httpActionResult = tierController.GetTierStatuses();
+            statuses = (OkNegotiatedContentResult<UserTierStatusRepresentation[]>)httpActionResult;
+            Assert.AreEqual(statuses.Content.Length, 5);
+            Assert.AreEqual(statuses.Content[0].Status, Status.Verified.ToString());
+            Assert.AreEqual(statuses.Content[1].Status, Status.Verified.ToString());
+            Assert.AreEqual(statuses.Content[2].Status, Status.NonVerified.ToString());
+
+            // Tier 2 will now be verified as Tier 1 is already verified
+            tierController.GetVerifyForTier2(new Tier2Param("asd", "", "", "punjab", "Isb", "123"));
+            httpActionResult = tierController.GetTierStatuses();
+            statuses = (OkNegotiatedContentResult<UserTierStatusRepresentation[]>)httpActionResult;
+            Assert.AreEqual(statuses.Content.Length, 5);
+            Assert.AreEqual(statuses.Content[0].Status, Status.Verified.ToString());
+            Assert.AreEqual(statuses.Content[1].Status, Status.Verified.ToString());
+            Assert.AreEqual(statuses.Content[2].Status, Status.Preverified.ToString());
+
+            verifyTierLevelResult = tierController.VerifyTierLevel(new VerifyTierLevelParams("Tier 2", essentials.ApiKey));
+            verificationResponse = (OkNegotiatedContentResult<VerifyTierLevelResponse>)verifyTierLevelResult;
+            Assert.IsTrue(verificationResponse.Content.VerificationSuccessful);
+
+            httpActionResult = tierController.GetTierStatuses();
+            statuses = (OkNegotiatedContentResult<UserTierStatusRepresentation[]>)httpActionResult;
+            Assert.AreEqual(statuses.Content.Length, 5);
+            Assert.AreEqual(statuses.Content[0].Status, Status.Verified.ToString());
+            Assert.AreEqual(statuses.Content[1].Status, Status.Verified.ToString());
+            Assert.AreEqual(statuses.Content[2].Status, Status.Verified.ToString());
         }
     }
 }

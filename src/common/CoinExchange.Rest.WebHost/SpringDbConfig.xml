@@ -6,7 +6,7 @@
   <!-- Database Configuration -->
   <db:provider id="DbProvider"
                    provider="MySql-6.2.2"
-                   connectionString="Server=localhost;Database=CoinExchange;User ID=root;Password=;"/>
+                   connectionString="Server=localhost;Database=CoinExchangeDev;User ID=root;Password=;"/>
 
   <!-- NHibernate SessionFactory configuration -->
   <object id="NHibernateSessionFactory" type="Spring.Data.NHibernate.LocalSessionFactoryObject, Spring.Data.NHibernate30">
@@ -15,6 +15,7 @@
       <list>
         <value>CoinExchange.IdentityAccess.Infrastructure.Persistence</value>
         <value>CoinExchange.Trades.ReadModel.Persistence</value>
+        <value>CoinExchange.Funds.Infrastructure.Persistence.NHibernate</value>
       </list>
     </property>
     
@@ -79,6 +80,51 @@
     <property name="SessionFactory" ref="NHibernateSessionFactory"/>
   </object>
   <object id="CurrencyPairRepository" type="CoinExchange.Trades.ReadModel.Persistence.NHibernate.CurrencyPairRepository, CoinExchange.Trades.ReadModel.Persistence">
+    <property name="SessionFactory" ref="NHibernateSessionFactory"/>
+  </object>
+
+  <!-- Repositories -->
+  <object id="FundsPersistenceRepository" type="CoinExchange.Funds.Infrastructure.Persistence.NHibernate.NHibernate.FundsPersistenceRepository, CoinExchange.Funds.Infrastructure.Persistence.NHibernate">
+    <property name="SessionFactory" ref="NHibernateSessionFactory"/>
+  </object>
+
+  <object id="BalanceRepository" type="CoinExchange.Funds.Infrastructure.Persistence.NHibernate.NHibernate.BalanceRepository, CoinExchange.Funds.Infrastructure.Persistence.NHibernate">
+    <property name="SessionFactory" ref="NHibernateSessionFactory"/>
+  </object>
+
+  <object id="DepositRepository" type="CoinExchange.Funds.Infrastructure.Persistence.NHibernate.NHibernate.DepositRepository, CoinExchange.Funds.Infrastructure.Persistence.NHibernate">
+    <property name="SessionFactory" ref="NHibernateSessionFactory"/>
+  </object>
+
+  <object id="WithdrawRepository" type="CoinExchange.Funds.Infrastructure.Persistence.NHibernate.NHibernate.WithdrawRepository, CoinExchange.Funds.Infrastructure.Persistence.NHibernate">
+    <property name="SessionFactory" ref="NHibernateSessionFactory"/>
+  </object>
+
+  <object id="LedgerRepository" type="CoinExchange.Funds.Infrastructure.Persistence.NHibernate.NHibernate.LedgerRepository, CoinExchange.Funds.Infrastructure.Persistence.NHibernate">
+    <property name="SessionFactory" ref="NHibernateSessionFactory"/>
+  </object>
+
+  <object id="DepositAddressRepository" type="CoinExchange.Funds.Infrastructure.Persistence.NHibernate.NHibernate.DepositAddressRepository, CoinExchange.Funds.Infrastructure.Persistence.NHibernate">
+    <property name="SessionFactory" ref="NHibernateSessionFactory"/>
+  </object>
+
+  <object id="WithdrawAddressRepository" type="CoinExchange.Funds.Infrastructure.Persistence.NHibernate.NHibernate.WithdrawAddressRepository, CoinExchange.Funds.Infrastructure.Persistence.NHibernate">
+    <property name="SessionFactory" ref="NHibernateSessionFactory"/>
+  </object>
+
+  <object id="WithdrawLimitRepository" type="CoinExchange.Funds.Infrastructure.Persistence.NHibernate.NHibernate.WithdrawLimitRepository, CoinExchange.Funds.Infrastructure.Persistence.NHibernate">
+    <property name="SessionFactory" ref="NHibernateSessionFactory"/>
+  </object>
+
+  <object id="DepositLimitRepository" type="CoinExchange.Funds.Infrastructure.Persistence.NHibernate.NHibernate.DepositLimitRepository, CoinExchange.Funds.Infrastructure.Persistence.NHibernate">
+    <property name="SessionFactory" ref="NHibernateSessionFactory"/>
+  </object>
+
+  <object id="FeeRepository" type="CoinExchange.Funds.Infrastructure.Persistence.NHibernate.NHibernate.FeeRepository, CoinExchange.Funds.Infrastructure.Persistence.NHibernate">
+    <property name="SessionFactory" ref="NHibernateSessionFactory"/>
+  </object>
+
+  <object id="WithdrawFeesRepository" type="CoinExchange.Funds.Infrastructure.Persistence.NHibernate.NHibernate.WithdrawFeesRepository, CoinExchange.Funds.Infrastructure.Persistence.NHibernate">
     <property name="SessionFactory" ref="NHibernateSessionFactory"/>
   </object>
   <tx:attribute-driven/>

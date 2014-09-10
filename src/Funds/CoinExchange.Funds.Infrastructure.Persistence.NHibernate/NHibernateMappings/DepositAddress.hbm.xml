@@ -1,0 +1,23 @@
+﻿<?xml version="1.0"?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+assembly="CoinExchange.Funds.Domain.Model" namespace="CoinExchange.Funds.Domain.Model.DepositAggregate">
+  <class name="DepositAddress" table="depositaddress" lazy="false">
+    <id name="Id" column="Id">
+      <generator class="native" />
+    </id>
+
+    <component name="Currency">
+      <property name="Name" column="Currency"/>
+      <property name="IsCryptoCurrency" column="IsCryptoCurrency"/>
+    </component>
+    <property name="CreationDateTime" />
+    <property name="DateUsed" />
+    <property name="Status" />
+    <component name="BitcoinAddress">
+      <property name="Value" column="BitcoinAddress"/>
+    </component>
+    <component name="AccountId">
+      <property name="Value" column="AccountId"/>
+    </component>
+  </class>
+</hibernate-mapping>

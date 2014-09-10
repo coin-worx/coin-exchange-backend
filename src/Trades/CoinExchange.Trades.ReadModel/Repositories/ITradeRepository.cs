@@ -54,6 +54,12 @@ namespace CoinExchange.Trades.ReadModel.Repositories
         IList<TradeReadModel> GetTradesBetweenDates(DateTime end, DateTime start,string currencyPair);
 
         /// <summary>
+        /// Get All trades
+        /// </summary>
+        /// <returns></returns>
+        IList<TradeReadModel> GetAll();
+
+        /// <summary>
         /// Get custom calculated data for ticker info calculation
         /// </summary>
         /// <param name="end"></param>
