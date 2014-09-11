@@ -24,5 +24,19 @@ namespace CoinExchange.Trades.Domain.Model.Services
         bool TradeExecuted(string baseCurrency, string quoteCurrency, decimal tradeVolume, decimal price,
             DateTime executionDateTime, string tradeId, string buyAccountId, string sellAccountId, string buyOrderId, 
             string sellOrderId);
+
+        /// <summary>
+        /// Calls Funds BC to restore balance after the order cancellation
+        /// </summary>
+        /// <param name="baseCurrency"></param>
+        /// <param name="quoteCurrency"></param>
+        /// <param name="traderId"></param>
+        /// <param name="orderSide"></param>
+        /// <param name="orderId"></param>
+        /// <param name="openQuantity"></param>
+        /// <param name="price"></param>
+        /// <returns></returns>
+        bool OrderCancelled(string baseCurrency, string quoteCurrency, string traderId, string orderSide,
+                                   string orderId, decimal openQuantity, decimal price);
     }
 }

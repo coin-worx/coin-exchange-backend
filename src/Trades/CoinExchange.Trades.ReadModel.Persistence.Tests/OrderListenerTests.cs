@@ -23,6 +23,7 @@ namespace CoinExchange.Trades.ReadModel.Persistence.Tests
     {
         private ManualResetEvent _manualResetEvent;
         private IEventStore _eventStore;
+        private IBalanceValidationService _balanceValidationService = (IBalanceValidationService)ContextRegistry.GetContext()["BalanceValidationService"];
         private OrderEventListener _listener;
         private IPersistanceRepository _persistance = ContextRegistry.GetContext()["PersistenceRepository"] as IPersistanceRepository;
 
@@ -34,6 +35,11 @@ namespace CoinExchange.Trades.ReadModel.Persistence.Tests
         public IPersistanceRepository Persistance
         {
             set { _persistance = ContextRegistry.GetContext()["PersistenceRepository"] as IPersistanceRepository; }
+        }
+
+        public IBalanceValidationService BalanceValidationService
+        {
+            set { _balanceValidationService = (IBalanceValidationService)ContextRegistry.GetContext()["BalanceValidationService"]; }
         }
 
         private ISessionFactory sessionFactory;
@@ -61,7 +67,7 @@ namespace CoinExchange.Trades.ReadModel.Persistence.Tests
             //assign journaler to disruptor as its consumer
             OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
             _manualResetEvent = new ManualResetEvent(false);
-            _listener = new OrderEventListener(_persistance);
+            _listener = new OrderEventListener(_persistance, _balanceValidationService);
             AfterSetup();
         }
 

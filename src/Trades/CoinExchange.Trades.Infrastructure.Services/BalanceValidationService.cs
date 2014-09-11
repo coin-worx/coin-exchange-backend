@@ -53,5 +53,23 @@ namespace CoinExchange.Trades.Infrastructure.Services
                                                                     int.Parse(buyAccountId), int.Parse(sellAccountId),
                                                                     buyOrderId, sellOrderId);
         }
+
+
+        /// <summary>
+        /// Calls Funds BC to restore balance after the order cancellation
+        /// </summary>
+        /// <param name="baseCurrency"></param>
+        /// <param name="quoteCurrency"></param>
+        /// <param name="traderId"></param>
+        /// <param name="orderSide"></param>
+        /// <param name="orderId"></param>
+        /// <param name="openQuantity"></param>
+        /// <param name="price"></param>
+        /// <returns></returns>
+        public bool OrderCancelled(string baseCurrency, string quoteCurrency, string traderId, string orderSide, string orderId, decimal openQuantity, decimal price)
+        {
+            return _orderValidationApplicationService.OrderCancelled(baseCurrency, quoteCurrency, int.Parse(traderId), orderSide, orderId,
+                                                                openQuantity, price);
+        }
     }
 }
