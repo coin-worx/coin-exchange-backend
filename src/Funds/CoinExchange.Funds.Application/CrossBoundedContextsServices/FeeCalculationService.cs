@@ -54,134 +54,38 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         private decimal GetFeeInstance(Currency baseCurrency, Currency quoteCurrency, decimal amount)
         {
             string currencyPair = baseCurrency.Name + quoteCurrency.Name;
-            int amountInInt = Convert.ToInt32(amount);
-            decimal finalFee = 0;
-            if (amountInInt < 1000)
+            
+            List<Fee> feeList = _feeRepository.GetFeeByCurrencyPair(currencyPair);
+            for (int i = 0; i < feeList.Count; i++)
             {
-                Fee fee = _feeRepository.GetFeeByCurrencyAndAmount(currencyPair, 1000);
-                return fee.PercentageFee;
+                // E.g., if amount == 500 && currentFee element = 1000
+                if (feeList[i].Amount >= amount)
+                {
+                    Fee currentFee = _feeRepository.GetFeeByCurrencyAndAmount(currencyPair, feeList[i].Amount);
+                    return currentFee.PercentageFee;
+                }
+                // If this is not the last element in the list
+                if ((feeList.Count - i) != 1)
+                {
+                    // E.g., if amount == 1100 && currentFee = 1000 && currentFee + 1 = 2000
+                    if (feeList[i].Amount < amount && feeList[i + 1].Amount > amount)
+                    {
+                        Fee currentFee = _feeRepository.GetFeeByCurrencyAndAmount(currencyPair, feeList[i].Amount);
+                        return currentFee.PercentageFee;
+                    }
+                }
+                // If this is the last element, that means the amount is greater than or equal to the last percentage element, 
+                // so we provide the last element
+                else
+                {
+                    if (feeList[i].Amount <= amount)
+                    {
+                        Fee currentFee = _feeRepository.GetFeeByCurrencyAndAmount(currencyPair, feeList[i].Amount);
+                        return currentFee.PercentageFee;
+                    }
+                }
             }
-            else if (amountInInt >= 1000 && amountInInt < 2000)
-            {
-                Fee fee = _feeRepository.GetFeeByCurrencyAndAmount(currencyPair, 2000);
-                return fee.PercentageFee;
-            }
-            else if (amountInInt >= 2000 && amountInInt < 3500)
-            {
-                Fee fee = _feeRepository.GetFeeByCurrencyAndAmount(currencyPair, 3500);
-                return fee.PercentageFee;
-            }
-            else if (amountInInt >= 3500 && amountInInt < 5000)
-            {
-                Fee fee = _feeRepository.GetFeeByCurrencyAndAmount(currencyPair, 4000);
-                return fee.PercentageFee;
-            }
-            else if (amountInInt >= 5000 && amountInInt < 6500)
-            {
-                Fee fee = _feeRepository.GetFeeByCurrencyAndAmount(currencyPair, 6500);
-                return fee.PercentageFee;
-            }
-            else if (amountInInt >= 6500 && amountInInt < 8000)
-            {
-                Fee fee = _feeRepository.GetFeeByCurrencyAndAmount(currencyPair, 8000);
-                return fee.PercentageFee;
-            }
-            else if (amountInInt >= 8000 && amountInInt < 10000)
-            {
-                Fee fee = _feeRepository.GetFeeByCurrencyAndAmount(currencyPair, 10000);
-                return fee.PercentageFee;
-            }
-            else if (amountInInt >= 10000 && amountInInt < 12500)
-            {
-                Fee fee = _feeRepository.GetFeeByCurrencyAndAmount(currencyPair, 10000);
-                return fee.PercentageFee;
-            }
-            else if (amountInInt >= 12500 && amountInInt < 15000)
-            {
-                Fee fee = _feeRepository.GetFeeByCurrencyAndAmount(currencyPair, 10000);
-                return fee.PercentageFee;
-            }
-            else if (amountInInt >= 15000 && amountInInt < 17500)
-            {
-                Fee fee = _feeRepository.GetFeeByCurrencyAndAmount(currencyPair, 10000);
-                return fee.PercentageFee;
-            }
-            else if (amountInInt >= 17500 && amountInInt < 20000)
-            {
-                Fee fee = _feeRepository.GetFeeByCurrencyAndAmount(currencyPair, 10000);
-                return fee.PercentageFee;
-            }
-            else if (amountInInt >= 20000 && amountInInt < 25000)
-            {
-                Fee fee = _feeRepository.GetFeeByCurrencyAndAmount(currencyPair, 25000);
-                return fee.PercentageFee;
-            }
-            else if (amountInInt >= 25000 && amountInInt < 30000)
-            {
-                Fee fee = _feeRepository.GetFeeByCurrencyAndAmount(currencyPair, 30000);
-                return fee.PercentageFee;
-            }
-            else if (amountInInt >= 30000 && amountInInt < 40000)
-            {
-                Fee fee = _feeRepository.GetFeeByCurrencyAndAmount(currencyPair, 40000);
-                return fee.PercentageFee;
-            }
-            else if (amountInInt >= 40000 && amountInInt < 50000)
-            {
-                Fee fee = _feeRepository.GetFeeByCurrencyAndAmount(currencyPair, 50000);
-                return fee.PercentageFee;
-            }
-            else if (amountInInt >= 50000 && amountInInt < 60000)
-            {
-                Fee fee = _feeRepository.GetFeeByCurrencyAndAmount(currencyPair, 60000);
-                return fee.PercentageFee;
-            }
-            else if (amountInInt >= 60000 && amountInInt < 80000)
-            {
-                Fee fee = _feeRepository.GetFeeByCurrencyAndAmount(currencyPair, 80000);
-                return fee.PercentageFee;
-            }
-            else if (amountInInt >= 80000 && amountInInt < 100000)
-            {
-                Fee fee = _feeRepository.GetFeeByCurrencyAndAmount(currencyPair, 100000);
-                return fee.PercentageFee;
-            }
-            else if (amountInInt >= 100000 && amountInInt < 125000)
-            {
-                Fee fee = _feeRepository.GetFeeByCurrencyAndAmount(currencyPair, 125000);
-                return fee.PercentageFee;
-            }
-            else if (amountInInt >= 125000 && amountInInt < 150000)
-            {
-                Fee fee = _feeRepository.GetFeeByCurrencyAndAmount(currencyPair, 150000);
-                return fee.PercentageFee;
-            }
-            else if (amountInInt >= 150000 && amountInInt < 200000)
-            {
-                Fee fee = _feeRepository.GetFeeByCurrencyAndAmount(currencyPair, 200000);
-                return fee.PercentageFee;
-            }
-            else if (amountInInt >= 200000 && amountInInt < 350000)
-            {
-                Fee fee = _feeRepository.GetFeeByCurrencyAndAmount(currencyPair, 350000);
-                return fee.PercentageFee;
-            }
-            else if (amountInInt >= 350000 && amountInInt < 500000)
-            {
-                Fee fee = _feeRepository.GetFeeByCurrencyAndAmount(currencyPair, 500000);
-                return fee.PercentageFee;
-            }
-            else if (amountInInt >= 500000 && amountInInt < 750000)
-            {
-                Fee fee = _feeRepository.GetFeeByCurrencyAndAmount(currencyPair, 750000);
-                return fee.PercentageFee;
-            }
-            else if (amountInInt >= 750000 && amountInInt < 1000000)
-            {
-                Fee fee = _feeRepository.GetFeeByCurrencyAndAmount(currencyPair, 1000000);
-                return fee.PercentageFee;
-            }
-            return finalFee;
+            return 0;
         }
 
 

@@ -1,4 +1,5 @@
-﻿using System.Configuration;
+﻿using System.Collections.Generic;
+using System.Configuration;
 using CoinExchange.Common.Tests;
 using CoinExchange.Funds.Domain.Model.FeeAggregate;
 using CoinExchange.Funds.Domain.Model.Repositories;
@@ -41,11 +42,11 @@ namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests.DatabaseP
 
             _persistanceRepository.SaveOrUpdate(fee);
 
-            Fee retrievedFee = _feeRepository.GetFeeByCurrencyPair("LTC/BTC");
+            List<Fee> retrievedFee = _feeRepository.GetFeeByCurrencyPair("LTC/BTC");
             Assert.IsNotNull(retrievedFee);
 
-            Assert.AreEqual(fee.PercentageFee, retrievedFee.PercentageFee);
-            Assert.AreEqual(fee.Amount, retrievedFee.Amount);
+            Assert.AreEqual(fee.PercentageFee, retrievedFee[0].PercentageFee);
+            Assert.AreEqual(fee.Amount, retrievedFee[0].Amount);
         }
 
         [Test]
@@ -55,14 +56,14 @@ namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests.DatabaseP
 
             _persistanceRepository.SaveOrUpdate(fee);
 
-            Fee retrievedFee = _feeRepository.GetFeeByCurrencyPair("LTC/BTC");
+            List<Fee> retrievedFee = _feeRepository.GetFeeByCurrencyPair("LTC/BTC");
             Assert.IsNotNull(retrievedFee);
-            int id = retrievedFee.Id;
+            int id = retrievedFee[0].Id;
             _persistanceRepository.SaveOrUpdate(retrievedFee);
 
-            retrievedFee = _feeRepository.GetFeeById(id);
-            Assert.AreEqual(fee.PercentageFee, retrievedFee.PercentageFee);
-            Assert.AreEqual(fee.Amount, retrievedFee.Amount);
+            fee = _feeRepository.GetFeeById(id);
+            Assert.AreEqual(fee.PercentageFee, fee.PercentageFee);
+            Assert.AreEqual(fee.Amount, fee.Amount);
         }
     }
 }

@@ -331,7 +331,7 @@ namespace CoinExchange.Funds.Application.DepositServices
                 }
                 return true;
             }
-            return false;
+            throw new InvalidOperationException("Require Tier Level is not verified.");
         }
 
         /// <summary>

@@ -11,9 +11,6 @@
   <object id="TransactionService" type="CoinExchange.Funds.Application.CrossBoundedContextsServices.TransactionService, CoinExchange.Funds.Application">
     <constructor-arg name="fundsPersistenceRepository" ref="FundsPersistenceRepository"/>
     <constructor-arg name="ledgerIdGeneratorService" ref="LedgerIdGeneratorService"/>
-    <constructor-arg name="ledgerRepository" ref="LedgerRepository"/>
-    <constructor-arg name="feeCalculationService" ref="FeeCalculationService"/>
-  <constructor-arg name="balanceRepository" ref="BalanceRepository"/>
   </object>
 
   <object id="FundsValidationService" type="CoinExchange.Funds.Application.CrossBoundedContextsServices.StubFundsValidationService, CoinExchange.Funds.Application">

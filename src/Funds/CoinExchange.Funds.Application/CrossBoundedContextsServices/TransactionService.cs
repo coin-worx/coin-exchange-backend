@@ -21,123 +21,18 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
 
         private IFundsPersistenceRepository _fundsPersistenceRepository;
         private ILedgerIdGeneraterService _ledgerIdGeneraterService;
-        private ILedgerRepository _ledgerRepository;
-        private IFeeCalculationService _feeCalculationService;
-        private IBalanceRepository _balanceRepository;
 
         /// <summary>
         /// Parameterized Constructor
         /// </summary>
         /// <param name="fundsPersistenceRepository"> </param>
         /// <param name="ledgerIdGeneratorService"></param>
-        /// <param name="ledgerRepository"> </param>
-        /// <param name="feeCalculationService"> </param>
-        /// <param name="balanceRepository"> </param>
         public TransactionService(IFundsPersistenceRepository fundsPersistenceRepository, 
-            ILedgerIdGeneraterService ledgerIdGeneratorService, ILedgerRepository ledgerRepository, 
-            IFeeCalculationService feeCalculationService, IBalanceRepository balanceRepository)
+            ILedgerIdGeneraterService ledgerIdGeneratorService)
         {
             _fundsPersistenceRepository = fundsPersistenceRepository;
             _ledgerIdGeneraterService = ledgerIdGeneratorService;
-            _ledgerRepository = ledgerRepository;
-            _feeCalculationService = feeCalculationService;
-            _balanceRepository = balanceRepository;
         }
-
-        /*/// <summary>
-        /// Creates a transaction as a result of a Trade
-        /// </summary>
-        /// <param name="currencyPair"> </param>
-        /// <param name="tradeVolume"></param>
-        /// <param name="price"></param>
-        /// <param name="executionDateTime"> </param>
-        /// <param name="tradeId"></param>
-        /// <param name="buyAccountId"></param>
-        /// <param name="sellAccountId"></param>
-        /// <param name="buyOrderId"></param>
-        /// <param name="sellOrderId"></param>        
-        /// <returns></returns>
-        public bool CreateTradeTransaction(string currencyPair, decimal tradeVolume, decimal price,
-            DateTime executionDateTime, string tradeId, string buyAccountId, string sellAccountId, string buyOrderId, 
-            string sellOrderId)
-        {
-            Tuple<Currency, Currency> separateBaseQuoteCurrencies = SeparateBaseQuoteCurrency(currencyPair);
-            if (BuyOrderLedger(separateBaseQuoteCurrencies.Item1, separateBaseQuoteCurrencies.Item2, tradeVolume, price,
-                           executionDateTime, buyOrderId, tradeId, buyAccountId))
-            {
-                return SellOrderLedger(separateBaseQuoteCurrencies.Item1, separateBaseQuoteCurrencies.Item2, tradeVolume,
-                            price, executionDateTime, sellOrderId, tradeId, sellAccountId);
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// Creates two ledgers for the user who has the buy order in the trade. Ledger 1 = Base currency stats, 
-        /// Ledger 2 = Quote Currency Stats
-        /// </summary>
-        /// <returns></returns>
-        private bool BuyOrderLedger(Currency baseCurrency, Currency quoteCurrency, decimal volume, decimal price, 
-            DateTime executionDateTime, string buyOrderId, string tradeId, string accountId)
-        {
-            // First, we take the balance of that currency
-            Balance balance = _balanceRepository.GetBalanceByCurrencyAndAccountId(baseCurrency, new AccountId(accountId));
-            if (balance != null)
-            {
-                decimal currentBalance = balance.CurrentBalance;
-                // Then we give details to the CreateLedgerEntry method that creates the ledger transaction
-                if (CreateLedgerEntry(baseCurrency, volume, 0.000M, currentBalance + volume, executionDateTime,
-                                      buyOrderId, tradeId,
-                                      new AccountId(accountId)))
-                {
-                    // Then, we get the balance for the quote currency
-                    balance = _balanceRepository.GetBalanceByCurrencyAndAccountId(quoteCurrency, new AccountId(accountId));
-                    if (balance != null)
-                    {
-                        currentBalance = balance.CurrentBalance;
-                        // Finally, we create ledger entry for the quote currency. Fee is charged for the quote currency
-                        // side
-                        decimal fee = _feeCalculationService.GetFee(baseCurrency, quoteCurrency, volume*price);
-                        return CreateLedgerEntry(quoteCurrency, -(volume*price), fee, currentBalance - (volume*price),
-                                                 executionDateTime, buyOrderId, tradeId, new AccountId(accountId));
-                    }
-                }
-            }
-            return false;
-        }
-*/
-/*
-        /// <summary>
-        /// Creates a ledger for the user who has the sell order in the trade
-        /// </summary>
-        /// <returns></returns>
-        private bool SellOrderLedger(Currency baseCurrency, Currency quoteCurrency, decimal volume, decimal price,
-            DateTime executionDateTime, string orderId, string tradeId, string accountId)
-        {
-            // First, we take the balance of that currency
-            Balance balance = _balanceRepository.GetBalanceByCurrencyAndAccountId(baseCurrency, new AccountId(accountId));
-            if (balance != null)
-            {
-                decimal currenctBalance = balance.CurrentBalance;
-                // Then we give details to the CreateLedgerEntry method that creates the ledger transaction
-                if (CreateLedgerEntry(baseCurrency, -volume, 0.000M, currenctBalance - volume, executionDateTime, orderId,
-                                      tradeId, new AccountId(accountId)))
-                {
-                    // Afterwards, we get the balance for the quote currency
-                    balance = _balanceRepository.GetBalanceByCurrencyAndAccountId(quoteCurrency, new AccountId(accountId));
-                    if (balance != null)
-                    {
-                        currenctBalance = balance.CurrentBalance;
-                        // Finally, we create the ledger for the quote currency. Fee is charged for the quote currency side
-                        decimal fee = _feeCalculationService.GetFee(baseCurrency, quoteCurrency, volume*price);
-                        return CreateLedgerEntry(quoteCurrency, volume*price, fee, currenctBalance + (volume*price),
-                                                 executionDateTime, orderId, tradeId, new AccountId(accountId));
-                    }
-                }
-            }
-            return false;
-        }
-
-*/
 
         /// <summary>
         /// Creates a ledger entry for one currency of one of the two order sids of a trade
@@ -168,20 +63,6 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
                 Log.Error(exception);
                 return false;
             }
-        }
-
-        /// <summary>
-        /// Separates the base and quote currency from the currency pair. The Tuple contains: 
-        /// 1 = Base Currency
-        /// 2 = Quote Currency
-        /// </summary>
-        /// <param name="currencyPair"></param>
-        /// <returns></returns>
-        private Tuple<Currency, Currency> SeparateBaseQuoteCurrency(string currencyPair)
-        {
-            // We will split the string from the 2nd index, so that XBTUSD becomes XBT and USD
-            return new Tuple<Currency, Currency>(new Currency(currencyPair.Substring(0, 3)), 
-                new Currency(currencyPair.Substring(3, 3)));
         }
 
         /// <summary>
