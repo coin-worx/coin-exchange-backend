@@ -246,7 +246,7 @@ namespace CoinExchange.Funds.Application.Tests
             mockBalanceRepository.AddBalance(balance);
 
             Withdraw withdrawalResponse = fundsValidationService.ValidateFundsForWithdrawal(balance.AccountId, balance.Currency,
-                2, new TransactionId("transaction123"), new BitcoinAddress("bitcoinid123"));
+                100.0002M, new TransactionId("transaction123"), new BitcoinAddress("bitcoinid123"));
             Assert.IsNull(withdrawalResponse);
         }
 

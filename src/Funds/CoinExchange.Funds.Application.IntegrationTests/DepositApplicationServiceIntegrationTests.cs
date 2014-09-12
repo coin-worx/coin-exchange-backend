@@ -123,7 +123,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
         }
 
         [Test]
-        public void DepositArrivedTest_TestsIfTheOperationProceedsAsExpectedWHenANewDepositArrives_VerifiesThroughQueryingDatabaseIsntances()
+        public void Deposit1ArrivedTest_TestsIfTheOperationProceedsAsExpectedWHenANewDepositArrives_VerifiesThroughQueryingDatabaseIsntances()
         {
             IDepositApplicationService depositApplicationService = (IDepositApplicationService)ContextRegistry.GetContext()["DepositApplicationService"];
             IFundsPersistenceRepository fundsPersistenceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];
@@ -131,7 +131,6 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             ILedgerRepository ledgerRepository = (ILedgerRepository)ContextRegistry.GetContext()["LedgerRepository"];
             IDepositRepository depositRepository = (IDepositRepository)ContextRegistry.GetContext()["DepositRepository"];
             IDepositAddressRepository depositAddressRepository = (IDepositAddressRepository)ContextRegistry.GetContext()["DepositAddressRepository"];
-            StubTierLevelRetrievalService tierLevelRetrievalService = (ITierLevelRetrievalService)ContextRegistry.GetContext()["TierLevelRetrievalService"] as StubTierLevelRetrievalService;
             
             AccountId accountId = new AccountId(123);
             Currency currency = new Currency("BTC", true);
@@ -154,7 +153,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             transactionsList.Add(new Tuple<string, string, decimal, string>(bitcoinAddress.Value, transactionId.Value, amount, category));
             depositApplicationService.OnDepositArrival(currency.Name, transactionsList);
 
-            Thread.Sleep(1000);
+            Thread.Sleep(2000);
             Deposit deposit = depositRepository.GetDepositByTransactionId(transactionId);
             Assert.IsNotNull(deposit);
             Assert.AreEqual(deposit.Amount, amount);

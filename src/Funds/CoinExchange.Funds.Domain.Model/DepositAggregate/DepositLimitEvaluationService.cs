@@ -15,7 +15,6 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
         private decimal _monthlyLimit = 0;
         private decimal _monthlyLimitUsed = 0;
         private decimal _maximumDeposit = 0;
-        private decimal _maximumDepositUsd = 0;
 
         /// <summary>
         /// Evaluates if the current deposit transaction is within the maximum deposit limit and is allowed to proceed
@@ -35,11 +34,10 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
                 // Evaluate the Maximum Deposit, set it, and return response whether it went successfully or not
                 if (EvaluateMaximumDepositUsd())
                 {
-                    return currentDepositAmount <= _maximumDepositUsd;
+                    return currentDepositAmount <= _maximumDeposit;
                 }
             }
             _maximumDeposit = 0;
-            _maximumDepositUsd = 0;
             _dailyLimit = 0;
             _dailyLimitUsed = 0;
             _monthlyLimit = 0;
@@ -69,7 +67,6 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
                 }
             }
             _maximumDeposit = 0;
-            _maximumDepositUsd = 0;
             _dailyLimit = 0;
             _dailyLimitUsed = 0;
             _monthlyLimit = 0;
@@ -157,13 +154,13 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
                 {
                     if (depositLedger.DateTime >= DateTime.Now.AddHours(-24))
                     {
-                        tempDailyLimitUsed += depositLedger.AmountInUsd;
-                        tempMonthlyLimitUsed += depositLedger.AmountInUsd;
+                        tempDailyLimitUsed += depositLedger.Amount;
+                        tempMonthlyLimitUsed += depositLedger.Amount;
                     }
                     if (depositLedger.DateTime >= DateTime.Now.AddDays(-30) &&
                         depositLedger.DateTime < DateTime.Now.AddHours(-24))
                     {
-                        tempMonthlyLimitUsed += depositLedger.AmountInUsd;
+                        tempMonthlyLimitUsed += depositLedger.Amount;
                     }
                 }
             }

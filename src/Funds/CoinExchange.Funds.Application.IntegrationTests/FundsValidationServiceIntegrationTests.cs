@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
 using System.Management.Instrumentation;
 using System.Threading;
 using CoinExchange.Common.Tests;
+using CoinExchange.Common.Utility;
 using CoinExchange.Funds.Application.CrossBoundedContextsServices;
 using CoinExchange.Funds.Application.WithdrawServices;
 using CoinExchange.Funds.Domain.Model.BalanceAggregate;
@@ -608,9 +610,12 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             ILedgerRepository ledgerRepository = (ILedgerRepository)ContextRegistry.GetContext()["LedgerRepository"];
             IFeeCalculationService feeCalculationService = (IFeeCalculationService)ContextRegistry.GetContext()["FeeCalculationService"];
             IBalanceRepository balanceRepository = (IBalanceRepository)ContextRegistry.GetContext()["BalanceRepository"];
+            IFeeRepository feeRepository = (IFeeRepository)ContextRegistry.GetContext()["FeeRepository"];
 
-            string baseCurrency = "BTC";
-            string quoteCurrency = "USD";
+            Tuple<string, string> splittedCurrencyPair = CurrencySplitterService.SplitCurrencyPair(feeRepository.GetAllFees().First().CurrencyPair);
+            string baseCurrency = splittedCurrencyPair.Item1;
+            string quoteCurrency = splittedCurrencyPair.Item2;
+            AccountId accountId = new AccountId(1);
             string tradeId = "tradeid123";
             string buyOrderId = "buyorderid123";
             string sellOrderId = "sellorderid123";
@@ -657,25 +662,25 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             // same second, so we check which one is fetched first
 
             // First, buy side order's ledger will be verified
-            if (ledgerByAccountId[0].Currency.Name == "BTC")
+            if (ledgerByAccountId[0].Currency.Name == splittedCurrencyPair.Item1)
             {
-                // For XBT
+                // For Base Currency
                 Assert.AreEqual(400, ledgerByAccountId[0].Amount);
                 Assert.AreEqual(4000 + 400, ledgerByAccountId[0].Balance);
-                // For USD
+                // For Quote CUrrency
                 Assert.AreEqual(-(400 * 100), ledgerByAccountId[1].Amount);
                 Assert.AreEqual(50000 -(400 * 100) - buySideFee, ledgerByAccountId[1].Balance);
 
                 Assert.AreEqual(buySideFee, ledgerByAccountId[1].Fee);
             }
-            else if (ledgerByAccountId[0].Currency.Name == "USD")
+            else if (ledgerByAccountId[0].Currency.Name == splittedCurrencyPair.Item2)
             {
-                // For USD
+                // For Quote Currency
                 Assert.AreEqual(-(400 * 100), ledgerByAccountId[0].Amount);
                 Assert.AreEqual(50000 -(400 * 100) - buySideFee, ledgerByAccountId[0].Balance);
                 Assert.AreEqual(buySideFee, ledgerByAccountId[0].Fee);
 
-                // For XBT
+                // For Base Currency
                 Assert.AreEqual(400, ledgerByAccountId[1].Amount);
                 Assert.AreEqual(4000 + 400, ledgerByAccountId[1].Balance);
             }
@@ -704,26 +709,26 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             Assert.AreEqual(2, ledgerByAccountId.Count);
 
             // Secondly, wee verify for the sell order side's ledgers
-            if (ledgerByAccountId[0].Currency.Name == "BTC")
+            if (ledgerByAccountId[0].Currency.Name == splittedCurrencyPair.Item1)
             {
-                // For XBT
+                // For Base Currency
                 Assert.AreEqual(-400, ledgerByAccountId[0].Amount);
                 Assert.AreEqual(6000 - 400, ledgerByAccountId[0].Balance);
-                // For USD
+                // For Quote Currency
                 Assert.AreEqual((400 * 100), ledgerByAccountId[1].Amount);
                 Assert.AreEqual(60000 + (400 * 100) - sellSideFee, ledgerByAccountId[1].Balance);
                 Assert.AreEqual(sellSideFee, ledgerByAccountId[1].Fee);
             }
-            else if (ledgerByAccountId[0].Currency.Name == "USD")
+            else if (ledgerByAccountId[0].Currency.Name == splittedCurrencyPair.Item2)
             {
-                // For USD
+                // For Quote Currency
                 Assert.AreEqual((400 * 100), ledgerByAccountId[0].Amount);
                 Assert.AreEqual(60000 + (400 * 100) - sellSideFee, ledgerByAccountId[0].Balance);
                 // Get the fee corresponding to the currenct volume of the quote currency
                 decimal fee = feeCalculationService.GetFee(new Currency(baseCurrency), new Currency(quoteCurrency),
                     new AccountId(buyAccountId), 400, 100);
                 Assert.AreEqual(fee, ledgerByAccountId[0].Fee);
-                // For XBT
+                // For Base Currency
                 Assert.AreEqual(-400, ledgerByAccountId[1].Amount);
                 Assert.AreEqual(6000 - 400, ledgerByAccountId[1].Balance);
             }
@@ -748,9 +753,11 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             IFundsPersistenceRepository fundsPersistenceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];
             ILedgerRepository ledgerRepository = (ILedgerRepository)ContextRegistry.GetContext()["LedgerRepository"];
             IFeeCalculationService feeCalculationService = (IFeeCalculationService)ContextRegistry.GetContext()["FeeCalculationService"];
+            IFeeRepository feeRepository = (IFeeRepository)ContextRegistry.GetContext()["FeeRepository"];
 
-            string baseCurrency = "BTC";
-            string quoteCurrency = "USD";
+            Tuple<string, string> splittedCurrencyPair = CurrencySplitterService.SplitCurrencyPair(feeRepository.GetAllFees().First().CurrencyPair);
+            string baseCurrency = splittedCurrencyPair.Item1;
+            string quoteCurrency = splittedCurrencyPair.Item2;
             string tradeId = "tradeid123";
             string buyOrderId = "buyorderid123";
             string sellOrderId = "sellorderid123";
@@ -876,10 +883,13 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             IBalanceRepository balanceRepository = (IBalanceRepository)ContextRegistry.GetContext()["BalanceRepository"];
             IFundsPersistenceRepository fundsPersistenceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];            
             IFeeCalculationService feeCalculationService = (IFeeCalculationService)ContextRegistry.GetContext()["FeeCalculationService"];
+            IFeeRepository feeRepository = (IFeeRepository)ContextRegistry.GetContext()["FeeRepository"];
 
             AccountId accountId = new AccountId(123);
-            Currency baseCurrency = new Currency("BTC");
-            Currency quoteCurrency = new Currency("USD");
+
+            Tuple<string, string> splittedCurrencyPair = CurrencySplitterService.SplitCurrencyPair(feeRepository.GetAllFees().First().CurrencyPair);
+            Currency baseCurrency = new Currency(splittedCurrencyPair.Item1);
+            Currency quoteCurrency = new Currency(splittedCurrencyPair.Item2);
             Balance baseCurrencyBalance = new Balance(baseCurrency, accountId, 5000, 5000);
             Balance quoteCurrencyBalance = new Balance(quoteCurrency, accountId, 20000, 20000);
             fundsPersistenceRepository.SaveOrUpdate(baseCurrencyBalance);
@@ -932,10 +942,13 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             IBalanceRepository balanceRepository = (IBalanceRepository)ContextRegistry.GetContext()["BalanceRepository"];
             IFundsPersistenceRepository fundsPersistenceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];
             IFeeCalculationService feeCalculationService = (IFeeCalculationService)ContextRegistry.GetContext()["FeeCalculationService"];
+            IFeeRepository feeRepository = (IFeeRepository)ContextRegistry.GetContext()["FeeRepository"];
 
-            AccountId accountId = new AccountId(123);
-            Currency baseCurrency = new Currency("BTC");
-            Currency quoteCurrency = new Currency("USD");
+            Tuple<string, string> splittedCurrencyPair = CurrencySplitterService.SplitCurrencyPair(feeRepository.GetAllFees().First().CurrencyPair);
+            Currency baseCurrency = new Currency(splittedCurrencyPair.Item1);
+            Currency quoteCurrency = new Currency(splittedCurrencyPair.Item2);
+            AccountId accountId = new AccountId(1);
+
             Balance baseCurrencyBalance = new Balance(baseCurrency, accountId, 5000, 5000);
             Balance quoteCurrencyBalance = new Balance(quoteCurrency, accountId, 20000, 20000);
             fundsPersistenceRepository.SaveOrUpdate(baseCurrencyBalance);

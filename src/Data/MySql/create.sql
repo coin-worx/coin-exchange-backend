@@ -53,7 +53,6 @@ CREATE TABLE `deposit` (
   `DepositId` varchar(100) DEFAULT NULL,
   `Date` datetime(6) DEFAULT NULL,
   `Amount` double DEFAULT NULL,
-  `AmountInUsd` double DEFAULT NULL,
   `Fee` double DEFAULT NULL,
   `Confirmations` int(11) DEFAULT NULL,
   `Status` varchar(15) DEFAULT NULL,

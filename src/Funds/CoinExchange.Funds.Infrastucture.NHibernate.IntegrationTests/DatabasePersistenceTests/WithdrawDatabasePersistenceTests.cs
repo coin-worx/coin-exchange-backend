@@ -153,13 +153,15 @@ namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests.DatabaseP
         [Test]
         public void SaveWithdrawAndRetreiveByTransacitonIdTest_SavesAnObjectToDatabaseAndManipulatesIt_ChecksIfItIsUpdatedAsExpected()
         {
+            TransactionId transactionId = new TransactionId("transact123");
             Withdraw withdraw = new Withdraw(new Currency("LTC", true), "1234", DateTime.Now, WithdrawType.Bitcoin, 2000,
                 0.005m, TransactionStatus.Pending,
                 new AccountId(1), new BitcoinAddress("address123"));
+            withdraw.SetTransactionId(transactionId.Value);
 
             _persistanceRepository.SaveOrUpdate(withdraw);
 
-            Withdraw retrievedWithdraw = _withdrawRepository.GetWithdrawByTransactionId(new TransactionId("transact123"));
+            Withdraw retrievedWithdraw = _withdrawRepository.GetWithdrawByTransactionId(transactionId);
             Assert.IsNotNull(retrievedWithdraw);
             retrievedWithdraw.SetAmount(777);
             _persistanceRepository.SaveOrUpdate(retrievedWithdraw);

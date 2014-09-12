@@ -143,8 +143,8 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         public Withdraw ValidateFundsForWithdrawal(AccountId accountId, Currency currency, decimal amount, TransactionId
             transactionId, BitcoinAddress bitcoinAddress)
         {
-            if (currency.IsCryptoCurrency)
-            {
+            //if (currency.IsCryptoCurrency)
+            //{
                 WithdrawFees withdrawFees = _withdrawFeesRepository.GetWithdrawFeesByCurrencyName(currency.Name);
                 if (withdrawFees != null)
                 {
@@ -190,11 +190,11 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
                         }
                     }
                 }
-            }
-            else
-            {
-                throw new Exception("Only Crypto Currencies can be withdrawn using this service");
-            }
+            //}
+            //else
+            //{
+              //  throw new Exception("Only Crypto Currencies can be withdrawn using this service");
+            //}
             return null;
         }
 
@@ -233,8 +233,8 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         {
             if (deposit != null && deposit.Status == TransactionStatus.Pending)
             {
-                if (deposit.Currency.IsCryptoCurrency)
-                {
+                //if (deposit.Currency.IsCryptoCurrency)
+                //{
                     deposit.StatusConfirmed();
                     // Get all the Deposit Ledgers for this currency and account
                     IList<Ledger> depositLedgers = GetDepositLedgers(deposit.Currency, deposit.AccountId);
@@ -243,16 +243,8 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
                     // Get the Current Deposit limits for this user
                     DepositLimit depositLimit = _depositLimitRepository.GetDepositLimitByTierLevel(currentTierLevel);
 
-                    // Get the best bid and best ask form the Trades BC.
-                    // NOTE: Implement adn use real implementation later, rather than using the stub implementation being
-                    // used right now
-                    Tuple<decimal, decimal> bestBidBestAsk =
-                        _bboCrossContextService.GetBestBidBestAsk(deposit.Currency.Name, CurrencyConstants.Usd);
-
-                    deposit.SetAmountInUsd(ConvertCurrencyToUsd(deposit.Amount, bestBidBestAsk.Item1,
-                                                                bestBidBestAsk.Item2));
                     // Check if the current Deposit transaction is within the Deposit limits
-                    if (_depositLimitEvaluationService.EvaluateDepositLimit(deposit.AmountInUsd, depositLedgers,
+                    if (_depositLimitEvaluationService.EvaluateDepositLimit(deposit.Amount, depositLedgers,
                                                                             depositLimit))
                     {
                         return UpdateBalance(deposit);
@@ -264,8 +256,8 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
                         UpdateBalanceAndFreezeAccount(deposit);
                         throw new InvalidOperationException("Deposit is over the limit. Account Balance will be frozen");
                     }
-                }
-                throw new InvalidOperationException("Only Crypto Currencies can be deposited using Crypto Addresses.");
+                //}
+                //throw new InvalidOperationException("Only Crypto Currencies can be deposited using Crypto Addresses.");
             }
             return false;
         }

@@ -75,7 +75,7 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.IntegrationTests
             OkNegotiatedContentResult<IList<DepositAddressRepresentation>> depositAddresses =
                 (OkNegotiatedContentResult<IList<DepositAddressRepresentation>>) httpActionResult;
             Assert.IsNotNull(depositAddresses.Content);
-            Assert.Greater(0, depositAddresses.Content.Count);
+            Assert.Greater(depositAddresses.Content.Count, 0);
             Assert.AreEqual(response.Content.Address, depositAddresses.Content[0].Address);
             Assert.AreEqual(response.Content.Status, depositAddresses.Content[0].Status);
         }
