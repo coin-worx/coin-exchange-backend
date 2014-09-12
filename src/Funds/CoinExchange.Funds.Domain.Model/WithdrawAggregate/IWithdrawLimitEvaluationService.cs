@@ -16,21 +16,19 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
         /// Evaluates the Maximum Withdraw amount
         /// </summary>
         /// <returns></returns>
-        bool EvaluateMaximumWithdrawLimit(decimal withdrawalAmountUsd, IList<Withdraw> depositLedgers, WithdrawLimit 
-            withdrawLimit, decimal bestBidPrice, decimal bestAskPrice, decimal balance, decimal currentBalance);
+        bool EvaluateMaximumWithdrawLimit(decimal withdrawalAmount, IList<Withdraw> depositLedgers, WithdrawLimit 
+                                            withdrawLimit, decimal balance, decimal currentBalance);
 
         /// <summary>
         /// Assigns the threshold limits without comparing the current withdrawal amount
         /// </summary>
         /// <param name="depositLedgers"></param>
         /// <param name="withdrawLimit"></param>
-        /// <param name="bestBidPrice"></param>
-        /// <param name="bestAskPrice"></param>
         /// <param name="balance"></param>
         /// <param name="currentBalance"></param>
         /// <returns></returns>
-        bool AssignWithdrawLimits(IList<Withdraw> depositLedgers, WithdrawLimit
-            withdrawLimit, decimal bestBidPrice, decimal bestAskPrice, decimal balance, decimal currentBalance);
+        bool AssignWithdrawLimits(IList<Withdraw> depositLedgers, WithdrawLimit withdrawLimit, decimal balance, 
+                                    decimal currentBalance);
 
         /// <summary>
         /// Daily Limit that the user can use in 24 hours
@@ -58,18 +56,8 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
         decimal WithheldAmount { get; }
 
         /// <summary>
-        /// Withheld amount converted to US Dollars
-        /// </summary>
-        decimal WithheldConverted { get; }
-
-        /// <summary>
         /// The maximum amount that can be withdrawn
         /// </summary>
         decimal MaximumWithdraw { get; }
-
-        /// <summary>
-        /// Represents the maximum amount that can be withdrawn in US Dollars
-        /// </summary>
-        decimal MaximumWithdrawUsd { get; }
     }
 }

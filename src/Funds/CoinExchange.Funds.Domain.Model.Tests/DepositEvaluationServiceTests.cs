@@ -29,8 +29,7 @@ namespace CoinExchange.Funds.Domain.Model.Tests
 
             List<Ledger> ledgers = new List<Ledger>();
             DepositLimit depositLimit = new DepositLimit("Tier 0", dailyLimit, monthlyLimit);
-            bool evaluationResponse = depositLimitEvaluationService.EvaluateDepositLimit(900, ledgers, depositLimit,
-                bestBid, bestAsk);
+            bool evaluationResponse = depositLimitEvaluationService.EvaluateDepositLimit(900, ledgers, depositLimit);
             Assert.IsTrue(evaluationResponse);
             Assert.AreEqual(1000, depositLimitEvaluationService.DailyLimit);
             Assert.AreEqual(5000, depositLimitEvaluationService.MonthlyLimit);
@@ -41,7 +40,7 @@ namespace CoinExchange.Funds.Domain.Model.Tests
                 900, 0, 1.5m, null, null, null, depositId, accountId);
             ledgers.Add(ledger);
 
-            evaluationResponse = depositLimitEvaluationService.EvaluateDepositLimit(200, ledgers, depositLimit, bestBid, bestAsk);
+            evaluationResponse = depositLimitEvaluationService.EvaluateDepositLimit(200, ledgers, depositLimit);
             Assert.IsFalse(evaluationResponse);
             Assert.AreEqual(1000, depositLimitEvaluationService.DailyLimit);
             Assert.AreEqual(5000, depositLimitEvaluationService.MonthlyLimit);
@@ -70,8 +69,7 @@ namespace CoinExchange.Funds.Domain.Model.Tests
                 900, 0, 1.5m, null, null, null, depositId, accountId);
             ledgers.Add(ledger);
             DepositLimit depositLimit = new DepositLimit("Tier 0", dailyLimit, monthlyLimit);
-            bool evaluationResponse = depositLimitEvaluationService.EvaluateDepositLimit(900, ledgers, depositLimit,
-                bestBid, bestAsk);
+            bool evaluationResponse = depositLimitEvaluationService.EvaluateDepositLimit(900, ledgers, depositLimit);
             Assert.IsTrue(evaluationResponse);
             Assert.AreEqual(1000, depositLimitEvaluationService.DailyLimit);
             Assert.AreEqual(5000, depositLimitEvaluationService.MonthlyLimit);
@@ -82,7 +80,7 @@ namespace CoinExchange.Funds.Domain.Model.Tests
                 900, 0, 1.5m, null, null, null, depositId, accountId);
             ledgers.Add(ledger2);
 
-            evaluationResponse = depositLimitEvaluationService.EvaluateDepositLimit(200, ledgers, depositLimit, bestBid, bestAsk);
+            evaluationResponse = depositLimitEvaluationService.EvaluateDepositLimit(200, ledgers, depositLimit);
             Assert.IsFalse(evaluationResponse);
             Assert.AreEqual(1000, depositLimitEvaluationService.DailyLimit);
             Assert.AreEqual(5000, depositLimitEvaluationService.MonthlyLimit);
@@ -112,8 +110,7 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             ledgers.Add(ledger);
 
             DepositLimit depositLimit = new DepositLimit("Tier 0", dailyLimit, monthlyLimit);
-            bool evaluationResponse = depositLimitEvaluationService.EvaluateDepositLimit(500, ledgers, depositLimit,
-                bestBid, bestAsk);
+            bool evaluationResponse = depositLimitEvaluationService.EvaluateDepositLimit(500, ledgers, depositLimit);
             Assert.IsTrue(evaluationResponse);
             Assert.AreEqual(1000, depositLimitEvaluationService.DailyLimit);
             Assert.AreEqual(5000, depositLimitEvaluationService.MonthlyLimit);
@@ -124,7 +121,7 @@ namespace CoinExchange.Funds.Domain.Model.Tests
                 500, 0, 1.5m, null, null, null, depositId, accountId);
             ledgers.Add(ledger2);
 
-            evaluationResponse = depositLimitEvaluationService.EvaluateDepositLimit(200, ledgers, depositLimit, bestBid, bestAsk);
+            evaluationResponse = depositLimitEvaluationService.EvaluateDepositLimit(200, ledgers, depositLimit);
             Assert.IsFalse(evaluationResponse);
             Assert.AreEqual(1000, depositLimitEvaluationService.DailyLimit);
             Assert.AreEqual(5000, depositLimitEvaluationService.MonthlyLimit);
@@ -156,8 +153,7 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             ledgers.Add(ledger2);
 
             DepositLimit depositLimit = new DepositLimit("Tier 0", dailyLimit, monthlyLimit);
-            bool evaluationResponse = depositLimitEvaluationService.EvaluateDepositLimit(400, ledgers, depositLimit,
-                bestBid, bestAsk);
+            bool evaluationResponse = depositLimitEvaluationService.EvaluateDepositLimit(400, ledgers, depositLimit);
             Assert.IsTrue(evaluationResponse);
             Assert.AreEqual(1000, depositLimitEvaluationService.DailyLimit);
             Assert.AreEqual(5000, depositLimitEvaluationService.MonthlyLimit);
@@ -165,7 +161,7 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             Assert.AreEqual(4500, depositLimitEvaluationService.MonthlyLimitUsed);
             Assert.AreEqual(ConvertUsdToCurrency(bestBid, bestAsk, 500), depositLimitEvaluationService.MaximumDeposit);
             
-            evaluationResponse = depositLimitEvaluationService.EvaluateDepositLimit(600, ledgers, depositLimit, bestBid, bestAsk);
+            evaluationResponse = depositLimitEvaluationService.EvaluateDepositLimit(600, ledgers, depositLimit);
             Assert.IsFalse(evaluationResponse);
             Assert.AreEqual(1000, depositLimitEvaluationService.DailyLimit);
             Assert.AreEqual(5000, depositLimitEvaluationService.MonthlyLimit);
@@ -173,7 +169,7 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             Assert.AreEqual(4500, depositLimitEvaluationService.MonthlyLimitUsed);
             Assert.AreEqual(ConvertUsdToCurrency(bestBid, bestAsk, 500), depositLimitEvaluationService.MaximumDeposit);
 
-            evaluationResponse = depositLimitEvaluationService.EvaluateDepositLimit(500, ledgers, depositLimit, bestBid, bestAsk);
+            evaluationResponse = depositLimitEvaluationService.EvaluateDepositLimit(500, ledgers, depositLimit);
             Assert.IsTrue(evaluationResponse);
             Assert.AreEqual(1000, depositLimitEvaluationService.DailyLimit);
             Assert.AreEqual(5000, depositLimitEvaluationService.MonthlyLimit);
@@ -185,7 +181,7 @@ namespace CoinExchange.Funds.Domain.Model.Tests
                 500, 0, 1.5m, null, null, null, depositId, accountId);
             ledgers.Add(ledger3);
 
-            evaluationResponse = depositLimitEvaluationService.EvaluateDepositLimit(1, ledgers, depositLimit, bestBid, bestAsk);
+            evaluationResponse = depositLimitEvaluationService.EvaluateDepositLimit(1, ledgers, depositLimit);
             Assert.IsFalse(evaluationResponse);
             Assert.AreEqual(1000, depositLimitEvaluationService.DailyLimit);
             Assert.AreEqual(5000, depositLimitEvaluationService.MonthlyLimit);
@@ -215,7 +211,7 @@ namespace CoinExchange.Funds.Domain.Model.Tests
                 5000, 0, 1.5m, null, null, null, depositId, accountId);
             ledgers.Add(ledger3);
 
-            bool evaluationResponse = depositLimitEvaluationService.EvaluateDepositLimit(1, ledgers, depositLimit, bestBid, bestAsk);
+            bool evaluationResponse = depositLimitEvaluationService.EvaluateDepositLimit(1, ledgers, depositLimit);
             Assert.IsFalse(evaluationResponse);
             Assert.AreEqual(1000, depositLimitEvaluationService.DailyLimit);
             Assert.AreEqual(5000, depositLimitEvaluationService.MonthlyLimit);
@@ -247,8 +243,7 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             ledgers.Add(ledger2);
 
             DepositLimit depositLimit = new DepositLimit("Tier 0", dailyLimit, monthlyLimit);
-            bool evaluationResponse = depositLimitEvaluationService.EvaluateDepositLimit(999, ledgers, depositLimit,
-                bestBid, bestAsk);
+            bool evaluationResponse = depositLimitEvaluationService.EvaluateDepositLimit(999, ledgers, depositLimit);
             Assert.IsFalse(evaluationResponse);
             Assert.AreEqual(1000, depositLimitEvaluationService.DailyLimit);
             Assert.AreEqual(5000, depositLimitEvaluationService.MonthlyLimit);
@@ -256,7 +251,7 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             Assert.AreEqual(4000, depositLimitEvaluationService.MonthlyLimitUsed);
             Assert.AreEqual(ConvertUsdToCurrency(bestBid, bestAsk, 500), depositLimitEvaluationService.MaximumDeposit);
 
-            evaluationResponse = depositLimitEvaluationService.EvaluateDepositLimit(500, ledgers, depositLimit, bestBid, bestAsk);
+            evaluationResponse = depositLimitEvaluationService.EvaluateDepositLimit(500, ledgers, depositLimit);
             Assert.IsTrue(evaluationResponse);
             Assert.AreEqual(1000, depositLimitEvaluationService.DailyLimit);
             Assert.AreEqual(5000, depositLimitEvaluationService.MonthlyLimit);
@@ -286,8 +281,7 @@ namespace CoinExchange.Funds.Domain.Model.Tests
 
             DepositLimit depositLimit = new DepositLimit("Tier 1", dailyLimit, monthlyLimit);
             // Fail Condition
-            bool evaluationResponse = depositLimitEvaluationService.EvaluateDepositLimit(501, ledgers, depositLimit,
-                bestBid, bestAsk);
+            bool evaluationResponse = depositLimitEvaluationService.EvaluateDepositLimit(501, ledgers, depositLimit);
             Assert.IsFalse(evaluationResponse);
             Assert.AreEqual(1000, depositLimitEvaluationService.DailyLimit);
             Assert.AreEqual(5000, depositLimitEvaluationService.MonthlyLimit);
@@ -296,7 +290,7 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             Assert.AreEqual(ConvertUsdToCurrency(bestBid, bestAsk, 500), depositLimitEvaluationService.MaximumDeposit);
 
             // Pass condition
-            evaluationResponse = depositLimitEvaluationService.EvaluateDepositLimit(500, ledgers, depositLimit, bestBid, bestAsk);
+            evaluationResponse = depositLimitEvaluationService.EvaluateDepositLimit(500, ledgers, depositLimit);
             Assert.IsTrue(evaluationResponse);
             Assert.AreEqual(1000, depositLimitEvaluationService.DailyLimit);
             Assert.AreEqual(5000, depositLimitEvaluationService.MonthlyLimit);
@@ -329,8 +323,7 @@ namespace CoinExchange.Funds.Domain.Model.Tests
 
             DepositLimit depositLimit = new DepositLimit("Tier 1", dailyLimit, monthlyLimit);
             // Fail Condition
-            bool evaluationResponse = depositLimitEvaluationService.EvaluateDepositLimit(501, ledgers, depositLimit,
-                bestBid, bestAsk);
+            bool evaluationResponse = depositLimitEvaluationService.EvaluateDepositLimit(501, ledgers, depositLimit);
             Assert.IsFalse(evaluationResponse);
             Assert.AreEqual(1000, depositLimitEvaluationService.DailyLimit);
             Assert.AreEqual(5000, depositLimitEvaluationService.MonthlyLimit);
@@ -339,7 +332,7 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             Assert.AreEqual(ConvertUsdToCurrency(bestBid, bestAsk, 500), depositLimitEvaluationService.MaximumDeposit);
 
             // Pass condition
-            evaluationResponse = depositLimitEvaluationService.EvaluateDepositLimit(500, ledgers, depositLimit, bestBid, bestAsk);
+            evaluationResponse = depositLimitEvaluationService.EvaluateDepositLimit(500, ledgers, depositLimit);
             Assert.IsTrue(evaluationResponse);
             Assert.AreEqual(1000, depositLimitEvaluationService.DailyLimit);
             Assert.AreEqual(5000, depositLimitEvaluationService.MonthlyLimit);

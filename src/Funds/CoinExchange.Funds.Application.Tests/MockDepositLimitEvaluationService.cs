@@ -10,13 +10,12 @@ namespace CoinExchange.Funds.Application.Tests
 {
     public class MockDepositLimitEvaluationService : IDepositLimitEvaluationService
     {
-        public bool EvaluateDepositLimit(decimal currentDeposit, IList<Ledger> depositLedgers, DepositLimit depositLimit, 
-            decimal bestBidPrice, decimal bestAskPrice)
+        public bool EvaluateDepositLimit(decimal amountInUsd, IList<Ledger> depositLedgers, DepositLimit depositLimit)
         {
             throw new NotImplementedException();
         }
 
-        public bool AssignDepositLimits(IList<Ledger> depositLedgers, DepositLimit depositLimit, decimal bestBidPrice, decimal bestAskPrice)
+        public bool AssignDepositLimits(IList<Ledger> depositLedgers, DepositLimit depositLimit)
         {
             throw new NotImplementedException();
         }

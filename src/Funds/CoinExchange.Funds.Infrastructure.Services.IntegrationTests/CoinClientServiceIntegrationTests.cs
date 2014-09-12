@@ -66,7 +66,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.IntegrationTests
                 AccountId accountId = new AccountId(1);
                 string newAddress = coinClientService.CreateNewAddress("BTC");
                 Withdraw withdraw = new Withdraw(new Currency("BTC", true), Guid.NewGuid().ToString(), DateTime.Now,
-                                                 WithdrawType.Bitcoin, Amount, Amount*585, fee,
+                                                 WithdrawType.Bitcoin, Amount, fee,
                                                  TransactionStatus.Pending, accountId,
                                                  new BitcoinAddress(newAddress));
                 string transactionId = coinClientService.CommitWithdraw(withdraw.BitcoinAddress.Value, withdraw.Amount);
@@ -122,7 +122,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.IntegrationTests
                 // new transaction has been received
                 manualResetEvent.WaitOne(Convert.ToInt32(coinClientService.PollingInterval + 3000));
                 Withdraw withdraw = new Withdraw(currency, Guid.NewGuid().ToString(), DateTime.Now, WithdrawType.Bitcoin,
-                                                 Amount, Amount * 585, 0.001m, TransactionStatus.Pending, accountId,
+                                                 Amount, 0.001m, TransactionStatus.Pending, accountId,
                                                  new BitcoinAddress(newAddress));
                 string commitWithdraw = coinClientService.CommitWithdraw(withdraw.BitcoinAddress.Value, withdraw.Amount);
                 Assert.IsNotNull(commitWithdraw);
@@ -191,7 +191,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.IntegrationTests
                 // new transaction has been received
                 manualResetEvent.WaitOne(Convert.ToInt32(coinClientService.PollingInterval + 3000));
                 Withdraw withdraw = new Withdraw(currency, Guid.NewGuid().ToString(), DateTime.Now, WithdrawType.Bitcoin,
-                                                 Amount, Amount*585, 0.001m, TransactionStatus.Pending, accountId,
+                                                 Amount, 0.001m, TransactionStatus.Pending, accountId,
                                                  new BitcoinAddress(newAddress));
                 string commitWithdraw = coinClientService.CommitWithdraw(withdraw.BitcoinAddress.Value, withdraw.Amount);
                 Assert.IsNotNull(commitWithdraw);
@@ -250,7 +250,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.IntegrationTests
                 // new transaction has been received
                 manualResetEvent.WaitOne(Convert.ToInt32(coinClientService.PollingInterval + 3000));
                 Withdraw withdraw = new Withdraw(currency, Guid.NewGuid().ToString(), DateTime.Now, WithdrawType.Bitcoin,
-                                                 Amount, Amount*585, 0.001m, TransactionStatus.Pending, accountId,
+                                                 Amount, 0.001m, TransactionStatus.Pending, accountId,
                                                  new BitcoinAddress(newAddress));
                 string commitWithdraw = coinClientService.CommitWithdraw(withdraw.BitcoinAddress.Value, withdraw.Amount);
                 Assert.IsTrue(!string.IsNullOrEmpty(commitWithdraw));

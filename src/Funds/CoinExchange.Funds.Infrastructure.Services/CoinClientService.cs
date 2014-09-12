@@ -6,6 +6,7 @@ using System.Timers;
 using BitcoinLib.Responses;
 using BitcoinLib.Services.Coins.Base;
 using BitcoinLib.Services.Coins.Bitcoin;
+using BitcoinLib.Services.Coins.Litecoin;
 using CoinExchange.Common.Domain.Model;
 using CoinExchange.Funds.Domain.Model.CurrencyAggregate;
 using CoinExchange.Funds.Domain.Model.DepositAggregate;

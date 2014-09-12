@@ -13,19 +13,15 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
         /// it with the threshold limits
         /// </summary>
         /// <returns></returns>
-        bool EvaluateDepositLimit(decimal amountInUsd, IList<Ledger> depositLedgers, DepositLimit depositLimit,
-            decimal bestBidPrice, decimal bestAskPrice);
+        bool EvaluateDepositLimit(decimal amountInUsd, IList<Ledger> depositLedgers, DepositLimit depositLimit);
 
         /// <summary>
         /// Assigns the deposit limits without comparing them to a given deposit value
         /// </summary>
         /// <param name="depositLedgers"></param>
         /// <param name="depositLimit"></param>
-        /// <param name="bestBidPrice"></param>
-        /// <param name="bestAskPrice"></param>
         /// <returns></returns>
-        bool AssignDepositLimits(IList<Ledger> depositLedgers, DepositLimit depositLimit, decimal bestBidPrice,
-                                 decimal bestAskPrice);
+        bool AssignDepositLimits(IList<Ledger> depositLedgers, DepositLimit depositLimit);
 
         /// <summary>
         /// Daily Deposit Limit

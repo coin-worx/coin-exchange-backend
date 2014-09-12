@@ -326,7 +326,7 @@ namespace CoinExchange.Funds.Application.Tests
                 mockTierLevelRetrievalService, mockBboRetrievalService, mockWithdrawRepository, tierValidationService);
             Withdraw withdraw = new Withdraw(new Currency("XBT", true), "123", DateTime.Now, WithdrawType.Bitcoin, 0.4m, 
                 0.001m, TransactionStatus.Pending, 
-                new AccountId(123), new TransactionId("123"), new BitcoinAddress("bitcoin123"));
+                new AccountId(123), new BitcoinAddress("bitcoin123"));
 
             Balance balance = new Balance(withdraw.Currency, withdraw.AccountId, 400, 800);
             mockBalanceRepository.AddBalance(balance);
