@@ -137,7 +137,8 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         public Withdraw ValidateFundsForWithdrawal(AccountId accountId, Currency currency, decimal amount, TransactionId
             transactionId, BitcoinAddress bitcoinAddress)
         {
-            if (IsTierVerified(accountId.Value, currency.IsCryptoCurrency).Item1)
+            Tuple<bool, string> isTierVerified = IsTierVerified(accountId.Value, currency.IsCryptoCurrency);
+            if (isTierVerified.Item1)
             {
                 //if (currency.IsCryptoCurrency)
                 //{
@@ -152,12 +153,10 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
                         {
                             // Get all the Withdraw Ledgers
                             IList<Withdraw> withdrawals = GetWithdrawalLedgers(currency, accountId);
-                            // Get the Current Tier Level for this user using the cross bounded context Tier retrieval service
-                            string currentTierLevel = _tierLevelRetrievalService.GetCurrentTierLevel(accountId.Value);
                             
                             // Evaluate if the current withdrawal is within the limits of the maximum withdrawal allowed and 
                             // the balance available
-                            if(_limitsConfigurationService.EvaluateWithdrawLimits(currency.Name, currentTierLevel, amount,
+                            if(_limitsConfigurationService.EvaluateWithdrawLimits(currency.Name, isTierVerified.Item2, amount,
                                withdrawals, balance.AvailableBalance, balance.CurrentBalance))
                             {
                                 Withdraw withdraw = new Withdraw(currency, _withdrawIdGeneratorService.GenerateNewId(),
@@ -226,25 +225,29 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         {
             if (deposit != null && deposit.Status == TransactionStatus.Pending)
             {
-                //if (deposit.Currency.IsCryptoCurrency)
-                //{
-                deposit.StatusConfirmed();
-                // Get all the Deposit Ledgers for this currency and account
-                IList<Ledger> depositLedgers = GetDepositLedgers(deposit.Currency, deposit.AccountId);
                 // Get the Current Tier Level for this user using the corss bounded context Tier retrieval service
-                string currentTierLevel = _tierLevelRetrievalService.GetCurrentTierLevel(deposit.AccountId.Value);
-                // Check if the current deposit amount is within the Deposit Limits
-                if (_limitsConfigurationService.EvaluateDepositLimits(deposit.Currency.Name, currentTierLevel,
-                                                                      deposit.Amount, depositLedgers))
+                Tuple<bool, string> isTierVerified = IsTierVerified(deposit.AccountId.Value, deposit.Currency.IsCryptoCurrency);
+                if (isTierVerified.Item1)
                 {
-                    return UpdateBalance(deposit);
-                }
-                else
-                {
-                    // If deposit was over the limit, add amount to pending balance and freeze the account
-                    // ToDo: Implement a way to inform the admin about the threshold crossing and take necessary action
-                    UpdateBalanceAndFreezeAccount(deposit);
-                    throw new InvalidOperationException("Deposit is over the limit. Account Balance will be frozen");
+                    //if (deposit.Currency.IsCryptoCurrency)
+                    //{
+                    deposit.StatusConfirmed();
+                    // Get all the Deposit Ledgers for this currency and account
+                    IList<Ledger> depositLedgers = GetDepositLedgers(deposit.Currency, deposit.AccountId);
+                    
+                    // Check if the current deposit amount is within the Deposit Limits
+                    if (_limitsConfigurationService.EvaluateDepositLimits(deposit.Currency.Name, isTierVerified.Item2,
+                                                                          deposit.Amount, depositLedgers))
+                    {
+                        return UpdateBalance(deposit);
+                    }
+                    else
+                    {
+                        // If deposit was over the limit, add amount to pending balance and freeze the account
+                        // ToDo: Implement a way to inform the admin about the threshold crossing and take necessary action
+                        UpdateBalanceAndFreezeAccount(deposit);
+                        throw new InvalidOperationException("Deposit is over the limit. Account Balance will be frozen");
+                    }
                 }
             }
             return false;
