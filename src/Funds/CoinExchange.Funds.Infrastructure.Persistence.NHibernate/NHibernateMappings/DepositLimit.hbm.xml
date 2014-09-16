@@ -9,5 +9,6 @@ assembly="CoinExchange.Funds.Domain.Model" namespace="CoinExchange.Funds.Domain.
     <property name="TierLevel" />
     <property name="DailyLimit" />
     <property name="MonthlyLimit" />
+    <property name="LimitsCurrency" />    
   </class>
 </hibernate-mapping>

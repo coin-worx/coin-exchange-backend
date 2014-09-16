@@ -25,6 +25,13 @@ namespace CoinExchange.Funds.Infrastructure.Persistence.NHibernate.NHibernate
             return CurrentSession.QueryOver<DepositLimit>().Where(x => x.TierLevel == tierLevel).SingleOrDefault();
         }
 
+        [Transaction]
+        public DepositLimit GetLimitByTierLevelAndCurrency(string tierLevel, string currencyType)
+        {
+            return CurrentSession.QueryOver<DepositLimit>().Where(x => x.TierLevel == tierLevel
+                && x.LimitsCurrency == currencyType).SingleOrDefault();
+        }
+
         /// <summary>
         /// Gets the Deposit limit by specifying the database primary key
         /// </summary>

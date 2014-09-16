@@ -19,6 +19,14 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
         DepositLimit GetDepositLimitByTierLevel(string tierLevel);
 
         /// <summary>
+        /// Gets the Deposit Limit by Tier Level and Currency Type
+        /// </summary>
+        /// <param name="tierLevel"></param>
+        /// <param name="currencyType"></param>
+        /// <returns></returns>
+        DepositLimit GetLimitByTierLevelAndCurrency(string tierLevel, string currencyType);
+
+        /// <summary>
         /// Gets the Deposit limit by specifying the database primary key
         /// </summary>
         /// <param name="id"></param>

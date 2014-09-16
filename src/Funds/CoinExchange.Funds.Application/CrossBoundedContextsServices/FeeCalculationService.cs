@@ -32,16 +32,15 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         /// <returns></returns>
         public decimal GetFee(Currency baseCurrency, Currency quoteCurrency, AccountId accountId, decimal volume, decimal price)
         {
-            // NOTE: If the quote currency is not USD, then we need to get the rate for that currency.
-            // E.g., if the currency pair given is XBT/XRP, then we will get the best bid for XRP/USD and convert the rate
-            // as X * XRP = (X * Best Bid(XRP/USD) + X * Best Ask(XRP/USD)) / 2, as we want to convert the XRP we have to 
-            // the amount of USD that someone on top of the order book is willing to pay, but currently it is not needed,
-            // as we are yet dealing with only XBT/USD.
+            // Get the amount traded in the last 30 days for the quote currency, because the fee is applied on the quote currency
+            // only
             decimal tradesVolume = GetLast30DaysTradeVolume(quoteCurrency.Name, accountId);
 
-            decimal percentageFee = GetFeeInstance(baseCurrency, quoteCurrency, Math.Abs(tradesVolume));
+            // Get the fee
+            decimal fee = GetFeeInstance(baseCurrency, quoteCurrency, Math.Abs(tradesVolume));
 
-            return Math.Abs((percentageFee / 100) * (volume * price));
+            // Take out the percentage fee
+            return Math.Abs((fee / 100) * (volume * price));
         }
 
         /// <summary>

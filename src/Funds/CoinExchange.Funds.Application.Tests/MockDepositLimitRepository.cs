@@ -35,6 +35,11 @@ namespace CoinExchange.Funds.Application.Tests
             return null;
         }
 
+        public DepositLimit GetLimitByTierLevelAndCurrency(string tierLevel, string currencyType)
+        {
+            throw new NotImplementedException();
+        }
+
         public DepositLimit GetDepositLimitById(int id)
         {
             foreach (var depositLimit in _depositLimits)

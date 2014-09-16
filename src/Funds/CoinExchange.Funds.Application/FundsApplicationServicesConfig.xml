@@ -11,6 +11,7 @@
   <object id="TransactionService" type="CoinExchange.Funds.Application.CrossBoundedContextsServices.TransactionService, CoinExchange.Funds.Application">
     <constructor-arg name="fundsPersistenceRepository" ref="FundsPersistenceRepository"/>
     <constructor-arg name="ledgerIdGeneratorService" ref="LedgerIdGeneratorService"/>
+    <constructor-arg name="limitsConfigurationService" ref="LimitsConfigurationService"/>
   </object>
 
   <object id="FundsValidationService" type="CoinExchange.Funds.Application.CrossBoundedContextsServices.FundsValidationService, CoinExchange.Funds.Application">
@@ -20,15 +21,15 @@
     <constructor-arg name="feeCalculationService" ref="FeeCalculationService"/>
     <constructor-arg name="withdrawFeesRepository" ref="WithdrawFeesRepository"/>
     <constructor-arg name="withdrawIdGeneratorService" ref="WithdrawIdGeneratorService"/>
-    <constructor-arg name="LedgerRepository" ref="LedgerRepository"/>
+    <constructor-arg name="ledgerRepository" ref="LedgerRepository"/>
     <constructor-arg name="depositLimitEvaluationService" ref="DepositLimitEvaluationService"/>
     <constructor-arg name="depositLimitRepository" ref="DepositLimitRepository"/>
     <constructor-arg name="withdrawLimitEvaluationService" ref="WithdrawLimitEvaluationService"/>
     <constructor-arg name="withdrawLimitRepository" ref="WithdrawLimitRepository"/>
     <constructor-arg name="tierLevelRetrievalService" ref="TierLevelRetrievalService"/>
-    <constructor-arg name="bboCrossContextService" ref="BboCrossContextService"/>
     <constructor-arg name="withdrawRepository" ref="WithdrawRepository"/>
     <constructor-arg name="tierValidationService" ref="TierValidationService"/>
+    <constructor-arg name="limitsConfigurationService" ref="LimitsConfigurationService"/>
   </object>
   
   <object id="OrderValidationApplicationService" type="CoinExchange.Funds.Application.OrderValidationServices.OrderValidationApplicationService, CoinExchange.Funds.Application">
@@ -64,6 +65,14 @@
 
   <object id="LedgerQueryService" type="CoinExchange.Funds.Application.LedgerServices.LedgerQueryService, CoinExchange.Funds.Application">
     <constructor-arg name="ledgerRepository" ref="LedgerRepository"/>
+  </object>
+  
+  <object id="LimitsConfigurationService" type="CoinExchange.Funds.Application.CrossBoundedContextsServices.LimitsConfigurationService, CoinExchange.Funds.Application">
+    <constructor-arg name="depositLimitRepository" ref="DepositLimitRepository"/>
+  <constructor-arg name="depositLimitEvaluationService" ref="DepositLimitEvaluationService"/>
+  <constructor-arg name="withdrawLimitRepository" ref="WithdrawLimitRepository"/>
+  <constructor-arg name="withdrawLimitEvaluationService" ref="WithdrawLimitEvaluationService"/>
+  <constructor-arg name="bboCrossContextService" ref="BboCrossContextService"/>
   </object>
   
   <tx:attribute-driven/>

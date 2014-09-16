@@ -145,34 +145,32 @@ namespace CoinExchange.Funds.Application.WithdrawServices
         /// <returns></returns>
         public CommitWithdrawResponse CommitWithdrawal(CommitWithdrawCommand commitWithdrawCommand)
         {
-            Balance balance = _balanceRepository.GetBalanceByCurrencyAndAccountId(new Currency(commitWithdrawCommand.Currency),
-                new AccountId(commitWithdrawCommand.AccountId));
+            Balance balance =
+                _balanceRepository.GetBalanceByCurrencyAndAccountId(new Currency(commitWithdrawCommand.Currency),
+                                                                    new AccountId(commitWithdrawCommand.AccountId));
             if (balance != null)
             {
                 if (balance.IsFrozen)
                 {
-                    throw new InvalidOperationException(string.Format("Account balance Frozen for Account ID = {0}, Currency = {1}",
-                        commitWithdrawCommand.Currency, commitWithdrawCommand.AccountId));
+                    throw new InvalidOperationException(
+                        string.Format("Account balance Frozen for Account ID = {0}, Currency = {1}",
+                                      commitWithdrawCommand.AccountId, commitWithdrawCommand.Currency));
                 }
             }
-            if (_fundsValidationService.IsTierVerified(commitWithdrawCommand.AccountId, commitWithdrawCommand.IsCryptoCurrency))
-            {
-                Withdraw withdraw = _fundsValidationService.ValidateFundsForWithdrawal(
-                    new AccountId(commitWithdrawCommand.AccountId), new Currency(commitWithdrawCommand.Currency,
-                                                                                 commitWithdrawCommand.IsCryptoCurrency),
-                    commitWithdrawCommand.Amount, null /*Null until confirmation of what to use*/,
-                    new BitcoinAddress(commitWithdrawCommand.BitcoinAddress));
 
-                if (withdraw != null)
-                {
-                    bool commitWithdrawResponse = _withdrawSubmissionService.CommitWithdraw(withdraw.WithdrawId);
-                    return new CommitWithdrawResponse(commitWithdrawResponse, withdraw.WithdrawId, null);
-                }
-                throw new InvalidOperationException(string.Format("Could not commit withdraw: AccountId = {0}",
-                                                                  commitWithdrawCommand.AccountId));
+            Withdraw withdraw = _fundsValidationService.ValidateFundsForWithdrawal(
+                new AccountId(commitWithdrawCommand.AccountId), new Currency(commitWithdrawCommand.Currency,
+                                                                             commitWithdrawCommand.IsCryptoCurrency),
+                commitWithdrawCommand.Amount, null /*Null until confirmation of what to use*/,
+                new BitcoinAddress(commitWithdrawCommand.BitcoinAddress));
+
+            if (withdraw != null)
+            {
+                bool commitWithdrawResponse = _withdrawSubmissionService.CommitWithdraw(withdraw.WithdrawId);
+                return new CommitWithdrawResponse(commitWithdrawResponse, withdraw.WithdrawId, null);
             }
-            throw new InvalidOperationException(string.Format("Withdraw Failed after Funds Validation: Account ID = {0}",
-                                                commitWithdrawCommand.AccountId));
+            throw new InvalidOperationException(string.Format("Could not commit withdraw: AccountId = {0}",
+                                                              commitWithdrawCommand.AccountId));
         }
 
         /// <summary>

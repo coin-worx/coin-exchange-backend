@@ -28,6 +28,19 @@ namespace CoinExchange.Funds.Infrastructure.Persistence.NHibernate.NHibernate
         }
 
         /// <summary>
+        /// Get the Withdrwaa limit by currency type and tier level
+        /// </summary>
+        /// <param name="tierLevel"></param>
+        /// <param name="currencyType"></param>
+        /// <returns></returns>
+        [Transaction]
+        public WithdrawLimit GetLimitByTierLevelAndCurrency(string tierLevel, string currencyType)
+        {
+            return CurrentSession.QueryOver<WithdrawLimit>().Where(x => x.TierLevel == tierLevel
+                && x.LimitsCurrency == currencyType).SingleOrDefault();
+        }
+
+        /// <summary>
         /// Gets the withdraw limit by specifying the database primary key
         /// </summary>
         /// <param name="id"></param>

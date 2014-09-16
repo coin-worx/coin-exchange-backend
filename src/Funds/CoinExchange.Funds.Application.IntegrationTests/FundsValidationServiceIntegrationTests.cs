@@ -249,10 +249,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
         [ExpectedException(typeof(InvalidOperationException))]
         public void WithdrawalFailTest_TestsIfWithdraweValidationReturnsFalseIfBalanceIsInsufficient_VerifiesThroughDatabaseQuery()
         {
-            // According to the TierLevel 1, the Daily limit is $1000 dollars. We can only withdraw 
-            // (1000/BestBid(XBT/USD) + (1000/BestAsk(XBT/USD)/2)) XBT for one day, approx. = 1.7
-            // Likewise, monthly limit for Tier 1 is $5000 and the threshold for a particular currency is measured the 
-            // same way as above
+            // According to the TierLevel 1, the Daily limit is 2 BTC, and if try to withdraw 3 BTC, exception should be raised
 
             // This test will fail due to over the llimit withdrawal amount requested
             IFundsValidationService fundsValidationService = (IFundsValidationService)ContextRegistry.GetContext()["FundsValidationService"];
@@ -271,10 +268,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
         [Test]
         public void WithdrawalPassTest_TestsIfWithdrawValidationReturnsTrueIfBalanceIsSufficient_VerifiesThroughDatabaseQuery()
         {
-            // According to the TierLevel 1, the Daily limit is $1000 dollars. We can only withdraw 
-            // (1000/BestBid(XBT/USD) + (1000/BestAsk(XBT/USD)/2)) XBT for one day, approx = 1.7
-            // Likewise, monthly limit for Tier 1 is $5000 and the threshold for a particular currency is measured the 
-            // same way as above
+            // According to the TierLevel 1, the Daily limit is 2 BTC, withdrawal of 1.7 BTC should happen fine
             IFundsValidationService fundsValidationService = (IFundsValidationService)ContextRegistry.GetContext()["FundsValidationService"];
             IFundsPersistenceRepository fundsPersistenceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];
 
@@ -292,12 +286,10 @@ namespace CoinExchange.Funds.Application.IntegrationTests
         [ExpectedException(typeof(InvalidOperationException))]
         public void WithdrawalFailAndVerificationTest_TestsIfWithdrawValidationReturnsFalseIfBalanceIsInsufficient_VerifiesThroughDatabaseQuery()
         {
-            // According to the TierLevel 1, the Daily limit is $1000 dollars. We can only withdraw 
-            // (1000/BestBid(XBT/USD) + (1000/BestAsk(XBT/USD)/2)) XBT for one day. 
-            // Likewise, monthly limit for Tier 1 is $5000 and the threshold for a particular currency is measured the 
-            // same way as above
+            // According to the TierLevel 1, the Daily limit is is 2 BTC for Tier Level 1, so anything above that limit should 
+            // result in an exception
 
-            // This test will fail due to over the llimit withdrawal amount requested
+            // This test will fail due to over the limit withdrawal amount requested
             IFundsValidationService fundsValidationService = (IFundsValidationService)ContextRegistry.GetContext()["FundsValidationService"];
             IFundsPersistenceRepository fundsPersistenceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];
             IBalanceRepository balanceRepository = (IBalanceRepository)ContextRegistry.GetContext()["BalanceRepository"];
@@ -322,10 +314,8 @@ namespace CoinExchange.Funds.Application.IntegrationTests
         [Test] 
         public void WithdrawalValidationPassAndBalanceVerificationTest_TestsIfWithdrawValidationReturnsTrueIfBalanceIsSufficient_VerifiesThroughDatabaseQuery()
         {
-            // According to the TierLevel 1, the Daily limit is $1000 dollars. We can only withdraw 
-            // (1000/BestBid(XBT/USD) + (1000/BestAsk(XBT/USD)/2)) XBT for one day, approx = 1.7
-            // Likewise, monthly limit for Tier 1 is $5000 and the threshold for a particular currency is measured the 
-            // same way as above
+            // According to the TierLevel 1, the Daily limit is is 2 BTC for Tier Level 1, so anything below that level should
+            // be withdrawn fine
             IFundsValidationService fundsValidationService = (IFundsValidationService)ContextRegistry.GetContext()["FundsValidationService"];
             IFundsPersistenceRepository fundsPersistenceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];
             IBalanceRepository balanceRepository = (IBalanceRepository)ContextRegistry.GetContext()["BalanceRepository"];
@@ -1015,7 +1005,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             IWithdrawLimitEvaluationService withdrawLimitEvaluationService = (IWithdrawLimitEvaluationService)ContextRegistry.GetContext()["WithdrawLimitEvaluationService"];
             IWithdrawLimitRepository withdrawLimitRepository = (IWithdrawLimitRepository)ContextRegistry.GetContext()["WithdrawLimitRepository"];
             ITierLevelRetrievalService tierLevelRetrievalService = (ITierLevelRetrievalService)ContextRegistry.GetContext()["TierLevelRetrievalService"];
-            IBboCrossContextService bboRetrievalService = (IBboCrossContextService)ContextRegistry.GetContext()["BboCrossContextService"];
+            ILimitsConfigurationService limitsConfigurationService = (ILimitsConfigurationService)ContextRegistry.GetContext()["LimitsConfigurationService"];
             IWithdrawRepository withdrawRepository = (IWithdrawRepository)ContextRegistry.GetContext()["WithdrawRepository"];
             ITierValidationService tierValidationService = (ITierValidationService)ContextRegistry.GetContext()["TierValidationService"];
 
@@ -1035,7 +1025,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
                 fundsPersistenceRepository, balanceRepository, feeCalculationService, 
                 withdrawFeesRepository, withdrawIdGeneratorService, ledgerRepository, depositLimitEvaluationService,
                 depositLimitRepository, withdrawLimitEvaluationService, withdrawLimitRepository, tierLevelRetrievalService,
-                bboRetrievalService, withdrawRepository, tierValidationService);
+                withdrawRepository, tierValidationService, limitsConfigurationService);
             fundsValidationService2.ValidateFundsForOrder(accountId, baseCurrency, quoteCurrency, 100, 101, "sell", "order123");
             Balance balance = balanceRepository.GetBalanceByCurrencyAndAccountId(baseCurrency, accountId);
             Assert.IsNotNull(balance);
@@ -1059,7 +1049,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             IWithdrawLimitEvaluationService withdrawLimitEvaluationService = (IWithdrawLimitEvaluationService)ContextRegistry.GetContext()["WithdrawLimitEvaluationService"];
             IWithdrawLimitRepository withdrawLimitRepository = (IWithdrawLimitRepository)ContextRegistry.GetContext()["WithdrawLimitRepository"];
             ITierLevelRetrievalService tierLevelRetrievalService = (ITierLevelRetrievalService)ContextRegistry.GetContext()["TierLevelRetrievalService"];
-            IBboCrossContextService bboRetrievalService = (IBboCrossContextService)ContextRegistry.GetContext()["BboCrossContextService"];
+            ILimitsConfigurationService limitsConfigurationService = (ILimitsConfigurationService)ContextRegistry.GetContext()["LimitsConfigurationService"];
             IWithdrawRepository withdrawRepository = (IWithdrawRepository)ContextRegistry.GetContext()["WithdrawRepository"];
             ITierValidationService tierValidationService = (ITierValidationService)ContextRegistry.GetContext()["TierValidationService"];
             
@@ -1074,8 +1064,8 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             IFundsValidationService fundsValidationService2 = new FundsValidationService(transactionService,
                 fundsPersistenceRepository, balanceRepository, feeCalculationService, withdrawFeesRepository,
                 withdrawIdGeneratorService, ledgerRepository, depositLimitEvaluationService, depositLimitRepository, 
-                withdrawLimitEvaluationService, withdrawLimitRepository, tierLevelRetrievalService, bboRetrievalService,
-                withdrawRepository, tierValidationService);
+                withdrawLimitEvaluationService, withdrawLimitRepository, tierLevelRetrievalService,
+                withdrawRepository, tierValidationService, limitsConfigurationService);
             fundsValidationService2.ValidateFundsForWithdrawal(accountId, baseCurrency, 0.1m, new TransactionId("transaction123"), new BitcoinAddress("bitcoinid123"));
 
             WithdrawFees withdrawFees = withdrawFeesRepository.GetWithdrawFeesByCurrencyName(baseCurrency.Name);

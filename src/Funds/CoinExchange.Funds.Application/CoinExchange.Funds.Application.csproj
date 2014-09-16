@@ -58,6 +58,7 @@
   <ItemGroup>
     <Compile Include="CrossBoundedContextsServices\FeeCalculationService.cs" />
     <Compile Include="CrossBoundedContextsServices\FundsValidationService.cs" />
+    <Compile Include="CrossBoundedContextsServices\LimitsConfigurationService.cs" />
     <Compile Include="CrossBoundedContextsServices\StubFundsValidationService.cs" />
     <Compile Include="CrossBoundedContextsServices\TransactionService.cs" />
     <Compile Include="DepositServices\Commands\GenerateNewAddressCommand.cs" />

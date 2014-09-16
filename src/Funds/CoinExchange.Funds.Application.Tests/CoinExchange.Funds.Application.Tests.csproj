@@ -53,6 +53,7 @@
     <Compile Include="MockFundsRepository.cs" />
     <Compile Include="MockLedgerGeneratorService.cs" />
     <Compile Include="MockLedgerRepository.cs" />
+    <Compile Include="MockLimitsConfigurationService.cs" />
     <Compile Include="MockTierLevelRetrievalService.cs" />
     <Compile Include="MockWithdrawFeesRepository.cs" />
     <Compile Include="MockWithdrawIdGeneratorService.cs" />

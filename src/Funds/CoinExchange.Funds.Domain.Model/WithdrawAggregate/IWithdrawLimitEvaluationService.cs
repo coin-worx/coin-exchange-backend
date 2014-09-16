@@ -17,7 +17,7 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
         /// </summary>
         /// <returns></returns>
         bool EvaluateMaximumWithdrawLimit(decimal withdrawalAmount, IList<Withdraw> depositLedgers, WithdrawLimit 
-                                            withdrawLimit, decimal balance, decimal currentBalance);
+                                 withdrawLimit, decimal balance, decimal currentBalance, decimal bestBid = 0, decimal bestAsk = 0);
 
         /// <summary>
         /// Assigns the threshold limits without comparing the current withdrawal amount
@@ -26,9 +26,11 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
         /// <param name="withdrawLimit"></param>
         /// <param name="balance"></param>
         /// <param name="currentBalance"></param>
+        /// <param name="bestBid"> </param>
+        /// <param name="bestAsk"> </param>
         /// <returns></returns>
         bool AssignWithdrawLimits(IList<Withdraw> depositLedgers, WithdrawLimit withdrawLimit, decimal balance, 
-                                    decimal currentBalance);
+                                    decimal currentBalance, decimal bestBid = 0, decimal bestAsk = 0);
 
         /// <summary>
         /// Daily Limit that the user can use in 24 hours

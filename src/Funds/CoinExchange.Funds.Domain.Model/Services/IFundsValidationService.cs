@@ -105,6 +105,6 @@ namespace CoinExchange.Funds.Domain.Model.Services
         /// Confirms if the user has been verified for the transaction on the current tier level
         /// </summary>
         /// <returns></returns>
-        bool IsTierVerified(int accountId, bool isCrypto);
+        Tuple<bool, string> IsTierVerified(int accountId, bool isCrypto);
     }
 }

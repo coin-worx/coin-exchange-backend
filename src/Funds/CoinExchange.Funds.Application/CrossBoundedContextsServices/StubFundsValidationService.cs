@@ -55,9 +55,9 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
             throw new NotImplementedException();
         }
 
-        public bool IsTierVerified(int accountId, bool isCrypto)
+        public Tuple<bool, string> IsTierVerified(int accountId, bool isCrypto)
         {
-            return true;
+            return new Tuple<bool, string>(true, "Tier 1");
         }
     }
 }

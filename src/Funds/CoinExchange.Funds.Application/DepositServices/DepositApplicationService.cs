@@ -105,7 +105,7 @@ namespace CoinExchange.Funds.Application.DepositServices
                     foreach (var depositAddress in allDepositAddresses)
                     {
                         // Confirm if the user has the permissions to perform the current transaction
-                        if (_fundsValidationService.IsTierVerified(depositAddress.AccountId.Value, true))
+                        if (_fundsValidationService.IsTierVerified(depositAddress.AccountId.Value, true).Item1)
                         {
                             // If any of the new transactions' addresses matches any deposit addresses
                             if (depositAddress.BitcoinAddress.Value == newTransactions[i].Item1)
@@ -209,7 +209,7 @@ namespace CoinExchange.Funds.Application.DepositServices
                 }
             }
             //Check if the required Tier Level for this operation is verified i.e., Tier 1
-            if (_fundsValidationService.IsTierVerified(generateNewAddressCommand.AccountId, true))
+            if (_fundsValidationService.IsTierVerified(generateNewAddressCommand.AccountId, true).Item1)
             {
                 List<DepositAddress> depositAddresses = _depositAddressRepository.
                     GetDepositAddressByAccountIdAndCurrency(
@@ -302,7 +302,7 @@ namespace CoinExchange.Funds.Application.DepositServices
         /// <returns></returns>
         public bool MakeDeposit(MakeDepositCommand makeDepositCommand)
         {
-            if (_fundsValidationService.IsTierVerified(makeDepositCommand.AccountId, makeDepositCommand.IsCryptoCurrency))
+            if (_fundsValidationService.IsTierVerified(makeDepositCommand.AccountId, makeDepositCommand.IsCryptoCurrency).Item1)
             {
                 Balance balance =
                     _balanceRepository.GetBalanceByCurrencyAndAccountId(new Currency(makeDepositCommand.Currency),

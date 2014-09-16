@@ -27,7 +27,7 @@ insert  into `currencypair`(`CurrencyPairName`,`BaseCurrency`,`QuoteCurrency`) v
 
 /*Data for the table `depositlimit` */
 
-insert  into `depositlimit`(`Id`,`TierLevel`,`DailyLimit`,`MonthlyLimit`) values (1,'Tier 0',0,0),(2,'Tier 1',2,10),(3,'Tier 2',4,20),(4,'Tier 3',40,200),(5,'Tier 4',200,1000);
+insert  into `depositlimit`(`Id`,`TierLevel`,`DailyLimit`,`MonthlyLimit`,`LimitsCurrency`) values (1,'Tier 0',0,0,'Default'),(2,'Tier 1',2,10,'Default'),(3,'Tier 2',4,20,'Default'),(4,'Tier 3',40,200,'Default'),(5,'Tier 4',200,1000,'Default');
 
 /*Data for the table `fee` */
 
@@ -75,7 +75,7 @@ insert  into `withdrawfees`(`Id`,`Currency`,`MinimumAmount`,`Fee`) values (3,'BT
 
 /*Data for the table `withdrawlimit` */
 
-insert  into `withdrawlimit`(`Id`,`TierLevel`,`DailyLimit`,`MonthlyLimit`) values (1,'Tier 0',0,0),(2,'Tier 1',2,10),(3,'Tier 2',4,20),(4,'Tier 3',40,200),(5,'Tier 4',200,1000);
+insert  into `withdrawlimit`(`Id`,`TierLevel`,`DailyLimit`,`MonthlyLimit`,`LimitsCurrency`) values (1,'Tier 0',0,0,'Default'),(2,'Tier 1',2,10,'Default'),(3,'Tier 2',4,20,'Default'),(4,'Tier 3',40,200,'Default'),(5,'Tier 4',200,1000,'Default');
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

@@ -21,17 +21,20 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
 
         private IFundsPersistenceRepository _fundsPersistenceRepository;
         private ILedgerIdGeneraterService _ledgerIdGeneraterService;
+        private ILimitsConfigurationService _limitsConfigurationService;
 
         /// <summary>
         /// Parameterized Constructor
         /// </summary>
         /// <param name="fundsPersistenceRepository"> </param>
         /// <param name="ledgerIdGeneratorService"></param>
+        /// <param name="limitsConfigurationService"> </param>
         public TransactionService(IFundsPersistenceRepository fundsPersistenceRepository, 
-            ILedgerIdGeneraterService ledgerIdGeneratorService)
+            ILedgerIdGeneraterService ledgerIdGeneratorService, ILimitsConfigurationService limitsConfigurationService)
         {
             _fundsPersistenceRepository = fundsPersistenceRepository;
             _ledgerIdGeneraterService = ledgerIdGeneratorService;
+            _limitsConfigurationService = limitsConfigurationService;
         }
 
         /// <summary>
@@ -78,6 +81,8 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
                 // double currenctBalance = _ledgerRepository.GetBalanceForCurrency(deposit.Currency.Name, 
                 //    new AccountId(deposit.AccountId.Value));
 
+                // ToDo: Inject LimitEvaluationConfigurationService here, and assign the amount in FIAT currency, if it is what
+                // the admin has specified
                 Ledger ledger = new Ledger(_ledgerIdGeneraterService.GenerateLedgerId(), DateTime.Now,
                                            LedgerType.Deposit, deposit.Currency, deposit.Amount, 0,
                                            balance, null, null, null, deposit.DepositId,

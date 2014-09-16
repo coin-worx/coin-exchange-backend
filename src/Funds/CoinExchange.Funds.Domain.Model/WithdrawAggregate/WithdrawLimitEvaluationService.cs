@@ -27,17 +27,18 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
         /// <param name="withdrawLimit"></param>
         /// <param name="availableBalance"></param>
         /// <param name="currentBalance"></param>
+        /// <param name="bestBid"> </param>
+        /// <param name="bestAsk"> </param>
         /// <returns></returns>
         public bool EvaluateMaximumWithdrawLimit(decimal withdrawAmount, IList<Withdraw> withdrawLedgers,
-            WithdrawLimit withdrawLimit, decimal availableBalance, 
-            decimal currentBalance)
+         WithdrawLimit withdrawLimit, decimal availableBalance, decimal currentBalance, decimal bestBid = 0, decimal bestAsk = 0)
         {
             if (withdrawLimit.DailyLimit != 0 && withdrawLimit.MonthlyLimit != 0)
             {
                 // Set Daily and Monthly Limit
                 SetLimits(withdrawLimit);
                 // Set the amount used in the Daily and Monthly limit
-                SetUsedLimits(withdrawLedgers);
+                SetUsedLimits(withdrawLedgers, bestBid, bestAsk);
                 // Evaluate the Maximum Withdraw, set it, and return response whether it went successfully or not
                 if (EvaluateMaximumWithdrawUsd())
                 {
@@ -70,16 +71,18 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
         /// <param name="withdrawLimit"></param>
         /// <param name="availableBalance"></param>
         /// <param name="currentBalance"></param>
+        /// <param name="bestBid"> </param>
+        /// <param name="bestAsk"> </param>
         /// <returns></returns>
         public bool AssignWithdrawLimits(IList<Withdraw> withdrawLedgers, WithdrawLimit withdrawLimit, decimal availableBalance,
-                                         decimal currentBalance)
+                                         decimal currentBalance, decimal bestBid = 0, decimal bestAsk = 0)
         {
             if (withdrawLimit.DailyLimit != 0 && withdrawLimit.MonthlyLimit != 0)
             {
                 // Set Daily and Monthly Limit
                 SetLimits(withdrawLimit);
                 // Set the amount used in the Daily and Monthly limit
-                SetUsedLimits(withdrawLedgers);
+                SetUsedLimits(withdrawLedgers, bestBid, bestAsk);
                 // Evaluate the Maximum Withdraw, set it, and return response whether it went successfully or not
                 if (EvaluateMaximumWithdrawUsd())
                 {
@@ -172,7 +175,7 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
         /// Sets the amount that has been used for daily and monthly Withdraw limits
         /// </summary>
         /// <returns></returns>
-        private void SetUsedLimits(IList<Withdraw> withdraws)
+        private void SetUsedLimits(IList<Withdraw> withdraws, decimal bestBid, decimal bestAsk)
         {
             decimal tempDailyLimitUsed = 0;
             decimal tempMonthlyLimitUsed = 0;
@@ -180,15 +183,24 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
             {
                 foreach (var withdraw in withdraws)
                 {
+                    decimal amount = 0;
+                    if (bestBid == 0 && bestAsk == 0)
+                    {
+                        amount = withdraw.Amount;
+                    }
+                    else
+                    {
+                        amount = withdraw.AmountInUsd;
+                    }
                     if (withdraw.DateTime >= DateTime.Now.AddHours(-24))
                     {
-                        tempDailyLimitUsed += withdraw.Amount;
-                        tempMonthlyLimitUsed += withdraw.Amount;
+                        tempDailyLimitUsed += amount;
+                        tempMonthlyLimitUsed += amount;
                     }
                     if (withdraw.DateTime >= DateTime.Now.AddDays(-30) &&
                         withdraw.DateTime < DateTime.Now.AddHours(-24))
                     {
-                        tempMonthlyLimitUsed += withdraw.Amount;
+                        tempMonthlyLimitUsed += amount;
                     }
                 }
             }
