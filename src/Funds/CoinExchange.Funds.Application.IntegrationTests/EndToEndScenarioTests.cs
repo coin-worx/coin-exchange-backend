@@ -355,6 +355,8 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             // Retrieve balance
             Balance balance = balanceRepository.GetBalanceByCurrencyAndAccountId(currency, accountId);
             Assert.IsNull(balance);
+
+            // Deposit
             bool depositResponse = fundsValidationService.DepositConfirmed(deposit);
             Assert.IsTrue(depositResponse);
 

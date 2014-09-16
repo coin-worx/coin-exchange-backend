@@ -225,30 +225,33 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         {
             if (deposit != null && deposit.Status == TransactionStatus.Pending)
             {
-                // Get the Current Tier Level for this user using the corss bounded context Tier retrieval service
-                Tuple<bool, string> isTierVerified = IsTierVerified(deposit.AccountId.Value, deposit.Currency.IsCryptoCurrency);
-                if (isTierVerified.Item1)
-                {
-                    //if (deposit.Currency.IsCryptoCurrency)
-                    //{
-                    deposit.StatusConfirmed();
-                    // Get all the Deposit Ledgers for this currency and account
-                    IList<Ledger> depositLedgers = GetDepositLedgers(deposit.Currency, deposit.AccountId);
-                    
-                    // Check if the current deposit amount is within the Deposit Limits
-                    if (_limitsConfigurationService.EvaluateDepositLimits(deposit.Currency.Name, isTierVerified.Item2,
-                                                                          deposit.Amount, depositLedgers))
-                    {
-                        return UpdateBalance(deposit);
-                    }
-                    else
-                    {
-                        // If deposit was over the limit, add amount to pending balance and freeze the account
-                        // ToDo: Implement a way to inform the admin about the threshold crossing and take necessary action
-                        UpdateBalanceAndFreezeAccount(deposit);
-                        throw new InvalidOperationException("Deposit is over the limit. Account Balance will be frozen");
-                    }
-                }
+                deposit.StatusConfirmed();
+
+                return UpdateBalance(deposit);
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="accountId"> </param>
+        /// <param name="currency"> </param>
+        /// <param name="amount"> </param>
+        /// <returns></returns>
+        public bool IsDepositLegit(AccountId accountId, Currency currency, decimal amount)
+        {
+            // Get the Current Tier Level for this user using the corss bounded context Tier retrieval service
+            Tuple<bool, string> isTierVerified = IsTierVerified(accountId.Value,
+                                                                currency.IsCryptoCurrency);
+            if (isTierVerified.Item1)
+            {
+                // Get all the Deposit Ledgers for this currency and account
+                IList<Ledger> depositLedgers = GetDepositLedgers(currency, accountId);
+
+                // Check if the current deposit amount is within the Deposit Limits
+                return _limitsConfigurationService.EvaluateDepositLimits(currency.Name, isTierVerified.Item2,
+                                                                      amount, depositLedgers);
             }
             return false;
         }
@@ -539,6 +542,11 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
             return new Balance(currency, accountId);
         }
 
+        /// <summary>
+        /// Update the balance
+        /// </summary>
+        /// <param name="deposit"></param>
+        /// <returns></returns>
         private bool UpdateBalance(Deposit deposit)
         {
             // Check if balance instance has been created for this user already
@@ -552,7 +560,7 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
             // Otherwise, update the balance for the current user's currency
             else
             {
-                if (!balance.IsFrozen)
+                //if (!balance.IsFrozen)
                 {
                     balance.AddAvailableBalance(deposit.Amount);
                     balance.AddCurrentBalance(deposit.Amount);

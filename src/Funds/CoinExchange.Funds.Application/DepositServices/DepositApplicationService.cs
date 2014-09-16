@@ -104,8 +104,10 @@ namespace CoinExchange.Funds.Application.DepositServices
                 {
                     foreach (var depositAddress in allDepositAddresses)
                     {
-                        // Confirm if the user has the permissions to perform the current transaction
-                        if (_fundsValidationService.IsTierVerified(depositAddress.AccountId.Value, true).Item1)
+                        // Confirm if the user has the permissions to perform the current transaction, and deposit is within 
+                        // the threshold limits
+                        if (_fundsValidationService.IsDepositLegit(depositAddress.AccountId, depositAddress.Currency, 
+                            newTransactions[i].Item3))
                         {
                             // If any of the new transactions' addresses matches any deposit addresses
                             if (depositAddress.BitcoinAddress.Value == newTransactions[i].Item1)
@@ -120,6 +122,8 @@ namespace CoinExchange.Funds.Application.DepositServices
                                 _fundsPersistenceRepository.SaveOrUpdate(depositAddress);
                             }
                         }
+                        // If deposit is not within tier levels and threshold limits, freeze the balance. No update to the
+                        // balance will ye be made
                         else
                         {
                             Log.Error(string.Format("FATAL ERROR: Tier Level not enough for submitting deposits: Account ID: {0}",
