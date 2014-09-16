@@ -95,6 +95,7 @@ namespace CoinExchange.Funds.Application.DepositServices
             List<DepositAddress> allDepositAddresses = _depositAddressRepository.GetAllDepositAddresses();
             for (int i = 0; i < newTransactions.Count; i++)
             {
+                // If there is already a deposit by the same transacitonId, raise an exception
                 Deposit deposit = _depositRepository.GetDepositByTransactionId(new TransactionId(newTransactions[i].Item2));
                 if (deposit != null)
                 {
@@ -128,13 +129,21 @@ namespace CoinExchange.Funds.Application.DepositServices
                         {
                             Log.Error(string.Format("FATAL ERROR: Tier Level not enough for submitting deposits: Account ID: {0}",
                                 depositAddress.AccountId.Value));
+                            // Create a deposit that is marked freezed
+                            ValidateDeposit(currency, newTransactions[i].Item1, newTransactions[i].Item3,
+                                                depositAddress.AccountId.Value, newTransactions[i].Item2,
+                                                TransactionStatus.Frozen);
+                            
+                            // Mark the balance frozen
                             Balance balance = _balanceRepository.GetBalanceByCurrencyAndAccountId(new Currency(currency, true),
                                 depositAddress.AccountId);
+                            // Update balance if already exists
                             if (balance != null)
                             {
                                 balance.FreezeAccount();
                                 _fundsPersistenceRepository.SaveOrUpdate(balance);
                             }
+                            // Else creaate a new one and freeze
                             else
                             {
                                 balance = new Balance(new Currency(currency, true), depositAddress.AccountId);

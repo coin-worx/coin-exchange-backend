@@ -242,8 +242,7 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         public bool IsDepositLegit(AccountId accountId, Currency currency, decimal amount)
         {
             // Get the Current Tier Level for this user using the corss bounded context Tier retrieval service
-            Tuple<bool, string> isTierVerified = IsTierVerified(accountId.Value,
-                                                                currency.IsCryptoCurrency);
+            Tuple<bool, string> isTierVerified = IsTierVerified(accountId.Value, currency.IsCryptoCurrency);
             if (isTierVerified.Item1)
             {
                 // Get all the Deposit Ledgers for this currency and account

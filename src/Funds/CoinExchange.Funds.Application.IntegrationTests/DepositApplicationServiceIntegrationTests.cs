@@ -251,5 +251,134 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             Assert.AreEqual(deposit.DepositId, ledger.DepositId);
             Assert.AreEqual(0, ledger.Fee);
         }
+
+        [Test]
+        public void DepositArrivedFailTest_VerifiesThatNewDepositWithAMountGreaterThanLimitsIsSuspendedAndAccountBalanceFrozen_VerifiesThroughDatabaseQuery()
+        {
+            IDepositApplicationService depositApplicationService = (IDepositApplicationService)ContextRegistry.GetContext()["DepositApplicationService"];
+            IFundsPersistenceRepository fundsPersistenceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];
+            IBalanceRepository balanceRepository = (IBalanceRepository)ContextRegistry.GetContext()["BalanceRepository"];
+            IDepositRepository depositRepository = (IDepositRepository)ContextRegistry.GetContext()["DepositRepository"];
+            IDepositLimitRepository depositLimitRepository = (IDepositLimitRepository)ContextRegistry.GetContext()["DepositLimitRepository"];
+            
+            AccountId accountId = new AccountId(123);
+            Currency currency = new Currency("BTC", true);
+            BitcoinAddress bitcoinAddress = new BitcoinAddress("bitcoinaddress1");
+            TransactionId transactionId = new TransactionId("transactionid1");
+            decimal amount = 1.02m;
+            string category = BitcoinConstants.ReceiveCategory;
+
+            DepositAddress depositAddress =  new DepositAddress(currency, bitcoinAddress, AddressStatus.New, DateTime.Now, accountId);
+            fundsPersistenceRepository.SaveOrUpdate(depositAddress);
+            DepositLimit depositLimit = depositLimitRepository.GetLimitByTierLevelAndCurrency("Tier 1", "Default");
+            Assert.IsNotNull(depositLimit, "DepositLimit used initially to compare later");
+
+            List<Tuple<string, string, decimal, string>> transactionsList = new List<Tuple<string, string, decimal, string>>();
+            // Provide the amount which is greater than the daily limit
+            transactionsList.Add(new Tuple<string, string, decimal, string>(bitcoinAddress.Value, transactionId.Value,
+                depositLimit.DailyLimit + 0.001M, category));
+            depositApplicationService.OnDepositArrival(currency.Name, transactionsList);
+
+            Deposit deposit = depositRepository.GetDepositByTransactionId(transactionId);
+            Assert.IsNotNull(deposit);
+            Assert.AreEqual(TransactionStatus.Frozen, deposit.Status);
+            Balance balance = balanceRepository.GetBalanceByCurrencyAndAccountId(currency, accountId);
+            Assert.IsNotNull(balance);
+            Assert.IsTrue(balance.IsFrozen);
+        }
+
+        [Test]
+        public void DepositArrivedSuccessfulTest_ChecksThatNewDepositInstanceIsCreatedAsExpectedWhenANewTrnasactionComesIn_VerifiesThroughDatabaseQuery()
+        {
+            IDepositApplicationService depositApplicationService = (IDepositApplicationService)ContextRegistry.GetContext()["DepositApplicationService"];
+            IFundsPersistenceRepository fundsPersistenceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];
+            IBalanceRepository balanceRepository = (IBalanceRepository)ContextRegistry.GetContext()["BalanceRepository"];
+            IDepositRepository depositRepository = (IDepositRepository)ContextRegistry.GetContext()["DepositRepository"];
+            IDepositLimitRepository depositLimitRepository = (IDepositLimitRepository)ContextRegistry.GetContext()["DepositLimitRepository"];
+
+            AccountId accountId = new AccountId(123);
+            Currency currency = new Currency("BTC", true);
+            BitcoinAddress bitcoinAddress = new BitcoinAddress("bitcoinaddress1");
+            TransactionId transactionId = new TransactionId("transactionid1");
+            string category = BitcoinConstants.ReceiveCategory;
+
+            DepositAddress depositAddress = new DepositAddress(currency, bitcoinAddress, AddressStatus.New, DateTime.Now, accountId);
+            fundsPersistenceRepository.SaveOrUpdate(depositAddress);
+            DepositLimit depositLimit = depositLimitRepository.GetLimitByTierLevelAndCurrency("Tier 1", "Default");
+            Assert.IsNotNull(depositLimit, "DepositLimit used initially to compare later");
+
+            List<Tuple<string, string, decimal, string>> transactionsList = new List<Tuple<string, string, decimal, string>>();
+            // Provide the amount which is greater than the daily limit
+            transactionsList.Add(new Tuple<string, string, decimal, string>(bitcoinAddress.Value, transactionId.Value,
+                depositLimit.DailyLimit - 0.01M, category));
+            depositApplicationService.OnDepositArrival(currency.Name, transactionsList);
+
+            Deposit deposit = depositRepository.GetDepositByTransactionId(transactionId);
+            Assert.IsNotNull(deposit);
+            Assert.AreEqual(depositLimit.DailyLimit - 0.01M, deposit.Amount);
+            Assert.AreEqual(transactionId.Value, deposit.TransactionId.Value);
+            Assert.AreEqual(accountId.Value, deposit.AccountId.Value);
+            Assert.AreEqual(bitcoinAddress.Value, deposit.BitcoinAddress.Value);
+            Assert.AreEqual(TransactionStatus.Pending, deposit.Status);
+            Balance balance = balanceRepository.GetBalanceByCurrencyAndAccountId(currency, accountId);
+            Assert.IsNull(balance);
+        }
+
+        [Test]
+        public void DepositArrivedSAndConfirmedTest_ChecksThatANewDepositInstanceIsCreatedAndConfirmedAsExpected_VerifiesThroughDatabaseQuery()
+        {
+            IDepositApplicationService depositApplicationService = (IDepositApplicationService)ContextRegistry.GetContext()["DepositApplicationService"];
+            IFundsPersistenceRepository fundsPersistenceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];
+            IBalanceRepository balanceRepository = (IBalanceRepository)ContextRegistry.GetContext()["BalanceRepository"];
+            IDepositRepository depositRepository = (IDepositRepository)ContextRegistry.GetContext()["DepositRepository"];
+            IDepositLimitRepository depositLimitRepository = (IDepositLimitRepository)ContextRegistry.GetContext()["DepositLimitRepository"];
+
+            AccountId accountId = new AccountId(123);
+            Currency currency = new Currency("BTC", true);
+            BitcoinAddress bitcoinAddress = new BitcoinAddress("bitcoinaddress1");
+            TransactionId transactionId = new TransactionId("transactionid1");
+            string category = BitcoinConstants.ReceiveCategory;
+
+            DepositAddress depositAddress = new DepositAddress(currency, bitcoinAddress, AddressStatus.New, DateTime.Now, accountId);
+            fundsPersistenceRepository.SaveOrUpdate(depositAddress);
+            DepositLimit depositLimit = depositLimitRepository.GetLimitByTierLevelAndCurrency("Tier 1", "Default");
+            Assert.IsNotNull(depositLimit, "DepositLimit used initially to compare later");
+
+            List<Tuple<string, string, decimal, string>> transactionsList = new List<Tuple<string, string, decimal, string>>();
+
+            // Provide the amount which is greater than the daily limit
+            transactionsList.Add(new Tuple<string, string, decimal, string>(bitcoinAddress.Value, transactionId.Value,
+                depositLimit.DailyLimit - 0.01M, category));
+            depositApplicationService.OnDepositArrival(currency.Name, transactionsList);
+
+            // Deposit Trnasction first arrival
+            Deposit deposit = depositRepository.GetDepositByTransactionId(transactionId);
+            Assert.IsNotNull(deposit);
+            Assert.AreEqual(depositLimit.DailyLimit - 0.01M, deposit.Amount);
+            Assert.AreEqual(transactionId.Value, deposit.TransactionId.Value);
+            Assert.AreEqual(accountId.Value, deposit.AccountId.Value);
+            Assert.AreEqual(bitcoinAddress.Value, deposit.BitcoinAddress.Value);
+            Assert.AreEqual(TransactionStatus.Pending, deposit.Status);
+            Balance balance = balanceRepository.GetBalanceByCurrencyAndAccountId(currency, accountId);
+            Assert.IsNull(balance);
+
+            // Deposit Confirmation
+            depositApplicationService.OnDepositConfirmed(transactionId.Value, 7);
+            deposit = depositRepository.GetDepositByTransactionId(transactionId);
+            Assert.IsNotNull(deposit);
+            Assert.AreEqual(depositLimit.DailyLimit - 0.01M, deposit.Amount);
+            Assert.AreEqual(transactionId.Value, deposit.TransactionId.Value);
+            Assert.AreEqual(accountId.Value, deposit.AccountId.Value);
+            Assert.AreEqual(bitcoinAddress.Value, deposit.BitcoinAddress.Value);
+            Assert.AreEqual(TransactionStatus.Confirmed, deposit.Status);
+
+            // Balance instance now will have been created
+            balance = balanceRepository.GetBalanceByCurrencyAndAccountId(currency, accountId);
+            Assert.IsNotNull(balance);
+            Assert.AreEqual(depositLimit.DailyLimit - 0.01M, balance.AvailableBalance);
+            Assert.AreEqual(depositLimit.DailyLimit - 0.01M, balance.CurrentBalance);
+            Assert.AreEqual(0, balance.PendingBalance);
+            Assert.IsFalse(balance.IsFrozen);
+        }
     }
 }
