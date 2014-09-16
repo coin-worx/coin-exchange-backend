@@ -37,7 +37,14 @@ namespace CoinExchange.Funds.Application.Tests
 
         public WithdrawLimit GetLimitByTierLevelAndCurrency(string tierLevel, string currencyType)
         {
-            throw new NotImplementedException();
+            foreach (var withdrawLimit in _withdrawLimits)
+            {
+                if (withdrawLimit.TierLevel == tierLevel)
+                {
+                    return withdrawLimit;
+                }
+            }
+            return null;
         }
 
         public WithdrawLimit GetWithdrawLimitById(int id)

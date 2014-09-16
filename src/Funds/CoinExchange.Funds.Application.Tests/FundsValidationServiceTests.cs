@@ -29,7 +29,9 @@ namespace CoinExchange.Funds.Application.Tests
             var mockTierLevelRetrievalService = new MockTierLevelRetrievalService();
             var mockWithdrawRepository = new MockWithdrawRepository();
             var tierValidationService = new TierValidationService();
-            var mockLimitsConfigurationService = new MockLimitsConfigurationService();
+            var mockBboRetrievalService = new MockBboRetrievalService();
+            var mockLimitsConfigurationService = new LimitsConfigurationService(mockDepositLimitRepository,
+             depositLimitEvaluationService, mockWithdrawLimitRepository, mockWithdrawLimitEvaluationService, mockBboRetrievalService);
             TransactionService transactionService = new TransactionService(mockFundsRepository, new MockLedgerGeneratorService(),
                 mockLimitsConfigurationService);
             FundsValidationService fundsValidationService = new FundsValidationService(transactionService,
@@ -59,7 +61,9 @@ namespace CoinExchange.Funds.Application.Tests
             var mockTierLevelRetrievalService = new MockTierLevelRetrievalService();
             var mockWithdrawRepository = new MockWithdrawRepository();
             var tierValidationService = new TierValidationService();
-            var mockLimitsConfigurationService = new MockLimitsConfigurationService();
+            var mockBboRetrievalService = new MockBboRetrievalService();
+            var mockLimitsConfigurationService = new LimitsConfigurationService(mockDepositLimitRepository,
+             depositLimitEvaluationService, mockWithdrawLimitRepository, mockWithdrawLimitEvaluationService, mockBboRetrievalService);
             TransactionService transactionService = new TransactionService(mockFundsRepository, new MockLedgerGeneratorService(),
                 mockLimitsConfigurationService);
             FundsValidationService fundsValidationService = new FundsValidationService(transactionService,
@@ -94,7 +98,9 @@ namespace CoinExchange.Funds.Application.Tests
             var mockTierLevelRetrievalService = new MockTierLevelRetrievalService();
             var mockWithdrawRepository = new MockWithdrawRepository();
             var tierValidationService = new TierValidationService();
-            var mockLimitsConfigurationService = new MockLimitsConfigurationService();
+            var mockBboRetrievalService = new MockBboRetrievalService();
+            var mockLimitsConfigurationService = new LimitsConfigurationService(mockDepositLimitRepository,
+             depositLimitEvaluationService, mockWithdrawLimitRepository, mockWithdrawLimitEvaluationService, mockBboRetrievalService);
             TransactionService transactionService = new TransactionService(mockFundsRepository, new MockLedgerGeneratorService(),
                 mockLimitsConfigurationService);
             FundsValidationService fundsValidationService = new FundsValidationService(transactionService,
@@ -130,7 +136,9 @@ namespace CoinExchange.Funds.Application.Tests
             var mockTierLevelRetrievalService = new MockTierLevelRetrievalService();
             var mockWithdrawRepository = new MockWithdrawRepository();
             var tierValidationService = new TierValidationService();
-            var mockLimitsConfigurationService = new MockLimitsConfigurationService();
+            var mockBboRetrievalService = new MockBboRetrievalService();
+            var mockLimitsConfigurationService = new LimitsConfigurationService(mockDepositLimitRepository,
+             depositLimitEvaluationService, mockWithdrawLimitRepository, mockWithdrawLimitEvaluationService, mockBboRetrievalService);
             TransactionService transactionService = new TransactionService(mockFundsRepository, new MockLedgerGeneratorService(),
                 mockLimitsConfigurationService);
             FundsValidationService fundsValidationService = new FundsValidationService(transactionService,
@@ -165,7 +173,9 @@ namespace CoinExchange.Funds.Application.Tests
             var mockTierLevelRetrievalService = new MockTierLevelRetrievalService();
             var mockWithdrawRepository = new MockWithdrawRepository();
             var tierValidationService = new TierValidationService();
-            var mockLimitsConfigurationService = new MockLimitsConfigurationService();
+            var mockBboRetrievalService = new MockBboRetrievalService();
+            var mockLimitsConfigurationService = new LimitsConfigurationService(mockDepositLimitRepository,
+             depositLimitEvaluationService, mockWithdrawLimitRepository, mockWithdrawLimitEvaluationService, mockBboRetrievalService);
             TransactionService transactionService = new TransactionService(mockFundsRepository, new MockLedgerGeneratorService(),
                 mockLimitsConfigurationService);
             FundsValidationService fundsValidationService = new FundsValidationService(transactionService,
@@ -202,7 +212,9 @@ namespace CoinExchange.Funds.Application.Tests
             var mockTierLevelRetrievalService = new MockTierLevelRetrievalService();
             var mockWithdrawRepository = new MockWithdrawRepository();
             var tierValidationService = new TierValidationService();
-            var mockLimitsConfigurationService = new MockLimitsConfigurationService();
+            var mockBboRetrievalService = new MockBboRetrievalService();
+            var mockLimitsConfigurationService = new LimitsConfigurationService(mockDepositLimitRepository,
+             depositLimitEvaluationService, mockWithdrawLimitRepository, mockWithdrawLimitEvaluationService, mockBboRetrievalService);
             TransactionService transactionService = new TransactionService(mockFundsRepository, new MockLedgerGeneratorService(),
                 mockLimitsConfigurationService);
             FundsValidationService fundsValidationService = new FundsValidationService(transactionService,
@@ -235,7 +247,9 @@ namespace CoinExchange.Funds.Application.Tests
             var mockTierLevelRetrievalService = new MockTierLevelRetrievalService();
             var mockWithdrawRepository = new MockWithdrawRepository();
             var tierValidationService = new TierValidationService();
-            var mockLimitsConfigurationService = new MockLimitsConfigurationService();
+            var mockBboRetrievalService = new MockBboRetrievalService();
+            var mockLimitsConfigurationService = new LimitsConfigurationService(mockDepositLimitRepository, 
+             depositLimitEvaluationService, mockWithdrawLimitRepository, mockWithdrawLimitEvaluationService, mockBboRetrievalService);
             TransactionService transactionService = new TransactionService(mockFundsRepository, new MockLedgerGeneratorService(),
                 mockLimitsConfigurationService);
             FundsValidationService fundsValidationService = new FundsValidationService(transactionService,
@@ -273,7 +287,9 @@ namespace CoinExchange.Funds.Application.Tests
             var mockTierLevelRetrievalService = new MockTierLevelRetrievalService();
             var mockWithdrawRepository = new MockWithdrawRepository();
             var tierValidationService = new TierValidationService();
-            var mockLimitsConfigurationService = new MockLimitsConfigurationService();
+            var mockBboRetrievalService = new MockBboRetrievalService();
+            var mockLimitsConfigurationService = new LimitsConfigurationService(mockDepositLimitRepository,
+             depositLimitEvaluationService, mockWithdrawLimitRepository, mockWithdrawLimitEvaluationService, mockBboRetrievalService);
             TransactionService transactionService = new TransactionService(mockFundsRepository, new MockLedgerGeneratorService(),
                 mockLimitsConfigurationService);
             FundsValidationService fundsValidationService = new FundsValidationService(transactionService,
@@ -287,13 +303,7 @@ namespace CoinExchange.Funds.Application.Tests
             Deposit deposit = new Deposit(balance.Currency, mockDepositIdGeneratorService.GenerateId(), DateTime.Now,
                 DepositType.Default, 1.5m, 0, TransactionStatus.Pending, balance.AccountId, new TransactionId("123"),
                 new BitcoinAddress("123"));
-            deposit.IncrementConfirmations();
-            deposit.IncrementConfirmations();
-            deposit.IncrementConfirmations();
-            deposit.IncrementConfirmations();
-            deposit.IncrementConfirmations();
-            deposit.IncrementConfirmations();
-            deposit.IncrementConfirmations();
+            deposit.IncrementConfirmations(7);
             mockDepositRepository.Save(deposit);
             bool response = fundsValidationService.DepositConfirmed(deposit);
             Assert.IsTrue(response);
@@ -317,7 +327,9 @@ namespace CoinExchange.Funds.Application.Tests
             var mockTierLevelRetrievalService = new MockTierLevelRetrievalService();
             var mockWithdrawRepository = new MockWithdrawRepository();
             var tierValidationService = new TierValidationService();
-            var mockLimitsConfigurationService = new MockLimitsConfigurationService();
+            var mockBboRetrievalService = new MockBboRetrievalService();
+            var mockLimitsConfigurationService = new LimitsConfigurationService(mockDepositLimitRepository,
+             depositLimitEvaluationService, mockWithdrawLimitRepository, mockWithdrawLimitEvaluationService, mockBboRetrievalService);
             TransactionService transactionService = new TransactionService(mockFundsRepository, new MockLedgerGeneratorService(),
                 mockLimitsConfigurationService);
             FundsValidationService fundsValidationService = new FundsValidationService(transactionService,

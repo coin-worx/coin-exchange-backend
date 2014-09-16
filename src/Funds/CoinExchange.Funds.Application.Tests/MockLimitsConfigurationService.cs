@@ -13,7 +13,7 @@ namespace CoinExchange.Funds.Application.Tests
     {
         public void ConfigureCurrencyType()
         {
-            throw new NotImplementedException();
+            
         }
 
         public bool EvaluateDepositLimits(string baseCurrency, string tierLevel, decimal amount, IList<Ledger> depositLedgers)
@@ -21,9 +21,10 @@ namespace CoinExchange.Funds.Application.Tests
             return true;
         }
 
-        public bool EvaluateWithdrawLimits(string baseCurrency, string tierLevel, decimal amount, IList<Withdraw> withdrawals, decimal availableBalance, decimal currentBalance)
+        public bool EvaluateWithdrawLimits(string baseCurrency, string tierLevel, decimal amount, IList<Withdraw> withdrawals, 
+            decimal availableBalance, decimal currentBalance)
         {
-            throw new NotImplementedException();
+            return true;
         }
 
 
@@ -32,14 +33,15 @@ namespace CoinExchange.Funds.Application.Tests
             throw new NotImplementedException();
         }
 
-        public void AssignWithdrawLimits(string baseCurrency, string tierLevel, IList<Withdraw> withdrawals, decimal availableBalance, decimal currentBalance)
+        public void AssignWithdrawLimits(string baseCurrency, string tierLevel, IList<Withdraw> withdrawals, 
+            decimal availableBalance, decimal currentBalance)
         {
-            throw new NotImplementedException();
+            
         }
 
         public decimal ConvertCurrencyToFiat(string currency, decimal amount)
         {
-            throw new NotImplementedException();
+            return amount*491;
         }
     }
 }
