@@ -80,7 +80,7 @@
     <Compile Include="Services\ITierValidationService.cs" />
     <Compile Include="Services\ITransactionService.cs" />
     <Compile Include="Services\ITierLevelRetrievalService.cs" />
-    <Compile Include="Services\IWithdrawSubmissionService.cs" />
+    <Compile Include="Services\IClientInteractionService.cs" />
     <Compile Include="Services\ILimitsConfigurationService.cs" />
     <Compile Include="Services\TierValidationService.cs" />
     <Compile Include="WithdrawAggregate\AccountWithdrawLimits.cs" />

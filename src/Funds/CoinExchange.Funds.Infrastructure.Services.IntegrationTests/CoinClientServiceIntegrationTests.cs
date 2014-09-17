@@ -49,7 +49,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.IntegrationTests
         {
             ICoinClientService coinClientService = (ICoinClientService)ContextRegistry.GetContext()["CoinClientService"];
 
-            string newAddress = coinClientService.CreateNewAddress("XBT");
+            string newAddress = coinClientService.CreateNewAddress();
             Assert.IsNotNull(newAddress);
             Assert.IsFalse(string.IsNullOrEmpty(newAddress));
         }
@@ -64,7 +64,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.IntegrationTests
 
                 decimal fee = 0.0001m;
                 AccountId accountId = new AccountId(1);
-                string newAddress = coinClientService.CreateNewAddress("BTC");
+                string newAddress = coinClientService.CreateNewAddress();
                 Withdraw withdraw = new Withdraw(new Currency("BTC", true), Guid.NewGuid().ToString(), DateTime.Now,
                                                  WithdrawType.Bitcoin, Amount, fee,
                                                  TransactionStatus.Pending, accountId,
@@ -105,7 +105,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.IntegrationTests
 
                 Currency currency = new Currency("BTC", true);
                 AccountId accountId = new AccountId(1);
-                string newAddress = coinClientService.CreateNewAddress("BTC");
+                string newAddress = coinClientService.CreateNewAddress();
                 BitcoinAddress bitcoinAddress = new BitcoinAddress(newAddress);
                 DepositAddress depositAddress = new DepositAddress(currency, bitcoinAddress,
                                                                    AddressStatus.New, DateTime.Now, accountId);
@@ -174,7 +174,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.IntegrationTests
 
                 Currency currency = new Currency("BTC", true);
                 AccountId accountId = new AccountId(1);
-                string newAddress = coinClientService.CreateNewAddress("BTC");
+                string newAddress = coinClientService.CreateNewAddress();
                 BitcoinAddress bitcoinAddress = new BitcoinAddress(newAddress);
                 DepositAddress depositAddress = new DepositAddress(currency, bitcoinAddress,
                                                                    AddressStatus.New, DateTime.Now, accountId);
@@ -238,7 +238,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.IntegrationTests
 
                 Currency currency = new Currency("BTC", true);
                 AccountId accountId = new AccountId(1);
-                string newAddress = coinClientService.CreateNewAddress("BTC");
+                string newAddress = coinClientService.CreateNewAddress();
                 BitcoinAddress bitcoinAddress = new BitcoinAddress(newAddress);
                 DepositAddress depositAddress = new DepositAddress(currency, bitcoinAddress,
                                                                    AddressStatus.New, DateTime.Now, accountId);

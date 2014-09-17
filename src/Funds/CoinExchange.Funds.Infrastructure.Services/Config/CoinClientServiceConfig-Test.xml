@@ -3,7 +3,10 @@
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xsi:schemaLocation="http://www.springframework.net http://www.springframework.net/xsd/spring-objects.xsd">
 
-  <object id="CoinClientService" type="CoinExchange.Funds.Infrastructure.Services.StubCoinClientService, CoinExchange.Funds.Infrastructure.Services">
+  <object id="BitcoinClientService" type="CoinExchange.Funds.Infrastructure.Services.CoinClientServices.StubBitcoinClientService, CoinExchange.Funds.Infrastructure.Services">
+  </object>
+
+  <object id="LitecoinClientService" type="CoinExchange.Funds.Infrastructure.Services.CoinClientServices.StubLitecoinClientService, CoinExchange.Funds.Infrastructure.Services">
   </object>
   
 </objects>

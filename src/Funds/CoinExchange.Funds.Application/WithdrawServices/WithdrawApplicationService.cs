@@ -24,7 +24,7 @@ namespace CoinExchange.Funds.Application.WithdrawServices
         private IWithdrawAddressRepository _withdrawAddressRepository;
         private IFundsValidationService _fundsValidationService;
         private IWithdrawRepository _withdrawRepository;
-        private IWithdrawSubmissionService _withdrawSubmissionService;
+        private IClientInteractionService _withdrawSubmissionService;
         private IDepositAddressRepository _depositAddressRepository;
         private IWithdrawLimitRepository _withdrawLimitRepository;
         private IBalanceRepository _balanceRepository;
@@ -35,14 +35,14 @@ namespace CoinExchange.Funds.Application.WithdrawServices
         public WithdrawApplicationService(IFundsPersistenceRepository fundsPersistenceRepository, 
             IWithdrawAddressRepository withdrawAddressRepository, 
             IFundsValidationService fundsValidationService, IWithdrawRepository withdrawRepository, 
-            IWithdrawSubmissionService withdrawSubmissionService, IDepositAddressRepository depositAddressRepository, 
+            IClientInteractionService clientInteractionService, IDepositAddressRepository depositAddressRepository, 
             IWithdrawLimitRepository withdrawLimitRepository, IBalanceRepository balanceRepository)
         {
             _fundsPersistenceRepository = fundsPersistenceRepository;
             _withdrawAddressRepository = withdrawAddressRepository;
             _fundsValidationService = fundsValidationService;
             _withdrawRepository = withdrawRepository;
-            _withdrawSubmissionService = withdrawSubmissionService;
+            _withdrawSubmissionService = clientInteractionService;
             _depositAddressRepository = depositAddressRepository;
             _withdrawLimitRepository = withdrawLimitRepository;
             _balanceRepository = balanceRepository;
@@ -166,7 +166,7 @@ namespace CoinExchange.Funds.Application.WithdrawServices
 
             if (withdraw != null)
             {
-                bool commitWithdrawResponse = _withdrawSubmissionService.CommitWithdraw(withdraw.WithdrawId);
+                bool commitWithdrawResponse = _withdrawSubmissionService.CommitWithdraw(withdraw);
                 return new CommitWithdrawResponse(commitWithdrawResponse, withdraw.WithdrawId, null);
             }
             throw new InvalidOperationException(string.Format("Could not commit withdraw: AccountId = {0}",
@@ -223,7 +223,19 @@ namespace CoinExchange.Funds.Application.WithdrawServices
         /// <returns></returns>
         public CancelWithdrawResponse CancelWithdraw(CancelWithdrawCommand cancelWithdrawCommand)
         {
-            return new CancelWithdrawResponse(_withdrawSubmissionService.CancelWithdraw(cancelWithdrawCommand.WithdrawId));
+            if (_withdrawSubmissionService.CancelWithdraw(cancelWithdrawCommand.WithdrawId))
+            {
+                Withdraw withdraw = _withdrawRepository.GetWithdrawByWithdrawId(cancelWithdrawCommand.WithdrawId);
+                if (withdraw != null)
+                {
+                    withdraw.StatusCancelled();
+                    _fundsPersistenceRepository.SaveOrUpdate(withdraw);
+                    return new CancelWithdrawResponse(true);
+                }
+                throw new NullReferenceException(string.Format("No withdraw found in the repository for Withdraw ID: {0}",
+                cancelWithdrawCommand.WithdrawId)); 
+            }
+            throw new ApplicationException(string.Format("Could not cancel withdraw with Withdraw ID: {0}", cancelWithdrawCommand.WithdrawId));
         }
 
         /// <summary>

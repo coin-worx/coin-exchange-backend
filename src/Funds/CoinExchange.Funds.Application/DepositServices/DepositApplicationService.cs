@@ -25,7 +25,7 @@ namespace CoinExchange.Funds.Application.DepositServices
         (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private IFundsValidationService _fundsValidationService;
-        private ICoinClientService _coinClientService;
+        private IClientInteractionService _clientInteractionService;
         private IFundsPersistenceRepository _fundsPersistenceRepository;
         private IDepositAddressRepository _depositAddressRepository;
         // NOTE: The balanceRepository is here for initial testing of Funds, it must be removed once the Exchange is
@@ -37,20 +37,20 @@ namespace CoinExchange.Funds.Application.DepositServices
         /// <summary>
         /// Default Constructor
         /// </summary>
-        private DepositApplicationService(IFundsValidationService fundsValidationService, ICoinClientService coinClientService,
+        private DepositApplicationService(IFundsValidationService fundsValidationService, IClientInteractionService clientInteractionService,
             IFundsPersistenceRepository fundsPersistenceRepository, IDepositAddressRepository depositAddressRepository,
             IBalanceRepository balanceRepository, IDepositRepository depositRepository, IDepositLimitRepository depositLimitRepository)
         {
             _fundsValidationService = fundsValidationService;
-            _coinClientService = coinClientService;
+            _clientInteractionService = clientInteractionService;
             _fundsPersistenceRepository = fundsPersistenceRepository;
             _depositAddressRepository = depositAddressRepository;
             _balanceRepository = balanceRepository;
             _depositRepository = depositRepository;
             _depositLimitRepository = depositLimitRepository;
 
-            _coinClientService.DepositArrived += OnDepositArrival;
-            _coinClientService.DepositConfirmed += OnDepositConfirmed;
+            _clientInteractionService.DepositArrived += OnDepositArrival;
+            _clientInteractionService.DepositConfirmed += OnDepositConfirmed;
         }
 
         /// <summary>
@@ -232,13 +232,19 @@ namespace CoinExchange.Funds.Application.DepositServices
                         throw new InvalidOperationException("Too many New addresses");
                     }
                 }
-                string address = _coinClientService.CreateNewAddress(generateNewAddressCommand.Currency);
-                DepositAddress depositAddress = new DepositAddress(new Currency(generateNewAddressCommand.Currency),
-                                                                   new BitcoinAddress(address), AddressStatus.New,
-                                                                   DateTime.Now,
-                                                                   new AccountId(generateNewAddressCommand.AccountId));
-                _fundsPersistenceRepository.SaveOrUpdate(depositAddress);
-                return new DepositAddressRepresentation(address, AddressStatus.New.ToString());
+                // Generate new address using the client
+                string address = _clientInteractionService.GenerateNewAddress(generateNewAddressCommand.Currency);
+                if (!string.IsNullOrEmpty(address))
+                {
+                    // Save the address in database
+                    DepositAddress depositAddress = new DepositAddress(new Currency(generateNewAddressCommand.Currency),
+                                                                       new BitcoinAddress(address), AddressStatus.New,
+                                                                       DateTime.Now,
+                                                                       new AccountId(generateNewAddressCommand.AccountId));
+                    _fundsPersistenceRepository.SaveOrUpdate(depositAddress);
+                    return new DepositAddressRepresentation(address, AddressStatus.New.ToString());
+                }
+                throw new NullReferenceException(string.Format("Null address returned from client for currency: {0}", generateNewAddressCommand.Currency));
             }
             throw new InvalidOperationException(string.Format("Tier 1 is not verified: Account ID = {0}", 
                 generateNewAddressCommand.AccountId));

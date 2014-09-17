@@ -3,12 +3,10 @@
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xsi:schemaLocation="http://www.springframework.net http://www.springframework.net/xsd/spring-objects.xsd">
 
-  <object id="CoinClientService" type="CoinExchange.Funds.Infrastructure.Services.CoinClientService, CoinExchange.Funds.Infrastructure.Services">
-    <constructor-arg name="fundsValidationService" ref="FundsValidationService" />
-    <constructor-arg name="depositRepository" ref="DepositRepository" />
-    <constructor-arg name="depositAddressRepository" ref="DepositAddressRepository" />
-    <constructor-arg name="depositIdGeneratorService" ref="DepositIdGeneratorService" />
-    <constructor-arg name="fundsPersistenceRepository" ref="FundsPersistenceRepository" />
+  <object id="BitcoinClientService" type="CoinExchange.Funds.Infrastructure.Services.CoinClientServices.BitcoinClientService, CoinExchange.Funds.Infrastructure.Services">
+  </object>
+
+  <object id="LitecoinClientService" type="CoinExchange.Funds.Infrastructure.Services.CoinClientServices.LitecoinClientService, CoinExchange.Funds.Infrastructure.Services">
   </object>
 
 </objects>

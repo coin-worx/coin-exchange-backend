@@ -42,9 +42,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClientInteractionServiceTests.cs" />
     <Compile Include="FundsValidationServiceTests.cs" />
+    <Compile Include="MockLitecoinClientService.cs" />
     <Compile Include="MockBalanceRepository.cs" />
     <Compile Include="MockBboRetrievalService.cs" />
+    <Compile Include="MockBitcoinClientService.cs" />
     <Compile Include="MockDepositIdGeneratorService.cs" />
     <Compile Include="MockDepositLimitEvaluationService.cs" />
     <Compile Include="MockDepositLimitRepository.cs" />

@@ -6,27 +6,19 @@ using System.Timers;
 using BitcoinLib.Responses;
 using BitcoinLib.Services.Coins.Base;
 using BitcoinLib.Services.Coins.Bitcoin;
-using BitcoinLib.Services.Coins.Litecoin;
 using CoinExchange.Common.Domain.Model;
-using CoinExchange.Funds.Domain.Model.CurrencyAggregate;
 using CoinExchange.Funds.Domain.Model.DepositAggregate;
 using CoinExchange.Funds.Domain.Model.Repositories;
 using CoinExchange.Funds.Domain.Model.Services;
-using CoinExchange.Funds.Domain.Model.WithdrawAggregate;
 
-namespace CoinExchange.Funds.Infrastructure.Services
+namespace CoinExchange.Funds.Infrastructure.Services.CoinClientServices
 {
     /// <summary>
     /// Service for interacting with the Bitcoin Client
     /// </summary>
-    public class CoinClientService : ICoinClientService
+    public class BitcoinClientService : ICoinClientService
     {
         private ICoinService _bitcoinService;
-        private IFundsValidationService _fundsValidationService;
-        private IDepositRepository _depositRepository;
-        private IDepositAddressRepository _depositAddressRepository;
-        private IDepositIdGeneratorService _depositIdGeneratorService;
-        private IFundsPersistenceRepository _fundsPersistenceRepository;
         private List<string> _currencies; 
         private Timer _timer = null;        
         private Dictionary<ICoinService, string> _serviceToBlockHashDictionary = new Dictionary<ICoinService, string>();
@@ -44,16 +36,8 @@ namespace CoinExchange.Funds.Infrastructure.Services
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
-        public CoinClientService(IFundsValidationService fundsValidationService, IDepositRepository depositRepository, 
-            IDepositAddressRepository depositAddressRepository, IDepositIdGeneratorService depositIdGeneratorService,
-            IFundsPersistenceRepository fundsPersistenceRepository)
+        public BitcoinClientService()
         {
-            _fundsValidationService = fundsValidationService;
-            _depositRepository = depositRepository;
-            _depositAddressRepository = depositAddressRepository;
-            _depositIdGeneratorService = depositIdGeneratorService;
-            _fundsPersistenceRepository = fundsPersistenceRepository;
-
             PopulateCurrencies();
             PopulateServices();
             StartTimer();
@@ -73,7 +57,7 @@ namespace CoinExchange.Funds.Infrastructure.Services
         /// </summary>
         public void PopulateServices()
         {
-            bool useBitcoinTestNet = Convert.ToBoolean(ConfigurationManager.AppSettings.Get("UseTestNet"));
+            bool useBitcoinTestNet = Convert.ToBoolean(ConfigurationManager.AppSettings.Get("BtcUseTestNet"));
             _bitcoinService = new BitcoinService(useTestnet:useBitcoinTestNet);
         }
 
@@ -261,7 +245,7 @@ namespace CoinExchange.Funds.Infrastructure.Services
         /// Gets a new address from the client for either a Deposit or Withdrawal
         /// </summary>
         /// <returns></returns>
-        public string CreateNewAddress(string currency)
+        public string CreateNewAddress()
         {
             string newAddress = _bitcoinService.GetNewAddress();
             return newAddress;
