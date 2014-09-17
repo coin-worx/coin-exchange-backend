@@ -380,5 +380,95 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             Assert.AreEqual(0, balance.PendingBalance);
             Assert.IsFalse(balance.IsFrozen);
         }
+
+        [Test]
+        public void AssignDepositLimitsTest_ChecksThatDepositLimitsAreAssignedProperlyWhenLevel1IsVerified_VerifiesThroughReturnedValues()
+        {
+            IDepositApplicationService depositApplicationService = (IDepositApplicationService)ContextRegistry.GetContext()["DepositApplicationService"];
+            IDepositLimitRepository depositLimitRepository = (IDepositLimitRepository)ContextRegistry.GetContext()["DepositLimitRepository"];
+
+            DepositLimit depositLimit = depositLimitRepository.GetLimitByTierLevelAndCurrency("Tier 1", LimitsCurrency.Default.ToString());
+            AccountId accountId = new AccountId(123);
+            Currency currency = new Currency("BTC", true);
+
+            DepositLimitThresholdsRepresentation depositLimitThresholds = depositApplicationService.GetThresholdLimits(accountId.Value, currency.Name);
+            Assert.IsNotNull(depositLimitThresholds);
+            Assert.AreEqual(depositLimit.DailyLimit, depositLimitThresholds.DailyLimit);
+            Assert.AreEqual(depositLimit.MonthlyLimit, depositLimitThresholds.MonthlyLimit);
+            Assert.AreEqual(0, depositLimitThresholds.DailyLimitUsed);
+            Assert.AreEqual(0, depositLimitThresholds.MonthlyLimitUsed);
+            Assert.AreEqual(0, depositLimitThresholds.CurrentBalance);
+            Assert.AreEqual(depositLimit.DailyLimit, depositLimitThresholds.MaximumDeposit);
+        }
+
+        [Test]
+        public void AssignDepositLimitsTest_ChecksThatDepositLimitsAreAssignedProperlyWhenLevel1IsVerifiedAndBalanceIsAlreadyPresent_VerifiesThroughReturnedValues()
+        {
+            IDepositApplicationService depositApplicationService = (IDepositApplicationService)ContextRegistry.GetContext()["DepositApplicationService"];
+            IDepositLimitRepository depositLimitRepository = (IDepositLimitRepository)ContextRegistry.GetContext()["DepositLimitRepository"];
+            IFundsPersistenceRepository fundsPersistenceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];
+
+            DepositLimit depositLimit = depositLimitRepository.GetLimitByTierLevelAndCurrency("Tier 1", LimitsCurrency.Default.ToString());
+            AccountId accountId = new AccountId(123);
+            Currency currency = new Currency("BTC", true);
+            decimal balanceAmount = 100;
+            Balance balance = new Balance(currency, accountId, balanceAmount, balanceAmount);
+            fundsPersistenceRepository.SaveOrUpdate(balance);
+
+            DepositLimitThresholdsRepresentation depositLimitThresholds = depositApplicationService.GetThresholdLimits(accountId.Value, currency.Name);
+            Assert.IsNotNull(depositLimitThresholds);
+            Assert.AreEqual(depositLimit.DailyLimit, depositLimitThresholds.DailyLimit);
+            Assert.AreEqual(depositLimit.MonthlyLimit, depositLimitThresholds.MonthlyLimit);
+            Assert.AreEqual(0, depositLimitThresholds.DailyLimitUsed);
+            Assert.AreEqual(0, depositLimitThresholds.MonthlyLimitUsed);
+            Assert.AreEqual(balanceAmount, depositLimitThresholds.CurrentBalance);
+            Assert.AreEqual(depositLimit.DailyLimit, depositLimitThresholds.MaximumDeposit);
+        }
+
+        [Test]
+        public void AssignDepositLimitsTest_ChecksThatDepositLimitsAreAssignedProperlyWhenLevel1IsNotVerifiedAndBalanceIsAlreadyPresent_VerifiesThroughReturnedValues()
+        {
+            IDepositApplicationService depositApplicationService = (IDepositApplicationService)ContextRegistry.GetContext()["DepositApplicationService"];
+            IDepositLimitRepository depositLimitRepository = (IDepositLimitRepository)ContextRegistry.GetContext()["DepositLimitRepository"];
+            StubTierLevelRetrievalService tierLevelRetrieval = (StubTierLevelRetrievalService)ContextRegistry.GetContext()["TierLevelRetrievalService"];
+
+            tierLevelRetrieval.SetTierLevel("Tier 0");
+            DepositLimit depositLimit = depositLimitRepository.GetLimitByTierLevelAndCurrency("Tier 0", LimitsCurrency.Default.ToString());
+            Assert.IsNotNull(depositLimit);
+            Assert.AreEqual(0, depositLimit.DailyLimit);
+            Assert.AreEqual(0, depositLimit.MonthlyLimit);
+            AccountId accountId = new AccountId(123);
+            Currency currency = new Currency("BTC", true);
+
+            DepositLimitThresholdsRepresentation depositLimitThresholds = depositApplicationService.GetThresholdLimits(accountId.Value, currency.Name);
+            Assert.IsNotNull(depositLimitThresholds);
+            Assert.AreEqual(depositLimit.DailyLimit, depositLimitThresholds.DailyLimit);
+            Assert.AreEqual(depositLimit.MonthlyLimit, depositLimitThresholds.MonthlyLimit);
+            Assert.AreEqual(0, depositLimitThresholds.DailyLimitUsed);
+            Assert.AreEqual(0, depositLimitThresholds.MonthlyLimitUsed);
+            Assert.AreEqual(0, depositLimitThresholds.CurrentBalance);
+            Assert.AreEqual(0, depositLimitThresholds.MaximumDeposit);
+        }
+
+        [Test]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void AssignDepositLimitsTest_ChecksThatDepositLimitsAreNotAssignedWhenNoDepositLimitIsFound_VerifiesThroughReturnedValues()
+        {
+            IDepositApplicationService depositApplicationService = (IDepositApplicationService)ContextRegistry.GetContext()["DepositApplicationService"];
+            IDepositLimitRepository depositLimitRepository = (IDepositLimitRepository)ContextRegistry.GetContext()["DepositLimitRepository"];
+            StubTierLevelRetrievalService tierLevelRetrieval = (StubTierLevelRetrievalService)ContextRegistry.GetContext()["TierLevelRetrievalService"];
+
+            // Specify invalid tier level
+            tierLevelRetrieval.SetTierLevel("Tier 6");
+            DepositLimit depositLimit = depositLimitRepository.GetLimitByTierLevelAndCurrency("Tier 0", LimitsCurrency.Default.ToString());
+            Assert.IsNotNull(depositLimit);
+            Assert.AreEqual(0, depositLimit.DailyLimit);
+            Assert.AreEqual(0, depositLimit.MonthlyLimit);
+            AccountId accountId = new AccountId(123);
+            Currency currency = new Currency("BTC", true);
+
+            // Exception occurs here because there is no such level as Tier 6
+            depositApplicationService.GetThresholdLimits(accountId.Value, currency.Name);
+        }
     }
 }

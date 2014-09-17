@@ -27,6 +27,11 @@ namespace CoinExchange.Funds.Application.Tests
             return true;
         }
 
+        public void AssignDepositLimits(string baseCurrency, string tierLevel, IList<Ledger> depositLedgers)
+        {
+            throw new NotImplementedException();
+        }
+
 
         public void AssignDepositLimits(string baseCurrency, string tierLevel, List<Ledger> depositLedgers)
         {

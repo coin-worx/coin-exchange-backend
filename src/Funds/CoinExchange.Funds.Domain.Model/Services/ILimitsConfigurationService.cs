@@ -39,7 +39,7 @@ namespace CoinExchange.Funds.Domain.Model.Services
         /// <summary>
         /// Assign the limits for Deposit
         /// </summary>
-        void AssignDepositLimits(string baseCurrency, string tierLevel, List<Ledger> depositLedgers);
+        void AssignDepositLimits(string baseCurrency, string tierLevel, IList<Ledger> depositLedgers);
 
         /// <summary>
         /// Assign the limtis for Withdraw

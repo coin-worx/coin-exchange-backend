@@ -355,6 +355,11 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         public AccountDepositLimits GetDepositLimitThresholds(AccountId accountId, Currency currency)
         {
             Balance balance = GetBalanceForAccountId(accountId, currency);
+            decimal balanceAmount = 0;
+            if (balance != null)
+            {
+                balanceAmount = balance.AvailableBalance;
+            }
             // Get all the Deposit Ledgers for this currency and account
             IList<Ledger> depositLedgers = GetDepositLedgers(currency, accountId);
             // Get the Current Tier Level for this user using the corss bounded context Tier retrieval service
@@ -362,27 +367,13 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
 
             if (!string.IsNullOrEmpty(currentTierLevel))
             {
-                // Get the Current Deposit limits for this user
-                DepositLimit depositLimit = _depositLimitRepository.GetDepositLimitByTierLevel(currentTierLevel);
+                _limitsConfigurationService.AssignDepositLimits(currency.Name, currentTierLevel, depositLedgers);
 
-                if (balance != null && depositLimit != null)
-                {
-                    // Check if the current Deposit transaction is within the Deposit limits
-                    _depositLimitEvaluationService.AssignDepositLimits(depositLedgers,
-                                                                       depositLimit);
-
-                    return new AccountDepositLimits(
-                        currency, accountId, _depositLimitEvaluationService.DailyLimit,
-                        _depositLimitEvaluationService.DailyLimitUsed,
-                        _depositLimitEvaluationService.MonthlyLimit, _depositLimitEvaluationService.MonthlyLimitUsed,
-                        balance.AvailableBalance, _depositLimitEvaluationService.MaximumDeposit);
-                }
-                else if (balance == null && depositLimit != null)
-                {
-                    return new AccountDepositLimits(
-                        currency, accountId, depositLimit.DailyLimit, 0, depositLimit.MonthlyLimit, 0, 0, 0);
-                }
-                return new AccountDepositLimits(currency, accountId, 0, 0, 0, 0, 0, 0);
+                return new AccountDepositLimits(
+                    currency, accountId, _depositLimitEvaluationService.DailyLimit,
+                    _depositLimitEvaluationService.DailyLimitUsed,
+                    _depositLimitEvaluationService.MonthlyLimit, _depositLimitEvaluationService.MonthlyLimitUsed,
+                    balanceAmount, _depositLimitEvaluationService.MaximumDeposit);
             }
             throw new InstanceNotFoundException(string.Format("No TierLevel Found for the user: AccountId = {0}", accountId.Value));
         }
@@ -402,10 +393,8 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
             IList<Withdraw> withdrawLedgers = GetWithdrawalLedgers(currency, accountId);
             // Get the Current Tier Level for this user using the cross bounded context Tier retrieval service                
             string currentTierLevel = _tierLevelRetrievalService.GetCurrentTierLevel(accountId.Value);
-            // Get the Current Withdraw limits for this user
-            WithdrawLimit withdrawLimit =
-                _withdrawLimitRepository.GetWithdrawLimitByTierLevel(currentTierLevel);
 
+            // Get the withdraw fee and minimum amount
             decimal withdrawFee = 0;
             decimal minimumAmount = 0;
             if (withdrawFees != null)
@@ -413,31 +402,29 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
                 withdrawFee = withdrawFees.Fee;
                 minimumAmount = withdrawFees.MinimumAmount;
             }
-
-            if (balance != null && withdrawLimit != null)
+            // Get the current and available balance
+            decimal availableBalance = 0;
+            decimal currentBalance = 0;
+            if (balance != null)
             {
-                // Evaluate if the current withdrawal is within the limits of the maximum withdrawal allowed and 
-                // the balance available
-                _withdrawLimitEvaluationService.AssignWithdrawLimits(withdrawLedgers,
-                                                                     withdrawLimit,
-                                                                     balance.AvailableBalance,
-                                                                     balance.CurrentBalance);
+                availableBalance = balance.AvailableBalance;
+                currentBalance = balance.CurrentBalance;
+            }
 
-                return new AccountWithdrawLimits(currency, accountId, _withdrawLimitEvaluationService.DailyLimit,
-                                                 _withdrawLimitEvaluationService.DailyLimitUsed,
-                                                 _withdrawLimitEvaluationService.MonthlyLimit,
-                                                 _withdrawLimitEvaluationService.MonthlyLimitUsed,
-                                                 balance.AvailableBalance,
-                                                 _withdrawLimitEvaluationService.MaximumWithdraw,
-                                                 _withdrawLimitEvaluationService.WithheldAmount,
-                                                 withdrawFee, minimumAmount);
-            }
-            else if (balance == null && withdrawLimit != null)
-            {
-                return new AccountWithdrawLimits(currency, accountId, withdrawLimit.DailyLimit, 0, withdrawLimit.MonthlyLimit, 0,
-                    0, 0, 0, withdrawFee, minimumAmount);
-            }
-            return new AccountWithdrawLimits(currency, accountId, 0, 0, 0, 0, 0, 0, 0, withdrawFee, minimumAmount);
+            // Evaluate if the current withdrawal is within the limits of the maximum withdrawal allowed and 
+            // the balance available
+            _limitsConfigurationService.AssignWithdrawLimits(currency.Name, currentTierLevel, withdrawLedgers,
+                                                             availableBalance, currentBalance);
+
+
+            return new AccountWithdrawLimits(currency, accountId, _withdrawLimitEvaluationService.DailyLimit,
+                                             _withdrawLimitEvaluationService.DailyLimitUsed,
+                                             _withdrawLimitEvaluationService.MonthlyLimit,
+                                             _withdrawLimitEvaluationService.MonthlyLimitUsed,
+                                             availableBalance,
+                                             _withdrawLimitEvaluationService.MaximumWithdraw,
+                                             _withdrawLimitEvaluationService.WithheldAmount,
+                                             withdrawFee, minimumAmount);
         }
 
         /// <summary>

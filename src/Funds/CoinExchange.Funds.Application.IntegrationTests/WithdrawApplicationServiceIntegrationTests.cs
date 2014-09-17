@@ -102,5 +102,170 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             Assert.AreEqual(amount + 1, balance.CurrentBalance);
             Assert.AreEqual(amount + withdrawFees.Fee, balance.PendingBalance);
         }
+
+        [Test]
+        public void AssignWithdrawLimitsTest_TestsIfWithdrawLimitsGetAsignedProperlyWhenTier1IsVerifiedAndBalanceIsLessThanDailyLimit_VerifiesThroughReturnedValue()
+        {
+            IWithdrawApplicationService withdrawApplicationService = (IWithdrawApplicationService)ContextRegistry.GetContext()["WithdrawApplicationService"];
+            IWithdrawLimitRepository withdrawLimitRepository = (IWithdrawLimitRepository)ContextRegistry.GetContext()["WithdrawLimitRepository"];
+            IFundsPersistenceRepository fundsPersistenceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];            
+            IWithdrawFeesRepository withdrawFeesRepository = (IWithdrawFeesRepository)ContextRegistry.GetContext()["WithdrawFeesRepository"];           
+            StubTierLevelRetrievalService tierLevelRetrievalService = (ITierLevelRetrievalService)ContextRegistry.GetContext()["TierLevelRetrievalService"] as StubTierLevelRetrievalService;
+
+            Assert.IsNotNull(tierLevelRetrievalService);
+            tierLevelRetrievalService.SetTierLevel(TierConstants.TierLevel1);
+            AccountId accountId = new AccountId(123);
+            Currency currency = new Currency("BTC", true);
+            WithdrawLimit withdrawLimit = withdrawLimitRepository.GetLimitByTierLevelAndCurrency("Tier 1", LimitsCurrency.Default.ToString());
+            Assert.IsNotNull(withdrawLimit);
+            decimal amount = withdrawLimit.DailyLimit;
+
+            Balance balance = new Balance(currency, accountId, amount - 0.001M, amount);
+            fundsPersistenceRepository.SaveOrUpdate(balance);
+
+            WithdrawFees withdrawFees = withdrawFeesRepository.GetWithdrawFeesByCurrencyName(currency.Name);
+            Assert.IsNotNull(withdrawFees);
+
+            WithdrawLimitRepresentation withdrawLimitRepresentation = withdrawApplicationService.GetWithdrawLimitThresholds(accountId.Value, currency.Name);
+            Assert.IsNotNull(withdrawLimitRepresentation);
+            Assert.AreEqual(currency.Name, withdrawLimitRepresentation.Currency);
+            Assert.AreEqual(accountId.Value, withdrawLimitRepresentation.AccountId);
+            Assert.AreEqual(withdrawLimit.DailyLimit, withdrawLimitRepresentation.DailyLimit);
+            Assert.AreEqual(withdrawLimit.DailyLimit, withdrawLimitRepresentation.DailyLimit);
+            Assert.AreEqual(withdrawLimit.MonthlyLimit, withdrawLimitRepresentation.MonthlyLimit);
+            Assert.AreEqual(0, withdrawLimitRepresentation.DailyLimitUsed);
+            Assert.AreEqual(0, withdrawLimitRepresentation.MonthlyLimitUsed);
+            Assert.AreEqual(amount - 0.001M, withdrawLimitRepresentation.CurrentBalance);
+            Assert.AreEqual(withdrawFees.Fee, withdrawLimitRepresentation.Fee);
+            Assert.AreEqual(withdrawFees.MinimumAmount, withdrawLimitRepresentation.MinimumAmount);
+            Assert.AreEqual(0.001M, withdrawLimitRepresentation.Withheld);
+            Assert.AreEqual(amount - 0.001M, withdrawLimitRepresentation.MaximumWithdraw);
+        }
+
+        [Test]
+        public void AssignWithdrawLimitsTest_TestsIfWithdrawLimitsGetAsignedProperlyWhenTier1IsVerifiedAndBalanceIsMoreThanDailyLimit_VerifiesThroughReturnedValue()
+        {
+            IWithdrawApplicationService withdrawApplicationService = (IWithdrawApplicationService)ContextRegistry.GetContext()["WithdrawApplicationService"];
+            IWithdrawLimitRepository withdrawLimitRepository = (IWithdrawLimitRepository)ContextRegistry.GetContext()["WithdrawLimitRepository"];
+            IFundsPersistenceRepository fundsPersistenceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];
+            IWithdrawFeesRepository withdrawFeesRepository = (IWithdrawFeesRepository)ContextRegistry.GetContext()["WithdrawFeesRepository"];
+            StubTierLevelRetrievalService tierLevelRetrievalService = (ITierLevelRetrievalService)ContextRegistry.GetContext()["TierLevelRetrievalService"] as StubTierLevelRetrievalService;
+
+            Assert.IsNotNull(tierLevelRetrievalService);
+            tierLevelRetrievalService.SetTierLevel(TierConstants.TierLevel1);
+            AccountId accountId = new AccountId(123);
+            Currency currency = new Currency("BTC", true);
+            WithdrawLimit withdrawLimit = withdrawLimitRepository.GetLimitByTierLevelAndCurrency("Tier 1", LimitsCurrency.Default.ToString());
+            Assert.IsNotNull(withdrawLimit);
+            decimal amount = withdrawLimit.DailyLimit + 0.001M;
+
+            Balance balance = new Balance(currency, accountId, amount, amount);
+            fundsPersistenceRepository.SaveOrUpdate(balance);
+
+            WithdrawFees withdrawFees = withdrawFeesRepository.GetWithdrawFeesByCurrencyName(currency.Name);
+            Assert.IsNotNull(withdrawFees);
+
+            WithdrawLimitRepresentation withdrawLimitRepresentation = withdrawApplicationService.GetWithdrawLimitThresholds(accountId.Value, currency.Name);
+            Assert.IsNotNull(withdrawLimitRepresentation);
+            Assert.AreEqual(currency.Name, withdrawLimitRepresentation.Currency);
+            Assert.AreEqual(accountId.Value, withdrawLimitRepresentation.AccountId);
+            Assert.AreEqual(withdrawLimit.DailyLimit, withdrawLimitRepresentation.DailyLimit);
+            Assert.AreEqual(withdrawLimit.DailyLimit, withdrawLimitRepresentation.DailyLimit);
+            Assert.AreEqual(withdrawLimit.MonthlyLimit, withdrawLimitRepresentation.MonthlyLimit);
+            Assert.AreEqual(0, withdrawLimitRepresentation.DailyLimitUsed);
+            Assert.AreEqual(0, withdrawLimitRepresentation.MonthlyLimitUsed);
+            Assert.AreEqual(amount, withdrawLimitRepresentation.CurrentBalance);
+            Assert.AreEqual(withdrawFees.Fee, withdrawLimitRepresentation.Fee);
+            Assert.AreEqual(withdrawFees.MinimumAmount, withdrawLimitRepresentation.MinimumAmount);
+            Assert.AreEqual(0, withdrawLimitRepresentation.Withheld);
+            Assert.AreEqual(withdrawLimit.DailyLimit, withdrawLimitRepresentation.MaximumWithdraw);
+        }
+
+        [Test]
+        public void AssignWithdrawLimitsTest_TestsIfWithdrawLimitsGetAsignedProperlyWhenNoBalanceisPresent_VerifiesThroughReturnedValue()
+        {
+            IWithdrawApplicationService withdrawApplicationService = (IWithdrawApplicationService)ContextRegistry.GetContext()["WithdrawApplicationService"];
+            IWithdrawLimitRepository withdrawLimitRepository = (IWithdrawLimitRepository)ContextRegistry.GetContext()["WithdrawLimitRepository"];
+            IFundsPersistenceRepository fundsPersistenceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];
+            IWithdrawFeesRepository withdrawFeesRepository = (IWithdrawFeesRepository)ContextRegistry.GetContext()["WithdrawFeesRepository"];
+            StubTierLevelRetrievalService tierLevelRetrievalService = (ITierLevelRetrievalService)ContextRegistry.GetContext()["TierLevelRetrievalService"] as StubTierLevelRetrievalService;
+
+            Assert.IsNotNull(tierLevelRetrievalService);
+            tierLevelRetrievalService.SetTierLevel(TierConstants.TierLevel1);
+            AccountId accountId = new AccountId(123);
+            Currency currency = new Currency("BTC", true);
+            WithdrawLimit withdrawLimit = withdrawLimitRepository.GetLimitByTierLevelAndCurrency("Tier 1", LimitsCurrency.Default.ToString());
+            Assert.IsNotNull(withdrawLimit);
+            
+            WithdrawFees withdrawFees = withdrawFeesRepository.GetWithdrawFeesByCurrencyName(currency.Name);
+            Assert.IsNotNull(withdrawFees);
+
+            WithdrawLimitRepresentation withdrawLimitRepresentation = withdrawApplicationService.GetWithdrawLimitThresholds(accountId.Value, currency.Name);
+            Assert.IsNotNull(withdrawLimitRepresentation);
+            Assert.AreEqual(currency.Name, withdrawLimitRepresentation.Currency);
+            Assert.AreEqual(accountId.Value, withdrawLimitRepresentation.AccountId);
+            Assert.AreEqual(withdrawLimit.DailyLimit, withdrawLimitRepresentation.DailyLimit);
+            Assert.AreEqual(withdrawLimit.MonthlyLimit, withdrawLimitRepresentation.MonthlyLimit);
+            Assert.AreEqual(0, withdrawLimitRepresentation.DailyLimitUsed);
+            Assert.AreEqual(0, withdrawLimitRepresentation.MonthlyLimitUsed);
+            Assert.AreEqual(0, withdrawLimitRepresentation.CurrentBalance);
+            Assert.AreEqual(withdrawFees.Fee, withdrawLimitRepresentation.Fee);
+            Assert.AreEqual(withdrawFees.MinimumAmount, withdrawLimitRepresentation.MinimumAmount);
+            Assert.AreEqual(0, withdrawLimitRepresentation.Withheld);
+            Assert.AreEqual(0, withdrawLimitRepresentation.MaximumWithdraw);
+        }
+
+        [Test]
+        public void AssignWithdrawLimitsTest_TestsIfWithdrawLimitsGetAsignedProperlyWhenTier1IsNotVerified_VerifiesThroughReturnedValue()
+        {
+            IWithdrawApplicationService withdrawApplicationService = (IWithdrawApplicationService)ContextRegistry.GetContext()["WithdrawApplicationService"];
+            IWithdrawLimitRepository withdrawLimitRepository = (IWithdrawLimitRepository)ContextRegistry.GetContext()["WithdrawLimitRepository"];            
+            IWithdrawFeesRepository withdrawFeesRepository = (IWithdrawFeesRepository)ContextRegistry.GetContext()["WithdrawFeesRepository"];
+            StubTierLevelRetrievalService tierLevelRetrievalService = (ITierLevelRetrievalService)ContextRegistry.GetContext()["TierLevelRetrievalService"] as StubTierLevelRetrievalService;
+
+            Assert.IsNotNull(tierLevelRetrievalService);
+            tierLevelRetrievalService.SetTierLevel(TierConstants.TierLevel0);
+            AccountId accountId = new AccountId(123);
+            Currency currency = new Currency("BTC", true);
+            WithdrawLimit withdrawLimit = withdrawLimitRepository.GetLimitByTierLevelAndCurrency("Tier 1", LimitsCurrency.Default.ToString());
+            Assert.IsNotNull(withdrawLimit);
+            
+            WithdrawFees withdrawFees = withdrawFeesRepository.GetWithdrawFeesByCurrencyName(currency.Name);
+            Assert.IsNotNull(withdrawFees);
+
+            WithdrawLimitRepresentation withdrawLimitRepresentation = withdrawApplicationService.GetWithdrawLimitThresholds(accountId.Value, currency.Name);
+            Assert.IsNotNull(withdrawLimitRepresentation);
+            Assert.AreEqual(currency.Name, withdrawLimitRepresentation.Currency);
+            Assert.AreEqual(accountId.Value, withdrawLimitRepresentation.AccountId);
+            Assert.AreEqual(0, withdrawLimitRepresentation.DailyLimit);
+            Assert.AreEqual(0, withdrawLimitRepresentation.MonthlyLimit);
+            Assert.AreEqual(0, withdrawLimitRepresentation.DailyLimitUsed);
+            Assert.AreEqual(0, withdrawLimitRepresentation.MonthlyLimitUsed);
+            Assert.AreEqual(0, withdrawLimitRepresentation.CurrentBalance);
+            Assert.AreEqual(withdrawFees.Fee, withdrawLimitRepresentation.Fee);
+            Assert.AreEqual(withdrawFees.MinimumAmount, withdrawLimitRepresentation.MinimumAmount);
+            Assert.AreEqual(0, withdrawLimitRepresentation.Withheld);
+            Assert.AreEqual(0, withdrawLimitRepresentation.MaximumWithdraw);
+        }
+
+        [Test]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void AssignWithdrawLimitsTest_TestsIfWithdrawLimitsGetAsignedProperlyWhenInvalidTierLevelIsSpecified_VerifiesThroughReturnedValue()
+        {
+            IWithdrawApplicationService withdrawApplicationService = (IWithdrawApplicationService)ContextRegistry.GetContext()["WithdrawApplicationService"];
+            IWithdrawLimitRepository withdrawLimitRepository = (IWithdrawLimitRepository)ContextRegistry.GetContext()["WithdrawLimitRepository"];
+            IWithdrawFeesRepository withdrawFeesRepository = (IWithdrawFeesRepository)ContextRegistry.GetContext()["WithdrawFeesRepository"];
+            StubTierLevelRetrievalService tierLevelRetrievalService = (ITierLevelRetrievalService)ContextRegistry.GetContext()["TierLevelRetrievalService"] as StubTierLevelRetrievalService;
+
+            Assert.IsNotNull(tierLevelRetrievalService);
+            tierLevelRetrievalService.SetTierLevel("Tier 6");
+            AccountId accountId = new AccountId(123);
+            Currency currency = new Currency("BTC", true);
+
+            WithdrawFees withdrawFees = withdrawFeesRepository.GetWithdrawFeesByCurrencyName(currency.Name);
+            Assert.IsNotNull(withdrawFees);
+
+            withdrawApplicationService.GetWithdrawLimitThresholds(accountId.Value, currency.Name);
+        }
     }
 }

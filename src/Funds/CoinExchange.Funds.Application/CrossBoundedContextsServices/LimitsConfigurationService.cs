@@ -82,9 +82,13 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
                 // Get the Current Deposit limits for this user
                 DepositLimit depositLimit = _depositLimitRepository.GetLimitByTierLevelAndCurrency(tierLevel, 
                     _adminDefinedLimitsCurrency);
-
-                // Check if the current Deposit transaction is within the Deposit limits
-                return _depositLimitEvaluationService.EvaluateDepositLimit(amount, depositLedgers, depositLimit);
+                if (depositLimit != null)
+                {
+                    // Check if the current Deposit transaction is within the Deposit limits
+                    return _depositLimitEvaluationService.EvaluateDepositLimit(amount, depositLedgers, depositLimit);
+                }
+                throw new InvalidOperationException(string.Format("No Deposit Limit found for Tier: Tier Level = {0} & " +
+                                                                  "CurrencyType = {1}", tierLevel, _adminDefinedLimitsCurrency));
             }
             // If the admin has specified that limtis must be calculated in a FIAT currency
             else
@@ -93,12 +97,19 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
                 DepositLimit depositLimit = _depositLimitRepository.GetLimitByTierLevelAndCurrency(tierLevel,
                     _adminDefinedLimitsCurrency);
 
-                // Convert the currency to FIAT
-                decimal amountInFiat = ConvertCurrencyToFiat(baseCurrency, amount);
-                // Return reponse that if the user is allowed to deposit the specified limit of not
-                // NOTE: If there is no best bid and best ask, then the limits will be speficied in the defauly crypto currency itself
-                return _depositLimitEvaluationService.EvaluateDepositLimit(amountInFiat, depositLedgers, depositLimit, 
-                        _bestBidBestAsk.Item1, _bestBidBestAsk.Item2);
+                if (depositLimit != null)
+                {
+                    // Convert the currency to FIAT
+                    decimal amountInFiat = ConvertCurrencyToFiat(baseCurrency, amount);
+                    // Return reponse that if the user is allowed to deposit the specified limit of not
+                    // NOTE: If there is no best bid and best ask, then the limits will be speficied in the defauly crypto currency itself
+                    return _depositLimitEvaluationService.EvaluateDepositLimit(amountInFiat, depositLedgers,
+                                                                               depositLimit,
+                                                                               _bestBidBestAsk.Item1,
+                                                                               _bestBidBestAsk.Item2);
+                }
+                throw new InvalidOperationException(string.Format("No Deposit Limit found for Tier: Tier Level = {0} & " +
+                                                                  "CurrencyType = {1}", tierLevel, _adminDefinedLimitsCurrency));
             }
         }
 
@@ -116,9 +127,15 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
                 WithdrawLimit withdrawLimit = _withdrawLimitRepository.GetLimitByTierLevelAndCurrency(tierLevel, 
                     _adminDefinedLimitsCurrency);
 
-                // Check if the current Withdraw transaction is within the Withdraw limits
-                return _withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(amount, withdrawals, withdrawLimit, 
-                    availableBalance, currentBalance);
+                if (withdrawLimit != null)
+                {
+                    // Check if the current Withdraw transaction is within the Withdraw limits
+                    return _withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(amount, withdrawals,
+                                                                                        withdrawLimit,
+                                                                                        availableBalance, currentBalance);
+                }
+                throw new InvalidOperationException(string.Format("No Withdraw Limit found for Tier: Tier Level = {0} & " +
+                                                                  "CurrencyType = {1}", tierLevel, _adminDefinedLimitsCurrency));
             }
             // If the admin has specified that limits must be calculated in a FIAT currency
             else
@@ -127,13 +144,21 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
                 WithdrawLimit withdrawLimit = _withdrawLimitRepository.GetLimitByTierLevelAndCurrency(tierLevel,
                     _adminDefinedLimitsCurrency);
 
-                // Convert the currency to FIAT
-                decimal amountInFiat = ConvertCurrencyToFiat(baseCurrency, amount);
-                // Check if the current Withdraw transaction is within the Withdraw limits
-                // NOTE: If there is no best bid and best ask, then the limits will be specified in the default crypto currency 
-                // itself
-                return _withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(amountInFiat, withdrawals, withdrawLimit,
-                    availableBalance, currentBalance, _bestBidBestAsk.Item1, _bestBidBestAsk.Item2);
+                if (withdrawLimit != null)
+                {
+                    // Convert the currency to FIAT
+                    decimal amountInFiat = ConvertCurrencyToFiat(baseCurrency, amount);
+                    // Check if the current Withdraw transaction is within the Withdraw limits
+                    // NOTE: If there is no best bid and best ask, then the limits will be specified in the default crypto currency 
+                    // itself
+                    return _withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(amountInFiat, withdrawals,
+                                                                                        withdrawLimit,
+                                                                                        availableBalance, currentBalance,
+                                                                                        _bestBidBestAsk.Item1,
+                                                                                        _bestBidBestAsk.Item2);
+                }
+                throw new InvalidOperationException(string.Format("No Withdraw Limit found for Tier: Tier Level = {0} & " +
+                                                                  "CurrencyType = {1}", tierLevel, _adminDefinedLimitsCurrency));
             }
         }
 
@@ -143,30 +168,47 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         /// <param name="baseCurrency"></param>
         /// <param name="tierLevel"></param>
         /// <param name="depositLedgers"></param>
-        public void AssignDepositLimits(string baseCurrency, string tierLevel, List<Ledger> depositLedgers)
+        public void AssignDepositLimits(string baseCurrency, string tierLevel, IList<Ledger> depositLedgers)
         {
             // If the admin has specified the limits to be calculated as the currency itself
             if (_adminDefinedLimitsCurrency == LimitsCurrency.Default.ToString())
             {
                 // Get the Current Deposit limits for this user
-                DepositLimit depositLimit = _depositLimitRepository.GetLimitByTierLevelAndCurrency(tierLevel,
+                DepositLimit depositLimit = _depositLimitRepository.GetLimitByTierLevelAndCurrency(tierLevel, 
                     _adminDefinedLimitsCurrency);
-
-                // Check if the current Deposit transaction is within the Deposit limits
-                _depositLimitEvaluationService.AssignDepositLimits(depositLedgers, depositLimit);
+                if (depositLimit != null)
+                {
+                    // Check if the current Deposit transaction is within the Deposit limits
+                    _depositLimitEvaluationService.AssignDepositLimits(depositLedgers, depositLimit);
+                }
+                else
+                {
+                    throw new InvalidOperationException(
+                        string.Format("No Deposit Limit found for Tier: Tier Level = " + tierLevel));
+                }
             }
             // If the admin has specified that limtis must be calculated in a FIAT currency
             else
             {
-                // Get the best bid and best ask
-                Tuple<decimal, decimal> bestBidBestAsk = _bboCrossContextService.GetBestBidBestAsk(baseCurrency, _adminDefinedLimitsCurrency);
                 // Get the Current Deposit limits for this user which will be in a FIAT currency
                 DepositLimit depositLimit = _depositLimitRepository.GetLimitByTierLevelAndCurrency(tierLevel,
                     _adminDefinedLimitsCurrency);
 
-                // Return reponse that if the user is allowed to deposit the specified limit of not
-                // NOTE: If there is no best bid and best ask, then the limits will be speficied in the defauly crypto currency itself
-                _depositLimitEvaluationService.AssignDepositLimits(depositLedgers, depositLimit, bestBidBestAsk.Item1, bestBidBestAsk.Item2);
+                if (depositLimit != null)
+                {
+                    // Get the best bid and best ask
+                    Tuple<decimal, decimal> bestBidBestAsk = _bboCrossContextService.GetBestBidBestAsk(baseCurrency, _adminDefinedLimitsCurrency);
+
+                    // Return reponse that if the user is allowed to deposit the specified limit of not
+                    // NOTE: If there is no best bid and best ask, then the limits will be speficied in the defauly crypto currency itself
+                    _depositLimitEvaluationService.AssignDepositLimits(depositLedgers, depositLimit,
+                                                                       bestBidBestAsk.Item1, bestBidBestAsk.Item2);
+                }
+                else
+                {
+                    throw new InvalidOperationException(
+                        string.Format("No Deposit Limit found for Tier: Tier Level = " + tierLevel));
+                }
             }
         }
 
@@ -188,22 +230,41 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
                 WithdrawLimit withdrawLimit = _withdrawLimitRepository.GetLimitByTierLevelAndCurrency(tierLevel,
                     _adminDefinedLimitsCurrency);
 
-                // Check if the current Withdraw transaction is within the Withdraw limits
-                _withdrawLimitEvaluationService.AssignWithdrawLimits(withdrawals, withdrawLimit,
-                    availableBalance, currentBalance);
+                if (withdrawLimit != null)
+                {
+                    // Check if the current Withdraw transaction is within the Withdraw limits
+                    _withdrawLimitEvaluationService.AssignWithdrawLimits(withdrawals, withdrawLimit,
+                                                                         availableBalance, currentBalance);
+                }
+                else
+                {
+                    throw new InvalidOperationException(
+                        string.Format("No Withdraw Limit found for Tier: Tier Level = {0} & " +
+                                      "CurrencyType = {1}", tierLevel, _adminDefinedLimitsCurrency));
+                }
             }
             // If the admin has specified that limits must be calculated in a FIAT currency
             else
             {
-                // Get the best bid and best ask
-                Tuple<decimal, decimal> bestBidBestAsk = _bboCrossContextService.GetBestBidBestAsk(baseCurrency, _adminDefinedLimitsCurrency);
                 // Get the Current Withdraw limits for this user which will be in a FIAT currency
                 WithdrawLimit withdrawLimit = _withdrawLimitRepository.GetLimitByTierLevelAndCurrency(tierLevel,
                     _adminDefinedLimitsCurrency);
 
-                // Assign the withdraw limits in FIAT amounts
-                _withdrawLimitEvaluationService.AssignWithdrawLimits(withdrawals, withdrawLimit,
-                    availableBalance, currentBalance, bestBidBestAsk.Item1, bestBidBestAsk.Item2);
+                if (withdrawLimit != null)
+                {
+                    // Get the best bid and best ask
+                    Tuple<decimal, decimal> bestBidBestAsk = _bboCrossContextService.GetBestBidBestAsk(baseCurrency, _adminDefinedLimitsCurrency);
+                    // Assign the withdraw limits in FIAT amounts
+                    _withdrawLimitEvaluationService.AssignWithdrawLimits(withdrawals, withdrawLimit,
+                                                                         availableBalance, currentBalance,
+                                                                         bestBidBestAsk.Item1, bestBidBestAsk.Item2);
+                }
+                else
+                {
+                    throw new InvalidOperationException(
+                        string.Format("No Withdraw Limit found for Tier: Tier Level = {0} & " +
+                                      "CurrencyType = {1}", tierLevel, _adminDefinedLimitsCurrency));
+                }
             }
         }
 
