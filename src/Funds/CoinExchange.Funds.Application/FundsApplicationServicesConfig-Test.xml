@@ -22,7 +22,7 @@
     <constructor-arg name="fundsValidationService" ref="FundsValidationService"/>
   </object>
 
-  <object id="ClientInteractionService" type="CoinExchange.Funds.Application.CrossBoundedContextsServices., CoinExchange.Funds.Application">
+  <object id="ClientInteractionService" type="CoinExchange.Funds.Application.CrossBoundedContextsServices.ClientInteractionService, CoinExchange.Funds.Application">
     <constructor-arg name="fundsPersistenceRepository" ref="FundsPersistenceRepository"/>
     <constructor-arg name="withdrawRepository" ref="WithdrawRepository"/>
     <constructor-arg name="bitcoinClientService" ref="BitcoinClientService"/>

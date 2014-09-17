@@ -20,7 +20,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.CoinClientServices
     {
         private ICoinService _bitcoinService;
         private List<string> _currencies; 
-        private Timer _timer = null;        
+        private Timer _timer = null;   
         private Dictionary<ICoinService, string> _serviceToBlockHashDictionary = new Dictionary<ICoinService, string>();
 
         /// <summary>
@@ -249,6 +249,16 @@ namespace CoinExchange.Funds.Infrastructure.Services.CoinClientServices
         {
             string newAddress = _bitcoinService.GetNewAddress();
             return newAddress;
+        }
+
+        public void CheckNewTransactions()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void PollConfirmations()
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>

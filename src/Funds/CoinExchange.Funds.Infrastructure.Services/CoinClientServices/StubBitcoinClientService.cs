@@ -23,6 +23,16 @@ namespace CoinExchange.Funds.Infrastructure.Services.CoinClientServices
             return Guid.NewGuid().ToString();
         }
 
+        public void CheckNewTransactions()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void PollConfirmations()
+        {
+            throw new NotImplementedException();
+        }
+
         public string CommitWithdraw(string bitcoinAddress, decimal amount)
         {
             return "123";

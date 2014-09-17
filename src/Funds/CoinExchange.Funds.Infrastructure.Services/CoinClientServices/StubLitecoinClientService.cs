@@ -16,6 +16,16 @@ namespace CoinExchange.Funds.Infrastructure.Services.CoinClientServices
             throw new NotImplementedException();
         }
 
+        public void CheckNewTransactions()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void PollConfirmations()
+        {
+            throw new NotImplementedException();
+        }
+
         public string CommitWithdraw(string bitcoinAddress, decimal amount)
         {
             throw new NotImplementedException();

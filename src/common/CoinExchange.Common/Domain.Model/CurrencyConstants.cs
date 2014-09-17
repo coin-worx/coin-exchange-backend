@@ -6,7 +6,9 @@
     public class CurrencyConstants
     {
         public const string BitCoinUsd = "BTCUSD";
+        public const string BtcLtc = "BTCLTC";
         public const string Btc = "BTC";
         public const string Usd = "USD";
+        public const string Ltc = "LTC";
     }
 }

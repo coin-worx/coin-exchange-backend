@@ -16,6 +16,16 @@ namespace CoinExchange.Funds.Application.Tests
             return "newaddress123";
         }
 
+        public void CheckNewTransactions()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void PollConfirmations()
+        {
+            throw new NotImplementedException();
+        }
+
         public string CommitWithdraw(string bitcoinAddress, decimal amount)
         {
             return "withdrawid123";
