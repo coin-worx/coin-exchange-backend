@@ -16,7 +16,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.IntegrationTests
         public void CheckNewTransactionTest_ChecksTheServiceChecksForNewTransactionsAndAddsThemToInternalListProperly_VerifiesThroughVariablesValues()
         {
             ICoinClientService litecoinClientService = (ICoinClientService)ContextRegistry.GetContext()["LitecoinClientService"];
-            litecoinClientService.CheckNewTransactions();
+            
         }
     }
 }

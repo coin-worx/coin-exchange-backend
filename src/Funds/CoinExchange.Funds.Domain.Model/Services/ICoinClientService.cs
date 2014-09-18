@@ -28,16 +28,6 @@ namespace CoinExchange.Funds.Domain.Model.Services
         string CreateNewAddress();
 
         /// <summary>
-        /// Check new transactions from the network
-        /// </summary>
-        void CheckNewTransactions();
-
-        /// <summary>
-        /// Poll for confirmations of pending transactions received
-        /// </summary>
-        void PollConfirmations();
-
-        /// <summary>
         /// Receives Withdraw, forwards to Bitcoin Client to proceed. Returns Transaction ID if commit is made
         /// </summary>
         /// <returns></returns>

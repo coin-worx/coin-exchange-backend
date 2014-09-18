@@ -19,8 +19,10 @@ namespace CoinExchange.Funds.Infrastructure.Services.CoinClientServices
     {
         private ICoinService _litecoinService = null;
         private Timer _newTransactrionsTimer = null;
-        private Timer _pollConfirmationsTimer = null;
         private string _blockHash = null;
+        private double _newTransactionsInterval = 0;
+        private double _pollInterval = 0;
+        private DateTime _pollIntervalDateTime = DateTime.MinValue;
 
         /// <summary>
         /// List of transactions with confirmations less than 7
@@ -46,15 +48,13 @@ namespace CoinExchange.Funds.Infrastructure.Services.CoinClientServices
         /// </summary>
         private void StartTimer()
         {
+            _newTransactionsInterval = Convert.ToDouble(ConfigurationManager.AppSettings.Get("LtcNewTransactionsTimer"));
+            _pollInterval = Convert.ToDouble(ConfigurationManager.AppSettings.Get("LtcPollingIntervalTimer"));     
+
             // Initializing Timer for new transactions
-            _newTransactrionsTimer = new Timer(Convert.ToDouble(ConfigurationManager.AppSettings.Get("LtcNewTransactionsTimer")));
+            _newTransactrionsTimer = new Timer(_newTransactionsInterval);
             _newTransactrionsTimer.Elapsed += NewTransactionsElapsed;
             _newTransactrionsTimer.Enabled = true;
-
-            // Initializing Timer for polling Confirmations of pending transactions
-            _pollConfirmationsTimer = new Timer(Convert.ToDouble(ConfigurationManager.AppSettings.Get("LtcPollingIntervalTimer")));
-            _pollConfirmationsTimer.Elapsed += PollIntervalElapsed;
-            _pollConfirmationsTimer.Enabled = true;
         }
 
         /// <summary>
@@ -65,41 +65,66 @@ namespace CoinExchange.Funds.Infrastructure.Services.CoinClientServices
         [Transaction]
         private void NewTransactionsElapsed(object sender, ElapsedEventArgs e)
         {
-            CheckNewTransactions();
+            List<TransactionSinceBlock> newTransactions = GetTransactionsSinceBlock();
+
+            // Check if there are new transactions that we dont have a track of
+            CheckNewTransactions(newTransactions);
+
+            // We will not check confirmations with the timer interval of checking new transactions, so we will make sure that we
+            // poll for confirmations after the specified PollConfrmations Interval. Because if we have separate timers, then
+            // the integrity of the _newTransactions list is doubtful, and having two separate timers and/or list can result in
+            // overheads and also disregard of data integrity
+
+            // If _pollIntervalDateTime has not yet been assigned
+            if (_pollIntervalDateTime == DateTime.MinValue)
+            {
+                _pollIntervalDateTime = DateTime.Now.AddMilliseconds(_pollInterval);
+            }
+            else
+            {
+                // If Poll Time has been assigned, check if it has been elapsed, only after that will we check for confirmations
+                if (_pollIntervalDateTime < DateTime.Now)
+                {
+                    // Add the time again after which confirmations will be checked
+                    _pollIntervalDateTime = DateTime.Now.AddMilliseconds(_pollInterval);
+                    PollConfirmations();
+                }
+            }
         }
 
         /// <summary>
-        /// When the interval for the Poll confirmations Timer elapses
+        /// Get the Transactions after the specified block
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        [Transaction]
-        private void PollIntervalElapsed(object sender, ElapsedEventArgs e)
-        {
-            PollConfirmations();
-        }
-
-        /// <summary>
-        /// Looks for new transactions
-        /// </summary>
-        public void CheckNewTransactions()
+        /// <returns></returns>
+        private List<TransactionSinceBlock> GetTransactionsSinceBlock()
         {
             if (string.IsNullOrEmpty(_blockHash))
             {
                 _blockHash = _litecoinService.GetBestBlockHash();
+                return null;
             }
+            else
+            {
+                // Get the list of blocks from the point we last time checked for blocks, by providing the last blockHash
+                // recorded last time 
+                List<TransactionSinceBlock> transactionSinceBlocks = _litecoinService.ListSinceBlock(_blockHash, 1).Transactions;
+                _blockHash = _litecoinService.GetBestBlockHash();
+                return transactionSinceBlocks;
+            }
+        }
 
-            // Get the list of blocks from the point we last time checked for blocks, by providing the last blockHash
-            // recorded last time 
-            List<TransactionSinceBlock> newTransactions = _litecoinService.ListSinceBlock(_blockHash, 1).Transactions;
-
+        /// <summary>
+        /// Look for new transactions coming from the network
+        /// </summary>
+        public void CheckNewTransactions(List<TransactionSinceBlock> newTransactions)
+        {
             List<Tuple<string, string, decimal, string>> transactionAddressList = null;
             if (newTransactions != null && newTransactions.Any())
             {
                 transactionAddressList = new List<Tuple<string, string, decimal, string>>();
                 foreach (TransactionSinceBlock transactionSinceBlock in newTransactions)
                 {
-                    if (transactionSinceBlock.Category == "receive")
+                    if (transactionSinceBlock.Category == BitcoinConstants.ReceiveCategory)
                     {
                         bool txIdExists = false;
                         foreach (Tuple<string, int> pendingDeposit in _pendingTransactions)
@@ -144,25 +169,8 @@ namespace CoinExchange.Funds.Infrastructure.Services.CoinClientServices
                 // Get the number of confirmations of each pending confirmation (deposit)
                 GetTransactionResponse getTransactionResponse = _litecoinService.GetTransaction(_pendingTransactions[i].Item1);
 
-                // If the current confirmation count in the block chain is greater than the one we have stored, update 
-                // confirmations
-                if (getTransactionResponse.Confirmations > _pendingTransactions[i].Item2)
-                {
-                    _pendingTransactions[i] = new Tuple<string, int>(_pendingTransactions[i].Item1, 
-                                                                     getTransactionResponse.Confirmations);
-                    if (DepositConfirmed != null)
-                    {
-                        // Raise the event and sned the TransacitonID and the no. of confirmation respectively
-                        DepositConfirmed(_pendingTransactions[i].Item1, getTransactionResponse.Confirmations);
-                    }
-                    // If the no of confirmations is >= 7, add to the list of confirmed deposits to be deleted outside this 
-                    // loop
-                    if (_pendingTransactions[i].Item2 >= 7)
-                    {
-                        // Add the confirmed trnasactions into the list of confirmed deposits
-                        depositsConfirmed.Add(_pendingTransactions[i]);
-                    }
-                }
+                // Add new confirmations and raise events
+                AddNewConfirmation(getTransactionResponse, i, depositsConfirmed);
             }
 
             // Remove the confirmed deposits from the list of _pendingTransactions. Do it here as we cannot do that when iterating
@@ -172,6 +180,30 @@ namespace CoinExchange.Funds.Infrastructure.Services.CoinClientServices
                 foreach (Tuple<string, int> deposit in depositsConfirmed)
                 {
                     _pendingTransactions.Remove(deposit);
+                }
+            }
+        }
+
+        private void AddNewConfirmation(GetTransactionResponse getTransactionResponse, int transactionIndex, 
+            List<Tuple<string,int>> depositsConfirmed)
+        {
+            // If the current confirmation count in the block chain is greater than the one we have stored, update 
+            // confirmations
+            if (getTransactionResponse.Confirmations > _pendingTransactions[transactionIndex].Item2)
+            {
+                _pendingTransactions[transactionIndex] = new Tuple<string, int>(_pendingTransactions[transactionIndex].Item1,
+                                                                 getTransactionResponse.Confirmations);
+                if (DepositConfirmed != null)
+                {
+                    // Raise the event and sned the TransacitonID and the no. of confirmation respectively
+                    DepositConfirmed(_pendingTransactions[transactionIndex].Item1, getTransactionResponse.Confirmations);
+                }
+                // If the no of confirmations is >= 7, add to the list of confirmed deposits to be deleted outside this 
+                // loop
+                if (_pendingTransactions[transactionIndex].Item2 >= 7)
+                {
+                    // Add the confirmed trnasactions into the list of confirmed deposits
+                    depositsConfirmed.Add(_pendingTransactions[transactionIndex]);
                 }
             }
         }
@@ -206,6 +238,8 @@ namespace CoinExchange.Funds.Infrastructure.Services.CoinClientServices
             return _litecoinService.GetBalance();
         }
 
-        public double PollingInterval { get; private set; }
+        public double PollingInterval { get { return _pollInterval; } }
+
+        public double NewTransactionsInterval { get { return _newTransactionsInterval; } }
     }
 }
