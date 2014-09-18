@@ -163,21 +163,21 @@ namespace CoinExchange.Funds.Infrastructure.Services.CoinClientServices
         {
             // List to temporarily save the transactions whose confirmations have reached the count of 7, these confirmations
             // are going to be deleted from the _pendingTransactions List
-            List<Tuple<string, int>> depositsConfirmed = new List<Tuple<string, int>>();
+            List<Tuple<string, int>> confirmedDeposits = new List<Tuple<string, int>>();
             for (int i = 0; i < _pendingTransactions.Count; i++)
             {
                 // Get the number of confirmations of each pending confirmation (deposit)
                 GetTransactionResponse getTransactionResponse = _litecoinService.GetTransaction(_pendingTransactions[i].Item1);
 
                 // Add new confirmations and raise events
-                AddNewConfirmation(getTransactionResponse, i, depositsConfirmed);
+                AddNewConfirmation(getTransactionResponse, i, confirmedDeposits);
             }
 
             // Remove the confirmed deposits from the list of _pendingTransactions. Do it here as we cannot do that when iterating
             // the _pensingTransactions list above
-            if (depositsConfirmed.Any())
+            if (confirmedDeposits.Any())
             {
-                foreach (Tuple<string, int> deposit in depositsConfirmed)
+                foreach (Tuple<string, int> deposit in confirmedDeposits)
                 {
                     _pendingTransactions.Remove(deposit);
                 }
