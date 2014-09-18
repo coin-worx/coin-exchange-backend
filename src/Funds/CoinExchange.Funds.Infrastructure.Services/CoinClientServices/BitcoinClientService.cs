@@ -10,6 +10,7 @@ using CoinExchange.Common.Domain.Model;
 using CoinExchange.Funds.Domain.Model.DepositAggregate;
 using CoinExchange.Funds.Domain.Model.Repositories;
 using CoinExchange.Funds.Domain.Model.Services;
+using Spring.Transaction.Interceptor;
 
 namespace CoinExchange.Funds.Infrastructure.Services.CoinClientServices
 {
@@ -18,18 +19,19 @@ namespace CoinExchange.Funds.Infrastructure.Services.CoinClientServices
     /// </summary>
     public class BitcoinClientService : ICoinClientService
     {
-        private ICoinService _bitcoinService;
-        private List<string> _currencies; 
-        private Timer _timer = null;   
-        private Dictionary<ICoinService, string> _serviceToBlockHashDictionary = new Dictionary<ICoinService, string>();
+        private ICoinService _bitcoinService = null;
+        private Timer _newTransactrionsTimer = null;
+        private string _blockHash = null;
+        private double _newTransactionsInterval = 0;
+        private double _pollInterval = 0;
+        private DateTime _pollIntervalDateTime = DateTime.MinValue;
+        private string _currency = CurrencyConstants.Btc;
 
         /// <summary>
-        /// Dictionary to add CoinService against the pending Transaction's TxId and No. of Confirmations
-        /// List: Item1 = TxId, Item2 = No. Of Confirmations
+        /// List of transactions with confirmations less than 7
+        /// Item1 = Transaction ID, Item2 = No. of Confirmations
         /// </summary>
-        private Dictionary<ICoinService, List<Tuple<string, int>>> _coinServiceToPendingDepositsDict = 
-            new Dictionary<ICoinService, List<Tuple<string, int>>>();
-
+        private List<Tuple<string, int>> _pendingTransactions = new List<Tuple<string, int>>();
         public event Action<string, List<Tuple<string, string, decimal, string>>> DepositArrived;
         public event Action<string, int> DepositConfirmed;
 
@@ -38,27 +40,10 @@ namespace CoinExchange.Funds.Infrastructure.Services.CoinClientServices
         /// </summary>
         public BitcoinClientService()
         {
-            PopulateCurrencies();
-            PopulateServices();
-            StartTimer();
-        }
-
-        /// <summary>
-        /// Populates the currencies
-        /// </summary>
-        public void PopulateCurrencies()
-        {
-            _currencies = new List<string>();
-            _currencies.Add(CurrencyConstants.Btc);
-        }
-
-        /// <summary>
-        /// Populates all the coin services
-        /// </summary>
-        public void PopulateServices()
-        {
             bool useBitcoinTestNet = Convert.ToBoolean(ConfigurationManager.AppSettings.Get("BtcUseTestNet"));
-            _bitcoinService = new BitcoinService(useTestnet:useBitcoinTestNet);
+            _bitcoinService = new BitcoinService(useTestnet: useBitcoinTestNet);
+
+            StartTimer();
         }
 
         /// <summary>
@@ -66,79 +51,79 @@ namespace CoinExchange.Funds.Infrastructure.Services.CoinClientServices
         /// </summary>
         private void StartTimer()
         {
-            _timer = new Timer(Convert.ToDouble(ConfigurationManager.AppSettings.Get("PollingInterval")));
-            _timer.Elapsed += PollIntervalElapsed;
-            _timer.Enabled = true;
+            _newTransactionsInterval = Convert.ToDouble(ConfigurationManager.AppSettings.Get("BtcNewTransactionsTimer"));
+            _pollInterval = Convert.ToDouble(ConfigurationManager.AppSettings.Get("BtcPollingIntervalTimer"));
+
+            // Initializing Timer for new transactions
+            _newTransactrionsTimer = new Timer(_newTransactionsInterval);
+            _newTransactrionsTimer.Elapsed += NewTransactionsElapsed;
+            _newTransactrionsTimer.Enabled = true;
         }
 
         /// <summary>
-        /// Returns the appropriate Coin Service corresponding to the given currency
+        /// When the interval for new 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        [Transaction]
+        private void NewTransactionsElapsed(object sender, ElapsedEventArgs e)
+        {
+            List<TransactionSinceBlock> newTransactions = GetTransactionsSinceBlock();
+
+            // Check if there are new transactions that we dont have a track of
+            CheckNewTransactions(newTransactions);
+
+            // We will not check confirmations with the timer interval of checking new transactions, so we will make sure that we
+            // poll for confirmations after the specified PollConfrmations Interval. Because if we have separate timers, then
+            // the integrity of the _newTransactions list is doubtful, and having two separate timers and/or list can result in
+            // overheads and also disregard of data integrity
+
+                // If _pollIntervalDateTime has not yet been assigned
+                if (_pollIntervalDateTime == DateTime.MinValue)
+                {
+                    _pollIntervalDateTime = DateTime.Now.AddMilliseconds(_pollInterval);
+                }
+                else
+                {
+                    // If there is no pending transaction in the list, there is no need to poll for confirmations
+                    if (_pendingTransactions.Any())
+                    {
+                        // If Poll Time has been assigned, check if it has been elapsed, only after that will we check for confirmations
+                        if (_pollIntervalDateTime < DateTime.Now)
+                        {
+                            // Add the time again after which confirmations will be checked
+                            _pollIntervalDateTime = DateTime.Now.AddMilliseconds(_pollInterval);
+                            PollConfirmations();
+                        }
+                    }
+                }
+        }
+
+        /// <summary>
+        /// Get the Transactions after the specified block
         /// </summary>
         /// <returns></returns>
-        private ICoinService GetSpecificCoinService(string currency)
+        private List<TransactionSinceBlock> GetTransactionsSinceBlock()
         {
-            switch (currency)
+            if (string.IsNullOrEmpty(_blockHash))
             {
-                case CurrencyConstants.Btc:
-                    return _bitcoinService;
-            }
-            return null;
-        }
-
-        /// <summary>
-        /// Checks for new Deposits
-        /// </summary>
-        /// <returns></returns>
-        public void PollIntervalElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
-        {
-            foreach (var currency in _currencies)
-            {
-                CheckSingleCurrencyDeposit(GetSpecificCoinService(currency), currency);
-            }
-        }
-
-        /// <summary>
-        /// Checks the deposit for a single currency
-        /// </summary>
-        public void CheckSingleCurrencyDeposit(ICoinService coinService, string currency)
-        {
-            //List<TransactionSinceBlock> oldTransactions = null;
-            string blockHash = null;
-            
-            _serviceToBlockHashDictionary.TryGetValue(coinService, out blockHash);
-            if (string.IsNullOrEmpty(blockHash))
-            {
-                _serviceToBlockHashDictionary.Add(coinService, coinService.GetBestBlockHash());                
+                _blockHash = _bitcoinService.GetBestBlockHash();
+                return null;
             }
             else
             {
                 // Get the list of blocks from the point we last time checked for blocks, by providing the last blockHash
                 // recorded last time 
-                ListSinceBlockResponse blocksList = coinService.ListSinceBlock(blockHash, 1);
-
-                // Check for new transactions
-                CheckNewTransactions(coinService, currency, blocksList.Transactions);
-
-                // Poll for confirmations of all the deposits that have else than 7 confirmations yet. If enough 
-                // confirmations are available, then forwards the deposit to FundsValidationService
-                PollConfirmations(coinService);
-                
-                // Get the latest of the client's transactions list
-                blockHash = coinService.GetBestBlockHash();
-
-                // Update the blockHash in the dictionary
-                _serviceToBlockHashDictionary[coinService] = blockHash;
+                List<TransactionSinceBlock> transactionSinceBlocks = _bitcoinService.ListSinceBlock(_blockHash, 1).Transactions;
+                _blockHash = _bitcoinService.GetBestBlockHash();
+                return transactionSinceBlocks;
             }
         }
 
         /// <summary>
-        /// Raises event in case new transactions arrive. 
-        /// Item1 = Address, Item2 = TransactionId, Item3 = Amount, Item4 = Category
+        /// Look for new transactions coming from the network
         /// </summary>
-        /// <param name="coinService"> </param>
-        /// <param name="currency"></param>
-        /// <param name="newTransactions"></param>
-        private void CheckNewTransactions(ICoinService coinService, string currency, List<TransactionSinceBlock> newTransactions)
+        public void CheckNewTransactions(List<TransactionSinceBlock> newTransactions)
         {
             List<Tuple<string, string, decimal, string>> transactionAddressList = null;
             if (newTransactions != null && newTransactions.Any())
@@ -146,48 +131,32 @@ namespace CoinExchange.Funds.Infrastructure.Services.CoinClientServices
                 transactionAddressList = new List<Tuple<string, string, decimal, string>>();
                 foreach (TransactionSinceBlock transactionSinceBlock in newTransactions)
                 {
-                    if (transactionSinceBlock.Category == "receive")
+                    if (transactionSinceBlock.Category == BitcoinConstants.ReceiveCategory)
                     {
-                        transactionAddressList.Add(
-                            new Tuple<string, string, decimal, string>(transactionSinceBlock.Address,
-                                                                       transactionSinceBlock.TxId,
-                                                                       transactionSinceBlock.Amount,
-                                                                       transactionSinceBlock.Category));
-
-                        List<Tuple<string, int>> pendingDeposits = null;
-                        if (_coinServiceToPendingDepositsDict.TryGetValue(coinService, out pendingDeposits))
+                        bool txIdExists = false;
+                        foreach (Tuple<string, int> pendingDeposit in _pendingTransactions)
                         {
-                            bool txIdExists = false;
-                            foreach (Tuple<string, int> pendingDeposit in pendingDeposits)
+                            // Make sure that one transaciton ID does not get saved twice
+                            if (pendingDeposit.Item1 == transactionSinceBlock.TxId)
                             {
-                                // Make sure that one transaciton ID does not get saved twice
-                                if (pendingDeposit.Item1 == transactionSinceBlock.TxId)
-                                {
-                                    txIdExists = true;
-                                }
-                            }
-                            if (txIdExists)
-                            {
-                                continue;
-                            }
-                            // If the ICoinService exists already, add to the list of pending confirmations(Deposits)
-                            pendingDeposits.Add(new Tuple<string, int>(transactionSinceBlock.TxId, 0));
-                            _coinServiceToPendingDepositsDict[coinService] = pendingDeposits;
-                            if (DepositArrived != null)
-                            {
-                                DepositArrived(currency, transactionAddressList);
+                                txIdExists = true;
                             }
                         }
-                        else
+                        if (txIdExists)
                         {
-                            // If the ICoinService does not exist, add it and a new list of Pending Confirmations(Deposist)
-                            pendingDeposits = new List<Tuple<string, int>>();
-                            pendingDeposits.Add(new Tuple<string, int>(transactionSinceBlock.TxId, 0));
-                            _coinServiceToPendingDepositsDict.Add(coinService, pendingDeposits);
-                            if (DepositArrived != null)
-                            {
-                                DepositArrived(currency, transactionAddressList);
-                            }
+                            continue;
+                        }
+                        // Add the new transaction to the list of pending transactions
+                        _pendingTransactions.Add(new Tuple<string, int>(transactionSinceBlock.TxId, 0));
+                        // Send the address, TransactionId, amount and category of the new transaction to the event handlers
+                        transactionAddressList.Add(new Tuple<string, string, decimal, string>(transactionSinceBlock.Address,
+                                                                                              transactionSinceBlock.TxId,
+                                                                                              transactionSinceBlock.Amount,
+                                                                                              transactionSinceBlock.Category));
+                        // Raise the event to let event handlers know
+                        if (DepositArrived != null)
+                        {
+                            DepositArrived(_currency, transactionAddressList);
                         }
                     }
                 }
@@ -195,86 +164,85 @@ namespace CoinExchange.Funds.Infrastructure.Services.CoinClientServices
         }
 
         /// <summary>
-        /// Poll Confirmations
+        /// Polls confirmations for pending transactions
         /// </summary>
-        public void PollConfirmations(ICoinService coinService)
+        public void PollConfirmations()
         {
-            List<Tuple<string, int>> depositsConfirmed = null;
-            List<Tuple<string, int>> pendingDeposits = null;
-            if (_coinServiceToPendingDepositsDict.TryGetValue(coinService, out pendingDeposits))
+            // List to temporarily save the transactions whose confirmations have reached the count of 7, these confirmations
+            // are going to be deleted from the _pendingTransactions List
+            List<Tuple<string, int>> confirmedDeposits = new List<Tuple<string, int>>();
+            for (int i = 0; i < _pendingTransactions.Count; i++)
             {
-                depositsConfirmed = new List<Tuple<string, int>>();
-                for (int i = 0; i < pendingDeposits.Count; i++)
-                {
-                    // Get the number of confirmations of each pending confirmation (deposit)
-                    GetTransactionResponse getTransactionResponse = coinService.GetTransaction(pendingDeposits[i].Item1);
-                    
-                    // If the current confirmation count in the block chain is greater than the one we have stored, update 
-                    // confirmations
-                    if (getTransactionResponse.Confirmations > pendingDeposits[i].Item2)
-                    {
-                        pendingDeposits[i] = new Tuple<string, int>(pendingDeposits[i].Item1, getTransactionResponse.Confirmations);
-                        if (DepositConfirmed != null)
-                        {
-                            // Raise the event and sned the TransacitonID and the no. of confirmation respectively
-                            DepositConfirmed(pendingDeposits[i].Item1, getTransactionResponse.Confirmations);
-                        }
-                        // If the no of confirmations is >= 7, add to the list of confirmed deposits to be deleted outside this 
-                        // loop
-                        if (pendingDeposits[i].Item2 >= 7)
-                        {
-                            // Add the confirmed trnasactions into the list of confirmed deposits
-                            depositsConfirmed.Add(pendingDeposits[i]);
-                        }
-                    }
-                }
+                // Get the number of confirmations of each pending confirmation (deposit)
+                GetTransactionResponse getTransactionResponse = _bitcoinService.GetTransaction(_pendingTransactions[i].Item1);
 
-                // Remove the confirmed deposits from the list of pending deposits. Do it here as we cannot do that when iterating
-                // the pendingDeposits list above
-                if (depositsConfirmed.Any())
+                // Add new confirmations and raise events
+                AddNewConfirmation(getTransactionResponse, i, confirmedDeposits);
+            }
+
+            // Remove the confirmed deposits from the list of _pendingTransactions. Do it here as we cannot do that when iterating
+            // the _pensingTransactions list above
+            if (confirmedDeposits.Any())
+            {
+                foreach (Tuple<string, int> deposit in confirmedDeposits)
                 {
-                    foreach (Tuple<string, int> deposit in depositsConfirmed)
-                    {
-                        pendingDeposits.Remove(deposit);
-                    }
+                    _pendingTransactions.Remove(deposit);
                 }
             }
         }
 
         /// <summary>
-        /// Gets a new address from the client for either a Deposit or Withdrawal
+        /// Add a new confirmation and raising an event to notify listeners
+        /// </summary>
+        /// <param name="getTransactionResponse"></param>
+        /// <param name="transactionIndex"></param>
+        /// <param name="depositsConfirmed"></param>
+        private void AddNewConfirmation(GetTransactionResponse getTransactionResponse, int transactionIndex,
+            List<Tuple<string, int>> depositsConfirmed)
+        {
+            // If the current confirmation count in the block chain is greater than the one we have stored, update 
+            // confirmations
+            if (getTransactionResponse.Confirmations > _pendingTransactions[transactionIndex].Item2)
+            {
+                _pendingTransactions[transactionIndex] = new Tuple<string, int>(_pendingTransactions[transactionIndex].Item1,
+                                                                 getTransactionResponse.Confirmations);
+                if (DepositConfirmed != null)
+                {
+                    // Raise the event and sned the TransacitonID and the no. of confirmation respectively
+                    DepositConfirmed(_pendingTransactions[transactionIndex].Item1, getTransactionResponse.Confirmations);
+                }
+                // If the no of confirmations is >= 7, add to the list of confirmed deposits to be deleted outside this 
+                // loop
+                if (_pendingTransactions[transactionIndex].Item2 >= 7)
+                {
+                    // Add the confirmed trnasactions into the list of confirmed deposits
+                    depositsConfirmed.Add(_pendingTransactions[transactionIndex]);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Create New Address using the daemon
         /// </summary>
         /// <returns></returns>
         public string CreateNewAddress()
         {
-            string newAddress = _bitcoinService.GetNewAddress();
-            return newAddress;
-        }
-
-        public void CheckNewTransactions()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void PollConfirmations()
-        {
-            throw new NotImplementedException();
+            return _bitcoinService.GetNewAddress();
         }
 
         /// <summary>
-        /// Commits the withdraw and forwards to the bitcoin network.
+        /// Commit the withdraw to the Litecoin Network
         /// </summary>
-        /// <param name="bitcoinAddress"> </param>
-        /// <param name="amount"> </param>
+        /// <param name="bitcoinAddress"></param>
+        /// <param name="amount"></param>
         /// <returns></returns>
         public string CommitWithdraw(string bitcoinAddress, decimal amount)
         {
-            string transactionId = _bitcoinService.SendToAddress(bitcoinAddress, amount);
-            return transactionId;
+            return _bitcoinService.SendToAddress(bitcoinAddress, amount);
         }
 
         /// <summary>
-        /// Checks the balance for the wallet
+        /// Check the balance for Currency
         /// </summary>
         /// <param name="currency"></param>
         /// <returns></returns>
@@ -283,16 +251,19 @@ namespace CoinExchange.Funds.Infrastructure.Services.CoinClientServices
             return _bitcoinService.GetBalance();
         }
 
-        #region Properties
+        /// <summary>
+        /// Polling interval for Confirmations
+        /// </summary>
+        public double PollingInterval { get { return _pollInterval; } }
 
         /// <summary>
-        /// Interval for polling
+        /// Currency that this implementation represents
         /// </summary>
-        public double PollingInterval
-        {
-            get { return _timer.Interval; }
-        }
+        public string Currency { get { return _currency; } }
 
-        #endregion Properties
+        /// <summary>
+        /// Interval for checking new transactions
+        /// </summary>
+        public double NewTransactionsInterval { get { return _newTransactionsInterval; } }
     }
 }

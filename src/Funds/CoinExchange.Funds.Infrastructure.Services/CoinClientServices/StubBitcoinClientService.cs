@@ -59,5 +59,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.CoinClientServices
         }
 
         public double PollingInterval { get; private set; }
+        public string Currency { get; private set; }
+        public double NewTransactionsInterval { get; private set; }
     }
 }

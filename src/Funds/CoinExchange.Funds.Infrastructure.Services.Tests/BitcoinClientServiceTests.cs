@@ -6,29 +6,32 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using BitcoinLib.Responses;
+using CoinExchange.Funds.Domain.Model.DepositAggregate;
+using CoinExchange.Funds.Domain.Model.CurrencyAggregate;
+using CoinExchange.Funds.Domain.Model.Services;
 using CoinExchange.Funds.Infrastructure.Services.CoinClientServices;
 using NUnit.Framework;
 
 namespace CoinExchange.Funds.Infrastructure.Services.Tests
 {
     [TestFixture]
-    class LitecoinClientServiceTests
+    class BitcoinClientServiceTests
     {
         [Test]
         public void NewTransactionTest_ChecksIfNewTransactionsAreProperlyHandledAndSavedToList_VerifiesThroughVariablesValues()
         {
             // New transaction is sent manually and checked that the event is raised and the values are the same
-            LitecoinClientService litecoinClientService = new LitecoinClientService();
+            BitcoinClientService bitcoinClientService = new BitcoinClientService();
 
             ManualResetEvent manualResetEvent = new ManualResetEvent(false);
             bool eventFired = false;
             List<Tuple<string, string, decimal, string>> transactionListReceived = new List<Tuple<string, string, decimal, string>>();
-            litecoinClientService.DepositArrived += delegate(string currency, List<Tuple<string, string, decimal, string>> newTransactions)
-                                                        {
-                                                            eventFired = true;
-                                                            transactionListReceived = newTransactions;
-                                                            manualResetEvent.Set();
-                                                        };
+            bitcoinClientService.DepositArrived += delegate(string currency, List<Tuple<string, string, decimal, string>> newTransactions)
+            {
+                eventFired = true;
+                transactionListReceived = newTransactions;
+                manualResetEvent.Set();
+            };
             List<TransactionSinceBlock> transactionsList = new List<TransactionSinceBlock>();
             TransactionSinceBlock transaction = new TransactionSinceBlock();
             transaction.TxId = "txid123";
@@ -38,7 +41,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.Tests
             transaction.Category = "receive";
             transaction.Confirmations = 0;
             transactionsList.Add(transaction);
-            litecoinClientService.CheckNewTransactions(transactionsList);
+            bitcoinClientService.CheckNewTransactions(transactionsList);
 
             manualResetEvent.WaitOne();
             Assert.IsTrue(eventFired);
@@ -53,17 +56,17 @@ namespace CoinExchange.Funds.Infrastructure.Services.Tests
         {
             // New transaction is sent manually and checked that the event is raised and the values are the same
             // Then confirmations are checked and it is made sure that events are being raised properly
-            LitecoinClientService litecoinClientService = new LitecoinClientService();
+            BitcoinClientService bitcoinClientService = new BitcoinClientService();
 
             ManualResetEvent manualResetEvent = new ManualResetEvent(false);
             bool eventFired = false;
             List<Tuple<string, string, decimal, string>> transactionListReceived = new List<Tuple<string, string, decimal, string>>();
-            litecoinClientService.DepositArrived += delegate(string currency, List<Tuple<string, string, decimal, string>> newTransactions)
-                                                        {
-                                                            eventFired = true;
-                                                            transactionListReceived = newTransactions;
-                                                            manualResetEvent.Set();
-                                                        };
+            bitcoinClientService.DepositArrived += delegate(string currency, List<Tuple<string, string, decimal, string>> newTransactions)
+            {
+                eventFired = true;
+                transactionListReceived = newTransactions;
+                manualResetEvent.Set();
+            };
             List<TransactionSinceBlock> transactionsList = new List<TransactionSinceBlock>();
             TransactionSinceBlock transaction = new TransactionSinceBlock();
             transaction.TxId = "txid123";
@@ -73,7 +76,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.Tests
             transaction.Category = "receive";
             transaction.Confirmations = 0;
             transactionsList.Add(transaction);
-            litecoinClientService.CheckNewTransactions(transactionsList);
+            bitcoinClientService.CheckNewTransactions(transactionsList);
 
             manualResetEvent.WaitOne();
             Assert.IsTrue(eventFired);
@@ -84,26 +87,26 @@ namespace CoinExchange.Funds.Infrastructure.Services.Tests
 
             string txId = null;
             int receivedConfirmations = 0;
-            
+
             eventFired = false;
             manualResetEvent.Reset();
             // Handler for event which is raised when enough confirmations are available
-            litecoinClientService.DepositConfirmed += delegate(string transactionId, int confirmations)
-                                                        {
-                                                            eventFired = true;
-                                                            txId = transactionId;
-                                                            receivedConfirmations = confirmations;
-                                                            manualResetEvent.Set();
-                                                        };
+            bitcoinClientService.DepositConfirmed += delegate(string transactionId, int confirmations)
+            {
+                eventFired = true;
+                txId = transactionId;
+                receivedConfirmations = confirmations;
+                manualResetEvent.Set();
+            };
 
             GetTransactionResponse getTransactionResponse = new GetTransactionResponse();
             getTransactionResponse.TxId = "txid123";
             getTransactionResponse.Confirmations = 7;
             int index = 0;
-            List<Tuple<string,int>> depositList = new List<Tuple<string, int>>();
-            MethodInfo methodInfo = litecoinClientService.GetType().GetMethod("AddNewConfirmation", BindingFlags.NonPublic | 
+            List<Tuple<string, int>> depositList = new List<Tuple<string, int>>();
+            MethodInfo methodInfo = bitcoinClientService.GetType().GetMethod("AddNewConfirmation", BindingFlags.NonPublic |
                 BindingFlags.Instance);
-            methodInfo.Invoke(litecoinClientService, new object[]{getTransactionResponse,index,depositList});
+            methodInfo.Invoke(bitcoinClientService, new object[] { getTransactionResponse, index, depositList });
             manualResetEvent.WaitOne();
 
             Assert.IsTrue(eventFired);
@@ -117,12 +120,12 @@ namespace CoinExchange.Funds.Infrastructure.Services.Tests
             // 4 Transactions are sent one after the other, and every time DepositArrived event is raised, its values are checked.
             // When all 4 transactions have been sent, we check the private _pendingTransactions field that it contains exactly
             // the elements theat we sent and in the same order
-            LitecoinClientService litecoinClientService = new LitecoinClientService();
+            BitcoinClientService bitcoinClientService = new BitcoinClientService();
 
             ManualResetEvent manualResetEvent = new ManualResetEvent(false);
             bool eventFired = false;
             List<Tuple<string, string, decimal, string>> transactionListReceived = new List<Tuple<string, string, decimal, string>>();
-            litecoinClientService.DepositArrived += delegate(string currency, List<Tuple<string, string, decimal, string>> newTransactions)
+            bitcoinClientService.DepositArrived += delegate(string currency, List<Tuple<string, string, decimal, string>> newTransactions)
             {
                 eventFired = true;
                 transactionListReceived = newTransactions;
@@ -137,7 +140,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.Tests
             transaction.Category = "receive";
             transaction.Confirmations = 0;
             transactionsList.Add(transaction);
-            litecoinClientService.CheckNewTransactions(transactionsList);
+            bitcoinClientService.CheckNewTransactions(transactionsList);
 
             manualResetEvent.WaitOne();
             Assert.IsTrue(eventFired);
@@ -149,7 +152,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.Tests
             // Second new transaction
             manualResetEvent.Reset();
             eventFired = false;
-            litecoinClientService.DepositArrived += delegate(string currency, List<Tuple<string, string, decimal, string>> newTransactions)
+            bitcoinClientService.DepositArrived += delegate(string currency, List<Tuple<string, string, decimal, string>> newTransactions)
             {
                 eventFired = true;
                 transactionListReceived = newTransactions;
@@ -162,7 +165,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.Tests
             transaction.Category = "receive";
             transaction.Confirmations = 0;
             transactionsList.Add(transaction);
-            litecoinClientService.CheckNewTransactions(transactionsList);
+            bitcoinClientService.CheckNewTransactions(transactionsList);
 
             manualResetEvent.WaitOne();
             Assert.IsTrue(eventFired);
@@ -174,7 +177,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.Tests
             // Third new transaction
             manualResetEvent.Reset();
             eventFired = false;
-            litecoinClientService.DepositArrived += delegate(string currency, List<Tuple<string, string, decimal, string>> newTransactions)
+            bitcoinClientService.DepositArrived += delegate(string currency, List<Tuple<string, string, decimal, string>> newTransactions)
             {
                 eventFired = true;
                 transactionListReceived = newTransactions;
@@ -187,7 +190,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.Tests
             transaction.Category = "receive";
             transaction.Confirmations = 0;
             transactionsList.Add(transaction);
-            litecoinClientService.CheckNewTransactions(transactionsList);
+            bitcoinClientService.CheckNewTransactions(transactionsList);
 
             manualResetEvent.WaitOne();
             Assert.IsTrue(eventFired);
@@ -199,7 +202,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.Tests
             // Fourth new transaction
             manualResetEvent.Reset();
             eventFired = false;
-            litecoinClientService.DepositArrived += delegate(string currency, List<Tuple<string, string, decimal, string>> newTransactions)
+            bitcoinClientService.DepositArrived += delegate(string currency, List<Tuple<string, string, decimal, string>> newTransactions)
             {
                 eventFired = true;
                 transactionListReceived = newTransactions;
@@ -212,7 +215,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.Tests
             transaction.Category = "receive";
             transaction.Confirmations = 0;
             transactionsList.Add(transaction);
-            litecoinClientService.CheckNewTransactions(transactionsList);
+            bitcoinClientService.CheckNewTransactions(transactionsList);
 
             manualResetEvent.WaitOne();
             Assert.IsTrue(eventFired);
@@ -221,10 +224,10 @@ namespace CoinExchange.Funds.Infrastructure.Services.Tests
             Assert.AreEqual(transactionsList[3].Amount, transactionListReceived.Single().Item3, "Amount Check");
             Assert.AreEqual(transactionsList[3].Category, transactionListReceived.Single().Item4, "Category Check");
 
-            FieldInfo fieldInfo = litecoinClientService.GetType().GetField("_pendingTransactions", 
+            FieldInfo fieldInfo = bitcoinClientService.GetType().GetField("_pendingTransactions",
                 BindingFlags.NonPublic | BindingFlags.Instance);
             Assert.IsNotNull(fieldInfo);
-            List<Tuple<string, int>> pendingTransactions = fieldInfo.GetValue(litecoinClientService) as List<Tuple<string, int>>;
+            List<Tuple<string, int>> pendingTransactions = fieldInfo.GetValue(bitcoinClientService) as List<Tuple<string, int>>;
             Assert.IsNotNull(pendingTransactions);
             Assert.AreEqual(transactionsList[0].TxId, pendingTransactions[0].Item1, "Address Check");
             Assert.AreEqual(transactionsList[0].Confirmations, pendingTransactions[0].Item2, "TxId Check");
@@ -246,12 +249,12 @@ namespace CoinExchange.Funds.Infrastructure.Services.Tests
             // When all 4 transactions have been sent, we check the private _pendingTransactions field that it contains exactly
             // the elements that we sent and in the same order
             // All transactions are updated to 7 confirmations
-            LitecoinClientService litecoinClientService = new LitecoinClientService();
+            BitcoinClientService bitcoinClientService = new BitcoinClientService();
 
             ManualResetEvent manualResetEvent = new ManualResetEvent(false);
             bool eventFired = false;
             List<Tuple<string, string, decimal, string>> transactionListReceived = new List<Tuple<string, string, decimal, string>>();
-            litecoinClientService.DepositArrived += delegate(string currency, List<Tuple<string, string, decimal, string>> newTransactions)
+            bitcoinClientService.DepositArrived += delegate(string currency, List<Tuple<string, string, decimal, string>> newTransactions)
             {
                 eventFired = true;
                 transactionListReceived = newTransactions;
@@ -266,7 +269,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.Tests
             transaction.Category = "receive";
             transaction.Confirmations = 0;
             transactionsList.Add(transaction);
-            litecoinClientService.CheckNewTransactions(transactionsList);
+            bitcoinClientService.CheckNewTransactions(transactionsList);
 
             manualResetEvent.WaitOne();
             Assert.IsTrue(eventFired);
@@ -278,7 +281,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.Tests
             // Second new transaction
             manualResetEvent.Reset();
             eventFired = false;
-            litecoinClientService.DepositArrived += delegate(string currency, List<Tuple<string, string, decimal, string>> newTransactions)
+            bitcoinClientService.DepositArrived += delegate(string currency, List<Tuple<string, string, decimal, string>> newTransactions)
             {
                 eventFired = true;
                 transactionListReceived = newTransactions;
@@ -291,7 +294,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.Tests
             transaction.Category = "receive";
             transaction.Confirmations = 0;
             transactionsList.Add(transaction);
-            litecoinClientService.CheckNewTransactions(transactionsList);
+            bitcoinClientService.CheckNewTransactions(transactionsList);
 
             manualResetEvent.WaitOne();
             Assert.IsTrue(eventFired);
@@ -303,7 +306,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.Tests
             // Third new transaction
             manualResetEvent.Reset();
             eventFired = false;
-            litecoinClientService.DepositArrived += delegate(string currency, List<Tuple<string, string, decimal, string>> newTransactions)
+            bitcoinClientService.DepositArrived += delegate(string currency, List<Tuple<string, string, decimal, string>> newTransactions)
             {
                 eventFired = true;
                 transactionListReceived = newTransactions;
@@ -316,7 +319,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.Tests
             transaction.Category = "receive";
             transaction.Confirmations = 0;
             transactionsList.Add(transaction);
-            litecoinClientService.CheckNewTransactions(transactionsList);
+            bitcoinClientService.CheckNewTransactions(transactionsList);
 
             manualResetEvent.WaitOne();
             Assert.IsTrue(eventFired);
@@ -328,7 +331,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.Tests
             // Fourth new transaction
             manualResetEvent.Reset();
             eventFired = false;
-            litecoinClientService.DepositArrived += delegate(string currency, List<Tuple<string, string, decimal, string>> newTransactions)
+            bitcoinClientService.DepositArrived += delegate(string currency, List<Tuple<string, string, decimal, string>> newTransactions)
             {
                 eventFired = true;
                 transactionListReceived = newTransactions;
@@ -341,7 +344,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.Tests
             transaction.Category = "receive";
             transaction.Confirmations = 0;
             transactionsList.Add(transaction);
-            litecoinClientService.CheckNewTransactions(transactionsList);
+            bitcoinClientService.CheckNewTransactions(transactionsList);
 
             manualResetEvent.WaitOne();
             Assert.IsTrue(eventFired);
@@ -350,10 +353,10 @@ namespace CoinExchange.Funds.Infrastructure.Services.Tests
             Assert.AreEqual(transactionsList[3].Amount, transactionListReceived.Single().Item3, "Amount Check");
             Assert.AreEqual(transactionsList[3].Category, transactionListReceived.Single().Item4, "Category Check");
 
-            FieldInfo fieldInfo = litecoinClientService.GetType().GetField("_pendingTransactions",
+            FieldInfo fieldInfo = bitcoinClientService.GetType().GetField("_pendingTransactions",
                 BindingFlags.NonPublic | BindingFlags.Instance);
             Assert.IsNotNull(fieldInfo);
-            List<Tuple<string, int>> pendingTransactions = fieldInfo.GetValue(litecoinClientService) as List<Tuple<string, int>>;
+            List<Tuple<string, int>> pendingTransactions = fieldInfo.GetValue(bitcoinClientService) as List<Tuple<string, int>>;
             Assert.IsNotNull(pendingTransactions);
             Assert.AreEqual(transactionsList[0].TxId, pendingTransactions[0].Item1, "Address Check");
             Assert.AreEqual(transactionsList[0].Confirmations, pendingTransactions[0].Item2, "TxId Check");
@@ -368,14 +371,14 @@ namespace CoinExchange.Funds.Infrastructure.Services.Tests
             Assert.AreEqual(transactionsList[3].Confirmations, pendingTransactions[3].Item2, "TxId Check");
 
             //----------------Confirmations Start----------------------
-            
+
             // Confirmation on index 0
             eventFired = false;
             manualResetEvent.Reset();
             string txId = null;
             int receivedConfirmations = 0;
             // Handler for event which is raised when enough confirmations are available
-            litecoinClientService.DepositConfirmed += delegate(string transactionId, int confirmations)
+            bitcoinClientService.DepositConfirmed += delegate(string transactionId, int confirmations)
             {
                 eventFired = true;
                 txId = transactionId;
@@ -389,11 +392,11 @@ namespace CoinExchange.Funds.Infrastructure.Services.Tests
             getTransactionResponse.Confirmations = 7;
             int index = 0;
             List<Tuple<string, int>> confirmedDeposits = new List<Tuple<string, int>>();
-            MethodInfo methodInfo = litecoinClientService.GetType().GetMethod("AddNewConfirmation", BindingFlags.NonPublic |
+            MethodInfo methodInfo = bitcoinClientService.GetType().GetMethod("AddNewConfirmation", BindingFlags.NonPublic |
                 BindingFlags.Instance);
             // Invoke private method AddNewConfirmations and send TransactionResponse, the index of _pendingTransactions list 
             // to which to add the confirmation to and the depositList instance that shows confirmedDeposits
-            methodInfo.Invoke(litecoinClientService, new object[] { getTransactionResponse, index, confirmedDeposits });
+            methodInfo.Invoke(bitcoinClientService, new object[] { getTransactionResponse, index, confirmedDeposits });
             manualResetEvent.WaitOne();
 
             Assert.IsTrue(eventFired);
@@ -407,7 +410,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.Tests
             txId = null;
             receivedConfirmations = 0;
             // Handler for event which is raised when enough confirmations are available
-            litecoinClientService.DepositConfirmed += delegate(string transactionId, int confirmations)
+            bitcoinClientService.DepositConfirmed += delegate(string transactionId, int confirmations)
             {
                 eventFired = true;
                 txId = transactionId;
@@ -423,7 +426,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.Tests
 
             // Invoke private method AddNewConfirmations and send TransactionResponse, the index of _pendingTransactions list 
             // to which to add the confirmation to and the depositList instance that shows confirmedDeposits
-            methodInfo.Invoke(litecoinClientService, new object[] { getTransactionResponse, index, confirmedDeposits });
+            methodInfo.Invoke(bitcoinClientService, new object[] { getTransactionResponse, index, confirmedDeposits });
             manualResetEvent.WaitOne();
 
             Assert.IsTrue(eventFired);
@@ -437,7 +440,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.Tests
             txId = null;
             receivedConfirmations = 0;
             // Handler for event which is raised when enough confirmations are available
-            litecoinClientService.DepositConfirmed += delegate(string transactionId, int confirmations)
+            bitcoinClientService.DepositConfirmed += delegate(string transactionId, int confirmations)
             {
                 eventFired = true;
                 txId = transactionId;
@@ -453,7 +456,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.Tests
 
             // Invoke private method AddNewConfirmations and send TransactionResponse, the index of _pendingTransactions list 
             // to which to add the confirmation to and the depositList instance that shows confirmedDeposits
-            methodInfo.Invoke(litecoinClientService, new object[] { getTransactionResponse, index, confirmedDeposits });
+            methodInfo.Invoke(bitcoinClientService, new object[] { getTransactionResponse, index, confirmedDeposits });
             manualResetEvent.WaitOne();
 
             Assert.IsTrue(eventFired);
@@ -467,7 +470,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.Tests
             txId = null;
             receivedConfirmations = 0;
             // Handler for event which is raised when enough confirmations are available
-            litecoinClientService.DepositConfirmed += delegate(string transactionId, int confirmations)
+            bitcoinClientService.DepositConfirmed += delegate(string transactionId, int confirmations)
             {
                 eventFired = true;
                 txId = transactionId;
@@ -483,7 +486,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.Tests
 
             // Invoke private method AddNewConfirmations and send TransactionResponse, the index of _pendingTransactions list 
             // to which to add the confirmation to and the depositList instance that shows confirmedDeposits
-            methodInfo.Invoke(litecoinClientService, new object[] { getTransactionResponse, index, confirmedDeposits });
+            methodInfo.Invoke(bitcoinClientService, new object[] { getTransactionResponse, index, confirmedDeposits });
             manualResetEvent.WaitOne();
 
             Assert.IsTrue(eventFired);
@@ -511,12 +514,12 @@ namespace CoinExchange.Funds.Infrastructure.Services.Tests
             // When all 4 transactions have been sent, we check the private _pendingTransactions field that it contains exactly
             // the elements that we sent and in the same order
             // Not all transactions are updated to 7 confirmations
-            LitecoinClientService litecoinClientService = new LitecoinClientService();
+            BitcoinClientService bitcoinClientService = new BitcoinClientService();
 
             ManualResetEvent manualResetEvent = new ManualResetEvent(false);
             bool eventFired = false;
             List<Tuple<string, string, decimal, string>> transactionListReceived = new List<Tuple<string, string, decimal, string>>();
-            litecoinClientService.DepositArrived += delegate(string currency, List<Tuple<string, string, decimal, string>> newTransactions)
+            bitcoinClientService.DepositArrived += delegate(string currency, List<Tuple<string, string, decimal, string>> newTransactions)
             {
                 eventFired = true;
                 transactionListReceived = newTransactions;
@@ -531,7 +534,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.Tests
             transaction.Category = "receive";
             transaction.Confirmations = 0;
             transactionsList.Add(transaction);
-            litecoinClientService.CheckNewTransactions(transactionsList);
+            bitcoinClientService.CheckNewTransactions(transactionsList);
 
             manualResetEvent.WaitOne();
             Assert.IsTrue(eventFired);
@@ -543,7 +546,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.Tests
             // Second new transaction
             manualResetEvent.Reset();
             eventFired = false;
-            litecoinClientService.DepositArrived += delegate(string currency, List<Tuple<string, string, decimal, string>> newTransactions)
+            bitcoinClientService.DepositArrived += delegate(string currency, List<Tuple<string, string, decimal, string>> newTransactions)
             {
                 eventFired = true;
                 transactionListReceived = newTransactions;
@@ -556,7 +559,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.Tests
             transaction.Category = "receive";
             transaction.Confirmations = 0;
             transactionsList.Add(transaction);
-            litecoinClientService.CheckNewTransactions(transactionsList);
+            bitcoinClientService.CheckNewTransactions(transactionsList);
 
             manualResetEvent.WaitOne();
             Assert.IsTrue(eventFired);
@@ -568,7 +571,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.Tests
             // Third new transaction
             manualResetEvent.Reset();
             eventFired = false;
-            litecoinClientService.DepositArrived += delegate(string currency, List<Tuple<string, string, decimal, string>> newTransactions)
+            bitcoinClientService.DepositArrived += delegate(string currency, List<Tuple<string, string, decimal, string>> newTransactions)
             {
                 eventFired = true;
                 transactionListReceived = newTransactions;
@@ -581,7 +584,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.Tests
             transaction.Category = "receive";
             transaction.Confirmations = 0;
             transactionsList.Add(transaction);
-            litecoinClientService.CheckNewTransactions(transactionsList);
+            bitcoinClientService.CheckNewTransactions(transactionsList);
 
             manualResetEvent.WaitOne();
             Assert.IsTrue(eventFired);
@@ -593,7 +596,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.Tests
             // Fourth new transaction
             manualResetEvent.Reset();
             eventFired = false;
-            litecoinClientService.DepositArrived += delegate(string currency, List<Tuple<string, string, decimal, string>> newTransactions)
+            bitcoinClientService.DepositArrived += delegate(string currency, List<Tuple<string, string, decimal, string>> newTransactions)
             {
                 eventFired = true;
                 transactionListReceived = newTransactions;
@@ -606,7 +609,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.Tests
             transaction.Category = "receive";
             transaction.Confirmations = 0;
             transactionsList.Add(transaction);
-            litecoinClientService.CheckNewTransactions(transactionsList);
+            bitcoinClientService.CheckNewTransactions(transactionsList);
 
             manualResetEvent.WaitOne();
             Assert.IsTrue(eventFired);
@@ -615,22 +618,22 @@ namespace CoinExchange.Funds.Infrastructure.Services.Tests
             Assert.AreEqual(transactionsList[3].Amount, transactionListReceived.Single().Item3, "Amount Check");
             Assert.AreEqual(transactionsList[3].Category, transactionListReceived.Single().Item4, "Category Check");
 
-            FieldInfo fieldInfo = litecoinClientService.GetType().GetField("_pendingTransactions",
+            FieldInfo fieldInfo = bitcoinClientService.GetType().GetField("_pendingTransactions",
                 BindingFlags.NonPublic | BindingFlags.Instance);
             Assert.IsNotNull(fieldInfo);
-            List<Tuple<string, int>> pendingTransactions = fieldInfo.GetValue(litecoinClientService) as List<Tuple<string, int>>;
+            List<Tuple<string, int>> pendingTransactions = fieldInfo.GetValue(bitcoinClientService) as List<Tuple<string, int>>;
             Assert.IsNotNull(pendingTransactions);
-            Assert.AreEqual(transactionsList[0].TxId, pendingTransactions[0].Item1, "TxId Check");
-            Assert.AreEqual(transactionsList[0].Confirmations, pendingTransactions[0].Item2, "Confirmations Check");
+            Assert.AreEqual(transactionsList[0].TxId, pendingTransactions[0].Item1, "Address Check");
+            Assert.AreEqual(transactionsList[0].Confirmations, pendingTransactions[0].Item2, "TxId Check");
 
-            Assert.AreEqual(transactionsList[1].TxId, pendingTransactions[1].Item1, "TxId Check");
-            Assert.AreEqual(transactionsList[1].Confirmations, pendingTransactions[1].Item2, "Confirmations Check");
+            Assert.AreEqual(transactionsList[1].TxId, pendingTransactions[1].Item1, "Address Check");
+            Assert.AreEqual(transactionsList[1].Confirmations, pendingTransactions[1].Item2, "TxId Check");
 
-            Assert.AreEqual(transactionsList[2].TxId, pendingTransactions[2].Item1, "TxId Check");
-            Assert.AreEqual(transactionsList[2].Confirmations, pendingTransactions[2].Item2, "Confirmations Check");
+            Assert.AreEqual(transactionsList[2].TxId, pendingTransactions[2].Item1, "Address Check");
+            Assert.AreEqual(transactionsList[2].Confirmations, pendingTransactions[2].Item2, "TxId Check");
 
-            Assert.AreEqual(transactionsList[3].TxId, pendingTransactions[3].Item1, "TxId Check");
-            Assert.AreEqual(transactionsList[3].Confirmations, pendingTransactions[3].Item2, "Confirmations Check");
+            Assert.AreEqual(transactionsList[3].TxId, pendingTransactions[3].Item1, "Address Check");
+            Assert.AreEqual(transactionsList[3].Confirmations, pendingTransactions[3].Item2, "TxId Check");
 
             //----------------Confirmations Start----------------------
 
@@ -640,7 +643,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.Tests
             string txId = null;
             int receivedConfirmations = 0;
             // Handler for event which is raised when enough confirmations are available
-            litecoinClientService.DepositConfirmed += delegate(string transactionId, int confirmations)
+            bitcoinClientService.DepositConfirmed += delegate(string transactionId, int confirmations)
             {
                 eventFired = true;
                 txId = transactionId;
@@ -654,11 +657,11 @@ namespace CoinExchange.Funds.Infrastructure.Services.Tests
             getTransactionResponse.Confirmations = 7;
             int index = 0;
             List<Tuple<string, int>> confirmedDeposits = new List<Tuple<string, int>>();
-            MethodInfo methodInfo = litecoinClientService.GetType().GetMethod("AddNewConfirmation", BindingFlags.NonPublic |
+            MethodInfo methodInfo = bitcoinClientService.GetType().GetMethod("AddNewConfirmation", BindingFlags.NonPublic |
                 BindingFlags.Instance);
             // Invoke private method AddNewConfirmations and send TransactionResponse, the index of _pendingTransactions list 
             // to which to add the confirmation to and the depositList instance that shows confirmedDeposits
-            methodInfo.Invoke(litecoinClientService, new object[] { getTransactionResponse, index, confirmedDeposits });
+            methodInfo.Invoke(bitcoinClientService, new object[] { getTransactionResponse, index, confirmedDeposits });
             manualResetEvent.WaitOne();
 
             Assert.IsTrue(eventFired);
@@ -672,7 +675,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.Tests
             txId = null;
             receivedConfirmations = 0;
             // Handler for event which is raised when enough confirmations are available
-            litecoinClientService.DepositConfirmed += delegate(string transactionId, int confirmations)
+            bitcoinClientService.DepositConfirmed += delegate(string transactionId, int confirmations)
             {
                 eventFired = true;
                 txId = transactionId;
@@ -688,7 +691,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.Tests
 
             // Invoke private method AddNewConfirmations and send TransactionResponse, the index of _pendingTransactions list 
             // to which to add the confirmation to and the depositList instance that shows confirmedDeposits
-            methodInfo.Invoke(litecoinClientService, new object[] { getTransactionResponse, index, confirmedDeposits });
+            methodInfo.Invoke(bitcoinClientService, new object[] { getTransactionResponse, index, confirmedDeposits });
             manualResetEvent.WaitOne();
 
             Assert.IsTrue(eventFired);
@@ -702,7 +705,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.Tests
             txId = null;
             receivedConfirmations = 0;
             // Handler for event which is raised when enough confirmations are available
-            litecoinClientService.DepositConfirmed += delegate(string transactionId, int confirmations)
+            bitcoinClientService.DepositConfirmed += delegate(string transactionId, int confirmations)
             {
                 eventFired = true;
                 txId = transactionId;
@@ -718,7 +721,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.Tests
 
             // Invoke private method AddNewConfirmations and send TransactionResponse, the index of _pendingTransactions list 
             // to which to add the confirmation to and the depositList instance that shows confirmedDeposits
-            methodInfo.Invoke(litecoinClientService, new object[] { getTransactionResponse, index, confirmedDeposits });
+            methodInfo.Invoke(bitcoinClientService, new object[] { getTransactionResponse, index, confirmedDeposits });
             manualResetEvent.WaitOne();
 
             Assert.IsTrue(eventFired);
@@ -732,7 +735,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.Tests
             txId = null;
             receivedConfirmations = 0;
             // Handler for event which is raised when enough confirmations are available
-            litecoinClientService.DepositConfirmed += delegate(string transactionId, int confirmations)
+            bitcoinClientService.DepositConfirmed += delegate(string transactionId, int confirmations)
             {
                 eventFired = true;
                 txId = transactionId;
@@ -748,7 +751,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.Tests
 
             // Invoke private method AddNewConfirmations and send TransactionResponse, the index of _pendingTransactions list 
             // to which to add the confirmation to and the depositList instance that shows confirmedDeposits
-            methodInfo.Invoke(litecoinClientService, new object[] { getTransactionResponse, index, confirmedDeposits });
+            methodInfo.Invoke(bitcoinClientService, new object[] { getTransactionResponse, index, confirmedDeposits });
             manualResetEvent.WaitOne();
 
             Assert.IsTrue(eventFired);

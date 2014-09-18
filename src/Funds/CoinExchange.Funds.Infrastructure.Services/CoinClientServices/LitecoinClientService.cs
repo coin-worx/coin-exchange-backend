@@ -23,6 +23,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.CoinClientServices
         private double _newTransactionsInterval = 0;
         private double _pollInterval = 0;
         private DateTime _pollIntervalDateTime = DateTime.MinValue;
+        private string _currency = CurrencyConstants.Ltc;
 
         /// <summary>
         /// List of transactions with confirmations less than 7
@@ -149,7 +150,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.CoinClientServices
                         // Raise the event to let event handlers know
                         if (DepositArrived != null)
                         {
-                            DepositArrived(CurrencyConstants.Ltc, transactionAddressList);
+                            DepositArrived(_currency, transactionAddressList);
                         }
                     }
                 }
@@ -238,8 +239,19 @@ namespace CoinExchange.Funds.Infrastructure.Services.CoinClientServices
             return _litecoinService.GetBalance();
         }
 
+        /// <summary>
+        /// Polling INterval
+        /// </summary>
         public double PollingInterval { get { return _pollInterval; } }
 
+        /// <summary>
+        /// Currency
+        /// </summary>
+        public string Currency { get { return _currency; } }
+
+        /// <summary>
+        /// New Transaction checking itnerval
+        /// </summary>
         public double NewTransactionsInterval { get { return _newTransactionsInterval; } }
     }
 }

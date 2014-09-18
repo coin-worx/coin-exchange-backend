@@ -46,7 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CoinClientServiceTests.cs" />
+    <Compile Include="BitcoinClientServiceTests.cs" />
     <Compile Include="LitecoinClientServiceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

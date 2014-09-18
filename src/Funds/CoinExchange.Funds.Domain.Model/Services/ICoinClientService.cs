@@ -44,5 +44,15 @@ namespace CoinExchange.Funds.Domain.Model.Services
         /// Interval for polling
         /// </summary>
         double PollingInterval { get; }
+
+        /// <summary>
+        /// The currency that this CoinClientService implementation represents
+        /// </summary>
+        string Currency { get; }
+
+        /// <summary>
+        /// Interval for checking new transactions
+        /// </summary>
+        double NewTransactionsInterval { get; }
     }
 }

@@ -80,7 +80,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CoinClientServiceIntegrationTests.cs" />
+    <Compile Include="BitcoinClientServiceIntegrationTests.cs" />
     <Compile Include="LitecoinClientServiceIntegrationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -92,6 +92,10 @@
     <ProjectReference Include="..\..\common\CoinExchange.Common.Tests\CoinExchange.Common.Tests.csproj">
       <Project>{bbf58888-03cd-47f4-aeb9-bc6070d97920}</Project>
       <Name>CoinExchange.Common.Tests</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Common\CoinExchange.Common\CoinExchange.Common.csproj">
+      <Project>{d61dbd04-95dc-4eb1-ad54-1ff929ac2814}</Project>
+      <Name>CoinExchange.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\CoinExchange.Funds.Application\CoinExchange.Funds.Application.csproj">
       <Project>{f6edd751-080b-4c4e-8216-2e1ed3ed0a66}</Project>
