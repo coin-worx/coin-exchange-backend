@@ -49,11 +49,15 @@ namespace CoinExchange.Funds.Infrastructure.Services.IntegrationTests
         [Test]
         public void CreateNewAddressTest_TestsWhetherTheServiceCreatesNewAddressSuccessfullyOrNot_VerifiesByTheReturnedResult()
         {
-            ICoinClientService coinClientService = (ICoinClientService)ContextRegistry.GetContext()["LitecoinClientService"];
+            if (_shouldRunTests)
+            {
+                ICoinClientService coinClientService =
+                    (ICoinClientService) ContextRegistry.GetContext()["LitecoinClientService"];
 
-            string newAddress = coinClientService.CreateNewAddress();
-            Assert.IsNotNull(newAddress);
-            Assert.IsFalse(string.IsNullOrEmpty(newAddress));
+                string newAddress = coinClientService.CreateNewAddress();
+                Assert.IsNotNull(newAddress);
+                Assert.IsFalse(string.IsNullOrEmpty(newAddress));
+            }
         }
 
         [Test]
@@ -79,11 +83,15 @@ namespace CoinExchange.Funds.Infrastructure.Services.IntegrationTests
         [Test]
         public void CheckBalanceTest_TestIfBalanceIsCheckedAndReturnedProperly_VerifiesThroughReturnedValue()
         {
-            ICoinClientService coinClientService = (ICoinClientService)ContextRegistry.GetContext()["LitecoinClientService"];
+            if (_shouldRunTests)
+            {
+                ICoinClientService coinClientService =
+                    (ICoinClientService) ContextRegistry.GetContext()["LitecoinClientService"];
 
-            decimal checkBalance = coinClientService.CheckBalance("BTC");
+                decimal checkBalance = coinClientService.CheckBalance("BTC");
 
-            Assert.AreNotEqual(0, checkBalance);
+                Assert.AreNotEqual(0, checkBalance);
+            }
         }
 
         [Test]
@@ -159,40 +167,44 @@ namespace CoinExchange.Funds.Infrastructure.Services.IntegrationTests
         [Test]
         public void NewTransactionClientStandaloneTest_TestsIfTheRaisedEventForNewTransactionSendsTheCorrectData_VerifiesThroughReturnedValue()
         {
-            // Checks the data when a DepositArrived event is raised by the CoinClientService. Sees that the parameters are as 
-            // expected
-            ICoinClientService coinClientService = new LitecoinClientService();
-
-            string newAddress = coinClientService.CreateNewAddress();
-            ManualResetEvent manualResetEvent = new ManualResetEvent(false);
-
-            // Wait for the first interval to elapse, and then withdraw, because only then we will be able to figure if a 
-            // new transaction has been received
-            manualResetEvent.WaitOne(Convert.ToInt32(coinClientService.PollingInterval + 3000));
-
-            manualResetEvent.Reset();
-            bool eventFired = false;
-            string receivedCurrency = null;
-            List<Tuple<string, string, decimal, string>> receivedTransactionList = null;
-            coinClientService.DepositArrived += delegate(string curr, List<Tuple<string, string, decimal, string>> pendingList)
+            if (_shouldRunTests)
             {
-                eventFired = true;
-                receivedCurrency = curr;
-                receivedTransactionList = pendingList;
-                manualResetEvent.Set();
-            };
+                // Checks the data when a DepositArrived event is raised by the CoinClientService. Sees that the parameters are as 
+                // expected
+                ICoinClientService coinClientService = new LitecoinClientService();
 
-            string commitWithdraw = coinClientService.CommitWithdraw(newAddress, Amount);
-            Assert.IsNotNull(commitWithdraw);
-            Assert.IsFalse(string.IsNullOrEmpty(commitWithdraw));
-            manualResetEvent.WaitOne();
+                string newAddress = coinClientService.CreateNewAddress();
+                ManualResetEvent manualResetEvent = new ManualResetEvent(false);
 
-            Assert.IsTrue(eventFired);
-            Assert.AreEqual(CurrencyConstants.Btc, receivedCurrency);
-            Assert.AreEqual(1, receivedTransactionList.Count);
-            Assert.AreEqual(newAddress, receivedTransactionList[0].Item1);
-            Assert.AreEqual(Amount, receivedTransactionList[0].Item3);
-            Assert.AreEqual(BitcoinConstants.ReceiveCategory, receivedTransactionList[0].Item4);
+                // Wait for the first interval to elapse, and then withdraw, because only then we will be able to figure if a 
+                // new transaction has been received
+                manualResetEvent.WaitOne(Convert.ToInt32(coinClientService.PollingInterval + 3000));
+
+                manualResetEvent.Reset();
+                bool eventFired = false;
+                string receivedCurrency = null;
+                List<Tuple<string, string, decimal, string>> receivedTransactionList = null;
+                coinClientService.DepositArrived +=
+                    delegate(string curr, List<Tuple<string, string, decimal, string>> pendingList)
+                        {
+                            eventFired = true;
+                            receivedCurrency = curr;
+                            receivedTransactionList = pendingList;
+                            manualResetEvent.Set();
+                        };
+
+                string commitWithdraw = coinClientService.CommitWithdraw(newAddress, Amount);
+                Assert.IsNotNull(commitWithdraw);
+                Assert.IsFalse(string.IsNullOrEmpty(commitWithdraw));
+                manualResetEvent.WaitOne();
+
+                Assert.IsTrue(eventFired);
+                Assert.AreEqual(CurrencyConstants.Btc, receivedCurrency);
+                Assert.AreEqual(1, receivedTransactionList.Count);
+                Assert.AreEqual(newAddress, receivedTransactionList[0].Item1);
+                Assert.AreEqual(Amount, receivedTransactionList[0].Item3);
+                Assert.AreEqual(BitcoinConstants.ReceiveCategory, receivedTransactionList[0].Item4);
+            }
         }
     }
 }

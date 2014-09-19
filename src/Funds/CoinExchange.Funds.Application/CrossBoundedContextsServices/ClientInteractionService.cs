@@ -156,10 +156,11 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
                                                              withdraw.BitcoinAddress.Value, withdraw.Amount);
                     // Set transaction Id recevied from the network
                     withdraw.SetTransactionId(transactionId);
+                    /*
                     // Set status as confirmed
                     withdraw.StatusConfirmed();
                     // Save the withdraw
-                    _fundsPersistenceRepository.SaveOrUpdate(withdraw);
+                    _fundsPersistenceRepository.SaveOrUpdate(withdraw);*/
                     _withdrawTimersDictionary.Remove(timer);
                     if (WithdrawExecuted != null)
                     {

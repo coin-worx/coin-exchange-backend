@@ -24,11 +24,11 @@ namespace CoinExchange.Client.Console
         private string _baseUrlCloud = "http://rockblanc.cloudapp.net/test/v1";
         private string _baseUrlLocalhost = "http://localhost:51780/v1";
         private FundsClient _fundsClient;
-        private string _username = "rodholt2";
+        private string _username = "rodholt";
         private string _password = "mclaren";
-        private string _email = "rodholt2@mclaren.com";
+        private string _email = "rodholt@mclaren.com";
         private string _baseCurrency = "BTC";
-        private string _quoteCurrency = "USD";
+        private string _quoteCurrency = "LTC";
 
         public AllBoundedContextsIntegrationTests()
         {
@@ -40,7 +40,7 @@ namespace CoinExchange.Client.Console
 
         public void Initialization()
         {
-            //ClearDatabase();
+            ClearDatabase();
             UserLogin();
 
             _fundsClient.key = _identityAccessClient.key;
@@ -50,8 +50,8 @@ namespace CoinExchange.Client.Console
             ApplyForTier1();            
             VerifyTier1();
 
-            ApplyForTier2();
-            VerifyTier2();
+            //ApplyForTier2();
+            //VerifyTier2();
             MakeDeposit();
             //GetLimits();
             //TradeExecuted();
@@ -82,7 +82,7 @@ namespace CoinExchange.Client.Console
         {
             System.Console.WriteLine("Deposit start");
             _fundsClient.MakeDeposit(_baseCurrency, 200, true);
-            _fundsClient.MakeDeposit(_quoteCurrency, 50000, false);
+            _fundsClient.MakeDeposit(_quoteCurrency, 200, false);
             System.Console.WriteLine("Deposit end");
         }
 

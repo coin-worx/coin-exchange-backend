@@ -209,18 +209,19 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         [Transaction]
         public bool WithdrawalExecuted(Withdraw withdraw)
         {
+            // Set Withdraw status to confirm and update in database
+            withdraw.StatusConfirmed();
+            _fundsPersistenceRepository.SaveOrUpdate(withdraw);
             Balance balance = _balanceRepository.GetBalanceByCurrencyAndAccountId(withdraw.Currency, withdraw.AccountId);
 
             if (balance != null)
             {
                 bool addResponse = balance.ConfirmPendingTransaction(withdraw.WithdrawId,
                                                                      PendingTransactionType.Withdraw,
-                                                                     -(withdraw.Amount + withdraw.Fee));
-                //withdraw.StatusConfirmed();
+                                                                     -(withdraw.Amount + withdraw.Fee));                
                 if (addResponse)
                 {
-                    _fundsPersistenceRepository.SaveOrUpdate(balance);
-                    _fundsPersistenceRepository.SaveOrUpdate(withdraw);
+                    _fundsPersistenceRepository.SaveOrUpdate(balance);                    
                     return _transactionService.CreateWithdrawTransaction(withdraw, balance.CurrentBalance);
                 }
             }

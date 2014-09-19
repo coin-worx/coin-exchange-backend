@@ -107,7 +107,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             Assert.AreEqual(withdraw.AccountId.Value, receivedWithdraw.AccountId.Value);
             Assert.AreEqual(withdraw.BitcoinAddress.Value, receivedWithdraw.BitcoinAddress.Value);
             Assert.AreEqual(withdraw.Fee, receivedWithdraw.Fee);
-            Assert.AreEqual(TransactionStatus.Confirmed, receivedWithdraw.Status);
+            Assert.AreEqual(TransactionStatus.Pending, receivedWithdraw.Status);
             Assert.IsNotNull(receivedWithdraw.TransactionId);
             Assert.AreEqual(withdraw.Type, receivedWithdraw.Type);
             Assert.AreEqual(withdraw.Amount, receivedWithdraw.Amount);
@@ -151,7 +151,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             Assert.AreEqual(withdraw.AccountId.Value, receivedWithdraw.AccountId.Value);
             Assert.AreEqual(withdraw.BitcoinAddress.Value, receivedWithdraw.BitcoinAddress.Value);
             Assert.AreEqual(withdraw.Fee, receivedWithdraw.Fee);
-            Assert.AreEqual(TransactionStatus.Confirmed, receivedWithdraw.Status);
+            Assert.AreEqual(TransactionStatus.Pending, receivedWithdraw.Status);
             Assert.IsNotNull(receivedWithdraw.TransactionId);
             Assert.AreEqual(withdraw.Type, receivedWithdraw.Type);
             Assert.AreEqual(withdraw.Amount, receivedWithdraw.Amount);
@@ -208,7 +208,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             Assert.AreEqual(withdraw.AccountId.Value, receivedWithdraw.AccountId.Value);
             Assert.AreEqual(withdraw.BitcoinAddress.Value, receivedWithdraw.BitcoinAddress.Value);
             Assert.AreEqual(withdraw.Fee, receivedWithdraw.Fee);
-            Assert.AreEqual(TransactionStatus.Confirmed, receivedWithdraw.Status);
+            Assert.AreEqual(TransactionStatus.Pending, receivedWithdraw.Status);
             Assert.IsNotNull(receivedWithdraw.TransactionId);
             Assert.AreEqual(withdraw.Type, receivedWithdraw.Type);
             Assert.AreEqual(withdraw.Amount, receivedWithdraw.Amount);
@@ -268,7 +268,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             Assert.AreEqual(withdraw.AccountId.Value, receivedWithdraw.AccountId.Value);
             Assert.AreEqual(withdraw.BitcoinAddress.Value, receivedWithdraw.BitcoinAddress.Value);
             Assert.AreEqual(withdraw.Fee, receivedWithdraw.Fee);
-            Assert.AreEqual(TransactionStatus.Confirmed, receivedWithdraw.Status);
+            Assert.AreEqual(TransactionStatus.Pending, receivedWithdraw.Status);
             Assert.IsNotNull(receivedWithdraw.TransactionId);
             Assert.AreEqual(withdraw.Type, receivedWithdraw.Type);
             Assert.AreEqual(withdraw.Amount, receivedWithdraw.Amount);
@@ -336,7 +336,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             Assert.AreEqual(withdraw.AccountId.Value, receivedWithdraw.AccountId.Value);
             Assert.AreEqual(withdraw.BitcoinAddress.Value, receivedWithdraw.BitcoinAddress.Value);
             Assert.AreEqual(withdraw.Fee, receivedWithdraw.Fee);
-            Assert.AreEqual(TransactionStatus.Confirmed, receivedWithdraw.Status);
+            Assert.AreEqual(TransactionStatus.Pending, receivedWithdraw.Status);
             Assert.IsNotNull(receivedWithdraw.TransactionId);
             Assert.AreEqual(withdraw.Type, receivedWithdraw.Type);
             Assert.AreEqual(withdraw.Amount, receivedWithdraw.Amount);
@@ -407,7 +407,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             Assert.AreEqual(withdraw.AccountId.Value, receivedWithdraw.AccountId.Value);
             Assert.AreEqual(withdraw.BitcoinAddress.Value, receivedWithdraw.BitcoinAddress.Value);
             Assert.AreEqual(withdraw.Fee, receivedWithdraw.Fee);
-            Assert.AreEqual(TransactionStatus.Confirmed, receivedWithdraw.Status);
+            Assert.AreEqual(TransactionStatus.Pending, receivedWithdraw.Status);
             Assert.IsNotNull(receivedWithdraw.TransactionId);
             Assert.AreEqual(withdraw.Type, receivedWithdraw.Type);
             Assert.AreEqual(withdraw.Amount, receivedWithdraw.Amount);

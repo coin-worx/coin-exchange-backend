@@ -201,7 +201,9 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             IDepositRepository depositRepository = (IDepositRepository)ContextRegistry.GetContext()["DepositRepository"];
             IDepositAddressRepository depositAddressRepository = (IDepositAddressRepository)ContextRegistry.GetContext()["DepositAddressRepository"];
             IDepositLimitRepository depositLimitRepository = (IDepositLimitRepository)ContextRegistry.GetContext()["DepositLimitRepository"];
+            StubTierLevelRetrievalService tierLevelRetrieval = (StubTierLevelRetrievalService)ContextRegistry.GetContext()["TierLevelRetrievalService"];
 
+            tierLevelRetrieval.SetTierLevel(TierConstants.TierLevel1);
             AccountId accountId = new AccountId(123);
             Currency currency = new Currency("BTC", true);
             BitcoinAddress bitcoinAddress = new BitcoinAddress("bitcoinaddress1");
@@ -225,7 +227,8 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             transactionsList.Add(new Tuple<string, string, decimal, string>(bitcoinAddress.Value, transactionId.Value, amount, category));
             depositApplicationService.OnDepositArrival(currency.Name, transactionsList);
 
-            Thread.Sleep(2000);
+            ManualResetEvent manualResetEvent = new ManualResetEvent(false);
+            manualResetEvent.WaitOne(2000);
             Deposit deposit = depositRepository.GetDepositByTransactionId(transactionId);
             Assert.IsNotNull(deposit);
             Assert.AreEqual(deposit.Amount, amount);
@@ -359,14 +362,16 @@ namespace CoinExchange.Funds.Application.IntegrationTests
         }
 
         [Test]
-        public void DepositArrivedSuccessfulTest_ChecksThatNewDepositInstanceIsCreatedAsExpectedWhenANewTrnasactionComesIn_VerifiesThroughDatabaseQuery()
+        public void DepositArrivedStandaloneTest_ChecksThatNewDepositInstanceIsCreatedAsExpectedWhenANewTrnasactionComesIn_VerifiesThroughDatabaseQuery()
         {
             IDepositApplicationService depositApplicationService = (IDepositApplicationService)ContextRegistry.GetContext()["DepositApplicationService"];
             IFundsPersistenceRepository fundsPersistenceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];
             IBalanceRepository balanceRepository = (IBalanceRepository)ContextRegistry.GetContext()["BalanceRepository"];
             IDepositRepository depositRepository = (IDepositRepository)ContextRegistry.GetContext()["DepositRepository"];
             IDepositLimitRepository depositLimitRepository = (IDepositLimitRepository)ContextRegistry.GetContext()["DepositLimitRepository"];
+            StubTierLevelRetrievalService tierLevelRetrieval = (StubTierLevelRetrievalService)ContextRegistry.GetContext()["TierLevelRetrievalService"];
 
+            tierLevelRetrieval.SetTierLevel(TierConstants.TierLevel1);
             AccountId accountId = new AccountId(123);
             Currency currency = new Currency("BTC", true);
             BitcoinAddress bitcoinAddress = new BitcoinAddress("bitcoinaddress1");
@@ -453,7 +458,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
         }
 
         [Test]
-        public void AssignDepositLimitsTest_ChecksThatDepositLimitsAreAssignedProperlyWhenLevel1IsVerified_VerifiesThroughReturnedValues()
+        public void AssignDepositLimits1Test_ChecksThatDepositLimitsAreAssignedProperlyWhenLevel1IsVerified_VerifiesThroughReturnedValues()
         {
             IDepositApplicationService depositApplicationService = (IDepositApplicationService)ContextRegistry.GetContext()["DepositApplicationService"];
             IDepositLimitRepository depositLimitRepository = (IDepositLimitRepository)ContextRegistry.GetContext()["DepositLimitRepository"];
@@ -473,7 +478,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
         }
 
         [Test]
-        public void AssignDepositLimitsTest_ChecksThatDepositLimitsAreAssignedProperlyWhenLevel1IsVerifiedAndBalanceIsAlreadyPresent_VerifiesThroughReturnedValues()
+        public void AssignDepositLimits2Test_ChecksThatDepositLimitsAreAssignedProperlyWhenLevel1IsVerifiedAndBalanceIsAlreadyPresent_VerifiesThroughReturnedValues()
         {
             IDepositApplicationService depositApplicationService = (IDepositApplicationService)ContextRegistry.GetContext()["DepositApplicationService"];
             IDepositLimitRepository depositLimitRepository = (IDepositLimitRepository)ContextRegistry.GetContext()["DepositLimitRepository"];

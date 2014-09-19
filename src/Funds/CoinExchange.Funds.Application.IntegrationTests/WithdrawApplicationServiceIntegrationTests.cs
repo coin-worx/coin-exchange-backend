@@ -42,6 +42,9 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             _databaseUtility.Create();
         }
 
+        // ToDo: Test for over the limit withdrawal
+
+
         [Test]
         [ExpectedException(typeof(InvalidOperationException))]
         public void WithdrawFailedTest_TestsIfWithdrawFailsWhenTirLevelIsNotHighEnough_VerifiesThroughDatabaseQueries()
@@ -54,8 +57,59 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             AccountId accountId = new AccountId(123);
             Currency currency = new Currency("BTC", true);
             BitcoinAddress bitcoinAddress = new BitcoinAddress("bitcoinaddress1");
-            TransactionId transactionId = new TransactionId("transactionid1");
             decimal amount = 1.02m;
+
+            withdrawApplicationService.CommitWithdrawal(new CommitWithdrawCommand(accountId.Value, currency.Name,
+                                                                                  currency.IsCryptoCurrency,
+                                                                                  bitcoinAddress.Value, amount));
+        }
+
+        [Test]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void WithdrawFailedTest_TestsIfWithdrawFailsWhenMaximumWIthdrawLimitIsOverTheThresholdLimit_VerifiesThroughDatabaseQueries()
+        {
+            IWithdrawApplicationService withdrawApplicationService = (IWithdrawApplicationService)ContextRegistry.GetContext()["WithdrawApplicationService"];
+            StubTierLevelRetrievalService tierLevelRetrievalService = (ITierLevelRetrievalService)ContextRegistry.GetContext()["TierLevelRetrievalService"] as StubTierLevelRetrievalService;
+            IWithdrawLimitRepository withdrawLimitRepository = (IWithdrawLimitRepository)ContextRegistry.GetContext()["WithdrawLimitRepository"];
+            IFundsPersistenceRepository fundsPersistenceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];
+
+            Assert.IsNotNull(tierLevelRetrievalService);
+            tierLevelRetrievalService.SetTierLevel(TierConstants.TierLevel1);
+            AccountId accountId = new AccountId(123);
+            Currency currency = new Currency("BTC", true);
+            BitcoinAddress bitcoinAddress = new BitcoinAddress("bitcoinaddress1");
+            WithdrawLimit withdrawLimit = withdrawLimitRepository.GetLimitByTierLevelAndCurrency(TierConstants.TierLevel1, LimitsCurrency.Default.ToString());
+            Assert.IsNotNull(withdrawLimit);
+            decimal amount = withdrawLimit.DailyLimit + 1;
+
+            Balance balance = new Balance(currency, accountId, amount + 1, amount + 1);
+            fundsPersistenceRepository.SaveOrUpdate(balance);
+
+            withdrawApplicationService.CommitWithdrawal(new CommitWithdrawCommand(accountId.Value, currency.Name,
+                                                                                  currency.IsCryptoCurrency,
+                                                                                  bitcoinAddress.Value, amount));
+        }
+
+        [Test]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void WithdrawFailedTest_TestsIfWithdrawFailsBecauseOfNotEnoughBalance_VerifiesThroughDatabaseQueries()
+        {
+            IWithdrawApplicationService withdrawApplicationService = (IWithdrawApplicationService)ContextRegistry.GetContext()["WithdrawApplicationService"];
+            StubTierLevelRetrievalService tierLevelRetrievalService = (ITierLevelRetrievalService)ContextRegistry.GetContext()["TierLevelRetrievalService"] as StubTierLevelRetrievalService;
+            IWithdrawLimitRepository withdrawLimitRepository = (IWithdrawLimitRepository)ContextRegistry.GetContext()["WithdrawLimitRepository"];
+            IFundsPersistenceRepository fundsPersistenceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];
+
+            Assert.IsNotNull(tierLevelRetrievalService);
+            tierLevelRetrievalService.SetTierLevel(TierConstants.TierLevel1);
+            AccountId accountId = new AccountId(123);
+            Currency currency = new Currency("BTC", true);
+            BitcoinAddress bitcoinAddress = new BitcoinAddress("bitcoinaddress1");
+            WithdrawLimit withdrawLimit = withdrawLimitRepository.GetLimitByTierLevelAndCurrency(TierConstants.TierLevel1, LimitsCurrency.Default.ToString());
+            Assert.IsNotNull(withdrawLimit);
+            decimal amount = withdrawLimit.DailyLimit + 0.001M;
+
+            Balance balance = new Balance(currency, accountId, amount - 1, amount - 1);
+            fundsPersistenceRepository.SaveOrUpdate(balance);
 
             withdrawApplicationService.CommitWithdrawal(new CommitWithdrawCommand(accountId.Value, currency.Name,
                                                                                   currency.IsCryptoCurrency,
@@ -71,13 +125,16 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             IBalanceRepository balanceRepository = (IBalanceRepository)ContextRegistry.GetContext()["BalanceRepository"];
             IWithdrawFeesRepository withdrawFeesRepository = (IWithdrawFeesRepository)ContextRegistry.GetContext()["WithdrawFeesRepository"];
             StubTierLevelRetrievalService tierLevelRetrievalService = (ITierLevelRetrievalService)ContextRegistry.GetContext()["TierLevelRetrievalService"] as StubTierLevelRetrievalService;
+            IWithdrawLimitRepository withdrawLimitRepository = (IWithdrawLimitRepository)ContextRegistry.GetContext()["WithdrawLimitRepository"];
 
             Assert.IsNotNull(tierLevelRetrievalService);
             tierLevelRetrievalService.SetTierLevel(TierConstants.TierLevel1);
             AccountId accountId = new AccountId(123);
             Currency currency = new Currency("BTC", true);
             BitcoinAddress bitcoinAddress = new BitcoinAddress("bitcoinaddress1");
-            decimal amount = 1.02m;
+            WithdrawLimit withdrawLimit = withdrawLimitRepository.GetLimitByTierLevelAndCurrency(TierConstants.TierLevel1, LimitsCurrency.Default.ToString());
+            Assert.IsNotNull(withdrawLimit);
+            decimal amount = withdrawLimit.DailyLimit;
 
             Balance balance = new Balance(currency, accountId, amount + 1, amount + 1);
             fundsPersistenceRepository.SaveOrUpdate(balance);
