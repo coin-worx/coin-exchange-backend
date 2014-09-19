@@ -81,10 +81,9 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
                 // double currenctBalance = _ledgerRepository.GetBalanceForCurrency(deposit.Currency.Name, 
                 //    new AccountId(deposit.AccountId.Value));
 
-                // ToDo: Inject LimitEvaluationConfigurationService here, and assign the amount in FIAT currency, if it is what
-                // the admin has specified
                 Ledger ledger = new Ledger(_ledgerIdGeneraterService.GenerateLedgerId(), DateTime.Now,
-                                           LedgerType.Deposit, deposit.Currency, deposit.Amount, 0,
+                                           LedgerType.Deposit, deposit.Currency, deposit.Amount, 
+                                           _limitsConfigurationService.ConvertCurrencyToFiat(deposit.Currency.Name, deposit.Amount),
                                            balance, null, null, null, deposit.DepositId,
                                            deposit.AccountId);
                 _fundsPersistenceRepository.SaveOrUpdate(ledger);

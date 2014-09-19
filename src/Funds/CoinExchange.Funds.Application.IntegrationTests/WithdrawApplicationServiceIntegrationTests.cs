@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using CoinExchange.Common.Domain.Model;
 using CoinExchange.Common.Tests;
@@ -252,8 +253,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
         [ExpectedException(typeof(InvalidOperationException))]
         public void AssignWithdrawLimitsTest_TestsIfWithdrawLimitsGetAsignedProperlyWhenInvalidTierLevelIsSpecified_VerifiesThroughReturnedValue()
         {
-            IWithdrawApplicationService withdrawApplicationService = (IWithdrawApplicationService)ContextRegistry.GetContext()["WithdrawApplicationService"];
-            IWithdrawLimitRepository withdrawLimitRepository = (IWithdrawLimitRepository)ContextRegistry.GetContext()["WithdrawLimitRepository"];
+            IWithdrawApplicationService withdrawApplicationService = (IWithdrawApplicationService)ContextRegistry.GetContext()["WithdrawApplicationService"];            
             IWithdrawFeesRepository withdrawFeesRepository = (IWithdrawFeesRepository)ContextRegistry.GetContext()["WithdrawFeesRepository"];
             StubTierLevelRetrievalService tierLevelRetrievalService = (ITierLevelRetrievalService)ContextRegistry.GetContext()["TierLevelRetrievalService"] as StubTierLevelRetrievalService;
 
@@ -266,6 +266,76 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             Assert.IsNotNull(withdrawFees);
 
             withdrawApplicationService.GetWithdrawLimitThresholds(accountId.Value, currency.Name);
+        }
+
+        [Test]
+        public void WithdrawExecutedEventTest_ChecksThatTheEventIsProperlyRaisedAndHandledWhenWithdrawIsSubmittedToTheNetwork_VerifiesThroughRaisedEvent()
+        {
+            // Withdraw is submitted and upon submission to network an event is raised confirming withdrawal execution which
+            // is handled and balance is updated. This whole process of events firing and balance validation is checked by this
+            // test case
+            IWithdrawApplicationService withdrawApplicationService = (IWithdrawApplicationService)ContextRegistry.GetContext()["WithdrawApplicationService"];
+            IWithdrawRepository withdrawRepository = (IWithdrawRepository)ContextRegistry.GetContext()["WithdrawRepository"];
+            IFundsPersistenceRepository fundsPersistenceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];
+            IBalanceRepository balanceRepository = (IBalanceRepository)ContextRegistry.GetContext()["BalanceRepository"];
+            IWithdrawFeesRepository withdrawFeesRepository = (IWithdrawFeesRepository)ContextRegistry.GetContext()["WithdrawFeesRepository"];
+            IWithdrawLimitRepository withdrawLimitRepository = (IWithdrawLimitRepository)ContextRegistry.GetContext()["WithdrawLimitRepository"];
+            IClientInteractionService clientInteractionService = (IClientInteractionService)ContextRegistry.GetContext()["ClientInteractionService"];
+            StubTierLevelRetrievalService tierLevelRetrievalService = (ITierLevelRetrievalService)ContextRegistry.GetContext()["TierLevelRetrievalService"] as StubTierLevelRetrievalService;
+
+            Assert.IsNotNull(tierLevelRetrievalService);
+            tierLevelRetrievalService.SetTierLevel(TierConstants.TierLevel1);
+            AccountId accountId = new AccountId(123);
+            Currency currency = new Currency(CurrencyConstants.Btc, true);
+            BitcoinAddress bitcoinAddress = new BitcoinAddress("bitcoinaddress1");
+            WithdrawLimit withdrawLimit = withdrawLimitRepository.GetLimitByTierLevelAndCurrency(TierConstants.TierLevel1, LimitsCurrency.Default.ToString());
+            Assert.IsNotNull(withdrawLimit);
+            decimal amount = withdrawLimit.DailyLimit;
+
+            Balance balance = new Balance(currency, accountId, amount + 1, amount + 1);
+            fundsPersistenceRepository.SaveOrUpdate(balance);
+            bool withdrawEventRaised = false;
+            ManualResetEvent manualResetEvent = new ManualResetEvent(false);
+            Withdraw receivedWithdraw = null;
+            clientInteractionService.WithdrawExecuted += delegate(Withdraw incomingWithdraw)
+                                                             {
+                                                                 withdrawEventRaised = true;
+                                                                 receivedWithdraw = incomingWithdraw;
+                                                                 manualResetEvent.Set();
+                                                             };
+            
+            CommitWithdrawResponse commitWithdrawResponse = withdrawApplicationService.CommitWithdrawal(new CommitWithdrawCommand(accountId.Value, currency.Name, currency.IsCryptoCurrency, bitcoinAddress.Value, amount));
+            Assert.IsNotNull(commitWithdrawResponse);
+            Assert.IsTrue(commitWithdrawResponse.CommitSuccessful);
+            manualResetEvent.WaitOne();
+
+            // Apply assertions after event has been handled
+            Assert.IsTrue(withdrawEventRaised);
+            Assert.IsNotNull(receivedWithdraw);
+            Withdraw withdraw = withdrawRepository.GetWithdrawByWithdrawId(commitWithdrawResponse.WithdrawId);
+            Assert.IsNotNull(withdraw);
+            Assert.AreEqual(accountId.Value, withdraw.AccountId.Value);
+            Assert.AreEqual(currency.Name, withdraw.Currency.Name);
+            Assert.AreEqual(currency.IsCryptoCurrency, withdraw.Currency.IsCryptoCurrency);
+            Assert.AreEqual(amount, withdraw.Amount);
+            Assert.AreEqual(TransactionStatus.Confirmed, withdraw.Status);
+
+            Assert.AreEqual(receivedWithdraw.AccountId.Value, withdraw.AccountId.Value);
+            Assert.AreEqual(receivedWithdraw.TransactionId.Value, withdraw.TransactionId.Value);
+            Assert.AreEqual(receivedWithdraw.BitcoinAddress.Value, withdraw.BitcoinAddress.Value);
+            Assert.AreEqual(receivedWithdraw.Currency.Name, withdraw.Currency.Name);
+            Assert.AreEqual(TransactionStatus.Confirmed, withdraw.Status);
+            Assert.AreEqual(receivedWithdraw.Amount, withdraw.Amount);
+            Assert.AreEqual(receivedWithdraw.WithdrawId, withdraw.WithdrawId);
+
+            WithdrawFees withdrawFees = withdrawFeesRepository.GetWithdrawFeesByCurrencyName(currency.Name);
+            Assert.IsNotNull(withdrawFees);
+
+            balance = balanceRepository.GetBalanceByCurrencyAndAccountId(currency, accountId);
+            Assert.IsNotNull(balance);
+            Assert.AreEqual((amount + 1) - (amount + withdrawFees.Fee), balance.AvailableBalance);
+            Assert.AreEqual((amount + 1) - (amount + withdrawFees.Fee), balance.CurrentBalance);
+            Assert.AreEqual(0, balance.PendingBalance);
         }
     }
 }

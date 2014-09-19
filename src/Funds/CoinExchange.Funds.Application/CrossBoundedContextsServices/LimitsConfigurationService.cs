@@ -276,12 +276,15 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         /// <returns></returns>
         public decimal ConvertCurrencyToFiat(string currency, decimal amount)
         {
-            _bestBidBestAsk = _bboCrossContextService.GetBestBidBestAsk(currency, _adminDefinedLimitsCurrency);
-            if (_bestBidBestAsk.Item1 > 0 && _bestBidBestAsk.Item2 > 0)
+            if (_adminDefinedLimitsCurrency != LimitsCurrency.Default.ToString())
             {
-                decimal sum = (amount*_bestBidBestAsk.Item1) + (amount*_bestBidBestAsk.Item2);
-                decimal midPoint = sum/2;
-                return midPoint;
+                _bestBidBestAsk = _bboCrossContextService.GetBestBidBestAsk(currency, _adminDefinedLimitsCurrency);
+                if (_bestBidBestAsk.Item1 > 0 && _bestBidBestAsk.Item2 > 0)
+                {
+                    decimal sum = (amount*_bestBidBestAsk.Item1) + (amount*_bestBidBestAsk.Item2);
+                    decimal midPoint = sum/2;
+                    return midPoint;
+                }
             }
             return 0;
         }

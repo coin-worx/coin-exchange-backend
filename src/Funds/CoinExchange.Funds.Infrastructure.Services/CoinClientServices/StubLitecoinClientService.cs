@@ -38,7 +38,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.CoinClientServices
             Thread.Sleep(200);
             if (DepositConfirmed != null)
             {
-                DepositConfirmed("transactionid1", 0);
+                DepositConfirmed("transactionid1", 7);
             }
             return "transactionid1";
         }

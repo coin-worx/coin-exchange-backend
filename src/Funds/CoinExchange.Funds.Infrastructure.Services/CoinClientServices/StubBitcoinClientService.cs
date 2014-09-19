@@ -33,16 +33,20 @@ namespace CoinExchange.Funds.Infrastructure.Services.CoinClientServices
 
         public string CommitWithdraw(string bitcoinAddress, decimal amount)
         {
+            string transactionId = "transactionId1";
+            _transactionList = new List<Tuple<string, string, decimal, string>>();
+            _transactionList.Add(new Tuple<string, string, decimal, string>(bitcoinAddress,transactionId, amount, 
+                BitcoinConstants.ReceiveCategory));
             if (DepositArrived != null)
             {
-                DepositArrived(CurrencyConstants.Btc, null);
+                DepositArrived(CurrencyConstants.Btc, _transactionList);
             }
             Thread.Sleep(200);
             if (DepositConfirmed != null)
             {
-                DepositConfirmed("transactionid1", 0);
+                DepositConfirmed(transactionId, 7);
             }
-            return "transactionid1";
+            return transactionId;
         }
 
         public void PopulateCurrencies()

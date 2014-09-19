@@ -153,10 +153,10 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
                         {
                             // Get all the Withdraw Ledgers
                             IList<Withdraw> withdrawals = GetWithdrawalLedgers(currency, accountId);
-                            
+
                             // Evaluate if the current withdrawal is within the limits of the maximum withdrawal allowed and 
                             // the balance available
-                            if(_limitsConfigurationService.EvaluateWithdrawLimits(currency.Name, isTierVerified.Item2, amount,
+                            if (_limitsConfigurationService.EvaluateWithdrawLimits(currency.Name, isTierVerified.Item2, amount,
                                withdrawals, balance.AvailableBalance, balance.CurrentBalance))
                             {
                                 Withdraw withdraw = new Withdraw(currency, _withdrawIdGeneratorService.GenerateNewId(),
@@ -177,17 +177,28 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
                                 throw new InvalidOperationException("Not enough balance or withdraw limit reached");
                             }
                         }
+                        else
+                        {
+                            throw new InvalidOperationException(string.Format("No balance available AccountID = {0} | Currency = {1}", accountId.Value, currency.Name));
+                        }
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException(string.Format("Withdraw amount less than Minimum Amount: " +
+                                   "AccountID = {0} | Currency = {1}", accountId.Value, currency.Name));
                     }
                 }
+                else
+                {
+                    throw new InstanceNotFoundException(string.Format("No Withdraw Fees Found: " +
+                                   "AccountID = {0} | Currency = {1}", accountId.Value, currency.Name));
+                }
             }
-            throw new InvalidOperationException(string.Format("Required Tier not verified for Withdraw: Account ID = {0}",
-                                                accountId.Value));
-            //}
-            //else
-            //{
-              //  throw new Exception("Only Crypto Currencies can be withdrawn using this service");
-            //}
-            return null;
+            else
+            {
+                throw new InvalidOperationException(string.Format("Required Tier not verified for Withdraw: Account ID = {0}",
+                                  accountId.Value));
+            }
         }
 
         /// <summary>
