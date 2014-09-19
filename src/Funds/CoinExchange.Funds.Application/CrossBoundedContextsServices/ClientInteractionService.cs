@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Management.Instrumentation;
 using System.Timers;
+using CoinExchange.Common.Domain.Model;
 using CoinExchange.Funds.Domain.Model.Repositories;
 using CoinExchange.Funds.Domain.Model.Services;
 using CoinExchange.Funds.Domain.Model.WithdrawAggregate;
@@ -66,9 +67,9 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         {
             switch (currency)
             {
-                case "BTC":
+                case CurrencyConstants.Btc:
                     return _bitcoinClientService;
-                case "LTC":
+                case CurrencyConstants.Ltc:
                     return _litecoinClientService;
             }
             return null;
@@ -153,7 +154,11 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
                     ICoinClientService coinClientService = SelectCoinService(withdraw.Currency.Name);
                     string transactionId = coinClientService.CommitWithdraw(
                                                              withdraw.BitcoinAddress.Value, withdraw.Amount);
+                    // Set transaction Id recevied from the network
                     withdraw.SetTransactionId(transactionId);
+                    // Set status as confirmed
+                    withdraw.StatusConfirmed();
+                    // Save the withdraw
                     _fundsPersistenceRepository.SaveOrUpdate(withdraw);
                     _withdrawTimersDictionary.Remove(timer);
                     if (WithdrawExecuted != null)

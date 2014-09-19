@@ -27,7 +27,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.IntegrationTests
 
         // As these tests need bitcoins to run from the test account, or may be even real bitcoins, this flag is for 
         // safety and must be set to true to run tests related to deposits and withdrawals
-        private bool _shouldRunTests = true;
+        private bool _shouldRunTests = false;
 
         private DatabaseUtility _databaseUtility;
 

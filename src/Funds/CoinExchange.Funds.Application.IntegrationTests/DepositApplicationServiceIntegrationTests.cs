@@ -265,7 +265,6 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             Currency currency = new Currency("BTC", true);
             BitcoinAddress bitcoinAddress = new BitcoinAddress("bitcoinaddress1");
             TransactionId transactionId = new TransactionId("transactionid1");
-            decimal amount = 1.02m;
             string category = BitcoinConstants.ReceiveCategory;
 
             DepositAddress depositAddress =  new DepositAddress(currency, bitcoinAddress, AddressStatus.New, DateTime.Now, accountId);

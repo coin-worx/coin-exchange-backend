@@ -205,7 +205,7 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
                 bool addResponse = balance.ConfirmPendingTransaction(withdraw.WithdrawId,
                                                                      PendingTransactionType.Withdraw,
                                                                      -(withdraw.Amount + withdraw.Fee));
-                withdraw.StatusConfirmed();
+                //withdraw.StatusConfirmed();
                 if (addResponse)
                 {
                     _fundsPersistenceRepository.SaveOrUpdate(balance);

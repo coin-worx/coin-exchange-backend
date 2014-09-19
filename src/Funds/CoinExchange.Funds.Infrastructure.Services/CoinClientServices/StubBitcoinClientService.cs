@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
+using CoinExchange.Common.Domain.Model;
 using CoinExchange.Funds.Domain.Model.Services;
 
 namespace CoinExchange.Funds.Infrastructure.Services.CoinClientServices
@@ -12,11 +14,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.CoinClientServices
         private List<Tuple<string, string, decimal, string>> _transactionList = new List<Tuple<string, string, decimal, string>>();
         public event Action<string, int> DepositConfirmed;
 
-        event Action<string, List<Tuple<string, string, decimal, string>>> ICoinClientService.DepositArrived
-        {
-            add { _transactionList.Add(new Tuple<string, string, decimal, string>("","",0,"")); }
-            remove { _transactionList.Remove(new Tuple<string, string, decimal, string>("", "", 0, "")); }
-        }
+        public event Action<string, List<Tuple<string, string, decimal, string>>> DepositArrived;
 
         public string CreateNewAddress()
         {
@@ -35,7 +33,16 @@ namespace CoinExchange.Funds.Infrastructure.Services.CoinClientServices
 
         public string CommitWithdraw(string bitcoinAddress, decimal amount)
         {
-            return "123";
+            if (DepositArrived != null)
+            {
+                DepositArrived(CurrencyConstants.Btc, null);
+            }
+            Thread.Sleep(200);
+            if (DepositConfirmed != null)
+            {
+                DepositConfirmed("transactionid1", 0);
+            }
+            return "transactionid1";
         }
 
         public void PopulateCurrencies()
@@ -46,11 +53,6 @@ namespace CoinExchange.Funds.Infrastructure.Services.CoinClientServices
         public void PopulateServices()
         {
             throw new NotImplementedException();
-        }
-
-        public bool DepositMade(string address, string currency, decimal amount)
-        {
-            return true;
         }
 
         public decimal CheckBalance(string currency)

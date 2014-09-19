@@ -84,6 +84,7 @@
   <ItemGroup>
     <Content Include="Config\CoinClientServiceConfig-Stage.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Config\CoinClientServiceConfig-Test.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

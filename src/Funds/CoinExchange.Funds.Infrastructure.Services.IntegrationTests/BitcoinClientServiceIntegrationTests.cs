@@ -132,9 +132,9 @@ namespace CoinExchange.Funds.Infrastructure.Services.IntegrationTests
                 Withdraw withdraw = new Withdraw(currency, Guid.NewGuid().ToString(), DateTime.Now, WithdrawType.Bitcoin,
                                                  Amount, 0.001m, TransactionStatus.Pending, accountId,
                                                  new BitcoinAddress(newAddress));
-                string commitWithdraw = coinClientService.CommitWithdraw(withdraw.BitcoinAddress.Value, withdraw.Amount);
-                Assert.IsNotNull(commitWithdraw);
-                Assert.IsFalse(string.IsNullOrEmpty(commitWithdraw));                
+                string withdrawTransactionId = coinClientService.CommitWithdraw(withdraw.BitcoinAddress.Value, withdraw.Amount);
+                Assert.IsNotNull(withdrawTransactionId);
+                Assert.IsFalse(string.IsNullOrEmpty(withdrawTransactionId));                
                 manualResetEvent.WaitOne();
 
                 Assert.IsTrue(eventFired);
@@ -154,6 +154,8 @@ namespace CoinExchange.Funds.Infrastructure.Services.IntegrationTests
                 Assert.AreEqual(0, deposit.Confirmations);
                 Assert.AreEqual(accountId.Value, deposit.AccountId.Value);
                 Assert.AreEqual(TransactionStatus.Pending, deposit.Status);
+
+                Assert.AreEqual(withdrawTransactionId, deposit.TransactionId.Value);
             }
         }
 
