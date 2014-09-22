@@ -67,11 +67,10 @@ namespace CoinExchange.Funds.Application.WithdrawServices
         /// <returns></returns>
         public List<WithdrawRepresentation> GetRecentWithdrawals(int accountId, string currency)
         {
-            List<WithdrawRepresentation> withdrawRepresentations = null;
+            List<WithdrawRepresentation> withdrawRepresentations = new List<WithdrawRepresentation>();
             List<Withdraw> withdrawals = _withdrawRepository.GetWithdrawByCurrencyAndAccountId(currency, new AccountId(accountId));
             if (withdrawals != null && withdrawals.Any())
             {
-                withdrawRepresentations = new List<WithdrawRepresentation>();
                 foreach (var withdrawal in withdrawals)
                 {
                     withdrawRepresentations.Add(new WithdrawRepresentation(withdrawal.Currency.Name, withdrawal.WithdrawId,
@@ -230,7 +229,18 @@ namespace CoinExchange.Funds.Application.WithdrawServices
                 {
                     withdraw.StatusCancelled();
                     _fundsPersistenceRepository.SaveOrUpdate(withdraw);
-                    return new CancelWithdrawResponse(true);
+                    Balance balance = _balanceRepository.GetBalanceByCurrencyAndAccountId(withdraw.Currency, withdraw.AccountId);
+                    if (balance != null)
+                    {
+                        if(balance.CancelPendingTransaction(withdraw.WithdrawId, PendingTransactionType.Withdraw,
+                                                         withdraw.Amount + withdraw.Fee))
+                        {
+                            _fundsPersistenceRepository.SaveOrUpdate(balance);
+                            return new CancelWithdrawResponse(true);
+                        }
+                    }
+                    throw new NullReferenceException(string.Format("No balance found for Currency = {0} | Account ID = {1}",
+                        withdraw.Currency.Name, withdraw.AccountId.Value));
                 }
                 throw new NullReferenceException(string.Format("No withdraw found in the repository for Withdraw ID: {0}",
                 cancelWithdrawCommand.WithdrawId)); 

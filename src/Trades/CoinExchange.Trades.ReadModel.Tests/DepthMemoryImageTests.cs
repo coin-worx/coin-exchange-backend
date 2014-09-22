@@ -23,7 +23,7 @@ namespace CoinExchange.Trades.ReadModel.Tests
         public void BuyDepthMemoryImageInitialization_ChecksWhetherTheDictionariesInitializesAsExpected_ChecksTheCountForDepthDictionaries()
         {
             DepthMemoryImage depthMemoryImage = new DepthMemoryImage();
-            Depth depth = new Depth(CurrencyConstants.BitCoinUsd, 10);
+            Depth depth = new Depth(CurrencyConstants.BtcUsd, 10);
 
             depth.AddOrder(new Price(491), new Volume(100), OrderSide.Buy);
             depth.AddOrder(new Price(498), new Volume(100), OrderSide.Buy);
@@ -46,7 +46,7 @@ namespace CoinExchange.Trades.ReadModel.Tests
         public void SellDepthMemoryImageInitialization_ChecksWhetherTheDictionariesInitializesAsExpected_ChecksTheCountForDepthDictionaries()
         {
             DepthMemoryImage depthMemoryImage = new DepthMemoryImage();
-            Depth depth = new Depth(CurrencyConstants.BitCoinUsd, 10);
+            Depth depth = new Depth(CurrencyConstants.BtcUsd, 10);
 
             depth.AddOrder(new Price(491), new Volume(100), OrderSide.Sell);
             depth.AddOrder(new Price(498), new Volume(100), OrderSide.Sell);
@@ -69,7 +69,7 @@ namespace CoinExchange.Trades.ReadModel.Tests
         public void BuyDepthLevelsPriceCheck_ChecksWhetherTheLevelshaveTheSamePriceAsInDepthLevels_VerifiesFromTheBidDepthRepresentations()
         {
             DepthMemoryImage depthMemoryImage = new DepthMemoryImage();
-            Depth depth = new Depth(CurrencyConstants.BitCoinUsd, 10);
+            Depth depth = new Depth(CurrencyConstants.BtcUsd, 10);
 
             depth.AddOrder(new Price(491), new Volume(100), OrderSide.Buy);
             depth.AddOrder(new Price(498), new Volume(100), OrderSide.Buy);
@@ -97,7 +97,7 @@ namespace CoinExchange.Trades.ReadModel.Tests
         public void AskDepthLevelsPriceCheck_ChecksWhetherTheLevelshaveTheSamePriceAsInDepthLevels_VerifiesFromTheBidDepthRepresentations()
         {
             DepthMemoryImage depthMemoryImage = new DepthMemoryImage();
-            Depth depth = new Depth(CurrencyConstants.BitCoinUsd, 10);
+            Depth depth = new Depth(CurrencyConstants.BtcUsd, 10);
 
             depth.AddOrder(new Price(491), new Volume(100), OrderSide.Sell);
             depth.AddOrder(new Price(498), new Volume(100), OrderSide.Sell);
@@ -125,7 +125,7 @@ namespace CoinExchange.Trades.ReadModel.Tests
         public void BuyDepthLevelsVolumeCheck_ChecksWhetherTheLevelshaveTheSameVolumeAsInDepthLevels_VerifiesFromTheAskDepthRepresentations()
         {
             DepthMemoryImage depthMemoryImage = new DepthMemoryImage();
-            Depth depth = new Depth(CurrencyConstants.BitCoinUsd, 10);
+            Depth depth = new Depth(CurrencyConstants.BtcUsd, 10);
 
             depth.AddOrder(new Price(491), new Volume(100), OrderSide.Buy);
             depth.AddOrder(new Price(498), new Volume(800), OrderSide.Buy);
@@ -153,7 +153,7 @@ namespace CoinExchange.Trades.ReadModel.Tests
         public void AskDepthLevelsVolumeCheck_ChecksWhetherTheLevelshaveTheSameVolumeAsInDepthLevels_VerifiesFromTheAskDepthRepresentations()
         {
             DepthMemoryImage depthMemoryImage = new DepthMemoryImage();
-            Depth depth = new Depth(CurrencyConstants.BitCoinUsd, 10);
+            Depth depth = new Depth(CurrencyConstants.BtcUsd, 10);
 
             depth.AddOrder(new Price(491), new Volume(100), OrderSide.Sell);
             depth.AddOrder(new Price(498), new Volume(800), OrderSide.Sell);
@@ -181,7 +181,7 @@ namespace CoinExchange.Trades.ReadModel.Tests
         public void LastBidRemovedTest_TestsIfTheLastBidIsRemovedFromTheMemorymagesListOfDepths_VerifiesusingMemoryImagesBidBook()
         {
             DepthMemoryImage depthMemoryImage = new DepthMemoryImage();
-            Depth depth = new Depth(CurrencyConstants.BitCoinUsd, 5);
+            Depth depth = new Depth(CurrencyConstants.BtcUsd, 5);
 
             depth.AddOrder(new Price(491), new Volume(100), OrderSide.Buy);
             depth.AddOrder(new Price(498), new Volume(800), OrderSide.Buy);
@@ -258,7 +258,7 @@ namespace CoinExchange.Trades.ReadModel.Tests
         public void LastAskRemovedTest_TestsIfTheLastAskIsRemovedFromTheMemorymagesListOfDepths_VerifiesusingMemoryImagesAskBook()
         {
             DepthMemoryImage depthMemoryImage = new DepthMemoryImage();
-            Depth depth = new Depth(CurrencyConstants.BitCoinUsd, 5);
+            Depth depth = new Depth(CurrencyConstants.BtcUsd, 5);
 
             depth.AddOrder(new Price(491), new Volume(100), OrderSide.Buy);
             depth.AddOrder(new Price(498), new Volume(800), OrderSide.Buy);

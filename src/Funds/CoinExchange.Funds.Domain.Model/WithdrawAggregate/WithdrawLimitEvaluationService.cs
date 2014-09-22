@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CoinExchange.Funds.Domain.Model.DepositAggregate;
 using CoinExchange.Funds.Domain.Model.LedgerAggregate;
 
 namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
@@ -46,9 +47,9 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
                     // at our disposal
                     if (availableBalance < _maximumWithdraw)
                     {
-                        _maximumWithdraw = Math.Round(availableBalance, 5);
+                        _maximumWithdraw = availableBalance;
                     }
-                    _withheld = Math.Round(currentBalance - availableBalance, 5);
+                    _withheld = currentBalance - availableBalance;
 
                     // If the current withdraw amount is less than the maximum withdraw
                     return withdrawAmount <= _maximumWithdraw;
@@ -90,9 +91,9 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
                     // at our disposal
                     if (availableBalance < _maximumWithdraw)
                     {
-                        _maximumWithdraw = Math.Round(availableBalance, 5);
+                        _maximumWithdraw = availableBalance;
                     }
-                    _withheld = Math.Round(currentBalance - availableBalance, 5);
+                    _withheld = currentBalance - availableBalance;
                     return true;
                 }
             }
@@ -102,7 +103,7 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
             _monthlyLimit = 0;
             _monthlyLimitUsed = 0;
 
-            _withheld = Math.Round(currentBalance - availableBalance, 5);
+            _withheld = currentBalance - availableBalance;
 
             return false;
         }
@@ -183,24 +184,29 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
             {
                 foreach (var withdraw in withdraws)
                 {
-                    decimal amount = 0;
-                    if (bestBid == 0 && bestAsk == 0)
+                    // Only consider a withdraw in case it is not cancelled, as in cancellation, the amount is added back to
+                    // balance
+                    if (withdraw.Status != TransactionStatus.Cancelled)
                     {
-                        amount = withdraw.Amount;
-                    }
-                    else
-                    {
-                        amount = withdraw.AmountInUsd;
-                    }
-                    if (withdraw.DateTime >= DateTime.Now.AddHours(-24))
-                    {
-                        tempDailyLimitUsed += amount;
-                        tempMonthlyLimitUsed += amount;
-                    }
-                    if (withdraw.DateTime >= DateTime.Now.AddDays(-30) &&
-                        withdraw.DateTime < DateTime.Now.AddHours(-24))
-                    {
-                        tempMonthlyLimitUsed += amount;
+                        decimal amount = 0;
+                        if (bestBid == 0 && bestAsk == 0)
+                        {
+                            amount = withdraw.Amount + withdraw.Fee;
+                        }
+                        else
+                        {
+                            amount = withdraw.AmountInUsd + withdraw.Fee;
+                        }
+                        if (withdraw.DateTime >= DateTime.Now.AddHours(-24))
+                        {
+                            tempDailyLimitUsed += amount;
+                            tempMonthlyLimitUsed += amount;
+                        }
+                        if (withdraw.DateTime >= DateTime.Now.AddDays(-30) &&
+                            withdraw.DateTime < DateTime.Now.AddHours(-24))
+                        {
+                            tempMonthlyLimitUsed += amount;
+                        }
                     }
                 }
             }
