@@ -14,5 +14,6 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
     {
         WithdrawAddress GetWithdrawAddressById(int id);
         List<WithdrawAddress> GetWithdrawAddressByAccountId(AccountId accountId);
+        List<WithdrawAddress> GetWithdrawAddressByAccountIdAndCurrency(AccountId accountId, CurrencyAggregate.Currency currency);
     }
 }

@@ -60,6 +60,29 @@ namespace CoinExchange.Funds.Application.WithdrawServices
         }
 
         /// <summary>
+        /// Gets the list of recent withdrawals for an Account ID
+        /// </summary>
+        /// <param name="accountId"></param>
+        /// <returns></returns>
+        public List<WithdrawRepresentation> GetRecentWithdrawals(int accountId)
+        {
+            List<WithdrawRepresentation> withdrawRepresentations = new List<WithdrawRepresentation>();
+            List<Withdraw> withdrawals = _withdrawRepository.GetWithdrawByAccountId(new AccountId(accountId));
+            if (withdrawals != null && withdrawals.Any())
+            {
+                foreach (var withdrawal in withdrawals)
+                {
+                    withdrawRepresentations.Add(new WithdrawRepresentation(withdrawal.Currency.Name, withdrawal.WithdrawId,
+                        withdrawal.DateTime, withdrawal.Type.ToString(), withdrawal.Amount, withdrawal.Fee,
+                        withdrawal.Status.ToString(), (withdrawal.BitcoinAddress == null) ? null : withdrawal.BitcoinAddress.Value,
+                        (withdrawal.TransactionId == null) ? null : withdrawal.TransactionId.Value));
+                }
+            }
+
+            return withdrawRepresentations;
+        }
+
+        /// <summary>
         /// Get recent withdrawals for hte given currency and account id
         /// </summary>
         /// <param name="accountId"></param>
@@ -94,10 +117,12 @@ namespace CoinExchange.Funds.Application.WithdrawServices
             {
                 return new WithdrawAddressResponse(false, "Invalid address");
             }
-            List<WithdrawAddress> withdrawAddresses = _withdrawAddressRepository.GetWithdrawAddressByAccountId(new AccountId(addAddressCommand.AccountId));
+            List<WithdrawAddress> withdrawAddresses = _withdrawAddressRepository.GetWithdrawAddressByAccountIdAndCurrency(
+                new AccountId(addAddressCommand.AccountId), new Currency(addAddressCommand.Currency));
             foreach (var address in withdrawAddresses)
             {
-                if (address.BitcoinAddress.Value == addAddressCommand.BitcoinAddress)
+                if (address.BitcoinAddress.Value == addAddressCommand.BitcoinAddress || 
+                    address.Description == addAddressCommand.Description)
                 {
                     return new WithdrawAddressResponse(false, "Duplicate Entry");
                 }
@@ -122,13 +147,15 @@ namespace CoinExchange.Funds.Application.WithdrawServices
         /// Gets the list of withdrawaal addresses
         /// </summary>
         /// <param name="accountId"></param>
+        /// <param name="currency"> </param>
         /// <returns></returns>
-        public List<WithdrawAddressRepresentation> GetWithdrawalAddresses(int accountId)
+        public List<WithdrawAddressRepresentation> GetWithdrawalAddresses(int accountId, string currency)
         {
             // Get the list of withdraw addresses, extract the information into the withdraw address representation list and 
             // return 
             List<WithdrawAddressRepresentation> withdrawAddressRepresentations = new List<WithdrawAddressRepresentation>();
-            List<WithdrawAddress> withdrawAddresses = _withdrawAddressRepository.GetWithdrawAddressByAccountId(new AccountId(accountId));
+            List<WithdrawAddress> withdrawAddresses = _withdrawAddressRepository.GetWithdrawAddressByAccountIdAndCurrency(
+                new AccountId(accountId), new Currency(currency));
             foreach (var withdrawAddress in withdrawAddresses)
             {
                 withdrawAddressRepresentations.Add(new WithdrawAddressRepresentation(withdrawAddress.BitcoinAddress.Value,

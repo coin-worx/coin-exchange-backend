@@ -11,6 +11,7 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
     /// </summary>
     public enum WithdrawType
     {
+        NotSpecified,
         Bitcoin,
         Litecoin
     }

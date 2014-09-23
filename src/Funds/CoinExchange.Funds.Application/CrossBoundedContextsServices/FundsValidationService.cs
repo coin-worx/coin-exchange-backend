@@ -160,7 +160,7 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
                                withdrawals, balance.AvailableBalance, balance.CurrentBalance))
                             {
                                 Withdraw withdraw = new Withdraw(currency, _withdrawIdGeneratorService.GenerateNewId(),
-                                                                 DateTime.Now, WithdrawType.Bitcoin, amount,
+                                                                 DateTime.Now, GetWithdrawType(currency.Name), amount,
                                                                  withdrawFees.Fee,
                                                                  TransactionStatus.Pending, accountId,
                                                                  bitcoinAddress);
@@ -198,6 +198,25 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
             {
                 throw new InvalidOperationException(string.Format("Required Tier not verified for Withdraw: Account ID = {0}",
                                   accountId.Value));
+            }
+        }
+
+        /// <summary>
+        /// Returns the corresponding Withdraw Type based on the currency
+        /// </summary>
+        /// <returns></returns>
+        private WithdrawType GetWithdrawType(string currency)
+        {
+            switch (currency)
+            {
+                case CurrencyConstants.Btc:
+                    return WithdrawType.Bitcoin;
+
+                case CurrencyConstants.Ltc:
+                    return WithdrawType.Litecoin;
+
+                default:
+                    return WithdrawType.NotSpecified;
             }
         }
 
