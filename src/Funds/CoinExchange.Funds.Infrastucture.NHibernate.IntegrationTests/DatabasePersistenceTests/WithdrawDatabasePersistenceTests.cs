@@ -43,6 +43,8 @@ namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests.DatabaseP
         [Test]
         public void SaveWithdrawalAndRetreiveByIdTest_SavesAnObjectToDatabaseAndManipulatesIt_ChecksIfItIsUpdatedAsExpected()
         {
+            ManualResetEvent manualResetEvent = new ManualResetEvent(false);
+            manualResetEvent.WaitOne(3000);
             Withdraw withdraw = new Withdraw(new Currency("LTC", true), "1234", DateTime.Now, WithdrawType.Bitcoin, 2000, 
                 0.005m, TransactionStatus.Pending,
                 new AccountId(1), new BitcoinAddress("bitcoin123"));
@@ -68,6 +70,9 @@ namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests.DatabaseP
         [Test]
         public void SaveWithdrawalAndRetreiveByWithdrawIdTest_SavesAnObjectToDatabaseAndManipulatesIt_ChecksIfItIsUpdatedAsExpected()
         {
+            // Wait for cleanup for resources
+            ManualResetEvent manualResetEvent = new ManualResetEvent(false);
+            manualResetEvent.WaitOne(3000);
             Withdraw withdraw = new Withdraw(new Currency("LTC", true), "1234", DateTime.Now, WithdrawType.Bitcoin, 2000, 
                 0.005m, TransactionStatus.Pending,
                 new AccountId(1), new BitcoinAddress("bitcoin123"));

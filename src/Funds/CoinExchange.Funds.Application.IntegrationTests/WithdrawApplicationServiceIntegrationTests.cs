@@ -148,7 +148,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             Assert.AreEqual(accountId.Value, withdraw.AccountId.Value);
             Assert.AreEqual(currency.Name, withdraw.Currency.Name);
             Assert.AreEqual(currency.IsCryptoCurrency, withdraw.Currency.IsCryptoCurrency);
-            Assert.AreEqual(amount, withdraw.Amount);
+            Assert.AreEqual(amount - withdraw.Fee, withdraw.Amount);
             Assert.AreEqual(TransactionStatus.Pending, withdraw.Status);
 
             WithdrawFees withdrawFees = withdrawFeesRepository.GetWithdrawFeesByCurrencyName(currency.Name);
@@ -156,9 +156,9 @@ namespace CoinExchange.Funds.Application.IntegrationTests
 
             balance = balanceRepository.GetBalanceByCurrencyAndAccountId(currency, accountId);
             Assert.IsNotNull(balance);
-            Assert.AreEqual((amount + 1) - (amount + withdrawFees.Fee), balance.AvailableBalance);
+            Assert.AreEqual((amount + 1) - (amount), balance.AvailableBalance);
             Assert.AreEqual(amount + 1, balance.CurrentBalance);
-            Assert.AreEqual(amount + withdrawFees.Fee, balance.PendingBalance);
+            Assert.AreEqual(amount, balance.PendingBalance);
         }
 
         [Test]
@@ -374,7 +374,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             Assert.AreEqual(accountId.Value, withdraw.AccountId.Value);
             Assert.AreEqual(currency.Name, withdraw.Currency.Name);
             Assert.AreEqual(currency.IsCryptoCurrency, withdraw.Currency.IsCryptoCurrency);
-            Assert.AreEqual(amount, withdraw.Amount);
+            Assert.AreEqual(amount - withdraw.Fee, withdraw.Amount);
             Assert.AreEqual(TransactionStatus.Confirmed, withdraw.Status);
 
             Assert.AreEqual(receivedWithdraw.AccountId.Value, withdraw.AccountId.Value);
@@ -390,8 +390,8 @@ namespace CoinExchange.Funds.Application.IntegrationTests
 
             balance = balanceRepository.GetBalanceByCurrencyAndAccountId(currency, accountId);
             Assert.IsNotNull(balance);
-            Assert.AreEqual((amount + 1) - (amount + withdrawFees.Fee), balance.AvailableBalance);
-            Assert.AreEqual((amount + 1) - (amount + withdrawFees.Fee), balance.CurrentBalance);
+            Assert.AreEqual((amount + 1) - (amount), balance.AvailableBalance);
+            Assert.AreEqual((amount + 1) - (amount), balance.CurrentBalance);
             Assert.AreEqual(0, balance.PendingBalance);
         }
     }

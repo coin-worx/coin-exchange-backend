@@ -589,7 +589,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             Assert.IsNotNull(withdraw);
             Deposit deposit = depositRepository.GetDepositByTransactionId(transactionId);
             Assert.IsNotNull(deposit);
-            Assert.AreEqual(amount, deposit.Amount);
+            Assert.AreEqual(amount - withdraw.Fee, deposit.Amount);
             Assert.AreEqual(withdraw.TransactionId.Value, deposit.TransactionId.Value);
             Assert.AreEqual(accountId.Value, deposit.AccountId.Value);
             Assert.AreEqual(bitcoinAddress.Value, deposit.BitcoinAddress.Value);

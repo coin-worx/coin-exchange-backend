@@ -332,9 +332,9 @@ namespace CoinExchange.Funds.Application.IntegrationTests
 
             WithdrawFees withdrawFee = withdrawFeesRepository.GetWithdrawFeesByCurrencyName(currency.Name);
             Balance baseAfterValidationBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(currency, accountId);
-            Assert.AreEqual(20 - 1.4m - withdrawFee.Fee, baseAfterValidationBalance.AvailableBalance);
+            Assert.AreEqual(20 - 1.4m, baseAfterValidationBalance.AvailableBalance);
             Assert.AreEqual(balance.CurrentBalance, baseAfterValidationBalance.CurrentBalance);
-            Assert.AreEqual(1.4m + withdrawFee.Fee, baseAfterValidationBalance.PendingBalance);
+            Assert.AreEqual(1.4m, baseAfterValidationBalance.PendingBalance);
         }
 
         #endregion Withdrawal Validation
@@ -857,8 +857,8 @@ namespace CoinExchange.Funds.Application.IntegrationTests
 
             balance = balanceRepository.GetBalanceByCurrencyAndAccountId(currency, accountId);
             Assert.IsNotNull(balance);
-            Assert.AreEqual(20 - 0.4m - withdrawFee.Fee, balance.CurrentBalance);
-            Assert.AreEqual(20 - 0.4m - withdrawFee.Fee, balance.AvailableBalance);
+            Assert.AreEqual(20 - 0.4m, balance.CurrentBalance);
+            Assert.AreEqual(20 - 0.4m, balance.AvailableBalance);
             Assert.AreEqual(0, balance.PendingBalance);
         }
 
@@ -1073,7 +1073,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             Balance balance = balanceRepository.GetBalanceByCurrencyAndAccountId(baseCurrency, accountId);
             Assert.IsNotNull(balance);
             Assert.AreEqual(20, balance.CurrentBalance);
-            Assert.AreEqual(19 - (withdrawFees.Fee * 2), balance.AvailableBalance);
+            Assert.AreEqual(19, balance.AvailableBalance);
         }
 
         #endregion Transaction Jobs Tests

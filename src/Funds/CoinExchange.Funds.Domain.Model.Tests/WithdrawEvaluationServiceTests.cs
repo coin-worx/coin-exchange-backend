@@ -110,10 +110,11 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             // Balance is less than the calculated maximum threshold
             decimal availableBalance = 1000;
             decimal currentBalance = 1000;
+            decimal fee = 0.001m;
 
             List<Withdraw> ledgers = new List<Withdraw>();
             Withdraw withdraw = new Withdraw(currency, "withdrawid123", DateTime.Now.AddDays(-29), WithdrawType.Bitcoin,
-                4500, 0.001m, TransactionStatus.Pending, accountId,
+                4500, fee, TransactionStatus.Pending, accountId,
                 new BitcoinAddress("bitcoin123"));
             ledgers.Add(withdraw);
             WithdrawLimit withdrawLimit = new WithdrawLimit("Tier0", dailyLimit, monthlyLimit);
@@ -124,20 +125,20 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             Assert.AreEqual(1000, withdrawLimitEvaluationService.DailyLimit);
             Assert.AreEqual(5000, withdrawLimitEvaluationService.MonthlyLimit);
             Assert.AreEqual(0, withdrawLimitEvaluationService.DailyLimitUsed);
-            Assert.AreEqual(4500, withdrawLimitEvaluationService.MonthlyLimitUsed);
-            Assert.AreEqual(500, withdrawLimitEvaluationService.MaximumWithdraw);
+            Assert.AreEqual(4500 + fee, withdrawLimitEvaluationService.MonthlyLimitUsed);
+            Assert.AreEqual(500 - fee, withdrawLimitEvaluationService.MaximumWithdraw);
             Assert.AreEqual(0, withdrawLimitEvaluationService.WithheldAmount);
 
             // Withdraw below the threshold limit
-            evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(500, ledgers,
+            evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(500 - fee, ledgers,
                 withdrawLimit, availableBalance, currentBalance);
             Assert.IsTrue(evaluationResponse);
 
             Assert.AreEqual(1000, withdrawLimitEvaluationService.DailyLimit);
             Assert.AreEqual(5000, withdrawLimitEvaluationService.MonthlyLimit);
             Assert.AreEqual(0, withdrawLimitEvaluationService.DailyLimitUsed);
-            Assert.AreEqual(4500, withdrawLimitEvaluationService.MonthlyLimitUsed);
-            Assert.AreEqual(500, withdrawLimitEvaluationService.MaximumWithdraw);
+            Assert.AreEqual(4500 + fee, withdrawLimitEvaluationService.MonthlyLimitUsed);
+            Assert.AreEqual(500 - fee, withdrawLimitEvaluationService.MaximumWithdraw);
             Assert.AreEqual(0, withdrawLimitEvaluationService.WithheldAmount);
         }
 
@@ -153,13 +154,14 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             // Balance is less than the calculated maximum threshold
             decimal availableBalance = 1000 - 0.09m;
             decimal currentBalance = 1000 - 0.09m;
+            decimal fee = 0.001m;
 
             List<Withdraw> withdraws = new List<Withdraw>();
             Withdraw withdraw = new Withdraw(currency, "withdrawid123", DateTime.Now.AddDays(-29), WithdrawType.Bitcoin,
-                4100, 0.001m, TransactionStatus.Pending, accountId,
+                4100, fee, TransactionStatus.Pending, accountId,
                 new BitcoinAddress("bitcoin123"));
             Withdraw withdraw2 = new Withdraw(currency, "withdrawid123", DateTime.Now.AddMinutes(-5), WithdrawType.Bitcoin,
-                400, 0.001m, TransactionStatus.Pending, accountId,
+                400, fee, TransactionStatus.Pending, accountId,
                 new BitcoinAddress("bitcoin123"));
             withdraws.Add(withdraw);
             withdraws.Add(withdraw2);
@@ -171,21 +173,21 @@ namespace CoinExchange.Funds.Domain.Model.Tests
 
             Assert.AreEqual(1000, withdrawLimitEvaluationService.DailyLimit);
             Assert.AreEqual(5000, withdrawLimitEvaluationService.MonthlyLimit);
-            Assert.AreEqual(400, withdrawLimitEvaluationService.DailyLimitUsed);
-            Assert.AreEqual(4500, withdrawLimitEvaluationService.MonthlyLimitUsed);
-            Assert.AreEqual(500, withdrawLimitEvaluationService.MaximumWithdraw);
+            Assert.AreEqual(400 + fee, withdrawLimitEvaluationService.DailyLimitUsed);
+            Assert.AreEqual(4500 + fee*2, withdrawLimitEvaluationService.MonthlyLimitUsed);
+            Assert.AreEqual(500 - fee*2, withdrawLimitEvaluationService.MaximumWithdraw);
             Assert.AreEqual(0, withdrawLimitEvaluationService.WithheldAmount);
 
             // Withdraw below the threshold limit
-            evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(500, withdraws,
+            evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(500 - fee*2, withdraws,
                 withdrawLimit, availableBalance, currentBalance);
             Assert.IsTrue(evaluationResponse);
 
             Assert.AreEqual(1000, withdrawLimitEvaluationService.DailyLimit);
             Assert.AreEqual(5000, withdrawLimitEvaluationService.MonthlyLimit);
-            Assert.AreEqual(400, withdrawLimitEvaluationService.DailyLimitUsed);
-            Assert.AreEqual(4500, withdrawLimitEvaluationService.MonthlyLimitUsed);
-            Assert.AreEqual(500, withdrawLimitEvaluationService.MaximumWithdraw);
+            Assert.AreEqual(400 + fee, withdrawLimitEvaluationService.DailyLimitUsed);
+            Assert.AreEqual(4500 + fee*2, withdrawLimitEvaluationService.MonthlyLimitUsed);
+            Assert.AreEqual(500 - fee*2, withdrawLimitEvaluationService.MaximumWithdraw);
             Assert.AreEqual(0, withdrawLimitEvaluationService.WithheldAmount);
         }
 
@@ -200,39 +202,40 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             decimal monthlyLimit = 5000;
             decimal availableBalance = 1000;
             decimal currentBalance = 1000;
+            decimal fee = 0.001m;
 
             List<Withdraw> withdraws = new List<Withdraw>();
             Withdraw withdraw = new Withdraw(currency, "withdrawid123", DateTime.Now.AddDays(-29), WithdrawType.Bitcoin,
-                4100, 0.001m, TransactionStatus.Pending, accountId,
+                4100, fee, TransactionStatus.Pending, accountId,
                 new BitcoinAddress("bitcoin123"));
             Withdraw withdraw2 = new Withdraw(currency, "withdrawid123", DateTime.Now.AddMinutes(-5), WithdrawType.Bitcoin,
-                400, 0.001m, TransactionStatus.Pending, accountId,
+                400, fee, TransactionStatus.Pending, accountId,
                 new BitcoinAddress("bitcoin123"));
             withdraws.Add(withdraw);
             withdraws.Add(withdraw2);
 
             WithdrawLimit withdrawLimit = new WithdrawLimit("Tier 0", dailyLimit, monthlyLimit);
-            bool evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(600, withdraws,
+            bool evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(600 - fee*2, withdraws,
                 withdrawLimit, availableBalance, currentBalance);
             Assert.IsFalse(evaluationResponse);
 
             Assert.AreEqual(1000, withdrawLimitEvaluationService.DailyLimit);
             Assert.AreEqual(5000, withdrawLimitEvaluationService.MonthlyLimit);
-            Assert.AreEqual(400, withdrawLimitEvaluationService.DailyLimitUsed);
-            Assert.AreEqual(4500, withdrawLimitEvaluationService.MonthlyLimitUsed);
-            Assert.AreEqual(500, withdrawLimitEvaluationService.MaximumWithdraw);
+            Assert.AreEqual(400 + fee, withdrawLimitEvaluationService.DailyLimitUsed);
+            Assert.AreEqual(4500 + fee*2, withdrawLimitEvaluationService.MonthlyLimitUsed);
+            Assert.AreEqual(500 - fee*2, withdrawLimitEvaluationService.MaximumWithdraw);
             Assert.AreEqual(0, withdrawLimitEvaluationService.WithheldAmount);
 
             // Withdraw below the threshold limit
-            evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(500, withdraws,
+            evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(500 - fee*2, withdraws,
                 withdrawLimit, availableBalance, currentBalance);
             Assert.IsTrue(evaluationResponse);
 
             Assert.AreEqual(1000, withdrawLimitEvaluationService.DailyLimit);
             Assert.AreEqual(5000, withdrawLimitEvaluationService.MonthlyLimit);
-            Assert.AreEqual(400, withdrawLimitEvaluationService.DailyLimitUsed);
-            Assert.AreEqual(4500, withdrawLimitEvaluationService.MonthlyLimitUsed);
-            Assert.AreEqual(500, withdrawLimitEvaluationService.MaximumWithdraw);
+            Assert.AreEqual(400 + fee, withdrawLimitEvaluationService.DailyLimitUsed);
+            Assert.AreEqual(4500 + fee*2, withdrawLimitEvaluationService.MonthlyLimitUsed);
+            Assert.AreEqual(500 - fee*2, withdrawLimitEvaluationService.MaximumWithdraw);
             Assert.AreEqual(0, withdrawLimitEvaluationService.WithheldAmount);
         }
 
@@ -248,39 +251,40 @@ namespace CoinExchange.Funds.Domain.Model.Tests
 
             decimal availableBalance = 1000;
             decimal currentBalance = 1000;
+            decimal fee = 0.001m;
 
             List<Withdraw> withdraws = new List<Withdraw>();
             Withdraw withdraw = new Withdraw(currency, "withdrawid123", DateTime.Now.AddDays(-29), WithdrawType.Bitcoin,
-                3500, 0.001m, TransactionStatus.Pending, accountId,
+                3500, fee, TransactionStatus.Pending, accountId,
                 new BitcoinAddress("bitcoin123"));
             Withdraw withdraw2 = new Withdraw(currency, "withdrawid123", DateTime.Now.AddMinutes(-5), WithdrawType.Bitcoin,
-                500, 0.001m, TransactionStatus.Pending, accountId,
+                500, fee, TransactionStatus.Pending, accountId,
                 new BitcoinAddress("bitcoin123"));
             withdraws.Add(withdraw);
             withdraws.Add(withdraw2);
 
             WithdrawLimit withdrawLimit = new WithdrawLimit("Tier0", dailyLimit, monthlyLimit);
-            bool evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(600, withdraws,
+            bool evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(600 - fee*2, withdraws,
                 withdrawLimit, availableBalance, currentBalance);
             Assert.IsFalse(evaluationResponse);
 
             Assert.AreEqual(1000, withdrawLimitEvaluationService.DailyLimit);
             Assert.AreEqual(5000, withdrawLimitEvaluationService.MonthlyLimit);
-            Assert.AreEqual(500, withdrawLimitEvaluationService.DailyLimitUsed);
-            Assert.AreEqual(4000, withdrawLimitEvaluationService.MonthlyLimitUsed);
-            Assert.AreEqual(500, withdrawLimitEvaluationService.MaximumWithdraw);
+            Assert.AreEqual(500 + fee, withdrawLimitEvaluationService.DailyLimitUsed);
+            Assert.AreEqual(4000 + fee*2, withdrawLimitEvaluationService.MonthlyLimitUsed);
+            Assert.AreEqual(500 - fee, withdrawLimitEvaluationService.MaximumWithdraw);
             Assert.AreEqual(0, withdrawLimitEvaluationService.WithheldAmount);
 
             // Withdraw below the threshold limit
-            evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(500, withdraws,
+            evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(500 - fee*2, withdraws,
                 withdrawLimit, availableBalance, currentBalance);
             Assert.IsTrue(evaluationResponse);
 
             Assert.AreEqual(1000, withdrawLimitEvaluationService.DailyLimit);
             Assert.AreEqual(5000, withdrawLimitEvaluationService.MonthlyLimit);
-            Assert.AreEqual(500, withdrawLimitEvaluationService.DailyLimitUsed);
-            Assert.AreEqual(4000, withdrawLimitEvaluationService.MonthlyLimitUsed);
-            Assert.AreEqual(500, withdrawLimitEvaluationService.MaximumWithdraw);
+            Assert.AreEqual(500 + fee, withdrawLimitEvaluationService.DailyLimitUsed);
+            Assert.AreEqual(4000 + fee*2, withdrawLimitEvaluationService.MonthlyLimitUsed);
+            Assert.AreEqual(500 - fee, withdrawLimitEvaluationService.MaximumWithdraw);
             Assert.AreEqual(0, withdrawLimitEvaluationService.WithheldAmount);
         }
 
@@ -296,35 +300,36 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             // Balance is less than the calculated maximum threshold
             decimal availableBalance = 1000;
             decimal currentBalance = 1000;
+            decimal fee = 0.001m;
 
             List<Withdraw> withdraws = new List<Withdraw>();
             Withdraw withdraw = new Withdraw(currency, "withdrawid123", DateTime.Now.AddMinutes(-5), WithdrawType.Bitcoin,
-                500, 0.001m, TransactionStatus.Pending, accountId,
+                500, fee, TransactionStatus.Pending, accountId,
                 new BitcoinAddress("bitcoin123"));
             withdraws.Add(withdraw);
 
             WithdrawLimit withdrawLimit = new WithdrawLimit("Tier0", dailyLimit, monthlyLimit);
-            bool evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(600, withdraws,
+            bool evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(600 - fee, withdraws,
                 withdrawLimit, availableBalance, currentBalance);
             Assert.IsFalse(evaluationResponse);
 
             Assert.AreEqual(1000, withdrawLimitEvaluationService.DailyLimit);
             Assert.AreEqual(5000, withdrawLimitEvaluationService.MonthlyLimit);
-            Assert.AreEqual(500, withdrawLimitEvaluationService.DailyLimitUsed);
-            Assert.AreEqual(500, withdrawLimitEvaluationService.MonthlyLimitUsed);
-            Assert.AreEqual(500, withdrawLimitEvaluationService.MaximumWithdraw);
+            Assert.AreEqual(500 + fee, withdrawLimitEvaluationService.DailyLimitUsed);
+            Assert.AreEqual(500 + fee, withdrawLimitEvaluationService.MonthlyLimitUsed);
+            Assert.AreEqual(500 - fee, withdrawLimitEvaluationService.MaximumWithdraw);
             Assert.AreEqual(0, withdrawLimitEvaluationService.WithheldAmount);
 
             // Withdraw below the threshold limit
-            evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(500, withdraws,
+            evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(500 - fee, withdraws,
                 withdrawLimit, availableBalance, currentBalance);
             Assert.IsTrue(evaluationResponse);
 
             Assert.AreEqual(1000, withdrawLimitEvaluationService.DailyLimit);
             Assert.AreEqual(5000, withdrawLimitEvaluationService.MonthlyLimit);
-            Assert.AreEqual(500, withdrawLimitEvaluationService.DailyLimitUsed);
-            Assert.AreEqual(500, withdrawLimitEvaluationService.MonthlyLimitUsed);
-            Assert.AreEqual(500, withdrawLimitEvaluationService.MaximumWithdraw);
+            Assert.AreEqual(500 + fee, withdrawLimitEvaluationService.DailyLimitUsed);
+            Assert.AreEqual(500 + fee, withdrawLimitEvaluationService.MonthlyLimitUsed);
+            Assert.AreEqual(500 - fee, withdrawLimitEvaluationService.MaximumWithdraw);
             Assert.AreEqual(0, withdrawLimitEvaluationService.WithheldAmount);
         }
 
@@ -339,39 +344,40 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             decimal monthlyLimit = 5000;
             decimal availableBalance = 1000;
             decimal currentBalance = 1000;
+            decimal fee = 0.001m;
 
             List<Withdraw> withdraws = new List<Withdraw>();
             Withdraw withdraw = new Withdraw(currency, "withdrawid123", DateTime.Now.AddDays(-3), WithdrawType.Bitcoin,
-                4000, 0.001m, TransactionStatus.Pending, accountId,
+                4000, fee, TransactionStatus.Pending, accountId,
                 new BitcoinAddress("bitcoin123"));
             Withdraw withdraw2 = new Withdraw(currency, "withdrawid123", DateTime.Now.AddMinutes(-5), WithdrawType.Bitcoin,
-                500, 0.001m, TransactionStatus.Pending, accountId,
+                500, fee, TransactionStatus.Pending, accountId,
                 new BitcoinAddress("bitcoin123"));
             withdraws.Add(withdraw);
             withdraws.Add(withdraw2);
 
             WithdrawLimit withdrawLimit = new WithdrawLimit("Tier0", dailyLimit, monthlyLimit);
-            bool evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(600, withdraws,
+            bool evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(600 - fee*2, withdraws,
                 withdrawLimit, availableBalance, currentBalance);
             Assert.IsFalse(evaluationResponse);
 
             Assert.AreEqual(1000, withdrawLimitEvaluationService.DailyLimit);
             Assert.AreEqual(5000, withdrawLimitEvaluationService.MonthlyLimit);
-            Assert.AreEqual(500, withdrawLimitEvaluationService.DailyLimitUsed);
-            Assert.AreEqual(4500, withdrawLimitEvaluationService.MonthlyLimitUsed);
-            Assert.AreEqual(500, withdrawLimitEvaluationService.MaximumWithdraw);
+            Assert.AreEqual(500 + fee, withdrawLimitEvaluationService.DailyLimitUsed);
+            Assert.AreEqual(4500 + fee*2, withdrawLimitEvaluationService.MonthlyLimitUsed);
+            Assert.AreEqual(500 - fee*2, withdrawLimitEvaluationService.MaximumWithdraw);
             Assert.AreEqual(0, withdrawLimitEvaluationService.WithheldAmount);
 
             // Withdraw below the threshold limit
-            evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(500, withdraws,
+            evaluationResponse = withdrawLimitEvaluationService.EvaluateMaximumWithdrawLimit(500 - fee*2, withdraws,
                 withdrawLimit, availableBalance, currentBalance);
             Assert.IsTrue(evaluationResponse);
 
             Assert.AreEqual(1000, withdrawLimitEvaluationService.DailyLimit);
             Assert.AreEqual(5000, withdrawLimitEvaluationService.MonthlyLimit);
-            Assert.AreEqual(500, withdrawLimitEvaluationService.DailyLimitUsed);
-            Assert.AreEqual(4500, withdrawLimitEvaluationService.MonthlyLimitUsed);
-            Assert.AreEqual(500, withdrawLimitEvaluationService.MaximumWithdraw);
+            Assert.AreEqual(500 + fee, withdrawLimitEvaluationService.DailyLimitUsed);
+            Assert.AreEqual(4500 +fee*2, withdrawLimitEvaluationService.MonthlyLimitUsed);
+            Assert.AreEqual(500 - fee*2, withdrawLimitEvaluationService.MaximumWithdraw);
             Assert.AreEqual(0, withdrawLimitEvaluationService.WithheldAmount);
         }
 
@@ -389,10 +395,11 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             decimal currentBalance = 500 - 0.09m;
             // Amount that can be safely withdrawn
             decimal safeAmount = availableBalance;
+            decimal fee = 0.001m;
 
             List<Withdraw> withdraws = new List<Withdraw>();
             Withdraw withdraw = new Withdraw(currency, "withdrawid123", DateTime.Now.AddDays(-29), WithdrawType.Bitcoin,
-                4500, 0.001m, TransactionStatus.Pending, accountId,
+                4500, fee, TransactionStatus.Pending, accountId,
                 new BitcoinAddress("bitcoin123"));
             withdraws.Add(withdraw);
 
@@ -404,7 +411,7 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             Assert.AreEqual(1000, withdrawLimitEvaluationService.DailyLimit);
             Assert.AreEqual(5000, withdrawLimitEvaluationService.MonthlyLimit);
             Assert.AreEqual(0, withdrawLimitEvaluationService.DailyLimitUsed);
-            Assert.AreEqual(4500, withdrawLimitEvaluationService.MonthlyLimitUsed);
+            Assert.AreEqual(4500 + fee, withdrawLimitEvaluationService.MonthlyLimitUsed);
             Assert.AreEqual(Math.Round(availableBalance, 5), withdrawLimitEvaluationService.MaximumWithdraw);
             Assert.AreEqual(0, withdrawLimitEvaluationService.WithheldAmount);
 
@@ -416,7 +423,7 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             Assert.AreEqual(1000, withdrawLimitEvaluationService.DailyLimit);
             Assert.AreEqual(5000, withdrawLimitEvaluationService.MonthlyLimit);
             Assert.AreEqual(0, withdrawLimitEvaluationService.DailyLimitUsed);
-            Assert.AreEqual(4500, withdrawLimitEvaluationService.MonthlyLimitUsed);
+            Assert.AreEqual(4500 + fee, withdrawLimitEvaluationService.MonthlyLimitUsed);
             Assert.AreEqual(Math.Round(availableBalance, 5), withdrawLimitEvaluationService.MaximumWithdraw);           
             Assert.AreEqual(0, withdrawLimitEvaluationService.WithheldAmount);
         }
@@ -435,13 +442,14 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             decimal currentBalance = 500 - 0.09m;
             // Amount that can be safely withdrawn
             decimal safeAmount = availableBalance;
+            decimal fee = 0.001m;
 
             List<Withdraw> withdraws = new List<Withdraw>();
             Withdraw withdraw = new Withdraw(currency, "withdrawid123", DateTime.Now.AddDays(-29), WithdrawType.Bitcoin,
-                4100, 0.001m, TransactionStatus.Pending, accountId,
+                4100, fee, TransactionStatus.Pending, accountId,
                 new BitcoinAddress("bitcoin123"));
             Withdraw withdraw2 = new Withdraw(currency, "withdrawid123", DateTime.Now.AddMinutes(-29), WithdrawType.Bitcoin,
-                400, 0.001m, TransactionStatus.Pending, accountId,
+                400, fee, TransactionStatus.Pending, accountId,
                 new BitcoinAddress("bitcoin123"));
             withdraws.Add(withdraw);
             withdraws.Add(withdraw2);
@@ -453,8 +461,8 @@ namespace CoinExchange.Funds.Domain.Model.Tests
 
             Assert.AreEqual(1000, withdrawLimitEvaluationService.DailyLimit);
             Assert.AreEqual(5000, withdrawLimitEvaluationService.MonthlyLimit);
-            Assert.AreEqual(400, withdrawLimitEvaluationService.DailyLimitUsed);
-            Assert.AreEqual(4500, withdrawLimitEvaluationService.MonthlyLimitUsed);
+            Assert.AreEqual(400 + fee, withdrawLimitEvaluationService.DailyLimitUsed);
+            Assert.AreEqual(4500 + fee*2, withdrawLimitEvaluationService.MonthlyLimitUsed);
             Assert.AreEqual(Math.Round(availableBalance, 5), withdrawLimitEvaluationService.MaximumWithdraw);            
             Assert.AreEqual(0, withdrawLimitEvaluationService.WithheldAmount);
 
@@ -465,8 +473,8 @@ namespace CoinExchange.Funds.Domain.Model.Tests
 
             Assert.AreEqual(1000, withdrawLimitEvaluationService.DailyLimit);
             Assert.AreEqual(5000, withdrawLimitEvaluationService.MonthlyLimit);
-            Assert.AreEqual(400, withdrawLimitEvaluationService.DailyLimitUsed);
-            Assert.AreEqual(4500, withdrawLimitEvaluationService.MonthlyLimitUsed);
+            Assert.AreEqual(400 + fee, withdrawLimitEvaluationService.DailyLimitUsed);
+            Assert.AreEqual(4500 + fee*2, withdrawLimitEvaluationService.MonthlyLimitUsed);
             Assert.AreEqual(Math.Round(availableBalance, 5), withdrawLimitEvaluationService.MaximumWithdraw);
             Assert.AreEqual(0, withdrawLimitEvaluationService.WithheldAmount);
         }
@@ -485,13 +493,14 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             decimal currentBalance = 500 - 0.09m;
             // Amount that can be safely withdrawn
             decimal safeAmount = availableBalance;
+            decimal fee = 0.001m;
 
             List<Withdraw> withdraws = new List<Withdraw>();
             Withdraw withdraw = new Withdraw(currency, "withdrawid123", DateTime.Now.AddDays(-29), WithdrawType.Bitcoin,
-                3500, 0.001m, TransactionStatus.Pending, accountId,
+                3500, fee, TransactionStatus.Pending, accountId,
                 new BitcoinAddress("bitcoin123"));
             Withdraw withdraw2 = new Withdraw(currency, "withdrawid123", DateTime.Now.AddMinutes(-29), WithdrawType.Bitcoin,
-                500, 0.001m, TransactionStatus.Pending, accountId,
+                500, fee, TransactionStatus.Pending, accountId,
                 new BitcoinAddress("bitcoin123"));
             withdraws.Add(withdraw);
             withdraws.Add(withdraw2);
@@ -502,8 +511,8 @@ namespace CoinExchange.Funds.Domain.Model.Tests
 
             Assert.AreEqual(1000, withdrawLimitEvaluationService.DailyLimit);
             Assert.AreEqual(5000, withdrawLimitEvaluationService.MonthlyLimit);
-            Assert.AreEqual(500, withdrawLimitEvaluationService.DailyLimitUsed);
-            Assert.AreEqual(4000, withdrawLimitEvaluationService.MonthlyLimitUsed);
+            Assert.AreEqual(500 + fee, withdrawLimitEvaluationService.DailyLimitUsed);
+            Assert.AreEqual(4000 + fee*2, withdrawLimitEvaluationService.MonthlyLimitUsed);
             Assert.AreEqual(Math.Round(availableBalance, 5), withdrawLimitEvaluationService.MaximumWithdraw);
             Assert.AreEqual(0, withdrawLimitEvaluationService.WithheldAmount);
 
@@ -514,8 +523,8 @@ namespace CoinExchange.Funds.Domain.Model.Tests
 
             Assert.AreEqual(1000, withdrawLimitEvaluationService.DailyLimit);
             Assert.AreEqual(5000, withdrawLimitEvaluationService.MonthlyLimit);
-            Assert.AreEqual(500, withdrawLimitEvaluationService.DailyLimitUsed);
-            Assert.AreEqual(4000, withdrawLimitEvaluationService.MonthlyLimitUsed);
+            Assert.AreEqual(500 + fee, withdrawLimitEvaluationService.DailyLimitUsed);
+            Assert.AreEqual(4000 + fee*2, withdrawLimitEvaluationService.MonthlyLimitUsed);
             Assert.AreEqual(Math.Round(availableBalance, 5), withdrawLimitEvaluationService.MaximumWithdraw);
             Assert.AreEqual(0, withdrawLimitEvaluationService.WithheldAmount);
         }
@@ -534,10 +543,11 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             decimal currentBalance = 500 - 0.09m;
             // Amount that can be safely withdrawn
             decimal safeAmount = availableBalance;
+            decimal fee = 0.001m;
 
             List<Withdraw> withdraws = new List<Withdraw>();
             Withdraw withdraw = new Withdraw(currency, "withdrawid123", DateTime.Now.AddMinutes(-29), WithdrawType.Bitcoin,
-                500, 0.001m, TransactionStatus.Pending, accountId,
+                500, fee, TransactionStatus.Pending, accountId,
                 new BitcoinAddress("bitcoin123"));
             withdraws.Add(withdraw);
 
@@ -548,8 +558,8 @@ namespace CoinExchange.Funds.Domain.Model.Tests
 
             Assert.AreEqual(1000, withdrawLimitEvaluationService.DailyLimit);
             Assert.AreEqual(5000, withdrawLimitEvaluationService.MonthlyLimit);
-            Assert.AreEqual(500, withdrawLimitEvaluationService.DailyLimitUsed);
-            Assert.AreEqual(500, withdrawLimitEvaluationService.MonthlyLimitUsed);
+            Assert.AreEqual(500 + fee, withdrawLimitEvaluationService.DailyLimitUsed);
+            Assert.AreEqual(500 + fee, withdrawLimitEvaluationService.MonthlyLimitUsed);
             Assert.AreEqual(Math.Round(availableBalance, 5), withdrawLimitEvaluationService.MaximumWithdraw);
             Assert.AreEqual(0, withdrawLimitEvaluationService.WithheldAmount);
 
@@ -560,8 +570,8 @@ namespace CoinExchange.Funds.Domain.Model.Tests
 
             Assert.AreEqual(1000, withdrawLimitEvaluationService.DailyLimit);
             Assert.AreEqual(5000, withdrawLimitEvaluationService.MonthlyLimit);
-            Assert.AreEqual(500, withdrawLimitEvaluationService.DailyLimitUsed);
-            Assert.AreEqual(500, withdrawLimitEvaluationService.MonthlyLimitUsed);
+            Assert.AreEqual(500 + fee, withdrawLimitEvaluationService.DailyLimitUsed);
+            Assert.AreEqual(500 + fee, withdrawLimitEvaluationService.MonthlyLimitUsed);
             Assert.AreEqual(Math.Round(availableBalance, 5), withdrawLimitEvaluationService.MaximumWithdraw);
             Assert.AreEqual(0, withdrawLimitEvaluationService.WithheldAmount);
         }
@@ -580,13 +590,14 @@ namespace CoinExchange.Funds.Domain.Model.Tests
             decimal currentBalance = 500 - 0.09m;
             // Amount that can be safely withdrawn
             decimal safeAmount = availableBalance;
+            decimal fee = 0.001m;
 
             List<Withdraw> withdraws = new List<Withdraw>();
             Withdraw withdraw = new Withdraw(currency, "withdrawid123", DateTime.Now.AddDays(-29), WithdrawType.Bitcoin,
-                4000, 0.001m, TransactionStatus.Pending, accountId,
+                4000, fee, TransactionStatus.Pending, accountId,
                 new BitcoinAddress("bitcoin123"));
             Withdraw withdraw2 = new Withdraw(currency, "withdrawid123", DateTime.Now.AddMinutes(-29), WithdrawType.Bitcoin,
-                500, 0.001m, TransactionStatus.Pending, accountId,
+                500, fee, TransactionStatus.Pending, accountId,
                 new BitcoinAddress("bitcoin123"));
             withdraws.Add(withdraw);
             withdraws.Add(withdraw2);
@@ -598,8 +609,8 @@ namespace CoinExchange.Funds.Domain.Model.Tests
 
             Assert.AreEqual(1000, withdrawLimitEvaluationService.DailyLimit);
             Assert.AreEqual(5000, withdrawLimitEvaluationService.MonthlyLimit);
-            Assert.AreEqual(500, withdrawLimitEvaluationService.DailyLimitUsed);
-            Assert.AreEqual(4500, withdrawLimitEvaluationService.MonthlyLimitUsed);
+            Assert.AreEqual(500 + fee, withdrawLimitEvaluationService.DailyLimitUsed);
+            Assert.AreEqual(4500 + fee*2, withdrawLimitEvaluationService.MonthlyLimitUsed);
             Assert.AreEqual(Math.Round(availableBalance, 5), withdrawLimitEvaluationService.MaximumWithdraw);
             Assert.AreEqual(0, withdrawLimitEvaluationService.WithheldAmount);
 
@@ -610,8 +621,8 @@ namespace CoinExchange.Funds.Domain.Model.Tests
 
             Assert.AreEqual(1000, withdrawLimitEvaluationService.DailyLimit);
             Assert.AreEqual(5000, withdrawLimitEvaluationService.MonthlyLimit);
-            Assert.AreEqual(500, withdrawLimitEvaluationService.DailyLimitUsed);
-            Assert.AreEqual(4500, withdrawLimitEvaluationService.MonthlyLimitUsed);
+            Assert.AreEqual(500 + fee, withdrawLimitEvaluationService.DailyLimitUsed);
+            Assert.AreEqual(4500 + fee*2, withdrawLimitEvaluationService.MonthlyLimitUsed);
             Assert.AreEqual(Math.Round(availableBalance, 5), withdrawLimitEvaluationService.MaximumWithdraw);
             Assert.AreEqual(0, withdrawLimitEvaluationService.WithheldAmount);
         }
