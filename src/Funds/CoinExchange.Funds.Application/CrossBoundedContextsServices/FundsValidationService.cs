@@ -156,8 +156,8 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
 
                             // Evaluate if the current withdrawal is within the limits of the maximum withdrawal allowed and 
                             // the balance available
-                            if (_limitsConfigurationService.EvaluateWithdrawLimits(currency.Name, isTierVerified.Item2, amount,
-                               withdrawals, balance.AvailableBalance, balance.CurrentBalance))
+                            if (_limitsConfigurationService.EvaluateWithdrawLimits(currency.Name, isTierVerified.Item2, 
+                                amount + withdrawFees.Fee, withdrawals, balance.AvailableBalance, balance.CurrentBalance))
                             {
                                 Withdraw withdraw = new Withdraw(currency, _withdrawIdGeneratorService.GenerateNewId(),
                                                                  DateTime.Now, GetWithdrawType(currency.Name), amount,
