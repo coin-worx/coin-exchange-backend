@@ -19,6 +19,10 @@ namespace CoinExchange.Funds.Infrastructure.Services.CoinClientServices
     /// </summary>
     public class BitcoinClientService : ICoinClientService
     {
+        // Get the Current Logger
+        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger
+        (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private ICoinService _bitcoinService = null;
         private Timer _newTransactrionsTimer = null;
         private string _blockHash = null;
@@ -57,7 +61,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.CoinClientServices
             // Initializing Timer for new transactions
             _newTransactrionsTimer = new Timer(_newTransactionsInterval);
             _newTransactrionsTimer.Elapsed += NewTransactionsElapsed;
-            _newTransactrionsTimer.Enabled = true;
+            _newTransactrionsTimer.Start();
         }
 
         /// <summary>
@@ -238,6 +242,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.CoinClientServices
         /// <returns></returns>
         public string CommitWithdraw(string bitcoinAddress, decimal amount)
         {
+            Log.Debug(string.Format("Sending to Address: BitcoinAddress = {0}, Amount = {1}", bitcoinAddress, amount));
             return _bitcoinService.SendToAddress(bitcoinAddress, amount);
         }
 

@@ -55,7 +55,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.CoinClientServices
             // Initializing Timer for new transactions
             _newTransactrionsTimer = new Timer(_newTransactionsInterval);
             _newTransactrionsTimer.Elapsed += NewTransactionsElapsed;
-            _newTransactrionsTimer.Enabled = true;
+            _newTransactrionsTimer.Start();
         }
 
         /// <summary>

@@ -16,6 +16,10 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
     /// </summary>
     public class ClientInteractionService : IClientInteractionService
     {
+        // Get the Current Logger
+        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger
+        (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private IFundsPersistenceRepository _fundsPersistenceRepository;
         private IWithdrawRepository _withdrawRepository;        
         private ICoinClientService _bitcoinClientService;
@@ -23,8 +27,8 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
 
         private Dictionary<Timer, Withdraw> _withdrawTimersDictionary = new Dictionary<Timer, Withdraw>();
 
-        private double _withdrawSubmissioInterval =
-            Convert.ToDouble(ConfigurationManager.AppSettings.Get("WithdrawSubmitInterval"));
+        private double _withdrawSubmissioInterval = 0;
+            
 
         public event Action<Withdraw> WithdrawExecuted;
         public event Action<string, List<Tuple<string, string, decimal, string>>> DepositArrived;
@@ -40,6 +44,9 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
             _withdrawRepository = withdrawRepository;
             _bitcoinClientService = bitcoinClientService;
             _litecoinClientService = litecoinClientService;
+
+            _withdrawSubmissioInterval = Convert.ToDouble(ConfigurationManager.AppSettings.Get("WithdrawSubmitInterval"));
+            Log.Debug(string.Format("Withdraw submission interval = {0}", _withdrawSubmissioInterval));
 
             HookEventHandlers();
         }
@@ -83,13 +90,15 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         {
             if (withdraw != null)
             {
+                Log.Debug(string.Format("New Withdraw  request received, starting withdraw timer: Account ID = {0}, Currency = {1}", withdraw.AccountId.Value, withdraw.Currency.Name));
                 Timer timer = new Timer(_withdrawSubmissioInterval);
                 timer.Elapsed += OnTimerElapsed;
-                timer.Enabled = true;
+                //timer.Enabled = true;
+                timer.Start();
                 _withdrawTimersDictionary.Add(timer, withdraw);
                 return true;
             }
-            throw new NullReferenceException(string.Format("Withdraw received is null"));
+            throw new NullReferenceException(string.Format("Withdraw received to ClientInteractionService is null"));
         }
 
         /// <summary>
@@ -99,6 +108,7 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         /// <returns></returns>
         public bool CancelWithdraw(string withdrawId)
         {
+            Log.Debug(string.Format("Cancel Withdraw request received: Withdraw ID = {0}", withdrawId));
             Timer timerKey = null;
             foreach (KeyValuePair<Timer, Withdraw> keyValuePair in _withdrawTimersDictionary)
             {
@@ -109,6 +119,7 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
             }
             if (timerKey != null)
             {
+                Log.Debug(string.Format("Withdraw cancelled: Withdraw ID = {0}", withdrawId));
                 timerKey.Stop();
                 timerKey.Dispose();
                 _withdrawTimersDictionary.Remove(timerKey);
@@ -141,30 +152,41 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
         /// <param name="elapsedEventArgs"></param>
         private void OnTimerElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
         {
+            Log.Debug(string.Format("Withdraw Timer Elapsed."));
             Timer timer = sender as Timer;
             if (timer != null)
             {
                 timer.Stop();
                 timer.Dispose();
+                Log.Debug(string.Format("Withdraw Timer Stopped"));
                 Withdraw withdraw = null;
                 _withdrawTimersDictionary.TryGetValue(timer, out withdraw);
                 if (withdraw != null)
                 {
+                    Log.Debug(string.Format("Submitting Withdraw to network: Account ID = {0}, Currency = {1}", withdraw.AccountId.Value, withdraw.Currency.Name));
                     // Selecct the coin client service to which to send the withdraw
                     ICoinClientService coinClientService = SelectCoinService(withdraw.Currency.Name);
                     string transactionId = coinClientService.CommitWithdraw(
                                                              withdraw.BitcoinAddress.Value, withdraw.Amount);
-                    // Set transaction Id recevied from the network
-                    withdraw.SetTransactionId(transactionId);
-                    /*
-                    // Set status as confirmed
-                    withdraw.StatusConfirmed();
-                    // Save the withdraw
-                    _fundsPersistenceRepository.SaveOrUpdate(withdraw);*/
-                    _withdrawTimersDictionary.Remove(timer);
-                    if (WithdrawExecuted != null)
+                    if (string.IsNullOrEmpty(transactionId))
                     {
-                        WithdrawExecuted(withdraw);
+                        Log.Error(string.Format("Withdraw could not be submitted to network: Account ID = {0}, Currency = {1}", withdraw.AccountId.Value, withdraw.Currency.Name));
+                    }
+                    else
+                    {
+                        Log.Debug(string.Format("Withdraw submitted succcessfully to network: Account ID = {0}, Currency = {1}", withdraw.AccountId.Value, withdraw.Currency.Name));
+                        // Set transaction Id recevied from the network
+                        withdraw.SetTransactionId(transactionId);
+                        /*
+                        // Set status as confirmed
+                        withdraw.StatusConfirmed();
+                        // Save the withdraw
+                        _fundsPersistenceRepository.SaveOrUpdate(withdraw);*/
+                        _withdrawTimersDictionary.Remove(timer);
+                        if (WithdrawExecuted != null)
+                        {
+                            WithdrawExecuted(withdraw);
+                        }
                     }
                 }
             }

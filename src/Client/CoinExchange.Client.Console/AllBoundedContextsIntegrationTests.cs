@@ -21,12 +21,12 @@ namespace CoinExchange.Client.Console
         private IApplicationContext _applicationContext;
         private DatabaseUtility _databaseUtility;
         
-        private string _baseUrlCloud = "http://rockblanc.cloudapp.net/test/v1";
+        private string _baseUrlCloud = "http://crypgo.cloudapp.net/test/v1";
         private string _baseUrlLocalhost = "http://localhost:51780/v1";
         private FundsClient _fundsClient;
-        private string _username = "rodholt2";
-        private string _password = "mclaren";
-        private string _email = "rodholt2@mclaren.com";
+        private string _username = "jonsnow";
+        private string _password = "pa$$word";
+        private string _email = "jonsnow@winter.com";
         private string _baseCurrency = "BTC";
         private string _quoteCurrency = "LTC";
 

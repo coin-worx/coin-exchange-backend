@@ -20,6 +20,10 @@ namespace CoinExchange.Funds.Application.WithdrawServices
     /// </summary>
     public class WithdrawApplicationService : IWithdrawApplicationService
     {
+        // Get the Current Logger
+        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger
+        (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private IFundsPersistenceRepository _fundsPersistenceRepository;
         private IWithdrawAddressRepository _withdrawAddressRepository;
         private IFundsValidationService _fundsValidationService;
@@ -56,6 +60,7 @@ namespace CoinExchange.Funds.Application.WithdrawServices
         /// <param name="withdraw"></param>
         private void WithdrawExecuted(Withdraw withdraw)
         {
+            Log.Debug(string.Format("Withdraw executed event received: Account ID = {0}, Currency = {1}", withdraw.AccountId.Value, withdraw.Currency.Name));
             _fundsValidationService.WithdrawalExecuted(withdraw);
         }
 
