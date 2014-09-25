@@ -29,6 +29,17 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="T:System.Object"/> class.
+        /// </summary>
+        public DepositLimit(string tierLevel, decimal monthlyLimit, decimal dailyLimit, string limitsCurrency)
+        {
+            TierLevel = tierLevel;
+            MonthlyLimit = monthlyLimit;
+            DailyLimit = dailyLimit;
+            LimitsCurrency = limitsCurrency;
+        }
+
+        /// <summary>
         /// Primary key for Database
         /// </summary>
         public int Id { get; private set; }
@@ -47,5 +58,10 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
         /// Daily Limit
         /// </summary>
         public decimal DailyLimit { get; private set; }
+
+        /// <summary>
+        /// Specifies in what currency limits should be represented
+        /// </summary>
+        public string LimitsCurrency { get; private set; }
     }
 }

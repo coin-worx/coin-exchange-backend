@@ -21,32 +21,13 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
         public Withdraw(Currency currency, string withdrawId, DateTime date, WithdrawType type, decimal amount, decimal fee, 
-            TransactionStatus status, AccountId accountId, TransactionId transactionId, BitcoinAddress bitcoinAddress)
+            TransactionStatus status, AccountId accountId, BitcoinAddress bitcoinAddress)
         {
             Currency = currency;
             WithdrawId = withdrawId;
             DateTime = date;
             Type = type;
             Amount = amount;
-            Fee = fee;
-            Status = status;
-            AccountId = accountId;
-            TransactionId = transactionId;
-            BitcoinAddress = bitcoinAddress;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="T:System.Object"/> class.
-        /// </summary>
-        public Withdraw(Currency currency, string withdrawId, DateTime dateTime, WithdrawType type, decimal amount, 
-            decimal amountInUsd, decimal fee, TransactionStatus status, AccountId accountId, BitcoinAddress bitcoinAddress)
-        {
-            Currency = currency;
-            WithdrawId = withdrawId;
-            DateTime = dateTime;
-            Type = type;
-            Amount = amount;
-            AmountInUsd = amountInUsd;
             Fee = fee;
             Status = status;
             AccountId = accountId;

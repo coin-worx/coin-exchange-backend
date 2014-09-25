@@ -77,8 +77,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClientInteractionServiceIntegrationTests.cs" />
     <Compile Include="DepositApplicationServiceIntegrationTests.cs" />
     <Compile Include="EndToEndScenarioTests.cs" />
+    <Compile Include="FeeCalculationServiceIntegrationTests.cs" />
     <Compile Include="FundsApplicationServicesInitializationTests.cs" />
     <Compile Include="FundsValidationServiceIntegrationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

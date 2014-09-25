@@ -25,7 +25,7 @@ namespace CoinExchange.Funds.Application.DepositServices
         (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private IFundsValidationService _fundsValidationService;
-        private ICoinClientService _coinClientService;
+        private IClientInteractionService _clientInteractionService;
         private IFundsPersistenceRepository _fundsPersistenceRepository;
         private IDepositAddressRepository _depositAddressRepository;
         // NOTE: The balanceRepository is here for initial testing of Funds, it must be removed once the Exchange is
@@ -37,20 +37,20 @@ namespace CoinExchange.Funds.Application.DepositServices
         /// <summary>
         /// Default Constructor
         /// </summary>
-        private DepositApplicationService(IFundsValidationService fundsValidationService, ICoinClientService coinClientService,
+        private DepositApplicationService(IFundsValidationService fundsValidationService, IClientInteractionService clientInteractionService,
             IFundsPersistenceRepository fundsPersistenceRepository, IDepositAddressRepository depositAddressRepository,
             IBalanceRepository balanceRepository, IDepositRepository depositRepository, IDepositLimitRepository depositLimitRepository)
         {
             _fundsValidationService = fundsValidationService;
-            _coinClientService = coinClientService;
+            _clientInteractionService = clientInteractionService;
             _fundsPersistenceRepository = fundsPersistenceRepository;
             _depositAddressRepository = depositAddressRepository;
             _balanceRepository = balanceRepository;
             _depositRepository = depositRepository;
             _depositLimitRepository = depositLimitRepository;
 
-            _coinClientService.DepositArrived += OnDepositArrival;
-            _coinClientService.DepositConfirmed += OnDepositConfirmed;
+            _clientInteractionService.DepositArrived += OnDepositArrival;
+            _clientInteractionService.DepositConfirmed += OnDepositConfirmed;
         }
 
         /// <summary>
@@ -95,6 +95,7 @@ namespace CoinExchange.Funds.Application.DepositServices
             List<DepositAddress> allDepositAddresses = _depositAddressRepository.GetAllDepositAddresses();
             for (int i = 0; i < newTransactions.Count; i++)
             {
+                // If there is already a deposit by the same transacitonId, raise an exception
                 Deposit deposit = _depositRepository.GetDepositByTransactionId(new TransactionId(newTransactions[i].Item2));
                 if (deposit != null)
                 {
@@ -104,45 +105,45 @@ namespace CoinExchange.Funds.Application.DepositServices
                 {
                     foreach (var depositAddress in allDepositAddresses)
                     {
-                        // Confirm if the user has the permissions to perform the current transaction
-                        if (_fundsValidationService.IsTierVerified(depositAddress.AccountId.Value, true))
+                        // Confirm if the user has the permissions to perform the current transaction, and deposit is within 
+                        // the threshold limits
+                        if (_fundsValidationService.IsDepositLegit(depositAddress.AccountId, depositAddress.Currency, 
+                            newTransactions[i].Item3))
                         {
                             // If any of the new transactions' addresses matches any deposit addresses
                             if (depositAddress.BitcoinAddress.Value == newTransactions[i].Item1)
                             {
-                                /*// Make sure this address hasn't been used earlier
-                                if (depositAddress.Status != AddressStatus.Used &&
-                                    depositAddress.Status != AddressStatus.Expired)
-                                {*/
-                                    // Create a new deposit for this transaction
-                                    ValidateDeposit(currency, newTransactions[i].Item1, newTransactions[i].Item3,
-                                                    depositAddress.AccountId.Value, newTransactions[i].Item2,
-                                                    TransactionStatus.Pending);
+                                // Create a new deposit for this transaction
+                                ValidateDeposit(currency, newTransactions[i].Item1, newTransactions[i].Item3,
+                                                depositAddress.AccountId.Value, newTransactions[i].Item2,
+                                                TransactionStatus.Pending);
 
-                                    // Change the status of the deposit address to Used and save
-                                    depositAddress.StatusUsed();
-                                    _fundsPersistenceRepository.SaveOrUpdate(depositAddress);
-                                /*}
-                                else
-                                {
-                                    // Create a new deposit for this transaction but mark it suspended
-                                    ValidateDeposit(currency, newTransactions[i].Item1, newTransactions[i].Item3,
-                                                    depositAddress.AccountId.Value, newTransactions[i].Item2,
-                                                    TransactionStatus.Suspended);
-                                }*/
+                                // Change the status of the deposit address to Used and save
+                                depositAddress.StatusUsed();
+                                _fundsPersistenceRepository.SaveOrUpdate(depositAddress);
                             }
                         }
+                        // If deposit is not within tier levels and threshold limits, freeze the balance. No update to the
+                        // balance will ye be made
                         else
                         {
                             Log.Error(string.Format("FATAL ERROR: Tier Level not enough for submitting deposits: Account ID: {0}",
                                 depositAddress.AccountId.Value));
+                            // Create a deposit that is marked freezed
+                            ValidateDeposit(currency, newTransactions[i].Item1, newTransactions[i].Item3,
+                                                depositAddress.AccountId.Value, newTransactions[i].Item2,
+                                                TransactionStatus.Frozen);
+                            
+                            // Mark the balance frozen
                             Balance balance = _balanceRepository.GetBalanceByCurrencyAndAccountId(new Currency(currency, true),
                                 depositAddress.AccountId);
+                            // Update balance if already exists
                             if (balance != null)
                             {
                                 balance.FreezeAccount();
                                 _fundsPersistenceRepository.SaveOrUpdate(balance);
                             }
+                            // Else creaate a new one and freeze
                             else
                             {
                                 balance = new Balance(new Currency(currency, true), depositAddress.AccountId);
@@ -209,7 +210,7 @@ namespace CoinExchange.Funds.Application.DepositServices
                 }
             }
             //Check if the required Tier Level for this operation is verified i.e., Tier 1
-            if (_fundsValidationService.IsTierVerified(generateNewAddressCommand.AccountId, true))
+            if (_fundsValidationService.IsTierVerified(generateNewAddressCommand.AccountId, true).Item1)
             {
                 List<DepositAddress> depositAddresses = _depositAddressRepository.
                     GetDepositAddressByAccountIdAndCurrency(
@@ -231,13 +232,19 @@ namespace CoinExchange.Funds.Application.DepositServices
                         throw new InvalidOperationException("Too many New addresses");
                     }
                 }
-                string address = _coinClientService.CreateNewAddress(generateNewAddressCommand.Currency);
-                DepositAddress depositAddress = new DepositAddress(new Currency(generateNewAddressCommand.Currency),
-                                                                   new BitcoinAddress(address), AddressStatus.New,
-                                                                   DateTime.Now,
-                                                                   new AccountId(generateNewAddressCommand.AccountId));
-                _fundsPersistenceRepository.SaveOrUpdate(depositAddress);
-                return new DepositAddressRepresentation(address, AddressStatus.New.ToString());
+                // Generate new address using the client
+                string address = _clientInteractionService.GenerateNewAddress(generateNewAddressCommand.Currency);
+                if (!string.IsNullOrEmpty(address))
+                {
+                    // Save the address in database
+                    DepositAddress depositAddress = new DepositAddress(new Currency(generateNewAddressCommand.Currency),
+                                                                       new BitcoinAddress(address), AddressStatus.New,
+                                                                       DateTime.Now,
+                                                                       new AccountId(generateNewAddressCommand.AccountId));
+                    _fundsPersistenceRepository.SaveOrUpdate(depositAddress);
+                    return new DepositAddressRepresentation(address, AddressStatus.New.ToString());
+                }
+                throw new NullReferenceException(string.Format("Null address returned from client for currency: {0}", generateNewAddressCommand.Currency));
             }
             throw new InvalidOperationException(string.Format("Tier 1 is not verified: Account ID = {0}", 
                 generateNewAddressCommand.AccountId));
@@ -302,7 +309,7 @@ namespace CoinExchange.Funds.Application.DepositServices
         /// <returns></returns>
         public bool MakeDeposit(MakeDepositCommand makeDepositCommand)
         {
-            if (_fundsValidationService.IsTierVerified(makeDepositCommand.AccountId, makeDepositCommand.IsCryptoCurrency))
+            if (_fundsValidationService.IsTierVerified(makeDepositCommand.AccountId, makeDepositCommand.IsCryptoCurrency).Item1)
             {
                 Balance balance =
                     _balanceRepository.GetBalanceByCurrencyAndAccountId(new Currency(makeDepositCommand.Currency),
@@ -331,7 +338,7 @@ namespace CoinExchange.Funds.Application.DepositServices
                 }
                 return true;
             }
-            return false;
+            throw new InvalidOperationException("Require Tier Level is not verified.");
         }
 
         /// <summary>

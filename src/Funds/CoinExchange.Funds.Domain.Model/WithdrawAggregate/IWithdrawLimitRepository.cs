@@ -19,12 +19,24 @@ namespace CoinExchange.Funds.Domain.Model.WithdrawAggregate
         WithdrawLimit GetWithdrawLimitByTierLevel(string tierLevel);
 
         /// <summary>
+        /// Gets the Withdraw Limit by Tier Level and Currency Type
+        /// </summary>
+        /// <param name="tierLevel"></param>
+        /// <param name="currencyType"></param>
+        /// <returns></returns>
+        WithdrawLimit GetLimitByTierLevelAndCurrency(string tierLevel, string currencyType);
+
+        /// <summary>
         /// Gets the withdraw limit by specifying the database primary key
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         WithdrawLimit GetWithdrawLimitById(int id);
 
+        /// <summary>
+        /// Get all the withdrawals
+        /// </summary>
+        /// <returns></returns>
         IList<WithdrawLimit> GetAllWithdrawLimits();
     }
 }

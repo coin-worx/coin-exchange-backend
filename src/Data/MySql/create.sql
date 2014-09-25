@@ -28,7 +28,7 @@ CREATE TABLE `balance` (
   `PendingBalance` double DEFAULT NULL,
   `IsFrozen` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`BalanceId`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 
 /*Table structure for table `currencypair` */
 
@@ -53,7 +53,6 @@ CREATE TABLE `deposit` (
   `DepositId` varchar(100) DEFAULT NULL,
   `Date` datetime(6) DEFAULT NULL,
   `Amount` double DEFAULT NULL,
-  `AmountInUsd` double DEFAULT NULL,
   `Fee` double DEFAULT NULL,
   `Confirmations` int(11) DEFAULT NULL,
   `Status` varchar(15) DEFAULT NULL,
@@ -88,8 +87,9 @@ CREATE TABLE `depositlimit` (
   `TierLevel` varchar(15) DEFAULT NULL,
   `DailyLimit` double DEFAULT NULL,
   `MonthlyLimit` double DEFAULT NULL,
+  `LimitsCurrency` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 
 /*Table structure for table `fee` */
 
@@ -414,8 +414,9 @@ CREATE TABLE `withdrawlimit` (
   `TierLevel` varchar(15) DEFAULT NULL,
   `DailyLimit` double DEFAULT NULL,
   `MonthlyLimit` double DEFAULT NULL,
+  `LimitsCurrency` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

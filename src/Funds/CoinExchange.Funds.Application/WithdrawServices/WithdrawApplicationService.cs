@@ -24,7 +24,7 @@ namespace CoinExchange.Funds.Application.WithdrawServices
         private IWithdrawAddressRepository _withdrawAddressRepository;
         private IFundsValidationService _fundsValidationService;
         private IWithdrawRepository _withdrawRepository;
-        private IWithdrawSubmissionService _withdrawSubmissionService;
+        private IClientInteractionService _withdrawSubmissionService;
         private IDepositAddressRepository _depositAddressRepository;
         private IWithdrawLimitRepository _withdrawLimitRepository;
         private IBalanceRepository _balanceRepository;
@@ -35,14 +35,14 @@ namespace CoinExchange.Funds.Application.WithdrawServices
         public WithdrawApplicationService(IFundsPersistenceRepository fundsPersistenceRepository, 
             IWithdrawAddressRepository withdrawAddressRepository, 
             IFundsValidationService fundsValidationService, IWithdrawRepository withdrawRepository, 
-            IWithdrawSubmissionService withdrawSubmissionService, IDepositAddressRepository depositAddressRepository, 
+            IClientInteractionService clientInteractionService, IDepositAddressRepository depositAddressRepository, 
             IWithdrawLimitRepository withdrawLimitRepository, IBalanceRepository balanceRepository)
         {
             _fundsPersistenceRepository = fundsPersistenceRepository;
             _withdrawAddressRepository = withdrawAddressRepository;
             _fundsValidationService = fundsValidationService;
             _withdrawRepository = withdrawRepository;
-            _withdrawSubmissionService = withdrawSubmissionService;
+            _withdrawSubmissionService = clientInteractionService;
             _depositAddressRepository = depositAddressRepository;
             _withdrawLimitRepository = withdrawLimitRepository;
             _balanceRepository = balanceRepository;
@@ -60,6 +60,29 @@ namespace CoinExchange.Funds.Application.WithdrawServices
         }
 
         /// <summary>
+        /// Gets the list of recent withdrawals for an Account ID
+        /// </summary>
+        /// <param name="accountId"></param>
+        /// <returns></returns>
+        public List<WithdrawRepresentation> GetRecentWithdrawals(int accountId)
+        {
+            List<WithdrawRepresentation> withdrawRepresentations = new List<WithdrawRepresentation>();
+            List<Withdraw> withdrawals = _withdrawRepository.GetWithdrawByAccountId(new AccountId(accountId));
+            if (withdrawals != null && withdrawals.Any())
+            {
+                foreach (var withdrawal in withdrawals)
+                {
+                    withdrawRepresentations.Add(new WithdrawRepresentation(withdrawal.Currency.Name, withdrawal.WithdrawId,
+                        withdrawal.DateTime, withdrawal.Type.ToString(), withdrawal.Amount, withdrawal.Fee,
+                        withdrawal.Status.ToString(), (withdrawal.BitcoinAddress == null) ? null : withdrawal.BitcoinAddress.Value,
+                        (withdrawal.TransactionId == null) ? null : withdrawal.TransactionId.Value));
+                }
+            }
+
+            return withdrawRepresentations;
+        }
+
+        /// <summary>
         /// Get recent withdrawals for hte given currency and account id
         /// </summary>
         /// <param name="accountId"></param>
@@ -67,11 +90,10 @@ namespace CoinExchange.Funds.Application.WithdrawServices
         /// <returns></returns>
         public List<WithdrawRepresentation> GetRecentWithdrawals(int accountId, string currency)
         {
-            List<WithdrawRepresentation> withdrawRepresentations = null;
+            List<WithdrawRepresentation> withdrawRepresentations = new List<WithdrawRepresentation>();
             List<Withdraw> withdrawals = _withdrawRepository.GetWithdrawByCurrencyAndAccountId(currency, new AccountId(accountId));
             if (withdrawals != null && withdrawals.Any())
             {
-                withdrawRepresentations = new List<WithdrawRepresentation>();
                 foreach (var withdrawal in withdrawals)
                 {
                     withdrawRepresentations.Add(new WithdrawRepresentation(withdrawal.Currency.Name, withdrawal.WithdrawId,
@@ -95,10 +117,12 @@ namespace CoinExchange.Funds.Application.WithdrawServices
             {
                 return new WithdrawAddressResponse(false, "Invalid address");
             }
-            List<WithdrawAddress> withdrawAddresses = _withdrawAddressRepository.GetWithdrawAddressByAccountId(new AccountId(addAddressCommand.AccountId));
+            List<WithdrawAddress> withdrawAddresses = _withdrawAddressRepository.GetWithdrawAddressByAccountIdAndCurrency(
+                new AccountId(addAddressCommand.AccountId), new Currency(addAddressCommand.Currency));
             foreach (var address in withdrawAddresses)
             {
-                if (address.BitcoinAddress.Value == addAddressCommand.BitcoinAddress)
+                if (address.BitcoinAddress.Value == addAddressCommand.BitcoinAddress || 
+                    address.Description == addAddressCommand.Description)
                 {
                     return new WithdrawAddressResponse(false, "Duplicate Entry");
                 }
@@ -123,13 +147,15 @@ namespace CoinExchange.Funds.Application.WithdrawServices
         /// Gets the list of withdrawaal addresses
         /// </summary>
         /// <param name="accountId"></param>
+        /// <param name="currency"> </param>
         /// <returns></returns>
-        public List<WithdrawAddressRepresentation> GetWithdrawalAddresses(int accountId)
+        public List<WithdrawAddressRepresentation> GetWithdrawalAddresses(int accountId, string currency)
         {
             // Get the list of withdraw addresses, extract the information into the withdraw address representation list and 
             // return 
             List<WithdrawAddressRepresentation> withdrawAddressRepresentations = new List<WithdrawAddressRepresentation>();
-            List<WithdrawAddress> withdrawAddresses = _withdrawAddressRepository.GetWithdrawAddressByAccountId(new AccountId(accountId));
+            List<WithdrawAddress> withdrawAddresses = _withdrawAddressRepository.GetWithdrawAddressByAccountIdAndCurrency(
+                new AccountId(accountId), new Currency(currency));
             foreach (var withdrawAddress in withdrawAddresses)
             {
                 withdrawAddressRepresentations.Add(new WithdrawAddressRepresentation(withdrawAddress.BitcoinAddress.Value,
@@ -145,34 +171,32 @@ namespace CoinExchange.Funds.Application.WithdrawServices
         /// <returns></returns>
         public CommitWithdrawResponse CommitWithdrawal(CommitWithdrawCommand commitWithdrawCommand)
         {
-            Balance balance = _balanceRepository.GetBalanceByCurrencyAndAccountId(new Currency(commitWithdrawCommand.Currency),
-                new AccountId(commitWithdrawCommand.AccountId));
+            Balance balance =
+                _balanceRepository.GetBalanceByCurrencyAndAccountId(new Currency(commitWithdrawCommand.Currency),
+                                                                    new AccountId(commitWithdrawCommand.AccountId));
             if (balance != null)
             {
                 if (balance.IsFrozen)
                 {
-                    throw new InvalidOperationException(string.Format("Account balance Frozen for Account ID = {0}, Currency = {1}",
-                        commitWithdrawCommand.Currency, commitWithdrawCommand.AccountId));
+                    throw new InvalidOperationException(
+                        string.Format("Account balance Frozen for Account ID = {0}, Currency = {1}",
+                                      commitWithdrawCommand.AccountId, commitWithdrawCommand.Currency));
                 }
             }
-            if (_fundsValidationService.IsTierVerified(commitWithdrawCommand.AccountId, commitWithdrawCommand.IsCryptoCurrency))
-            {
-                Withdraw withdraw = _fundsValidationService.ValidateFundsForWithdrawal(
-                    new AccountId(commitWithdrawCommand.AccountId), new Currency(commitWithdrawCommand.Currency,
-                                                                                 commitWithdrawCommand.IsCryptoCurrency),
-                    commitWithdrawCommand.Amount, null /*Null until confirmation of what to use*/,
-                    new BitcoinAddress(commitWithdrawCommand.BitcoinAddress));
 
-                if (withdraw != null)
-                {
-                    bool commitWithdrawResponse = _withdrawSubmissionService.CommitWithdraw(withdraw.WithdrawId);
-                    return new CommitWithdrawResponse(commitWithdrawResponse, withdraw.WithdrawId, null);
-                }
-                throw new InvalidOperationException(string.Format("Could not commit withdraw: AccountId = {0}",
-                                                                  commitWithdrawCommand.AccountId));
+            Withdraw withdraw = _fundsValidationService.ValidateFundsForWithdrawal(
+                new AccountId(commitWithdrawCommand.AccountId), new Currency(commitWithdrawCommand.Currency,
+                                                                             commitWithdrawCommand.IsCryptoCurrency),
+                commitWithdrawCommand.Amount, null /*Null until confirmation of what to use*/,
+                new BitcoinAddress(commitWithdrawCommand.BitcoinAddress));
+
+            if (withdraw != null)
+            {
+                bool commitWithdrawResponse = _withdrawSubmissionService.CommitWithdraw(withdraw);
+                return new CommitWithdrawResponse(commitWithdrawResponse, withdraw.WithdrawId, null);
             }
-            throw new InvalidOperationException(string.Format("Withdraw Failed after Funds Validation: Account ID = {0}",
-                                                commitWithdrawCommand.AccountId));
+            throw new InvalidOperationException(string.Format("Could not commit withdraw: AccountId = {0}",
+                                                              commitWithdrawCommand.AccountId));
         }
 
         /// <summary>
@@ -225,7 +249,30 @@ namespace CoinExchange.Funds.Application.WithdrawServices
         /// <returns></returns>
         public CancelWithdrawResponse CancelWithdraw(CancelWithdrawCommand cancelWithdrawCommand)
         {
-            return new CancelWithdrawResponse(_withdrawSubmissionService.CancelWithdraw(cancelWithdrawCommand.WithdrawId));
+            if (_withdrawSubmissionService.CancelWithdraw(cancelWithdrawCommand.WithdrawId))
+            {
+                Withdraw withdraw = _withdrawRepository.GetWithdrawByWithdrawId(cancelWithdrawCommand.WithdrawId);
+                if (withdraw != null)
+                {
+                    withdraw.StatusCancelled();
+                    _fundsPersistenceRepository.SaveOrUpdate(withdraw);
+                    Balance balance = _balanceRepository.GetBalanceByCurrencyAndAccountId(withdraw.Currency, withdraw.AccountId);
+                    if (balance != null)
+                    {
+                        if(balance.CancelPendingTransaction(withdraw.WithdrawId, PendingTransactionType.Withdraw,
+                                                         withdraw.Amount + withdraw.Fee))
+                        {
+                            _fundsPersistenceRepository.SaveOrUpdate(balance);
+                            return new CancelWithdrawResponse(true);
+                        }
+                    }
+                    throw new NullReferenceException(string.Format("No balance found for Currency = {0} | Account ID = {1}",
+                        withdraw.Currency.Name, withdraw.AccountId.Value));
+                }
+                throw new NullReferenceException(string.Format("No withdraw found in the repository for Withdraw ID: {0}",
+                cancelWithdrawCommand.WithdrawId)); 
+            }
+            throw new ApplicationException(string.Format("Could not cancel withdraw with Withdraw ID: {0}", cancelWithdrawCommand.WithdrawId));
         }
 
         /// <summary>

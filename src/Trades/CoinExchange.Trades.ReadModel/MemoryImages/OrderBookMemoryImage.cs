@@ -41,7 +41,10 @@ namespace CoinExchange.Trades.ReadModel.MemoryImages
         /// </summary>
         private void InitializeCurrencyPairs()
         {
-            _currencyPairs.Add(CurrencyConstants.BitCoinUsd);
+            _currencyPairs.Add(CurrencyConstants.BtcLtc);
+            _currencyPairs.Add(CurrencyConstants.BtcLtcSeparated);
+            _currencyPairs.Add(CurrencyConstants.XbtLtc);
+            _currencyPairs.Add(CurrencyConstants.XbtLtcSeparated);
         }
 
         /// <summary>

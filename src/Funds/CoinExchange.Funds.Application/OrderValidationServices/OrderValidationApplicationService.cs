@@ -65,5 +65,23 @@ namespace CoinExchange.Funds.Application.OrderValidationServices
             return _fundsValidationService.TradeExecuted(baseCurrency, quoteCurrency, tradeVolume, price, executionDateTime,
                                                   tradeId, buyAccountId, sellAccountId, buyOrderId, sellOrderId);
         }
+
+        /// <summary>
+        /// Restores the balance when an order is cancelled based on the order's open quantity
+        /// </summary>
+        /// <param name="baseCurrency"></param>
+        /// <param name="quoteCurrency"></param>
+        /// <param name="accountId"></param>
+        /// <param name="orderSide"></param>
+        /// <param name="orderId"></param>
+        /// <param name="openQuantity"></param>
+        /// <param name="price"></param>
+        /// <returns></returns>
+        public bool OrderCancelled(string baseCurrency, string quoteCurrency, int accountId, string orderSide, string orderId,
+            decimal openQuantity, decimal price)
+        {
+            return _fundsValidationService.OrderCancelled(new Currency(baseCurrency), new Currency(quoteCurrency),
+                                                          new AccountId(accountId), orderSide, orderId, openQuantity, price);
+        }
     }
 }

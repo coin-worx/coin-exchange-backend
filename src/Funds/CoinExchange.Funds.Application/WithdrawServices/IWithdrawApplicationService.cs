@@ -17,6 +17,13 @@ namespace CoinExchange.Funds.Application.WithdrawServices
         /// Get recent withdrawals for the given currency and account ID
         /// </summary>
         /// <param name="accountId"></param>
+        /// <returns></returns>
+        List<WithdrawRepresentation> GetRecentWithdrawals(int accountId); 
+
+        /// <summary>
+        /// Get recent withdrawals for the given currency and account ID
+        /// </summary>
+        /// <param name="accountId"></param>
         /// <param name="currency"></param>
         /// <returns></returns>
         List<WithdrawRepresentation> GetRecentWithdrawals(int accountId, string currency); 
@@ -32,7 +39,7 @@ namespace CoinExchange.Funds.Application.WithdrawServices
         /// </summary>
         /// <param name="accountId"></param>
         /// <returns></returns>
-        List<WithdrawAddressRepresentation> GetWithdrawalAddresses(int accountId);
+        List<WithdrawAddressRepresentation> GetWithdrawalAddresses(int accountId, string currency);
 
         /// <summary>
         /// Commits a withdraw on the user's request

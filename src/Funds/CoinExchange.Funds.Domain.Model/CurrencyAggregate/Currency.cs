@@ -18,8 +18,10 @@
         public Currency(string name)
         {
             Name = name;
+            IsCryptoCurrency = true;
         }
 
+        // ToDo: Remove this constructor and build
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>

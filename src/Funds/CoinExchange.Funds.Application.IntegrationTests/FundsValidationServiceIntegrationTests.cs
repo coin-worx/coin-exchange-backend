@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
 using System.Management.Instrumentation;
 using System.Threading;
 using CoinExchange.Common.Tests;
+using CoinExchange.Common.Utility;
 using CoinExchange.Funds.Application.CrossBoundedContextsServices;
 using CoinExchange.Funds.Application.WithdrawServices;
 using CoinExchange.Funds.Domain.Model.BalanceAggregate;
@@ -247,10 +249,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
         [ExpectedException(typeof(InvalidOperationException))]
         public void WithdrawalFailTest_TestsIfWithdraweValidationReturnsFalseIfBalanceIsInsufficient_VerifiesThroughDatabaseQuery()
         {
-            // According to the TierLevel 1, the Daily limit is $1000 dollars. We can only withdraw 
-            // (1000/BestBid(XBT/USD) + (1000/BestAsk(XBT/USD)/2)) XBT for one day, approx. = 1.7
-            // Likewise, monthly limit for Tier 1 is $5000 and the threshold for a particular currency is measured the 
-            // same way as above
+            // According to the TierLevel 1, the Daily limit is 2 BTC, and if try to withdraw 3 BTC, exception should be raised
 
             // This test will fail due to over the llimit withdrawal amount requested
             IFundsValidationService fundsValidationService = (IFundsValidationService)ContextRegistry.GetContext()["FundsValidationService"];
@@ -269,10 +268,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
         [Test]
         public void WithdrawalPassTest_TestsIfWithdrawValidationReturnsTrueIfBalanceIsSufficient_VerifiesThroughDatabaseQuery()
         {
-            // According to the TierLevel 1, the Daily limit is $1000 dollars. We can only withdraw 
-            // (1000/BestBid(XBT/USD) + (1000/BestAsk(XBT/USD)/2)) XBT for one day, approx = 1.7
-            // Likewise, monthly limit for Tier 1 is $5000 and the threshold for a particular currency is measured the 
-            // same way as above
+            // According to the TierLevel 1, the Daily limit is 2 BTC, withdrawal of 1.7 BTC should happen fine
             IFundsValidationService fundsValidationService = (IFundsValidationService)ContextRegistry.GetContext()["FundsValidationService"];
             IFundsPersistenceRepository fundsPersistenceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];
 
@@ -290,12 +286,10 @@ namespace CoinExchange.Funds.Application.IntegrationTests
         [ExpectedException(typeof(InvalidOperationException))]
         public void WithdrawalFailAndVerificationTest_TestsIfWithdrawValidationReturnsFalseIfBalanceIsInsufficient_VerifiesThroughDatabaseQuery()
         {
-            // According to the TierLevel 1, the Daily limit is $1000 dollars. We can only withdraw 
-            // (1000/BestBid(XBT/USD) + (1000/BestAsk(XBT/USD)/2)) XBT for one day. 
-            // Likewise, monthly limit for Tier 1 is $5000 and the threshold for a particular currency is measured the 
-            // same way as above
+            // According to the TierLevel 1, the Daily limit is is 2 BTC for Tier Level 1, so anything above that limit should 
+            // result in an exception
 
-            // This test will fail due to over the llimit withdrawal amount requested
+            // This test will fail due to over the limit withdrawal amount requested
             IFundsValidationService fundsValidationService = (IFundsValidationService)ContextRegistry.GetContext()["FundsValidationService"];
             IFundsPersistenceRepository fundsPersistenceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];
             IBalanceRepository balanceRepository = (IBalanceRepository)ContextRegistry.GetContext()["BalanceRepository"];
@@ -320,10 +314,8 @@ namespace CoinExchange.Funds.Application.IntegrationTests
         [Test] 
         public void WithdrawalValidationPassAndBalanceVerificationTest_TestsIfWithdrawValidationReturnsTrueIfBalanceIsSufficient_VerifiesThroughDatabaseQuery()
         {
-            // According to the TierLevel 1, the Daily limit is $1000 dollars. We can only withdraw 
-            // (1000/BestBid(XBT/USD) + (1000/BestAsk(XBT/USD)/2)) XBT for one day, approx = 1.7
-            // Likewise, monthly limit for Tier 1 is $5000 and the threshold for a particular currency is measured the 
-            // same way as above
+            // According to the TierLevel 1, the Daily limit is is 2 BTC for Tier Level 1, so anything below that level should
+            // be withdrawn fine
             IFundsValidationService fundsValidationService = (IFundsValidationService)ContextRegistry.GetContext()["FundsValidationService"];
             IFundsPersistenceRepository fundsPersistenceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];
             IBalanceRepository balanceRepository = (IBalanceRepository)ContextRegistry.GetContext()["BalanceRepository"];
@@ -340,9 +332,9 @@ namespace CoinExchange.Funds.Application.IntegrationTests
 
             WithdrawFees withdrawFee = withdrawFeesRepository.GetWithdrawFeesByCurrencyName(currency.Name);
             Balance baseAfterValidationBalance = balanceRepository.GetBalanceByCurrencyAndAccountId(currency, accountId);
-            Assert.AreEqual(20 - 1.4m - withdrawFee.Fee, baseAfterValidationBalance.AvailableBalance);
+            Assert.AreEqual(20 - 1.4m, baseAfterValidationBalance.AvailableBalance);
             Assert.AreEqual(balance.CurrentBalance, baseAfterValidationBalance.CurrentBalance);
-            Assert.AreEqual(1.4m + withdrawFee.Fee, baseAfterValidationBalance.PendingBalance);
+            Assert.AreEqual(1.4m, baseAfterValidationBalance.PendingBalance);
         }
 
         #endregion Withdrawal Validation
@@ -608,9 +600,12 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             ILedgerRepository ledgerRepository = (ILedgerRepository)ContextRegistry.GetContext()["LedgerRepository"];
             IFeeCalculationService feeCalculationService = (IFeeCalculationService)ContextRegistry.GetContext()["FeeCalculationService"];
             IBalanceRepository balanceRepository = (IBalanceRepository)ContextRegistry.GetContext()["BalanceRepository"];
+            IFeeRepository feeRepository = (IFeeRepository)ContextRegistry.GetContext()["FeeRepository"];
 
-            string baseCurrency = "BTC";
-            string quoteCurrency = "USD";
+            Tuple<string, string> splittedCurrencyPair = CurrencySplitterService.SplitCurrencyPair(feeRepository.GetAllFees().First().CurrencyPair);
+            string baseCurrency = splittedCurrencyPair.Item1;
+            string quoteCurrency = splittedCurrencyPair.Item2;
+            AccountId accountId = new AccountId(1);
             string tradeId = "tradeid123";
             string buyOrderId = "buyorderid123";
             string sellOrderId = "sellorderid123";
@@ -657,25 +652,25 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             // same second, so we check which one is fetched first
 
             // First, buy side order's ledger will be verified
-            if (ledgerByAccountId[0].Currency.Name == "BTC")
+            if (ledgerByAccountId[0].Currency.Name == splittedCurrencyPair.Item1)
             {
-                // For XBT
+                // For Base Currency
                 Assert.AreEqual(400, ledgerByAccountId[0].Amount);
                 Assert.AreEqual(4000 + 400, ledgerByAccountId[0].Balance);
-                // For USD
+                // For Quote CUrrency
                 Assert.AreEqual(-(400 * 100), ledgerByAccountId[1].Amount);
                 Assert.AreEqual(50000 -(400 * 100) - buySideFee, ledgerByAccountId[1].Balance);
 
                 Assert.AreEqual(buySideFee, ledgerByAccountId[1].Fee);
             }
-            else if (ledgerByAccountId[0].Currency.Name == "USD")
+            else if (ledgerByAccountId[0].Currency.Name == splittedCurrencyPair.Item2)
             {
-                // For USD
+                // For Quote Currency
                 Assert.AreEqual(-(400 * 100), ledgerByAccountId[0].Amount);
                 Assert.AreEqual(50000 -(400 * 100) - buySideFee, ledgerByAccountId[0].Balance);
                 Assert.AreEqual(buySideFee, ledgerByAccountId[0].Fee);
 
-                // For XBT
+                // For Base Currency
                 Assert.AreEqual(400, ledgerByAccountId[1].Amount);
                 Assert.AreEqual(4000 + 400, ledgerByAccountId[1].Balance);
             }
@@ -704,26 +699,26 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             Assert.AreEqual(2, ledgerByAccountId.Count);
 
             // Secondly, wee verify for the sell order side's ledgers
-            if (ledgerByAccountId[0].Currency.Name == "BTC")
+            if (ledgerByAccountId[0].Currency.Name == splittedCurrencyPair.Item1)
             {
-                // For XBT
+                // For Base Currency
                 Assert.AreEqual(-400, ledgerByAccountId[0].Amount);
                 Assert.AreEqual(6000 - 400, ledgerByAccountId[0].Balance);
-                // For USD
+                // For Quote Currency
                 Assert.AreEqual((400 * 100), ledgerByAccountId[1].Amount);
                 Assert.AreEqual(60000 + (400 * 100) - sellSideFee, ledgerByAccountId[1].Balance);
                 Assert.AreEqual(sellSideFee, ledgerByAccountId[1].Fee);
             }
-            else if (ledgerByAccountId[0].Currency.Name == "USD")
+            else if (ledgerByAccountId[0].Currency.Name == splittedCurrencyPair.Item2)
             {
-                // For USD
+                // For Quote Currency
                 Assert.AreEqual((400 * 100), ledgerByAccountId[0].Amount);
                 Assert.AreEqual(60000 + (400 * 100) - sellSideFee, ledgerByAccountId[0].Balance);
                 // Get the fee corresponding to the currenct volume of the quote currency
                 decimal fee = feeCalculationService.GetFee(new Currency(baseCurrency), new Currency(quoteCurrency),
                     new AccountId(buyAccountId), 400, 100);
                 Assert.AreEqual(fee, ledgerByAccountId[0].Fee);
-                // For XBT
+                // For Base Currency
                 Assert.AreEqual(-400, ledgerByAccountId[1].Amount);
                 Assert.AreEqual(6000 - 400, ledgerByAccountId[1].Balance);
             }
@@ -748,9 +743,11 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             IFundsPersistenceRepository fundsPersistenceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];
             ILedgerRepository ledgerRepository = (ILedgerRepository)ContextRegistry.GetContext()["LedgerRepository"];
             IFeeCalculationService feeCalculationService = (IFeeCalculationService)ContextRegistry.GetContext()["FeeCalculationService"];
+            IFeeRepository feeRepository = (IFeeRepository)ContextRegistry.GetContext()["FeeRepository"];
 
-            string baseCurrency = "BTC";
-            string quoteCurrency = "USD";
+            Tuple<string, string> splittedCurrencyPair = CurrencySplitterService.SplitCurrencyPair(feeRepository.GetAllFees().First().CurrencyPair);
+            string baseCurrency = splittedCurrencyPair.Item1;
+            string quoteCurrency = splittedCurrencyPair.Item2;
             string tradeId = "tradeid123";
             string buyOrderId = "buyorderid123";
             string sellOrderId = "sellorderid123";
@@ -860,8 +857,8 @@ namespace CoinExchange.Funds.Application.IntegrationTests
 
             balance = balanceRepository.GetBalanceByCurrencyAndAccountId(currency, accountId);
             Assert.IsNotNull(balance);
-            Assert.AreEqual(20 - 0.4m - withdrawFee.Fee, balance.CurrentBalance);
-            Assert.AreEqual(20 - 0.4m - withdrawFee.Fee, balance.AvailableBalance);
+            Assert.AreEqual(20 - 0.4m, balance.CurrentBalance);
+            Assert.AreEqual(20 - 0.4m, balance.AvailableBalance);
             Assert.AreEqual(0, balance.PendingBalance);
         }
 
@@ -876,10 +873,13 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             IBalanceRepository balanceRepository = (IBalanceRepository)ContextRegistry.GetContext()["BalanceRepository"];
             IFundsPersistenceRepository fundsPersistenceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];            
             IFeeCalculationService feeCalculationService = (IFeeCalculationService)ContextRegistry.GetContext()["FeeCalculationService"];
+            IFeeRepository feeRepository = (IFeeRepository)ContextRegistry.GetContext()["FeeRepository"];
 
             AccountId accountId = new AccountId(123);
-            Currency baseCurrency = new Currency("BTC");
-            Currency quoteCurrency = new Currency("USD");
+
+            Tuple<string, string> splittedCurrencyPair = CurrencySplitterService.SplitCurrencyPair(feeRepository.GetAllFees().First().CurrencyPair);
+            Currency baseCurrency = new Currency(splittedCurrencyPair.Item1);
+            Currency quoteCurrency = new Currency(splittedCurrencyPair.Item2);
             Balance baseCurrencyBalance = new Balance(baseCurrency, accountId, 5000, 5000);
             Balance quoteCurrencyBalance = new Balance(quoteCurrency, accountId, 20000, 20000);
             fundsPersistenceRepository.SaveOrUpdate(baseCurrencyBalance);
@@ -932,10 +932,13 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             IBalanceRepository balanceRepository = (IBalanceRepository)ContextRegistry.GetContext()["BalanceRepository"];
             IFundsPersistenceRepository fundsPersistenceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];
             IFeeCalculationService feeCalculationService = (IFeeCalculationService)ContextRegistry.GetContext()["FeeCalculationService"];
+            IFeeRepository feeRepository = (IFeeRepository)ContextRegistry.GetContext()["FeeRepository"];
 
-            AccountId accountId = new AccountId(123);
-            Currency baseCurrency = new Currency("BTC");
-            Currency quoteCurrency = new Currency("USD");
+            Tuple<string, string> splittedCurrencyPair = CurrencySplitterService.SplitCurrencyPair(feeRepository.GetAllFees().First().CurrencyPair);
+            Currency baseCurrency = new Currency(splittedCurrencyPair.Item1);
+            Currency quoteCurrency = new Currency(splittedCurrencyPair.Item2);
+            AccountId accountId = new AccountId(1);
+
             Balance baseCurrencyBalance = new Balance(baseCurrency, accountId, 5000, 5000);
             Balance quoteCurrencyBalance = new Balance(quoteCurrency, accountId, 20000, 20000);
             fundsPersistenceRepository.SaveOrUpdate(baseCurrencyBalance);
@@ -1002,7 +1005,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             IWithdrawLimitEvaluationService withdrawLimitEvaluationService = (IWithdrawLimitEvaluationService)ContextRegistry.GetContext()["WithdrawLimitEvaluationService"];
             IWithdrawLimitRepository withdrawLimitRepository = (IWithdrawLimitRepository)ContextRegistry.GetContext()["WithdrawLimitRepository"];
             ITierLevelRetrievalService tierLevelRetrievalService = (ITierLevelRetrievalService)ContextRegistry.GetContext()["TierLevelRetrievalService"];
-            IBboCrossContextService bboRetrievalService = (IBboCrossContextService)ContextRegistry.GetContext()["BboCrossContextService"];
+            ILimitsConfigurationService limitsConfigurationService = (ILimitsConfigurationService)ContextRegistry.GetContext()["LimitsConfigurationService"];
             IWithdrawRepository withdrawRepository = (IWithdrawRepository)ContextRegistry.GetContext()["WithdrawRepository"];
             ITierValidationService tierValidationService = (ITierValidationService)ContextRegistry.GetContext()["TierValidationService"];
 
@@ -1022,7 +1025,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
                 fundsPersistenceRepository, balanceRepository, feeCalculationService, 
                 withdrawFeesRepository, withdrawIdGeneratorService, ledgerRepository, depositLimitEvaluationService,
                 depositLimitRepository, withdrawLimitEvaluationService, withdrawLimitRepository, tierLevelRetrievalService,
-                bboRetrievalService, withdrawRepository, tierValidationService);
+                withdrawRepository, tierValidationService, limitsConfigurationService);
             fundsValidationService2.ValidateFundsForOrder(accountId, baseCurrency, quoteCurrency, 100, 101, "sell", "order123");
             Balance balance = balanceRepository.GetBalanceByCurrencyAndAccountId(baseCurrency, accountId);
             Assert.IsNotNull(balance);
@@ -1046,7 +1049,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             IWithdrawLimitEvaluationService withdrawLimitEvaluationService = (IWithdrawLimitEvaluationService)ContextRegistry.GetContext()["WithdrawLimitEvaluationService"];
             IWithdrawLimitRepository withdrawLimitRepository = (IWithdrawLimitRepository)ContextRegistry.GetContext()["WithdrawLimitRepository"];
             ITierLevelRetrievalService tierLevelRetrievalService = (ITierLevelRetrievalService)ContextRegistry.GetContext()["TierLevelRetrievalService"];
-            IBboCrossContextService bboRetrievalService = (IBboCrossContextService)ContextRegistry.GetContext()["BboCrossContextService"];
+            ILimitsConfigurationService limitsConfigurationService = (ILimitsConfigurationService)ContextRegistry.GetContext()["LimitsConfigurationService"];
             IWithdrawRepository withdrawRepository = (IWithdrawRepository)ContextRegistry.GetContext()["WithdrawRepository"];
             ITierValidationService tierValidationService = (ITierValidationService)ContextRegistry.GetContext()["TierValidationService"];
             
@@ -1061,8 +1064,8 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             IFundsValidationService fundsValidationService2 = new FundsValidationService(transactionService,
                 fundsPersistenceRepository, balanceRepository, feeCalculationService, withdrawFeesRepository,
                 withdrawIdGeneratorService, ledgerRepository, depositLimitEvaluationService, depositLimitRepository, 
-                withdrawLimitEvaluationService, withdrawLimitRepository, tierLevelRetrievalService, bboRetrievalService,
-                withdrawRepository, tierValidationService);
+                withdrawLimitEvaluationService, withdrawLimitRepository, tierLevelRetrievalService,
+                withdrawRepository, tierValidationService, limitsConfigurationService);
             fundsValidationService2.ValidateFundsForWithdrawal(accountId, baseCurrency, 0.1m, new TransactionId("transaction123"), new BitcoinAddress("bitcoinid123"));
 
             WithdrawFees withdrawFees = withdrawFeesRepository.GetWithdrawFeesByCurrencyName(baseCurrency.Name);
@@ -1070,7 +1073,7 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             Balance balance = balanceRepository.GetBalanceByCurrencyAndAccountId(baseCurrency, accountId);
             Assert.IsNotNull(balance);
             Assert.AreEqual(20, balance.CurrentBalance);
-            Assert.AreEqual(19 - (withdrawFees.Fee * 2), balance.AvailableBalance);
+            Assert.AreEqual(19, balance.AvailableBalance);
         }
 
         #endregion Transaction Jobs Tests

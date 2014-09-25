@@ -35,6 +35,11 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
             return true;
         }
 
+        public bool IsDepositLegit(AccountId accountId, Currency currency, decimal amount)
+        {
+            return true;
+        }
+
         public bool TradeExecuted(string baseCurrency, string quoteCurrency, decimal tradeVolume, decimal price, DateTime executionDateTime, string tradeId, int buyAccountId, int sellAccountId, string buyOrderId, string sellOrderId)
         {
             throw new NotImplementedException();
@@ -55,9 +60,9 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
             throw new NotImplementedException();
         }
 
-        public bool IsTierVerified(int accountId, bool isCrypto)
+        public Tuple<bool, string> IsTierVerified(int accountId, bool isCrypto)
         {
-            throw new NotImplementedException();
+            return new Tuple<bool, string>(true, "Tier 1");
         }
     }
 }

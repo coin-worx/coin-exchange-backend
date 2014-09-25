@@ -58,6 +58,7 @@
   <ItemGroup>
     <Compile Include="CrossBoundedContextsServices\FeeCalculationService.cs" />
     <Compile Include="CrossBoundedContextsServices\FundsValidationService.cs" />
+    <Compile Include="CrossBoundedContextsServices\LimitsConfigurationService.cs" />
     <Compile Include="CrossBoundedContextsServices\StubFundsValidationService.cs" />
     <Compile Include="CrossBoundedContextsServices\TransactionService.cs" />
     <Compile Include="DepositServices\Commands\GenerateNewAddressCommand.cs" />
@@ -88,7 +89,7 @@
     <Compile Include="WithdrawServices\Representations\WithdrawRepresentation.cs" />
     <Compile Include="WithdrawServices\Representations\WithdrawTierLimitRepresentation.cs" />
     <Compile Include="WithdrawServices\WithdrawApplicationService.cs" />
-    <Compile Include="WithdrawServices\WithdrawSubmissionService.cs" />
+    <Compile Include="CrossBoundedContextsServices\ClientInteractionService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

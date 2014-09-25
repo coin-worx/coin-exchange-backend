@@ -19,7 +19,7 @@ USE `coinexchangedev`;
 
 /*Data for the table `currencypair` */
 
-insert  into `currencypair`(`CurrencyPairName`,`BaseCurrency`,`QuoteCurrency`) values ('XBTUSD','XBT','USD');
+insert  into `currencypair`(`CurrencyPairName`,`BaseCurrency`,`QuoteCurrency`) values ('BTCLTC','BTC','LTC');
 
 /*Data for the table `deposit` */
 
@@ -27,11 +27,11 @@ insert  into `currencypair`(`CurrencyPairName`,`BaseCurrency`,`QuoteCurrency`) v
 
 /*Data for the table `depositlimit` */
 
-insert  into `depositlimit`(`Id`,`TierLevel`,`DailyLimit`,`MonthlyLimit`) values (1,'Tier 0',0,0),(2,'Tier 1',1000,5000),(3,'Tier 2',2000,10000),(4,'Tier 3',20000,100000);
+insert  into `depositlimit`(`Id`,`TierLevel`,`DailyLimit`,`MonthlyLimit`,`LimitsCurrency`) values (1,'Tier 0',0,0,'Default'),(2,'Tier 1',2,10,'Default'),(3,'Tier 2',4,20,'Default'),(4,'Tier 3',40,200,'Default'),(5,'Tier 4',200,1000,'Default');
 
 /*Data for the table `fee` */
 
-insert  into `fee`(`Id`,`CurrencyPair`,`PercentageFee`,`Amount`) values (1,'XBTUSD',0.3,1000),(2,'XBTUSD',0.29,2000),(3,'XBTUSD',0.28,3500),(4,'XBTUSD',0.27,5000),(5,'XBTUSD',0.26,6500),(6,'XBTUSD',0.25,8000),(7,'XBTUSD',0.24,10000),(8,'XBTUSD',0.23,12500),(9,'XBTUSD',0.22,15000),(10,'XBTUSD',0.21,17500),(11,'XBTUSD',0.2,20000),(12,'XBTUSD',0.19,25000),(13,'XBTUSD',0.18,30000),(14,'XBTUSD',0.17,40000),(15,'XBTUSD',0.16,50000),(16,'XBTUSD',0.15,60000),(17,'XBTUSD',0.14,80000),(18,'XBTUSD',0.13,100000),(19,'XBTUSD',0.12,125000),(20,'XBTUSD',0.11,150000),(21,'XBTUSD',0.1,200000),(22,'XBTUSD',0.09,350000),(23,'XBTUSD',0.08,500000),(24,'XBTUSD',0.07,750000),(25,'XBTUSD',0.06,1000000),(26,'BTCUSD',0.3,1000),(27,'BTCUSD',0.29,2000),(28,'BTCUSD',0.28,3500),(29,'BTCUSD',0.27,5000),(30,'BTCUSD',0.26,6500),(31,'BTCUSD',0.25,8000),(32,'BTCUSD',0.24,10000),(33,'BTCUSD',0.23,12500),(34,'BTCUSD',0.22,15000),(35,'BTCUSD',0.21,17500),(36,'BTCUSD',0.2,20000),(37,'BTCUSD',0.19,25000),(38,'BTCUSD',0.18,30000),(39,'BTCUSD',0.17,40000),(40,'BTCUSD',0.16,50000),(41,'BTCUSD',0.15,60000),(42,'BTCUSD',0.14,80000),(43,'BTCUSD',0.13,100000),(44,'BTCUSD',0.12,125000),(45,'BTCUSD',0.11,150000),(46,'BTCUSD',0.1,200000),(47,'BTCUSD',0.09,350000),(48,'BTCUSD',0.08,500000),(49,'BTCUSD',0.07,750000),(50,'BTCUSD',0.06,1000000);
+insert  into `fee`(`Id`,`CurrencyPair`,`PercentageFee`,`Amount`) values (1,'BTCLTC',0.1,1000),(2,'BTCLTC',0.9,2000),(3,'BTCLTC',0.8,3000),(4,'BTCLTC',0.7,5000),(5,'BTCLTC',0.6,8000),(6,'BTCLTC',0.5,10000),(7,'BTCLTC',0.4,15000);
 
 /*Data for the table `ledger` */
 
@@ -71,11 +71,11 @@ insert  into `tier`(`TierLevel`,`TierName`) values ('Tier 0','Tier 0'),('Tier 1'
 
 /*Data for the table `withdrawfees` */
 
-insert  into `withdrawfees`(`Id`,`Currency`,`MinimumAmount`,`Fee`) values (3,'BTC',0.01,0.001),(4,'USD',1,0.01);
+insert  into `withdrawfees`(`Id`,`Currency`,`MinimumAmount`,`Fee`) values (3,'BTC',0.001,0.0001),(4,'LTC',0.001,0.0001);
 
 /*Data for the table `withdrawlimit` */
 
-insert  into `withdrawlimit`(`Id`,`TierLevel`,`DailyLimit`,`MonthlyLimit`) values (1,'Tier 0',0,0),(2,'Tier 1',1000,5000),(3,'Tier 2',2000,10000),(4,'Tier 3',20000,100000);
+insert  into `withdrawlimit`(`Id`,`TierLevel`,`DailyLimit`,`MonthlyLimit`,`LimitsCurrency`) values (1,'Tier 0',0,0,'Default'),(2,'Tier 1',2,10,'Default'),(3,'Tier 2',4,20,'Default'),(4,'Tier 3',40,200,'Default'),(5,'Tier 4',200,1000,'Default');
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

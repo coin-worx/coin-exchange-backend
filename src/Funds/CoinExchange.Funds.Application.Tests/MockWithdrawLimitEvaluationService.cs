@@ -10,17 +10,12 @@ namespace CoinExchange.Funds.Application.Tests
 {
     public class MockWithdrawLimitEvaluationService : IWithdrawLimitEvaluationService
     {
-        public bool EvaluateMaximumWithdraw()
+        public bool EvaluateMaximumWithdrawLimit(decimal withdrawalAmount, IList<Withdraw> depositLedgers, WithdrawLimit withdrawLimit, decimal balance, decimal currentBalance, decimal bestBid = 0, decimal bestAsk = 0)
         {
             throw new NotImplementedException();
         }
 
-        public bool EvaluateMaximumWithdrawLimit(decimal withdrawalAmountUsd, IList<Withdraw> depositLedgers, WithdrawLimit withdrawLimit, decimal bestBidPrice, decimal bestAskPrice, decimal balance, decimal pendingBalance)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool AssignWithdrawLimits(IList<Withdraw> depositLedgers, WithdrawLimit withdrawLimit, decimal bestBidPrice, decimal bestAskPrice, decimal balance, decimal currentBalance)
+        public bool AssignWithdrawLimits(IList<Withdraw> depositLedgers, WithdrawLimit withdrawLimit, decimal balance, decimal currentBalance, decimal bestBid = 0, decimal bestAsk = 0)
         {
             throw new NotImplementedException();
         }
@@ -30,8 +25,6 @@ namespace CoinExchange.Funds.Application.Tests
         public decimal MonthlyLimit { get; private set; }
         public decimal MonthlyLimitUsed { get; private set; }
         public decimal WithheldAmount { get; private set; }
-        public decimal WithheldConverted { get; private set; }
         public decimal MaximumWithdraw { get; private set; }
-        public decimal MaximumWithdrawUsd { get; private set; }
     }
 }

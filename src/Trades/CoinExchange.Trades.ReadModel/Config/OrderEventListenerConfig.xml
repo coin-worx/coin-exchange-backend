@@ -4,5 +4,6 @@
 
   <object id="OrderEventListener" type="CoinExchange.Trades.ReadModel.EventHandlers.OrderEventListener, CoinExchange.Trades.ReadModel">
     <constructor-arg name="persistanceRepository" ref="PersistenceRepository"/>
+    <constructor-arg name="balanceValidationService" ref="BalanceValidationService"/>
   </object>
  </objects>

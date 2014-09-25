@@ -26,14 +26,7 @@ namespace CoinExchange.Funds.Domain.Model.Services
                     // No transactions of any kind are allowed on Tier Level 0
                     return false;
                 case TierConstants.TierLevel1:
-                    if(isCrypto)
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
+                    return true;
                 case TierConstants.TierLevel2:
                     // Both Fiat and Crypto currenceis are allowed on Tier Level 2
                     return true;

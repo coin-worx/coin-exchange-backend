@@ -39,32 +39,24 @@ namespace CoinExchange.Funds.Infrastucture.NHibernate.IntegrationTests.DatabaseP
         [Test]
         public void SaveWithdrawFeesAndRetreiveByCurrencyNameTest_SavesAnObjectToDatabaseAndManipulatesIt_ChecksIfItIsUpdatedAsExpected()
         {
-            WithdrawFees withdrawFees = new WithdrawFees(new Currency("LTC", true), 4000, 500);
-
-            _persistanceRepository.SaveOrUpdate(withdrawFees);
-
             WithdrawFees retrievedWithdrawFees = _withdrawFeesRepository.GetWithdrawFeesByCurrencyName("LTC");
             Assert.IsNotNull(retrievedWithdrawFees);
 
-            Assert.AreEqual(withdrawFees.MinimumAmount, retrievedWithdrawFees.MinimumAmount);
-            Assert.AreEqual(withdrawFees.Fee, retrievedWithdrawFees.Fee);
+            Assert.Greater(retrievedWithdrawFees.MinimumAmount, 0);
+            Assert.Greater(retrievedWithdrawFees.Fee, 0);
         }
 
         [Test]
         public void SaveWithdrawFeesAndRetreiveByIdTest_SavesAnObjectToDatabaseAndManipulatesIt_ChecksIfItIsUpdatedAsExpected()
         {
-            WithdrawFees withdrawFees = new WithdrawFees(new Currency("LTC", true), 4000, 500);
-
-            _persistanceRepository.SaveOrUpdate(withdrawFees);
-
             WithdrawFees retrievedWithdrawFees = _withdrawFeesRepository.GetWithdrawFeesByCurrencyName("LTC");
             Assert.IsNotNull(retrievedWithdrawFees);
             int id = retrievedWithdrawFees.Id;
             _persistanceRepository.SaveOrUpdate(retrievedWithdrawFees);
 
             retrievedWithdrawFees = _withdrawFeesRepository.GetWithdrawFeesById(id);
-            Assert.AreEqual(withdrawFees.MinimumAmount, retrievedWithdrawFees.MinimumAmount);
-            Assert.AreEqual(withdrawFees.Fee, retrievedWithdrawFees.Fee);
+            Assert.Greater(retrievedWithdrawFees.MinimumAmount, 0);
+            Assert.Greater(retrievedWithdrawFees.Fee, 0);
         }
     }
 }

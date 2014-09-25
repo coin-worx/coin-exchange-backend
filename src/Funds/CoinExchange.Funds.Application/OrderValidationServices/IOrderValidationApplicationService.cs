@@ -42,5 +42,19 @@ namespace CoinExchange.Funds.Application.OrderValidationServices
         bool TradeExecuted(string baseCurrency, bool baseCurrencyIsCrypto, string quoteCurrency, bool quoteCurrencyIsCrypto, 
                         decimal tradeVolume, decimal price, DateTime executionDateTime, string tradeId, int buyAccountId, 
                         int sellAccountId, string buyOrderId, string sellOrderId);
+
+        /// <summary>
+        /// Restores the balance when an order is cancelled based on the order's open quantity
+        /// </summary>
+        /// <param name="baseCurrency"></param>
+        /// <param name="quoteCurrency"></param>
+        /// <param name="accountId"></param>
+        /// <param name="orderSide"></param>
+        /// <param name="orderId"></param>
+        /// <param name="openQuantity"></param>
+        /// <param name="price"></param>
+        /// <returns></returns>
+        bool OrderCancelled(string baseCurrency, string quoteCurrency, int accountId, string orderSide, string orderId,
+                            decimal openQuantity, decimal price);
     }
 }

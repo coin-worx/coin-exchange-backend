@@ -8,6 +8,6 @@
         Pending,
         Confirmed,
         Cancelled,
-        Suspended
+        Frozen
     }
 }

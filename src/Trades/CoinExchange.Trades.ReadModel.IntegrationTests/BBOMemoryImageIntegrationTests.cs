@@ -53,15 +53,15 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
 
             // Start exchagne to accept orders
             Exchange exchange = new Exchange();
-            Order buyOrder1 = OrderFactory.CreateOrder("1233", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder1 = OrderFactory.CreateOrder("1233", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 250, 493.34M, new StubbedOrderIdGenerator());
-            Order buyOrder2 = OrderFactory.CreateOrder("1234", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder2 = OrderFactory.CreateOrder("1234", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 494.34M, new StubbedOrderIdGenerator());
-            Order buyOrder3 = OrderFactory.CreateOrder("123498", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder3 = OrderFactory.CreateOrder("123498", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 494.34M, new StubbedOrderIdGenerator());
-            Order buyOrder4 = OrderFactory.CreateOrder("12355", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder4 = OrderFactory.CreateOrder("12355", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 496.34M, new StubbedOrderIdGenerator());
-            Order buyOrder5 = OrderFactory.CreateOrder("12356", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder5 = OrderFactory.CreateOrder("12356", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 500, 497.34M, new StubbedOrderIdGenerator());
 
             // Initial buy. Send buys with a higher price than te last one
@@ -78,13 +78,13 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.Count());
 
             // Best bid and its depth stats
-            Assert.AreEqual(CurrencyConstants.BitCoinUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
+            Assert.AreEqual(CurrencyConstants.BtcUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
             Assert.AreEqual(buyOrder1.Volume.Value, bboMemoryImage.BBORepresentationList.First().BestBidVolume);
             Assert.AreEqual(buyOrder1.Price.Value, bboMemoryImage.BBORepresentationList.First().BestBidPrice);
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.First().BestBidOrderCount);
 
             // Best ask and its depth stats
-            Assert.AreEqual(CurrencyConstants.BitCoinUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
+            Assert.AreEqual(CurrencyConstants.BtcUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
             Assert.AreEqual(0, bboMemoryImage.BBORepresentationList.First().BestAskVolume);
             Assert.AreEqual(0, bboMemoryImage.BBORepresentationList.First().BestAskPrice);
             Assert.AreEqual(0, bboMemoryImage.BBORepresentationList.First().BestAskOrderCount);
@@ -103,13 +103,13 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.Count());
 
             // Best bid and its depth stats
-            Assert.AreEqual(CurrencyConstants.BitCoinUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
+            Assert.AreEqual(CurrencyConstants.BtcUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
             Assert.AreEqual(buyOrder2.Volume.Value, bboMemoryImage.BBORepresentationList.First().BestBidVolume);
             Assert.AreEqual(buyOrder2.Price.Value, bboMemoryImage.BBORepresentationList.First().BestBidPrice);
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.First().BestBidOrderCount);
 
             // Best ask and its depth stats
-            Assert.AreEqual(CurrencyConstants.BitCoinUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
+            Assert.AreEqual(CurrencyConstants.BtcUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
             Assert.AreEqual(0, bboMemoryImage.BBORepresentationList.First().BestAskVolume);
             Assert.AreEqual(0, bboMemoryImage.BBORepresentationList.First().BestAskPrice);
             Assert.AreEqual(0, bboMemoryImage.BBORepresentationList.First().BestAskOrderCount);
@@ -128,13 +128,13 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.Count());
 
             // Best bid and its depth stats
-            Assert.AreEqual(CurrencyConstants.BitCoinUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
+            Assert.AreEqual(CurrencyConstants.BtcUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
             Assert.AreEqual(200, bboMemoryImage.BBORepresentationList.First().BestBidVolume);// Now contains aggregated volume of 2 orders
             Assert.AreEqual(buyOrder2.Price.Value, bboMemoryImage.BBORepresentationList.First().BestBidPrice);
             Assert.AreEqual(2, bboMemoryImage.BBORepresentationList.First().BestBidOrderCount);// Now contains two orders
 
             // Best ask and its depth stats
-            Assert.AreEqual(CurrencyConstants.BitCoinUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
+            Assert.AreEqual(CurrencyConstants.BtcUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
             Assert.AreEqual(0, bboMemoryImage.BBORepresentationList.First().BestAskVolume);
             Assert.AreEqual(0, bboMemoryImage.BBORepresentationList.First().BestAskPrice);
             Assert.AreEqual(0, bboMemoryImage.BBORepresentationList.First().BestAskOrderCount);
@@ -153,13 +153,13 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.Count());
 
             // Best bid and its depth stats
-            Assert.AreEqual(CurrencyConstants.BitCoinUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
+            Assert.AreEqual(CurrencyConstants.BtcUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
             Assert.AreEqual(100, bboMemoryImage.BBORepresentationList.First().BestBidVolume);
             Assert.AreEqual(496.34M, bboMemoryImage.BBORepresentationList.First().BestBidPrice);
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.First().BestBidOrderCount);
 
             // Best ask and its depth stats
-            Assert.AreEqual(CurrencyConstants.BitCoinUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
+            Assert.AreEqual(CurrencyConstants.BtcUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
             Assert.AreEqual(0, bboMemoryImage.BBORepresentationList.First().BestAskVolume);
             Assert.AreEqual(0, bboMemoryImage.BBORepresentationList.First().BestAskPrice);
             Assert.AreEqual(0, bboMemoryImage.BBORepresentationList.First().BestAskOrderCount);
@@ -178,13 +178,13 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.Count());
 
             // Best bid and its depth stats
-            Assert.AreEqual(CurrencyConstants.BitCoinUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
+            Assert.AreEqual(CurrencyConstants.BtcUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
             Assert.AreEqual(500, bboMemoryImage.BBORepresentationList.First().BestBidVolume);
             Assert.AreEqual(497.34M, bboMemoryImage.BBORepresentationList.First().BestBidPrice);
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.First().BestBidOrderCount);
 
             // Best ask and its depth stats
-            Assert.AreEqual(CurrencyConstants.BitCoinUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
+            Assert.AreEqual(CurrencyConstants.BtcUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
             Assert.AreEqual(0, bboMemoryImage.BBORepresentationList.First().BestAskVolume);
             Assert.AreEqual(0, bboMemoryImage.BBORepresentationList.First().BestAskPrice);
             Assert.AreEqual(0, bboMemoryImage.BBORepresentationList.First().BestAskOrderCount);
@@ -205,15 +205,15 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
 
             // Start exchagne to accept orders
             Exchange exchange = new Exchange();
-            Order sellOrder1 = OrderFactory.CreateOrder("1244", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder1 = OrderFactory.CreateOrder("1244", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 250, 496.34M, new StubbedOrderIdGenerator());
-            Order sellOrder2 = OrderFactory.CreateOrder("1222", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder2 = OrderFactory.CreateOrder("1222", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 200, 495.34M, new StubbedOrderIdGenerator());
-            Order sellOrder3 = OrderFactory.CreateOrder("1264", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder3 = OrderFactory.CreateOrder("1264", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 200, 492.34M, new StubbedOrderIdGenerator());
-            Order sellOrder4 = OrderFactory.CreateOrder("12387", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder4 = OrderFactory.CreateOrder("12387", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 200, 492.34M, new StubbedOrderIdGenerator());
-            Order sellOrder5 = OrderFactory.CreateOrder("123897", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder5 = OrderFactory.CreateOrder("123897", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 200, 493.34M, new StubbedOrderIdGenerator());
 
             exchange.PlaceNewOrder(sellOrder1);
@@ -229,13 +229,13 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.Count());
 
             // Best bid and its depth stats
-            Assert.AreEqual(CurrencyConstants.BitCoinUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
+            Assert.AreEqual(CurrencyConstants.BtcUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
             Assert.AreEqual(0, bboMemoryImage.BBORepresentationList.First().BestBidVolume);
             Assert.AreEqual(0, bboMemoryImage.BBORepresentationList.First().BestBidPrice);
             Assert.AreEqual(0, bboMemoryImage.BBORepresentationList.First().BestBidOrderCount);
 
             // Best ask and its depth stats
-            Assert.AreEqual(CurrencyConstants.BitCoinUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
+            Assert.AreEqual(CurrencyConstants.BtcUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
             Assert.AreEqual(250, bboMemoryImage.BBORepresentationList.First().BestAskVolume);
             Assert.AreEqual(496.34M, bboMemoryImage.BBORepresentationList.First().BestAskPrice);
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.First().BestAskOrderCount);
@@ -253,13 +253,13 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.Count());
 
             // Best bid and its depth stats
-            Assert.AreEqual(CurrencyConstants.BitCoinUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
+            Assert.AreEqual(CurrencyConstants.BtcUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
             Assert.AreEqual(0, bboMemoryImage.BBORepresentationList.First().BestBidVolume);
             Assert.AreEqual(0, bboMemoryImage.BBORepresentationList.First().BestBidPrice);
             Assert.AreEqual(0, bboMemoryImage.BBORepresentationList.First().BestBidOrderCount);
 
             // Best ask and its depth stats
-            Assert.AreEqual(CurrencyConstants.BitCoinUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
+            Assert.AreEqual(CurrencyConstants.BtcUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
             Assert.AreEqual(200, bboMemoryImage.BBORepresentationList.First().BestAskVolume);
             Assert.AreEqual(495.34M, bboMemoryImage.BBORepresentationList.First().BestAskPrice);
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.First().BestAskOrderCount);
@@ -277,13 +277,13 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.Count());
 
             // Best bid and its depth stats
-            Assert.AreEqual(CurrencyConstants.BitCoinUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
+            Assert.AreEqual(CurrencyConstants.BtcUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
             Assert.AreEqual(0, bboMemoryImage.BBORepresentationList.First().BestBidVolume);
             Assert.AreEqual(0, bboMemoryImage.BBORepresentationList.First().BestBidPrice);
             Assert.AreEqual(0, bboMemoryImage.BBORepresentationList.First().BestBidOrderCount);
 
             // Best ask and its depth stats
-            Assert.AreEqual(CurrencyConstants.BitCoinUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
+            Assert.AreEqual(CurrencyConstants.BtcUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
             Assert.AreEqual(200, bboMemoryImage.BBORepresentationList.First().BestAskVolume);
             Assert.AreEqual(492.34M, bboMemoryImage.BBORepresentationList.First().BestAskPrice);
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.First().BestAskOrderCount);
@@ -301,14 +301,14 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.Count());
 
             // Best bid and its depth stats
-            Assert.AreEqual(CurrencyConstants.BitCoinUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
+            Assert.AreEqual(CurrencyConstants.BtcUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
             Assert.AreEqual(0, bboMemoryImage.BBORepresentationList.First().BestBidVolume);
             Assert.AreEqual(0, bboMemoryImage.BBORepresentationList.First().BestBidPrice);
             Assert.AreEqual(0, bboMemoryImage.BBORepresentationList.First().BestBidOrderCount);
 
             // Best ask and its depth stats
             // Two orders at the same price will accumulate the volume
-            Assert.AreEqual(CurrencyConstants.BitCoinUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
+            Assert.AreEqual(CurrencyConstants.BtcUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
             Assert.AreEqual(400, bboMemoryImage.BBORepresentationList.First().BestAskVolume);
             Assert.AreEqual(492.34M, bboMemoryImage.BBORepresentationList.First().BestAskPrice);
             Assert.AreEqual(2, bboMemoryImage.BBORepresentationList.First().BestAskOrderCount);
@@ -326,14 +326,14 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.Count());
 
             // Best bid and its depth stats
-            Assert.AreEqual(CurrencyConstants.BitCoinUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
+            Assert.AreEqual(CurrencyConstants.BtcUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
             Assert.AreEqual(0, bboMemoryImage.BBORepresentationList.First().BestBidVolume);
             Assert.AreEqual(0, bboMemoryImage.BBORepresentationList.First().BestBidPrice);
             Assert.AreEqual(0, bboMemoryImage.BBORepresentationList.First().BestBidOrderCount);
 
             // Best ask and its depth stats
             // No change in best ask as the new ask price is higher than the previous one
-            Assert.AreEqual(CurrencyConstants.BitCoinUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
+            Assert.AreEqual(CurrencyConstants.BtcUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
             Assert.AreEqual(400, bboMemoryImage.BBORepresentationList.First().BestAskVolume);
             Assert.AreEqual(492.34M, bboMemoryImage.BBORepresentationList.First().BestAskPrice);
             Assert.AreEqual(2, bboMemoryImage.BBORepresentationList.First().BestAskOrderCount);
@@ -354,26 +354,26 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
 
             // Start exchagne to accept orders
             Exchange exchange = new Exchange();
-            Order buyOrder1 = OrderFactory.CreateOrder("1233", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder1 = OrderFactory.CreateOrder("1233", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 250, 493.34M, new StubbedOrderIdGenerator());
-            Order buyOrder2 = OrderFactory.CreateOrder("1234", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder2 = OrderFactory.CreateOrder("1234", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 494.34M, new StubbedOrderIdGenerator());
-            Order buyOrder3 = OrderFactory.CreateOrder("123498", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder3 = OrderFactory.CreateOrder("123498", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 492.34M, new StubbedOrderIdGenerator());
-            Order buyOrder4 = OrderFactory.CreateOrder("12355", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder4 = OrderFactory.CreateOrder("12355", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 491.34M, new StubbedOrderIdGenerator());
-            Order buyOrder5 = OrderFactory.CreateOrder("12356", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder5 = OrderFactory.CreateOrder("12356", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 500, 494.34M, new StubbedOrderIdGenerator());
 
-            Order sellOrder1 = OrderFactory.CreateOrder("1244", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder1 = OrderFactory.CreateOrder("1244", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 250, 496.34M, new StubbedOrderIdGenerator());
-            Order sellOrder2 = OrderFactory.CreateOrder("1222", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder2 = OrderFactory.CreateOrder("1222", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 200, 495.34M, new StubbedOrderIdGenerator());
-            Order sellOrder3 = OrderFactory.CreateOrder("1264", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder3 = OrderFactory.CreateOrder("1264", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 200, 495.34M, new StubbedOrderIdGenerator());
-            Order sellOrder4 = OrderFactory.CreateOrder("12387", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder4 = OrderFactory.CreateOrder("12387", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 200, 497.34M, new StubbedOrderIdGenerator());
-            Order sellOrder5 = OrderFactory.CreateOrder("123897", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder5 = OrderFactory.CreateOrder("123897", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 100, 495.34M, new StubbedOrderIdGenerator());
 
             exchange.PlaceNewOrder(buyOrder1);
@@ -398,13 +398,13 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.Count());
 
             // Best bid and its depth stats
-            Assert.AreEqual(CurrencyConstants.BitCoinUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
+            Assert.AreEqual(CurrencyConstants.BtcUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
             Assert.AreEqual(600, bboMemoryImage.BBORepresentationList.First().BestBidVolume);
             Assert.AreEqual(494.34M, bboMemoryImage.BBORepresentationList.First().BestBidPrice);
             Assert.AreEqual(2, bboMemoryImage.BBORepresentationList.First().BestBidOrderCount);
 
             // Best ask and its depth stats
-            Assert.AreEqual(CurrencyConstants.BitCoinUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
+            Assert.AreEqual(CurrencyConstants.BtcUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
             Assert.AreEqual(500, bboMemoryImage.BBORepresentationList.First().BestAskVolume);
             Assert.AreEqual(495.34M, bboMemoryImage.BBORepresentationList.First().BestAskPrice);
             Assert.AreEqual(3, bboMemoryImage.BBORepresentationList.First().BestAskOrderCount);
@@ -425,26 +425,26 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
 
             // Start exchagne to accept orders
             Exchange exchange = new Exchange();
-            Order buyOrder1 = OrderFactory.CreateOrder("1233", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder1 = OrderFactory.CreateOrder("1233", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 250, 493.34M, new StubbedOrderIdGenerator());
-            Order buyOrder2 = OrderFactory.CreateOrder("1234", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder2 = OrderFactory.CreateOrder("1234", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 500, 495.34M, new StubbedOrderIdGenerator());
-            Order buyOrder3 = OrderFactory.CreateOrder("123498", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder3 = OrderFactory.CreateOrder("123498", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 250, 496.34M, new StubbedOrderIdGenerator());
-            Order buyOrder4 = OrderFactory.CreateOrder("12355", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder4 = OrderFactory.CreateOrder("12355", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 491.34M, new StubbedOrderIdGenerator());
-            Order buyOrder5 = OrderFactory.CreateOrder("12356", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder5 = OrderFactory.CreateOrder("12356", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 500, 494.34M, new StubbedOrderIdGenerator());
 
-            Order sellOrder1 = OrderFactory.CreateOrder("1244", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder1 = OrderFactory.CreateOrder("1244", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 250, 496.34M, new StubbedOrderIdGenerator());
-            Order sellOrder2 = OrderFactory.CreateOrder("1222", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder2 = OrderFactory.CreateOrder("1222", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 200, 495.34M, new StubbedOrderIdGenerator());
-            Order sellOrder3 = OrderFactory.CreateOrder("1264", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder3 = OrderFactory.CreateOrder("1264", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 200, 495.34M, new StubbedOrderIdGenerator());
-            Order sellOrder4 = OrderFactory.CreateOrder("12387", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder4 = OrderFactory.CreateOrder("12387", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 200, 497.34M, new StubbedOrderIdGenerator());
-            Order sellOrder5 = OrderFactory.CreateOrder("123897", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder5 = OrderFactory.CreateOrder("123897", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 100, 495.34M, new StubbedOrderIdGenerator());
 
             exchange.PlaceNewOrder(buyOrder1);
@@ -465,13 +465,13 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.Count());
 
             // Best bid and its depth stats
-            Assert.AreEqual(CurrencyConstants.BitCoinUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
+            Assert.AreEqual(CurrencyConstants.BtcUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
             Assert.AreEqual(250, bboMemoryImage.BBORepresentationList.First().BestBidVolume);
             Assert.AreEqual(493.34M, bboMemoryImage.BBORepresentationList.First().BestBidPrice);
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.First().BestBidOrderCount);
 
             // Best ask and its depth stats
-            Assert.AreEqual(CurrencyConstants.BitCoinUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
+            Assert.AreEqual(CurrencyConstants.BtcUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
             Assert.AreEqual(500, bboMemoryImage.BBORepresentationList.First().BestAskVolume);
             Assert.AreEqual(495.34M, bboMemoryImage.BBORepresentationList.First().BestAskPrice);
             Assert.AreEqual(3, bboMemoryImage.BBORepresentationList.First().BestAskOrderCount);
@@ -488,13 +488,13 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.Count());
 
             // Best bid and its depth stats
-            Assert.AreEqual(CurrencyConstants.BitCoinUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
+            Assert.AreEqual(CurrencyConstants.BtcUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
             Assert.AreEqual(250, bboMemoryImage.BBORepresentationList.First().BestBidVolume);
             Assert.AreEqual(493.34M, bboMemoryImage.BBORepresentationList.First().BestBidPrice);
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.First().BestBidOrderCount);
 
             // Best ask and its depth stats
-            Assert.AreEqual(CurrencyConstants.BitCoinUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
+            Assert.AreEqual(CurrencyConstants.BtcUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
             Assert.AreEqual(250, bboMemoryImage.BBORepresentationList.First().BestAskVolume);
             Assert.AreEqual(496.34M, bboMemoryImage.BBORepresentationList.First().BestAskPrice);
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.First().BestAskOrderCount);
@@ -511,13 +511,13 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.Count());
 
             // Best bid and its depth stats
-            Assert.AreEqual(CurrencyConstants.BitCoinUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
+            Assert.AreEqual(CurrencyConstants.BtcUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
             Assert.AreEqual(250, bboMemoryImage.BBORepresentationList.First().BestBidVolume);
             Assert.AreEqual(493.34M, bboMemoryImage.BBORepresentationList.First().BestBidPrice);
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.First().BestBidOrderCount);
 
             // Best ask and its depth stats
-            Assert.AreEqual(CurrencyConstants.BitCoinUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
+            Assert.AreEqual(CurrencyConstants.BtcUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
             Assert.AreEqual(200, bboMemoryImage.BBORepresentationList.First().BestAskVolume);
             Assert.AreEqual(497.34M, bboMemoryImage.BBORepresentationList.First().BestAskPrice);
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.First().BestAskOrderCount);
@@ -538,26 +538,26 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
 
             // Start exchagne to accept orders
             Exchange exchange = new Exchange();
-            Order buyOrder1 = OrderFactory.CreateOrder("1233", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder1 = OrderFactory.CreateOrder("1233", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 250, 493.34M, new StubbedOrderIdGenerator());
-            Order buyOrder2 = OrderFactory.CreateOrder("1234", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder2 = OrderFactory.CreateOrder("1234", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 500, 495.34M, new StubbedOrderIdGenerator());
-            Order buyOrder3 = OrderFactory.CreateOrder("123498", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder3 = OrderFactory.CreateOrder("123498", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 250, 496.34M, new StubbedOrderIdGenerator());
-            Order buyOrder4 = OrderFactory.CreateOrder("12355", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder4 = OrderFactory.CreateOrder("12355", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 491.34M, new StubbedOrderIdGenerator());
-            Order buyOrder5 = OrderFactory.CreateOrder("12356", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder5 = OrderFactory.CreateOrder("12356", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 500, 494.34M, new StubbedOrderIdGenerator());
 
-            Order sellOrder1 = OrderFactory.CreateOrder("1244", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder1 = OrderFactory.CreateOrder("1244", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 250, 497.34M, new StubbedOrderIdGenerator());
-            Order sellOrder2 = OrderFactory.CreateOrder("1222", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder2 = OrderFactory.CreateOrder("1222", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 250, 496.34M, new StubbedOrderIdGenerator());
-            Order sellOrder3 = OrderFactory.CreateOrder("1264", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder3 = OrderFactory.CreateOrder("1264", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 200, 495.34M, new StubbedOrderIdGenerator());
-            Order sellOrder4 = OrderFactory.CreateOrder("12387", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder4 = OrderFactory.CreateOrder("12387", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 300, 495.34M, new StubbedOrderIdGenerator());
-            Order sellOrder5 = OrderFactory.CreateOrder("123897", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder5 = OrderFactory.CreateOrder("123897", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 100, 495.34M, new StubbedOrderIdGenerator());
 
             exchange.PlaceNewOrder(sellOrder1);
@@ -578,13 +578,13 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.Count());
 
             // Best bid and its depth stats
-            Assert.AreEqual(CurrencyConstants.BitCoinUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
+            Assert.AreEqual(CurrencyConstants.BtcUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
             Assert.AreEqual(250, bboMemoryImage.BBORepresentationList.First().BestBidVolume);
             Assert.AreEqual(496.34M, bboMemoryImage.BBORepresentationList.First().BestBidPrice);
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.First().BestBidOrderCount);
 
             // Best ask and its depth stats
-            Assert.AreEqual(CurrencyConstants.BitCoinUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
+            Assert.AreEqual(CurrencyConstants.BtcUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
             Assert.AreEqual(250, bboMemoryImage.BBORepresentationList.First().BestAskVolume);
             Assert.AreEqual(497.34M, bboMemoryImage.BBORepresentationList.First().BestAskPrice);
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.First().BestAskOrderCount);
@@ -602,7 +602,7 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.Count());
 
             // Best bid and its depth stats
-            Assert.AreEqual(CurrencyConstants.BitCoinUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
+            Assert.AreEqual(CurrencyConstants.BtcUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
             Assert.AreEqual(500, bboMemoryImage.BBORepresentationList.First().BestBidVolume);
             Assert.AreEqual(495.34M, bboMemoryImage.BBORepresentationList.First().BestBidPrice);
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.First().BestBidOrderCount);
@@ -625,7 +625,7 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.Count());
 
             // Best bid and its depth stats
-            Assert.AreEqual(CurrencyConstants.BitCoinUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
+            Assert.AreEqual(CurrencyConstants.BtcUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
             Assert.AreEqual(300, bboMemoryImage.BBORepresentationList.First().BestBidVolume);
             Assert.AreEqual(495.34M, bboMemoryImage.BBORepresentationList.First().BestBidPrice);
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.First().BestBidOrderCount);
@@ -648,7 +648,7 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.Count());
 
             // Best bid and its depth stats
-            Assert.AreEqual(CurrencyConstants.BitCoinUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
+            Assert.AreEqual(CurrencyConstants.BtcUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
             Assert.AreEqual(500, bboMemoryImage.BBORepresentationList.First().BestBidVolume);
             Assert.AreEqual(494.34M, bboMemoryImage.BBORepresentationList.First().BestBidPrice);
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.First().BestBidOrderCount);
@@ -671,7 +671,7 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.Count());
 
             // Best bid and its depth stats
-            Assert.AreEqual(CurrencyConstants.BitCoinUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
+            Assert.AreEqual(CurrencyConstants.BtcUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
             Assert.AreEqual(500, bboMemoryImage.BBORepresentationList.First().BestBidVolume);
             Assert.AreEqual(494.34M, bboMemoryImage.BBORepresentationList.First().BestBidPrice);
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.First().BestBidOrderCount);
@@ -697,26 +697,26 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
 
             // Start exchagne to accept orders
             Exchange exchange = new Exchange();
-            Order buyOrder1 = OrderFactory.CreateOrder("1233", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder1 = OrderFactory.CreateOrder("1233", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 250, 483.34M, new StubbedOrderIdGenerator());
-            Order buyOrder2 = OrderFactory.CreateOrder("1234", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder2 = OrderFactory.CreateOrder("1234", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 500, 485.34M, new StubbedOrderIdGenerator());
-            Order buyOrder3 = OrderFactory.CreateOrder("123498", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder3 = OrderFactory.CreateOrder("123498", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 250, 486.34M, new StubbedOrderIdGenerator());
-            Order buyOrder4 = OrderFactory.CreateOrder("12355", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder4 = OrderFactory.CreateOrder("12355", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 481.34M, new StubbedOrderIdGenerator());
-            Order buyOrder5 = OrderFactory.CreateOrder("12356", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder5 = OrderFactory.CreateOrder("12356", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 500, 484.34M, new StubbedOrderIdGenerator());
 
-            Order sellOrder1 = OrderFactory.CreateOrder("1244", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder1 = OrderFactory.CreateOrder("1244", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 250, 497.34M, new StubbedOrderIdGenerator());
-            Order sellOrder2 = OrderFactory.CreateOrder("1222", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder2 = OrderFactory.CreateOrder("1222", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 250, 496.34M, new StubbedOrderIdGenerator());
-            Order sellOrder3 = OrderFactory.CreateOrder("1264", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder3 = OrderFactory.CreateOrder("1264", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 200, 495.34M, new StubbedOrderIdGenerator());
-            Order sellOrder4 = OrderFactory.CreateOrder("12387", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder4 = OrderFactory.CreateOrder("12387", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 300, 495.34M, new StubbedOrderIdGenerator());
-            Order sellOrder5 = OrderFactory.CreateOrder("123897", CurrencyConstants.BitCoinUsd, Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder5 = OrderFactory.CreateOrder("123897", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 100, 492.34M, new StubbedOrderIdGenerator());
 
             exchange.PlaceNewOrder(sellOrder1);
@@ -750,13 +750,13 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.Count());
 
             // Best bid and its depth stats
-            Assert.AreEqual(CurrencyConstants.BitCoinUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
+            Assert.AreEqual(CurrencyConstants.BtcUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
             Assert.AreEqual(250, bboMemoryImage.BBORepresentationList.First().BestBidVolume);
             Assert.AreEqual(486.34M, bboMemoryImage.BBORepresentationList.First().BestBidPrice);
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.First().BestBidOrderCount);
 
             // Best ask and its depth stats
-            Assert.AreEqual(CurrencyConstants.BitCoinUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
+            Assert.AreEqual(CurrencyConstants.BtcUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
             Assert.AreEqual(100, bboMemoryImage.BBORepresentationList.First().BestAskVolume);
             Assert.AreEqual(492.34M, bboMemoryImage.BBORepresentationList.First().BestAskPrice);
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.First().BestAskOrderCount);
@@ -773,13 +773,13 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.Count());
 
             // Best bid and its depth stats
-            Assert.AreEqual(CurrencyConstants.BitCoinUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
+            Assert.AreEqual(CurrencyConstants.BtcUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
             Assert.AreEqual(500, bboMemoryImage.BBORepresentationList.First().BestBidVolume);
             Assert.AreEqual(485.34M, bboMemoryImage.BBORepresentationList.First().BestBidPrice);
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.First().BestBidOrderCount);
 
             // Best ask and its depth stats
-            Assert.AreEqual(CurrencyConstants.BitCoinUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
+            Assert.AreEqual(CurrencyConstants.BtcUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
             Assert.AreEqual(100, bboMemoryImage.BBORepresentationList.First().BestAskVolume);
             Assert.AreEqual(492.34M, bboMemoryImage.BBORepresentationList.First().BestAskPrice);
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.First().BestAskOrderCount);
@@ -796,13 +796,13 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.Count());
 
             // Best bid and its depth stats
-            Assert.AreEqual(CurrencyConstants.BitCoinUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
+            Assert.AreEqual(CurrencyConstants.BtcUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
             Assert.AreEqual(500, bboMemoryImage.BBORepresentationList.First().BestBidVolume);
             Assert.AreEqual(485.34M, bboMemoryImage.BBORepresentationList.First().BestBidPrice);
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.First().BestBidOrderCount);
 
             // Best ask and its depth stats
-            Assert.AreEqual(CurrencyConstants.BitCoinUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
+            Assert.AreEqual(CurrencyConstants.BtcUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
             Assert.AreEqual(100, bboMemoryImage.BBORepresentationList.First().BestAskVolume);
             Assert.AreEqual(492.34M, bboMemoryImage.BBORepresentationList.First().BestAskPrice);
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.First().BestAskOrderCount);
@@ -820,13 +820,13 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.Count());
 
             // Best bid and its depth stats
-            Assert.AreEqual(CurrencyConstants.BitCoinUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
+            Assert.AreEqual(CurrencyConstants.BtcUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
             Assert.AreEqual(500, bboMemoryImage.BBORepresentationList.First().BestBidVolume);
             Assert.AreEqual(485.34M, bboMemoryImage.BBORepresentationList.First().BestBidPrice);
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.First().BestBidOrderCount);
 
             // Best ask and its depth stats
-            Assert.AreEqual(CurrencyConstants.BitCoinUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
+            Assert.AreEqual(CurrencyConstants.BtcUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
             Assert.AreEqual(100, bboMemoryImage.BBORepresentationList.First().BestAskVolume);
             Assert.AreEqual(492.34M, bboMemoryImage.BBORepresentationList.First().BestAskPrice);
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.First().BestAskOrderCount);
@@ -843,13 +843,13 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.Count());
 
             // Best bid and its depth stats
-            Assert.AreEqual(CurrencyConstants.BitCoinUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
+            Assert.AreEqual(CurrencyConstants.BtcUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
             Assert.AreEqual(500, bboMemoryImage.BBORepresentationList.First().BestBidVolume);
             Assert.AreEqual(484.34M, bboMemoryImage.BBORepresentationList.First().BestBidPrice);
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.First().BestBidOrderCount);
 
             // Best ask and its depth stats
-            Assert.AreEqual(CurrencyConstants.BitCoinUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
+            Assert.AreEqual(CurrencyConstants.BtcUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
             Assert.AreEqual(100, bboMemoryImage.BBORepresentationList.First().BestAskVolume);
             Assert.AreEqual(492.34M, bboMemoryImage.BBORepresentationList.First().BestAskPrice);
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.First().BestAskOrderCount);
@@ -867,13 +867,13 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.Count());
 
             // Best bid and its depth stats
-            Assert.AreEqual(CurrencyConstants.BitCoinUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
+            Assert.AreEqual(CurrencyConstants.BtcUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
             Assert.AreEqual(250, bboMemoryImage.BBORepresentationList.First().BestBidVolume);
             Assert.AreEqual(483.34M, bboMemoryImage.BBORepresentationList.First().BestBidPrice);
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.First().BestBidOrderCount);
 
             // Best ask and its depth stats
-            Assert.AreEqual(CurrencyConstants.BitCoinUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
+            Assert.AreEqual(CurrencyConstants.BtcUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
             Assert.AreEqual(100, bboMemoryImage.BBORepresentationList.First().BestAskVolume);
             Assert.AreEqual(492.34M, bboMemoryImage.BBORepresentationList.First().BestAskPrice);
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.First().BestAskOrderCount);
@@ -891,13 +891,13 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.Count());
 
             // Best bid and its depth stats
-            Assert.AreEqual(CurrencyConstants.BitCoinUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
+            Assert.AreEqual(CurrencyConstants.BtcUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
             Assert.AreEqual(250, bboMemoryImage.BBORepresentationList.First().BestBidVolume);
             Assert.AreEqual(483.34M, bboMemoryImage.BBORepresentationList.First().BestBidPrice);
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.First().BestBidOrderCount);
 
             // Best ask and its depth stats
-            Assert.AreEqual(CurrencyConstants.BitCoinUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
+            Assert.AreEqual(CurrencyConstants.BtcUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
             Assert.AreEqual(500, bboMemoryImage.BBORepresentationList.First().BestAskVolume);
             Assert.AreEqual(495.34M, bboMemoryImage.BBORepresentationList.First().BestAskPrice);
             Assert.AreEqual(2, bboMemoryImage.BBORepresentationList.First().BestAskOrderCount);
@@ -915,13 +915,13 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.Count());
 
             // Best bid and its depth stats
-            Assert.AreEqual(CurrencyConstants.BitCoinUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
+            Assert.AreEqual(CurrencyConstants.BtcUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
             Assert.AreEqual(250, bboMemoryImage.BBORepresentationList.First().BestBidVolume);
             Assert.AreEqual(483.34M, bboMemoryImage.BBORepresentationList.First().BestBidPrice);
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.First().BestBidOrderCount);
 
             // Best ask and its depth stats
-            Assert.AreEqual(CurrencyConstants.BitCoinUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
+            Assert.AreEqual(CurrencyConstants.BtcUsd, bboMemoryImage.BBORepresentationList.First().CurrencyPair);
             Assert.AreEqual(300, bboMemoryImage.BBORepresentationList.First().BestAskVolume);
             Assert.AreEqual(495.34M, bboMemoryImage.BBORepresentationList.First().BestAskPrice);
             Assert.AreEqual(1, bboMemoryImage.BBORepresentationList.First().BestAskOrderCount);

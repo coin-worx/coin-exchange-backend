@@ -53,6 +53,15 @@ namespace CoinExchange.Funds.Domain.Model.Services
         bool DepositConfirmed(Deposit deposit);
 
         /// <summary>
+        /// Is the Deposit within the limits and required tier level is verified for this user
+        /// </summary>
+        /// <param name="accountId"></param>
+        /// <param name="currency"></param>
+        /// <param name="amount"></param>
+        /// <returns></returns>
+        bool IsDepositLegit(AccountId accountId, Currency currency, decimal amount);
+
+        /// <summary>
         /// Handles the event that a trade has been executed and performs the necessay steps to update the balance and 
         /// create a transaction record
         /// </summary>
@@ -105,6 +114,6 @@ namespace CoinExchange.Funds.Domain.Model.Services
         /// Confirms if the user has been verified for the transaction on the current tier level
         /// </summary>
         /// <returns></returns>
-        bool IsTierVerified(int accountId, bool isCrypto);
+        Tuple<bool, string> IsTierVerified(int accountId, bool isCrypto);
     }
 }

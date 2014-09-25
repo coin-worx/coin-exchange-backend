@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CoinExchange.Funds.Domain.Model.CurrencyAggregate;
 using CoinExchange.Funds.Domain.Model.DepositAggregate;
 using CoinExchange.Funds.Domain.Model.WithdrawAggregate;
 using NHibernate.Linq;
@@ -26,6 +27,16 @@ namespace CoinExchange.Funds.Infrastructure.Persistence.NHibernate.NHibernate
         {
             return CurrentSession.Query<WithdrawAddress>()
                 .Where(x => x.AccountId.Value == accountId.Value)
+                .AsQueryable()
+                .OrderByDescending(x => x.CreationDateTime)
+                .ToList();
+        }
+
+        [Transaction]
+        public List<WithdrawAddress> GetWithdrawAddressByAccountIdAndCurrency(AccountId accountId, Currency currency)
+        {
+            return CurrentSession.Query<WithdrawAddress>()
+                .Where(x => x.AccountId.Value == accountId.Value && x.Currency.Name == currency.Name)
                 .AsQueryable()
                 .OrderByDescending(x => x.CreationDateTime)
                 .ToList();

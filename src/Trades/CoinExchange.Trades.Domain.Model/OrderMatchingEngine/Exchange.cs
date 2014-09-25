@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Timers;
 using System.Threading.Tasks;
+using CoinExchange.Common.Domain.Model;
 using CoinExchange.Trades.Domain.Model.OrderAggregate;
 using CoinExchange.Trades.Domain.Model.Services;
 using Disruptor;
@@ -20,8 +21,8 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         private static readonly log4net.ILog Log = log4net.LogManager.GetLogger
             (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private string BitCoinUsd = "BTCUSD";
-        private string XbtUsd = "XBTUSD";
+        private string BtcLtc = CurrencyConstants.BtcLtc;
+        private string XbtLtc = CurrencyConstants.XbtLtc;
         private List<string> _currencyPairs = new List<string>();
         private ExchangeEssentialsList _exchangeEssentialsList = new ExchangeEssentialsList();
         [NonSerialized] 
@@ -32,10 +33,10 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// </summary>
         public Exchange()
         {
-            _currencyPairs.Add(BitCoinUsd);
-            _currencyPairs.Add(XbtUsd);
-            _currencyPairs.Add("BTC/USD");
-            _currencyPairs.Add("XBT/USD");
+            _currencyPairs.Add(CurrencyConstants.BtcLtc);
+            _currencyPairs.Add(CurrencyConstants.XbtLtc);
+            _currencyPairs.Add(CurrencyConstants.BtcLtcSeparated);
+            _currencyPairs.Add(CurrencyConstants.XbtLtcSeparated);
             foreach (var currencyPair in _currencyPairs)
             {
                 LimitOrderBook orderBook = new LimitOrderBook(currencyPair);
@@ -90,10 +91,10 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// </summary>
         public Exchange(ExchangeEssentialsList exchangeEssentialsList)
         {
-            _currencyPairs.Add(BitCoinUsd);
-            _currencyPairs.Add(XbtUsd);
-            _currencyPairs.Add("BTC/USD");
-            _currencyPairs.Add("XBT/USD");
+            _currencyPairs.Add(CurrencyConstants.BtcLtc);
+            _currencyPairs.Add(CurrencyConstants.XbtLtc);
+            _currencyPairs.Add(CurrencyConstants.BtcLtcSeparated);
+            _currencyPairs.Add(CurrencyConstants.XbtLtcSeparated);
             _exchangeEssentialsList = exchangeEssentialsList;
             foreach (var exchangeEssential in _exchangeEssentialsList)
             {
@@ -196,13 +197,13 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         {
             switch (order.CurrencyPair.ToUpper())
             {
-                case "BTCUSD":
+                case CurrencyConstants.BtcLtc:
                     return _exchangeEssentialsList.First().LimitOrderBook.PlaceOrder(order);
-                case "XBTUSD":
+                case CurrencyConstants.XbtLtc:
                     return _exchangeEssentialsList.ToList()[1].LimitOrderBook.PlaceOrder(order);
-                case "BTC/USD":
+                case CurrencyConstants.BtcLtcSeparated:
                     return _exchangeEssentialsList.ToList()[2].LimitOrderBook.PlaceOrder(order);
-                case "XBT/USD":
+                case CurrencyConstants.XbtLtcSeparated:
                     return _exchangeEssentialsList.ToList()[3].LimitOrderBook.PlaceOrder(order);
             }
             return false;
@@ -217,10 +218,14 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         {
             switch (orderCancellation.CurrencyPair)
             {
-                case "BTCUSD":
+                case CurrencyConstants.BtcLtc:
                     return _exchangeEssentialsList.First().LimitOrderBook.CancelOrder(orderCancellation.OrderId);
-                case "XBTUSD":
+                case CurrencyConstants.XbtLtc:
                     return _exchangeEssentialsList.ToList()[1].LimitOrderBook.CancelOrder(orderCancellation.OrderId);
+                case CurrencyConstants.BtcLtcSeparated:
+                    return _exchangeEssentialsList.ToList()[2].LimitOrderBook.CancelOrder(orderCancellation.OrderId);
+                case CurrencyConstants.XbtLtcSeparated:
+                    return _exchangeEssentialsList.ToList()[3].LimitOrderBook.CancelOrder(orderCancellation.OrderId);
             }
             return false;
         }

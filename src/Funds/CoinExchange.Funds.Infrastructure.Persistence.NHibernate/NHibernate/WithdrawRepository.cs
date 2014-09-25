@@ -62,7 +62,9 @@ namespace CoinExchange.Funds.Infrastructure.Persistence.NHibernate.NHibernate
         [Transaction]
         public Withdraw GetWithdrawByTransactionId(TransactionId transactionId)
         {
-            return CurrentSession.QueryOver<Withdraw>().Where(x => x.TransactionId.Value == transactionId.Value).SingleOrDefault();
+            return CurrentSession.QueryOver<Withdraw>()
+                .Where(x => x.TransactionId.Value == transactionId.Value)
+                .SingleOrDefault();
         }
 
         [Transaction]

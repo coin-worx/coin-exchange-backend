@@ -128,28 +128,6 @@ namespace CoinExchange.Funds.Domain.Model.LedgerAggregate
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:System.Object"/> class.
-        /// </summary>
-        public Ledger(string ledgerId, DateTime dateTime, LedgerType ledgerType, Currency currency, decimal amount,
-            decimal amountInUsd, decimal fee, decimal balance, string tradeId, string orderId, string withdrawId, 
-            string depositId, AccountId accountId)
-        {
-            LedgerId = ledgerId;
-            DateTime = dateTime;
-            LedgerType = ledgerType;
-            Currency = currency;
-            Amount = amount;
-            AmountInUsd = amountInUsd;
-            Fee = fee;
-            Balance = balance;
-            TradeId = tradeId;
-            OrderId = orderId;
-            WithdrawId = withdrawId;
-            DepositId = depositId;
-            AccountId = accountId;
-        }
-
-        /// <summary>
         /// Initializer for trade ledgers
         /// </summary>
         public Ledger(string ledgerId, DateTime dateTime, LedgerType ledgerType, Currency currency, decimal amount, decimal amountInUsd, decimal fee, decimal balance, string tradeId, string orderId, bool isBaseCurrencyInTrade, AccountId accountId)

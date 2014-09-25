@@ -8,24 +8,42 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
     /// </summary>
     public interface IDepositLimitEvaluationService
     {
-        /// <summary>
+        /*/// <summary>
         /// Evaluate the limit for deposit and signify if current transaction is within the deposit limits by comapring 
         /// it with the threshold limits
         /// </summary>
         /// <returns></returns>
-        bool EvaluateDepositLimit(decimal amountInUsd, IList<Ledger> depositLedgers, DepositLimit depositLimit,
-            decimal bestBidPrice, decimal bestAskPrice);
+        bool EvaluateDepositLimit(decimal amountInUsd, IList<Ledger> depositLedgers, DepositLimit depositLimit);
 
         /// <summary>
         /// Assigns the deposit limits without comparing them to a given deposit value
         /// </summary>
         /// <param name="depositLedgers"></param>
         /// <param name="depositLimit"></param>
-        /// <param name="bestBidPrice"></param>
-        /// <param name="bestAskPrice"></param>
         /// <returns></returns>
-        bool AssignDepositLimits(IList<Ledger> depositLedgers, DepositLimit depositLimit, decimal bestBidPrice,
-                                 decimal bestAskPrice);
+        bool AssignDepositLimits(IList<Ledger> depositLedgers, DepositLimit depositLimit);*/
+
+        /// <summary>
+        /// Evaluate the limit for deposit in the FIAT currency specified by the user, to see if the deposit is within the limits
+        /// </summary>
+        /// <param name="amountInUsd"></param>
+        /// <param name="depositLedgers"></param>
+        /// <param name="depositLimit"></param>
+        /// <param name="bestBid"></param>
+        /// <param name="bestAsk"></param>
+        /// <returns></returns>
+        bool EvaluateDepositLimit(decimal amountInUsd, IList<Ledger> depositLedgers, DepositLimit depositLimit, 
+            decimal bestBid = 0, decimal bestAsk = 0);
+
+        /// <summary>
+        /// Assigns the deposit limits without comparing them to a given deposit value
+        /// </summary>
+        /// <param name="depositLedgers"></param>
+        /// <param name="depositLimit"></param>
+        /// <param name="bestBid"> </param>
+        /// <param name="bestAsk"> </param>
+        /// <returns></returns>
+        bool AssignDepositLimits(IList<Ledger> depositLedgers, DepositLimit depositLimit, decimal bestBid = 0, decimal bestAsk = 0);
 
         /// <summary>
         /// Daily Deposit Limit

@@ -51,6 +51,7 @@
     <Compile Include="DepositAggregate\AccountDepositLimits.cs" />
     <Compile Include="DepositAggregate\DepositLimit.cs" />
     <Compile Include="DepositAggregate\DepositLimitEvaluationService.cs" />
+    <Compile Include="DepositAggregate\LimitsCurrency.cs" />
     <Compile Include="DepositAggregate\DepositType.cs" />
     <Compile Include="DepositAggregate\IDepositAddressRepository.cs" />
     <Compile Include="DepositAggregate\IDepositIdGeneratorService.cs" />
@@ -79,7 +80,8 @@
     <Compile Include="Services\ITierValidationService.cs" />
     <Compile Include="Services\ITransactionService.cs" />
     <Compile Include="Services\ITierLevelRetrievalService.cs" />
-    <Compile Include="Services\IWithdrawSubmissionService.cs" />
+    <Compile Include="Services\IClientInteractionService.cs" />
+    <Compile Include="Services\ILimitsConfigurationService.cs" />
     <Compile Include="Services\TierValidationService.cs" />
     <Compile Include="WithdrawAggregate\AccountWithdrawLimits.cs" />
     <Compile Include="WithdrawAggregate\BankAccount.cs" />

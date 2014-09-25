@@ -15,7 +15,6 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
         private decimal _monthlyLimit = 0;
         private decimal _monthlyLimitUsed = 0;
         private decimal _maximumDeposit = 0;
-        private decimal _maximumDepositUsd = 0;
 
         /// <summary>
         /// Evaluates if the current deposit transaction is within the maximum deposit limit and is allowed to proceed
@@ -23,31 +22,29 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
         /// <param name="currentDepositAmount"> </param>
         /// <param name="depositLedgers"></param>
         /// <param name="depositLimit"></param>
-        /// <param name="bestBidPrice"></param>
-        /// <param name="bestAskPrice"></param>
+        /// <param name="bestBid"> </param>
+        /// <param name="bestAsk"> </param>
         /// <returns></returns>
-        public bool EvaluateDepositLimit(decimal currentDepositAmount, IList<Ledger> depositLedgers, DepositLimit depositLimit, decimal bestBidPrice,
-            decimal bestAskPrice)
+        public bool EvaluateDepositLimit(decimal currentDepositAmount, IList<Ledger> depositLedgers, DepositLimit depositLimit, 
+            decimal bestBid = 0, decimal bestAsk = 0)
         {
             if (depositLimit.DailyLimit != 0 && depositLimit.MonthlyLimit != 0)
             {
                 // Set Daily and Monthly Limit
                 SetLimits(depositLimit);
                 // Set the amount used in the Daily and Monthly limit
-                SetUsedLimitsUsd(depositLedgers);
+                SetUsedLimits(depositLedgers, bestBid, bestAsk);
                 // Evaluate the Maximum Deposit, set it, and return response whether it went successfully or not
-                if (EvaluateMaximumDepositUsd(bestBidPrice, bestAskPrice))
+                if (EvaluateMaximumDeposit())
                 {
-                    return currentDepositAmount <= _maximumDepositUsd;
+                    return currentDepositAmount <= _maximumDeposit;
                 }
             }
             _maximumDeposit = 0;
-            _maximumDepositUsd = 0;
             _dailyLimit = 0;
             _dailyLimitUsed = 0;
             _monthlyLimit = 0;
             _monthlyLimitUsed = 0;
-
             return false;
         }
 
@@ -56,26 +53,24 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
         /// </summary>
         /// <param name="depositLedgers"></param>
         /// <param name="depositLimit"></param>
-        /// <param name="bestBidPrice"></param>
-        /// <param name="bestAskPrice"></param>
+        /// <param name="bestBid"> </param>
+        /// <param name="bestAsk"> </param>
         /// <returns></returns>
-        public bool AssignDepositLimits(IList<Ledger> depositLedgers, DepositLimit depositLimit, decimal bestBidPrice,
-            decimal bestAskPrice)
+        public bool AssignDepositLimits(IList<Ledger> depositLedgers, DepositLimit depositLimit, decimal bestBid, decimal bestAsk)
         {
             if (depositLimit.DailyLimit != 0 && depositLimit.MonthlyLimit != 0)
             {
                 // Set Daily and Monthly Limit
                 SetLimits(depositLimit);
                 // Set the amount used in the Daily and Monthly limit
-                SetUsedLimitsUsd(depositLedgers);
+                SetUsedLimits(depositLedgers, bestBid, bestAsk);
                 // Evaluate the Maximum Deposit, set it, and return response whether it went successfully or not
-                if (EvaluateMaximumDepositUsd(bestBidPrice, bestAskPrice))
+                if (EvaluateMaximumDeposit())
                 {
                     return true;
                 }
             }
             _maximumDeposit = 0;
-            _maximumDepositUsd = 0;
             _dailyLimit = 0;
             _dailyLimitUsed = 0;
             _monthlyLimit = 0;
@@ -88,7 +83,7 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
         /// Evaluates the value of Maximum Deposit
         /// </summary>
         /// <returns></returns>
-        private bool EvaluateMaximumDepositUsd(decimal bestBid, decimal bestAsk)
+        private bool EvaluateMaximumDeposit()
         {
             // If either the daily limit or monthly limit has been reached, no deposit can be made
             if (!(_monthlyLimit - _monthlyLimitUsed).Equals(0) || !(_dailyLimit - _dailyLimitUsed).Equals(0))
@@ -96,7 +91,7 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
                 // If both the used limits have not been used
                 if (_monthlyLimitUsed.Equals(0) && _dailyLimitUsed.Equals(0))
                 {
-                    return SetMaximumDeposit(_dailyLimit, bestBid, bestAsk);
+                    return SetMaximumDeposit(_dailyLimit);
                 }
                 // If only the DailyLimitUsed is 0, we need to evaluate other conditions
                 else if (_dailyLimitUsed.Equals(0))
@@ -104,55 +99,39 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
                     // E.g., if DailyLimit = 0/1000 & MonthlyLimit = 3000/5000
                     if (_monthlyLimit - _monthlyLimitUsed > _dailyLimit)
                     {
-                        return SetMaximumDeposit(_dailyLimit, bestBid, bestAsk);
+                        return SetMaximumDeposit(_dailyLimit);
                     }
                     // E.g., if DailyLimit = 0/1000, & MonthlyLimit = 4500/5000
                     else if (_monthlyLimit - _monthlyLimitUsed < _dailyLimit)
                     {
-                        return SetMaximumDeposit(_monthlyLimit - _monthlyLimitUsed, bestBid, bestAsk);
+                        return SetMaximumDeposit(_monthlyLimit - _monthlyLimitUsed);
                     }
                 }
                 // E.g., if DailyLimit = 500/1000 & MonthlyLimit = 4000/5000
                 else if ((_monthlyLimit - _monthlyLimitUsed) > (_dailyLimit - _dailyLimitUsed))
                 {
-                    return SetMaximumDeposit(_dailyLimit - _dailyLimitUsed, bestBid, bestAsk);
+                    return SetMaximumDeposit(_dailyLimit - _dailyLimitUsed);
                 }
                 // E.g., if DailyLimit = 400/1000 & MonthlyLimit = 4500/5000
                 else if ((_monthlyLimit - _monthlyLimitUsed) < (_dailyLimit - _dailyLimitUsed))
                 {
-                    return SetMaximumDeposit(_monthlyLimit - _monthlyLimitUsed, bestBid, bestAsk);
+                    return SetMaximumDeposit(_monthlyLimit - _monthlyLimitUsed);
                 }
                 else if ((_monthlyLimit - _monthlyLimitUsed).Equals(_dailyLimit - _dailyLimitUsed))
                 {
-                    return SetMaximumDeposit(_monthlyLimit - _monthlyLimitUsed, bestBid, bestAsk);
+                    return SetMaximumDeposit(_monthlyLimit - _monthlyLimitUsed);
                 }
             }
             return false;
         }
 
         /// <summary>
-        /// Set the value for the Maximum Deposit in currency amount and US Dollars
+        /// Set the value for the Maximum Deposit in currency amount
         /// </summary>
-        private bool SetMaximumDeposit(decimal maximumDeposit, decimal bestBid, decimal bestAsk)
+        private bool SetMaximumDeposit(decimal maximumDeposit)
         {
-            _maximumDeposit = ConvertUsdToCurrency(bestBid, bestAsk, maximumDeposit);
-            _maximumDepositUsd = maximumDeposit;
+            _maximumDeposit = maximumDeposit;
             return true;
-        }
-
-        /// <summary>
-        /// Converts US Dollars to currency amount
-        /// </summary>
-        private decimal ConvertUsdToCurrency(decimal bestBid, decimal bestAsk, decimal usdAmount)
-        {
-            // ToDo: What to do if the best bid and/or best ask is 0?
-            if (bestBid > 0 && bestAsk > 0)
-            {
-                decimal sum = (usdAmount/bestBid) + (usdAmount/bestAsk);
-                decimal midPoint = sum/2;
-                return midPoint;
-            }
-            return 0;
         }
 
         /// <summary>
@@ -168,7 +147,7 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
         /// Sets the amount that has been used for daily and monthly deposit limits
         /// </summary>
         /// <returns></returns>
-        private void SetUsedLimitsUsd(IList<Ledger> depositLedgers)
+        private void SetUsedLimits(IList<Ledger> depositLedgers, decimal bestBid, decimal bestAsk)
         {
             decimal tempDailyLimitUsed = 0;
             decimal tempMonthlyLimitUsed = 0;
@@ -177,15 +156,29 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
             {
                 foreach (var depositLedger in depositLedgers)
                 {
+                    decimal amount = 0;
+
+                    // Best bid and best ask will be zero if the admin has decided to specify the limits in  Default Crypto currency
+                    // and not FIAT currency
+                    if (bestBid == 0 && bestAsk == 0)
+                    {
+                        amount = depositLedger.Amount;
+                    }
+                    else
+                    {
+                        amount = depositLedger.AmountInUsd;
+                    }
+                    // Set the amount used in the last 24 hours
                     if (depositLedger.DateTime >= DateTime.Now.AddHours(-24))
                     {
-                        tempDailyLimitUsed += depositLedger.AmountInUsd;
-                        tempMonthlyLimitUsed += depositLedger.AmountInUsd;
+                        tempDailyLimitUsed += amount;
+                        tempMonthlyLimitUsed += amount;
                     }
+                    // Set the amount used in the last 30 days
                     if (depositLedger.DateTime >= DateTime.Now.AddDays(-30) &&
                         depositLedger.DateTime < DateTime.Now.AddHours(-24))
                     {
-                        tempMonthlyLimitUsed += depositLedger.AmountInUsd;
+                        tempMonthlyLimitUsed += amount;
                     }
                 }
             }

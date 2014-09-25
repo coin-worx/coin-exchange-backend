@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CoinExchange.Common.Tests;
+using CoinExchange.Common.Utility;
 using CoinExchange.Funds.Domain.Model.BalanceAggregate;
 using CoinExchange.Funds.Domain.Model.CurrencyAggregate;
 using CoinExchange.Funds.Domain.Model.DepositAggregate;
@@ -51,42 +52,36 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             IDepositIdGeneratorService depositIdGeneratorService = (IDepositIdGeneratorService)ContextRegistry.GetContext()["DepositIdGeneratorService"];
             IWithdrawFeesRepository withdrawFeesRepository = (IWithdrawFeesRepository)ContextRegistry.GetContext()["WithdrawFeesRepository"];
             IFeeCalculationService feeCalculationService = (IFeeCalculationService)ContextRegistry.GetContext()["FeeCalculationService"];
+            IFeeRepository feeRepository = (IFeeRepository)ContextRegistry.GetContext()["FeeRepository"];
 
-            Currency baseCurrency = new Currency("BTC", true);
-            Currency quoteCurrency = new Currency("USD", false);            
+            Tuple<string, string> splittedCurrencyPair = CurrencySplitterService.SplitCurrencyPair(feeRepository.GetAllFees().First().CurrencyPair);
+            Currency baseCurrency = new Currency(splittedCurrencyPair.Item1);
+            Currency quoteCurrency = new Currency(splittedCurrencyPair.Item2);
+                      
             AccountId user1Account = new AccountId(1);
             AccountId user2Account = new AccountId(2);
-            decimal btcDepositAmount = 1.4m;
-            decimal usdDepositAmount = 1000;
+            decimal baseDepositAmount = 1.4m;
+            decimal quoteDepositAmount = 1000;
 
-            Balance user1UsdInitialBalance = new Balance(quoteCurrency, user1Account, usdDepositAmount, usdDepositAmount);
-            Balance user2UsdInitialBalance = new Balance(quoteCurrency, user2Account, usdDepositAmount, usdDepositAmount);
-            fundsPersistenceRepository.SaveOrUpdate(user1UsdInitialBalance);
-            fundsPersistenceRepository.SaveOrUpdate(user2UsdInitialBalance);
+            Balance user1QuoteInitialBalance = new Balance(quoteCurrency, user1Account, quoteDepositAmount, quoteDepositAmount);
+            Balance user2QuoteInitialBalance = new Balance(quoteCurrency, user2Account, quoteDepositAmount, quoteDepositAmount);
+            fundsPersistenceRepository.SaveOrUpdate(user1QuoteInitialBalance);
+            fundsPersistenceRepository.SaveOrUpdate(user2QuoteInitialBalance);
 
             // Deposit
             Deposit deposit1 = new Deposit(baseCurrency, depositIdGeneratorService.GenerateId(), DateTime.Now,
-                                          DepositType.Default, btcDepositAmount, 0, TransactionStatus.Pending, user1Account,
+                                          DepositType.Default, baseDepositAmount, 0, TransactionStatus.Pending, user1Account,
                                           new TransactionId("1"), new BitcoinAddress("bitcoin1"));
             deposit1.IncrementConfirmations(7);
             fundsPersistenceRepository.SaveOrUpdate(deposit1);
-            /*Deposit deposit2 = new Deposit(quoteCurrency, depositIdGeneratorService.GenerateId(), DateTime.Now,
-                                          DepositType.Default, usdDepositAmount, 0, TransactionStatus.Pending, user1Account,
-                                          new TransactionId("2"), new BitcoinAddress("bitcoin2"));                
-            deposit2.IncrementConfirmations(7);
-            fundsPersistenceRepository.SaveOrUpdate(deposit2);*/
-            Deposit deposit3 = new Deposit(baseCurrency, depositIdGeneratorService.GenerateId(), DateTime.Now,
-                                          DepositType.Default, btcDepositAmount, 0, TransactionStatus.Pending, user2Account,
-                                          new TransactionId("3"), new BitcoinAddress("bitcoin3"));
-            deposit3.IncrementConfirmations(7);
-            fundsPersistenceRepository.SaveOrUpdate(deposit3);
-            /*Deposit deposit4 = new Deposit(quoteCurrency, depositIdGeneratorService.GenerateId(), DateTime.Now,
-                                          DepositType.Default, usdDepositAmount, 0, TransactionStatus.Pending, user2Account,
-                                          new TransactionId("4"), new BitcoinAddress("bitcoin4"));
-            deposit4.IncrementConfirmations(7);
-            fundsPersistenceRepository.SaveOrUpdate(deposit4);*/
 
-            // Retrieve BTC balance for user 1
+            Deposit deposit2 = new Deposit(baseCurrency, depositIdGeneratorService.GenerateId(), DateTime.Now,
+                                          DepositType.Default, baseDepositAmount, 0, TransactionStatus.Pending, user2Account,
+                                          new TransactionId("3"), new BitcoinAddress("bitcoin3"));
+            deposit2.IncrementConfirmations(7);
+            fundsPersistenceRepository.SaveOrUpdate(deposit2);
+
+            // Retrieve Base Currency balance for user 1
             bool depositResponse = fundsValidationService.DepositConfirmed(deposit1);
             Assert.IsTrue(depositResponse);
             Balance balance = balanceRepository.GetBalanceByCurrencyAndAccountId(baseCurrency, user1Account);
@@ -95,31 +90,27 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             Assert.AreEqual(deposit1.Amount, balance.AvailableBalance);
             Assert.AreEqual(balance.PendingBalance, 0);
 
-            // Retrieve USD balance for user 1
-           // depositResponse = fundsValidationService.DepositConfirmed(deposit2);
-            Assert.IsTrue(depositResponse);
+            // Retrieve Quote Currency balance for user 1
             balance = balanceRepository.GetBalanceByCurrencyAndAccountId(quoteCurrency, user1Account);
             Assert.IsNotNull(balance);
-            Assert.AreEqual(user1UsdInitialBalance.CurrentBalance, balance.CurrentBalance);
-            Assert.AreEqual(user1UsdInitialBalance.AvailableBalance, balance.AvailableBalance);
+            Assert.AreEqual(user1QuoteInitialBalance.CurrentBalance, balance.CurrentBalance);
+            Assert.AreEqual(user1QuoteInitialBalance.AvailableBalance, balance.AvailableBalance);
             Assert.AreEqual(0, balance.PendingBalance);
 
             // Retrieve BTC balance for user 2
-            depositResponse = fundsValidationService.DepositConfirmed(deposit3);
+            depositResponse = fundsValidationService.DepositConfirmed(deposit2);
             Assert.IsTrue(depositResponse);
             balance = balanceRepository.GetBalanceByCurrencyAndAccountId(baseCurrency, user2Account);
             Assert.IsNotNull(balance);
-            Assert.AreEqual(deposit3.Amount, balance.CurrentBalance);
-            Assert.AreEqual(deposit3.Amount, balance.AvailableBalance);
+            Assert.AreEqual(deposit2.Amount, balance.CurrentBalance);
+            Assert.AreEqual(deposit2.Amount, balance.AvailableBalance);
             Assert.AreEqual(balance.PendingBalance, 0);
 
             // Retrieve USD balance for user 2
-            //depositResponse = fundsValidationService.DepositConfirmed(deposit4);
-            Assert.IsTrue(depositResponse);
             balance = balanceRepository.GetBalanceByCurrencyAndAccountId(quoteCurrency, user2Account);
             Assert.IsNotNull(balance);
-            Assert.AreEqual(user2UsdInitialBalance.CurrentBalance, balance.CurrentBalance);
-            Assert.AreEqual(user2UsdInitialBalance.AvailableBalance, balance.AvailableBalance);
+            Assert.AreEqual(user2QuoteInitialBalance.CurrentBalance, balance.CurrentBalance);
+            Assert.AreEqual(user2QuoteInitialBalance.AvailableBalance, balance.AvailableBalance);
             Assert.AreEqual(0, balance.PendingBalance);
 
             // Order Validation for User 1's Account
@@ -136,18 +127,18 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             decimal user1Fee = feeCalculationService.GetFee(baseCurrency, quoteCurrency, user1Account, volume, price);
             decimal user2Fee = feeCalculationService.GetFee(baseCurrency, quoteCurrency, user2Account, volume, price);
 
-            // btc for User Account 1
+            // Base Currency Balance for User Account 1
             balance = balanceRepository.GetBalanceByCurrencyAndAccountId(baseCurrency, user1Account);
             Assert.IsNotNull(balance);
-            Assert.AreEqual(btcDepositAmount, balance.AvailableBalance);
-            Assert.AreEqual(btcDepositAmount, balance.CurrentBalance);
+            Assert.AreEqual(baseDepositAmount, balance.AvailableBalance);
+            Assert.AreEqual(baseDepositAmount, balance.CurrentBalance);
             Assert.AreEqual(0, balance.PendingBalance);
 
-            // USD for User Account 1
+            // Quote Currency Balance for User Account 1
             balance = balanceRepository.GetBalanceByCurrencyAndAccountId(quoteCurrency, user1Account);
             Assert.IsNotNull(balance);
-            Assert.AreEqual(usdDepositAmount - (volume * price), balance.AvailableBalance);
-            Assert.AreEqual(usdDepositAmount, balance.CurrentBalance);
+            Assert.AreEqual(quoteDepositAmount - (volume * price), balance.AvailableBalance);
+            Assert.AreEqual(quoteDepositAmount, balance.CurrentBalance);
             Assert.AreEqual(volume * price, balance.PendingBalance);
 
             // Validation of User 2's order
@@ -155,18 +146,18 @@ namespace CoinExchange.Funds.Application.IntegrationTests
                 volume, price, sell, sellOrderId);
             Assert.IsTrue(validationResponse);
 
-            // btc for User Account 2
+            // Base Currency Balance for User Account 2
             balance = balanceRepository.GetBalanceByCurrencyAndAccountId(baseCurrency, user2Account);
             Assert.IsNotNull(balance);
-            Assert.AreEqual(btcDepositAmount - volume, balance.AvailableBalance);
-            Assert.AreEqual(btcDepositAmount, balance.CurrentBalance);
+            Assert.AreEqual(baseDepositAmount - volume, balance.AvailableBalance);
+            Assert.AreEqual(baseDepositAmount, balance.CurrentBalance);
             Assert.AreEqual(volume, balance.PendingBalance);
 
-            // USD for User Account 2
+            // Quote Currency Balance for User Account 2
             balance = balanceRepository.GetBalanceByCurrencyAndAccountId(quoteCurrency, user2Account);
             Assert.IsNotNull(balance);
-            Assert.AreEqual(usdDepositAmount, balance.AvailableBalance);
-            Assert.AreEqual(usdDepositAmount, balance.CurrentBalance);
+            Assert.AreEqual(quoteDepositAmount, balance.AvailableBalance);
+            Assert.AreEqual(quoteDepositAmount, balance.CurrentBalance);
             Assert.AreEqual(0, balance.PendingBalance);
 
             string tradeId = "tradeid123";
@@ -174,68 +165,70 @@ namespace CoinExchange.Funds.Application.IntegrationTests
                 volume, price, DateTime.Now, tradeId, user1Account.Value, user2Account.Value, buyOrderId, sellOrderId);
             Assert.IsTrue(tradeExecutedResponse);
 
-            // btc for User Account 1
+            // Base Currency Balance for User Account 1
             balance = balanceRepository.GetBalanceByCurrencyAndAccountId(baseCurrency, user1Account);
             Assert.IsNotNull(balance);
-            Assert.AreEqual(btcDepositAmount + volume, balance.AvailableBalance);
-            Assert.AreEqual(btcDepositAmount + volume, balance.CurrentBalance);
+            Assert.AreEqual(baseDepositAmount + volume, balance.AvailableBalance);
+            Assert.AreEqual(baseDepositAmount + volume, balance.CurrentBalance);
             Assert.AreEqual(0, balance.PendingBalance);
 
-            // USD for User Account 1
+            // Quote Currency Balance for User Account 1
             balance = balanceRepository.GetBalanceByCurrencyAndAccountId(quoteCurrency, user1Account);
             Assert.IsNotNull(balance);
-            Assert.AreEqual(usdDepositAmount - (volume * price) - user1Fee, balance.AvailableBalance);
-            Assert.AreEqual(usdDepositAmount - (volume * price) - user1Fee, balance.CurrentBalance);
+            Assert.AreEqual(quoteDepositAmount - (volume * price) - user1Fee, balance.AvailableBalance);
+            Assert.AreEqual(quoteDepositAmount - (volume * price) - user1Fee, balance.CurrentBalance);
             Assert.AreEqual(0, balance.PendingBalance);
 
-            // btc for User Account 2
+            // Base Currency Balance for User Account 2
             balance = balanceRepository.GetBalanceByCurrencyAndAccountId(baseCurrency, user2Account);
             Assert.IsNotNull(balance);
-            Assert.AreEqual(btcDepositAmount - (volume), balance.AvailableBalance);
-            Assert.AreEqual(btcDepositAmount - (volume), balance.CurrentBalance);
+            Assert.AreEqual(baseDepositAmount - (volume), balance.AvailableBalance);
+            Assert.AreEqual(baseDepositAmount - (volume), balance.CurrentBalance);
             Assert.AreEqual(0, balance.PendingBalance);
 
-            // USD for User Account 2
+            // Quote Currency Balance for User Account 2
             balance = balanceRepository.GetBalanceByCurrencyAndAccountId(quoteCurrency, user2Account);
             Assert.IsNotNull(balance);
-            Assert.AreEqual(usdDepositAmount + (volume * price) - user2Fee, balance.AvailableBalance);
-            Assert.AreEqual(usdDepositAmount + (volume * price) - user2Fee, balance.CurrentBalance);
+            Assert.AreEqual(quoteDepositAmount + (volume * price) - user2Fee, balance.AvailableBalance);
+            Assert.AreEqual(quoteDepositAmount + (volume * price) - user2Fee, balance.CurrentBalance);
             Assert.AreEqual(0, balance.PendingBalance);
 
             decimal withdrawAmount = 0.3M;
-            // Withdraw btc
+            // Withdraw Base Currency
             Withdraw validateFundsForWithdrawal = fundsValidationService.ValidateFundsForWithdrawal(user1Account, 
                 baseCurrency, withdrawAmount, new TransactionId("transaction123"), new BitcoinAddress("bitcoin123"));
             Assert.IsNotNull(validateFundsForWithdrawal);
             WithdrawFees withdrawFee = withdrawFeesRepository.GetWithdrawFeesByCurrencyName(baseCurrency.Name);
 
-            // btc for User Account 1
+            // Base Currency Balance for User Account 1
             balance = balanceRepository.GetBalanceByCurrencyAndAccountId(baseCurrency, user1Account);
             Assert.IsNotNull(balance);
-            Assert.AreEqual(btcDepositAmount + volume - withdrawAmount - withdrawFee.Fee, balance.AvailableBalance);
-            Assert.AreEqual(btcDepositAmount + volume, balance.CurrentBalance);
-            Assert.AreEqual(withdrawAmount + withdrawFee.Fee, balance.PendingBalance);
+            Assert.AreEqual(baseDepositAmount + volume - withdrawAmount, balance.AvailableBalance);
+            Assert.AreEqual(baseDepositAmount + volume, balance.CurrentBalance);
+            Assert.AreEqual(withdrawAmount, balance.PendingBalance);
 
             bool withdrawalExecuted = fundsValidationService.WithdrawalExecuted(validateFundsForWithdrawal);
             Assert.IsTrue(withdrawalExecuted);
 
-            // btc for User Account 1
+            // Base Currency Balance for User Account 1
             balance = balanceRepository.GetBalanceByCurrencyAndAccountId(baseCurrency, user1Account);
             Assert.IsNotNull(balance);
-            Assert.AreEqual(btcDepositAmount + volume - withdrawAmount - withdrawFee.Fee, balance.AvailableBalance);
-            Assert.AreEqual(btcDepositAmount + volume - withdrawAmount - withdrawFee.Fee, balance.CurrentBalance);
+            Assert.AreEqual(baseDepositAmount + volume - withdrawAmount, balance.AvailableBalance);
+            Assert.AreEqual(baseDepositAmount + volume - withdrawAmount, balance.CurrentBalance);
             Assert.AreEqual(0, balance.PendingBalance);
 
+            // EXCEPTION OCCURS HERE when the user tries to withdraw more than their remaining limit
             // Withdraw will fail because the amount requested is greater than the maximum limit threshold
             validateFundsForWithdrawal = fundsValidationService.ValidateFundsForWithdrawal(user1Account, 
-                baseCurrency, 1.6m, new TransactionId("transaction123"), new BitcoinAddress("bitcoin123"));
+                baseCurrency, baseDepositAmount + volume/*Excluding previous withdrawal amount*/, 
+                new TransactionId("transaction123"), new BitcoinAddress("bitcoin123"));
             Assert.IsNull(validateFundsForWithdrawal);
 
-            // btc for User Account 1
+            // Base Currency for User Account 1
             balance = balanceRepository.GetBalanceByCurrencyAndAccountId(baseCurrency, user1Account);
             Assert.IsNotNull(balance);
-            Assert.AreEqual(btcDepositAmount + volume - withdrawAmount - withdrawFee.Fee, balance.AvailableBalance);
-            Assert.AreEqual(btcDepositAmount + volume - withdrawAmount - withdrawFee.Fee, balance.CurrentBalance);
+            Assert.AreEqual(baseDepositAmount + volume - withdrawAmount, balance.AvailableBalance);
+            Assert.AreEqual(baseDepositAmount + volume - withdrawAmount, balance.CurrentBalance);
             Assert.AreEqual(0, balance.PendingBalance);
         }
 
@@ -285,9 +278,9 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             // Check balance
             balance = balanceRepository.GetBalanceByCurrencyAndAccountId(currency, accountId);
             Assert.IsNotNull(balance);
-            Assert.AreEqual(Math.Round(1.4M - 1.3M - withdrawFee.Fee, 5), Math.Round(balance.AvailableBalance, 5));
+            Assert.AreEqual(Math.Round(1.4M - 1.3M, 5), Math.Round(balance.AvailableBalance, 5));
             Assert.AreEqual(Math.Round(1.4M, 5), Math.Round(balance.CurrentBalance, 5));
-            Assert.AreEqual(1.3m + withdrawFee.Fee, balance.PendingBalance);
+            Assert.AreEqual(1.3m, balance.PendingBalance);
 
             // Withdraw # 1 Confirmed
             bool withdrawalExecuted = fundsValidationService.WithdrawalExecuted(withdrawal);
@@ -297,8 +290,8 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             // Check balance
             balance = balanceRepository.GetBalanceByCurrencyAndAccountId(currency, accountId);
             Assert.IsNotNull(balance);
-            Assert.AreEqual(Math.Round(1.4M - 1.3M - withdrawFee.Fee, 5), Math.Round(balance.CurrentBalance, 5));
-            Assert.AreEqual(Math.Round(1.4M - 1.3M - withdrawFee.Fee, 5), Math.Round(balance.AvailableBalance, 5));
+            Assert.AreEqual(Math.Round(1.4M - 1.3M, 5), Math.Round(balance.CurrentBalance, 5));
+            Assert.AreEqual(Math.Round(1.4M - 1.3M, 5), Math.Round(balance.AvailableBalance, 5));
             Assert.AreEqual(0, balance.PendingBalance);
 
             // Withdraw # 2: Exception Expected
@@ -309,8 +302,8 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             // Check balance
             balance = balanceRepository.GetBalanceByCurrencyAndAccountId(currency, accountId);
             Assert.IsNotNull(balance);
-            Assert.AreEqual(Math.Round(1.4M - 1.3M - withdrawFee.Fee, 5), Math.Round(balance.CurrentBalance, 5));
-            Assert.AreEqual(Math.Round(1.4M - 1.3M - withdrawFee.Fee, 5), Math.Round(balance.AvailableBalance, 5));
+            Assert.AreEqual(Math.Round(1.4M - 1.3M, 5), Math.Round(balance.CurrentBalance, 5));
+            Assert.AreEqual(Math.Round(1.4M - 1.3M, 5), Math.Round(balance.AvailableBalance, 5));
             Assert.AreEqual(0, balance.PendingBalance);
 
             // Withdraw # 3
@@ -320,9 +313,9 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             Assert.AreEqual(TransactionStatus.Pending, withdrawal.Status);
             balance = balanceRepository.GetBalanceByCurrencyAndAccountId(currency, accountId);
             Assert.IsNotNull(balance);
-            Assert.AreEqual(Math.Round(1.4M - 1.3M - 0.1M - (withdrawFee.Fee*2), 5), Math.Round(balance.AvailableBalance, 5));
-            Assert.AreEqual(Math.Round(1.4M - 1.3M - withdrawFee.Fee, 5), Math.Round(balance.CurrentBalance, 5));
-            Assert.AreEqual(0.1M + withdrawFee.Fee, balance.PendingBalance);
+            Assert.AreEqual(Math.Round(1.4M - 1.3M - 0.1M, 5), Math.Round(balance.AvailableBalance, 5));
+            Assert.AreEqual(Math.Round(1.4M - 1.3M, 5), Math.Round(balance.CurrentBalance, 5));
+            Assert.AreEqual(0.1M, balance.PendingBalance);
 
             // Withdraw # 3 Confirmed
             withdrawalExecuted = fundsValidationService.WithdrawalExecuted(withdrawal);
@@ -332,8 +325,8 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             // Check balance
             balance = balanceRepository.GetBalanceByCurrencyAndAccountId(currency, accountId);
             Assert.IsNotNull(balance);
-            Assert.AreEqual(Math.Round(1.4M - 1.3M - 0.1M - (withdrawFee.Fee*2), 5), Math.Round(balance.CurrentBalance, 5));
-            Assert.AreEqual(Math.Round(1.4M - 1.3M - 0.1M - (withdrawFee.Fee*2), 5), Math.Round(balance.AvailableBalance, 5));
+            Assert.AreEqual(Math.Round(1.4M - 1.3M - 0.1M, 5), Math.Round(balance.CurrentBalance, 5));
+            Assert.AreEqual(Math.Round(1.4M - 1.3M - 0.1M, 5), Math.Round(balance.AvailableBalance, 5));
             Assert.AreEqual(0, balance.PendingBalance);
         }
 
@@ -362,6 +355,8 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             // Retrieve balance
             Balance balance = balanceRepository.GetBalanceByCurrencyAndAccountId(currency, accountId);
             Assert.IsNull(balance);
+
+            // Deposit
             bool depositResponse = fundsValidationService.DepositConfirmed(deposit);
             Assert.IsTrue(depositResponse);
 
@@ -383,9 +378,9 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             // Check balance
             balance = balanceRepository.GetBalanceByCurrencyAndAccountId(currency, accountId);
             Assert.IsNotNull(balance);
-            Assert.AreEqual(Math.Round(1.4M - 1.3M - withdrawFee.Fee, 5), Math.Round(balance.AvailableBalance, 5));
+            Assert.AreEqual(Math.Round(1.4M - 1.3M, 5), Math.Round(balance.AvailableBalance, 5));
             Assert.AreEqual(Math.Round(1.4M, 5), Math.Round(balance.CurrentBalance, 5));
-            Assert.AreEqual(1.3m + withdrawFee.Fee, balance.PendingBalance);
+            Assert.AreEqual(1.3m, balance.PendingBalance);
 
             // Withdraw # 1 Confirmed
             bool withdrawalExecuted = fundsValidationService.WithdrawalExecuted(withdrawal);
@@ -395,8 +390,8 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             // Check balance
             balance = balanceRepository.GetBalanceByCurrencyAndAccountId(currency, accountId);
             Assert.IsNotNull(balance);
-            Assert.AreEqual(Math.Round(1.4M - 1.3M - withdrawFee.Fee, 5), Math.Round(balance.CurrentBalance, 5));
-            Assert.AreEqual(Math.Round(1.4M - 1.3M - withdrawFee.Fee, 5), Math.Round(balance.AvailableBalance, 5));
+            Assert.AreEqual(Math.Round(1.4M - 1.3M, 5), Math.Round(balance.CurrentBalance, 5));
+            Assert.AreEqual(Math.Round(1.4M - 1.3M, 5), Math.Round(balance.AvailableBalance, 5));
             Assert.AreEqual(0, balance.PendingBalance);
 
             // Withdraw # 2: Exception Expected
@@ -407,8 +402,8 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             // Check balance
             balance = balanceRepository.GetBalanceByCurrencyAndAccountId(currency, accountId);
             Assert.IsNotNull(balance);
-            Assert.AreEqual(Math.Round(1.4M - 1.3M - withdrawFee.Fee, 5), Math.Round(balance.CurrentBalance, 5));
-            Assert.AreEqual(Math.Round(1.4M - 1.3M - withdrawFee.Fee, 5), Math.Round(balance.AvailableBalance, 5));
+            Assert.AreEqual(Math.Round(1.4M - 1.3M, 5), Math.Round(balance.CurrentBalance, 5));
+            Assert.AreEqual(Math.Round(1.4M - 1.3M, 5), Math.Round(balance.AvailableBalance, 5));
             Assert.AreEqual(0, balance.PendingBalance);
 
             // Withdraw # 3
@@ -419,8 +414,8 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             balance = balanceRepository.GetBalanceByCurrencyAndAccountId(currency, accountId);
             Assert.IsNotNull(balance);
             Assert.AreEqual(Math.Round(1.4M - 1.3M - 0.1M - (withdrawFee.Fee * 2), 5), Math.Round(balance.AvailableBalance, 5));
-            Assert.AreEqual(Math.Round(1.4M - 1.3M - withdrawFee.Fee, 5), Math.Round(balance.CurrentBalance, 5));
-            Assert.AreEqual(0.1M + withdrawFee.Fee, balance.PendingBalance);
+            Assert.AreEqual(Math.Round(1.4M - 1.3M, 5), Math.Round(balance.CurrentBalance, 5));
+            Assert.AreEqual(0.1M, balance.PendingBalance);
 
             // Withdraw # 3 Confirmed
             withdrawalExecuted = fundsValidationService.WithdrawalExecuted(withdrawal);
@@ -461,10 +456,13 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             IFundsPersistenceRepository fundsPersistenceRepository = (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];
             IBalanceRepository balanceRepository = (IBalanceRepository)ContextRegistry.GetContext()["BalanceRepository"];
             IFeeCalculationService feeCalculationService = (IFeeCalculationService)ContextRegistry.GetContext()["FeeCalculationService"];
+            IFeeRepository feeRepository = (IFeeRepository)ContextRegistry.GetContext()["FeeRepository"];
 
             AccountId accountId = new AccountId(123);
-            Currency baseCurrency = new Currency("BTC");
-            Currency quoteCurrency = new Currency("USD");
+            List<Fee> allFees = feeRepository.GetAllFees();
+            Tuple<string, string> splittedCurrencyPair = CurrencySplitterService.SplitCurrencyPair(allFees.First().CurrencyPair);
+            Currency baseCurrency = new Currency(splittedCurrencyPair.Item1);
+            Currency quoteCurrency = new Currency(splittedCurrencyPair.Item2);
             Balance baseCurrencyBalance = new Balance(baseCurrency, accountId, 400, 400);
             fundsPersistenceRepository.SaveOrUpdate(baseCurrencyBalance);
 
@@ -539,8 +537,8 @@ namespace CoinExchange.Funds.Application.IntegrationTests
             // Check balance
             balance = balanceRepository.GetBalanceByCurrencyAndAccountId(currency, accountId);
             Assert.IsNotNull(balance);
-            Assert.AreEqual(Math.Round(1.4M - 1.3M - withdrawFee.Fee, 5), Math.Round(balance.CurrentBalance, 5));
-            Assert.AreEqual(Math.Round(1.4M - 1.3M - withdrawFee.Fee, 5), Math.Round(balance.AvailableBalance, 5));
+            Assert.AreEqual(Math.Round(1.4M - 1.3M, 5), Math.Round(balance.CurrentBalance, 5));
+            Assert.AreEqual(Math.Round(1.4M - 1.3M, 5), Math.Round(balance.AvailableBalance, 5));
             Assert.AreEqual(0, balance.PendingBalance);
         }
 

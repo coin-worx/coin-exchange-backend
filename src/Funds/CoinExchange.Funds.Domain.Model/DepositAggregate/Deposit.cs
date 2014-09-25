@@ -69,12 +69,6 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
         public decimal Amount { get; private set; }
 
         /// <summary>
-        /// Amount in US dollars. THis value is only set in the DepositLimitEvaluationService after the deposit has been 
-        /// confirmed, and the best bid and best ask is used for the evaluation
-        /// </summary>
-        public decimal AmountInUsd { get; private set; }
-
-        /// <summary>
         /// Fee
         /// </summary>
         public decimal Fee { get; private set; }
@@ -110,12 +104,6 @@ namespace CoinExchange.Funds.Domain.Model.DepositAggregate
         public void SetAmount(decimal amount)
         {
             Amount = amount;
-        }
-
-        //?Sets amount in US Dollars
-        public void SetAmountInUsd(decimal amount)
-        {
-            AmountInUsd = amount;
         }
 
         /// <summary>

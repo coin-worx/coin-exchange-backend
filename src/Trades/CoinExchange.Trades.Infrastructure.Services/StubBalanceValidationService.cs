@@ -33,5 +33,10 @@ namespace CoinExchange.Trades.Infrastructure.Services
         {
             return true;
         }
+
+        public bool OrderCancelled(string baseCurrency, string quoteCurrency, string traderId, string orderSide, string orderId, decimal openQuantity, decimal price)
+        {
+            return true;
+        }
     }
 }
