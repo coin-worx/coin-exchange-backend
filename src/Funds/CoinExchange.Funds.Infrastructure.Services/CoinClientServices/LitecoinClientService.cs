@@ -210,7 +210,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.CoinClientServices
             if (getTransactionResponse.Confirmations > _pendingTransactions[transactionIndex].Item2)
             {
                 Log.Debug(string.Format("Litecoin Confirmation received from network: Transaction ID = {0}, Confirmations = {1}",
-                    _pendingTransactions[transactionIndex].Item1, _pendingTransactions[transactionIndex].Item2));
+                    _pendingTransactions[transactionIndex].Item1, getTransactionResponse.Confirmations));
                 _pendingTransactions[transactionIndex] = new Tuple<string, int>(_pendingTransactions[transactionIndex].Item1,
                                                                  getTransactionResponse.Confirmations);
                 if (DepositConfirmed != null)

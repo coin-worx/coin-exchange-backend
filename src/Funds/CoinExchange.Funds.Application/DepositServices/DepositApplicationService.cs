@@ -72,7 +72,7 @@ namespace CoinExchange.Funds.Application.DepositServices
                 // Set the confirmations
                 deposit.SetConfirmations(confirmations);
                 Log.Debug(string.Format("Confirmations set: Deposit ID = {0}, Confirmations = {1}",
-                                             deposit.DepositId, confirmations));
+                                             deposit.DepositId, deposit.Confirmations));
                 // If enough confirmations are not available for the current deposit yet
                 if (deposit.Confirmations < 7)
                 {
