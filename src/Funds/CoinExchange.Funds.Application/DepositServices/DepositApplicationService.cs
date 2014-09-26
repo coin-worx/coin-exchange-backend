@@ -83,7 +83,7 @@ namespace CoinExchange.Funds.Application.DepositServices
                 }
                 // If enough confirmations are available, forward to the FundsValidationService to proceed with the 
                 // ledger transation of this deposit
-                else if (deposit.Confirmations >= 7)
+                else
                 {
                     Log.Debug(string.Format("Deposit Verified: Transaction ID = {0}, Confirmations = {1}," +
                                             " Currency = {2}, Date Received = {3}, Address = {4}, Account ID = {5}",

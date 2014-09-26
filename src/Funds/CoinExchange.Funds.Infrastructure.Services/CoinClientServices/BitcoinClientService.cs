@@ -226,7 +226,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.CoinClientServices
                 }
                 // If the no of confirmations is >= 7, add to the list of confirmed deposits to be deleted outside this 
                 // loop
-                if (_pendingTransactions[transactionIndex].Item2 >= 7)
+                if (_pendingTransactions[transactionIndex].Item2 > 6)
                 {
                     // Add the confirmed trnasactions into the list of confirmed deposits
                     depositsConfirmed.Add(_pendingTransactions[transactionIndex]);
