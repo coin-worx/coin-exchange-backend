@@ -12,6 +12,7 @@ using CoinExchange.Funds.Domain.Model.CurrencyAggregate;
 using CoinExchange.Funds.Domain.Model.DepositAggregate;
 using CoinExchange.Funds.Domain.Model.Repositories;
 using CoinExchange.Funds.Domain.Model.Services;
+using Spring.Transaction.Interceptor;
 
 namespace CoinExchange.Funds.Application.DepositServices
 {
@@ -58,6 +59,7 @@ namespace CoinExchange.Funds.Application.DepositServices
         /// </summary>
         /// <param name="transactionId"></param>
         /// <param name="confirmations"></param>
+        [Transaction]
         public void OnDepositConfirmed(string transactionId, int confirmations)
         {
             Log.Debug(string.Format("Deposit Confirmation Event received: Transaction ID = {0}, Confirmations = {1}",
@@ -69,6 +71,8 @@ namespace CoinExchange.Funds.Application.DepositServices
             {
                 // Set the confirmations
                 deposit.SetConfirmations(confirmations);
+                Log.Debug(string.Format("Confirmations set: Deposit ID = {0}, Confirmations = {1}",
+                                             deposit.DepositId, confirmations));
                 // If enough confirmations are not available for the current deposit yet
                 if (deposit.Confirmations < 7)
                 {
@@ -77,16 +81,20 @@ namespace CoinExchange.Funds.Application.DepositServices
                     // Save in database
                     _fundsPersistenceRepository.SaveOrUpdate(deposit);
                 }
-                    // If enough confirmations are available, forward to the FundsValidationService to proceed with the 
-                    // ledger transation of this deposit
+                // If enough confirmations are available, forward to the FundsValidationService to proceed with the 
+                // ledger transation of this deposit
                 else if (deposit.Confirmations >= 7)
                 {
                     Log.Debug(string.Format("Deposit Verified: Transaction ID = {0}, Confirmations = {1}," +
                                             " Currency = {2}, Date Received = {3}, Address = {4}, Account ID = {5}",
-                                             transactionId, confirmations, deposit.Currency, deposit.BitcoinAddress, 
+                                             transactionId, confirmations, deposit.Currency, deposit.BitcoinAddress,
                                              deposit.AccountId.Value));
                     _fundsValidationService.DepositConfirmed(deposit);
                 }
+            }
+            else
+            {
+                Log.Error(string.Format("Could not finds deposit in database: Transaction ID = {0}", transactionId));
             }
         }
 
@@ -96,6 +104,7 @@ namespace CoinExchange.Funds.Application.DepositServices
         /// </summary>
         /// <param name="currency"></param>
         /// <param name="newTransactions"></param>
+        [Transaction]
         public void OnDepositArrival(string currency, List<Tuple<string, string, decimal, string>> newTransactions)
         {
             Log.Debug(string.Format("New Deposit Event received: Currency = {0}",
