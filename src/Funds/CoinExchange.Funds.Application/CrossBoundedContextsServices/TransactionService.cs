@@ -59,6 +59,9 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
                 Ledger ledger = new Ledger(_ledgerIdGeneraterService.GenerateLedgerId(), executionDate, LedgerType.Trade, 
                     currency, amount, amountInUsd, fee, balance, tradeId, orderId, isBaseCurrencyInTrade, accountId);
                 _fundsPersistenceRepository.SaveOrUpdate(ledger);
+                Log.Debug(string.Format("Ledger Trade Transaction saved: Currency = {0} | Account ID = {1} | " +
+                                        "Amount = {2} | Fee = {3} | Balance = {4} | TradeID = {5} | OrderID = {6}", 
+                                        currency.Name, accountId.Value, amount, fee, balance, tradeId, orderId));
                 return true;
             }
             catch (Exception exception)
@@ -87,6 +90,11 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
                                            balance, null, null, null, deposit.DepositId,
                                            deposit.AccountId);
                 _fundsPersistenceRepository.SaveOrUpdate(ledger);
+                Log.Debug(string.Format("Ledger Deposit Transaction saved: Currency = {0} | Account ID = {1} | " +
+                                        "Amount = {2} | Fee = {3} | Balance = {4} | DepositID = {5} | Address = {6} | " +
+                                        "TransactionID = {7} | DateTime = {8}",
+                                        deposit.Currency.Name, deposit.AccountId.Value, deposit.Amount, deposit.Fee, balance, 
+                                        deposit.DepositId, deposit.BitcoinAddress, deposit.TransactionId, deposit.Date));
                 return true;
             }
             return false;
@@ -108,6 +116,11 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
                                            balance, null, null, withdraw.WithdrawId,
                                            null, withdraw.AccountId);
                 _fundsPersistenceRepository.SaveOrUpdate(ledger);
+                Log.Debug(string.Format("Ledger Withdraw Transaction saved: Currency = {0} | Account ID = {1} | " +
+                                        "Amount = {2} | Fee = {3} | Balance = {4} | WithdrawID = {5} | Address = {6} | " +
+                                        "TransactionID = {7} | DateTime = {8}",
+                                        withdraw.Currency.Name, withdraw.AccountId.Value, withdraw.Amount, withdraw.Fee, balance,
+                                        withdraw.WithdrawId, withdraw.BitcoinAddress, withdraw.TransactionId, withdraw.DateTime));
                 return true;
             }
             return false;

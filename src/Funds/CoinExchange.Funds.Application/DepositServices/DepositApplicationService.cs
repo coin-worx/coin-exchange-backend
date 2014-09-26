@@ -60,6 +60,8 @@ namespace CoinExchange.Funds.Application.DepositServices
         /// <param name="confirmations"></param>
         public void OnDepositConfirmed(string transactionId, int confirmations)
         {
+            Log.Debug(string.Format("Deposit Confirmation Event received: Transaction ID = {0}, Confirmations = {1}",
+                transactionId, confirmations));
             // Get all deposits
             Deposit deposit = _depositRepository.GetDepositByTransactionId(new TransactionId(transactionId));
 
@@ -70,6 +72,8 @@ namespace CoinExchange.Funds.Application.DepositServices
                 // If enough confirmations are not available for the current deposit yet
                 if (deposit.Confirmations < 7)
                 {
+                    Log.Debug(string.Format("Deposit Confirmations updated: Transaction ID = {0}, Confirmations = {1}",
+                                             transactionId, confirmations));
                     // Save in database
                     _fundsPersistenceRepository.SaveOrUpdate(deposit);
                 }
@@ -77,6 +81,10 @@ namespace CoinExchange.Funds.Application.DepositServices
                     // ledger transation of this deposit
                 else if (deposit.Confirmations >= 7)
                 {
+                    Log.Debug(string.Format("Deposit Verified: Transaction ID = {0}, Confirmations = {1}," +
+                                            " Currency = {2}, Date Received = {3}, Address = {4}, Account ID = {5}",
+                                             transactionId, confirmations, deposit.Currency, deposit.BitcoinAddress, 
+                                             deposit.AccountId.Value));
                     _fundsValidationService.DepositConfirmed(deposit);
                 }
             }
@@ -90,6 +98,8 @@ namespace CoinExchange.Funds.Application.DepositServices
         /// <param name="newTransactions"></param>
         public void OnDepositArrival(string currency, List<Tuple<string, string, decimal, string>> newTransactions)
         {
+            Log.Debug(string.Format("New Deposit Event received: Currency = {0}",
+                currency));
             // Get all the deposit addresses to get the AccountId of the user who created this address. These
             // addresses are created whenever a new address is requested from the bitcoin network
             List<DepositAddress> allDepositAddresses = _depositAddressRepository.GetAllDepositAddresses();
@@ -113,6 +123,10 @@ namespace CoinExchange.Funds.Application.DepositServices
                             // If any of the new transactions' addresses matches any deposit addresses
                             if (depositAddress.BitcoinAddress.Value == newTransactions[i].Item1)
                             {
+                                Log.Debug(string.Format("New Deposit Instance created: Currency = {0}, Transaction ID = {1}, " +
+                                                        "Account ID = {2}, Amount = {3}, Address = {4}",
+                                                          currency, newTransactions[i].Item2, depositAddress.AccountId.Value,
+                                                          newTransactions[i].Item3, newTransactions[i].Item1));
                                 // Create a new deposit for this transaction
                                 ValidateDeposit(currency, newTransactions[i].Item1, newTransactions[i].Item3,
                                                 depositAddress.AccountId.Value, newTransactions[i].Item2,
@@ -178,7 +192,7 @@ namespace CoinExchange.Funds.Application.DepositServices
         /// <returns></returns>
         public List<DepositRepresentation> GetRecentDeposits(string currency, int accountId)
         {
-            List<DepositRepresentation> depositRepresentations = new List<DepositRepresentation>(); ;
+            List<DepositRepresentation> depositRepresentations = new List<DepositRepresentation>();
             List<Deposit> deposits = _depositRepository.GetDepositByCurrencyAndAccountId(currency, new AccountId(accountId));
             if (deposits != null && deposits.Any())
             {
@@ -188,6 +202,10 @@ namespace CoinExchange.Funds.Application.DepositServices
                         deposit.Date, deposit.Amount, deposit.Status.ToString(), (deposit.BitcoinAddress == null) ? null : 
                         deposit.BitcoinAddress.Value, (deposit.TransactionId == null) ? null : deposit.TransactionId.Value));
                 }
+            }
+            else
+            {
+                Log.Debug(string.Format("No recent deposits found: Currency = {0}, AccountID = {1}",currency, accountId));
             }
             return depositRepresentations;
         }
@@ -229,6 +247,8 @@ namespace CoinExchange.Funds.Application.DepositServices
                     }
                     if (counter >= 5)
                     {
+                        Log.Debug(string.Format("Cannot create more than 5 new addresses at a time: Currency = {0}, AccountID = {1}",
+                            generateNewAddressCommand.Currency, generateNewAddressCommand.AccountId));
                         throw new InvalidOperationException("Too many New addresses");
                     }
                 }
@@ -242,6 +262,8 @@ namespace CoinExchange.Funds.Application.DepositServices
                                                                        DateTime.Now,
                                                                        new AccountId(generateNewAddressCommand.AccountId));
                     _fundsPersistenceRepository.SaveOrUpdate(depositAddress);
+                    Log.Debug(string.Format("New address generated and saved: Currency = {0} | AccountID = {1}", 
+                        generateNewAddressCommand.Currency, generateNewAddressCommand.AccountId));
                     return new DepositAddressRepresentation(address, AddressStatus.New.ToString());
                 }
                 throw new NullReferenceException(string.Format("Null address returned from client for currency: {0}", generateNewAddressCommand.Currency));

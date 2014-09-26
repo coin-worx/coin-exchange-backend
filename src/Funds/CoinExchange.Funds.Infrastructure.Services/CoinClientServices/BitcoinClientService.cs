@@ -48,6 +48,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.CoinClientServices
             _bitcoinService = new BitcoinService(useTestnet: useBitcoinTestNet);
 
             StartTimer();
+            Log.Debug(string.Format("Bitcoin Timer Started"));
         }
 
         /// <summary>
@@ -57,6 +58,9 @@ namespace CoinExchange.Funds.Infrastructure.Services.CoinClientServices
         {
             _newTransactionsInterval = Convert.ToDouble(ConfigurationManager.AppSettings.Get("BtcNewTransactionsTimer"));
             _pollInterval = Convert.ToDouble(ConfigurationManager.AppSettings.Get("BtcPollingIntervalTimer"));
+
+            Log.Debug(string.Format("Bitcoin New Transaction Timer Interval = {0}", _newTransactionsInterval));
+            Log.Debug(string.Format("Bitcoin Poll Confirmations Timer Interval = {0}", _pollInterval));
 
             // Initializing Timer for new transactions
             _newTransactrionsTimer = new Timer(_newTransactionsInterval);
@@ -150,6 +154,9 @@ namespace CoinExchange.Funds.Infrastructure.Services.CoinClientServices
                         {
                             continue;
                         }
+                        Log.Debug(string.Format("New Bitcoin transaction received from network: " +
+                                                "Address = {0}, Amount = {1}, Transaction ID = {2}",
+                            transactionSinceBlock.Address, transactionSinceBlock.Amount, transactionSinceBlock.TxId));
                         // Add the new transaction to the list of pending transactions
                         _pendingTransactions.Add(new Tuple<string, int>(transactionSinceBlock.TxId, 0));
                         // Send the address, TransactionId, amount and category of the new transaction to the event handlers
@@ -208,6 +215,8 @@ namespace CoinExchange.Funds.Infrastructure.Services.CoinClientServices
             // confirmations
             if (getTransactionResponse.Confirmations > _pendingTransactions[transactionIndex].Item2)
             {
+                Log.Debug(string.Format("Bitcoin Confirmation received from network: Transaction ID = {0}, Confirmations = {1}",
+                    _pendingTransactions[transactionIndex].Item1, _pendingTransactions[transactionIndex].Item2));
                 _pendingTransactions[transactionIndex] = new Tuple<string, int>(_pendingTransactions[transactionIndex].Item1,
                                                                  getTransactionResponse.Confirmations);
                 if (DepositConfirmed != null)
@@ -235,7 +244,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.CoinClientServices
         }
 
         /// <summary>
-        /// Commit the withdraw to the Litecoin Network
+        /// Commit the withdraw to the Bitcoin Network
         /// </summary>
         /// <param name="bitcoinAddress"></param>
         /// <param name="amount"></param>

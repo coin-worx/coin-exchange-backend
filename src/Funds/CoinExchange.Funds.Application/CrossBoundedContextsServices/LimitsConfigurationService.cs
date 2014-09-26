@@ -14,6 +14,10 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
     /// </summary>
     public class LimitsConfigurationService : ILimitsConfigurationService
     {
+        // Get the Current Logger
+        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger
+        (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private string _adminDefinedLimitsCurrency = null;
         private IDepositLimitRepository _depositLimitRepository = null;
         private IWithdrawLimitRepository _withdrawLimitRepository = null;
@@ -173,6 +177,7 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
             // If the admin has specified the limits to be calculated as the currency itself
             if (_adminDefinedLimitsCurrency == LimitsCurrency.Default.ToString())
             {
+                Log.Debug(string.Format("Limits representation Currency is Default(Digital)"));
                 // Get the Current Deposit limits for this user
                 DepositLimit depositLimit = _depositLimitRepository.GetLimitByTierLevelAndCurrency(tierLevel, 
                     _adminDefinedLimitsCurrency);
@@ -190,6 +195,7 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
             // If the admin has specified that limtis must be calculated in a FIAT currency
             else
             {
+                Log.Debug(string.Format("Limits representation Currency = {0}", _adminDefinedLimitsCurrency));
                 // Get the Current Deposit limits for this user which will be in a FIAT currency
                 DepositLimit depositLimit = _depositLimitRepository.GetLimitByTierLevelAndCurrency(tierLevel,
                     _adminDefinedLimitsCurrency);
@@ -226,6 +232,7 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
             // If the admin has specified the limits to be calculated as the currency itself
             if (_adminDefinedLimitsCurrency == LimitsCurrency.Default.ToString())
             {
+                Log.Debug(string.Format("Limits representation Currency = {0}", _adminDefinedLimitsCurrency));
                 // Get the Current Withdraw limits for this user
                 WithdrawLimit withdrawLimit = _withdrawLimitRepository.GetLimitByTierLevelAndCurrency(tierLevel,
                     _adminDefinedLimitsCurrency);
@@ -246,6 +253,7 @@ namespace CoinExchange.Funds.Application.CrossBoundedContextsServices
             // If the admin has specified that limits must be calculated in a FIAT currency
             else
             {
+                Log.Debug(string.Format("Limits representation Currency = {0}", _adminDefinedLimitsCurrency));
                 // Get the Current Withdraw limits for this user which will be in a FIAT currency
                 WithdrawLimit withdrawLimit = _withdrawLimitRepository.GetLimitByTierLevelAndCurrency(tierLevel,
                     _adminDefinedLimitsCurrency);

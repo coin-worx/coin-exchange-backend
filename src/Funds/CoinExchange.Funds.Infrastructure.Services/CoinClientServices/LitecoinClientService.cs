@@ -17,6 +17,10 @@ namespace CoinExchange.Funds.Infrastructure.Services.CoinClientServices
     /// </summary>
     public class LitecoinClientService : ICoinClientService
     {
+        // Get the Current Logger
+        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger
+        (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private ICoinService _litecoinService = null;
         private Timer _newTransactrionsTimer = null;
         private string _blockHash = null;
@@ -38,10 +42,11 @@ namespace CoinExchange.Funds.Infrastructure.Services.CoinClientServices
         /// </summary>
         public LitecoinClientService()
         {
-            bool useBitcoinTestNet = Convert.ToBoolean(ConfigurationManager.AppSettings.Get("LtcUseTestNet"));
-            _litecoinService = new LitecoinService(useTestnet: useBitcoinTestNet);
+            bool useLitecoinTestNet = Convert.ToBoolean(ConfigurationManager.AppSettings.Get("LtcUseTestNet"));
+            _litecoinService = new LitecoinService(useTestnet: useLitecoinTestNet);
 
             StartTimer();
+            Log.Debug(string.Format("Litecoin Timer Started"));
         }
 
         /// <summary>
@@ -51,6 +56,9 @@ namespace CoinExchange.Funds.Infrastructure.Services.CoinClientServices
         {
             _newTransactionsInterval = Convert.ToDouble(ConfigurationManager.AppSettings.Get("LtcNewTransactionsTimer"));
             _pollInterval = Convert.ToDouble(ConfigurationManager.AppSettings.Get("LtcPollingIntervalTimer"));     
+
+            Log.Debug(string.Format("Litecoin New Transaction Timer Interval = {0}", _newTransactionsInterval));
+            Log.Debug(string.Format("Litecoin Poll Confirmations Timer Interval = {0}", _pollInterval));
 
             // Initializing Timer for new transactions
             _newTransactrionsTimer = new Timer(_newTransactionsInterval);
@@ -140,6 +148,9 @@ namespace CoinExchange.Funds.Infrastructure.Services.CoinClientServices
                         {
                             continue;
                         }
+                        Log.Debug(string.Format("New Litecoin transaction received from network: " +
+                                                "Address = {0}, Amount = {1}, Transaction ID = {2}", 
+                            transactionSinceBlock.Address, transactionSinceBlock.Amount, transactionSinceBlock.TxId));
                         // Add the new transaction to the list of pending transactions
                         _pendingTransactions.Add(new Tuple<string, int>(transactionSinceBlock.TxId, 0));
                         // Send the address, TransactionId, amount and category of the new transaction to the event handlers
@@ -185,6 +196,12 @@ namespace CoinExchange.Funds.Infrastructure.Services.CoinClientServices
             }
         }
 
+        /// <summary>
+        /// Adds a new confirmation if it is greater than the last number of confirmations
+        /// </summary>
+        /// <param name="getTransactionResponse"></param>
+        /// <param name="transactionIndex"></param>
+        /// <param name="depositsConfirmed"></param>
         private void AddNewConfirmation(GetTransactionResponse getTransactionResponse, int transactionIndex, 
             List<Tuple<string,int>> depositsConfirmed)
         {
@@ -192,6 +209,8 @@ namespace CoinExchange.Funds.Infrastructure.Services.CoinClientServices
             // confirmations
             if (getTransactionResponse.Confirmations > _pendingTransactions[transactionIndex].Item2)
             {
+                Log.Debug(string.Format("Litecoin Confirmation received from network: Transaction ID = {0}, Confirmations = {1}",
+                    _pendingTransactions[transactionIndex].Item1, _pendingTransactions[transactionIndex].Item2));
                 _pendingTransactions[transactionIndex] = new Tuple<string, int>(_pendingTransactions[transactionIndex].Item1,
                                                                  getTransactionResponse.Confirmations);
                 if (DepositConfirmed != null)
@@ -221,12 +240,12 @@ namespace CoinExchange.Funds.Infrastructure.Services.CoinClientServices
         /// <summary>
         /// Commit the withdraw to the Litecoin Network
         /// </summary>
-        /// <param name="bitcoinAddress"></param>
+        /// <param name="litecoinAddress"></param>
         /// <param name="amount"></param>
         /// <returns></returns>
-        public string CommitWithdraw(string bitcoinAddress, decimal amount)
+        public string CommitWithdraw(string litecoinAddress, decimal amount)
         {
-            return _litecoinService.SendToAddress(bitcoinAddress, amount);
+            return _litecoinService.SendToAddress(litecoinAddress, amount);
         }
 
         /// <summary>
