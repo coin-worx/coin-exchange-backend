@@ -87,8 +87,8 @@ namespace CoinExchange.Funds.Application.DepositServices
                 {
                     Log.Debug(string.Format("Deposit Verified: Transaction ID = {0}, Confirmations = {1}," +
                                             " Currency = {2}, Date Received = {3}, Address = {4}, Account ID = {5}",
-                                             transactionId, confirmations, deposit.Currency, deposit.BitcoinAddress,
-                                             deposit.AccountId.Value));
+                                             transactionId, confirmations, deposit.Currency.Name, deposit.Date, 
+                                             deposit.BitcoinAddress, deposit.AccountId.Value));
                     _fundsValidationService.DepositConfirmed(deposit);
                 }
             }
