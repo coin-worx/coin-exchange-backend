@@ -198,6 +198,8 @@ namespace CoinExchange.Funds.Infrastructure.Services.CoinClientServices
                 foreach (Tuple<string, int> deposit in confirmedDeposits)
                 {
                     _pendingTransactions.Remove(deposit);
+                    Log.Debug(string.Format("Verified Deposit removed from list of pending deposits: Transaction ID = {0}",
+                        deposit.Item1));
                 }
             }
         }
@@ -219,17 +221,29 @@ namespace CoinExchange.Funds.Infrastructure.Services.CoinClientServices
                     _pendingTransactions[transactionIndex].Item1, _pendingTransactions[transactionIndex].Item2));
                 _pendingTransactions[transactionIndex] = new Tuple<string, int>(_pendingTransactions[transactionIndex].Item1,
                                                                  getTransactionResponse.Confirmations);
-                if (DepositConfirmed != null)
+                try
                 {
-                    // Raise the event and sned the TransacitonID and the no. of confirmation respectively
-                    DepositConfirmed(_pendingTransactions[transactionIndex].Item1, getTransactionResponse.Confirmations);
+                    if (DepositConfirmed != null)
+                    {
+                        // Raise the event and sned the TransacitonID and the no. of confirmation respectively
+                        DepositConfirmed(_pendingTransactions[transactionIndex].Item1, getTransactionResponse.Confirmations);
+                    }
                 }
-                // If the no of confirmations is >= 7, add to the list of confirmed deposits to be deleted outside this 
-                // loop
-                if (getTransactionResponse.Confirmations > 6)
+                catch (Exception exception)
                 {
-                    // Add the confirmed trnasactions into the list of confirmed deposits
-                    depositsConfirmed.Add(_pendingTransactions[transactionIndex]);
+                    Log.Error(exception);
+                }
+                finally
+                {
+                    // If the no of confirmations is >= 7, add to the list of confirmed deposits to be deleted outside this 
+                    // loop
+                    if (getTransactionResponse.Confirmations > 6)
+                    {
+                        // Add the confirmed trnasactions into the list of confirmed deposits
+                        depositsConfirmed.Add(_pendingTransactions[transactionIndex]);
+                        Log.Debug(string.Format("Verified deposit added to confirmed deposits list: Transaction ID = {0}",
+                            _pendingTransactions[transactionIndex].Item1));
+                    }
                 }
             }
         }

@@ -73,23 +73,33 @@ namespace CoinExchange.Funds.Application.DepositServices
                 deposit.SetConfirmations(confirmations);
                 Log.Debug(string.Format("Confirmations set: Deposit ID = {0}, Confirmations = {1}",
                                              deposit.DepositId, deposit.Confirmations));
-                // If enough confirmations are not available for the current deposit yet
-                if (deposit.Confirmations < 7)
+
+                try
                 {
-                    Log.Debug(string.Format("Deposit Confirmations updated: Transaction ID = {0}, Confirmations = {1}",
-                                             transactionId, confirmations));
-                    // Save in database
-                    _fundsPersistenceRepository.SaveOrUpdate(deposit);
+                    // If enough confirmations are not available for the current deposit yet
+                    if (deposit.Confirmations < 7)
+                    {
+                        Log.Debug(string.Format("Deposit Confirmations updated: Transaction ID = {0}, Confirmations = {1}",
+                                                transactionId, confirmations));
+                        // Save in database
+                        _fundsPersistenceRepository.SaveOrUpdate(deposit);
+                    }
+                        // If enough confirmations are available, forward to the FundsValidationService to proceed with the 
+                        // ledger transation of this deposit
+                    else
+                    {
+                        Log.Debug(string.Format("7 Confirmations received: Transaction ID = {0}",
+                                                transactionId));
+                        _fundsValidationService.DepositConfirmed(deposit);
+                        Log.Debug(string.Format("Deposit Verified: Transaction ID = {0}, Confirmations = {1}," +
+                                                " Currency = {2}, Date Received = {3}, Address = {4}, Account ID = {5}",
+                                                transactionId, confirmations, deposit.Currency.Name, deposit.Date,
+                                                deposit.BitcoinAddress, deposit.AccountId.Value));
+                    }
                 }
-                // If enough confirmations are available, forward to the FundsValidationService to proceed with the 
-                // ledger transation of this deposit
-                else
+                catch (Exception ex)
                 {
-                    Log.Debug(string.Format("Deposit Verified: Transaction ID = {0}, Confirmations = {1}," +
-                                            " Currency = {2}, Date Received = {3}, Address = {4}, Account ID = {5}",
-                                             transactionId, confirmations, deposit.Currency.Name, deposit.Date, 
-                                             deposit.BitcoinAddress, deposit.AccountId.Value));
-                    _fundsValidationService.DepositConfirmed(deposit);
+                    Log.Error("Error while adding Confirmations to deposit: " + ex.Message);
                 }
             }
             else
