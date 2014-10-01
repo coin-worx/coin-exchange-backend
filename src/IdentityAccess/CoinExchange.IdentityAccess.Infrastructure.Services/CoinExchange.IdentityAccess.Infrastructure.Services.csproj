@@ -37,7 +37,11 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\log4net.1.2.10\lib\2.0\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="RestSharp">
+      <HintPath>..\..\packages\RestSharp.104.4.0\lib\net4\RestSharp.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Security" />
     <Reference Include="System.Xml.Linq" />
@@ -45,6 +49,9 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="Twilio.Api">
+      <HintPath>..\..\packages\Twilio.3.6.18\lib\3.5\Twilio.Api.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActivationKeyGenerationService.cs" />
@@ -52,6 +59,9 @@
     <Compile Include="Email\EmailContents.cs" />
     <Compile Include="Email\EmailService.cs" />
     <Compile Include="Email\IEmailService.cs" />
+    <Compile Include="MfaServices\MfaCodeGenerationService.cs" />
+    <Compile Include="MfaServices\MfaEmailService.cs" />
+    <Compile Include="MfaServices\MfaSmsService.cs" />
     <Compile Include="PasswordCodeGenerationService.cs" />
     <Compile Include="SecurityKeysGenerationService.cs" />
     <Compile Include="PasswordEncryptionService.cs" />

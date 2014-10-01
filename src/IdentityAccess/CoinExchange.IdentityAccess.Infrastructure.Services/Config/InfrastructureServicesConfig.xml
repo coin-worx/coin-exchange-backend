@@ -20,8 +20,8 @@
   <constructor-arg name="host" value="smtp.gmail.com"/>
   <constructor-arg name="port" value="587"/>
   
-  <constructor-arg name="from" value="waqasshah047@gmail.com"/>
-  <constructor-arg name="password" value="fixhub123"/>
+  <constructor-arg name="from" value="crypgocoinexchange@gmail.com"/>
+  <constructor-arg name="password" value="CrypGo123"/>
   </object>
 
   <object id="PasswordCodeGenerationService" type="CoinExchange.IdentityAccess.Infrastructure.Services.PasswordCodeGenerationService, 
@@ -29,6 +29,18 @@
   </object>
 
   <object id="DocumentPersistence" type="CoinExchange.IdentityAccess.Infrastructure.Services.DocumentPersistence, 
+          CoinExchange.IdentityAccess.Infrastructure.Services">
+  </object>
+  
+  <object id="MfaSmsService" type="CoinExchange.IdentityAccess.Infrastructure.Services.MfaServices.MfaSmsService, 
+          CoinExchange.IdentityAccess.Infrastructure.Services">
+  </object>
+  
+  <object id="MfaEmailService" type="CoinExchange.IdentityAccess.Infrastructure.Services.MfaServices.MfaEmailService, 
+          CoinExchange.IdentityAccess.Infrastructure.Services">
+  </object>
+  
+<object id="MfaCodeGenerationService" type="CoinExchange.IdentityAccess.Infrastructure.Services.MfaServices.MfaCodeGenerationService, 
           CoinExchange.IdentityAccess.Infrastructure.Services">
   </object>
 
