@@ -48,6 +48,7 @@
     <Compile Include="AccessControlServices\ILogoutApplicationService.cs" />
     <Compile Include="AccessControlServices\LoginApplicationService.cs" />
     <Compile Include="AccessControlServices\LogoutApplicationService.cs" />
+    <Compile Include="MfaServices\MfaAuthorizationService.cs" />
     <Compile Include="SecurityKeysServices\Commands\CreateUserGeneratedSecurityKeyPair.cs" />
     <Compile Include="SecurityKeysServices\Commands\UpdateUserGeneratedSecurityKeyPair.cs" />
     <Compile Include="SecurityKeysServices\Representations\SecurityKeyPair.cs" />

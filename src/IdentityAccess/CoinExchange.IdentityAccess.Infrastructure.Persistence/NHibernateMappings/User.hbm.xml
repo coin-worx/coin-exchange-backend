@@ -32,7 +32,7 @@ assembly="CoinExchange.IdentityAccess.Domain.Model" namespace="CoinExchange.Iden
     <property name="DateOfBirth" column="DateOfBirth"/>
     <component name="IsUserBlocked">
       <property name="Value" column="IsUserBlocked"/>
-    </component>
+    </component>    
     <component name="IsActivationKeyUsed">
       <property name="Value" column="IsActivationKeyUsed"/>
     </component>
@@ -44,5 +44,8 @@ assembly="CoinExchange.IdentityAccess.Domain.Model" namespace="CoinExchange.Iden
       <key column="UserId"/>
       <one-to-many class="UserTierLevelStatus"/>
     </bag>
+    <one-to-one name="MfaSubscriptions"
+                      constrained="true"
+                      class="MfaSubscriptions" /> 
     </class>
 </hibernate-mapping>

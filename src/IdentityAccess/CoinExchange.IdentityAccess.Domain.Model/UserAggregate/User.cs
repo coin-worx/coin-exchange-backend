@@ -34,6 +34,8 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         private string _fullName;
         private DateTime _dateOfBirth;
         private IList<PasswordCodeRecord> _forgottenPasswordCodesList { get; set; }
+        private bool _emailMfaEnabled = true;
+        private MfaSubscriptions _mfaSubscriptions = new MfaSubscriptions();
 
         //default constructor
         public User()
@@ -351,6 +353,184 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
             return true;
         }
 
+        #region MFA Methods
+
+        /// <summary>
+        /// Subscribe to MFA using Email Address
+        /// </summary>
+        /// <returns></returns>
+        public bool SubscribeEmailMfa()
+        {
+            if (!string.IsNullOrEmpty(_email))
+            {
+                _emailMfaEnabled = true;
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Subscribe to MFA using Phone Number
+        /// </summary>
+        /// <returns></returns>
+        public bool SubscribeToSmsMfa(string phoneNumber)
+        {
+            if (!string.IsNullOrEmpty(phoneNumber))
+            {
+                _emailMfaEnabled = false;
+                _phoneNumber = phoneNumber;
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Subscribe to Login MFA
+        /// </summary>
+        /// <returns></returns>
+        public bool SubscribeLoginMfa()
+        {
+            return _mfaSubscriptions.SubscribeLoginMfa();
+        }
+
+        /// <summary>
+        /// Subscribe to Deposit MFA
+        /// </summary>
+        /// <returns></returns>
+        public bool SubscribeDepositMfa()
+        {
+            return _mfaSubscriptions.SubscribeDepositMfa();
+        }
+
+        /// <summary>
+        /// Subscribe to Withdrawal MFA
+        /// </summary>
+        /// <returns></returns>
+        public bool SubscribeWithdrawalMfa()
+        {
+            return _mfaSubscriptions.SubscribeWithdrawalMfa();
+        }
+
+        /// <summary>
+        /// Subscribe to Place Order MFA
+        /// </summary>
+        /// <returns></returns>
+        public bool SubscribePlaceOrderMfa()
+        {
+            return _mfaSubscriptions.SubscribePlaceOrderMfa();
+        }
+
+        /// <summary>
+        /// Subscribe to Cancel Order MFA
+        /// </summary>
+        /// <returns></returns>
+        public bool SubscribeCancelOrderMfa()
+        {
+            return _mfaSubscriptions.SubscribeCancelOrderMfa();
+        }
+
+        /// <summary>
+        /// Check if the given method has been subscribed for MFA or not
+        /// </summary>
+        /// <returns></returns>
+        public bool CheckMfaSubscription(string currentAction)
+        {
+            switch (currentAction)
+            {
+                // If current action is login, check if it has been subscribed for MFA by the user or not
+                case MfaConstants.Login:
+                    return _mfaSubscriptions.LoginMfaEnabled;
+                // If current action is Deposit, check if it has been subscribed for MFA by the user or not
+                case MfaConstants.Deposit:
+                    return _mfaSubscriptions.DepositMfaEnabled;
+                // If current action is Withdraw, check if it has been subscribed for MFA by the user or not
+                case MfaConstants.Withdrawal:
+                    return _mfaSubscriptions.WithdrawalMfaEnabled;
+                // If current action is Placing a New Order, check if it has been subscribed for MFA by the user or not
+                case MfaConstants.PlaceOrder:
+                    return _mfaSubscriptions.PlaceOrderMfaEnabled;
+                // If current action is Cancelling an order, check if it has been subscribed for MFA by the user or not
+                case MfaConstants.CancelOrder:
+                    return _mfaSubscriptions.CancelOrderMfaEnabled;
+                // If no action found, return null;
+                default:
+                    return false;
+            }
+        }
+
+        /// <summary>
+        /// Specifies whether the user has subscribed to TFA using Email or SMS. 
+        /// Returns True + EmailAddress if email is subscribed
+        /// Returns False + Phone Number if SMS is subscribed
+        /// </summary>
+        /// <returns></returns>
+        public Tuple<bool, string> IsEmailMfaEnabled()
+        {
+            // If Email TFA is enabled
+            if (_emailMfaEnabled)
+            {
+                // Email must be present
+                if (!string.IsNullOrEmpty(this.Email))
+                {
+                    return new Tuple<bool, string>(true, this.Email);
+                }
+                // Throw exception if no email is yet present
+                else
+                {
+                    throw new InvalidOperationException(string.Format("No Email Provided for TFA Subscription: Username = {0}",
+                        Username));
+                }
+            }
+            // If SMS TFA is enabled
+            else
+            {
+                // Phone number must be present
+                if (!string.IsNullOrEmpty(_phoneNumber))
+                {
+                    return new Tuple<bool, string>(false, this._phoneNumber);
+                }
+                // Throw exception if no phone number is present
+                else
+                {
+                    throw new InvalidOperationException(string.Format("No Phone Number Provided for TFA Subscription: Username = {0}",
+                        Username));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Evaluate if the provided code is real one-time code for this user
+        /// </summary>
+        /// <returns></returns>
+        public bool VerifyMfaCode(string mfaCode)
+        {
+            // Verify the code
+            if (this.MfaCode == mfaCode)
+            {
+                // Make the code null, so it can verified the next time
+                this.MfaCode = null;
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Assign the given MFA code
+        /// </summary>
+        /// <param name="mfaCode"></param>
+        /// <returns></returns>
+        public bool AssignMfaCode(string mfaCode)
+        {
+            if (!string.IsNullOrEmpty(mfaCode))
+            {
+                this.MfaCode = mfaCode;
+                return true;
+            }
+            return false;
+        }
+
+        #endregion MFA Methods
+
         #endregion Methods
 
         /// <summary>
@@ -553,5 +733,15 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         /// Are Newsletter emails subscribed
         /// </summary>
         public bool NewsletterEmailsSubscribed { get; private set; }
+
+        /// <summary>
+        /// MFA Subscriptions instance
+        /// </summary>
+        public MfaSubscriptions MfaSubscriptions { get { return _mfaSubscriptions; } set { _mfaSubscriptions = value; } }
+
+        /// <summary>
+        /// One-Time Two Factor Authorization Code
+        /// </summary>
+        public string MfaCode { get; private set; }
     }
 }

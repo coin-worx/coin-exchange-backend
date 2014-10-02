@@ -12,6 +12,13 @@ namespace CoinExchange.IdentityAccess.Domain.Model.Services
     /// </summary>
     public interface IMfaAuthorizationService
     {
-        bool AuthorizeAccess(string currentAction, string mfaCode);
+        /// <summary>
+        /// Authenticate the user using TFA if it is subscribed for the given action
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="currentAction"></param>
+        /// <param name="mfaCode"></param>
+        /// <returns></returns>
+        bool AuthorizeAccess(int userId, string currentAction, string mfaCode);
     }
 }

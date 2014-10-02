@@ -41,6 +41,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         /// KeyDescription
         /// </summary>
         public string ApiKey { get; private set; }
+
         /// <summary>
         /// Permission ID
         /// </summary>
