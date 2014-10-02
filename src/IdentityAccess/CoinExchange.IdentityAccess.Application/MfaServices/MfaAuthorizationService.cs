@@ -34,7 +34,7 @@ namespace CoinExchange.IdentityAccess.Application.MfaServices
             if (user != null)
             {
                 // Check if the user has asked for the TFA for the current given action
-                if (user.CheckMfaSubscription(currentAction))
+                if (user.CheckMfaSubscriptions(currentAction))
                 {
                     // If yes, check if the user contains a TFA code. If he does, verify the code
                     if (!string.IsNullOrEmpty(user.MfaCode))

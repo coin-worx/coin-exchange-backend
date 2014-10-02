@@ -143,6 +143,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="NHibernateMappings\MfaSubscriptionStatus.hbm.xml" />
+    <EmbeddedResource Include="NHibernateMappings\MfaSubscription.hbm.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
     <Content Include="NHibernateMappings\MfaSubscriptions.hbm.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

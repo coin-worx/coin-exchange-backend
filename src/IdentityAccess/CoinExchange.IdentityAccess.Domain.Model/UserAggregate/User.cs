@@ -35,7 +35,8 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         private DateTime _dateOfBirth;
         private IList<PasswordCodeRecord> _forgottenPasswordCodesList { get; set; }
         private bool _emailMfaEnabled = true;
-        private MfaSubscriptions _mfaSubscriptions = new MfaSubscriptions();
+        //private MfaSubscriptions _mfaSubscriptions = new MfaSubscriptions();
+        private IList<MfaSubscriptionStatus> _mfaSubscriptions { get; set; } 
 
         //default constructor
         public User()
@@ -46,6 +47,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
 
             _forgottenPasswordCodesList=new List<PasswordCodeRecord>();
             _tierLevelStatuses=new List<UserTierLevelStatus>();
+            _mfaSubscriptions = new List<MfaSubscriptionStatus>();
         }
 
         /// <summary>
@@ -75,6 +77,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
             _tierLevelStatuses=new List<UserTierLevelStatus>();
             _userDocumentsList = new UserDocumentsList();
             _forgottenPasswordCodesList=new List<PasswordCodeRecord>();
+            _mfaSubscriptions = new List<MfaSubscriptionStatus>();
         }
 
         /// <summary>
@@ -116,6 +119,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
             _forgottenPasswordCodesList = new List<PasswordCodeRecord>();
             _tierLevelStatuses=new List<UserTierLevelStatus>();
             _userDocumentsList = new UserDocumentsList();
+            _mfaSubscriptions = new List<MfaSubscriptionStatus>();
         }
 
         #region Methods
@@ -385,76 +389,55 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         }
 
         /// <summary>
-        /// Subscribe to Login MFA
+        /// Check the MFA Subscription for the current action
         /// </summary>
+        /// <param name="currentAction"></param>
         /// <returns></returns>
-        public bool SubscribeLoginMfa()
+        public bool CheckMfaSubscriptions(string currentAction)
         {
-            return _mfaSubscriptions.SubscribeLoginMfa();
-        }
-
-        /// <summary>
-        /// Subscribe to Deposit MFA
-        /// </summary>
-        /// <returns></returns>
-        public bool SubscribeDepositMfa()
-        {
-            return _mfaSubscriptions.SubscribeDepositMfa();
-        }
-
-        /// <summary>
-        /// Subscribe to Withdrawal MFA
-        /// </summary>
-        /// <returns></returns>
-        public bool SubscribeWithdrawalMfa()
-        {
-            return _mfaSubscriptions.SubscribeWithdrawalMfa();
-        }
-
-        /// <summary>
-        /// Subscribe to Place Order MFA
-        /// </summary>
-        /// <returns></returns>
-        public bool SubscribePlaceOrderMfa()
-        {
-            return _mfaSubscriptions.SubscribePlaceOrderMfa();
-        }
-
-        /// <summary>
-        /// Subscribe to Cancel Order MFA
-        /// </summary>
-        /// <returns></returns>
-        public bool SubscribeCancelOrderMfa()
-        {
-            return _mfaSubscriptions.SubscribeCancelOrderMfa();
-        }
-
-        /// <summary>
-        /// Check if the given method has been subscribed for MFA or not
-        /// </summary>
-        /// <returns></returns>
-        public bool CheckMfaSubscription(string currentAction)
-        {
-            switch (currentAction)
+            // Check in each element of the list to see if the current action is enabled
+            foreach (var mfaSubscriptionStatus in _mfaSubscriptions)
             {
-                // If current action is login, check if it has been subscribed for MFA by the user or not
-                case MfaConstants.Login:
-                    return _mfaSubscriptions.LoginMfaEnabled;
-                // If current action is Deposit, check if it has been subscribed for MFA by the user or not
-                case MfaConstants.Deposit:
-                    return _mfaSubscriptions.DepositMfaEnabled;
-                // If current action is Withdraw, check if it has been subscribed for MFA by the user or not
-                case MfaConstants.Withdrawal:
-                    return _mfaSubscriptions.WithdrawalMfaEnabled;
-                // If current action is Placing a New Order, check if it has been subscribed for MFA by the user or not
-                case MfaConstants.PlaceOrder:
-                    return _mfaSubscriptions.PlaceOrderMfaEnabled;
-                // If current action is Cancelling an order, check if it has been subscribed for MFA by the user or not
-                case MfaConstants.CancelOrder:
-                    return _mfaSubscriptions.CancelOrderMfaEnabled;
-                // If no action found, return null;
-                default:
-                    return false;
+                if (mfaSubscriptionStatus.MfaSubscription.MfaSubscriptionName == currentAction)
+                {
+                    return mfaSubscriptionStatus.Enabled;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Marks the MFA Subscriptions as enabled, whichever are present in the parameter list
+        /// </summary>
+        /// <param name="mfaSubscriptions"></param>
+        /// <returns></returns>
+        public void AssignMfaSubscriptions(IList<string> mfaSubscriptions)
+        {
+            IList<string> firstTimeSubscriptions = new List<string>();
+            // As this list of incoming MFA subscriptions is the list that is taken as master data from the database, displayed
+            // on front-end, and then picked by user and sent here, the subscription may or may not be present to the user. So,
+            // if a subscription is not present yet, it is safe to add it as it is master data
+            foreach (var mfaSubscription in mfaSubscriptions)
+            {
+                bool subscriptionPresent = false;
+                foreach (var mfaSubscriptionStatus in _mfaSubscriptions)
+                {
+                    if (mfaSubscriptionStatus.MfaSubscription.MfaSubscriptionName == mfaSubscription)
+                    {
+                        subscriptionPresent = true;
+                        mfaSubscriptionStatus.Enabled = true;
+                    }
+                }
+                // If this subscription isnot alreaady present, add it to the temporary list and add to MFASubscriptions list later
+                if (!subscriptionPresent)
+                {
+                    firstTimeSubscriptions.Add(mfaSubscription);
+                }
+            }
+            // For each of the subscriptions in the temporary list, we need to add them in the MFA Subscriptions list
+            foreach (var firstTimeSubscription in firstTimeSubscriptions)
+            {
+                _mfaSubscriptions.Add(new MfaSubscriptionStatus(Id, new MfaSubscription(firstTimeSubscription), true));
             }
         }
 
@@ -737,7 +720,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         /// <summary>
         /// MFA Subscriptions instance
         /// </summary>
-        public MfaSubscriptions MfaSubscriptions { get { return _mfaSubscriptions; } set { _mfaSubscriptions = value; } }
+        //public MfaSubscriptions MfaSubscriptions { get { return _mfaSubscriptions; } set { _mfaSubscriptions = value; } }
 
         /// <summary>
         /// One-Time Two Factor Authorization Code

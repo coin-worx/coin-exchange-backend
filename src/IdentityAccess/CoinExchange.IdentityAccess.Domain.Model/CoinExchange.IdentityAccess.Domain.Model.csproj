@@ -73,7 +73,9 @@
     <Compile Include="UserAggregate\IPasswordEncryptionService.cs" />
     <Compile Include="UserAggregate\IsActivationKeyUsed.cs" />
     <Compile Include="UserAggregate\IsUserBlocked.cs" />
+    <Compile Include="UserAggregate\MfaSubscription.cs" />
     <Compile Include="UserAggregate\MfaSubscriptions.cs" />
+    <Compile Include="UserAggregate\MfaSubscriptionStatus.cs" />
     <Compile Include="UserAggregate\PasswordCodeRecord.cs" />
     <Compile Include="UserAggregate\Status.cs" />
     <Compile Include="UserAggregate\Tier.cs" />
