@@ -46,7 +46,7 @@ assembly="CoinExchange.IdentityAccess.Domain.Model" namespace="CoinExchange.Iden
     </bag>
   <bag name="_mfaSubscriptions" table="MfaSubscriptionStatus" cascade="all" inverse="true" lazy="false">
       <key column="UserId"/>
-      <one-to-many class="UserTierLevelStatus"/>
+      <one-to-many class="MfaSubscriptionStatus"/>
     </bag>
     </class>
 </hibernate-mapping>

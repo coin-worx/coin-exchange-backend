@@ -75,6 +75,7 @@
     <Compile Include="NHibernateSessionFactory.cs" />
     <Compile Include="Projection\SecurityKeyPairList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\MfaSubscriptionRepository.cs" />
     <Compile Include="Repositories\SecurityKeysPairRepository.cs" />
     <Compile Include="Repositories\PermissionRespository.cs" />
     <Compile Include="Repositories\IdentityAccessPersistenceRepository.cs" />
@@ -87,6 +88,7 @@
   <ItemGroup>
     <EmbeddedResource Include="NHibernateMappings\User.hbm.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -143,11 +145,15 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="NHibernateMappings\MfaSubscriptionStatus.hbm.xml" />
+    <EmbeddedResource Include="NHibernateMappings\MfaSubscriptionStatus.hbm.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="NHibernateMappings\MfaSubscription.hbm.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <Content Include="NHibernateMappings\MfaSubscriptions.hbm.xml" />
+    <EmbeddedResource Include="NHibernateMappings\MfaSubscriptions.hbm.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

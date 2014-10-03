@@ -21,13 +21,26 @@ namespace CoinExchange.IdentityAccess.Application.MfaServices
         private IMfaCodeGenerationService _codeGenerationService = null;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="T:System.Object"/> class.
+        /// </summary>
+        public MfaAuthorizationService(IIdentityAccessPersistenceRepository persistenceRepository, IUserRepository userRepository, IMfaCodeSenderService smsService, IMfaCodeSenderService emailService, IMfaCodeGenerationService codeGenerationService)
+        {
+            _persistenceRepository = persistenceRepository;
+            _userRepository = userRepository;
+            _smsService = smsService;
+            _emailService = emailService;
+            _codeGenerationService = codeGenerationService;
+        }
+
+        /// <summary>
         /// Authenticate the user using TFA if it is subscribed for the given action
+        /// Returns Tuple: Item1 = Response, Item2 = Error Message
         /// </summary>
         /// <param name="userId"> </param>
         /// <param name="currentAction"></param>
         /// <param name="mfaCode"></param>
         /// <returns></returns>
-        public bool AuthorizeAccess(int userId, string currentAction, string mfaCode)
+        public Tuple<bool,string> AuthorizeAccess(int userId, string currentAction, string mfaCode)
         {
             // Get user from repository
             User user = _userRepository.GetUserById(userId);
@@ -45,13 +58,13 @@ namespace CoinExchange.IdentityAccess.Application.MfaServices
                             // If the given code matches the user's stored mfa code, then return true
                             if (user.VerifyMfaCode(mfaCode))
                             {
-                                return true;
+                                return new Tuple<bool, string>(true, "Verification Successful");
                             }
                             else
                             {
                                 Log.Error(string.Format("MFA code could not be verified: User ID = {0}, Action = {1}", userId,
                                                         currentAction));
-                                throw new NullReferenceException("MFA code could not be verifiedd");
+                                throw new InvalidOperationException("MFA code could not be verifiedd");
                             }
                         }
                         else
@@ -74,14 +87,15 @@ namespace CoinExchange.IdentityAccess.Application.MfaServices
                         // Get the service to which the user has subscribed to, Email or SMS
                         IMfaCodeSenderService mfaCodeSenderService = GetService(isEmailMfaEnabled.Item1);
                         // Send the user an MFA Code and assign it to the current user
-                        return mfaCodeSenderService.SendCode(isEmailMfaEnabled.Item2, theCode);
+                        mfaCodeSenderService.SendCode(isEmailMfaEnabled.Item2, theCode);
+                        return new Tuple<bool, string>(false, "Enter TFA");
                     }
                 }
                 // If the user has not subscribed TFA for any action, then let the user go ahead without any more checks
                 else
                 {
                     Log.Debug(string.Format("MFA not enabled: User ID = {0} | Action = {1}. Request will proceed", userId, currentAction));
-                    return true;
+                    return new Tuple<bool, string>(true, "No MFA subscription enabled");
                 }
             }
             // If no user instance is found

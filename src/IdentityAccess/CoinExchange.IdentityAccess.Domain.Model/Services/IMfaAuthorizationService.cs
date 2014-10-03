@@ -19,6 +19,6 @@ namespace CoinExchange.IdentityAccess.Domain.Model.Services
         /// <param name="currentAction"></param>
         /// <param name="mfaCode"></param>
         /// <returns></returns>
-        bool AuthorizeAccess(int userId, string currentAction, string mfaCode);
+        Tuple<bool,string> AuthorizeAccess(int userId, string currentAction, string mfaCode);
     }
 }

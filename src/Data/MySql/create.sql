@@ -126,6 +126,28 @@ CREATE TABLE `ledger` (
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
+/*Table structure for table `mfasubscription` */
+
+DROP TABLE IF EXISTS `mfasubscription`;
+
+CREATE TABLE `mfasubscription` (
+  `MfaSubscriptionId` varchar(11) NOT NULL,
+  `MfaSubscriptionName` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`MfaSubscriptionId`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Table structure for table `mfasubscriptionstatus` */
+
+DROP TABLE IF EXISTS `mfasubscriptionstatus`;
+
+CREATE TABLE `mfasubscriptionstatus` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `UserId` int(11) DEFAULT NULL,
+  `Enabled` tinyint(1) DEFAULT NULL,
+  `MfaSubscriptionId` varchar(11) DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 /*Table structure for table `ohlc` */
 
 DROP TABLE IF EXISTS `ohlc`;

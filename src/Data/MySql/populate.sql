@@ -35,6 +35,12 @@ insert  into `fee`(`Id`,`CurrencyPair`,`PercentageFee`,`Amount`) values (1,'BTCL
 
 /*Data for the table `ledger` */
 
+/*Data for the table `mfasubscription` */
+
+insert  into `mfasubscription`(`MfaSubscriptionId`,`MfaSubscriptionName`) values ('CO','CancelOrder'),('DEP','Deposit'),('LOG','Login'),('PO','PlaceOrder'),('WD','Withdraw');
+
+/*Data for the table `mfasubscriptionstatus` */
+
 /*Data for the table `ohlc` */
 
 /*Data for the table `order` */

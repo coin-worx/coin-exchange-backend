@@ -80,9 +80,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MfaAuthorizationServiceTests.cs" />
     <Compile Include="MockEmailService.cs" />
+    <Compile Include="MockMfaCodeGenerationService.cs" />
+    <Compile Include="MockMfaEmailService.cs" />
     <Compile Include="MockPersistenceRepository.cs" />
     <Compile Include="MockSecurityKeysRepository.cs" />
+    <Compile Include="MockSmsService.cs" />
     <Compile Include="MockTierRepository.cs" />
     <Compile Include="MockUserRepository.cs" />
     <Compile Include="SecurityKeysApplicationServiceUnitTests.cs" />

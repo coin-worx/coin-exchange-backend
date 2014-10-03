@@ -78,6 +78,8 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
             return true;
         }
 
+        public int Id { get; private set; }
+
         /// <summary>
         /// User ID
         /// </summary>

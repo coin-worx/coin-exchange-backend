@@ -59,5 +59,8 @@
   <object id="TierRepository" type="CoinExchange.IdentityAccess.Infrastructure.Persistence.Repositories.TierRepository, CoinExchange.IdentityAccess.Infrastructure.Persistence">
     <property name="SessionFactory" ref="NHibernateSessionFactory"/>
   </object>
+  <object id="MfaSubscriptionRepository" type="CoinExchange.IdentityAccess.Infrastructure.Persistence.Repositories.MfaSubscriptionRepository, CoinExchange.IdentityAccess.Infrastructure.Persistence">
+    <property name="SessionFactory" ref="NHibernateSessionFactory"/>
+  </object>
   <tx:attribute-driven/>
 </objects>

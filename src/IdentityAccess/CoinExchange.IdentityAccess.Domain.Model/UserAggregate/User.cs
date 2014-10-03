@@ -35,8 +35,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         private DateTime _dateOfBirth;
         private IList<PasswordCodeRecord> _forgottenPasswordCodesList { get; set; }
         private bool _emailMfaEnabled = true;
-        //private MfaSubscriptions _mfaSubscriptions = new MfaSubscriptions();
-        private IList<MfaSubscriptionStatus> _mfaSubscriptions { get; set; } 
+        private IList<MfaSubscriptionStatus> _mfaSubscriptions { get; set; }
 
         //default constructor
         public User()
@@ -363,14 +362,43 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         /// Subscribe to MFA using Email Address
         /// </summary>
         /// <returns></returns>
-        public bool SubscribeEmailMfa()
+        public bool SubscribeToEmailMfa()
         {
             if (!string.IsNullOrEmpty(_email))
             {
                 _emailMfaEnabled = true;
                 return true;
             }
-            return false;
+            throw new NullReferenceException("Email Address is null.");
+        }
+
+        /// <summary>
+        /// Subscribe to MFA using Email Address
+        /// </summary>
+        /// <returns></returns>
+        public bool SubscribeToEmailMfa(string emailAddress)
+        {
+            if (!string.IsNullOrEmpty(emailAddress))
+            {
+                _emailMfaEnabled = true;
+                _email = emailAddress;
+                return true;
+            }
+            throw new NullReferenceException("Email Address is null.");
+        }
+
+        /// <summary>
+        /// Subscribe to MFA using Phone Number
+        /// </summary>
+        /// <returns></returns>
+        public bool SubscribeToSmsMfa()
+        {
+            if (!string.IsNullOrEmpty(_phoneNumber))
+            {
+                _emailMfaEnabled = false;
+                return true;
+            }
+            throw new NullReferenceException("Phone Number is null.");
         }
 
         /// <summary>
@@ -408,12 +436,13 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
 
         /// <summary>
         /// Marks the MFA Subscriptions as enabled, whichever are present in the parameter list
+        /// Item1 = MfaSUbscriptionId, Item2 = MfaSubscriptionName, Item3 = Enabled/Disabled
         /// </summary>
         /// <param name="mfaSubscriptions"></param>
         /// <returns></returns>
-        public void AssignMfaSubscriptions(IList<string> mfaSubscriptions)
+        public void AssignMfaSubscriptions(IList<Tuple<string, string, bool>> mfaSubscriptions)
         {
-            IList<string> firstTimeSubscriptions = new List<string>();
+            IList<Tuple<string,string,bool>> firstTimeSubscriptions = new List<Tuple<string,string,bool>>();
             // As this list of incoming MFA subscriptions is the list that is taken as master data from the database, displayed
             // on front-end, and then picked by user and sent here, the subscription may or may not be present to the user. So,
             // if a subscription is not present yet, it is safe to add it as it is master data
@@ -422,22 +451,26 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
                 bool subscriptionPresent = false;
                 foreach (var mfaSubscriptionStatus in _mfaSubscriptions)
                 {
-                    if (mfaSubscriptionStatus.MfaSubscription.MfaSubscriptionName == mfaSubscription)
+                    if (mfaSubscriptionStatus.MfaSubscription.MfaSubscriptionName == mfaSubscription.Item2)
                     {
                         subscriptionPresent = true;
-                        mfaSubscriptionStatus.Enabled = true;
+                        mfaSubscriptionStatus.Enabled = mfaSubscription.Item3;
                     }
                 }
-                // If this subscription isnot alreaady present, add it to the temporary list and add to MFASubscriptions list later
+                // If this subscription is not alreaady present, add it to the temporary list and add to MFASubscriptions list later
                 if (!subscriptionPresent)
                 {
-                    firstTimeSubscriptions.Add(mfaSubscription);
+                    firstTimeSubscriptions.Add(new Tuple<string, string, bool>(mfaSubscription.Item1, mfaSubscription.Item2,
+                        mfaSubscription.Item3));
                 }
             }
-            // For each of the subscriptions in the temporary list, we need to add them in the MFA Subscriptions list
+
+            // For each of the subscriptions in the temporary list, we need to add them in the MFA Subscriptions list, these are
+            // the new elements that we need to add
             foreach (var firstTimeSubscription in firstTimeSubscriptions)
             {
-                _mfaSubscriptions.Add(new MfaSubscriptionStatus(Id, new MfaSubscription(firstTimeSubscription), true));
+                _mfaSubscriptions.Add(new MfaSubscriptionStatus(Id, new MfaSubscription(firstTimeSubscription.Item1,
+                    firstTimeSubscription.Item2), firstTimeSubscription.Item3));
             }
         }
 
@@ -716,11 +749,6 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         /// Are Newsletter emails subscribed
         /// </summary>
         public bool NewsletterEmailsSubscribed { get; private set; }
-
-        /// <summary>
-        /// MFA Subscriptions instance
-        /// </summary>
-        //public MfaSubscriptions MfaSubscriptions { get { return _mfaSubscriptions; } set { _mfaSubscriptions = value; } }
 
         /// <summary>
         /// One-Time Two Factor Authorization Code

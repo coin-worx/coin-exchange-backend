@@ -10,6 +10,7 @@ using CoinExchange.IdentityAccess.Domain.Model.UserAggregate;
 using NHibernate;
 using NHibernate.Mapping;
 using NUnit.Framework;
+using Spring.Context.Support;
 using Spring.Data.NHibernate;
 
 namespace CoinExchange.IdentityAccess.Infrastructure.IntegrationTests
@@ -199,6 +200,5 @@ namespace CoinExchange.IdentityAccess.Infrastructure.IntegrationTests
             Assert.AreEqual(user.IsUserBlocked.Value, false);
             Assert.AreEqual(user.ForgottenPasswordCodes.Length,receivedUser.ForgottenPasswordCodes.Length);
         }
-
     }
 }

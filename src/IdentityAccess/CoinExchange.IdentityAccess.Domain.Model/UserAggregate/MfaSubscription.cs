@@ -27,6 +27,20 @@ namespace CoinExchange.IdentityAccess.Domain.Model.UserAggregate
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="T:System.Object"/> class.
+        /// </summary>
+        public MfaSubscription(string mfaSubscriptionId, string mfaSubscriptionName)
+        {
+            MfaSubscriptionId = mfaSubscriptionId;
+            MfaSubscriptionName = mfaSubscriptionName;
+        }
+
+        /// <summary>
+        /// Database primary key
+        /// </summary>
+        public string MfaSubscriptionId { get; private set; }
+
+        /// <summary>
         /// Name
         /// </summary>
         public string MfaSubscriptionName { get; private set; }

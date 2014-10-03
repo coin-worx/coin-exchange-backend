@@ -6,7 +6,7 @@ assembly="CoinExchange.IdentityAccess.Domain.Model" namespace="CoinExchange.Iden
       <generator class="native" />
     </id>
     <property name="UserId"  column="UserId"/>
-    <property name="IsAllowed"  column="IsAllowed"/>
-    <many-to-one name="MfaSubscription" column="Id"/>
+    <property name="Enabled"  column="Enabled"/>
+    <many-to-one name="MfaSubscription" column="MfaSubscriptionId"/>
   </class>
 </hibernate-mapping>

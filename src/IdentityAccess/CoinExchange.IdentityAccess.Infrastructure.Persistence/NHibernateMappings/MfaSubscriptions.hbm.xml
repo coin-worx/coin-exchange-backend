@@ -2,7 +2,7 @@
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
 assembly="CoinExchange.IdentityAccess.Domain.Model" namespace="CoinExchange.IdentityAccess.Domain.Model.UserAggregate">
   <class name="MfaSubscriptions" table="MfaSubscriptions" lazy="false">
-    <id name="_id" column="Id">
+    <id name="Id" column="Id">
       <generator class="native" />
     </id>
     <property name="UserId"  column="UserId"/>
