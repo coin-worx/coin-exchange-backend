@@ -6,6 +6,7 @@ using System.Management.Instrumentation;
 using System.Web.Http;
 using CoinExchange.Common.Domain.Model;
 using CoinExchange.Common.Services;
+using CoinExchange.IdentityAccess.Application;
 using CoinExchange.Trades.Application.OrderServices;
 using CoinExchange.Trades.Application.OrderServices.Commands;
 using CoinExchange.Trades.Application.OrderServices.Representation;
@@ -46,6 +47,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         [Route("orders/cancelorder")]
         [Authorize]
         [HttpPost]
+        [MfaAuthorization(MfaConstants.CancelOrder)]
         public IHttpActionResult CancelOrder([FromBody]string orderId)
         {
             if (log.IsDebugEnabled)
@@ -118,6 +120,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         [Route("orders/createorder")]
         [Authorize]
         [HttpPost]
+        [MfaAuthorization(MfaConstants.PlaceOrder)]
         public IHttpActionResult CreateOrder([FromBody]CreateOrderParam order)
         {
             if (log.IsDebugEnabled)

@@ -59,9 +59,13 @@
     <Compile Include="Email\EmailContents.cs" />
     <Compile Include="Email\EmailService.cs" />
     <Compile Include="Email\IEmailService.cs" />
+    <Compile Include="Email\StubEmailService.cs" />
     <Compile Include="MfaServices\MfaCodeGenerationService.cs" />
     <Compile Include="MfaServices\MfaEmailService.cs" />
     <Compile Include="MfaServices\MfaSmsService.cs" />
+    <Compile Include="MfaServices\StubMfaCodeGenerationService.cs" />
+    <Compile Include="MfaServices\StubMfaEmailService.cs" />
+    <Compile Include="MfaServices\StubMfaSmsService.cs" />
     <Compile Include="PasswordCodeGenerationService.cs" />
     <Compile Include="SecurityKeysGenerationService.cs" />
     <Compile Include="PasswordEncryptionService.cs" />
@@ -77,6 +81,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Config\InfrastructureServicesConfig-Test.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Config\InfrastructureServicesConfig.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

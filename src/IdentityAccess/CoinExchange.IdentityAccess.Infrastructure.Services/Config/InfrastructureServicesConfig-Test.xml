@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<objects xmlns="http://www.springframework.net"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xsi:schemaLocation="http://www.springframework.net http://www.springframework.net/xsd/spring-objects.xsd">
+
+  <object id="ActivationKeyGenerationService" type="CoinExchange.IdentityAccess.Infrastructure.Services.ActivationKeyGenerationService, 
+          CoinExchange.IdentityAccess.Infrastructure.Services">
+  </object>
+
+  <object id="PasswordEncryptionService" type="CoinExchange.IdentityAccess.Infrastructure.Services.PasswordEncryptionService, 
+          CoinExchange.IdentityAccess.Infrastructure.Services">
+  </object>
+
+  <object id="SecurityKeysGenerationService" type="CoinExchange.IdentityAccess.Infrastructure.Services.SecurityKeysGenerationService, 
+          CoinExchange.IdentityAccess.Infrastructure.Services">
+  </object>
+
+  <object id="EmailService" type="CoinExchange.IdentityAccess.Infrastructure.Services.Email.StubEmailService, 
+          CoinExchange.IdentityAccess.Infrastructure.Services">
+  </object>
+
+  <object id="PasswordCodeGenerationService" type="CoinExchange.IdentityAccess.Infrastructure.Services.PasswordCodeGenerationService, 
+          CoinExchange.IdentityAccess.Infrastructure.Services">
+  </object>
+
+  <object id="DocumentPersistence" type="CoinExchange.IdentityAccess.Infrastructure.Services.DocumentPersistence, 
+          CoinExchange.IdentityAccess.Infrastructure.Services">
+  </object>
+
+  <object id="MfaSmsService" type="CoinExchange.IdentityAccess.Infrastructure.Services.MfaServices.StubMfaSmsService, 
+          CoinExchange.IdentityAccess.Infrastructure.Services">
+  </object>
+
+  <object id="MfaEmailService" type="CoinExchange.IdentityAccess.Infrastructure.Services.MfaServices.StubMfaEmailService, 
+          CoinExchange.IdentityAccess.Infrastructure.Services">
+  </object>
+
+  <object id="MfaCodeGenerationService" type="CoinExchange.IdentityAccess.Infrastructure.Services.MfaServices.StubMfaCodeGenerationService, 
+          CoinExchange.IdentityAccess.Infrastructure.Services">
+  </object>
+
+</objects>

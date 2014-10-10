@@ -94,6 +94,10 @@
       <Project>{bbf58888-03cd-47f4-aeb9-bc6070d97920}</Project>
       <Name>CoinExchange.Common.Tests</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Common\CoinExchange.Common\CoinExchange.Common.csproj">
+      <Project>{d61dbd04-95dc-4eb1-ad54-1ff929ac2814}</Project>
+      <Name>CoinExchange.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CoinExchange.IdentityAccess.Application\CoinExchange.IdentityAccess.Application.csproj">
       <Project>{523daca3-bec6-45e9-90d4-8f6f8a1266d7}</Project>
       <Name>CoinExchange.IdentityAccess.Application</Name>

@@ -5,6 +5,7 @@ using System.Management.Instrumentation;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
+using CoinExchange.Common.Domain.Model;
 using CoinExchange.Common.Services;
 using CoinExchange.Funds.Application.DepositServices;
 using CoinExchange.Funds.Application.DepositServices.Commands;
@@ -86,7 +87,7 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Resources
         [Route("funds/createdepositaddress")]
         [Authorize]
         [HttpPost]
-        [MfaAuthorization("Deposit")]
+        [MfaAuthorization(MfaConstants.Deposit)]
         public IHttpActionResult CreateDepositAddress([FromBody]GenerateAddressParams generateAddressParams)
         {
             if (log.IsDebugEnabled)
@@ -248,7 +249,7 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Resources
         [Route("funds/makedeposit")]
         [Authorize]
         [HttpPost]
-        [MfaAuthorization("Deposit")]
+        [MfaAuthorization(MfaConstants.Deposit)]
         public IHttpActionResult MakeDeposit([FromBody]MakeDepositParams makeDepositParams)
         {
             if (log.IsDebugEnabled)

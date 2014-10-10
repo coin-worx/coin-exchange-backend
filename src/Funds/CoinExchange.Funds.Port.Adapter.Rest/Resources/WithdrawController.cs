@@ -5,10 +5,12 @@ using System.Management.Instrumentation;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
+using CoinExchange.Common.Domain.Model;
 using CoinExchange.Common.Services;
 using CoinExchange.Funds.Application.WithdrawServices;
 using CoinExchange.Funds.Application.WithdrawServices.Commands;
 using CoinExchange.Funds.Port.Adapter.Rest.DTOs.Withdraw;
+using CoinExchange.IdentityAccess.Application;
 
 namespace CoinExchange.Funds.Port.Adapter.Rest.Resources
 {
@@ -218,6 +220,7 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Resources
         [Route("funds/commitwithdraw")]
         [Authorize]
         [HttpPost]
+        [MfaAuthorization(MfaConstants.Withdrawal)]
         public IHttpActionResult CommitWithdraw([FromBody]CommitWithdrawParams commitWithdrawParams)
         {
             if (log.IsDebugEnabled)
