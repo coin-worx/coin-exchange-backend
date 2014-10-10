@@ -40,7 +40,7 @@ namespace CoinExchange.Client.Console
 
         public void Initialization()
         {
-            //ClearDatabase();
+            ClearDatabase();
             UserLogin();
 
             _fundsClient.key = _identityAccessClient.key;

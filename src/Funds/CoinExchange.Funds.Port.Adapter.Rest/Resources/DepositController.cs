@@ -8,6 +8,7 @@ using CoinExchange.Common.Services;
 using CoinExchange.Funds.Application.DepositServices;
 using CoinExchange.Funds.Application.DepositServices.Commands;
 using CoinExchange.Funds.Port.Adapter.Rest.DTOs.Deposit;
+using CoinExchange.IdentityAccess.Application;
 
 namespace CoinExchange.Funds.Port.Adapter.Rest.Resources
 {
@@ -84,6 +85,7 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Resources
         [Route("funds/createdepositaddress")]
         [Authorize]
         [HttpPost]
+        [MfaAuthorization]
         public IHttpActionResult CreateDepositAddress([FromBody]GenerateAddressParams generateAddressParams)
         {
             if (log.IsDebugEnabled)

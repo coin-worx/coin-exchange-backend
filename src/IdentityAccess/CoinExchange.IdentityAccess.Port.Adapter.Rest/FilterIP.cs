@@ -20,10 +20,12 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger
               (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         public FilterIP()
         {
 
         }
+
         public override void OnActionExecuting(HttpActionContext actionContext)
         {
             string ipAddress = HttpContext.Current.Request.UserHostAddress;

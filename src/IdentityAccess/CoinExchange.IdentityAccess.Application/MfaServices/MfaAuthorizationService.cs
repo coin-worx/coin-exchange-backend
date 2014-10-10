@@ -23,7 +23,8 @@ namespace CoinExchange.IdentityAccess.Application.MfaServices
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
-        public MfaAuthorizationService(IIdentityAccessPersistenceRepository persistenceRepository, IUserRepository userRepository, IMfaCodeSenderService smsService, IMfaCodeSenderService emailService, IMfaCodeGenerationService codeGenerationService)
+        public MfaAuthorizationService(IIdentityAccessPersistenceRepository persistenceRepository, IUserRepository userRepository,
+            IMfaCodeSenderService smsService, IMfaCodeSenderService emailService, IMfaCodeGenerationService codeGenerationService)
         {
             _persistenceRepository = persistenceRepository;
             _userRepository = userRepository;

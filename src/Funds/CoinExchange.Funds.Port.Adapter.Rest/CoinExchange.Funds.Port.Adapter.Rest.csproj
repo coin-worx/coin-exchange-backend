@@ -110,6 +110,10 @@
       <Project>{d61dbd04-95dc-4eb1-ad54-1ff929ac2814}</Project>
       <Name>CoinExchange.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\IdentityAccess\CoinExchange.IdentityAccess.Application\CoinExchange.IdentityAccess.Application.csproj">
+      <Project>{523daca3-bec6-45e9-90d4-8f6f8a1266d7}</Project>
+      <Name>CoinExchange.IdentityAccess.Application</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CoinExchange.Funds.Application\CoinExchange.Funds.Application.csproj">
       <Project>{f6edd751-080b-4c4e-8216-2e1ed3ed0a66}</Project>
       <Name>CoinExchange.Funds.Application</Name>
