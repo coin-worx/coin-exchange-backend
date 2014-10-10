@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Management.Instrumentation;
 using System.Web.Http;
 using CoinExchange.Common.Domain.Model;
 using CoinExchange.Common.Services;
@@ -75,6 +76,30 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                 }
                 return BadRequest("OrderId is not provided.");
             }
+            catch (InvalidOperationException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Cancel Order Call Exception ", exception);
+                }
+                return BadRequest(exception.Message);
+            }
+            catch (NullReferenceException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Cancel Order Call Exception ", exception);
+                }
+                return BadRequest(exception.Message);
+            }
+            catch (InstanceNotFoundException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Cancel Order Call Exception ", exception);
+                }
+                return BadRequest(exception.Message);
+            }
             catch (Exception exception)
             {
                 if (log.IsErrorEnabled)
@@ -130,6 +155,22 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
                 if (log.IsErrorEnabled)
                 {
                     log.Error("Create Order Call Error", exception);
+                }
+                return BadRequest(exception.Message);
+            }
+            catch (NullReferenceException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Create Order Call Exception ", exception);
+                }
+                return BadRequest(exception.Message);
+            }
+            catch (InstanceNotFoundException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Create Order Call Exception ", exception);
                 }
                 return BadRequest(exception.Message);
             }

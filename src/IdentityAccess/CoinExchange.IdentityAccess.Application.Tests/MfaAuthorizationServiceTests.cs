@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CoinExchange.IdentityAccess.Application.MfaServices;
+using CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate;
 using CoinExchange.IdentityAccess.Domain.Model.UserAggregate;
 using NUnit.Framework;
 
@@ -17,7 +18,7 @@ namespace CoinExchange.IdentityAccess.Application.Tests
         public void MfaAuthorizationNotSubscribedTest_TestsIfResultIsTrueWhenMfaIsNotSubscribedForAnyAction_VerifiesByReturnValue()
         {
             MockPersistenceRepository mockPersistenceRepository = new MockPersistenceRepository(true);
-            MockUserRepository mockUserRepository = new MockUserRepository();
+            MockUserRepository mockUserRepository = new MockUserRepository();            
             MockMfaEmailService mockMfaEmailService = new MockMfaEmailService();
             MockSmsService mockSmsService = new MockSmsService();
             MockMfaCodeGenerationService mockMfaCodeGenerationService = new MockMfaCodeGenerationService();
@@ -25,15 +26,20 @@ namespace CoinExchange.IdentityAccess.Application.Tests
             string userName = "NewUser";
             string phoneNumber = "2233344";
             string email = "user88@gmail.com";
+            
             User user = new User(userName, "asdf", "12345", "xyz", email, Language.English, TimeZone.CurrentTimeZone,
                 new TimeSpan(1, 1, 1, 1), DateTime.Now, "Pakistan", "", phoneNumber, "1234");
 
+            MockSecurityKeysRepository mockSecurityKeysRepository = new MockSecurityKeysRepository();
+            string apiKey = "apikey123";
+            // Add Api Key to mock implementation
+            mockSecurityKeysRepository.AddSecurityKeysPair(new SecurityKeysPair(user.Id, apiKey, "secretkey123", true, "Desc"));
             // Add user to mock implementation
             mockUserRepository.AddUser(user);
 
             MfaAuthorizationService mfaAuthorizationService = new MfaAuthorizationService(mockPersistenceRepository,
-                mockUserRepository, mockSmsService, mockMfaEmailService, mockMfaCodeGenerationService);
-            Tuple<bool, string> authorizeAccess = mfaAuthorizationService.AuthorizeAccess(user.Id, "Login", null);
+                mockUserRepository, mockSecurityKeysRepository, mockSmsService, mockMfaEmailService, mockMfaCodeGenerationService);
+            Tuple<bool, string> authorizeAccess = mfaAuthorizationService.AuthorizeAccess(apiKey, "Login", null);
             Assert.IsTrue(authorizeAccess.Item1);
         }
 
@@ -68,44 +74,48 @@ namespace CoinExchange.IdentityAccess.Application.Tests
             subscriptionsList.Add(cancelOrderSubscription);
             user.AssignMfaSubscriptions(subscriptionsList);
 
+            MockSecurityKeysRepository mockSecurityKeysRepository = new MockSecurityKeysRepository();
+            string apiKey = "apikey123";
+            // Add Api Key to mock implementation
+            mockSecurityKeysRepository.AddSecurityKeysPair(new SecurityKeysPair(user.Id, apiKey, "secretkey123", true, "Desc"));
             // Add user to mock implementation
             mockUserRepository.AddUser(user);
 
             MfaAuthorizationService mfaAuthorizationService = new MfaAuthorizationService(mockPersistenceRepository,
-                mockUserRepository, mockSmsService, mockMfaEmailService, mockMfaCodeGenerationService);
+                mockUserRepository, mockSecurityKeysRepository, mockSmsService, mockMfaEmailService, mockMfaCodeGenerationService);
 
             // Login MFA
-            Tuple<bool, string> authorizeAccess1 = mfaAuthorizationService.AuthorizeAccess(user.Id, loginSubscription.Item2, null);
+            Tuple<bool, string> authorizeAccess1 = mfaAuthorizationService.AuthorizeAccess(apiKey, loginSubscription.Item2, null);
             Assert.IsFalse(authorizeAccess1.Item1);
             // This time the code should be assigned to the user, so verify that
-            authorizeAccess1 = mfaAuthorizationService.AuthorizeAccess(user.Id, loginSubscription.Item2, user.MfaCode);
+            authorizeAccess1 = mfaAuthorizationService.AuthorizeAccess(apiKey, loginSubscription.Item2, user.MfaCode);
             Assert.IsTrue(authorizeAccess1.Item1);
             // MFA Code in the user should be null
             Assert.IsNull(user.MfaCode);
 
             // Deposit MFA
-            authorizeAccess1 = mfaAuthorizationService.AuthorizeAccess(user.Id, depositSubscription.Item2, null);
+            authorizeAccess1 = mfaAuthorizationService.AuthorizeAccess(apiKey, depositSubscription.Item2, null);
             Assert.IsFalse(authorizeAccess1.Item1);
             // This time the code should be assigned to the user, so verify that
-            authorizeAccess1 = mfaAuthorizationService.AuthorizeAccess(user.Id, depositSubscription.Item2, user.MfaCode);
+            authorizeAccess1 = mfaAuthorizationService.AuthorizeAccess(apiKey, depositSubscription.Item2, user.MfaCode);
             Assert.IsTrue(authorizeAccess1.Item1);
             // MFA Code in the user should be null
             Assert.IsNull(user.MfaCode);
 
             // Withdraw MFA
-            authorizeAccess1 = mfaAuthorizationService.AuthorizeAccess(user.Id, withdrawSubscription.Item2, null);
+            authorizeAccess1 = mfaAuthorizationService.AuthorizeAccess(apiKey, withdrawSubscription.Item2, null);
             Assert.IsFalse(authorizeAccess1.Item1);
             // This time the code should be assigned to the user, so verify that
-            authorizeAccess1 = mfaAuthorizationService.AuthorizeAccess(user.Id, withdrawSubscription.Item2, user.MfaCode);
+            authorizeAccess1 = mfaAuthorizationService.AuthorizeAccess(apiKey, withdrawSubscription.Item2, user.MfaCode);
             Assert.IsTrue(authorizeAccess1.Item1);
             // MFA Code in the user should be null
             Assert.IsNull(user.MfaCode);
 
             // Place Order MFA
-            authorizeAccess1 = mfaAuthorizationService.AuthorizeAccess(user.Id, placeOrderSubscription.Item2, null);
+            authorizeAccess1 = mfaAuthorizationService.AuthorizeAccess(apiKey, placeOrderSubscription.Item2, null);
             Assert.IsFalse(authorizeAccess1.Item1);
             // This time the code should be assigned to the user, so verify that
-            authorizeAccess1 = mfaAuthorizationService.AuthorizeAccess(user.Id, placeOrderSubscription.Item2, user.MfaCode);
+            authorizeAccess1 = mfaAuthorizationService.AuthorizeAccess(apiKey, placeOrderSubscription.Item2, user.MfaCode);
             Assert.IsTrue(authorizeAccess1.Item1);
             // MFA Code in the user should be null
             Assert.IsNull(user.MfaCode);
@@ -142,14 +152,18 @@ namespace CoinExchange.IdentityAccess.Application.Tests
             subscriptionsList.Add(cancelOrderSubscription);
             user.AssignMfaSubscriptions(subscriptionsList);
 
+            MockSecurityKeysRepository mockSecurityKeysRepository = new MockSecurityKeysRepository();
+            string apiKey = "apikey123";
+            // Add Api Key to mock implementation
+            mockSecurityKeysRepository.AddSecurityKeysPair(new SecurityKeysPair(user.Id, apiKey, "secretkey123", true, "Desc"));
             // Add user to mock implementation
             mockUserRepository.AddUser(user);
 
             MfaAuthorizationService mfaAuthorizationService = new MfaAuthorizationService(mockPersistenceRepository,
-                mockUserRepository, mockSmsService, mockMfaEmailService, mockMfaCodeGenerationService);
+                mockUserRepository, mockSecurityKeysRepository, mockSmsService, mockMfaEmailService, mockMfaCodeGenerationService);
 
             // Login MFA
-            Tuple<bool, string> authorizeAccess1 = mfaAuthorizationService.AuthorizeAccess(user.Id, loginSubscription.Item2, null);
+            Tuple<bool, string> authorizeAccess1 = mfaAuthorizationService.AuthorizeAccess(apiKey, loginSubscription.Item2, null);
             Assert.IsFalse(authorizeAccess1.Item1);
         }
 
@@ -175,17 +189,21 @@ namespace CoinExchange.IdentityAccess.Application.Tests
             subscriptionsList.Add(loginSubscription);
             user.AssignMfaSubscriptions(subscriptionsList);
 
+            MockSecurityKeysRepository mockSecurityKeysRepository = new MockSecurityKeysRepository();
+            string apiKey = "apikey123";
+            // Add Api Key to mock implementation
+            mockSecurityKeysRepository.AddSecurityKeysPair(new SecurityKeysPair(user.Id, apiKey, "secretkey123", true, "Desc"));
             // Add user to mock implementation
             mockUserRepository.AddUser(user);
 
             MfaAuthorizationService mfaAuthorizationService = new MfaAuthorizationService(mockPersistenceRepository,
-                mockUserRepository, mockSmsService, mockMfaEmailService, mockMfaCodeGenerationService);
+                mockUserRepository, mockSecurityKeysRepository, mockSmsService, mockMfaEmailService, mockMfaCodeGenerationService);
 
             // Login MFA
-            Tuple<bool, string> authorizeAccess1 = mfaAuthorizationService.AuthorizeAccess(user.Id, loginSubscription.Item2, null);
+            Tuple<bool, string> authorizeAccess1 = mfaAuthorizationService.AuthorizeAccess(apiKey, loginSubscription.Item2, null);
             Assert.IsFalse(authorizeAccess1.Item1);
             // This time the code should be assigned to the user, so verify that
-            mfaAuthorizationService.AuthorizeAccess(user.Id, loginSubscription.Item2, user.MfaCode + "1");
+            mfaAuthorizationService.AuthorizeAccess(apiKey, loginSubscription.Item2, user.MfaCode + "1");
         }
     }
 }

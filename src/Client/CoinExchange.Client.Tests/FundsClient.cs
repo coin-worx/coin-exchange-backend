@@ -16,12 +16,13 @@ namespace CoinExchange.Client.Tests
             _baseUrl = baseUrl;
         }
 
-        public string MakeDeposit(string currency, decimal amount, bool isCryptoCurrency)
+        public string MakeDeposit(string currency, decimal amount, bool isCryptoCurrency, string mfaCode = null)
         {
             JObject jsonObject = new JObject();
             jsonObject.Add("Currency", currency);
             jsonObject.Add("Amount", amount);
             jsonObject.Add("IsCryptoCurrency", isCryptoCurrency);
+            jsonObject.Add("MfaCode", mfaCode);
             string url = _baseUrl + "/funds/makedeposit";
             return HttpPostRequest(jsonObject, url);
         }

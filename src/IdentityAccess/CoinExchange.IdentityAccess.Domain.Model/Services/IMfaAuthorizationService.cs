@@ -15,10 +15,10 @@ namespace CoinExchange.IdentityAccess.Domain.Model.Services
         /// <summary>
         /// Authenticate the user using TFA if it is subscribed for the given action
         /// </summary>
-        /// <param name="userId"></param>
+        /// <param name="apiKey"></param>
         /// <param name="currentAction"></param>
         /// <param name="mfaCode"></param>
         /// <returns></returns>
-        Tuple<bool,string> AuthorizeAccess(int userId, string currentAction, string mfaCode);
+        Tuple<bool,string> AuthorizeAccess(string apiKey, string currentAction, string mfaCode);
     }
 }

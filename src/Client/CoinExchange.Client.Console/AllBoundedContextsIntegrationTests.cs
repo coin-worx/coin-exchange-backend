@@ -81,12 +81,10 @@ namespace CoinExchange.Client.Console
         private void MakeDeposit()
         {
             System.Console.WriteLine("Deposit start");
-            _fundsClient.MakeDeposit(_baseCurrency, 2000, true);
-            _fundsClient.MakeDeposit(_quoteCurrency, 2000, true);
+            _fundsClient.MakeDeposit(_baseCurrency, 2000, true, "1234");
+            _fundsClient.MakeDeposit(_quoteCurrency, 2000, true, "");
             System.Console.WriteLine("Deposit end");
         }
-
-        
 
         private void ApplyForTier1()
         {

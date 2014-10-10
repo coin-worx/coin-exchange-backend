@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Management.Instrumentation;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -85,7 +86,7 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Resources
         [Route("funds/createdepositaddress")]
         [Authorize]
         [HttpPost]
-        [MfaAuthorization]
+        [MfaAuthorization("Deposit")]
         public IHttpActionResult CreateDepositAddress([FromBody]GenerateAddressParams generateAddressParams)
         {
             if (log.IsDebugEnabled)
@@ -115,6 +116,30 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Resources
                         accountId, generateAddressParams.Currency)));
                 }
                 return BadRequest("Currency is not provided.");
+            }
+            catch (InvalidOperationException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Create New Address Exception ", exception);
+                }
+                return BadRequest(exception.Message);
+            }
+            catch (NullReferenceException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Create New Address Exception ", exception);
+                }
+                return BadRequest(exception.Message);
+            }
+            catch (InstanceNotFoundException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Create New Address Exception ", exception);
+                }
+                return BadRequest(exception.Message);
             }
             catch (Exception exception)
             {
@@ -223,6 +248,7 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Resources
         [Route("funds/makedeposit")]
         [Authorize]
         [HttpPost]
+        [MfaAuthorization("Deposit")]
         public IHttpActionResult MakeDeposit([FromBody]MakeDepositParams makeDepositParams)
         {
             if (log.IsDebugEnabled)
@@ -251,6 +277,30 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Resources
                         accountId, makeDepositParams.Currency, makeDepositParams.Amount, makeDepositParams.IsCryptoCurrency)));
                 }
                 return BadRequest("Currency is not provided or API key not found with request");
+            }
+            catch (InvalidOperationException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Make Deposit Exception ", exception);
+                }
+                return BadRequest(exception.Message);
+            }
+            catch (NullReferenceException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Make Deposit Exception ", exception);
+                }
+                return BadRequest(exception.Message);
+            }
+            catch (InstanceNotFoundException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Make Deposit Exception ", exception);
+                }
+                return BadRequest(exception.Message);
             }
             catch (Exception exception)
             {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Management.Instrumentation;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -246,6 +247,30 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Resources
                         commitWithdrawParams.Amount)));
                 }
                 return BadRequest("Currency is not provided.");
+            }
+            catch (InvalidOperationException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Commit Withdraw Exception ", exception);
+                }
+                return BadRequest(exception.Message);
+            }
+            catch (NullReferenceException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Commit Withdraw Exception ", exception);
+                }
+                return BadRequest(exception.Message);
+            }
+            catch (InstanceNotFoundException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Commit Withdraw Exception ", exception);
+                }
+                return BadRequest(exception.Message);
             }
             catch (Exception exception)
             {

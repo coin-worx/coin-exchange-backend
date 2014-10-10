@@ -58,6 +58,7 @@
           CoinExchange.IdentityAccess.Application">
     <constructor-arg name="persistenceRepository" ref="IdentityAccessPersistenceRepository"/>
     <constructor-arg name="userRepository" ref="UserRepository"/>
+    <constructor-arg name="securityKeysRepository" ref="SecurityKeysPairRepository"/>
     <constructor-arg name="smsService" ref="MfaSmsService"/>
     <constructor-arg name="emailService" ref="MfaEmailService"/>
     <constructor-arg name="codeGenerationService" ref="MfaCodeGenerationService"/>
