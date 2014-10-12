@@ -12,6 +12,7 @@ using CoinExchange.IdentityAccess.Application.SecurityKeysServices;
 using CoinExchange.IdentityAccess.Application.UserServices.Representations;
 using CoinExchange.IdentityAccess.Domain.Model.Repositories;
 using CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate;
+using CoinExchange.IdentityAccess.Domain.Model.Services;
 using CoinExchange.IdentityAccess.Infrastructure.Persistence.Repositories;
 using CoinExchange.IdentityAccess.Infrastructure.Services;
 using NUnit.Framework;
@@ -43,8 +44,9 @@ namespace CoinExchange.IdentityAccess.Application.Tests
             ISecurityKeysApplicationService securityKeysApplicationService = new SecurityKeysApplicationService(new SecurityKeysGenerationService(),
                 persistRepository,null,null);
             IPasswordEncryptionService passwordEncryptionService = new PasswordEncryptionService();
+            IMfaAuthorizationService mockMfaAuthorizationService = new MockMfaAuthorizationService();
             ILoginApplicationService loginApplicationService = new LoginApplicationService(userRepository, passwordEncryptionService, 
-                securityKeysApplicationService, new MockPersistenceRepository(false));
+                securityKeysApplicationService, new MockPersistenceRepository(false), mockMfaAuthorizationService);
 
             string enteredPassword = "whereistheJoker";
             User user = new User("batman@gotham.com", "brucewayne", passwordEncryptionService.EncryptPassword(enteredPassword),
@@ -72,8 +74,9 @@ namespace CoinExchange.IdentityAccess.Application.Tests
             ISecurityKeysApplicationService securityKeysApplicationService = new SecurityKeysApplicationService(new SecurityKeysGenerationService(),
                 persistRepository,null,null);
             IPasswordEncryptionService passwordEncryptionService = new PasswordEncryptionService();
+            IMfaAuthorizationService mockMfaAuthorizationService = new MockMfaAuthorizationService();
             ILoginApplicationService loginApplicationService = new LoginApplicationService(userRepository, passwordEncryptionService,
-                securityKeysApplicationService, new MockPersistenceRepository(false));
+                securityKeysApplicationService, new MockPersistenceRepository(false), mockMfaAuthorizationService);
 
             string enteredPassword = "whereistheJoker";
             User user = new User("batman@gotham.com", "brucewayne", passwordEncryptionService.EncryptPassword(enteredPassword),
@@ -96,11 +99,9 @@ namespace CoinExchange.IdentityAccess.Application.Tests
                 new SecurityKeysApplicationService(new SecurityKeysGenerationService(),
                                                    persistRepository, null,null);
             IPasswordEncryptionService passwordEncryptionService = new PasswordEncryptionService();
-            ILoginApplicationService loginApplicationService = new LoginApplicationService(userRepository,
-                                                                                           passwordEncryptionService,
-                                                                                           securityKeysApplicationService,
-                                                                                           new MockPersistenceRepository
-                                                                                               (false));
+            IMfaAuthorizationService mockMfaAuthorizationService = new MockMfaAuthorizationService();
+            ILoginApplicationService loginApplicationService = new LoginApplicationService(userRepository, passwordEncryptionService,
+                securityKeysApplicationService, new MockPersistenceRepository(false), mockMfaAuthorizationService);
 
             string enteredPassword = "whereistheJoker";
             User user = new User("batman@gotham.com", "brucewayne",
@@ -123,8 +124,9 @@ namespace CoinExchange.IdentityAccess.Application.Tests
             ISecurityKeysApplicationService securityKeysApplicationService = new SecurityKeysApplicationService(new SecurityKeysGenerationService(),
                 persistRepository,null,null);
             IPasswordEncryptionService passwordEncryptionService = new PasswordEncryptionService();
+            IMfaAuthorizationService mockMfaAuthorizationService = new MockMfaAuthorizationService();
             ILoginApplicationService loginApplicationService = new LoginApplicationService(userRepository, passwordEncryptionService,
-                securityKeysApplicationService, new MockPersistenceRepository(false));
+                securityKeysApplicationService, new MockPersistenceRepository(false), mockMfaAuthorizationService);
             string enteredPassword = "whereistheJoker";
             User user = new User("batman@gotham.com", "brucewayne", passwordEncryptionService.EncryptPassword(enteredPassword),
                 "Ninja County", TimeZone.CurrentTimeZone, "", "");
@@ -146,8 +148,9 @@ namespace CoinExchange.IdentityAccess.Application.Tests
             ISecurityKeysApplicationService securityKeysApplicationService = new SecurityKeysApplicationService(new SecurityKeysGenerationService(),
                 persistRepository, null,null);
             IPasswordEncryptionService passwordEncryptionService = new PasswordEncryptionService();
+            IMfaAuthorizationService mockMfaAuthorizationService = new MockMfaAuthorizationService();
             ILoginApplicationService loginApplicationService = new LoginApplicationService(userRepository, passwordEncryptionService,
-                securityKeysApplicationService, new MockPersistenceRepository(false));
+                securityKeysApplicationService, new MockPersistenceRepository(false), mockMfaAuthorizationService);
             string enteredPassword = "whereistheJoker";
             User user = new User("batman@gotham.com", "brucewayne", passwordEncryptionService.EncryptPassword(enteredPassword),
                 "Ninja County", TimeZone.CurrentTimeZone, "", "");

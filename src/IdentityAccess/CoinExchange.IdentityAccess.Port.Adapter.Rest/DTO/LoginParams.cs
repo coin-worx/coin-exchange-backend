@@ -18,6 +18,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.DTO
 
         public string UserName { get; set; }
         public string Password { get; set; }
+        public string MfaCode { get; set; }
 
         /// <summary>
         /// Parametrized constructor
@@ -28,6 +29,16 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.DTO
         {
             UserName = userName;
             Password = password;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:System.Object"/> class.
+        /// </summary>
+        public LoginParams(string userName, string password, string mfaCode)
+        {
+            UserName = userName;
+            Password = password;
+            MfaCode = mfaCode;
         }
 
         /// <summary>

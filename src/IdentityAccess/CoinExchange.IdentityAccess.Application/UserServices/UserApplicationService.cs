@@ -429,5 +429,42 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
                 throw new InstanceNotFoundException("No SecurityKeysPair instance found for the given API key");
             }
         }
+
+        /// <summary>
+        /// Submit Mfa Subscription settings for user
+        /// </summary>
+        /// <returns></returns>
+        public SubmitMfaSettingsResponse SubmitMfaSettings(MfaSettingsCommand mfaSettingsCommand)
+        {
+            // Find security keys
+            SecurityKeysPair securityKeysPair = _securityKeysRepository.GetByApiKey(mfaSettingsCommand.ApiKey);
+            if (securityKeysPair != null)
+            {
+                // Finds user
+                User user = _userRepository.GetUserById(securityKeysPair.UserId);
+                if (user != null)
+                {
+                    user.AssignMfaSubscriptions(mfaSettingsCommand.MfaSettingsList);
+                    _persistenceRepository.SaveUpdate(user);
+                    return new SubmitMfaSettingsResponse(true, "Mfa Subscription successful");
+                }
+                // If user is not found
+                else
+                {
+                    Log.Error(string.Format("No user instance found for UserId = {0}",
+                    securityKeysPair.UserId));
+                    throw new NullReferenceException(string.Format("No user instance found for UserId = {0}",
+                    securityKeysPair.UserId));
+                }
+            }
+            // If secruity keys pair instance is not found
+            else
+            {
+                Log.Error(string.Format("No Security keys pair instance found for Api Key = {0}",
+                    mfaSettingsCommand.ApiKey));
+                throw new NullReferenceException(string.Format("No Security keys pair instance found for Api Key = {0}", 
+                    mfaSettingsCommand.ApiKey));
+            }
+        }
     }
 }

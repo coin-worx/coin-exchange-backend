@@ -30,6 +30,7 @@ assembly="CoinExchange.IdentityAccess.Domain.Model" namespace="CoinExchange.Iden
     <property name="NationalIdentificationNumber" column="NationalIdentificationNumber"/>
     <property name="FullName" column="FullName"/>
     <property name="DateOfBirth" column="DateOfBirth"/>
+    <property name="MfaCode" column="MfaCode"/>
     <component name="IsUserBlocked">
       <property name="Value" column="IsUserBlocked"/>
     </component>    

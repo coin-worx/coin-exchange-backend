@@ -26,6 +26,29 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="T:System.Object"/> class.
+        /// </summary>
+        public UserValidationEssentials(bool loginSuccessful, string message, string apiKey, string secretKey, TimeSpan sessionLogoutTime, DateTime lastLogin)
+        {
+            LoginSuccessful = loginSuccessful;
+            Message = message;
+            ApiKey = apiKey;
+            SecretKey = secretKey;
+            SessionLogoutTime = sessionLogoutTime;
+            LastLogin = lastLogin;
+        }
+
+        /// <summary>
+        /// Is the login successful
+        /// </summary>
+        public bool LoginSuccessful { get; private set; }
+
+        /// <summary>
+        /// Response message after login attempt
+        /// </summary>
+        public string Message { get; private set; }
+
+        /// <summary>
         /// API Key
         /// </summary>
         public string ApiKey { get; private set; }
@@ -40,6 +63,9 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         /// </summary>
         public TimeSpan SessionLogoutTime { get; private set; }
 
+        /// <summary>
+        /// The time of last login
+        /// </summary>
         public DateTime LastLogin { get; private set; }
     }
 }

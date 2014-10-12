@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Management.Instrumentation;
 using System.Security.Authentication;
+using CoinExchange.Common.Domain.Model;
 using CoinExchange.IdentityAccess.Application.AccessControlServices.Commands;
 using CoinExchange.IdentityAccess.Application.SecurityKeysServices;
 using CoinExchange.IdentityAccess.Domain.Model.Repositories;
 using CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate;
+using CoinExchange.IdentityAccess.Domain.Model.Services;
 using CoinExchange.IdentityAccess.Domain.Model.UserAggregate;
 
 namespace CoinExchange.IdentityAccess.Application.AccessControlServices
@@ -22,17 +24,20 @@ namespace CoinExchange.IdentityAccess.Application.AccessControlServices
         private IPasswordEncryptionService _passwordEncryptionService;
         private ISecurityKeysApplicationService _securityKeysApplicationService;
         private IIdentityAccessPersistenceRepository _persistenceRepository;
+        private IMfaAuthorizationService _mfaAuthorizationService;
 
         /// <summary>
         /// Initializes with the UserRepository and PasswordEncryption service 
         /// </summary>
         public LoginApplicationService(IUserRepository userRepository, IPasswordEncryptionService passwordEncryptionService,
-        ISecurityKeysApplicationService securityKeysApplicationService, IIdentityAccessPersistenceRepository persistenceRepository)
+        ISecurityKeysApplicationService securityKeysApplicationService, IIdentityAccessPersistenceRepository persistenceRepository,
+            IMfaAuthorizationService mfaAuthorizationService)
         {
             _userRepository = userRepository;
             _passwordEncryptionService = passwordEncryptionService;
             _securityKeysApplicationService = securityKeysApplicationService;
             _persistenceRepository = persistenceRepository;
+            _mfaAuthorizationService = mfaAuthorizationService;
         }
 
         /// <summary>
@@ -55,11 +60,25 @@ namespace CoinExchange.IdentityAccess.Application.AccessControlServices
                     }
                     if (_passwordEncryptionService.VerifyPassword(loginCommand.Password, user.Password))
                     {
-                        Tuple<ApiKey, SecretKey,DateTime> securityKeys =
+                        Tuple<bool, string> mfaAccessResponse =
+                            _mfaAuthorizationService.AuthorizeAccess(user.Id, MfaConstants.Login, loginCommand.MfaCode);
+                       
+                        // Check if the user has susbcribed for mfa authorization. If yes, check the Mfa Code
+                        if (mfaAccessResponse.Item1)
+                        {
+                            Tuple<ApiKey, SecretKey, DateTime> securityKeys =
                             _securityKeysApplicationService.CreateSystemGeneratedKey(user.Id);
-                        user.LastLogin = DateTime.Now;
-                        _persistenceRepository.SaveUpdate(user);
-                        return new UserValidationEssentials(securityKeys, user.AutoLogout);
+                            user.LastLogin = DateTime.Now;
+                            _persistenceRepository.SaveUpdate(user);
+                            return new UserValidationEssentials(mfaAccessResponse.Item1, mfaAccessResponse.Item2, 
+                                securityKeys.Item1.Value, securityKeys.Item2.Value, user.AutoLogout, user.LastLogin);
+                        }
+                        // If MFA authorization passes successfuly, return the user with the security keys
+                        else
+                        {
+                            return new UserValidationEssentials(mfaAccessResponse.Item1, mfaAccessResponse.Item2,
+                                                                null, null, user.AutoLogout, user.LastLogin);
+                        }
                     }
                     else
                     {

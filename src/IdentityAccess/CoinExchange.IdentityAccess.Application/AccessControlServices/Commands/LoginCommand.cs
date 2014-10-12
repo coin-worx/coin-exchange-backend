@@ -17,6 +17,16 @@
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="T:System.Object"/> class.
+        /// </summary>
+        public LoginCommand(string username, string password, string mfaCode)
+        {
+            Username = username;
+            Password = password;
+            MfaCode = mfaCode;
+        }
+
+        /// <summary>
         /// Username
         /// </summary>
         public string Username { get; private set; }
@@ -25,5 +35,10 @@
         /// Password
         /// </summary>
         public string Password { get; private set; }
+
+        /// <summary>
+        /// Mfa Code
+        /// </summary>
+        public string MfaCode { get; private set; }
     }
 }

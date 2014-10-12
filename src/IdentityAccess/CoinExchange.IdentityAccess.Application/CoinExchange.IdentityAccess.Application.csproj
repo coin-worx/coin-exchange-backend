@@ -83,6 +83,7 @@
     <Compile Include="UserServices\Commands\EmailSettingsCommand.cs" />
     <Compile Include="UserServices\Commands\ForgotPasswordCommand.cs" />
     <Compile Include="UserServices\Commands\ForgotUsernameCommand.cs" />
+    <Compile Include="UserServices\Commands\MfaSettingsCommand.cs" />
     <Compile Include="UserServices\Commands\ResetPasswordCommand.cs" />
     <Compile Include="UserServices\Commands\VerifyTier3Command.cs" />
     <Compile Include="UserServices\Commands\VerifyTier1Command.cs" />
@@ -94,6 +95,7 @@
     <Compile Include="UserServices\Representations\ChangePasswordResponse.cs" />
     <Compile Include="UserServices\Representations\ChangeSettingsResponse.cs" />
     <Compile Include="UserServices\Representations\SubmitEmailSettingsResponse.cs" />
+    <Compile Include="UserServices\Representations\SubmitMfaSettingsResponse.cs" />
     <Compile Include="UserServices\Representations\Tier1Details.cs" />
     <Compile Include="UserServices\Representations\Tier2Details.cs" />
     <Compile Include="UserServices\Representations\Tier3Details.cs" />

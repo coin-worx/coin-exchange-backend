@@ -348,6 +348,7 @@ CREATE TABLE `user` (
   `DateOfBirth` date DEFAULT NULL,
   `AdminEmailsSubscribed` tinyint(1) DEFAULT NULL,
   `NewsletterEmailsSubscribed` tinyint(1) DEFAULT NULL,
+  `MfaCode` varchar(60) DEFAULT NULL,
   PRIMARY KEY (`Id`),
   UNIQUE KEY `NewIndex1` (`UserName`,`Email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;

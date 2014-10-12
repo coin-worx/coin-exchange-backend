@@ -82,6 +82,7 @@
   <ItemGroup>
     <Compile Include="MfaAuthorizationServiceTests.cs" />
     <Compile Include="MockEmailService.cs" />
+    <Compile Include="MockMfaAuthoriztaionService.cs" />
     <Compile Include="MockMfaCodeGenerationService.cs" />
     <Compile Include="MockMfaEmailService.cs" />
     <Compile Include="MockPersistenceRepository.cs" />

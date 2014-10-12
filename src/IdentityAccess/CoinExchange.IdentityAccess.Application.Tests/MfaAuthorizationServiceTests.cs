@@ -169,7 +169,7 @@ namespace CoinExchange.IdentityAccess.Application.Tests
 
         [Test]
         [Category("Unit")]
-        [ExpectedException(typeof(InvalidOperationException))]
+        //[ExpectedException(typeof(InvalidOperationException))]
         public void MfaAuthorizationSubscribedFailtTest_ChecksThatExceptionIsRaisedWhenMfaCodesDontMatch_VerifiesByReturnValue()
         {
             MockPersistenceRepository mockPersistenceRepository = new MockPersistenceRepository(false);
@@ -203,7 +203,8 @@ namespace CoinExchange.IdentityAccess.Application.Tests
             Tuple<bool, string> authorizeAccess1 = mfaAuthorizationService.AuthorizeAccess(apiKey, loginSubscription.Item2, null);
             Assert.IsFalse(authorizeAccess1.Item1);
             // This time the code should be assigned to the user, so verify that
-            mfaAuthorizationService.AuthorizeAccess(apiKey, loginSubscription.Item2, user.MfaCode + "1");
+            authorizeAccess1 = mfaAuthorizationService.AuthorizeAccess(apiKey, loginSubscription.Item2, user.MfaCode + "1");
+            Assert.IsFalse(authorizeAccess1.Item1);
         }
     }
 }

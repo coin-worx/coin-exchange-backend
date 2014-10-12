@@ -46,7 +46,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
                     log.Debug("Login Call Recevied, parameters:" + param);
                 }
                 return
-                    Ok(_loginApplicationService.Login(new LoginCommand(param.UserName,param.Password)));
+                    Ok(_loginApplicationService.Login(new LoginCommand(param.UserName,param.Password,param.MfaCode)));
             }
             catch (InvalidOperationException exception)
             {

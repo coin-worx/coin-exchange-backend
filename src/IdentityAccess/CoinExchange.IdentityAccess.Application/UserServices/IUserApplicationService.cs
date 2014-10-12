@@ -83,5 +83,12 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
         /// <param name="emailSettingsCommand"></param>
         /// <returns></returns>
         SubmitEmailSettingsResponse SubmitEmailSettings(EmailSettingsCommand emailSettingsCommand);
+
+        /// <summary>
+        /// Submit the MFA settings for a user
+        /// </summary>
+        /// <param name="mfaSettingsCommand"></param>
+        /// <returns></returns>
+        SubmitMfaSettingsResponse SubmitMfaSettings(MfaSettingsCommand mfaSettingsCommand);
     }
 }

@@ -122,5 +122,126 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             authorizeAccess = mfaAuthorizationService.AuthorizeAccess(apiKey, MfaConstants.Deposit, null);
             Assert.IsFalse(authorizeAccess.Item1);
         }
+
+        [Test]
+        [Category("Integration")]
+        public void MfaAuthorizationSuccessfulTest_ChecksThatServiceReturnsTrueIfMfaCodeIsProvidedAfterSubscription_VerifiesThroughReturnsValue()
+        {
+            IIdentityAccessPersistenceRepository persistenceRepository = (IIdentityAccessPersistenceRepository)ContextRegistry.GetContext()["IdentityAccessPersistenceRepository"];
+            IUserRepository userRepository = (IUserRepository)ContextRegistry.GetContext()["UserRepository"];
+            ISecurityKeysRepository securityKeysPairRepository = (ISecurityKeysRepository)ContextRegistry.GetContext()["SecurityKeysPairRepository"];
+            IMfaCodeSenderService mfaSmsService = (IMfaCodeSenderService)ContextRegistry.GetContext()["MfaSmsService"];
+            IMfaCodeSenderService mfaEmailService = (IMfaCodeSenderService)ContextRegistry.GetContext()["MfaEmailService"];
+            IMfaCodeGenerationService mfaCodeGenerationService = (IMfaCodeGenerationService)ContextRegistry.GetContext()["MfaCodeGenerationService"];
+            IMfaSubscriptionRepository mfaSubscriptionRepository = (IMfaSubscriptionRepository)ContextRegistry.GetContext()["MfaSubscriptionRepository"];
+            IMfaAuthorizationService mfaAuthorizationService = new MfaAuthorizationService(persistenceRepository,
+                userRepository, securityKeysPairRepository, mfaSmsService, mfaEmailService, mfaCodeGenerationService);
+
+            string apiKey = "123";
+            string userName = "NewUser";
+            string phoneNumber = "2233344";
+            string email = "user88@gmail.com";
+
+            User user = new User(userName, "asdf", "12345", "xyz", email, Language.English, TimeZone.CurrentTimeZone,
+                new TimeSpan(1, 1, 1, 1), DateTime.Now, "Pakistan", "", phoneNumber, "1234");
+            persistenceRepository.SaveUpdate(user);
+
+            user = userRepository.GetUserByUserName(userName);
+            Assert.IsNotNull(user);
+            SecurityKeysPair securityKeysPair = new SecurityKeysPair(user.Id, apiKey, "secret123", true, "#1");
+            persistenceRepository.SaveUpdate(securityKeysPair);
+            Tuple<bool, string> authorizeAccess = mfaAuthorizationService.AuthorizeAccess(apiKey, MfaConstants.Deposit, "");
+            Assert.IsTrue(authorizeAccess.Item1);
+
+            IList<MfaSubscription> allSubscriptions = mfaSubscriptionRepository.GetAllSubscriptions();
+
+            IList<Tuple<string, string, bool>> mfaSubscriptions = new List<Tuple<string, string, bool>>();
+            foreach (var subscription in allSubscriptions)
+            {
+                mfaSubscriptions.Add(new Tuple<string, string, bool>(subscription.MfaSubscriptionId,
+                    subscription.MfaSubscriptionName, true));
+            }
+            user.AssignMfaSubscriptions(mfaSubscriptions);
+            persistenceRepository.SaveUpdate(user);
+
+            authorizeAccess = mfaAuthorizationService.AuthorizeAccess(apiKey, MfaConstants.Deposit, null);
+            Assert.IsFalse(authorizeAccess.Item1);
+
+            // The Stub Implementation always generates and returns the same MFA Code, so we can use that to our convenience
+            string mfaCode = mfaCodeGenerationService.GenerateCode();
+            authorizeAccess = mfaAuthorizationService.AuthorizeAccess(apiKey, MfaConstants.Deposit, mfaCode);
+            Assert.IsTrue(authorizeAccess.Item1);
+
+            // Withdraw Mfa Code Verfification
+            mfaCode = mfaCodeGenerationService.GenerateCode();
+            authorizeAccess = mfaAuthorizationService.AuthorizeAccess(apiKey, MfaConstants.Withdrawal, mfaCode);
+            Assert.IsTrue(authorizeAccess.Item1);
+
+            // Login Mfa Code Verfification
+            mfaCode = mfaCodeGenerationService.GenerateCode();
+            authorizeAccess = mfaAuthorizationService.AuthorizeAccess(apiKey, MfaConstants.Login, mfaCode);
+            Assert.IsTrue(authorizeAccess.Item1);
+
+            // Place Order Mfa Code Verfification
+            mfaCode = mfaCodeGenerationService.GenerateCode();
+            authorizeAccess = mfaAuthorizationService.AuthorizeAccess(apiKey, MfaConstants.PlaceOrder, mfaCode);
+            Assert.IsTrue(authorizeAccess.Item1);
+
+            // Cancel order Mfa Code Verfification
+            mfaCode = mfaCodeGenerationService.GenerateCode();
+            authorizeAccess = mfaAuthorizationService.AuthorizeAccess(apiKey, MfaConstants.CancelOrder, mfaCode);
+            Assert.IsTrue(authorizeAccess.Item1);
+        }
+
+        [Test]
+        [Category("Integration")]
+        public void MfaAuthorizationFailTest_ChecksThatServiceReturnsTrueIfMfaCodesDontMatch_VerifiesThroughReturnsValue()
+        {
+            IIdentityAccessPersistenceRepository persistenceRepository = (IIdentityAccessPersistenceRepository)ContextRegistry.GetContext()["IdentityAccessPersistenceRepository"];
+            IUserRepository userRepository = (IUserRepository)ContextRegistry.GetContext()["UserRepository"];
+            ISecurityKeysRepository securityKeysPairRepository = (ISecurityKeysRepository)ContextRegistry.GetContext()["SecurityKeysPairRepository"];
+            IMfaCodeSenderService mfaSmsService = (IMfaCodeSenderService)ContextRegistry.GetContext()["MfaSmsService"];
+            IMfaCodeSenderService mfaEmailService = (IMfaCodeSenderService)ContextRegistry.GetContext()["MfaEmailService"];
+            IMfaCodeGenerationService mfaCodeGenerationService = (IMfaCodeGenerationService)ContextRegistry.GetContext()["MfaCodeGenerationService"];
+            IMfaSubscriptionRepository mfaSubscriptionRepository = (IMfaSubscriptionRepository)ContextRegistry.GetContext()["MfaSubscriptionRepository"];
+            IMfaAuthorizationService mfaAuthorizationService = new MfaAuthorizationService(persistenceRepository,
+                userRepository, securityKeysPairRepository, mfaSmsService, mfaEmailService, mfaCodeGenerationService);
+
+            string apiKey = "123";
+            string userName = "NewUser";
+            string phoneNumber = "2233344";
+            string email = "user88@gmail.com";
+
+            User user = new User(userName, "asdf", "12345", "xyz", email, Language.English, TimeZone.CurrentTimeZone,
+                new TimeSpan(1, 1, 1, 1), DateTime.Now, "Pakistan", "", phoneNumber, "1234");
+            persistenceRepository.SaveUpdate(user);
+
+            user = userRepository.GetUserByUserName(userName);
+            Assert.IsNotNull(user);
+            SecurityKeysPair securityKeysPair = new SecurityKeysPair(user.Id, apiKey, "secret123", true, "#1");
+            persistenceRepository.SaveUpdate(securityKeysPair);
+            Tuple<bool, string> authorizeAccess = mfaAuthorizationService.AuthorizeAccess(apiKey, MfaConstants.Deposit, "");
+            Assert.IsTrue(authorizeAccess.Item1);
+
+            IList<MfaSubscription> allSubscriptions = mfaSubscriptionRepository.GetAllSubscriptions();
+
+            IList<Tuple<string, string, bool>> mfaSubscriptions = new List<Tuple<string, string, bool>>();
+            foreach (var subscription in allSubscriptions)
+            {
+                mfaSubscriptions.Add(new Tuple<string, string, bool>(subscription.MfaSubscriptionId,
+                    subscription.MfaSubscriptionName, true));
+            }
+            user.AssignMfaSubscriptions(mfaSubscriptions);
+            persistenceRepository.SaveUpdate(user);
+
+            authorizeAccess = mfaAuthorizationService.AuthorizeAccess(apiKey, MfaConstants.Deposit, null);
+            Assert.IsFalse(authorizeAccess.Item1);
+
+            // The Stub Implementation always generates and returns the same MFA Code. We manuipulate it so that the code is 
+            // incorrect
+            string mfaCode = mfaCodeGenerationService.GenerateCode();
+            authorizeAccess = mfaAuthorizationService.AuthorizeAccess(apiKey, MfaConstants.Deposit, mfaCode + "1");
+            Assert.IsFalse(authorizeAccess.Item1);
+        }
     }
 }

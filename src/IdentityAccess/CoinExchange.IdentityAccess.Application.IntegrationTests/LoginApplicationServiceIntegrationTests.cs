@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Security.Authentication;
 using CoinExchange.Common.Tests;
@@ -8,8 +9,10 @@ using CoinExchange.IdentityAccess.Application.RegistrationServices;
 using CoinExchange.IdentityAccess.Application.RegistrationServices.Commands;
 using CoinExchange.IdentityAccess.Application.UserServices;
 using CoinExchange.IdentityAccess.Application.UserServices.Commands;
+using CoinExchange.IdentityAccess.Application.UserServices.Representations;
 using CoinExchange.IdentityAccess.Domain.Model.Repositories;
 using CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate;
+using CoinExchange.IdentityAccess.Domain.Model.Services;
 using CoinExchange.IdentityAccess.Domain.Model.UserAggregate;
 using NUnit.Framework;
 using Spring.Context;
@@ -286,6 +289,58 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
             Assert.IsTrue(accountActivated);
 
             loginApplicationService.Login(new LoginCommand("Bob", ""));
+        }
+
+        [Test]
+        [Category("Integration")]
+        public void LoginMfaAuthorizationTest_ChecksIfMfaAuthorizationIsDoneSuccessfully_VerifiesThroughReturnValue()
+        {
+            ILoginApplicationService loginApplicationService = (ILoginApplicationService)_applicationContext["LoginApplicationService"];
+            ILogoutApplicationService logoutApplicationService = (ILogoutApplicationService)_applicationContext["LogoutApplicationService"];
+            IMfaSubscriptionRepository mfaSubscriptionRepository = (IMfaSubscriptionRepository)_applicationContext["MfaSubscriptionRepository"];
+            IMfaCodeGenerationService mfaCodeGenerationService = (IMfaCodeGenerationService)ContextRegistry.GetContext()["MfaCodeGenerationService"];
+            Assert.IsNotNull(loginApplicationService);
+            IRegistrationApplicationService registrationService = (IRegistrationApplicationService)_applicationContext["RegistrationApplicationService"];
+
+            string username = "Bob";
+            string activationKey = registrationService.CreateAccount(new SignupUserCommand(
+                "bob@alice.com", username, "alice", "Wonderland", TimeZone.CurrentTimeZone, ""));
+            Assert.IsNotNull(activationKey);
+
+            IUserApplicationService userApplicationService = (IUserApplicationService)_applicationContext["UserApplicationService"];
+            bool accountActivated = userApplicationService.ActivateAccount(new ActivationCommand(activationKey, "Bob", "alice"));
+            Assert.IsTrue(accountActivated);
+
+            UserValidationEssentials userValidationEssentials = loginApplicationService.Login(new LoginCommand("Bob", "alice"));
+            Assert.IsNotNull(userValidationEssentials);
+            Assert.IsNotNull(userValidationEssentials.ApiKey);
+            Assert.IsNotNull(userValidationEssentials.SecretKey);
+            Assert.IsNotNull(userValidationEssentials.SessionLogoutTime);
+
+            IList<MfaSubscription> allSubscriptions = mfaSubscriptionRepository.GetAllSubscriptions();
+            List<Tuple<string,string,bool>> mfaSubscriptions = new List<Tuple<string, string, bool>>();
+            foreach (var subscription in allSubscriptions)
+            {
+                mfaSubscriptions.Add(new Tuple<string, string, bool>(subscription.MfaSubscriptionId, subscription.MfaSubscriptionName,
+                    true));
+            }
+            SubmitMfaSettingsResponse submitMfaSettingsResponse = userApplicationService.SubmitMfaSettings(
+                new MfaSettingsCommand(userValidationEssentials.ApiKey, mfaSubscriptions));
+            Assert.IsTrue(submitMfaSettingsResponse.Successful);
+
+            logoutApplicationService.Logout(new LogoutCommand(userValidationEssentials.ApiKey));
+
+            UserValidationEssentials validationEssentials = loginApplicationService.Login(new LoginCommand("Bob", "alice", null));
+            Assert.IsFalse(validationEssentials.LoginSuccessful);
+            Assert.IsNull(validationEssentials.ApiKey);
+
+            // As we are using the stub implementation for MfaCodeGenerationService, the service returns only the same code every 
+            // time. So we can use the code in this test case
+
+            validationEssentials = loginApplicationService.Login(new LoginCommand("Bob", "alice", mfaCodeGenerationService.GenerateCode()));
+            Assert.IsTrue(validationEssentials.LoginSuccessful);
+            Assert.IsNotNull(validationEssentials.ApiKey);
+            Assert.IsNotNull(validationEssentials.SecretKey);
         }
     }
 }

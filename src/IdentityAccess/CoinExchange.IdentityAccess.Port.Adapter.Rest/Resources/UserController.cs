@@ -509,5 +509,71 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
                 return InternalServerError();
             }
         }
+
+        /// <summary>
+        /// Get available permissions
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("private/user/api/mfasettings")]
+        [FilterIP]
+        [Authorize]
+        public IHttpActionResult SubmitMfaSettings(MfaSettingsParams mfaSettingsParams)
+        {
+            try
+            {
+                if (log.IsDebugEnabled)
+                {
+                    log.Debug("Submit Email Settings Call Recevied");
+                }
+                string apikey = HeaderParamUtility.GetApikey(Request);
+                if (!string.IsNullOrEmpty(apikey))
+                {
+                    List<Tuple<string,string,bool>> mfaSettingsList = new List<Tuple<string, string, bool>>();
+                    foreach (var setting in mfaSettingsParams.MfaSettingsList)
+                    {
+                        mfaSettingsList.Add(new Tuple<string, string, bool>(setting.MfaSubscriptionId, 
+                            setting.MfaSubscriptionName,setting.Enabled));
+                    }
+                    return Ok(_userApplicationService.);
+                }
+                else
+                {
+                    throw new Exception("API Key not recieved");
+                }
+            }
+            catch (InvalidOperationException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Submit Email Settings Call Exception ", exception);
+                }
+                return BadRequest(exception.Message);
+            }
+            catch (InvalidCredentialException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Submit Email Settings Call Exception ", exception);
+                }
+                return BadRequest(exception.Message);
+            }
+            catch (InvalidDataException exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Submit Email Settings Call Exception ", exception);
+                }
+                return BadRequest(exception.Message);
+            }
+            catch (Exception exception)
+            {
+                if (log.IsErrorEnabled)
+                {
+                    log.Error("Submit Email Settings Call Exception ", exception);
+                }
+                return InternalServerError();
+            }
+        }
     }
 }
