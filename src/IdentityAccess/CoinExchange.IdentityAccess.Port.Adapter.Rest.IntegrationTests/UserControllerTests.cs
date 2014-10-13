@@ -790,7 +790,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             }
 
             string mfaCode = "mfacode123";
-            IHttpActionResult submissionResponse = userController.SubmitMfaSettings(new MfaSettingsParams(true, , mfaSettingsList));
+            IHttpActionResult submissionResponse = userController.SubmitMfaSettings(new MfaSettingsParams(true, mfaCode, mfaSettingsList));
             Assert.IsNotNull(submissionResponse);
             OkNegotiatedContentResult<SubmitMfaSettingsResponse> okSubmissionResponse = (OkNegotiatedContentResult<SubmitMfaSettingsResponse>) submissionResponse;
             Assert.IsTrue(okSubmissionResponse.Content.Successful);
@@ -801,7 +801,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             {
                 Assert.IsTrue(retreivedKey.CheckMfaSubscriptions(subscription.MfaSubscriptionName));
             }
-            Assert.AreEqual(mfaCode, securityKeysPair.MfaCode);
+            Assert.AreEqual(mfaCode, retreivedKey.MfaCode);
         }
     }
 }
