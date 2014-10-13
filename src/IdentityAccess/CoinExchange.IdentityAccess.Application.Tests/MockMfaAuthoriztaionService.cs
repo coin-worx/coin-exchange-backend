@@ -13,5 +13,10 @@ namespace CoinExchange.IdentityAccess.Application.Tests
        {
            return new Tuple<bool, string>(true, "");
        }
+
+       public Tuple<bool, string> AuthorizeAccess(int userId, string currentAction, string mfaCode)
+       {
+           throw new NotImplementedException();
+       }
     }
 }

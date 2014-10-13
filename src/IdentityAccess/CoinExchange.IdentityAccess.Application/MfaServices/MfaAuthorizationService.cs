@@ -50,11 +50,14 @@ namespace CoinExchange.IdentityAccess.Application.MfaServices
             SecurityKeysPair securityKeysPair = _securityKeysRepository.GetByApiKey(apiKey);
             if (securityKeysPair != null)
             {
+                // ToDo: Check SecurityKeysPair == SystemGenerated || UserGenerated
+                // ToDo: If UserGenerated, check if TFA enabled. 
+                // ToDo: If TFA enableds, check SecurityKeysPair.Password
                 int userId = securityKeysPair.UserId;
                 // Get user from repository
                 User user = _userRepository.GetUserById(userId);
 
-                return CheckMfaSubscription(user, userId, currentAction, mfaCode);
+                return CheckSystemGeneratedKeySubscription(user, userId, currentAction, mfaCode);
             }
             else
             {
@@ -75,7 +78,7 @@ namespace CoinExchange.IdentityAccess.Application.MfaServices
         {
             // Get user from repository
             User user = _userRepository.GetUserById(userId);
-            return CheckMfaSubscription(user, userId, currentAction, mfaCode);
+            return CheckSystemGeneratedKeySubscription(user, userId, currentAction, mfaCode);
         }
 
         /// <summary>
@@ -86,7 +89,7 @@ namespace CoinExchange.IdentityAccess.Application.MfaServices
         /// <param name="currentAction"></param>
         /// <param name="mfaCode"></param>
         /// <returns></returns>
-        private Tuple<bool,string> CheckMfaSubscription(User user, int userId, string currentAction, string mfaCode)
+        private Tuple<bool,string> CheckSystemGeneratedKeySubscription(User user, int userId, string currentAction, string mfaCode)
         {
             if (user != null)
             {

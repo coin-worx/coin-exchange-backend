@@ -535,7 +535,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
                         mfaSettingsList.Add(new Tuple<string, string, bool>(setting.MfaSubscriptionId, 
                             setting.MfaSubscriptionName,setting.Enabled));
                     }
-                    return Ok(_userApplicationService.);
+                    return Ok(_userApplicationService.SubmitMfaSettings(new MfaSettingsCommand(apikey, mfaSettingsList)));
                 }
                 else
                 {
