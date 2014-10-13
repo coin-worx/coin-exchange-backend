@@ -14,11 +14,23 @@ namespace CoinExchange.IdentityAccess.Application.UserServices.Commands
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
-        public MfaSettingsCommand(string apiKey, List<Tuple<string, string, bool>> mfaSettingsList)
+        public MfaSettingsCommand(bool apiKeyMfa, string apiKeyPassword, string apiKey, List<Tuple<string, string, bool>> mfaSettingsList)
         {
+            ApiKeyMfa = apiKeyMfa;
+            ApiKeyPassword = apiKeyPassword;
             ApiKey = apiKey;
             MfaSettingsList = mfaSettingsList;
         }
+
+        /// <summary>
+        /// Are the subscriptions for API key or for the user
+        /// </summary>
+        public bool ApiKeyMfa { get; private set; }
+
+        /// <summary>
+        /// Password for the API key
+        /// </summary>
+        public string ApiKeyPassword { get; private set; }
 
         /// <summary>
         /// Api Key

@@ -142,6 +142,7 @@ DROP TABLE IF EXISTS `mfasubscriptionstatus`;
 
 CREATE TABLE `mfasubscriptionstatus` (
   `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `ApiKey` varchar(100) DEFAULT NULL,
   `UserId` int(11) DEFAULT NULL,
   `Enabled` tinyint(1) DEFAULT NULL,
   `MfaSubscriptionId` varchar(11) DEFAULT NULL,
@@ -244,6 +245,7 @@ CREATE TABLE `securitykeyspair` (
   `EnableStartDate` tinyint(1) DEFAULT NULL,
   `EnableEndDate` tinyint(1) DEFAULT NULL,
   `Deleted` tinyint(1) DEFAULT NULL,
+  `MfaCode` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`ApiKey`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 

@@ -325,7 +325,7 @@ namespace CoinExchange.IdentityAccess.Application.IntegrationTests
                     true));
             }
             SubmitMfaSettingsResponse submitMfaSettingsResponse = userApplicationService.SubmitMfaSettings(
-                new MfaSettingsCommand(userValidationEssentials.ApiKey, mfaSubscriptions));
+                new MfaSettingsCommand(false, null, userValidationEssentials.ApiKey, mfaSubscriptions));
             Assert.IsTrue(submitMfaSettingsResponse.Successful);
 
             logoutApplicationService.Logout(new LogoutCommand(userValidationEssentials.ApiKey));

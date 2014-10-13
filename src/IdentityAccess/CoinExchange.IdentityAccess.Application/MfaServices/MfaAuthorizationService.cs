@@ -50,14 +50,19 @@ namespace CoinExchange.IdentityAccess.Application.MfaServices
             SecurityKeysPair securityKeysPair = _securityKeysRepository.GetByApiKey(apiKey);
             if (securityKeysPair != null)
             {
-                // ToDo: Check SecurityKeysPair == SystemGenerated || UserGenerated
-                // ToDo: If UserGenerated, check if TFA enabled. 
-                // ToDo: If TFA enableds, check SecurityKeysPair.Password
-                int userId = securityKeysPair.UserId;
-                // Get user from repository
-                User user = _userRepository.GetUserById(userId);
-
-                return CheckSystemGeneratedKeySubscription(user, userId, currentAction, mfaCode);
+                // If it is a system generated api key, then we verify it from the user's view point
+                if (securityKeysPair.SystemGenerated)
+                {
+                    int userId = securityKeysPair.UserId;
+                    // Get user from repository
+                    User user = _userRepository.GetUserById(userId);
+                    return CheckSystemGeneratedKeySubscription(user, userId, currentAction, mfaCode);
+                }
+                // If it is a user generated api key, then we verify it from the api key's view point only
+                else
+                {
+                    return CheckUserGeneratedKeySubscription(securityKeysPair, currentAction, mfaCode);
+                }
             }
             else
             {
@@ -82,7 +87,59 @@ namespace CoinExchange.IdentityAccess.Application.MfaServices
         }
 
         /// <summary>
-        /// Check and validate Mfa Subscription for the given user action
+        /// Check and validate Mfa Subscription for the given action in the case of a user generated key
+        /// </summary>
+        /// <returns></returns>
+        public Tuple<bool,string> CheckUserGeneratedKeySubscription(SecurityKeysPair securityKeysPair, string currentAction, string mfaCode)
+        {
+            if (securityKeysPair != null)
+            {
+                // Check if the user has asked for the TFA for the current given action for this Api Key
+                if (securityKeysPair.CheckMfaSubscriptions(currentAction))
+                {
+                    if (!string.IsNullOrEmpty(securityKeysPair.MfaCode))
+                    {
+                        if (!string.IsNullOrEmpty(mfaCode))
+                        {
+                            // If the given code matches the user's stored mfa code, then return true
+                            if (securityKeysPair.VerifyMfaCode(mfaCode))
+                            {
+                                return new Tuple<bool, string>(true, "Verification Successful");
+                            }
+                            else
+                            {
+                                Log.Error(string.Format("MFA code could not be verified: Api Key = {0}, Action = {1}",
+                                                  securityKeysPair.ApiKey, currentAction));
+                                //throw new InvalidOperationException("MFA code could not be verified");
+                                return new Tuple<bool, string>(false, "Mfa Code is incorrect");
+                            }
+                        }
+                        else
+                        {
+                            return new Tuple<bool, string>(false, string.Format("Given Mfa code is null"));
+                        }
+                    }
+                    else
+                    {
+                        return new Tuple<bool, string>(false, string.Format("No MfaPassword is assigned to the Api Key = {0}", 
+                            securityKeysPair.ApiKey));
+                    }
+                }
+                // If the user has not subscribed TFA for any action, then let the user go ahead without any more checks
+                else
+                {
+                    Log.Debug(string.Format("MFA not enabled: Action = {0}. Request will proceed", currentAction));
+                    return new Tuple<bool, string>(true, "No MFA subscription enabled");
+                }
+            }
+            else
+            {
+                return new Tuple<bool, string>(false, "SecurityKeysPair instance is null");
+            }
+        }
+
+        /// <summary>
+        /// Check and validate Mfa Subscription for the given user action in the case of a system generated key
         /// </summary>
         /// <param name="user"></param>
         /// <param name="userId"></param>

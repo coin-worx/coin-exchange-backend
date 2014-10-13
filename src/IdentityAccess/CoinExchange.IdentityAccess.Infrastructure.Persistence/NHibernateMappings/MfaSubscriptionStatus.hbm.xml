@@ -5,6 +5,7 @@ assembly="CoinExchange.IdentityAccess.Domain.Model" namespace="CoinExchange.Iden
     <id name="Id" column="Id">
       <generator class="native" />
     </id>
+    <property name="ApiKey"  column="ApiKey"/>
     <property name="UserId"  column="UserId"/>
     <property name="Enabled"  column="Enabled"/>
     <many-to-one name="MfaSubscription" column="MfaSubscriptionId"/>

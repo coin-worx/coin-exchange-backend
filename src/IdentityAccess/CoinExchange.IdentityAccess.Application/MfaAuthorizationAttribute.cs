@@ -43,6 +43,13 @@ namespace CoinExchange.IdentityAccess.Application
                 inputStream = reader.ReadToEnd();
             }
 
+            // The MFA code is sent by the user when MFA is susbcribed on any specific action(s)
+
+            // If the user has logged into the web app, then the in the first turn, this attribute will return false, prompting 
+            // the user to enter their MFA code that will just be sent to them via SMS or email.
+
+            // If the user is communicating through an API client while using an API key, then they will provide a password 
+            // with every call they have subscribed for TFA. The password will be set once using the web app by the user
             string mfaCode =
                 (string)Newtonsoft.Json.JsonConvert.DeserializeObject<IDictionary<string, object>>(inputStream)["MfaCode"];
 

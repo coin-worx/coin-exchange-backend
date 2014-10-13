@@ -18,9 +18,14 @@ assembly="CoinExchange.IdentityAccess.Domain.Model" namespace="CoinExchange.Iden
     <property name="EnableEndDate" column="EnableEndDate"/>
     <property name="Deleted" column="Deleted"/>
     <property name="SecretKey" column="SecretKey"/>
+    <property name="MfaCode" column="MfaCode"/>
     <bag name="_securityKeysPermissions" table="SecurityKeysPermission" cascade="save-update" inverse="true" lazy="false">
       <key column="ApiKey"/>
       <one-to-many class="SecurityKeysPermission"/>
+    </bag>
+    <bag name="_mfaSubscriptions" table="MfaSubscriptionStatus" cascade="all" inverse="true" lazy="false">
+      <key column="ApiKey"/>
+      <one-to-many class="CoinExchange.IdentityAccess.Domain.Model.UserAggregate.MfaSubscriptionStatus"/>
     </bag>
   </class>
 </hibernate-mapping>

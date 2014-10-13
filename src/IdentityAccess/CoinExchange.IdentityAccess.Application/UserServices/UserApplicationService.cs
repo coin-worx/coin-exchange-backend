@@ -440,24 +440,36 @@ namespace CoinExchange.IdentityAccess.Application.UserServices
             SecurityKeysPair securityKeysPair = _securityKeysRepository.GetByApiKey(mfaSettingsCommand.ApiKey);
             if (securityKeysPair != null)
             {
-                // Finds user
-                User user = _userRepository.GetUserById(securityKeysPair.UserId);
-                if (user != null)
+                // If the securityKeysPair instance is system generated, then assign the TFA susbcriptions to the user instance
+                if (securityKeysPair.SystemGenerated)
                 {
-                    user.AssignMfaSubscriptions(mfaSettingsCommand.MfaSettingsList);
-                    _persistenceRepository.SaveUpdate(user);
-                    return new SubmitMfaSettingsResponse(true, "Mfa Subscription successful");
+                    // Find user
+                    User user = _userRepository.GetUserById(securityKeysPair.UserId);
+                    if (user != null)
+                    {
+                        user.AssignMfaSubscriptions(mfaSettingsCommand.MfaSettingsList);
+                        _persistenceRepository.SaveUpdate(user);
+                        return new SubmitMfaSettingsResponse(true, "Mfa Subscription successful");
+                    }
+                    // If user is not found
+                    else
+                    {
+                        Log.Error(string.Format("No user instance found for UserId = {0}",
+                                                securityKeysPair.UserId));
+                        throw new NullReferenceException(string.Format("No user instance found for UserId = {0}",
+                                                                       securityKeysPair.UserId));
+                    }
                 }
-                // If user is not found
+                // If the securityKeysPair instance is user generated, them assign the TFA subscriptions to the SecurityKeysPair instance
                 else
                 {
-                    Log.Error(string.Format("No user instance found for UserId = {0}",
-                    securityKeysPair.UserId));
-                    throw new NullReferenceException(string.Format("No user instance found for UserId = {0}",
-                    securityKeysPair.UserId));
+                    securityKeysPair.AssignMfaSubscriptions(mfaSettingsCommand.MfaSettingsList);
+                    securityKeysPair.AssignMfaCode(mfaSettingsCommand.ApiKeyPassword);
+                    _persistenceRepository.SaveUpdate(securityKeysPair);
+                    return new SubmitMfaSettingsResponse(true, "Mfa Subscription successful");
                 }
             }
-            // If secruity keys pair instance is not found
+            // If security keys pair instance is not found
             else
             {
                 Log.Error(string.Format("No Security keys pair instance found for Api Key = {0}",

@@ -19,6 +19,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         private string _keyDescription;
         private int _userId;
         private IList<SecurityKeysPermission> _securityKeysPermissions { get; set; }
+        private IList<MfaSubscriptionStatus> _mfaSubscriptions { get; set; }
 
         #endregion Private Fields
 
@@ -28,6 +29,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         public SecurityKeysPair()
         {
             _securityKeysPermissions=new List<SecurityKeysPermission>();
+            _mfaSubscriptions = new List<MfaSubscriptionStatus>();
         }
 
         /// <summary>
@@ -47,6 +49,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
             SystemGenerated = systemGenerated;
             CreationDateTime = DateTime.Now;
             LastModified = DateTime.Now;
+            _mfaSubscriptions = new List<MfaSubscriptionStatus>();
         }
 
         /// <summary>
@@ -66,6 +69,7 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
             SystemGenerated = systemGenerated;
             _securityKeysPermissions = permissions;
             CreationDateTime = DateTime.Now;
+            _mfaSubscriptions = new List<MfaSubscriptionStatus>();
         }
 
         /// <summary>
@@ -273,6 +277,94 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
             return permissions.ToArray();
         }
 
+        /// <summary>
+        /// Assigns the Mfa Pass code to this security keys pair instance
+        /// </summary>
+        /// <returns></returns>
+        public bool AssignMfaCode(string mfaPassCode)
+        {
+            if (!string.IsNullOrEmpty(mfaPassCode))
+            {
+                MfaCode = mfaPassCode;
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Check the MFA Subscription for the current action
+        /// </summary>
+        /// <param name="currentAction"></param>
+        /// <returns></returns>
+        public bool CheckMfaSubscriptions(string currentAction)
+        {
+            // Check in each element of the list to see if the current action is enabled
+            foreach (var mfaSubscriptionStatus in _mfaSubscriptions)
+            {
+                if (mfaSubscriptionStatus.MfaSubscription.MfaSubscriptionName == currentAction)
+                {
+                    return mfaSubscriptionStatus.Enabled;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Marks the MFA Subscriptions as enabled, whichever are present in the parameter list
+        /// Item1 = MfaSUbscriptionId, Item2 = MfaSubscriptionName, Item3 = Enabled/Disabled
+        /// </summary>
+        /// <param name="mfaSubscriptions"></param>
+        /// <returns></returns>
+        public void AssignMfaSubscriptions(IList<Tuple<string, string, bool>> mfaSubscriptions)
+        {
+            IList<Tuple<string, string, bool>> firstTimeSubscriptions = new List<Tuple<string, string, bool>>();
+            // As this list of incoming MFA subscriptions is the list that is taken as master data from the database, displayed
+            // on front-end, and then picked by user and sent here, the subscription may or may not be present to the user. So,
+            // if a subscription is not present yet, it is safe to add it as it is master data
+            foreach (var mfaSubscription in mfaSubscriptions)
+            {
+                bool subscriptionPresent = false;
+                foreach (var mfaSubscriptionStatus in _mfaSubscriptions)
+                {
+                    if (mfaSubscriptionStatus.MfaSubscription.MfaSubscriptionName == mfaSubscription.Item2)
+                    {
+                        subscriptionPresent = true;
+                        mfaSubscriptionStatus.Enabled = mfaSubscription.Item3;
+                    }
+                }
+                // If this subscription is not alreaady present, add it to the temporary list and add to MFASubscriptions list later
+                if (!subscriptionPresent)
+                {
+                    firstTimeSubscriptions.Add(new Tuple<string, string, bool>(mfaSubscription.Item1, mfaSubscription.Item2,
+                        mfaSubscription.Item3));
+                }
+            }
+
+            // For each of the subscriptions in the temporary list, we need to add them in the MFA Subscriptions list, these are
+            // the new elements that we need to add
+            foreach (var firstTimeSubscription in firstTimeSubscriptions)
+            {
+                _mfaSubscriptions.Add(new MfaSubscriptionStatus(ApiKey, new MfaSubscription(firstTimeSubscription.Item1,
+                    firstTimeSubscription.Item2), firstTimeSubscription.Item3));
+            }
+        }
+
+        /// <summary>
+        /// Evaluate if the provided code is real one-time code for this user
+        /// </summary>
+        /// <returns></returns>
+        public bool VerifyMfaCode(string mfaCode)
+        {
+            // Verify the code
+            if (this.MfaCode == mfaCode)
+            {
+                // Make the code null, so it can verified the next time
+                this.MfaCode = null;
+                return true;
+            }
+            return false;
+        }
+
         #endregion Methods
 
         /// <summary>
@@ -359,5 +451,10 @@ namespace CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate
         /// Soft Delete
         /// </summary>
         public bool Deleted { get; set; }
+
+        /// <summary>
+        /// Password for MFA
+        /// </summary>
+        public string MfaCode { get; private set; }
     }
 }

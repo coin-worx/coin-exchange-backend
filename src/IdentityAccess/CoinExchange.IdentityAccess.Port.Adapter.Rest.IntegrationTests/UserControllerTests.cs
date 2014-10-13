@@ -11,6 +11,7 @@ using System.Web.Http.Results;
 using CoinExchange.Common.Tests;
 using CoinExchange.IdentityAccess.Application.UserServices.Commands;
 using CoinExchange.IdentityAccess.Application.UserServices.Representations;
+using CoinExchange.IdentityAccess.Domain.Model.Repositories;
 using CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate;
 using CoinExchange.IdentityAccess.Domain.Model.UserAggregate;
 using CoinExchange.IdentityAccess.Port.Adapter.Rest.DTO;
@@ -674,6 +675,133 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.IntegrationTests
             Assert.AreEqual(userByUserName.Language, accountSettingsOkResponse.Content.Language);
             Assert.AreEqual(userByUserName.AutoLogout.Minutes, accountSettingsOkResponse.Content.AutoLogoutMinutes);
             Assert.IsFalse(accountSettingsOkResponse.Content.IsDefaultAutoLogout);
+        }
+
+        [Test]
+        [Category("Integration")]
+        public void UserMfaSubscriptionsSubmissionTest_ChecksThatMfaSubscriptionsForSystemGeneratedKeyAreSubmittedAsExpected_VerifiesThroughDatabaseQuery()
+        {
+            // Register an account
+            RegistrationController registrationController = (RegistrationController)_applicationContext["RegistrationController"];
+            
+            string email = "waqasshah047@gmail.com";
+            string username = "Bane";
+            string password = "iwearamask";
+            IHttpActionResult httpActionResult = registrationController.Register(new SignUpParam(email, username,
+                password, "Pakistan", TimeZone.CurrentTimeZone, ""));
+            OkNegotiatedContentResult<string> okResponseMessage = (OkNegotiatedContentResult<string>)httpActionResult;
+            string activationKey = okResponseMessage.Content;
+            Assert.IsNotNullOrEmpty(activationKey);
+
+            // Activate Account
+            UserController userController = (UserController)_applicationContext["UserController"];            
+            httpActionResult = userController.ActivateUser(new UserActivationParam(username, password, activationKey));
+            OkNegotiatedContentResult<string> okResponseMessage1 = (OkNegotiatedContentResult<string>)httpActionResult;
+            Assert.AreEqual(okResponseMessage1.Content, "activated");
+
+            // Confirm the current user settings
+            IUserRepository userRepository = (IUserRepository)_applicationContext["UserRepository"];
+            User userByUserName = userRepository.GetUserByUserName(username);
+            Assert.IsNotNull(userByUserName);
+            IPasswordEncryptionService passwordEncryptionService = (IPasswordEncryptionService)_applicationContext["PasswordEncryptionService"];
+            Assert.AreEqual(email, userByUserName.Email);
+            Assert.IsTrue(passwordEncryptionService.VerifyPassword(password, userByUserName.Password));
+            Assert.AreEqual(Language.English, userByUserName.Language);
+            Assert.AreEqual(TimeZone.CurrentTimeZone.StandardName, userByUserName.TimeZone.StandardName);
+            Assert.AreEqual(new TimeSpan(0, 0, 10, 0), userByUserName.AutoLogout);
+            Assert.IsNull(userByUserName.ForgotPasswordCode);
+            Assert.IsNull(userByUserName.ForgotPasswordCodeExpiration);
+            Assert.AreEqual(0, userByUserName.ForgottenPasswordCodes.Length);
+
+            // Login
+            LoginController loginController = (LoginController)_applicationContext["LoginController"];
+            httpActionResult = loginController.Login(new LoginParams(username, password));
+            OkNegotiatedContentResult<UserValidationEssentials> keys =
+                (OkNegotiatedContentResult<UserValidationEssentials>)httpActionResult;
+            Assert.IsNotNullOrEmpty(keys.Content.ApiKey);
+            Assert.IsNotNullOrEmpty(keys.Content.SecretKey);
+            Assert.IsNotNullOrEmpty(keys.Content.SessionLogoutTime.ToString());
+
+            // Get the Account Settings
+            userController.Request = new HttpRequestMessage(HttpMethod.Post, "");
+            userController.Request.Headers.Add("Auth", keys.Content.ApiKey);
+
+            IMfaSubscriptionRepository mfaSubscriptionRepository = (IMfaSubscriptionRepository)_applicationContext["MfaSubscriptionRepository"];
+            IList<MfaSubscription> allSubscriptions = mfaSubscriptionRepository.GetAllSubscriptions();
+
+            List<MfaSingleSettingParams> mfaSettingsList = new List<MfaSingleSettingParams>();
+            
+            foreach (var subscription in allSubscriptions)
+            {
+                mfaSettingsList.Add(new MfaSingleSettingParams(subscription.MfaSubscriptionId, subscription.MfaSubscriptionName,
+                    true));
+            }
+
+            IHttpActionResult submissionResponse = userController.SubmitMfaSettings(new MfaSettingsParams(false, null, mfaSettingsList));
+            Assert.IsNotNull(submissionResponse);
+
+            OkNegotiatedContentResult<SubmitMfaSettingsResponse> okSubmissionResponse = (OkNegotiatedContentResult<SubmitMfaSettingsResponse>) submissionResponse;
+            Assert.IsTrue(okSubmissionResponse.Content.Successful);
+
+            User user = userRepository.GetUserByUserName(username);
+            Assert.IsNotNull(user);
+            // Check that all the4 expected subscriptions are present in the user instance
+            foreach (var subscription in allSubscriptions)
+            {
+                Assert.IsTrue(user.CheckMfaSubscriptions(subscription.MfaSubscriptionName));
+            }
+        }
+
+        [Test]
+        [Category("Integration")]
+        public void ApiKeyMfaSubscriptionsSubmissionTest_ChecksThatMfaSubscriptionsForSystemGeneratedKeyAreSubmittedAsExpected_VerifiesThroughDatabaseQuery()
+        {
+            IIdentityAccessPersistenceRepository persistenceRepository = (IIdentityAccessPersistenceRepository)_applicationContext["IdentityAccessPersistenceRepository"];
+            IPermissionRepository permissionRepository = (IPermissionRepository)_applicationContext["PermissionRespository"];
+            UserController userController = (UserController)_applicationContext["UserController"];
+            ISecurityKeysRepository securityKeysRepository = (ISecurityKeysRepository)_applicationContext["SecurityKeysPairRepository"];
+
+            IList<Permission> allPermissions = permissionRepository.GetAllPermissions();
+            List<SecurityKeysPermission> securityKeysPermissions = new List<SecurityKeysPermission>();
+
+            string apiKey = "apikey123";
+            string secretKey = "secretkey123";
+            foreach (var permission in allPermissions)
+            {
+                securityKeysPermissions.Add(new SecurityKeysPermission(apiKey, permission, true));
+            }
+            
+            SecurityKeysPair securityKeysPair = new SecurityKeysPair(apiKey, secretKey, "#1", 1, false, securityKeysPermissions);
+            persistenceRepository.SaveUpdate(securityKeysPair);
+            
+            // Get the Account Settings
+            userController.Request = new HttpRequestMessage(HttpMethod.Post, "");
+            userController.Request.Headers.Add("Auth", securityKeysPair.ApiKey);
+
+            IMfaSubscriptionRepository mfaSubscriptionRepository = (IMfaSubscriptionRepository)_applicationContext["MfaSubscriptionRepository"];
+            IList<MfaSubscription> allSubscriptions = mfaSubscriptionRepository.GetAllSubscriptions();
+
+            List<MfaSingleSettingParams> mfaSettingsList = new List<MfaSingleSettingParams>();
+
+            foreach (var subscription in allSubscriptions)
+            {
+                mfaSettingsList.Add(new MfaSingleSettingParams(subscription.MfaSubscriptionId, subscription.MfaSubscriptionName,
+                    true));
+            }
+
+            string mfaCode = "mfacode123";
+            IHttpActionResult submissionResponse = userController.SubmitMfaSettings(new MfaSettingsParams(true, , mfaSettingsList));
+            Assert.IsNotNull(submissionResponse);
+            OkNegotiatedContentResult<SubmitMfaSettingsResponse> okSubmissionResponse = (OkNegotiatedContentResult<SubmitMfaSettingsResponse>) submissionResponse;
+            Assert.IsTrue(okSubmissionResponse.Content.Successful);
+            SecurityKeysPair retreivedKey = securityKeysRepository.GetByApiKey(apiKey);
+            Assert.IsNotNull(retreivedKey);
+            // Check that all the expected subscriptions are present in the user instance
+            foreach (var subscription in allSubscriptions)
+            {
+                Assert.IsTrue(retreivedKey.CheckMfaSubscriptions(subscription.MfaSubscriptionName));
+            }
+            Assert.AreEqual(mfaCode, securityKeysPair.MfaCode);
         }
     }
 }

@@ -14,11 +14,15 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.DTO
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
-        public MfaSettingsParams(List<MfaSingleSettingParams> mfaSettingsList)
+        public MfaSettingsParams(bool apiKeyMfa, string apiKeyPassword, List<MfaSingleSettingParams> mfaSettingsList)
         {
+            ApiKeyPassword = apiKeyPassword;
+            ApiKeyMfa = apiKeyMfa;
             MfaSettingsList = mfaSettingsList;
         }
 
+        public string ApiKeyPassword { get; set; }
+        public bool ApiKeyMfa { get; set; }
         public List<MfaSingleSettingParams> MfaSettingsList { get; set; }
     }
 }

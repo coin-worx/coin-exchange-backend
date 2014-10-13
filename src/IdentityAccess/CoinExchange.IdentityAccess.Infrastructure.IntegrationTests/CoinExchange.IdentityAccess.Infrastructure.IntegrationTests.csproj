@@ -93,6 +93,7 @@
     <Compile Include="MfaCodeGenerationServiceIntegrationTests.cs" />
     <Compile Include="MfaEmailServiceIntegrationTests.cs" />
     <Compile Include="MfaSubscriptionRepositoryIntegrationTests.cs" />
+    <Compile Include="SecurityKeysDatabasePersistenceTests.cs" />
     <Compile Include="SecurityKeysPairRepositoryTests.cs" />
     <Compile Include="PermisssionRepositoryTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
