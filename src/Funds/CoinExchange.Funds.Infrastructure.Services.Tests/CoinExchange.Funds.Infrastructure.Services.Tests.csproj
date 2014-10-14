@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BitcoinClientServiceTests.cs" />
+    <Compile Include="DogecoinClientUnitTests.cs" />
     <Compile Include="LitecoinClientServiceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

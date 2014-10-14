@@ -9,7 +9,10 @@ using CoinExchange.Funds.Domain.Model.Services;
 
 namespace CoinExchange.Funds.Infrastructure.Services.CoinClientServices
 {
-    public class StubLitecoinClientService : ICoinClientService
+    /// <summary>
+    /// Stub implementation
+    /// </summary>
+    public class StubDogecoinClientService : ICoinClientService
     {
         public event Action<string, List<Tuple<string, string, decimal, string>>> DepositArrived;
         public event Action<string, int> DepositConfirmed;
@@ -33,7 +36,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.CoinClientServices
         {
             if (DepositArrived != null)
             {
-                DepositArrived(CurrencyConstants.Ltc, null);
+                DepositArrived(CurrencyConstants.Doge, null);
             }
             Thread.Sleep(200);
             if (DepositConfirmed != null)

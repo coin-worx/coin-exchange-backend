@@ -19,7 +19,7 @@ using Spring.Context.Support;
 namespace CoinExchange.Funds.Infrastructure.Services.IntegrationTests
 {
     [TestFixture]
-    class LitecoinClientServiceIntegrationTests
+    class DogecoinClientServiceIntegrationTests
     {
         // Care must be taken to decide this amount, as this will subtract the currency from the testnet version
         // of bitcoin
@@ -27,7 +27,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.IntegrationTests
 
         // As these tests need bitcoins to run from the test account, or may be even real bitcoins, this flag is for 
         // safety and must be set to true to run tests related to deposits and withdrawals
-        private bool _shouldRunTests = false;
+        private bool _shouldRunTests = true;
 
         private DatabaseUtility _databaseUtility;
 
@@ -52,7 +52,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.IntegrationTests
             if (_shouldRunTests)
             {
                 ICoinClientService coinClientService =
-                    (ICoinClientService) ContextRegistry.GetContext()["LitecoinClientService"];
+                    (ICoinClientService)ContextRegistry.GetContext()["DogecoinClientService"];
 
                 string newAddress = coinClientService.CreateNewAddress();
                 Assert.IsNotNull(newAddress);
@@ -66,12 +66,12 @@ namespace CoinExchange.Funds.Infrastructure.Services.IntegrationTests
             if (_shouldRunTests)
             {
                 ICoinClientService coinClientService =
-                    (ICoinClientService)ContextRegistry.GetContext()["LitecoinClientService"];
+                    (ICoinClientService)ContextRegistry.GetContext()["DogecoinClientService"];
 
                 decimal fee = 0.0001m;
                 AccountId accountId = new AccountId(1);
                 string newAddress = coinClientService.CreateNewAddress();
-                Withdraw withdraw = new Withdraw(new Currency("LTC", true), Guid.NewGuid().ToString(), DateTime.Now,
+                Withdraw withdraw = new Withdraw(new Currency("DOGE", true), Guid.NewGuid().ToString(), DateTime.Now,
                                                  WithdrawType.Bitcoin, Amount, fee,
                                                  TransactionStatus.Pending, accountId,
                                                  new BitcoinAddress(newAddress));
@@ -86,9 +86,9 @@ namespace CoinExchange.Funds.Infrastructure.Services.IntegrationTests
             if (_shouldRunTests)
             {
                 ICoinClientService coinClientService =
-                    (ICoinClientService) ContextRegistry.GetContext()["LitecoinClientService"];
+                    (ICoinClientService)ContextRegistry.GetContext()["DogecoinClientService"];
 
-                decimal checkBalance = coinClientService.CheckBalance("LTC");
+                decimal checkBalance = coinClientService.CheckBalance("DOGE");
 
                 Assert.AreNotEqual(0, checkBalance);
             }
@@ -102,7 +102,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.IntegrationTests
             if (_shouldRunTests)
             {
                 ICoinClientService coinClientService =
-                    (ICoinClientService)ContextRegistry.GetContext()["LitecoinClientService"];
+                    (ICoinClientService)ContextRegistry.GetContext()["DogecoinClientService"];
                 IFundsPersistenceRepository fundsPersistenceRepository =
                     (IFundsPersistenceRepository)ContextRegistry.GetContext()["FundsPersistenceRepository"];
                 IDepositAddressRepository depositAddressRepository =
@@ -110,7 +110,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.IntegrationTests
                 IDepositRepository depositRepository =
                     (IDepositRepository)ContextRegistry.GetContext()["DepositRepository"];
 
-                Currency currency = new Currency("LTC", true);
+                Currency currency = new Currency("DOGE", true);
                 AccountId accountId = new AccountId(1);
                 string newAddress = coinClientService.CreateNewAddress();
                 BitcoinAddress bitcoinAddress = new BitcoinAddress(newAddress);
@@ -171,7 +171,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.IntegrationTests
             {
                 // Checks the data when a DepositArrived event is raised by the CoinClientService. Sees that the parameters are as 
                 // expected
-                ICoinClientService coinClientService = new LitecoinClientService();
+                ICoinClientService coinClientService = new DogecoinClientService();
 
                 string newAddress = coinClientService.CreateNewAddress();
                 ManualResetEvent manualResetEvent = new ManualResetEvent(false);
@@ -186,12 +186,12 @@ namespace CoinExchange.Funds.Infrastructure.Services.IntegrationTests
                 List<Tuple<string, string, decimal, string>> receivedTransactionList = null;
                 coinClientService.DepositArrived +=
                     delegate(string curr, List<Tuple<string, string, decimal, string>> pendingList)
-                        {
-                            eventFired = true;
-                            receivedCurrency = curr;
-                            receivedTransactionList = pendingList;
-                            manualResetEvent.Set();
-                        };
+                    {
+                        eventFired = true;
+                        receivedCurrency = curr;
+                        receivedTransactionList = pendingList;
+                        manualResetEvent.Set();
+                    };
 
                 string commitWithdraw = coinClientService.CommitWithdraw(newAddress, Amount);
                 Assert.IsNotNull(commitWithdraw);
@@ -199,7 +199,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.IntegrationTests
                 manualResetEvent.WaitOne();
 
                 Assert.IsTrue(eventFired);
-                Assert.AreEqual(CurrencyConstants.Ltc, receivedCurrency);
+                Assert.AreEqual(CurrencyConstants.Doge, receivedCurrency);
                 Assert.AreEqual(1, receivedTransactionList.Count);
                 Assert.AreEqual(newAddress, receivedTransactionList[0].Item1);
                 Assert.AreEqual(Amount, receivedTransactionList[0].Item3);

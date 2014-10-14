@@ -26,7 +26,7 @@ namespace CoinExchange.Client.Console
         private FundsClient _fundsClient;
         private string _username = "jonsnow";
         private string _password = "pa$$word";
-        private string _email = "jonsnow@winter.com";
+        private string _email = "waqas.shah.syed@gmail.com";
         private string _baseCurrency = "BTC";
         private string _quoteCurrency = "LTC";
 
@@ -81,8 +81,8 @@ namespace CoinExchange.Client.Console
         private void MakeDeposit()
         {
             System.Console.WriteLine("Deposit start");
-            _fundsClient.MakeDeposit(_baseCurrency, 2000, true, "1234");
-            _fundsClient.MakeDeposit(_quoteCurrency, 2000, true, "");
+            _fundsClient.MakeDeposit(_baseCurrency, 2000, true, "");
+            _fundsClient.MakeDeposit(_quoteCurrency, 2000, true, "123");
             System.Console.WriteLine("Deposit end");
         }
 

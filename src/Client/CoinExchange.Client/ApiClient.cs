@@ -205,6 +205,7 @@ namespace CoinExchange.Client
                 try
                 {
                     HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                    request.KeepAlive = false;
                     request.Method = "POST";
                     request.ContentType = "application/json; charset=utf-8";
                     string hash = String.Format("{0}:{1}:{2}", key, url, secretkey).ToMD5Hash();

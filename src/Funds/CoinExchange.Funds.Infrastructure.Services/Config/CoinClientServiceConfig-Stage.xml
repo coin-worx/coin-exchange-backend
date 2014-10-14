@@ -9,4 +9,7 @@
   <object id="LitecoinClientService" type="CoinExchange.Funds.Infrastructure.Services.CoinClientServices.LitecoinClientService, CoinExchange.Funds.Infrastructure.Services">
   </object>
 
+  <object id="DogecoinClientService" type="CoinExchange.Funds.Infrastructure.Services.CoinClientServices.DogecoinClientService, CoinExchange.Funds.Infrastructure.Services">
+  </object>
+
 </objects>

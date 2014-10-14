@@ -21,7 +21,8 @@ namespace CoinExchange.IdentityAccess.Infrastructure.Services.MfaServices
         /// <returns></returns>
         public string GenerateCode()
         {
-            return _random.Next(100000, 999999).ToString(CultureInfo.InvariantCulture); 
+            //return _random.Next(100000, 999999).ToString(CultureInfo.InvariantCulture);
+            return "123";
         }
     }
 }

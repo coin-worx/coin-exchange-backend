@@ -37,6 +37,10 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             _currencyPairs.Add(CurrencyConstants.XbtLtc);
             _currencyPairs.Add(CurrencyConstants.BtcLtcSeparated);
             _currencyPairs.Add(CurrencyConstants.XbtLtcSeparated);
+            _currencyPairs.Add(CurrencyConstants.BtcDoge);
+            _currencyPairs.Add(CurrencyConstants.XbtDoge);
+            _currencyPairs.Add(CurrencyConstants.BtcDogeSeparated);
+            _currencyPairs.Add(CurrencyConstants.XbtDogeSeparated);
             foreach (var currencyPair in _currencyPairs)
             {
                 LimitOrderBook orderBook = new LimitOrderBook(currencyPair);

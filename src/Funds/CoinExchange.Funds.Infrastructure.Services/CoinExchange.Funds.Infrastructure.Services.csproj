@@ -64,7 +64,9 @@
   <ItemGroup>
     <Compile Include="BboCrossContextService.cs" />
     <Compile Include="CoinClientServices\BitcoinClientService.cs" />
+    <Compile Include="CoinClientServices\DogecoinClientService.cs" />
     <Compile Include="CoinClientServices\LitecoinClientService.cs" />
+    <Compile Include="CoinClientServices\StubDogecoinClientService.cs" />
     <Compile Include="CoinClientServices\StubLitecoinClientService.cs" />
     <Compile Include="StubBboCrossContextService.cs" />
     <Compile Include="DepositIdGeneratorService.cs" />

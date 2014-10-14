@@ -8,5 +8,8 @@
 
   <object id="LitecoinClientService" type="CoinExchange.Funds.Infrastructure.Services.CoinClientServices.StubLitecoinClientService, CoinExchange.Funds.Infrastructure.Services">
   </object>
+
+  <object id="DogecoinClientService" type="CoinExchange.Funds.Infrastructure.Services.CoinClientServices.StubDogecoinClientService, CoinExchange.Funds.Infrastructure.Services">
+  </object>
   
 </objects>

@@ -19,7 +19,7 @@ USE `coinexchangedev`;
 
 /*Data for the table `currencypair` */
 
-insert  into `currencypair`(`CurrencyPairName`,`BaseCurrency`,`QuoteCurrency`) values ('BTCLTC','BTC','LTC');
+insert  into `currencypair`(`CurrencyPairName`,`BaseCurrency`,`QuoteCurrency`) values ('BTCDOGE','BTC','DOGE'),('BTCLTC','BTC','LTC');
 
 /*Data for the table `deposit` */
 
