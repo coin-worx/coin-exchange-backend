@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using CoinExchange.Common.Domain.Model;
 using CoinExchange.Rest.WebHost.App_Start;
+using CoinExchange.Trades.Domain.Model.CurrencyPairAggregate;
 using CoinExchange.Trades.Domain.Model.OrderAggregate;
 using CoinExchange.Trades.Domain.Model.OrderMatchingEngine;
 using CoinExchange.Trades.Domain.Model.Services;
@@ -62,11 +63,13 @@ namespace CoinExchange.Rest.WebHost
             Journaler inputJournaler = new Journaler(inputEventStore);
             Journaler outputJournaler = new Journaler(outputEventStore);
             ExchangeEssentialsList exchangeEssentialsList=outputEventStore.LoadLastSnapshot();
+            ICurrencyPairRepository currencyPairRepository = (ICurrencyPairRepository) ContextRegistry.GetContext()["CurrencyPairRepository"];
+            IList<CurrencyPair> tradeableCurrencyPairs = currencyPairRepository.GetTradeableCurrencyPairs();
             Exchange exchange;
             if (exchangeEssentialsList != null)
             {
                 //means snapshot found so initialize the exchange
-                exchange = new Exchange(exchangeEssentialsList);
+                exchange = new Exchange(tradeableCurrencyPairs, exchangeEssentialsList);
                 InputDisruptorPublisher.InitializeDisruptor(new IEventHandler<InputPayload>[] {exchange, inputJournaler});
                 OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] {outputJournaler});
                 exchange.InitializeExchangeAfterSnaphot();
@@ -77,7 +80,7 @@ namespace CoinExchange.Rest.WebHost
             else
             {
                 //no snapshot found
-                exchange = new Exchange();
+                exchange = new Exchange(tradeableCurrencyPairs);
                 InputDisruptorPublisher.InitializeDisruptor(new IEventHandler<InputPayload>[] { exchange, inputJournaler });
                 OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { outputJournaler });
                // check if there are events to replay

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using CoinExchange.Common.Domain.Model;
+using CoinExchange.Trades.Domain.Model.CurrencyPairAggregate;
 using CoinExchange.Trades.Domain.Model.OrderAggregate;
 using CoinExchange.Trades.Domain.Model.OrderMatchingEngine;
 using CoinExchange.Trades.Domain.Model.Services;
@@ -25,7 +26,11 @@ namespace CoinExchange.Trades.Domain.Model.Tests.Performance
             IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
             Journaler journaler = new Journaler(eventStore);
             OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
-            _exchange = new Exchange();
+            IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
+            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
+            _exchange = new Exchange(currencyPairs);
             List<OrderId> orderIds = new List<OrderId>();
             // Create Orders
             Order[] orders = new Order[10000];

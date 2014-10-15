@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using CoinExchange.Common.Domain.Model;
+using CoinExchange.Trades.Domain.Model.CurrencyPairAggregate;
 using CoinExchange.Trades.Domain.Model.OrderAggregate;
 using CoinExchange.Trades.Domain.Model.OrderMatchingEngine;
 using CoinExchange.Trades.Domain.Model.Services;
@@ -305,7 +306,11 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         [Category("Unit")]
         public void MatchBidAndDepthUpdatetest_EntersBidOrdertoMatchAndUpdatesDepth_ValidatesDepthLevelsIfTheyPerformAsExpected()
         {
-            Exchange exchange = new Exchange();
+            IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
+            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
+            Exchange exchange = new Exchange(currencyPairs);
 
             Order sellOrder1 = OrderFactory.CreateOrder("1234", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 250, 1252, new StubbedOrderIdGenerator());
@@ -345,7 +350,11 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         [Category("Unit")]
         public void MatchAskAndDepthUpdatetest_EntersAskOrdertoMatchAndUpdatesDepth_ValidatesDepthLevelsIfTheyPerformAsExpected()
         {
-            Exchange exchange = new Exchange();
+            IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
+            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
+            Exchange exchange = new Exchange(currencyPairs);
 
             Order buyOrder2 = OrderFactory.CreateOrder("1234", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 250, 1250, new StubbedOrderIdGenerator());
@@ -381,7 +390,11 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         [Category("Unit")]
         public void BidMultipleMatchesTest_EntersBidOrdertoMatchAndUpdatesDepth_ValidatesDepthLevelsIfTheyPerformAsExpected()
         {
-            Exchange exchange = new Exchange();
+            IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
+            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
+            Exchange exchange = new Exchange(currencyPairs);
 
             Order sellOrder1 = OrderFactory.CreateOrder("1234", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 250, 1252, new StubbedOrderIdGenerator());
@@ -424,7 +437,11 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         [Category("Unit")]
         public void AskMultipleMatchesTest_EntersAskOrdertoMatchAndUpdatesDepth_ValidatesDepthLevelsIfTheyPerformAsExpected()
         {
-            Exchange exchange = new Exchange();
+            IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
+            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
+            Exchange exchange = new Exchange(currencyPairs);
 
             Order sellOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 200, 1254, new StubbedOrderIdGenerator());
@@ -481,7 +498,11 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         [Test]
         public void BidPartialFillTest_TestsThatABidMatchesAndBecomesPartiallyFilled_ValidatesDepthAndOrderStateAfterPartialFill()
         {
-            Exchange exchange = new Exchange();
+            IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
+            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
+            Exchange exchange = new Exchange(currencyPairs);
 
             Order sellOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 200, 947, new StubbedOrderIdGenerator());
@@ -544,7 +565,11 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         [Test]
         public void AskPartialFillTest_TestsThatAAskMatchesAndBecomesPartiallyFilled_ValidatesDepthAndOrderStateAfterPartialFill()
         {
-            Exchange exchange = new Exchange();
+            IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
+            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
+            Exchange exchange = new Exchange(currencyPairs);
             
             Order buyOrder1 = OrderFactory.CreateOrder("123456", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 400, 945, new StubbedOrderIdGenerator());
@@ -607,7 +632,11 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         [Test]
         public void MultiplePartialBidMatch_ChecksIfBidMatchesWithMultipleAsksButFillsPartially_ValidatesThroughDepthLevelsAndFillChecks()
         {
-            Exchange exchange = new Exchange();
+            IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
+            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
+            Exchange exchange = new Exchange(currencyPairs);
 
             Order buyOrder1 = OrderFactory.CreateOrder("123456", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 700, 945, new StubbedOrderIdGenerator());
@@ -663,7 +692,11 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         [Test]
         public void MultipleMatchedPartialAskFill_ChecksIfAskMatchesWithMultipleAsksButFillsPartially_ValidatesThroughDepthLevelsAndFillChecks()
         {
-            Exchange exchange = new Exchange();
+            IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
+            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
+            Exchange exchange = new Exchange(currencyPairs);
 
             Order buyOrder1 = OrderFactory.CreateOrder("123456", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 400, 945, new StubbedOrderIdGenerator());
@@ -736,7 +769,11 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         [Category("Unit")]
         public void MultipleRepeatMatchBidTest_MatchesManyAsksToBidButBidVolumeRemains_VerifiesUsingFillCheckAndDepthLevel()
         {
-            Exchange exchange = new Exchange();
+            IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
+            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
+            Exchange exchange = new Exchange(currencyPairs);
 
             Order buyOrder1 = OrderFactory.CreateOrder("123456", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 200, 930, new StubbedOrderIdGenerator());
@@ -814,7 +851,11 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         [Category("Unit")]
         public void MultipleRepeatMatchAskTest_MatchesManyBidsToAskButAskVolumeRemains_VerifiesUsingFillCheckAndDepthLevel()
         {
-            Exchange exchange = new Exchange();
+            IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
+            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
+            Exchange exchange = new Exchange(currencyPairs);
 
             Order buyOrder1 = OrderFactory.CreateOrder("123456", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 942, new StubbedOrderIdGenerator());
@@ -892,7 +933,11 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         [Category("Unit")]
         public void BidMarketOrderFill_TestsWhetherTheMarketOrderGetFilledCorrectly_ChecksOrderStateAfterFill()
         {
-            Exchange exchange = new Exchange();
+            IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
+            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
+            Exchange exchange = new Exchange(currencyPairs);
 
             Order buyOrder1 = OrderFactory.CreateOrder("123456", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 941, new StubbedOrderIdGenerator());
@@ -942,7 +987,11 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         [Test]
         public void AskMarketOrderFill_TestsWhetherTheMarketOrderGetFilledCorrectly_ChecksOrderStateAfterFill()
         {
-            Exchange exchange = new Exchange();
+            IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
+            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
+            Exchange exchange = new Exchange(currencyPairs);
 
             Order buyOrder1 = OrderFactory.CreateOrder("123456", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 941, new StubbedOrderIdGenerator());
@@ -1071,7 +1120,11 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         [Test]
         public void BidCancelOrderTest_CancelsOrderAndUpdatesOrderBookAndDepth_ValidatesEntriesAndOrderStateToConfirm()
         {
-            Exchange exchange = new Exchange();
+            IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
+            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
+            Exchange exchange = new Exchange(currencyPairs);
 
             Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 941, new StubbedOrderIdGenerator());
@@ -1131,7 +1184,11 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         [Test]
         public void AskCancelOrderTest_CancelsOrderAndUpdatesOrderBookAndDepth_ValidatesEntriesAndOrderStateToConfirm()
         {
-            Exchange exchange = new Exchange();
+            IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
+            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
+            Exchange exchange = new Exchange(currencyPairs);
 
             Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 941, new StubbedOrderIdGenerator());
@@ -1197,7 +1254,11 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         [Category("Unit")]
         public void AskCancelThenBidMatchTest_TestsWhetherTheOrderIsCancelledAndThenBidOrderisMatched_VerifiesThroughBooksLists()
         {
-            Exchange exchange = new Exchange();
+            IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
+            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
+            Exchange exchange = new Exchange(currencyPairs);
 
             Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 941, new StubbedOrderIdGenerator());
@@ -1250,7 +1311,11 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         [Category("Unit")]
         public void BidCancelThenAskMatchTest_TestsWhetherTheOrderIsCancelledAndThenBidOrderisMatched_VerifiesThroughBooksLists()
         {
-            Exchange exchange = new Exchange();
+            IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
+            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
+            Exchange exchange = new Exchange(currencyPairs);
 
             Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 941, new StubbedOrderIdGenerator());
@@ -1316,7 +1381,11 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         [Category("Unit")]
         public void BidCancelFailTest_ChekcsIfMatchedOrderIsNotCancelled_VerifiesUsingBooksLists()
         {
-            Exchange exchange = new Exchange();
+            IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
+            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
+            Exchange exchange = new Exchange(currencyPairs);
 
             Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 941, new StubbedOrderIdGenerator());
@@ -1377,7 +1446,11 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         [Category("Unit")]
         public void AskCancelFailTest_ChekcsIfMatchedOrderIsNotCancelled_VerifiesUsingBooksLists()
         {
-            Exchange exchange = new Exchange();
+            IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
+            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
+            Exchange exchange = new Exchange(currencyPairs);
 
             Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 941, new StubbedOrderIdGenerator());
@@ -1442,7 +1515,11 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         [Category("Unit")]
         public void BuyMarketOrderReject_CHecksIfOrderGetsRejectedWhenNoLimitOrdersAreOnBook_VerifiesThroughOrdersState()
         {
-            Exchange exchange = new Exchange();
+            IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
+            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
+            Exchange exchange = new Exchange(currencyPairs);
 
             Order buyOrder1 = OrderFactory.CreateOrder("123456", "BTCUSD", Constants.ORDER_TYPE_MARKET,
                 Constants.ORDER_SIDE_BUY, 100, 0, new StubbedOrderIdGenerator());
@@ -1456,7 +1533,11 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         [Category("Unit")]
         public void SellMarketOrderReject_CHecksIfOrderGetsRejectedWhenNoLimitOrdersAreOnBook_VerifiesThroughOrdersState()
         {
-            Exchange exchange = new Exchange();
+            IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
+            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
+            Exchange exchange = new Exchange(currencyPairs);
 
             Order sellOrder1 = OrderFactory.CreateOrder("123456", "BTCUSD", Constants.ORDER_TYPE_MARKET,
                 Constants.ORDER_SIDE_SELL, 100, 0, new StubbedOrderIdGenerator());
@@ -1473,7 +1554,11 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         [Test]
         public void OrderBookChangedDepthEventTest_DepthOrderBookRaisesEventForDepthWhenOrderBookChanges_EventIsHandled()
         {
-            Exchange exchange = new Exchange();
+            IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
+            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
+            Exchange exchange = new Exchange(currencyPairs);
 
             Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 941, new StubbedOrderIdGenerator());
@@ -1503,7 +1588,11 @@ namespace CoinExchange.Trades.Domain.Model.Tests
         [Test]
         public void OrderBookChangedBBoEventTest_DepthOrderBookRaisesEventForDepthWhenOrderBookChanges_EventIsHandled()
         {
-            Exchange exchange = new Exchange();
+            IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
+            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
+            Exchange exchange = new Exchange(currencyPairs);
 
             Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 941, new StubbedOrderIdGenerator());

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using CoinExchange.Common.Domain.Model;
+using CoinExchange.Trades.Domain.Model.CurrencyPairAggregate;
 using CoinExchange.Trades.Domain.Model.OrderAggregate;
 using CoinExchange.Trades.Domain.Model.OrderMatchingEngine;
 using CoinExchange.Trades.Domain.Model.Services;
@@ -49,7 +50,11 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             bool bboChangeArrived = false;
             bool orderBookArrived = false;
             Trade receivedTrade = null;
-            Exchange exchange=new Exchange();
+            IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
+            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
+            Exchange exchange=new Exchange(currencyPairs);
             string currencyPair = "BTCUSD";
             Order buyOrder = OrderFactory.CreateOrder("1234", currencyPair, "limit", "buy", 5, 10,
                new StubbedOrderIdGenerator());

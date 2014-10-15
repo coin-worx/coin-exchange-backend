@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using CoinExchange.Common.Domain.Model;
+using CoinExchange.Trades.Domain.Model.CurrencyPairAggregate;
 using CoinExchange.Trades.Domain.Model.OrderAggregate;
 using CoinExchange.Trades.Domain.Model.OrderMatchingEngine;
 using CoinExchange.Trades.Domain.Model.Services;
@@ -51,8 +52,12 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             //Journaler journaler = new Journaler(eventStore);
             //OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
 
+            IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
+            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
             // Start exchagne to accept orders
-            Exchange exchange = new Exchange();
+            Exchange exchange = new Exchange(currencyPairs);
             Order buyOrder1 = OrderFactory.CreateOrder("1233", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 250, 493.34M, new StubbedOrderIdGenerator());
             Order buyOrder2 = OrderFactory.CreateOrder("1234", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
@@ -203,8 +208,12 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
            // Journaler journaler = new Journaler(eventStore);
             //OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
 
+            IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
+            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
             // Start exchagne to accept orders
-            Exchange exchange = new Exchange();
+            Exchange exchange = new Exchange(currencyPairs);
             Order sellOrder1 = OrderFactory.CreateOrder("1244", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 250, 496.34M, new StubbedOrderIdGenerator());
             Order sellOrder2 = OrderFactory.CreateOrder("1222", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
@@ -352,8 +361,12 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             //Journaler journaler = new Journaler(eventStore);
             //OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
 
+            IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
+            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
             // Start exchagne to accept orders
-            Exchange exchange = new Exchange();
+            Exchange exchange = new Exchange(currencyPairs);
             Order buyOrder1 = OrderFactory.CreateOrder("1233", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 250, 493.34M, new StubbedOrderIdGenerator());
             Order buyOrder2 = OrderFactory.CreateOrder("1234", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
@@ -423,8 +436,12 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             //Journaler journaler = new Journaler(eventStore);
             //OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
 
+            IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
+            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
             // Start exchagne to accept orders
-            Exchange exchange = new Exchange();
+            Exchange exchange = new Exchange(currencyPairs);
             Order buyOrder1 = OrderFactory.CreateOrder("1233", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 250, 493.34M, new StubbedOrderIdGenerator());
             Order buyOrder2 = OrderFactory.CreateOrder("1234", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
@@ -536,8 +553,12 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
            // Journaler journaler = new Journaler(eventStore);
             //OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
 
+            IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
+            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
             // Start exchagne to accept orders
-            Exchange exchange = new Exchange();
+            Exchange exchange = new Exchange(currencyPairs);
             Order buyOrder1 = OrderFactory.CreateOrder("1233", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 250, 493.34M, new StubbedOrderIdGenerator());
             Order buyOrder2 = OrderFactory.CreateOrder("1234", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
@@ -695,8 +716,12 @@ namespace CoinExchange.Trades.ReadModel.IntegrationTests
             //Journaler journaler = new Journaler(eventStore);
             //OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
 
+            IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
+            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
             // Start exchagne to accept orders
-            Exchange exchange = new Exchange();
+            Exchange exchange = new Exchange(currencyPairs);
             Order buyOrder1 = OrderFactory.CreateOrder("1233", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 250, 483.34M, new StubbedOrderIdGenerator());
             Order buyOrder2 = OrderFactory.CreateOrder("1234", CurrencyConstants.BtcUsd, Constants.ORDER_TYPE_LIMIT,

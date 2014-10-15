@@ -11,6 +11,7 @@ using System.Web.Http.Results;
 using CoinExchange.Common.Domain.Model;
 using CoinExchange.Common.Tests;
 using CoinExchange.Trades.Application.OrderServices.Representation;
+using CoinExchange.Trades.Domain.Model.CurrencyPairAggregate;
 using CoinExchange.Trades.Domain.Model.OrderAggregate;
 using CoinExchange.Trades.Domain.Model.OrderMatchingEngine;
 using CoinExchange.Trades.Domain.Model.Services;
@@ -54,7 +55,11 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             outputEventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
             inputJournaler = new Journaler(inputEventStore);
             outputJournaler = new Journaler(outputEventStore);
-            Exchange exchange = new Exchange();
+            IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
+            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
+            Exchange exchange = new Exchange(currencyPairs);
             InputDisruptorPublisher.InitializeDisruptor(new IEventHandler<InputPayload>[] { exchange, inputJournaler });
             OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { outputJournaler });
         }

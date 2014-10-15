@@ -5,6 +5,7 @@ using System.Text;
 using System.Timers;
 using System.Threading.Tasks;
 using CoinExchange.Common.Domain.Model;
+using CoinExchange.Trades.Domain.Model.CurrencyPairAggregate;
 using CoinExchange.Trades.Domain.Model.OrderAggregate;
 using CoinExchange.Trades.Domain.Model.Services;
 using Disruptor;
@@ -21,8 +22,8 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         private static readonly log4net.ILog Log = log4net.LogManager.GetLogger
             (System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private string BtcLtc = CurrencyConstants.BtcLtc;
-        private string XbtLtc = CurrencyConstants.XbtLtc;
+        //private string BtcLtc = CurrencyConstants.BtcLtc;
+        //private string XbtLtc = CurrencyConstants.XbtLtc;
         private List<string> _currencyPairs = new List<string>();
         private ExchangeEssentialsList _exchangeEssentialsList = new ExchangeEssentialsList();
         [NonSerialized] 
@@ -31,16 +32,17 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// <summary>
         /// Default Constructor
         /// </summary>
-        public Exchange()
+        public Exchange(IList<CurrencyPair> currencyPairs)
         {
-            _currencyPairs.Add(CurrencyConstants.BtcLtc);
+            /*_currencyPairs.Add(CurrencyConstants.BtcLtc);
             _currencyPairs.Add(CurrencyConstants.XbtLtc);
             _currencyPairs.Add(CurrencyConstants.BtcLtcSeparated);
             _currencyPairs.Add(CurrencyConstants.XbtLtcSeparated);
             _currencyPairs.Add(CurrencyConstants.BtcDoge);
             _currencyPairs.Add(CurrencyConstants.XbtDoge);
             _currencyPairs.Add(CurrencyConstants.BtcDogeSeparated);
-            _currencyPairs.Add(CurrencyConstants.XbtDogeSeparated);
+            _currencyPairs.Add(CurrencyConstants.XbtDogeSeparated);*/
+            ExtractCurrencyPairs(currencyPairs);
             foreach (var currencyPair in _currencyPairs)
             {
                 LimitOrderBook orderBook = new LimitOrderBook(currencyPair);
@@ -93,12 +95,13 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// <summary>
         /// parameterized constructor
         /// </summary>
-        public Exchange(ExchangeEssentialsList exchangeEssentialsList)
+        public Exchange(IList<CurrencyPair> currencyPairs, ExchangeEssentialsList exchangeEssentialsList)
         {
-            _currencyPairs.Add(CurrencyConstants.BtcLtc);
-            _currencyPairs.Add(CurrencyConstants.XbtLtc);
-            _currencyPairs.Add(CurrencyConstants.BtcLtcSeparated);
-            _currencyPairs.Add(CurrencyConstants.XbtLtcSeparated);
+            //_currencyPairs.Add(CurrencyConstants.BtcLtc);
+            //_currencyPairs.Add(CurrencyConstants.XbtLtc);
+            //_currencyPairs.Add(CurrencyConstants.BtcLtcSeparated);
+            //_currencyPairs.Add(CurrencyConstants.XbtLtcSeparated);
+            ExtractCurrencyPairs(currencyPairs);
             _exchangeEssentialsList = exchangeEssentialsList;
             foreach (var exchangeEssential in _exchangeEssentialsList)
             {
@@ -141,6 +144,18 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
                 exchangeEssential.DepthOrderBook.BboChanged += exchangeEssential.BBOListener.OnBBOChange;
                 exchangeEssential.DepthOrderBook.DepthChanged += exchangeEssential.DepthListener.OnDepthChanged;
                 //exchangeEssential.Update(tradeListener,orderListener,depthListener,bboListener);
+            }
+        }
+
+        /// <summary>
+        /// Extracts a list of currency pairs as strings and adds to the _currencyPairs list
+        /// </summary>
+        /// <returns></returns>
+        private void ExtractCurrencyPairs(IList<CurrencyPair> currencyPairs)
+        {
+            foreach (var currencyPair in currencyPairs)
+            {
+                _currencyPairs.Add(currencyPair.CurrencyPairName);
             }
         }
 

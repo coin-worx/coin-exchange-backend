@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using CoinExchange.Common.Domain.Model;
+using CoinExchange.Trades.Domain.Model.CurrencyPairAggregate;
 using CoinExchange.Trades.Domain.Model.OrderAggregate;
 using CoinExchange.Trades.Domain.Model.OrderMatchingEngine;
 using CoinExchange.Trades.Domain.Model.Services;
@@ -58,9 +59,13 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             // Initialize the output Disruptor and assign the journaler as the event handler
             //IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
            LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
-            
+
+           IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
+           currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+           currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
+           currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
             // Intialize the exchange so that the order changes can be fired to listernes which will then log them to event store
-            Exchange exchange = new Exchange();
+            Exchange exchange = new Exchange(currencyPairs);
 
             Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
                                                        Constants.ORDER_SIDE_BUY, 100, 941, new StubbedOrderIdGenerator());
@@ -93,7 +98,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(OrderState.Accepted, preCrashOrders[2].OrderState);
             Assert.AreEqual(OrderState.Accepted, preCrashOrders[3].OrderState);
 
-            exchange = new Exchange();
+            exchange = new Exchange(currencyPairs);
 
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
@@ -127,9 +132,13 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             //IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
             //Journaler journaler = new Journaler(eventStore);
             LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
-           // OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] {journaler});
+
+            IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
+            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
             // Intialize the exchange so that the order changes can be fired to listernes which will then log them to event store
-            Exchange exchange = new Exchange();
+            Exchange exchange = new Exchange(currencyPairs);
 
             Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
                                                        Constants.ORDER_SIDE_BUY, 100, 941, new StubbedOrderIdGenerator());
@@ -194,7 +203,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(100, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.First().Volume.Value);
 
             // Crash Exchange and order book
-            exchange = new Exchange();
+            exchange = new Exchange(currencyPairs);
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
@@ -247,9 +256,12 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
            // IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
             //Journaler journaler = new Journaler(eventStore);
             LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
-           // OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] {journaler});
+            IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
+            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
             // Intialize the exchange so that the order changes can be fired to listernes which will then log them to event store
-            Exchange exchange = new Exchange();
+            Exchange exchange = new Exchange(currencyPairs);
 
             Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
                                                        Constants.ORDER_SIDE_BUY, 100, 941, new StubbedOrderIdGenerator());
@@ -310,7 +322,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(6, completeOrdersCount);
             Assert.AreEqual(14, preCrashOrders.Count);
             // Crash Exchange and order book
-            exchange = new Exchange();
+            exchange = new Exchange(currencyPairs);
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
@@ -362,9 +374,12 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
            // IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
             //Journaler journaler = new Journaler(eventStore);
             LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
-            //OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] {journaler});
+            IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
+            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
             // Intialize the exchange so that the order changes can be fired to listernes which will then log them to event store
-            Exchange exchange = new Exchange();
+            Exchange exchange = new Exchange(currencyPairs);
 
             Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
                                                        Constants.ORDER_SIDE_BUY, 100, 941, new StubbedOrderIdGenerator());
@@ -434,7 +449,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(600, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[1].Volume.Value);
 
             // Crash Exchange and order book
-            exchange = new Exchange();
+            exchange = new Exchange(currencyPairs);
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
@@ -494,9 +509,12 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
            // IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
             //Journaler journaler = new Journaler(eventStore);
             LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
-            //OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] {journaler});
+            IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
+            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
             // Intialize the exchange so that the order changes can be fired to listernes which will then log them to event store
-            Exchange exchange = new Exchange();
+            Exchange exchange = new Exchange(currencyPairs);
 
             Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
                                                        Constants.ORDER_SIDE_BUY, 100, 941, new StubbedOrderIdGenerator());
@@ -590,7 +608,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(100, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[3].Volume.Value);
 
             // Crash Exchange and order book
-            exchange = new Exchange();
+            exchange = new Exchange(currencyPairs);
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
@@ -674,9 +692,13 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             //IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
            // Journaler journaler = new Journaler(eventStore);
             LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
-           // OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] {journaler});
+            IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
+            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
+            // OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] {journaler});
             // Intialize the exchange so that the order changes can be fired to listernes which will then log them to event store
-            Exchange exchange = new Exchange();
+            Exchange exchange = new Exchange(currencyPairs);
 
             Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
                                                        Constants.ORDER_SIDE_BUY, 100, 941, new StubbedOrderIdGenerator());
@@ -770,7 +792,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(100, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[3].Volume.Value);
 
             // Crash Exchange and order book
-            exchange = new Exchange();
+            exchange = new Exchange(currencyPairs);
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
@@ -852,8 +874,12 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
            // Journaler journaler = new Journaler(eventStore);
             LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
            // OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] {journaler});
+            IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
+            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
             // Intialize the exchange so that the order changes can be fired to listernes which will then log them to event store
-            Exchange exchange = new Exchange();
+            Exchange exchange = new Exchange(currencyPairs);
 
             Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
                                                        Constants.ORDER_SIDE_BUY, 100, 941, new StubbedOrderIdGenerator());
@@ -940,7 +966,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(800, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[1].OpenQuantity.Value);
 
             // Crash Exchange and order book
-            exchange = new Exchange();
+            exchange = new Exchange(currencyPairs);
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
@@ -1006,8 +1032,12 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
            // Journaler journaler = new Journaler(eventStore);
             LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
            // OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] {journaler});
+            IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
+            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
             // Intialize the exchange so that the order changes can be fired to listernes which will then log them to event store
-            Exchange exchange = new Exchange();
+            Exchange exchange = new Exchange(currencyPairs);
 
             Order sellOrder1 = OrderFactory.CreateOrder("1234", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
                                                         Constants.ORDER_SIDE_SELL, 250, 1252,
@@ -1073,7 +1103,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(250, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[0].Volume.Value);
             Assert.AreEqual(250, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[0].OpenQuantity.Value);
 
-            exchange = new Exchange();
+            exchange = new Exchange(currencyPairs);
             replayService.ReplayOrderBooks(exchange, journaler);
 
             manualReset.Reset();
@@ -1130,9 +1160,13 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             //Journaler journaler = new Journaler(eventStore);
             LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
            // OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] {journaler});
+            IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
+            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
             // Intialize the exchange so that the order changes can be fired to listernes which will then log them to event 
             // store
-            Exchange exchange = new Exchange();
+            Exchange exchange = new Exchange(currencyPairs);
 
             Order sellOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
                                                         Constants.ORDER_SIDE_SELL, 200, 1254,
@@ -1220,7 +1254,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(200, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[2].Volume.Value);
             Assert.AreEqual(200, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[2].OpenQuantity.Value);
 
-            exchange = new Exchange();
+            exchange = new Exchange(currencyPairs);
             replayService.ReplayOrderBooks(exchange, journaler);
             Thread.Sleep(3000);
 
@@ -1282,9 +1316,13 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             //Journaler journaler = new Journaler(eventStore);
             LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
            // OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] {journaler});
+            IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
+            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
             // Intialize the exchange so that the order changes can be fired to listernes which will then log them to event 
             // store
-            Exchange exchange = new Exchange();
+            Exchange exchange = new Exchange(currencyPairs);
 
             Order buyOrder1 = OrderFactory.CreateOrder("123456", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
                                                        Constants.ORDER_SIDE_BUY, 200, 930, new StubbedOrderIdGenerator());
@@ -1350,7 +1388,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(200, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].Volume.Value);
             Assert.AreEqual(200, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].OpenQuantity.Value);
 
-            exchange = new Exchange();
+            exchange = new Exchange(currencyPairs);
             replayService.ReplayOrderBooks(exchange, journaler);
             Thread.Sleep(3000);
 
@@ -1400,9 +1438,13 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
            // Journaler journaler = new Journaler(eventStore);
             LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
            // OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
+            IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
+            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
             // Intialize the exchange so that the order changes can be fired to listernes which will then log them to event 
             // store
-            Exchange exchange = new Exchange();
+            Exchange exchange = new Exchange(currencyPairs);
 
             Order buyOrder1 = OrderFactory.CreateOrder("123456", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 942, new StubbedOrderIdGenerator());
@@ -1464,7 +1506,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(100, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[1].Volume.Value);
             Assert.AreEqual(100, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[1].OpenQuantity.Value);
 
-            exchange = new Exchange();
+            exchange = new Exchange(currencyPairs);
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
             replayService.ReplayOrderBooks(exchange, journaler);
@@ -1520,10 +1562,14 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             //IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
            // Journaler journaler = new Journaler(eventStore);
             LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
+            IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
+            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
            // OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
             // Intialize the exchange so that the order changes can be fired to listernes which will then log them to event 
             // store
-            Exchange exchange = new Exchange();
+            Exchange exchange = new Exchange(currencyPairs);
 
             Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 941, new StubbedOrderIdGenerator());
@@ -1614,7 +1660,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(1, cancelledOrdersCount);
             Assert.AreEqual(8, preCrashOrders.Count);
 
-            exchange = new Exchange();
+            exchange = new Exchange(currencyPairs);
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
             replayService.ReplayOrderBooks(exchange, journaler);
@@ -1673,9 +1719,13 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             //Journaler journaler = new Journaler(eventStore);
             LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
           //  OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
+            IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
+            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
             // Intialize the exchange so that the order changes can be fired to listernes which will then log them to event 
             // store
-            Exchange exchange = new Exchange();
+            Exchange exchange = new Exchange(currencyPairs);
 
             Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 941, new StubbedOrderIdGenerator());
@@ -1768,7 +1818,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(1, cancelledOrdersCount);
             Assert.AreEqual(8, preCrashOrders.Count);
 
-            exchange = new Exchange();
+            exchange = new Exchange(currencyPairs);
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(0, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
             replayService.ReplayOrderBooks(exchange, journaler);
