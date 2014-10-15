@@ -90,7 +90,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             Scenario1OrderCreation(orderController);
 
             // ------------------------------- Order Book ------------------------------
-            IHttpActionResult orderBookResponse = marketController.GetOrderBook("XBTUSD");
+            IHttpActionResult orderBookResponse = marketController.GetOrderBook("BTCLTC");
 
             OkNegotiatedContentResult<object> okOrderBookResponse =
                 (OkNegotiatedContentResult<object>) orderBookResponse;
@@ -106,7 +106,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             // Item2 = Ask Book, Item2[i].Item1 = Volume of Ask at index 'i', Item2[i].Item2 = Price of Ask at index 'i'
             Assert.AreEqual(0, orderBook.Item2.Count());
             // ------------------------------- Order Book ------------------------------
-            IHttpActionResult depthResponse = marketController.GetDepth("XBTUSD");
+            IHttpActionResult depthResponse = marketController.GetDepth("BTCLTC");
 
             OkNegotiatedContentResult<object> okDepth
                 = (OkNegotiatedContentResult<object>)depthResponse;
@@ -206,15 +206,15 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             // This call return list of object, so we have to explicitly check values within elements
             Assert.AreEqual(252, trades[2][2]);// Price
             Assert.AreEqual(3, trades[2][3]);// Volume
-            Assert.AreEqual("XBTUSD", trades[2][4]);
+            Assert.AreEqual("BTCLTC", trades[2][4]);
 
             Assert.AreEqual(252, trades[1][2]);
             Assert.AreEqual(2, trades[1][3]);
-            Assert.AreEqual("XBTUSD", trades[0][4]);
+            Assert.AreEqual("BTCLTC", trades[0][4]);
 
             Assert.AreEqual(250, trades[0][2]);
             Assert.AreEqual(5, trades[0][3]);
-            Assert.AreEqual("XBTUSD", trades[0][4]);
+            Assert.AreEqual("BTCLTC", trades[0][4]);
             //------------------- Trades -------------------------
         }
 
@@ -238,7 +238,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             Scenario2OrderCreation(orderController);
 
             // ------------------------------- Order Book ------------------------------
-            IHttpActionResult orderBookResponse = marketController.GetOrderBook("XBTUSD");
+            IHttpActionResult orderBookResponse = marketController.GetOrderBook("BTCLTC");
 
             OkNegotiatedContentResult<object> okOrderBookResponse =
                 (OkNegotiatedContentResult<object>)orderBookResponse;
@@ -256,7 +256,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             // ------------------------------------------------------------------------
 
             // --------------------------------- Depth ---------------------------------
-            IHttpActionResult depthResponse = marketController.GetDepth("XBTUSD");
+            IHttpActionResult depthResponse = marketController.GetDepth("BTCLTC");
 
             OkNegotiatedContentResult<object> okDepth
                 = (OkNegotiatedContentResult<object>)depthResponse;
@@ -382,11 +382,11 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             // This call return list of object, so we have to explicitly check values within elements
             Assert.AreEqual(252, trades[4][2]);// Price
             Assert.AreEqual(3, trades[4][3]);// Volume
-            Assert.AreEqual("XBTUSD", trades[4][4]);
+            Assert.AreEqual("BTCLTC", trades[4][4]);
 
             Assert.AreEqual(250, trades[3][2]);
             Assert.AreEqual(5, trades[3][3]);
-            Assert.AreEqual("XBTUSD", trades[3][4]);
+            Assert.AreEqual("BTCLTC", trades[3][4]);
 
             // These trades execute simultaneously, so when queried from the database and sorted as per the time when 
             // they were saved in the database, they can be queried out of the order as we expected because they have the
@@ -396,13 +396,13 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             {
                 Assert.AreEqual(250, trades[2][2]);
                 Assert.AreEqual(2, trades[2][3]);
-                Assert.AreEqual("XBTUSD", trades[2][4]);
+                Assert.AreEqual("BTCLTC", trades[2][4]);
             }
             else if ((decimal)trades[2][2] == 245 && (decimal)trades[2][3] == 2)
             {
                 Assert.AreEqual(245, trades[2][2]);
                 Assert.AreEqual(2, trades[2][3]);
-                Assert.AreEqual("XBTUSD", trades[2][4]);
+                Assert.AreEqual("BTCLTC", trades[2][4]);
             }
             else
             {
@@ -413,13 +413,13 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             {
                 Assert.AreEqual(250, trades[1][2]);
                 Assert.AreEqual(2, trades[1][3]);
-                Assert.AreEqual("XBTUSD", trades[1][4]);
+                Assert.AreEqual("BTCLTC", trades[1][4]);
             }
             else if ((decimal)trades[1][2] == 245 && (decimal)trades[1][3] == 2)
             {
                 Assert.AreEqual(245, trades[1][2]);
                 Assert.AreEqual(2, trades[1][3]);
-                Assert.AreEqual("XBTUSD", trades[1][4]);
+                Assert.AreEqual("BTCLTC", trades[1][4]);
             }
             else
             {
@@ -428,7 +428,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
 
             Assert.AreEqual(245, trades[0][2]);
             Assert.AreEqual(5, trades[0][3]);
-            Assert.AreEqual("XBTUSD", trades[0][4]);
+            Assert.AreEqual("BTCLTC", trades[0][4]);
             //-----------------------------------------------------------------------
         }
 
@@ -452,7 +452,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             Scenario3OrderCreation(orderController);
 
             // ------------------------------- Order Book ------------------------------
-            IHttpActionResult orderBookResponse = marketController.GetOrderBook("XBTUSD");
+            IHttpActionResult orderBookResponse = marketController.GetOrderBook("BTCLTC");
 
             OkNegotiatedContentResult<object> okOrderBookResponse =
                 (OkNegotiatedContentResult<object>)orderBookResponse;
@@ -466,7 +466,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             // ------------------------------------------------------------------------
 
             // --------------------------------- Depth ---------------------------------
-            IHttpActionResult depthResponse = marketController.GetDepth("XBTUSD");
+            IHttpActionResult depthResponse = marketController.GetDepth("BTCLTC");
 
             OkNegotiatedContentResult<object> okDepth
                 = (OkNegotiatedContentResult<object>)depthResponse;
@@ -597,13 +597,13 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             {
                 Assert.AreEqual(250, trades[1][2]);// Price
                 Assert.AreEqual(7, trades[1][3]); // Volume
-                Assert.AreEqual("XBTUSD", trades[1][4]); // CurrencyPair
+                Assert.AreEqual("BTCLTC", trades[1][4]); // CurrencyPair
             }
             else if ((decimal)trades[1][3] == 2)
             {
                 Assert.AreEqual(250, trades[1][2]);
                 Assert.AreEqual(2, trades[1][3]);
-                Assert.AreEqual("XBTUSD", trades[1][4]);
+                Assert.AreEqual("BTCLTC", trades[1][4]);
             }
             else
             {
@@ -614,13 +614,13 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
             {
                 Assert.AreEqual(250, trades[0][2]);// Price
                 Assert.AreEqual(7, trades[0][3]); // Volume
-                Assert.AreEqual("XBTUSD", trades[0][4]); // CurrencyPair
+                Assert.AreEqual("BTCLTC", trades[0][4]); // CurrencyPair
             }
             else if ((decimal)trades[0][3] == 2)
             {
                 Assert.AreEqual(250, trades[0][2]);// Price
                 Assert.AreEqual(2, trades[0][3]); // Volume
-                Assert.AreEqual("XBTUSD", trades[0][4]); // CurrencyPair
+                Assert.AreEqual("BTCLTC", trades[0][4]); // CurrencyPair
             }
             else
             {
@@ -636,7 +636,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
         /// </summary>
         private void Scenario1OrderCreation(OrderController orderController)
         {
-            string currecyPair = "XBTUSD";
+            string currecyPair = "BTCLTC";
             //Create orders
             Console.WriteLine(orderController.CreateOrder(new CreateOrderParam(currecyPair, "buy", "limit", 250, 10)));
             Thread.Sleep(2000);
@@ -658,7 +658,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
         /// <param name="orderController"></param>
         private void Scenario2OrderCreation(OrderController orderController)
         {
-            string currecyPair = "XBTUSD";
+            string currecyPair = "BTCLTC";
             IHttpActionResult httpActionResult1 = (orderController.CreateOrder(new CreateOrderParam(currecyPair, "buy", "market", 0, 10)));
             Thread.Sleep(2000);
             string orderId1 = this.GetOrderId(httpActionResult1);
@@ -693,7 +693,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.IntegrationTests
         /// <param name="orderController"></param>
         private void Scenario3OrderCreation(OrderController orderController)
         {
-            string currecyPair = "XBTUSD";
+            string currecyPair = "BTCLTC";
             IHttpActionResult httpActionResult1 = orderController.CreateOrder(new CreateOrderParam(currecyPair, "sell", "limit", 252, 5));
             Thread.Sleep(2000);
             string orderId1 = this.GetOrderId(httpActionResult1);

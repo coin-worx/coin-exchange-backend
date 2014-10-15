@@ -61,21 +61,21 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
            LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
 
            IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
-           currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+           
            currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
            currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
             // Intialize the exchange so that the order changes can be fired to listernes which will then log them to event store
             Exchange exchange = new Exchange(currencyPairs);
 
-            Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                        Constants.ORDER_SIDE_BUY, 100, 941, new StubbedOrderIdGenerator());
-            Order buyOrder2 = OrderFactory.CreateOrder("1234", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder2 = OrderFactory.CreateOrder("1234", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                        Constants.ORDER_SIDE_BUY, 100, 945, new StubbedOrderIdGenerator());
 
-            Order sellOrder1 = OrderFactory.CreateOrder("1244", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder1 = OrderFactory.CreateOrder("1244", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                         Constants.ORDER_SIDE_SELL, 100, 949,
                                                         new StubbedOrderIdGenerator());
-            Order sellOrder2 = OrderFactory.CreateOrder("1222", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder2 = OrderFactory.CreateOrder("1222", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                         Constants.ORDER_SIDE_SELL, 100, 948,
                                                         new StubbedOrderIdGenerator());
 
@@ -134,31 +134,31 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
 
             IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
-            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            
             currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
             currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
             // Intialize the exchange so that the order changes can be fired to listernes which will then log them to event store
             Exchange exchange = new Exchange(currencyPairs);
 
-            Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                        Constants.ORDER_SIDE_BUY, 100, 941, new StubbedOrderIdGenerator());
-            Order buyOrder2 = OrderFactory.CreateOrder("1234", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder2 = OrderFactory.CreateOrder("1234", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                        Constants.ORDER_SIDE_BUY, 100, 943, new StubbedOrderIdGenerator());
-            Order buyOrder3 = OrderFactory.CreateOrder("12344", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder3 = OrderFactory.CreateOrder("12344", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                        Constants.ORDER_SIDE_BUY, 100, 944, new StubbedOrderIdGenerator());
-            Order buyOrder4 = OrderFactory.CreateOrder("12345", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder4 = OrderFactory.CreateOrder("12345", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                        Constants.ORDER_SIDE_BUY, 100, 945, new StubbedOrderIdGenerator());
 
-            Order sellOrder1 = OrderFactory.CreateOrder("1244", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder1 = OrderFactory.CreateOrder("1244", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                         Constants.ORDER_SIDE_SELL, 100, 949,
                                                         new StubbedOrderIdGenerator());
-            Order sellOrder2 = OrderFactory.CreateOrder("1222", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder2 = OrderFactory.CreateOrder("1222", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                         Constants.ORDER_SIDE_SELL, 100, 943,
                                                         new StubbedOrderIdGenerator());
-            Order sellOrder3 = OrderFactory.CreateOrder("12225", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder3 = OrderFactory.CreateOrder("12225", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                         Constants.ORDER_SIDE_SELL, 100, 945,
                                                         new StubbedOrderIdGenerator());
-            Order sellOrder4 = OrderFactory.CreateOrder("12226", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder4 = OrderFactory.CreateOrder("12226", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                         Constants.ORDER_SIDE_SELL, 100, 944,
                                                         new StubbedOrderIdGenerator());
 
@@ -257,31 +257,31 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             //Journaler journaler = new Journaler(eventStore);
             LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
             IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
-            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            
             currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
             currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
             // Intialize the exchange so that the order changes can be fired to listernes which will then log them to event store
             Exchange exchange = new Exchange(currencyPairs);
 
-            Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                        Constants.ORDER_SIDE_BUY, 100, 941, new StubbedOrderIdGenerator());
-            Order buyOrder2 = OrderFactory.CreateOrder("1234", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder2 = OrderFactory.CreateOrder("1234", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                        Constants.ORDER_SIDE_BUY, 100, 943, new StubbedOrderIdGenerator());
-            Order buyOrder3 = OrderFactory.CreateOrder("12344", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder3 = OrderFactory.CreateOrder("12344", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                        Constants.ORDER_SIDE_BUY, 100, 944, new StubbedOrderIdGenerator());
-            Order buyOrder4 = OrderFactory.CreateOrder("12345", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder4 = OrderFactory.CreateOrder("12345", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                        Constants.ORDER_SIDE_BUY, 100, 945, new StubbedOrderIdGenerator());
 
-            Order sellOrder1 = OrderFactory.CreateOrder("1244", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder1 = OrderFactory.CreateOrder("1244", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                         Constants.ORDER_SIDE_SELL, 100, 949,
                                                         new StubbedOrderIdGenerator());
-            Order sellOrder2 = OrderFactory.CreateOrder("1222", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder2 = OrderFactory.CreateOrder("1222", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                         Constants.ORDER_SIDE_SELL, 100, 945,
                                                         new StubbedOrderIdGenerator());
-            Order sellOrder3 = OrderFactory.CreateOrder("12225", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder3 = OrderFactory.CreateOrder("12225", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                         Constants.ORDER_SIDE_SELL, 100, 944,
                                                         new StubbedOrderIdGenerator());
-            Order sellOrder4 = OrderFactory.CreateOrder("12226", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder4 = OrderFactory.CreateOrder("12226", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                         Constants.ORDER_SIDE_SELL, 100, 943,
                                                         new StubbedOrderIdGenerator());
 
@@ -375,31 +375,31 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             //Journaler journaler = new Journaler(eventStore);
             LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
             IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
-            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            
             currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
             currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
             // Intialize the exchange so that the order changes can be fired to listernes which will then log them to event store
             Exchange exchange = new Exchange(currencyPairs);
 
-            Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                        Constants.ORDER_SIDE_BUY, 100, 941, new StubbedOrderIdGenerator());
-            Order buyOrder2 = OrderFactory.CreateOrder("1234", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder2 = OrderFactory.CreateOrder("1234", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                        Constants.ORDER_SIDE_BUY, 100, 943, new StubbedOrderIdGenerator());
-            Order buyOrder3 = OrderFactory.CreateOrder("12344", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder3 = OrderFactory.CreateOrder("12344", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                        Constants.ORDER_SIDE_BUY, 400, 944, new StubbedOrderIdGenerator());
-            Order buyOrder4 = OrderFactory.CreateOrder("12345", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder4 = OrderFactory.CreateOrder("12345", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                        Constants.ORDER_SIDE_BUY, 500, 945, new StubbedOrderIdGenerator());
 
-            Order sellOrder1 = OrderFactory.CreateOrder("1244", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder1 = OrderFactory.CreateOrder("1244", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                         Constants.ORDER_SIDE_SELL, 600, 956,
                                                         new StubbedOrderIdGenerator());
-            Order sellOrder2 = OrderFactory.CreateOrder("1222", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder2 = OrderFactory.CreateOrder("1222", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                         Constants.ORDER_SIDE_SELL, 400, 954,
                                                         new StubbedOrderIdGenerator());
-            Order sellOrder3 = OrderFactory.CreateOrder("12225", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder3 = OrderFactory.CreateOrder("12225", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                         Constants.ORDER_SIDE_SELL, 100, 958,
                                                         new StubbedOrderIdGenerator());
-            Order sellOrder4 = OrderFactory.CreateOrder("12226", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder4 = OrderFactory.CreateOrder("12226", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                         Constants.ORDER_SIDE_SELL, 500, 945,
                                                         new StubbedOrderIdGenerator());
 
@@ -434,17 +434,17 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(3, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(3, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().CurrencyPair);
             Assert.AreEqual(944, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().Price.Value);
             Assert.AreEqual(400, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().Volume.Value);
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().CurrencyPair);
             Assert.AreEqual(954, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.First().Price.Value);
             Assert.AreEqual(400, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.First().Volume.Value);
 
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].CurrencyPair);
             Assert.AreEqual(943, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].Price.Value);
             Assert.AreEqual(100, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].Volume.Value);
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].CurrencyPair);
             Assert.AreEqual(956, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[1].Price.Value);
             Assert.AreEqual(600, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[1].Volume.Value);
 
@@ -480,17 +480,17 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(3, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.Count());
             Assert.AreEqual(3, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().CurrencyPair);
             Assert.AreEqual(944, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().Price.Value);
             Assert.AreEqual(400, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().Volume.Value);
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().CurrencyPair);
             Assert.AreEqual(954, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.First().Price.Value);
             Assert.AreEqual(400, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.First().Volume.Value);
 
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].CurrencyPair);
             Assert.AreEqual(943, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].Price.Value);
             Assert.AreEqual(100, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].Volume.Value);
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].CurrencyPair);
             Assert.AreEqual(956, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[1].Price.Value);
             Assert.AreEqual(600, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[1].Volume.Value);
 
@@ -510,31 +510,31 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             //Journaler journaler = new Journaler(eventStore);
             LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
             IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
-            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            
             currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
             currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
             // Intialize the exchange so that the order changes can be fired to listernes which will then log them to event store
             Exchange exchange = new Exchange(currencyPairs);
 
-            Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                        Constants.ORDER_SIDE_BUY, 100, 941, new StubbedOrderIdGenerator());
-            Order buyOrder2 = OrderFactory.CreateOrder("1234", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder2 = OrderFactory.CreateOrder("1234", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                        Constants.ORDER_SIDE_BUY, 100, 943, new StubbedOrderIdGenerator());
-            Order buyOrder3 = OrderFactory.CreateOrder("12344", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder3 = OrderFactory.CreateOrder("12344", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                        Constants.ORDER_SIDE_BUY, 400, 944, new StubbedOrderIdGenerator());
-            Order buyOrder4 = OrderFactory.CreateOrder("12345", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder4 = OrderFactory.CreateOrder("12345", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                        Constants.ORDER_SIDE_BUY, 500, 945, new StubbedOrderIdGenerator());
 
-            Order sellOrder1 = OrderFactory.CreateOrder("1244", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder1 = OrderFactory.CreateOrder("1244", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                         Constants.ORDER_SIDE_SELL, 600, 956,
                                                         new StubbedOrderIdGenerator());
-            Order sellOrder2 = OrderFactory.CreateOrder("1222", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder2 = OrderFactory.CreateOrder("1222", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                         Constants.ORDER_SIDE_SELL, 400, 954,
                                                         new StubbedOrderIdGenerator());
-            Order sellOrder3 = OrderFactory.CreateOrder("12225", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder3 = OrderFactory.CreateOrder("12225", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                         Constants.ORDER_SIDE_SELL, 100, 958,
                                                         new StubbedOrderIdGenerator());
-            Order sellOrder4 = OrderFactory.CreateOrder("12226", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder4 = OrderFactory.CreateOrder("12226", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                         Constants.ORDER_SIDE_SELL, 100, 945,
                                                         new StubbedOrderIdGenerator());
 
@@ -576,34 +576,34 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(3, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             // First slot for bids and asks
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().CurrencyPair);
             Assert.AreEqual(945, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().Price.Value);
             Assert.AreEqual(500, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().Volume.Value);
             // Check open quantity after partial fill
             Assert.AreEqual(400, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().OpenQuantity.Value);
 
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Asks.First().CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Asks.First().CurrencyPair);
             Assert.AreEqual(954, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.First().Price.Value);
             Assert.AreEqual(400, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.First().Volume.Value);
 
             // Second slot for bids and asks
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].CurrencyPair);
             Assert.AreEqual(944, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].Price.Value);
             Assert.AreEqual(400, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].Volume.Value);
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].CurrencyPair);
             Assert.AreEqual(956, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[1].Price.Value);
             Assert.AreEqual(600, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[1].Volume.Value);
 
             // Third slot for bids and asks
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[2].CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[2].CurrencyPair);
             Assert.AreEqual(943, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[2].Price.Value);
             Assert.AreEqual(100, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[2].Volume.Value);
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[2].CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[2].CurrencyPair);
             Assert.AreEqual(958, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[2].Price.Value);
             Assert.AreEqual(100, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[2].Volume.Value);
 
             // Fourth slot in bid book only
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[3].CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[3].CurrencyPair);
             Assert.AreEqual(941, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[3].Price.Value);
             Assert.AreEqual(100, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[3].Volume.Value);
 
@@ -646,34 +646,34 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(3, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             // First slot for bids and asks
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().CurrencyPair);
             Assert.AreEqual(945, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().Price.Value);
             Assert.AreEqual(500, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().Volume.Value);
             // Check open quantity after partial fill
             Assert.AreEqual(400, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().OpenQuantity.Value);
 
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Asks.First().CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Asks.First().CurrencyPair);
             Assert.AreEqual(954, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.First().Price.Value);
             Assert.AreEqual(400, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.First().Volume.Value);
 
             // Second slot for bids and asks
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].CurrencyPair);
             Assert.AreEqual(944, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].Price.Value);
             Assert.AreEqual(400, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].Volume.Value);
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].CurrencyPair);
             Assert.AreEqual(956, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[1].Price.Value);
             Assert.AreEqual(600, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[1].Volume.Value);
 
             // Third slot for bids and asks
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[2].CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[2].CurrencyPair);
             Assert.AreEqual(943, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[2].Price.Value);
             Assert.AreEqual(100, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[2].Volume.Value);
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[2].CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[2].CurrencyPair);
             Assert.AreEqual(958, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[2].Price.Value);
             Assert.AreEqual(100, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[2].Volume.Value);
 
             // Fourth slot in bid book only
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[3].CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[3].CurrencyPair);
             Assert.AreEqual(941, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[3].Price.Value);
             Assert.AreEqual(100, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[3].Volume.Value);
 
@@ -693,32 +693,32 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
            // Journaler journaler = new Journaler(eventStore);
             LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
             IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
-            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            
             currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
             currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
             // OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] {journaler});
             // Intialize the exchange so that the order changes can be fired to listernes which will then log them to event store
             Exchange exchange = new Exchange(currencyPairs);
 
-            Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                        Constants.ORDER_SIDE_BUY, 100, 941, new StubbedOrderIdGenerator());
-            Order buyOrder2 = OrderFactory.CreateOrder("1234", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder2 = OrderFactory.CreateOrder("1234", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                        Constants.ORDER_SIDE_BUY, 100, 943, new StubbedOrderIdGenerator());
-            Order buyOrder3 = OrderFactory.CreateOrder("12344", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder3 = OrderFactory.CreateOrder("12344", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                        Constants.ORDER_SIDE_BUY, 400, 944, new StubbedOrderIdGenerator());
-            Order buyOrder4 = OrderFactory.CreateOrder("12345", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder4 = OrderFactory.CreateOrder("12345", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                        Constants.ORDER_SIDE_BUY, 100, 945, new StubbedOrderIdGenerator());
 
-            Order sellOrder1 = OrderFactory.CreateOrder("1244", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder1 = OrderFactory.CreateOrder("1244", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                         Constants.ORDER_SIDE_SELL, 600, 956,
                                                         new StubbedOrderIdGenerator());
-            Order sellOrder2 = OrderFactory.CreateOrder("1222", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder2 = OrderFactory.CreateOrder("1222", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                         Constants.ORDER_SIDE_SELL, 400, 954,
                                                         new StubbedOrderIdGenerator());
-            Order sellOrder3 = OrderFactory.CreateOrder("12225", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder3 = OrderFactory.CreateOrder("12225", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                         Constants.ORDER_SIDE_SELL, 100, 958,
                                                         new StubbedOrderIdGenerator());
-            Order sellOrder4 = OrderFactory.CreateOrder("12226", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder4 = OrderFactory.CreateOrder("12226", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                         Constants.ORDER_SIDE_SELL, 500, 945,
                                                         new StubbedOrderIdGenerator());
 
@@ -760,34 +760,34 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(4, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             // First slot for bids and asks
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().CurrencyPair);
             Assert.AreEqual(944, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().Price.Value);
             Assert.AreEqual(400, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().Volume.Value);
             Assert.AreEqual(400, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().OpenQuantity.Value);
 
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Asks.First().CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Asks.First().CurrencyPair);
             Assert.AreEqual(945, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.First().Price.Value);
             Assert.AreEqual(500, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.First().Volume.Value);
             Assert.AreEqual(400, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.First().OpenQuantity.Value);
 
             // Second slot for bids and asks
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].CurrencyPair);
             Assert.AreEqual(943, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].Price.Value);
             Assert.AreEqual(100, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].Volume.Value);
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].CurrencyPair);
             Assert.AreEqual(954, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[1].Price.Value);
             Assert.AreEqual(400, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[1].Volume.Value);
 
             // Third slot for bids and asks
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[2].CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[2].CurrencyPair);
             Assert.AreEqual(941, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[2].Price.Value);
             Assert.AreEqual(100, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[2].Volume.Value);
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[2].CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[2].CurrencyPair);
             Assert.AreEqual(956, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[2].Price.Value);
             Assert.AreEqual(600, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[2].Volume.Value);
 
             // Fourth slot in Ask only, as Bids book count is 3
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[3].CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[3].CurrencyPair);
             Assert.AreEqual(958, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[3].Price.Value);
             Assert.AreEqual(100, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[3].Volume.Value);
 
@@ -830,33 +830,33 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(4, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             // First slot for bids and asks
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().CurrencyPair);
             Assert.AreEqual(944, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().Price.Value);
             Assert.AreEqual(400, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().Volume.Value);
             Assert.AreEqual(400, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().OpenQuantity.Value);
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Asks.First().CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Asks.First().CurrencyPair);
             Assert.AreEqual(945, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.First().Price.Value);
             Assert.AreEqual(500, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.First().Volume.Value);
             Assert.AreEqual(400, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.First().OpenQuantity.Value);
 
             // Second slot for bids and asks
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].CurrencyPair);
             Assert.AreEqual(943, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].Price.Value);
             Assert.AreEqual(100, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].Volume.Value);
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[1].CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[1].CurrencyPair);
             Assert.AreEqual(954, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[1].Price.Value);
             Assert.AreEqual(400, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[1].Volume.Value);
 
             // Third slot for bids and asks
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[2].CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[2].CurrencyPair);
             Assert.AreEqual(941, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[2].Price.Value);
             Assert.AreEqual(100, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[2].Volume.Value);
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[2].CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[2].CurrencyPair);
             Assert.AreEqual(956, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[2].Price.Value);
             Assert.AreEqual(600, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[2].Volume.Value);
 
             // Fourth slot in Ask only, as Bids book count is 3
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[3].CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[3].CurrencyPair);
             Assert.AreEqual(958, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[3].Price.Value);
             Assert.AreEqual(100, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[3].Volume.Value);
 
@@ -875,31 +875,31 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
            // OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] {journaler});
             IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
-            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            
             currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
             currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
             // Intialize the exchange so that the order changes can be fired to listernes which will then log them to event store
             Exchange exchange = new Exchange(currencyPairs);
 
-            Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                        Constants.ORDER_SIDE_BUY, 100, 941, new StubbedOrderIdGenerator());
-            Order buyOrder2 = OrderFactory.CreateOrder("1234", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder2 = OrderFactory.CreateOrder("1234", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                        Constants.ORDER_SIDE_BUY, 300, 943, new StubbedOrderIdGenerator());
-            Order buyOrder3 = OrderFactory.CreateOrder("12344", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder3 = OrderFactory.CreateOrder("12344", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                        Constants.ORDER_SIDE_BUY, 400, 944, new StubbedOrderIdGenerator());
-            Order buyOrder4 = OrderFactory.CreateOrder("12345", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder4 = OrderFactory.CreateOrder("12345", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                        Constants.ORDER_SIDE_BUY, 500, 945, new StubbedOrderIdGenerator());
 
-            Order sellOrder1 = OrderFactory.CreateOrder("1244", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder1 = OrderFactory.CreateOrder("1244", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                         Constants.ORDER_SIDE_SELL, 600, 956,
                                                         new StubbedOrderIdGenerator());
-            Order sellOrder2 = OrderFactory.CreateOrder("1222", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder2 = OrderFactory.CreateOrder("1222", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                         Constants.ORDER_SIDE_SELL, 400, 954,
                                                         new StubbedOrderIdGenerator());
-            Order sellOrder3 = OrderFactory.CreateOrder("12225", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder3 = OrderFactory.CreateOrder("12225", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                         Constants.ORDER_SIDE_SELL, 800, 958,
                                                         new StubbedOrderIdGenerator());
-            Order sellOrder4 = OrderFactory.CreateOrder("12226", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder4 = OrderFactory.CreateOrder("12226", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                         Constants.ORDER_SIDE_SELL, 500, 946,
                                                         new StubbedOrderIdGenerator());
 
@@ -946,21 +946,21 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             // First slot for bids and asks
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().CurrencyPair);
             Assert.AreEqual(945, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().Price.Value);
             Assert.AreEqual(500, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().Volume.Value);
             Assert.AreEqual(500, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().OpenQuantity.Value);
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Asks.First().CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Asks.First().CurrencyPair);
             Assert.AreEqual(956, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.First().Price.Value);
             Assert.AreEqual(600, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.First().Volume.Value);
             Assert.AreEqual(600, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.First().OpenQuantity.Value);
 
             // Second slot for bids and asks
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].CurrencyPair);
             Assert.AreEqual(943, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].Price.Value);
             Assert.AreEqual(300, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].Volume.Value);
             Assert.AreEqual(300, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].OpenQuantity.Value);
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[1].CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[1].CurrencyPair);
             Assert.AreEqual(958, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[1].Price.Value);
             Assert.AreEqual(800, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[1].Volume.Value);
             Assert.AreEqual(800, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[1].OpenQuantity.Value);
@@ -1001,21 +1001,21 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(2, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.Count());
 
             // First slot for bids and asks
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().CurrencyPair);
             Assert.AreEqual(945, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().Price.Value);
             Assert.AreEqual(500, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().Volume.Value);
             Assert.AreEqual(500, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().OpenQuantity.Value);
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Asks.First().CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Asks.First().CurrencyPair);
             Assert.AreEqual(956, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.First().Price.Value);
             Assert.AreEqual(600, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.First().Volume.Value);
             Assert.AreEqual(600, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.First().OpenQuantity.Value);
 
             // Second slot for bids and asks
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].CurrencyPair);
             Assert.AreEqual(943, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].Price.Value);
             Assert.AreEqual(300, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].Volume.Value);
             Assert.AreEqual(300, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].OpenQuantity.Value);
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[1].CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[1].CurrencyPair);
             Assert.AreEqual(958, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[1].Price.Value);
             Assert.AreEqual(800, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[1].Volume.Value);
             Assert.AreEqual(800, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[1].OpenQuantity.Value);
@@ -1033,25 +1033,25 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
            // OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] {journaler});
             IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
-            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            
             currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
             currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
             // Intialize the exchange so that the order changes can be fired to listernes which will then log them to event store
             Exchange exchange = new Exchange(currencyPairs);
 
-            Order sellOrder1 = OrderFactory.CreateOrder("1234", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder1 = OrderFactory.CreateOrder("1234", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                         Constants.ORDER_SIDE_SELL, 250, 1252,
                                                         new StubbedOrderIdGenerator());
-            Order sellOrder2 = OrderFactory.CreateOrder("12345", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder2 = OrderFactory.CreateOrder("12345", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                         Constants.ORDER_SIDE_SELL, 300, 1251,
                                                         new StubbedOrderIdGenerator());
-            Order sellOrder3 = OrderFactory.CreateOrder("12344", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder3 = OrderFactory.CreateOrder("12344", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                         Constants.ORDER_SIDE_SELL, 200, 1251,
                                                         new StubbedOrderIdGenerator());
-            Order buyOrder1 = OrderFactory.CreateOrder("123456", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder1 = OrderFactory.CreateOrder("123456", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                        Constants.ORDER_SIDE_BUY, 500, 1251,
                                                        new StubbedOrderIdGenerator());
-            Order buyOrder2 = OrderFactory.CreateOrder("123457", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder2 = OrderFactory.CreateOrder("123457", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                        Constants.ORDER_SIDE_BUY, 250, 1250,
                                                        new StubbedOrderIdGenerator());
 
@@ -1092,13 +1092,13 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(9, preCrashOrders.Count);
 
             // First slot for bids and asks
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().CurrencyPair);
             Assert.AreEqual(1250, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().Price.Value);
             Assert.AreEqual(250, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().Volume.Value);
             Assert.AreEqual(250, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().OpenQuantity.Value);
 
             // Second slot for bids and asks
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[0].CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[0].CurrencyPair);
             Assert.AreEqual(1252, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[0].Price.Value);
             Assert.AreEqual(250, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[0].Volume.Value);
             Assert.AreEqual(250, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[0].OpenQuantity.Value);
@@ -1110,13 +1110,13 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             manualReset.WaitOne(3000);
 
             // First slot for bids and asks
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().CurrencyPair);
             Assert.AreEqual(1250, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().Price.Value);
             Assert.AreEqual(250, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().Volume.Value);
             Assert.AreEqual(250, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().OpenQuantity.Value);
 
             // Second slot for bids and asks
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[0].CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[0].CurrencyPair);
             Assert.AreEqual(1252, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[0].Price.Value);
             Assert.AreEqual(250, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[0].Volume.Value);
             Assert.AreEqual(250, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[0].OpenQuantity.Value);
@@ -1161,35 +1161,35 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
            // OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] {journaler});
             IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
-            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            
             currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
             currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
             // Intialize the exchange so that the order changes can be fired to listernes which will then log them to event 
             // store
             Exchange exchange = new Exchange(currencyPairs);
 
-            Order sellOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder1 = OrderFactory.CreateOrder("1233", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                         Constants.ORDER_SIDE_SELL, 200, 1254,
                                                         new StubbedOrderIdGenerator());
-            Order sellOrder2 = OrderFactory.CreateOrder("1234", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder2 = OrderFactory.CreateOrder("1234", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                         Constants.ORDER_SIDE_SELL, 300, 1253,
                                                         new StubbedOrderIdGenerator());
-            Order sellOrder3 = OrderFactory.CreateOrder("12344", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder3 = OrderFactory.CreateOrder("12344", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                         Constants.ORDER_SIDE_SELL, 200, 1253,
                                                         new StubbedOrderIdGenerator());
-            Order sellOrder4 = OrderFactory.CreateOrder("12355", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder4 = OrderFactory.CreateOrder("12355", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                         Constants.ORDER_SIDE_SELL, 700, 1251,
                                                         new StubbedOrderIdGenerator());
-            Order buyOrder1 = OrderFactory.CreateOrder("123456", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder1 = OrderFactory.CreateOrder("123456", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                        Constants.ORDER_SIDE_BUY, 500, 1251,
                                                        new StubbedOrderIdGenerator());
-            Order buyOrder2 = OrderFactory.CreateOrder("723457", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder2 = OrderFactory.CreateOrder("723457", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                        Constants.ORDER_SIDE_BUY, 100, 1252,
                                                        new StubbedOrderIdGenerator());
-            Order buyOrder3 = OrderFactory.CreateOrder("623456", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder3 = OrderFactory.CreateOrder("623456", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                        Constants.ORDER_SIDE_BUY, 100, 1251,
                                                        new StubbedOrderIdGenerator());
-            Order buyOrder4 = OrderFactory.CreateOrder("523457", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder4 = OrderFactory.CreateOrder("523457", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                        Constants.ORDER_SIDE_BUY, 100, 1249,
                                                        new StubbedOrderIdGenerator());
 
@@ -1233,23 +1233,23 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(14, preCrashOrders.Count);
 
             // Bid
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().CurrencyPair);
             Assert.AreEqual(1249, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().Price.Value);
             Assert.AreEqual(100, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().Volume.Value);
             Assert.AreEqual(100, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().OpenQuantity.Value);
 
             // Asks
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[0].CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[0].CurrencyPair);
             Assert.AreEqual(1253, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[0].Price.Value);
             Assert.AreEqual(200, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[0].Volume.Value);
             Assert.AreEqual(200, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[0].OpenQuantity.Value);
 
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[1].CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[1].CurrencyPair);
             Assert.AreEqual(1253, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[1].Price.Value);
             Assert.AreEqual(300, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[1].Volume.Value);
             Assert.AreEqual(300, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[1].OpenQuantity.Value);
 
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[2].CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[2].CurrencyPair);
             Assert.AreEqual(1254, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[2].Price.Value);
             Assert.AreEqual(200, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[2].Volume.Value);
             Assert.AreEqual(200, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[2].OpenQuantity.Value);
@@ -1283,23 +1283,23 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(14, preCrashOrders.Count);
 
             // Bid
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().CurrencyPair);
             Assert.AreEqual(1249, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().Price.Value);
             Assert.AreEqual(100, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().Volume.Value);
             Assert.AreEqual(100, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().OpenQuantity.Value);
 
             // Asks
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[0].CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[0].CurrencyPair);
             Assert.AreEqual(1253, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[0].Price.Value);
             Assert.AreEqual(200, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[0].Volume.Value);
             Assert.AreEqual(200, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[0].OpenQuantity.Value);
 
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[1].CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[1].CurrencyPair);
             Assert.AreEqual(1253, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[1].Price.Value);
             Assert.AreEqual(300, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[1].Volume.Value);
             Assert.AreEqual(300, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[1].OpenQuantity.Value);
 
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[2].CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[2].CurrencyPair);
             Assert.AreEqual(1254, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[2].Price.Value);
             Assert.AreEqual(200, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[2].Volume.Value);
             Assert.AreEqual(200, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[2].OpenQuantity.Value);
@@ -1317,27 +1317,27 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
            // OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] {journaler});
             IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
-            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            
             currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
             currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
             // Intialize the exchange so that the order changes can be fired to listernes which will then log them to event 
             // store
             Exchange exchange = new Exchange(currencyPairs);
 
-            Order buyOrder1 = OrderFactory.CreateOrder("123456", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder1 = OrderFactory.CreateOrder("123456", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                        Constants.ORDER_SIDE_BUY, 200, 930, new StubbedOrderIdGenerator());
-            Order buyOrder2 = OrderFactory.CreateOrder("723457", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder2 = OrderFactory.CreateOrder("723457", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                        Constants.ORDER_SIDE_BUY, 900, 942, new StubbedOrderIdGenerator());
-            Order sellOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder1 = OrderFactory.CreateOrder("1233", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                         Constants.ORDER_SIDE_SELL, 100, 942,
                                                         new StubbedOrderIdGenerator());
-            Order sellOrder2 = OrderFactory.CreateOrder("1234", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder2 = OrderFactory.CreateOrder("1234", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                         Constants.ORDER_SIDE_SELL, 100, 942,
                                                         new StubbedOrderIdGenerator());
-            Order sellOrder3 = OrderFactory.CreateOrder("12344", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder3 = OrderFactory.CreateOrder("12344", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                         Constants.ORDER_SIDE_SELL, 100, 942,
                                                         new StubbedOrderIdGenerator());
-            Order sellOrder4 = OrderFactory.CreateOrder("12224", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder4 = OrderFactory.CreateOrder("12224", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                                                         Constants.ORDER_SIDE_SELL, 100, 942,
                                                         new StubbedOrderIdGenerator());
 
@@ -1379,11 +1379,11 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(14, preCrashOrders.Count);
 
             // Bids
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().CurrencyPair);
             Assert.AreEqual(942, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().Price.Value);
             Assert.AreEqual(900, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().Volume.Value);
             Assert.AreEqual(500, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().OpenQuantity.Value);
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].CurrencyPair);
             Assert.AreEqual(930, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].Price.Value);
             Assert.AreEqual(200, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].Volume.Value);
             Assert.AreEqual(200, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].OpenQuantity.Value);
@@ -1417,11 +1417,11 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(14, preCrashOrders.Count);
 
             // Bids
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().CurrencyPair);
             Assert.AreEqual(942, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().Price.Value);
             Assert.AreEqual(900, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().Volume.Value);
             Assert.AreEqual(500, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.First().OpenQuantity.Value);
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].CurrencyPair);
             Assert.AreEqual(930, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].Price.Value);
             Assert.AreEqual(200, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].Volume.Value);
             Assert.AreEqual(200, exchange.ExchangeEssentials.First().LimitOrderBook.Bids.ToList()[1].OpenQuantity.Value);
@@ -1439,24 +1439,24 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
            // OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
             IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
-            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            
             currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
             currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
             // Intialize the exchange so that the order changes can be fired to listernes which will then log them to event 
             // store
             Exchange exchange = new Exchange(currencyPairs);
 
-            Order buyOrder1 = OrderFactory.CreateOrder("123456", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder1 = OrderFactory.CreateOrder("123456", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 942, new StubbedOrderIdGenerator());
-            Order buyOrder2 = OrderFactory.CreateOrder("723457", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder2 = OrderFactory.CreateOrder("723457", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 942, new StubbedOrderIdGenerator());
-            Order buyOrder3 = OrderFactory.CreateOrder("123456", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder3 = OrderFactory.CreateOrder("123456", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 942, new StubbedOrderIdGenerator());
-            Order buyOrder4 = OrderFactory.CreateOrder("723457", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder4 = OrderFactory.CreateOrder("723457", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 942, new StubbedOrderIdGenerator());
-            Order sellOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder1 = OrderFactory.CreateOrder("1233", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 100, 951, new StubbedOrderIdGenerator());
-            Order sellOrder2 = OrderFactory.CreateOrder("1234", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder2 = OrderFactory.CreateOrder("1234", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 1000, 942, new StubbedOrderIdGenerator());
 
             exchange.PlaceNewOrder(sellOrder1);
@@ -1497,11 +1497,11 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(14, preCrashOrders.Count);
 
             // Asks
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Asks.First().CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Asks.First().CurrencyPair);
             Assert.AreEqual(942, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.First().Price.Value);
             Assert.AreEqual(1000, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.First().Volume.Value);
             Assert.AreEqual(600, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.First().OpenQuantity.Value);
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[1].CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[1].CurrencyPair);
             Assert.AreEqual(951, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[1].Price.Value);
             Assert.AreEqual(100, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[1].Volume.Value);
             Assert.AreEqual(100, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[1].OpenQuantity.Value);
@@ -1542,11 +1542,11 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             Assert.AreEqual(14, preCrashOrders.Count);
 
             // Asks
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Asks.First().CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Asks.First().CurrencyPair);
             Assert.AreEqual(942, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.First().Price.Value);
             Assert.AreEqual(1000, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.First().Volume.Value);
             Assert.AreEqual(600, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.First().OpenQuantity.Value);
-            Assert.AreEqual("BTCUSD", exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[1].CurrencyPair);
+            Assert.AreEqual("BTCLTC", exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[1].CurrencyPair);
             Assert.AreEqual(951, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[1].Price.Value);
             Assert.AreEqual(100, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[1].Volume.Value);
             Assert.AreEqual(100, exchange.ExchangeEssentials.First().LimitOrderBook.Asks.ToList()[1].OpenQuantity.Value);
@@ -1563,7 +1563,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
            // Journaler journaler = new Journaler(eventStore);
             LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
             IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
-            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            
             currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
             currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
            // OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
@@ -1571,16 +1571,16 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             // store
             Exchange exchange = new Exchange(currencyPairs);
 
-            Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 941, new StubbedOrderIdGenerator());
-            Order buyOrder2 = OrderFactory.CreateOrder("1234", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder2 = OrderFactory.CreateOrder("1234", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 945, new StubbedOrderIdGenerator());
-            Order buyOrder3 = OrderFactory.CreateOrder("12345", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder3 = OrderFactory.CreateOrder("12345", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 948, new StubbedOrderIdGenerator());
 
-            Order sellOrder1 = OrderFactory.CreateOrder("1244", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder1 = OrderFactory.CreateOrder("1244", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 100, 949, new StubbedOrderIdGenerator());
-            Order sellOrder2 = OrderFactory.CreateOrder("1222", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder2 = OrderFactory.CreateOrder("1222", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 100, 948, new StubbedOrderIdGenerator());
 
             exchange.PlaceNewOrder(buyOrder1);
@@ -1720,23 +1720,23 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
           //  OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
             IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
-            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            
             currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
             currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
             // Intialize the exchange so that the order changes can be fired to listernes which will then log them to event 
             // store
             Exchange exchange = new Exchange(currencyPairs);
 
-            Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 941, new StubbedOrderIdGenerator());
-            Order buyOrder2 = OrderFactory.CreateOrder("1234", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder2 = OrderFactory.CreateOrder("1234", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 945, new StubbedOrderIdGenerator());
 
-            Order sellOrder1 = OrderFactory.CreateOrder("1244", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder1 = OrderFactory.CreateOrder("1244", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 100, 949, new StubbedOrderIdGenerator());
-            Order sellOrder2 = OrderFactory.CreateOrder("1222", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder2 = OrderFactory.CreateOrder("1222", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 100, 948, new StubbedOrderIdGenerator());
-            Order sellOrder3 = OrderFactory.CreateOrder("1222", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder3 = OrderFactory.CreateOrder("1222", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 100, 945, new StubbedOrderIdGenerator());
 
             exchange.PlaceNewOrder(buyOrder1);

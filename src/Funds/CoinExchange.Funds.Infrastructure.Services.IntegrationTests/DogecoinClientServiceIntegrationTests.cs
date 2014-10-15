@@ -23,7 +23,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.IntegrationTests
     {
         // Care must be taken to decide this amount, as this will subtract the currency from the testnet version
         // of bitcoin
-        private const decimal Amount = 0.0001m;
+        private const decimal Amount = 0.001m;
 
         // As these tests need bitcoins to run from the test account, or may be even real bitcoins, this flag is for 
         // safety and must be set to true to run tests related to deposits and withdrawals
@@ -118,7 +118,7 @@ namespace CoinExchange.Funds.Infrastructure.Services.IntegrationTests
                                                                    AddressStatus.New, DateTime.Now, accountId);
                 fundsPersistenceRepository.SaveOrUpdate(depositAddress);
 
-                // Check that there is no deposit with htis address present
+                // Check that there is no deposit with this address present
                 List<Deposit> deposits = depositRepository.GetDepositsByBitcoinAddress(bitcoinAddress);
                 Assert.AreEqual(0, deposits.Count);
 

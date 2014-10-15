@@ -214,7 +214,16 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         /// <returns></returns>
         public bool PlaceNewOrder(Order order)
         {
-            switch (order.CurrencyPair.ToUpper())
+            // Search for the order book to which this order should go to
+            foreach (var exchangeEssentials in _exchangeEssentialsList)
+            {
+                if (exchangeEssentials.LimitOrderBook.CurrencyPair.Equals(order.CurrencyPair))
+                {
+                    exchangeEssentials.LimitOrderBook.PlaceOrder(order);
+                    return true;
+                }
+            }
+            /*switch (order.CurrencyPair.ToUpper())
             {
                 case CurrencyConstants.BtcLtc:
                     return _exchangeEssentialsList.First().LimitOrderBook.PlaceOrder(order);
@@ -224,7 +233,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
                     return _exchangeEssentialsList.ToList()[2].LimitOrderBook.PlaceOrder(order);
                 case CurrencyConstants.XbtLtcSeparated:
                     return _exchangeEssentialsList.ToList()[3].LimitOrderBook.PlaceOrder(order);
-            }
+            }*/
             return false;
         }
 

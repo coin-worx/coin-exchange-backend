@@ -18,7 +18,7 @@ namespace CoinExchange.Trades.ReadModel.Persistence.NHibernate
             }
             catch (Exception exception)
             {
-                
+
             }
         }
     }

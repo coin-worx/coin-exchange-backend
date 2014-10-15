@@ -51,11 +51,10 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             bool orderBookArrived = false;
             Trade receivedTrade = null;
             IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
-            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
             currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
             currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
             Exchange exchange=new Exchange(currencyPairs);
-            string currencyPair = "BTCUSD";
+            string currencyPair = "BTCLTC";
             Order buyOrder = OrderFactory.CreateOrder("1234", currencyPair, "limit", "buy", 5, 10,
                new StubbedOrderIdGenerator());
             Order sellOrder = OrderFactory.CreateOrder("12334", currencyPair, "market", "sell", 5, 0,

@@ -33,6 +33,7 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
         {
             log4net.Config.XmlConfigurator.Configure();
             eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
+            eventStore.RemoveAllEvents();
             journaler = new Journaler(eventStore);
             OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
         }
@@ -57,21 +58,20 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             //Journaler journaler = new Journaler(eventStore);
             LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
             IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
-            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
             currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
             currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
            // OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
             // Intialize the exchange so that the order changes can be fired to listernes which will then log them to event store
             Exchange exchange = new Exchange(currencyPairs);
 
-            Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 941, new StubbedOrderIdGenerator());
-            Order buyOrder2 = OrderFactory.CreateOrder("1234", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder2 = OrderFactory.CreateOrder("1234", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 945, new StubbedOrderIdGenerator());
 
-            Order sellOrder1 = OrderFactory.CreateOrder("1244", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder1 = OrderFactory.CreateOrder("1244", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 100, 949, new StubbedOrderIdGenerator());
-            Order sellOrder2 = OrderFactory.CreateOrder("1222", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder2 = OrderFactory.CreateOrder("1222", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 100, 948, new StubbedOrderIdGenerator());
 
             exchange.PlaceNewOrder(buyOrder1);
@@ -146,29 +146,29 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             //Journaler journaler = new Journaler(eventStore);
             LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
             IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
-            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            
             currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
             currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
             //OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
             // Intialize the exchange so that the order changes can be fired to listernes which will then log them to event store
             Exchange exchange = new Exchange(currencyPairs);
 
-            Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 941, new StubbedOrderIdGenerator());
-            Order buyOrder2 = OrderFactory.CreateOrder("1234", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder2 = OrderFactory.CreateOrder("1234", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 943, new StubbedOrderIdGenerator());
-            Order buyOrder3 = OrderFactory.CreateOrder("12344", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder3 = OrderFactory.CreateOrder("12344", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 944, new StubbedOrderIdGenerator());
-            Order buyOrder4 = OrderFactory.CreateOrder("12345", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder4 = OrderFactory.CreateOrder("12345", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 945, new StubbedOrderIdGenerator());
 
-            Order sellOrder1 = OrderFactory.CreateOrder("1244", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder1 = OrderFactory.CreateOrder("1244", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 100, 949, new StubbedOrderIdGenerator());
-            Order sellOrder2 = OrderFactory.CreateOrder("1222", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder2 = OrderFactory.CreateOrder("1222", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 100, 943, new StubbedOrderIdGenerator());
-            Order sellOrder3 = OrderFactory.CreateOrder("12225", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder3 = OrderFactory.CreateOrder("12225", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 100, 945, new StubbedOrderIdGenerator());
-            Order sellOrder4 = OrderFactory.CreateOrder("12226", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder4 = OrderFactory.CreateOrder("12226", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 100, 944, new StubbedOrderIdGenerator());
 
             exchange.PlaceNewOrder(buyOrder1);
@@ -237,29 +237,29 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             //Journaler journaler = new Journaler(eventStore);
             LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
             IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
-            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            
             currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
             currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
             //OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
             // Intialize the exchange so that the order changes can be fired to listernes which will then log them to event store
             Exchange exchange = new Exchange(currencyPairs);
 
-            Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 941, new StubbedOrderIdGenerator());
-            Order buyOrder2 = OrderFactory.CreateOrder("1234", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder2 = OrderFactory.CreateOrder("1234", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 943, new StubbedOrderIdGenerator());
-            Order buyOrder3 = OrderFactory.CreateOrder("12344", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder3 = OrderFactory.CreateOrder("12344", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 944, new StubbedOrderIdGenerator());
-            Order buyOrder4 = OrderFactory.CreateOrder("12345", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder4 = OrderFactory.CreateOrder("12345", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 945, new StubbedOrderIdGenerator());
 
-            Order sellOrder1 = OrderFactory.CreateOrder("1244", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder1 = OrderFactory.CreateOrder("1244", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 100, 949, new StubbedOrderIdGenerator());
-            Order sellOrder2 = OrderFactory.CreateOrder("1222", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder2 = OrderFactory.CreateOrder("1222", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 100, 945, new StubbedOrderIdGenerator());
-            Order sellOrder3 = OrderFactory.CreateOrder("12225", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder3 = OrderFactory.CreateOrder("12225", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 100, 944, new StubbedOrderIdGenerator());
-            Order sellOrder4 = OrderFactory.CreateOrder("12226", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder4 = OrderFactory.CreateOrder("12226", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 100, 943, new StubbedOrderIdGenerator());
 
             exchange.PlaceNewOrder(buyOrder1);
@@ -324,28 +324,28 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
            // Journaler journaler = new Journaler(eventStore);
             LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
             IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
-            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            
             currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
             currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
             // Intialize the exchange so that the order changes can be fired to listernes which will then log them to event store
             Exchange exchange = new Exchange(currencyPairs);
 
-            Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 941, new StubbedOrderIdGenerator());
-            Order buyOrder2 = OrderFactory.CreateOrder("1234", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder2 = OrderFactory.CreateOrder("1234", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 943, new StubbedOrderIdGenerator());
-            Order buyOrder3 = OrderFactory.CreateOrder("12344", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder3 = OrderFactory.CreateOrder("12344", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 400, 944, new StubbedOrderIdGenerator());
-            Order buyOrder4 = OrderFactory.CreateOrder("12345", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder4 = OrderFactory.CreateOrder("12345", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 500, 945, new StubbedOrderIdGenerator());
 
-            Order sellOrder1 = OrderFactory.CreateOrder("1244", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder1 = OrderFactory.CreateOrder("1244", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 600, 956, new StubbedOrderIdGenerator());
-            Order sellOrder2 = OrderFactory.CreateOrder("1222", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder2 = OrderFactory.CreateOrder("1222", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 400, 954, new StubbedOrderIdGenerator());
-            Order sellOrder3 = OrderFactory.CreateOrder("12225", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder3 = OrderFactory.CreateOrder("12225", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 100, 958, new StubbedOrderIdGenerator());
-            Order sellOrder4 = OrderFactory.CreateOrder("12226", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder4 = OrderFactory.CreateOrder("12226", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 500, 945, new StubbedOrderIdGenerator());
 
             exchange.PlaceNewOrder(buyOrder1);
@@ -440,28 +440,28 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             //Journaler journaler = new Journaler(eventStore);
             LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
             IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
-            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            
             currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
             currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
             // Intialize the exchange so that the order changes can be fired to listernes which will then log them to event store
             Exchange exchange = new Exchange(currencyPairs);
 
-            Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 941, new StubbedOrderIdGenerator());
-            Order buyOrder2 = OrderFactory.CreateOrder("1234", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder2 = OrderFactory.CreateOrder("1234", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 943, new StubbedOrderIdGenerator());
-            Order buyOrder3 = OrderFactory.CreateOrder("12344", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder3 = OrderFactory.CreateOrder("12344", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 400, 944, new StubbedOrderIdGenerator());
-            Order buyOrder4 = OrderFactory.CreateOrder("12345", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder4 = OrderFactory.CreateOrder("12345", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 500, 945, new StubbedOrderIdGenerator());
 
-            Order sellOrder1 = OrderFactory.CreateOrder("1244", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder1 = OrderFactory.CreateOrder("1244", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 600, 956, new StubbedOrderIdGenerator());
-            Order sellOrder2 = OrderFactory.CreateOrder("1222", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder2 = OrderFactory.CreateOrder("1222", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 400, 954, new StubbedOrderIdGenerator());
-            Order sellOrder3 = OrderFactory.CreateOrder("12225", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder3 = OrderFactory.CreateOrder("12225", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 100, 958, new StubbedOrderIdGenerator());
-            Order sellOrder4 = OrderFactory.CreateOrder("12226", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder4 = OrderFactory.CreateOrder("12226", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 100, 945, new StubbedOrderIdGenerator());
 
             exchange.PlaceNewOrder(buyOrder1);
@@ -556,28 +556,28 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             //Journaler journaler = new Journaler(eventStore);
             LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
             IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
-            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            
             currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
             currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
             // Intialize the exchange so that the order changes can be fired to listernes which will then log them to event store
             Exchange exchange = new Exchange(currencyPairs);
 
-            Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 941, new StubbedOrderIdGenerator());
-            Order buyOrder2 = OrderFactory.CreateOrder("1234", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder2 = OrderFactory.CreateOrder("1234", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 943, new StubbedOrderIdGenerator());
-            Order buyOrder3 = OrderFactory.CreateOrder("12344", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder3 = OrderFactory.CreateOrder("12344", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 400, 944, new StubbedOrderIdGenerator());
-            Order buyOrder4 = OrderFactory.CreateOrder("12345", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder4 = OrderFactory.CreateOrder("12345", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 945, new StubbedOrderIdGenerator());
 
-            Order sellOrder1 = OrderFactory.CreateOrder("1244", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder1 = OrderFactory.CreateOrder("1244", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 600, 956, new StubbedOrderIdGenerator());
-            Order sellOrder2 = OrderFactory.CreateOrder("1222", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder2 = OrderFactory.CreateOrder("1222", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 400, 954, new StubbedOrderIdGenerator());
-            Order sellOrder3 = OrderFactory.CreateOrder("12225", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder3 = OrderFactory.CreateOrder("12225", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 100, 958, new StubbedOrderIdGenerator());
-            Order sellOrder4 = OrderFactory.CreateOrder("12226", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder4 = OrderFactory.CreateOrder("12226", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 500, 945, new StubbedOrderIdGenerator());
 
             exchange.PlaceNewOrder(buyOrder1);
@@ -671,28 +671,28 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             //Journaler journaler = new Journaler(eventStore);
             LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
             IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
-            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            
             currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
             currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
             // Intialize the exchange so that the order changes can be fired to listernes which will then log them to event store
             Exchange exchange = new Exchange(currencyPairs);
 
-            Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 941, new StubbedOrderIdGenerator());
-            Order buyOrder2 = OrderFactory.CreateOrder("1234", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder2 = OrderFactory.CreateOrder("1234", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 300, 943, new StubbedOrderIdGenerator());
-            Order buyOrder3 = OrderFactory.CreateOrder("12344", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder3 = OrderFactory.CreateOrder("12344", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 400, 944, new StubbedOrderIdGenerator());
-            Order buyOrder4 = OrderFactory.CreateOrder("12345", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder4 = OrderFactory.CreateOrder("12345", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 500, 945, new StubbedOrderIdGenerator());
 
-            Order sellOrder1 = OrderFactory.CreateOrder("1244", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder1 = OrderFactory.CreateOrder("1244", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 600, 956, new StubbedOrderIdGenerator());
-            Order sellOrder2 = OrderFactory.CreateOrder("1222", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder2 = OrderFactory.CreateOrder("1222", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 400, 954, new StubbedOrderIdGenerator());
-            Order sellOrder3 = OrderFactory.CreateOrder("12225", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder3 = OrderFactory.CreateOrder("12225", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 800, 958, new StubbedOrderIdGenerator());
-            Order sellOrder4 = OrderFactory.CreateOrder("12226", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder4 = OrderFactory.CreateOrder("12226", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 500, 946, new StubbedOrderIdGenerator());
 
             exchange.PlaceNewOrder(buyOrder1);
@@ -782,21 +782,21 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             //Journaler journaler = new Journaler(eventStore);
             LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
             IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
-            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            
             currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
             currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
             // Intialize the exchange so that the order changes can be fired to listernes which will then log them to event store
             Exchange exchange = new Exchange(currencyPairs);
 
-            Order sellOrder1 = OrderFactory.CreateOrder("1234", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder1 = OrderFactory.CreateOrder("1234", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 250, 1252, new StubbedOrderIdGenerator());
-            Order sellOrder2 = OrderFactory.CreateOrder("12345", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder2 = OrderFactory.CreateOrder("12345", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 300, 1251, new StubbedOrderIdGenerator());
-            Order sellOrder3 = OrderFactory.CreateOrder("12344", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder3 = OrderFactory.CreateOrder("12344", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 200, 1251, new StubbedOrderIdGenerator());
-            Order buyOrder1 = OrderFactory.CreateOrder("123456", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder1 = OrderFactory.CreateOrder("123456", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 500, 1251, new StubbedOrderIdGenerator());
-            Order buyOrder2 = OrderFactory.CreateOrder("123457", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder2 = OrderFactory.CreateOrder("123457", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 250, 1250, new StubbedOrderIdGenerator());
 
             exchange.PlaceNewOrder(buyOrder2);
@@ -856,27 +856,27 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
            // Journaler journaler = new Journaler(eventStore);
             LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
             IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
-            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            
             currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
             currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
             // Intialize the exchange so that the order changes can be fired to listernes which will then log them to event store
             Exchange exchange = new Exchange(currencyPairs);
 
-            Order sellOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder1 = OrderFactory.CreateOrder("1233", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 200, 1254, new StubbedOrderIdGenerator());
-            Order sellOrder2 = OrderFactory.CreateOrder("1234", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder2 = OrderFactory.CreateOrder("1234", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 300, 1253, new StubbedOrderIdGenerator());
-            Order sellOrder3 = OrderFactory.CreateOrder("12344", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder3 = OrderFactory.CreateOrder("12344", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 200, 1253, new StubbedOrderIdGenerator());
-            Order sellOrder4 = OrderFactory.CreateOrder("12355", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder4 = OrderFactory.CreateOrder("12355", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 700, 1251, new StubbedOrderIdGenerator());
-            Order buyOrder1 = OrderFactory.CreateOrder("123456", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder1 = OrderFactory.CreateOrder("123456", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 500, 1251, new StubbedOrderIdGenerator());
-            Order buyOrder2 = OrderFactory.CreateOrder("723457", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder2 = OrderFactory.CreateOrder("723457", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 1252, new StubbedOrderIdGenerator());
-            Order buyOrder3 = OrderFactory.CreateOrder("623456", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder3 = OrderFactory.CreateOrder("623456", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 1251, new StubbedOrderIdGenerator());
-            Order buyOrder4 = OrderFactory.CreateOrder("523457", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder4 = OrderFactory.CreateOrder("523457", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 1249, new StubbedOrderIdGenerator());
 
             exchange.PlaceNewOrder(buyOrder1);
@@ -936,24 +936,24 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             //Journaler journaler = new Journaler(eventStore);
             LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
             IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
-            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            
             currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
             currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
             // Intialize the exchange so that the order changes can be fired to listernes which will then log them to event 
             // store
             Exchange exchange = new Exchange(currencyPairs);
 
-            Order buyOrder1 = OrderFactory.CreateOrder("123456", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder1 = OrderFactory.CreateOrder("123456", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 200, 930, new StubbedOrderIdGenerator());
-            Order buyOrder2 = OrderFactory.CreateOrder("723457", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder2 = OrderFactory.CreateOrder("723457", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 900, 942, new StubbedOrderIdGenerator());
-            Order sellOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder1 = OrderFactory.CreateOrder("1233", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 100, 942, new StubbedOrderIdGenerator());
-            Order sellOrder2 = OrderFactory.CreateOrder("1234", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder2 = OrderFactory.CreateOrder("1234", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 100, 942, new StubbedOrderIdGenerator());
-            Order sellOrder3 = OrderFactory.CreateOrder("12344", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder3 = OrderFactory.CreateOrder("12344", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 100, 942, new StubbedOrderIdGenerator());
-            Order sellOrder4 = OrderFactory.CreateOrder("12224", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder4 = OrderFactory.CreateOrder("12224", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 100, 942, new StubbedOrderIdGenerator());
 
             exchange.PlaceNewOrder(buyOrder1);
@@ -1012,24 +1012,24 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             //Journaler journaler = new Journaler(eventStore);
             LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
             IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
-            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            
             currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
             currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
             // Intialize the exchange so that the order changes can be fired to listernes which will then log them to event 
             // store
             Exchange exchange = new Exchange(currencyPairs);
 
-            Order buyOrder1 = OrderFactory.CreateOrder("123456", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder1 = OrderFactory.CreateOrder("123456", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 942, new StubbedOrderIdGenerator());
-            Order buyOrder2 = OrderFactory.CreateOrder("723457", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder2 = OrderFactory.CreateOrder("723457", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 942, new StubbedOrderIdGenerator());
-            Order buyOrder3 = OrderFactory.CreateOrder("123456", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder3 = OrderFactory.CreateOrder("123456", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 942, new StubbedOrderIdGenerator());
-            Order buyOrder4 = OrderFactory.CreateOrder("723457", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder4 = OrderFactory.CreateOrder("723457", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 942, new StubbedOrderIdGenerator());
-            Order sellOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder1 = OrderFactory.CreateOrder("1233", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 100, 951, new StubbedOrderIdGenerator());
-            Order sellOrder2 = OrderFactory.CreateOrder("1234", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder2 = OrderFactory.CreateOrder("1234", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 1000, 942, new StubbedOrderIdGenerator());
 
             exchange.PlaceNewOrder(sellOrder1);
@@ -1105,23 +1105,23 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             //Journaler journaler = new Journaler(eventStore);
             LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
             IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
-            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            
             currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
             currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
             // Intialize the exchange so that the order changes can be fired to listernes which will then log them to event 
             // store
             Exchange exchange = new Exchange(currencyPairs);
 
-            Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 941, new StubbedOrderIdGenerator());
-            Order buyOrder2 = OrderFactory.CreateOrder("1234", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder2 = OrderFactory.CreateOrder("1234", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 945, new StubbedOrderIdGenerator());
-            Order buyOrder3 = OrderFactory.CreateOrder("12345", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder3 = OrderFactory.CreateOrder("12345", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 948, new StubbedOrderIdGenerator());
 
-            Order sellOrder1 = OrderFactory.CreateOrder("1244", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder1 = OrderFactory.CreateOrder("1244", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 100, 949, new StubbedOrderIdGenerator());
-            Order sellOrder2 = OrderFactory.CreateOrder("1222", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder2 = OrderFactory.CreateOrder("1222", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 100, 948, new StubbedOrderIdGenerator());
 
             exchange.PlaceNewOrder(buyOrder1);
@@ -1220,23 +1220,23 @@ namespace CoinExchange.Trades.Domain.Model.IntegrationTests
             //Journaler journaler = new Journaler(eventStore);
             LimitOrderBookReplayService replayService = new LimitOrderBookReplayService();
             IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
-            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
+            
             currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
             currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
             // Intialize the exchange so that the order changes can be fired to listernes which will then log them to event 
             // store
             Exchange exchange = new Exchange(currencyPairs);
 
-            Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder1 = OrderFactory.CreateOrder("1233", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 941, new StubbedOrderIdGenerator());
-            Order buyOrder2 = OrderFactory.CreateOrder("1234", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order buyOrder2 = OrderFactory.CreateOrder("1234", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_BUY, 100, 945, new StubbedOrderIdGenerator());
 
-            Order sellOrder1 = OrderFactory.CreateOrder("1244", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder1 = OrderFactory.CreateOrder("1244", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 100, 949, new StubbedOrderIdGenerator());
-            Order sellOrder2 = OrderFactory.CreateOrder("1222", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder2 = OrderFactory.CreateOrder("1222", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 100, 948, new StubbedOrderIdGenerator());
-            Order sellOrder3 = OrderFactory.CreateOrder("1222", "BTCUSD", Constants.ORDER_TYPE_LIMIT,
+            Order sellOrder3 = OrderFactory.CreateOrder("1222", "BTCLTC", Constants.ORDER_TYPE_LIMIT,
                 Constants.ORDER_SIDE_SELL, 100, 945, new StubbedOrderIdGenerator());
 
             exchange.PlaceNewOrder(buyOrder1);
