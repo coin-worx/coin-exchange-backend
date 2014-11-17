@@ -32,5 +32,11 @@ namespace CoinExchange.Funds.Application.Tests
             _balanceList.Add(balance);
             return true;
         }
+
+
+        public List<Balance> GetAllCurrienceBalances(AccountId accountId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

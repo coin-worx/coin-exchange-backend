@@ -73,6 +73,16 @@ namespace CoinExchange.Client
         }
 
         /// <summary>
+        /// GetBalances
+        /// </summary>
+        /// <returns></returns>
+        public string GetBalances()
+        {
+            string url = _baseUrl + "/funds/getbalances";
+            return HttpGetRequest(url);
+        }
+
+        /// <summary>
         /// Query trades of specific txid
         /// </summary>
         /// <param name="orderId"></param>

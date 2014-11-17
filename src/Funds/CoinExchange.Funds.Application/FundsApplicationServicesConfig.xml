@@ -76,5 +76,8 @@
   <constructor-arg name="bboCrossContextService" ref="BboCrossContextService"/>
   </object>
   
+  <object id="BalanceQueryService" type="CoinExchange.Funds.Application.BalanceService.BalanceQueryService, CoinExchange.Funds.Application">
+    <constructor-arg name="balanceRepository" ref="BalanceRepository"/>
+  </object>
   <tx:attribute-driven/>
 </objects>

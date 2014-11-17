@@ -20,11 +20,11 @@ namespace CoinExchange.Client.Console
             //Scenario1(client);
             //ScenarioResults(client);
             //System.Console.WriteLine(client.GetTradeHistory("",""));
-            //Login(baseUrl);
+            Login(baseUrl);
             //Scenario1(client);
 
             AllBoundedContextsIntegrationTests allBoundedContexts = new AllBoundedContextsIntegrationTests();
-            allBoundedContexts.Initialization();
+            //allBoundedContexts.Initialization();
             System.Console.ReadKey();
         }
 
@@ -134,11 +134,12 @@ namespace CoinExchange.Client.Console
         private static void Login(string baseUrl)
         {
             IdentityAccessClient client=new IdentityAccessClient(baseUrl);
-            AccessControl control=new AccessControl(client,"123","user1");
+            AccessControl control=new AccessControl(client,"pa$$word","bruce");
             //control.CreateAndActivateUser("user1", "123", "jonsnow@user.com");
             control.Login("user1", "123");
             //Scenario1(client);
-            OrderBookGenerator(client);
+            //OrderBookGenerator(client);
+            System.Console.WriteLine(client.GetBalances());
             //ScenarioResults(client);
             //System.Console.WriteLine(control.GetSecurityPairs());
             //PermissionRepresentation[] rep = control.ListPermissions();

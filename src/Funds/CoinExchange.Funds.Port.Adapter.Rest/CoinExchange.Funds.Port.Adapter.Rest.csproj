@@ -90,6 +90,7 @@
     <Compile Include="DTOs\Withdraw\GetWithdrawAddressesParams.cs" />
     <Compile Include="DTOs\Withdraw\GetWithdrawLimitsParams.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\BalanceController.cs" />
     <Compile Include="Resources\DepositController.cs" />
     <Compile Include="Resources\LedgerController.cs" />
     <Compile Include="Resources\WithdrawController.cs" />
@@ -117,6 +118,10 @@
     <ProjectReference Include="..\CoinExchange.Funds.Application\CoinExchange.Funds.Application.csproj">
       <Project>{f6edd751-080b-4c4e-8216-2e1ed3ed0a66}</Project>
       <Name>CoinExchange.Funds.Application</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CoinExchange.Funds.Domain.Model\CoinExchange.Funds.Domain.Model.csproj">
+      <Project>{4C4F167D-3339-45F1-9A85-71159EF0D806}</Project>
+      <Name>CoinExchange.Funds.Domain.Model</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

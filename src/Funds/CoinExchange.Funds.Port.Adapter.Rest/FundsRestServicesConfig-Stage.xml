@@ -18,4 +18,9 @@
     <constructor-arg name="apiKeyInfoAccess" ref="SecurityKeysPairRepository"/>
   </object>
   
+<object id="BalanceController" type="CoinExchange.Funds.Port.Adapter.Rest.Resources.BalanceController, CoinExchange.Funds.Port.Adapter.Rest" singleton="false">
+    <constructor-arg name="balanceQueryService" ref="BalanceQueryService"/>
+    <constructor-arg name="apiKeyInfoAccess" ref="SecurityKeysPairRepository"/>
+  </object>
+  
 </objects>

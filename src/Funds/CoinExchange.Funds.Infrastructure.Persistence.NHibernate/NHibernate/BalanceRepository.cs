@@ -41,5 +41,16 @@ namespace CoinExchange.Funds.Infrastructure.Persistence.NHibernate.NHibernate
                 .Where(x => x.Currency.Name == currency.Name && x.AccountId.Value == accountId.Value)
                 .SingleOrDefault();
         }
+
+        /// <summary>
+        /// Get all the balances in each currecy of owner
+        /// </summary>
+        /// <param name="accountId"></param>
+        /// <returns></returns>
+        [Transaction(ReadOnly = true)]
+        public List<Balance> GetAllCurrienceBalances(AccountId accountId)
+        {
+            return CurrentSession.QueryOver<Balance>().Where(x => x.AccountId.Value == accountId.Value).List<Balance>().ToList();
+        }
     }
 }
