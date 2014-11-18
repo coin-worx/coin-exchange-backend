@@ -6,8 +6,10 @@ using System.Security.Authentication;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Http.Description;
 using CoinExchange.IdentityAccess.Application.RegistrationServices;
 using CoinExchange.IdentityAccess.Application.RegistrationServices.Commands;
+using CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate;
 using CoinExchange.IdentityAccess.Port.Adapter.Rest.DTO;
 
 namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
@@ -34,6 +36,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         [HttpPost]
         [Route("admin/signup")]
         [FilterIP]
+        [ResponseType(typeof(string))]
         public IHttpActionResult Register([FromBody]SignUpParam param)
         {
             try

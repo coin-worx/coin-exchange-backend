@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Management.Instrumentation;
 using System.Web.Http;
+using System.Web.Http.Description;
 using CoinExchange.Common.Domain.Model;
 using CoinExchange.Common.Services;
 using CoinExchange.IdentityAccess.Application;
@@ -48,6 +49,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         [Authorize]
         [HttpPost]
         [MfaAuthorization(MfaConstants.CancelOrder)]
+        [ResponseType(typeof(CancelOrderResponse))]
         public IHttpActionResult CancelOrder([FromBody]string orderId)
         {
             if (log.IsDebugEnabled)
@@ -121,6 +123,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         [Authorize]
         [HttpPost]
         [MfaAuthorization(MfaConstants.PlaceOrder)]
+        [ResponseType(typeof(NewOrderRepresentation))]
         public IHttpActionResult CreateOrder([FromBody]CreateOrderParam order)
         {
             if (log.IsDebugEnabled)
@@ -198,6 +201,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         [Route("orders/openorders")]
         [Authorize]
         [HttpPost]
+        [ResponseType(typeof(List<OrderReadModel>))]
         public IHttpActionResult QueryOpenOrders([FromBody] string includeTrades)
         {
             if (log.IsDebugEnabled)
@@ -256,6 +260,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         [Route("orders/closedorders")]
         [Authorize]
         [HttpPost]
+        [ResponseType(typeof(List<OrderReadModel>))]
         public IHttpActionResult QueryClosedOrders([FromBody] QueryClosedOrdersParams closedOrdersParams)
         {
             if (log.IsDebugEnabled)
@@ -307,6 +312,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         [Route("orders/queryorders")]
         [Authorize]
         [HttpPost]
+        [ResponseType(typeof(OrderReadModel))]
         public IHttpActionResult QueryOrders([FromBody] string orderId)
         {
             if (log.IsDebugEnabled)

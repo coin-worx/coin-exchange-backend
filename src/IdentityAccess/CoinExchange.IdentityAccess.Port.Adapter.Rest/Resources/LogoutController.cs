@@ -7,9 +7,11 @@ using System.Net;
 using System.Net.Http;
 using System.Security.Authentication;
 using System.Web.Http;
+using System.Web.Http.Description;
 using CoinExchange.Common.Utility;
 using CoinExchange.IdentityAccess.Application.AccessControlServices;
 using CoinExchange.IdentityAccess.Application.AccessControlServices.Commands;
+using CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate;
 using CoinExchange.IdentityAccess.Port.Adapter.Rest.DTO;
 
 namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
@@ -40,6 +42,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         [Route("private/admin/logout")]
         [FilterIP]
         [Authorize]
+        [ResponseType(typeof(bool))]
         public IHttpActionResult Logout()
         {
             try

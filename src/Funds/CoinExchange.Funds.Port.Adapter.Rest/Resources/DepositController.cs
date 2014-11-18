@@ -5,10 +5,13 @@ using System.Management.Instrumentation;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Http.Description;
 using CoinExchange.Common.Domain.Model;
 using CoinExchange.Common.Services;
+using CoinExchange.Funds.Application.BalanceService.Representations;
 using CoinExchange.Funds.Application.DepositServices;
 using CoinExchange.Funds.Application.DepositServices.Commands;
+using CoinExchange.Funds.Application.DepositServices.Representations;
 using CoinExchange.Funds.Port.Adapter.Rest.DTOs.Deposit;
 using CoinExchange.IdentityAccess.Application;
 
@@ -40,6 +43,7 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Resources
         [Route("funds/getrecentdeposits")]
         [Authorize]
         [HttpPost]
+        [ResponseType(typeof(List<DepositRepresentation>))]
         public IHttpActionResult GetRecentDeposits([FromBody]GetRecentDepositParams getRecentDepositParams)
         {
             if (log.IsDebugEnabled)
@@ -88,6 +92,7 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Resources
         [Authorize]
         [HttpPost]
         [MfaAuthorization(MfaConstants.Deposit)]
+        [ResponseType(typeof(DepositAddressRepresentation))]
         public IHttpActionResult CreateDepositAddress([FromBody]GenerateAddressParams generateAddressParams)
         {
             if (log.IsDebugEnabled)
@@ -159,6 +164,7 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Resources
         [Route("funds/getdepositaddresses")]
         [Authorize]
         [HttpPost]
+        [ResponseType(typeof(IList<DepositAddressRepresentation>))]
         public IHttpActionResult GetDepositAddresses([FromBody]GetDepositAddressesParams depositAddressesParams)
         {
             if (log.IsDebugEnabled)
@@ -204,6 +210,7 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Resources
         [Route("funds/getdepositlimits")]
         [Authorize]
         [HttpPost]
+        [ResponseType(typeof(DepositLimitThresholdsRepresentation))]
         public IHttpActionResult GetDepositLimits([FromBody]GetDepositLimitsParams getDepositLimitsParams)
         {
             if (log.IsDebugEnabled)
@@ -250,6 +257,7 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Resources
         [Authorize]
         [HttpPost]
         [MfaAuthorization(MfaConstants.Deposit)]
+        [ResponseType(typeof(bool))]
         public IHttpActionResult MakeDeposit([FromBody]MakeDepositParams makeDepositParams)
         {
             if (log.IsDebugEnabled)
@@ -320,6 +328,7 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Resources
         [Route("funds/getDepositTierLimits")]
         [Authorize]
         [HttpPost]
+        [ResponseType(typeof(DepositTierLimitRepresentation))]
         public IHttpActionResult GetDepositTierLimits()
         {
             if (log.IsDebugEnabled)

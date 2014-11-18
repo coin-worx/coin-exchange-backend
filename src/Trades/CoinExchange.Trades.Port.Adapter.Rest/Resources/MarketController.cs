@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Web.Http;
+using System.Web.Http.Description;
 using CoinExchange.Common.Domain.Model;
 using CoinExchange.Trades.Application.MarketDataServices;
+using CoinExchange.Trades.Application.MarketDataServices.Representation;
+using CoinExchange.Trades.ReadModel.DTO;
 using CoinExchange.Trades.ReadModel.MemoryImages;
 
 namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
@@ -32,6 +35,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         /// <returns></returns>
         [HttpGet]
         [Route("marketdata/tickerinfo")]
+        [ResponseType(typeof(List<TickerInfoReadModel>))]
         public IHttpActionResult TickerInfo(string currencyPair)
         {
             if (log.IsDebugEnabled)
@@ -70,6 +74,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         /// <returns></returns>
         [HttpGet]
         [Route("marketdata/ohlcinfo")]
+        [ResponseType(typeof(OhlcRepresentation))]
         public IHttpActionResult OhlcInfo(string currencyPair, int interval = 1, string since = "")
         {
             if (log.IsDebugEnabled)
@@ -105,6 +110,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         /// <returns></returns>
         [Route("marketdata/rate")]
         [HttpGet]
+        [ResponseType(typeof(Rate))]
         public IHttpActionResult GetRate(string currencyPair)
         {
             if (log.IsDebugEnabled)
@@ -132,6 +138,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
 
         [Route("marketdata/rates")]
         [HttpGet]
+        [ResponseType(typeof(RatesList))]
         public IHttpActionResult GetAllRates()
         {
             if (log.IsDebugEnabled)
@@ -166,6 +173,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         /// <returns></returns>
         [Route("marketdata/orderbook")]
         [HttpGet]
+        [ResponseType(typeof(OrderBookRepresentation))]
         public IHttpActionResult GetOrderBook(string currencyPair, int count = 0)
         {
             if (log.IsDebugEnabled)
@@ -199,6 +207,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         /// <returns></returns>
         [Route("marketdata/spread")]
         [HttpGet]
+        [ResponseType(typeof(List<Spread>))]
         public IHttpActionResult GetSpread(string currencyPair)
         {
             if (log.IsDebugEnabled)
@@ -241,6 +250,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         /// <returns></returns>
         [Route("marketdata/bbo")]
         [HttpGet]
+        [ResponseType(typeof(BBORepresentation))]
         public IHttpActionResult GetBbo(string currencyPair)
         {
             if (log.IsDebugEnabled)
@@ -286,6 +296,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         /// <returns></returns>
         [Route("marketdata/depth")]
         [HttpGet]
+        [ResponseType(typeof(DepthTupleRepresentation))]
         public IHttpActionResult GetDepth(string currencyPair)
         {
             if (log.IsDebugEnabled)

@@ -5,9 +5,12 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Http.Description;
 using CoinExchange.Common.Services;
 using CoinExchange.Funds.Application.BalanceService;
+using CoinExchange.Funds.Application.BalanceService.Representations;
 using CoinExchange.Funds.Domain.Model.DepositAggregate;
+using CoinExchange.IdentityAccess.Application.UserServices.Representations;
 
 namespace CoinExchange.Funds.Port.Adapter.Rest.Resources
 {
@@ -36,6 +39,7 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Resources
         [Route("funds/getbalances")]
         [Authorize]
         [HttpGet]
+        [ResponseType(typeof(List<BalanceDetails>))]
         public IHttpActionResult GetBalances()
         {
             try

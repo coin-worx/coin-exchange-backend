@@ -7,10 +7,12 @@ using System.Security.Authentication;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Http.Description;
 using CoinExchange.Common.Utility;
 using CoinExchange.IdentityAccess.Application.RegistrationServices.Commands;
 using CoinExchange.IdentityAccess.Application.UserServices;
 using CoinExchange.IdentityAccess.Application.UserServices.Commands;
+using CoinExchange.IdentityAccess.Application.UserServices.Representations;
 using CoinExchange.IdentityAccess.Port.Adapter.Rest.DTO;
 
 namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
@@ -42,6 +44,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         [HttpPost]
         [Route("admin/user/activate")]
         [FilterIP]
+        [ResponseType(typeof(bool))]
         public IHttpActionResult ActivateUser([FromBody]UserActivationParam param)
         {
             try
@@ -97,6 +100,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         [HttpPost]
         [Route("admin/user/cancelactivation")]
         [FilterIP]
+        [ResponseType(typeof(bool))]
         public IHttpActionResult CancelUserActivation([FromBody]CancelActivationParams cancelActivationParams)
         {
             try
@@ -140,6 +144,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         [Route("private/user/changepassword")]
         [FilterIP]
         [Authorize]
+        [ResponseType(typeof(ChangePasswordResponse))]
         public IHttpActionResult ChangePassword([FromBody]ChangePasswordParams changePasswordParams)
         {
             try
@@ -190,6 +195,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         [Route("private/user/lastlogin")]
         [FilterIP]
         [Authorize]
+        [ResponseType(typeof(DateTime))]
         public IHttpActionResult LastLogin()
         {
             try
@@ -237,6 +243,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         [HttpPost]
         [Route("admin/user/forgotusername")]
         [FilterIP]
+        [ResponseType(typeof(string))]
         public IHttpActionResult ForgotUsername([FromBody]ForgotUsernameParams forgotUsernameParams)
         {
             try
@@ -277,6 +284,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         [HttpPost]
         [Route("admin/user/forgotpassword")]
         [FilterIP]
+        [ResponseType(typeof(string))]
         public IHttpActionResult ForgotPassword([FromBody]ForgotPasswordParams forgotPasswordParams)
         {
             try
@@ -318,6 +326,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         [HttpPost]
         [Route("admin/user/resetpassword")]
         [FilterIP]
+        [ResponseType(typeof(bool))]
         public IHttpActionResult ResetPassword([FromBody]ResetPasswordParams resetPasswordParams)
         {
             try
@@ -369,6 +378,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         [Route("private/user/changesettings")]
         [FilterIP]
         [Authorize]
+        [ResponseType(typeof(ChangeSettingsResponse))]
         public IHttpActionResult ChangeSettings([FromBody]ChangeSettingsParams changeSettingsParams)
         {
             try
@@ -413,6 +423,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         [Route("private/user/accountsettings")]
         [FilterIP]
         [Authorize]
+        [ResponseType(typeof(AccountSettingsRepresentation))]
         public IHttpActionResult GetAccountSettings()
         {
             try
@@ -457,6 +468,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         [Route("private/user/api/submitemailsettings")]
         [FilterIP]
         [Authorize]
+        [ResponseType(typeof(SubmitEmailSettingsResponse))]
         public IHttpActionResult SubmitEmailSettings(EmailSettingsParams emailSettingsParams)
         {
             try
@@ -518,6 +530,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         [Route("private/user/api/mfasettings")]
         [FilterIP]
         [Authorize]
+        [ResponseType(typeof(SubmitMfaSettingsResponse))]
         public IHttpActionResult SubmitMfaSettings(MfaSettingsParams mfaSettingsParams)
         {
             try

@@ -2,15 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using System.Web.Http.Description;
 using CoinExchange.Common.Domain.Model;
 using CoinExchange.Common.Services;
 using CoinExchange.Trades.Application.OrderServices.Representation;
 using CoinExchange.Trades.Application.TradeServices;
 using CoinExchange.Trades.Application.TradeServices.Representation;
+using CoinExchange.Trades.Domain.Model.CurrencyPairAggregate;
 using CoinExchange.Trades.Domain.Model.OrderAggregate;
 using CoinExchange.Trades.Domain.Model.TradeAggregate;
 using CoinExchange.Trades.Port.Adapter.Rest.DTOs;
 using CoinExchange.Trades.Port.Adapter.Rest.DTOs.Trade;
+using CoinExchange.Trades.ReadModel.DTO;
 using Spring.Context;
 using Spring.Context.Support;
 
@@ -45,6 +48,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         [Route("trades/tradehistory")]
         [Authorize]
         [HttpPost]
+        [ResponseType(typeof(IList<object>))]
         public IHttpActionResult GetTradeHistory([FromBody]TradeHistoryParams tradeHistoryParams)
         {
             if (log.IsDebugEnabled)
@@ -91,6 +95,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         [Route("trades/querytrades")]
         [Authorize]
         [HttpPost]
+        [ResponseType(typeof(IList<object>))]
         public IHttpActionResult QueryTrades([FromBody]string orderId)
         {
             try
@@ -140,6 +145,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         [Route("trades/tradedetails")]
         [Authorize]
         [HttpPost]
+        [ResponseType(typeof(TradeDetailsRepresentation))]
         public IHttpActionResult TradeDetails([FromBody]string tradeId)
         {
             try
@@ -189,6 +195,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         /// <returns></returns>
         [Route("trades/recenttrades")]
         [HttpGet]
+        [ResponseType(typeof(IList<object>))]
         public IHttpActionResult RecentTrades(string currencyPair, string since = "")
         {
             if (log.IsDebugEnabled)
@@ -232,6 +239,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         [Route("trades/tradevolume")]
         [Authorize]
         [HttpPost]
+        [ResponseType(typeof(TradeVolumeRepresentation))]
         public IHttpActionResult TradeVolume([FromBody]string pair)
         {
             try
@@ -254,6 +262,7 @@ namespace CoinExchange.Trades.Port.Adapter.Rest.Resources
         /// <returns></returns>
         [Route("trades/tradeablecurrencypair")]
         [HttpGet]
+        [ResponseType(typeof(IList<CurrencyPair>))]
         public IHttpActionResult TradeableCurrencyPair()
         {
             if (log.IsDebugEnabled)

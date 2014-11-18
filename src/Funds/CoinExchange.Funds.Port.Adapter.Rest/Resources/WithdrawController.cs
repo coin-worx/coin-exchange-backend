@@ -5,10 +5,13 @@ using System.Management.Instrumentation;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Http.Description;
 using CoinExchange.Common.Domain.Model;
 using CoinExchange.Common.Services;
+using CoinExchange.Funds.Application.LedgerServices.Representations;
 using CoinExchange.Funds.Application.WithdrawServices;
 using CoinExchange.Funds.Application.WithdrawServices.Commands;
+using CoinExchange.Funds.Application.WithdrawServices.Representations;
 using CoinExchange.Funds.Port.Adapter.Rest.DTOs.Withdraw;
 using CoinExchange.IdentityAccess.Application;
 
@@ -40,6 +43,7 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Resources
         [Route("funds/getrecentwithdrawals")]
         [Authorize]
         [HttpPost]
+        [ResponseType(typeof(List<WithdrawRepresentation>))]
         public IHttpActionResult GetRecentWithdrawals([FromBody]GetRecentWithdrawalsParams recentWithdrawalsParams)
         {
             if (log.IsDebugEnabled)
@@ -81,6 +85,7 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Resources
         [Route("funds/getwithdrawalsforcurrency")]
         [Authorize]
         [HttpPost]
+        [ResponseType(typeof(List<WithdrawRepresentation>))]
         public IHttpActionResult GetRecentWithdrawalsForCurrency([FromBody]GetRecentWithdrawalsParams recentWithdrawalsParams)
         {
             if (log.IsDebugEnabled)
@@ -127,6 +132,7 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Resources
         [Route("funds/addwithdrawaddress")]
         [Authorize]
         [HttpPost]
+        [ResponseType(typeof(WithdrawAddressResponse))]
         public IHttpActionResult AddAddress([FromBody]AddWithdrawAddressParams addWithdrawAddress)
         {
             if (log.IsDebugEnabled)
@@ -174,6 +180,7 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Resources
         [Route("funds/getwithdrawaddresses")]
         [Authorize]
         [HttpPost]
+        [ResponseType(typeof(List<WithdrawAddressRepresentation>))]
         public IHttpActionResult GetWithdrawAddresses([FromBody]GetWithdrawAddressesParams getWithdrawAddressesParams)
         {
             if (log.IsDebugEnabled)
@@ -221,6 +228,7 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Resources
         [Authorize]
         [HttpPost]
         [MfaAuthorization(MfaConstants.Withdrawal)]
+        [ResponseType(typeof(CommitWithdrawResponse))]
         public IHttpActionResult CommitWithdraw([FromBody]CommitWithdrawParams commitWithdrawParams)
         {
             if (log.IsDebugEnabled)
@@ -293,6 +301,7 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Resources
         [Route("funds/getwithdrawlimits")]
         [Authorize]
         [HttpPost]
+        [ResponseType(typeof(List<WithdrawLimitRepresentation>))]
         public IHttpActionResult GetWithdrawLimits([FromBody]GetWithdrawLimitsParams getWithdrawLimitsParams)
         {
             if (log.IsDebugEnabled)
@@ -334,6 +343,7 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Resources
         [Route("funds/deletewithdrawaddress")]
         [Authorize]
         [HttpPost]
+        [ResponseType(typeof(List<DeleteWithdrawAddressResponse>))]
         public IHttpActionResult DeleteWithdrawAddress([FromBody]DeleteWithdrawAddressParams deleteWithdrawAddressParams)
         {
             if (log.IsDebugEnabled)
@@ -376,6 +386,7 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Resources
         [Route("funds/cancelWithdraw")]
         [Authorize]
         [HttpPost]
+        [ResponseType(typeof(CancelWithdrawResponse))]
         public IHttpActionResult CancelWithdraw([FromBody]CancelWithdrawParams cancelWithdrawParams)
         {
             if (log.IsDebugEnabled)
@@ -416,6 +427,7 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Resources
         [Route("funds/getWithdrawTierLimits")]
         [Authorize]
         [HttpPost]
+        [ResponseType(typeof(WithdrawTierLimitRepresentation))]
         public IHttpActionResult GetWithdrawTierLimits()
         {
             if (log.IsDebugEnabled)

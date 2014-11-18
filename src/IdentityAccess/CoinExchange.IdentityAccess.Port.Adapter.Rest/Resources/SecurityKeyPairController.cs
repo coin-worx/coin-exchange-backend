@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Security.Authentication;
 using System.Web.Http;
+using System.Web.Http.Description;
 using CoinExchange.Common.Utility;
 using CoinExchange.IdentityAccess.Application.SecurityKeysServices;
 using CoinExchange.IdentityAccess.Application.SecurityKeysServices.Commands;
+using CoinExchange.IdentityAccess.Application.SecurityKeysServices.Representations;
+using CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate;
 
 namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
 {
@@ -31,6 +35,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         [Route("private/user/api/create")]
         [FilterIP]
         [Authorize]
+        [ResponseType(typeof(SecurityKeyPair))]
         public IHttpActionResult CreateSecurityKey(CreateUserGeneratedSecurityKeyPair command)
         {
             try
@@ -79,6 +84,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         [Route("private/user/api/update")]
         [FilterIP]
         [Authorize]
+        [ResponseType(typeof(bool))]
         public IHttpActionResult UpdateSecurityKey(UpdateUserGeneratedSecurityKeyPair command)
         {
             try
@@ -130,6 +136,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         [Route("private/user/api/permissions")]
         [FilterIP]
         [Authorize]
+        [ResponseType(typeof(SecurityKeyRepresentation[]))]
         public IHttpActionResult GetAvailablePermissions()
         {
             try
@@ -182,6 +189,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         [Route("private/user/api/list")]
         [FilterIP]
         [Authorize]
+        [ResponseType(typeof(List<object>))]
         public IHttpActionResult GetUserSecurityKeys()
         {
             try
@@ -234,6 +242,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         [Route("private/user/api/keydetail")]
         [FilterIP]
         [Authorize]
+        [ResponseType(typeof(SecurityKeyRepresentation))]
         public IHttpActionResult GetSecurityKeyDetail(string keyDescription)
         {
             try
@@ -286,6 +295,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         [Route("private/user/api/delete")]
         [FilterIP]
         [Authorize]
+        [ResponseType(typeof(bool))]
         public IHttpActionResult DeleteSecurityKeyPair(string keyDescription)
         {
             try

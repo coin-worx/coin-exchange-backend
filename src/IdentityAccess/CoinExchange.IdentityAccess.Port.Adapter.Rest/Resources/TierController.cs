@@ -9,9 +9,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
+using System.Web.Http.Description;
 using CoinExchange.Common.Utility;
+using CoinExchange.IdentityAccess.Application.SecurityKeysServices.Representations;
 using CoinExchange.IdentityAccess.Application.UserServices;
 using CoinExchange.IdentityAccess.Application.UserServices.Commands;
+using CoinExchange.IdentityAccess.Application.UserServices.Representations;
 using CoinExchange.IdentityAccess.Domain.Model.UserAggregate;
 using CoinExchange.IdentityAccess.Port.Adapter.Rest.DTO;
 
@@ -46,6 +49,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         [Route("private/user/applyfortier1")]
         [FilterIP]
         [Authorize]
+        [ResponseType(typeof(bool))]
         public IHttpActionResult GetVerifyForTier1([FromBody]Tier1Param param)
         {
             try
@@ -100,6 +104,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         [Route("private/user/applyfortier2")]
         [FilterIP]
         [Authorize]
+        [ResponseType(typeof(void))]
         public IHttpActionResult GetVerifyForTier2([FromBody]Tier2Param param)
         {
             try
@@ -155,6 +160,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         [Route("private/user/applyfortier3")]
         [FilterIP]
         [Authorize]
+        [ResponseType(typeof(void))]
         public async Task<IHttpActionResult> GetVerifyForTier3([FromBody]Tier3Param param)
         {
             try
@@ -225,6 +231,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         [Route("private/user/tiers")]
         [FilterIP]
         [Authorize]
+        [ResponseType(typeof(UserTierStatusRepresentation))]
         public IHttpActionResult GetTierStatuses()
         {
             try
@@ -277,6 +284,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         [Route("private/user/tier1")]
         [FilterIP]
         [Authorize]
+        [ResponseType(typeof(Tier1Details))]
         public IHttpActionResult GetTier1Details()
         {
             try
@@ -329,6 +337,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         [Route("private/user/tier2")]
         [FilterIP]
         [Authorize]
+        [ResponseType(typeof(Tier2Details))]
         public IHttpActionResult GetTier2Details()
         {
             try
@@ -381,6 +390,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         [Route("private/user/tier3")]
         [FilterIP]
         [Authorize]
+        [ResponseType(typeof(Tier3Details))]
         public IHttpActionResult GetTier3Details()
         {
             try
@@ -434,6 +444,7 @@ namespace CoinExchange.IdentityAccess.Port.Adapter.Rest.Resources
         [Route("private/user/verifytierlevel")]
         [FilterIP]
         [Authorize]
+        [ResponseType(typeof(VerifyTierLevelResponse))]
         public IHttpActionResult VerifyTierLevel(VerifyTierLevelParams verifyTierLevelParams)
         {
             try

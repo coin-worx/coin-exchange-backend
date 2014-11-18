@@ -5,8 +5,11 @@ using System.Management.Instrumentation;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Http.Description;
 using CoinExchange.Common.Services;
+using CoinExchange.Funds.Application.BalanceService.Representations;
 using CoinExchange.Funds.Application.LedgerServices;
+using CoinExchange.Funds.Application.LedgerServices.Representations;
 using CoinExchange.Funds.Application.WithdrawServices;
 using CoinExchange.Funds.Port.Adapter.Rest.DTOs.Ledgers;
 
@@ -43,6 +46,7 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Resources
         [Route("funds/getledgers")]
         [Authorize]
         [HttpPost]
+        [ResponseType(typeof(IList<LedgerRepresentation>))]
         public IHttpActionResult GetLedgersForCurrency([FromBody]GetLedgersParams getLedgersParams)
         {
             if (log.IsDebugEnabled)
@@ -88,6 +92,7 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Resources
         [Route("funds/getallledgers")]
         [Authorize]
         [HttpGet]
+        [ResponseType(typeof(IList<LedgerRepresentation>))]
         public IHttpActionResult GetAllLedgers()
         {
             if (log.IsDebugEnabled)
@@ -134,6 +139,7 @@ namespace CoinExchange.Funds.Port.Adapter.Rest.Resources
         [Route("funds/getledgerdetails")]
         [Authorize]
         [HttpPost]
+        [ResponseType(typeof(LedgerRepresentation))]
         public IHttpActionResult GetLedgerDetails([FromBody]GetLedgerDetailsParams getLedgersDetailsParams)
         {
             if (log.IsDebugEnabled)
