@@ -1,0 +1,7 @@
+﻿<configuration>
+  <system.webServer>
+    <handlers>
+      <add name="SwashbuckleUiHandler" verb="*" path="swagger/ui/*" type="Swashbuckle.Application.SwaggerUiHandler, Swashbuckle.Core" preCondition="managedHandler"/>
+    </handlers>
+  </system.webServer>
+</configuration>
