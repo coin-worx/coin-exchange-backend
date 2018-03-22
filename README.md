@@ -10,9 +10,8 @@
 
 ## Code Base
 1. Download and install Git.
-2. Right the folder which you want to be the home for the codebase, and choose Git Bash.
-3. Paste git clone git@bitbucket.org:abaziz/coin-exchange-backend.git
-4. Give the password when prompted.
+2. Navigate to the folder which you want to be the home for the codebase.
+3. Clone the repo: git clone https://github.com/coin-worx/coin-exchange-backend.git
 
 ## Install IIS
 - Follow this guide: http://www.howtogeek.com/112455/how-to-install-iis-8-on-windows-8/
