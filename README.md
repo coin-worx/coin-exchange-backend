@@ -45,15 +45,15 @@ The project runs as an IIS service.
 - Follow this guide to setup IIS on windows machine: https://msdn.microsoft.com/en-us/Library/ms181052(v=vs.80).aspx
 
 #### Setting up RavenDB
-1. Download the RavenDB from here: http://hibernatingrhinos.com/downloads/RavenDB%20Installer/2879
-2. Run the Setup installation.
+1. Download the RavenDB from their website: https://ravendb.net/download
+2. Run the Setup installation using the provided instructions: https://ravendb.net/docs/article-page/4.0/csharp/start/installation/manual
 3. While installing the RavenDB, please select "Development" in Tragetting environment.
 4. Install the RavenDB as a service and chose enter port 8081.
-5. After the installtion completes, open "http://localhost:8081/raven/studio.html" link in the browser.
-(install silver light if prompted) you might have to use IE for opening the ravendb studio
+5. After the installtion completes, open "http://localhost:8081/studio/index.html" link in the browser.
 6. In the main screen,click on "New Database", type "InputEventStore" in Name Field and click next.
 7. In the main screen,click on "New Database", type "OutputEventStore" in Name Field and click next.
-This all was needed to configure RavenDB. If the link "http://localhost:8081/raven/studio.html" make sure that RavenDB service is running.
+
+If the link "http://localhost:8081/studio/index.html" is inaccessible make sure that RavenDB service is running. The following link can be used to start or stop RavenDB service: https://ravendb.net/docs/article-page/4.0/csharp/start/installation/running-as-service
 
 #### MySql
 1. Download latest version of MySql community server.
