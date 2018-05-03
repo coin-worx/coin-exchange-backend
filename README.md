@@ -50,8 +50,8 @@ The project runs as an IIS service.
 3. While installing the RavenDB, please select "Development" in Tragetting environment.
 4. Install the RavenDB as a service and chose enter port 8081.
 5. After the installtion completes, open "http://localhost:8081/studio/index.html" link in the browser.
-6. In the main screen,click on "New Database", type "InputEventStore" in Name Field and click next.
-7. In the main screen,click on "New Database", type "OutputEventStore" in Name Field and click next.
+6. In the main screen,click on "New Database", type "InputEventStoreDev" in Name Field and click next.
+7. In the main screen,click on "New Database", type "OutputEventStoreDev" in Name Field and click next.
 
 If the link "http://localhost:8081/studio/index.html" is inaccessible make sure that RavenDB service is running. The following link can be used to start or stop RavenDB service: https://ravendb.net/docs/article-page/4.0/csharp/start/installation/running-as-service
 
@@ -63,7 +63,7 @@ If the link "http://localhost:8081/studio/index.html" is inaccessible make sure 
 5. Execute the "create" and "populate" scripts in the src\data\MySql folder.
 
 #### Database Setup
-1. Create a new database named coinexchange.
+1. Create a new database named **coinexchangedev**.
 2. MySql Settings:
 3. username = root,
 4. host = localhost,
@@ -71,6 +71,35 @@ If the link "http://localhost:8081/studio/index.html" is inaccessible make sure 
 
 #### MySQL Connector for .NET:
 Download and install the MySQL connector for .NET from here: http://dev.mysql.com/downloads/connector/net/
+
+#### Bitcoin:
+Download and install bitcoin core from bitcoin [website](https://bitcoin.org/en/download).
+
+If you want to run bitcoin in testnet, edit the configuration file named **bitcoin.conf** located in %appdata% under bitcoin directory and add the following propteris:
+- testnet=1
+- server=1
+- rpcport=[Same as the value provided in Web.config file]
+- rpcuser=[Same as the value provided in Web.config file]
+- rpcpassword=[Same as the value provided in Web.config file]
+
+#### Litecoin:
+Similar to Bitcoin download and install litecoin core from litecoin [website](https://litecoin.org/).
+
+If you want to run bitcoin in testnet, edit the configuration file named **litecoin.conf** located in %appdata% under litecoin directory and add the following propteris:
+- testnet=1
+- server=1
+- rpcport=[Same as the value provided in Web.config file]
+- rpcuser=[Same as the value provided in Web.config file]
+- rpcpassword=[Same as the value provided in Web.config file]
+
+Once done, go to the litecoin installaion directory and perform the following tasks:
+- Copy the executable file and make a shortcut on the desktop.
+- Right click the shortcut and go to properties and in the shortcut tab edit the target location by adding **-testnet** at the of the existing value after which your target location will look something like this: "C:\Program Files\Litecoin\litecoin-qt.exe" -testnet
+
+#### Dogecoin:
+Download and install dogecoin core from dogecoin [website](http://dogecoin.com/).
+
+Setting up the testnet for dogecoin is similar to the tasks performed for the litecoin setup.
 
 #### Building
 - Clone the repo: git clone https://github.com/coin-worx/coin-exchange-backend.git
@@ -81,7 +110,7 @@ Download and install the MySQL connector for .NET from here: http://dev.mysql.co
 - NAnt and ccnet build scripts are available in **..\coin-exchange-backend\src\Build**
 
 ### Logs
-  *TODO: Add content*
+Log files are created under the directory: **C:\Logs**
   
 ## Help
 
