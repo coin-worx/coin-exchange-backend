@@ -92,10 +92,10 @@ namespace CoinExchange.Funds.Infrastructure.Services.CoinClientServices
             {
                 _daemonUrl = ConfigurationManager.AppSettings.Get("Dogecoin_DaemonUrl");
             }
-            _dogecoinClientService = new CryptocoinService(_daemonUrl, _username, _password, _walletPassword);
+            /*_dogecoinClientService = new CryptocoinService(_daemonUrl, _username, _password, _walletPassword);
 
             StartTimer();
-            Log.Debug(string.Format("Dogecoin Timer Started"));
+            Log.Debug(string.Format("Dogecoin Timer Started"));*/
         }
 
         /// <summary>

@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0"?>
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
 assembly="CoinExchange.Trades.Domain.Model" namespace="CoinExchange.Trades.Domain.Model.CurrencyPairAggregate">
-  <class name="CurrencyPair" table="CurrencyPair" lazy="false">
+  <class name="CurrencyPair" table="currencypair" lazy="false">
     <id name="CurrencyPairName" column="CurrencyPairName">
       <generator class="assigned" />
     </id>

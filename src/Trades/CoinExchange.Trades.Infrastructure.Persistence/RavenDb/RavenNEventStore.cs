@@ -50,6 +50,7 @@ using NEventStore.Dispatcher;
 //using Raven.Imports.Newtonsoft.Json;
 //using Raven.Imports.Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Linq;
+using NEventStore.Persistence;
 
 
 namespace CoinExchange.Trades.Infrastructure.Persistence.RavenDb
@@ -212,10 +213,10 @@ namespace CoinExchange.Trades.Infrastructure.Persistence.RavenDb
                 var events = _store.Advanced.GetFrom(_loadFrom).ToList();
                 for (int i = 0; i < events.Count; i++)
                 {
-                    if (events[i].Events[0].Body is Order)
+                    if (events[i].Events.First().Body is Order)
                     {
-                        Order order = events[i].Events[0].Body as Order;
-                        if (order.CurrencyPair == currencyPair)
+                        Order order = events[i].Events.First().Body as Order;
+                        if (order != null && order.CurrencyPair == currencyPair)
                         {
                             orders.Add(order);
                         }
@@ -262,7 +263,7 @@ namespace CoinExchange.Trades.Infrastructure.Persistence.RavenDb
             var events = _store.Advanced.GetFrom(DateTime.MinValue).ToList();
             for (int i = 0; i < events.Count; i++)
             {
-                readEvents.Add(events[i].Events[0].Body);
+                readEvents.Add(events[i].Events.First().Body);
             }
             return readEvents;
         }
@@ -307,7 +308,7 @@ namespace CoinExchange.Trades.Infrastructure.Persistence.RavenDb
             var initialize = _store.Advanced.GetFrom(Constants.LastSnapshotSearch).GroupBy(i => i.StreamId).Select(g => g.First()).ToList();
             for (int i = 0; i < initialize.Count; i++)
             {
-                snapshot = _store.Advanced.GetSnapshot(initialize[i].StreamId, int.MaxValue);
+                snapshot = _store.Advanced.GetSnapshot(initialize[i].StreamId, int.MaxValue) as Snapshot;
             }
             _lastSnaphot = snapshot;
             if (snapshot != null)

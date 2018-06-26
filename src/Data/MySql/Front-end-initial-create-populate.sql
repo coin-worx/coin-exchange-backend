@@ -150,6 +150,33 @@ CREATE TABLE `ledger` (
 
 /*Data for the table `ledger` */
 
+/*Table structure for table `mfasubscription` */
+
+DROP TABLE IF EXISTS `mfasubscription`;
+
+CREATE TABLE `mfasubscription` (
+  `MfaSubscriptionId` varchar(11) NOT NULL,
+  `MfaSubscriptionName` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`MfaSubscriptionId`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `mfasubscription` */
+
+insert  into `mfasubscription`(`MfaSubscriptionId`,`MfaSubscriptionName`) values ('CO','CancelOrder'),('DEP','Deposit'),('LOG','Login'),('PO','PlaceOrder'),('WD','Withdraw');
+
+/*Table structure for table `mfasubscriptionstatus` */
+
+DROP TABLE IF EXISTS `mfasubscriptionstatus`;
+
+CREATE TABLE `mfasubscriptionstatus` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `ApiKey` varchar(100) DEFAULT NULL,
+  `UserId` int(11) DEFAULT NULL,
+  `Enabled` tinyint(1) DEFAULT NULL,
+  `MfaSubscriptionId` varchar(11) DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 /*Table structure for table `ohlc` */
 
 DROP TABLE IF EXISTS `ohlc`;
@@ -258,6 +285,7 @@ CREATE TABLE `securitykeyspair` (
   `EnableStartDate` tinyint(1) DEFAULT NULL,
   `EnableEndDate` tinyint(1) DEFAULT NULL,
   `Deleted` tinyint(1) DEFAULT NULL,
+  `MfaCode` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`ApiKey`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -376,6 +404,7 @@ CREATE TABLE `user` (
   `DateOfBirth` date DEFAULT NULL,
   `AdminEmailsSubscribed` tinyint(1) DEFAULT NULL,
   `NewsletterEmailsSubscribed` tinyint(1) DEFAULT NULL,
+  `MfaCode` varchar(60) DEFAULT NULL,
   PRIMARY KEY (`Id`),
   UNIQUE KEY `NewIndex1` (`UserName`,`Email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;

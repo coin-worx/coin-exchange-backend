@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0"?>
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
 assembly="CoinExchange.IdentityAccess.Domain.Model" namespace="CoinExchange.IdentityAccess.Domain.Model.UserAggregate">
-  <class name="User" table="User" lazy="false">
+  <class name="User" table="user" lazy="false">
     <id name="Id" column="Id">
       <generator class="native" />
     </id>
@@ -37,15 +37,15 @@ assembly="CoinExchange.IdentityAccess.Domain.Model" namespace="CoinExchange.Iden
     <component name="IsActivationKeyUsed">
       <property name="Value" column="IsActivationKeyUsed"/>
     </component>
-    <bag name="_forgottenPasswordCodesList" table="PasswordCodeRecord" cascade="all" inverse="true" lazy="false">
+    <bag name="_forgottenPasswordCodesList" table="passwordcoderecord" cascade="all" inverse="true" lazy="false">
       <key column="UserId"/>
       <one-to-many class="PasswordCodeRecord"/>
     </bag>
-    <bag name="_tierLevelStatuses" table="UserTierLevelStatus" cascade="all" inverse="true" lazy="false">
+    <bag name="_tierLevelStatuses" table="usertierlevelstatus" cascade="all" inverse="true" lazy="false">
       <key column="UserId"/>
       <one-to-many class="UserTierLevelStatus"/>
     </bag>
-  <bag name="_mfaSubscriptions" table="MfaSubscriptionStatus" cascade="all" inverse="true" lazy="false">
+  <bag name="_mfaSubscriptions" table="mfasubscriptionstatus" cascade="all" inverse="true" lazy="false">
       <key column="UserId"/>
       <one-to-many class="MfaSubscriptionStatus"/>
     </bag>
