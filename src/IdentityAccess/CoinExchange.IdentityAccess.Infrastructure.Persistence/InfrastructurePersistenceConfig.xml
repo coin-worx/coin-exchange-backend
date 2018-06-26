@@ -5,8 +5,8 @@
 
   <!-- Database Configuration -->
   <db:provider id="DbProvider"
-                   provider="MySql-6.2.2"
-                   connectionString="Server=localhost;Database=CoinExchangeDev;User ID=root;Password=;"/>
+                   provider="MySql-6.10.6"
+                   connectionString="Server=localhost;Database=CoinExchangeDev;User ID=root;Password=root;"/>
 
   <!-- NHibernate SessionFactory configuration -->
   <object id="NHibernateSessionFactory" type="Spring.Data.NHibernate.LocalSessionFactoryObject, Spring.Data.NHibernate30">

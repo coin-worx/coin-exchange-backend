@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0"?>
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
 assembly="CoinExchange.IdentityAccess.Domain.Model" namespace="CoinExchange.IdentityAccess.Domain.Model.SecurityKeysAggregate">
-  <class name="SecurityKeysPair" table="SecurityKeysPair" lazy="false">
+  <class name="SecurityKeysPair" table="securitykeyspair" lazy="false">
     <id name="ApiKey" column="ApiKey">
       <generator class="assigned" />
     </id>
@@ -19,11 +19,11 @@ assembly="CoinExchange.IdentityAccess.Domain.Model" namespace="CoinExchange.Iden
     <property name="Deleted" column="Deleted"/>
     <property name="SecretKey" column="SecretKey"/>
     <property name="MfaCode" column="MfaCode"/>
-    <bag name="_securityKeysPermissions" table="SecurityKeysPermission" cascade="save-update" inverse="true" lazy="false">
+    <bag name="_securityKeysPermissions" table="securityKeyspermission" cascade="save-update" inverse="true" lazy="false">
       <key column="ApiKey"/>
       <one-to-many class="SecurityKeysPermission"/>
     </bag>
-    <bag name="_mfaSubscriptions" table="MfaSubscriptionStatus" cascade="all" inverse="true" lazy="false">
+    <bag name="_mfaSubscriptions" table="mfasubscriptionstatus" cascade="all" inverse="true" lazy="false">
       <key column="ApiKey"/>
       <one-to-many class="CoinExchange.IdentityAccess.Domain.Model.UserAggregate.MfaSubscriptionStatus"/>
     </bag>

@@ -54,7 +54,8 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             exchange.TurnReplayModeOn();
             foreach (var exchangeEssential in exchange.ExchangeEssentials)
             {
-                List<Order> ordersForReplay = journaler.GetOrdersForReplay(exchangeEssential.LimitOrderBook);
+                //List<Order> ordersForReplay = journaler.GetOrdersForReplay(exchangeEssential.LimitOrderBook);
+                List<Order> ordersForReplay = null;
 
                 if (ordersForReplay != null)
                 {
