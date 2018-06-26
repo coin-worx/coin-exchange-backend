@@ -55,6 +55,8 @@ The project runs as an IIS service.
 
 If the link "http://localhost:8081/studio/index.html" is inaccessible make sure that RavenDB service is running. The following link can be used to start or stop RavenDB service: https://ravendb.net/docs/article-page/4.0/csharp/start/installation/running-as-service
 
+*NOTE*: RavenDB and Event Sourcing has been disabled for now as the library is no longer functional.
+
 #### MySql
 1. Download latest version of MySql community server.
 2. Run .exe or .msi file and follow the instructions.
