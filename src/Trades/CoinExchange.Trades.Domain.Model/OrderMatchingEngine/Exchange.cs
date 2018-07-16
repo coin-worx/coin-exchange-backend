@@ -253,7 +253,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             {
                 if (exchangeEssentials.LimitOrderBook.CurrencyPair.Equals(order.CurrencyPair))
                 {
-                    exchangeEssentials.LimitOrderBook.PlaceOrder(order);
+                    exchangeEssentials.LimitOrderBook.AddOrder(order);
                     return true;
                 }
             }

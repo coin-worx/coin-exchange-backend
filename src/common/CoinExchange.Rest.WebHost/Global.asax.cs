@@ -101,7 +101,7 @@ namespace CoinExchange.Rest.WebHost
             ExchangeEssentialsList exchangeEssentialsList=outputEventStore.LoadLastSnapshot();*/
 
             Journaler inputJournaler = null;
-            Journaler outputJournaler = null;
+            Journaler outputJournaler = new Journaler(null);
 
             ICurrencyPairRepository currencyPairRepository = (ICurrencyPairRepository) ContextRegistry.GetContext()["CurrencyPairRepository"];
             IList<CurrencyPair> tradeableCurrencyPairs = currencyPairRepository.GetTradeableCurrencyPairs();
@@ -122,7 +122,7 @@ namespace CoinExchange.Rest.WebHost
                 //no snapshot found
                 exchange = new Exchange(tradeableCurrencyPairs);
                 InputDisruptorPublisher.InitializeDisruptor(new IEventHandler<InputPayload>[] { exchange/*, null*/ });
-                // OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { null });
+                OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { outputJournaler });
                // check if there are events to replay
                 LimitOrderBookReplayService service = new LimitOrderBookReplayService();
                 service.ReplayOrderBooks(exchange, null);
