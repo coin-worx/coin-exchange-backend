@@ -84,8 +84,13 @@ namespace CoinExchange.IdentityAccess.Application
 
             // If the user is communicating through an API client while using an API key, then they will provide a password 
             // with every call they have subscribed for TFA. The password will be set once using the web app by the user
-            string mfaCode =
-                (string)Newtonsoft.Json.JsonConvert.DeserializeObject<IDictionary<string, object>>(inputStream)["MfaCode"];
+            
+            //NOTE: Temporarily mfa code disables
+            //string mfaCode =
+            //    (string)Newtonsoft.Json.JsonConvert.DeserializeObject<IDictionary<string, object>>(inputStream)["MfaCode"];
+
+            
+            string mfaCode = null;
 
             var headers = HttpContext.Current.Request.Headers;
             string authValues = headers.Get("Auth");

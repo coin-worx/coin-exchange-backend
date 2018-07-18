@@ -152,7 +152,8 @@ namespace CoinExchange.Funds.Application.WithdrawServices
         /// <returns></returns>
         public WithdrawAddressResponse AddAddress(AddAddressCommand addAddressCommand)
         {
-            if (addAddressCommand.BitcoinAddress.Length < 26 || addAddressCommand.BitcoinAddress.Length > 34)
+            //if (addAddressCommand.BitcoinAddress.Length < 26 || addAddressCommand.BitcoinAddress.Length > 34)
+            if (addAddressCommand.BitcoinAddress.Length < 26 )
             {
                 return new WithdrawAddressResponse(false, "Invalid address");
             }

@@ -101,11 +101,13 @@ namespace CoinExchange.Trades.Domain.Model.Services
             object getObject = ByteArrayToObject(data);
             if (getObject is Order)
             {
-                _eventStore.StoreEvent(getObject as Order);
+                //NOTE: Commented out due event store issues
+                //_eventStore.StoreEvent(getObject as Order);
             }
             if (getObject is Trade)
             {
-                _eventStore.StoreEvent(getObject as Trade);
+                //NOTE: Commented out due event store issues
+                //_eventStore.StoreEvent(getObject as Trade);
             }
             if (getObject is LimitOrderBook)
             {

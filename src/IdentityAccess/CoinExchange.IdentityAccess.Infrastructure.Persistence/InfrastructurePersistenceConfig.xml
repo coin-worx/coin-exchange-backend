@@ -5,7 +5,7 @@
 
   <!-- Database Configuration -->
   <db:provider id="DbProvider"
-                   provider="MySql-6.10.6"
+                   provider="MySql"
                    connectionString="Server=localhost;Database=CoinExchangeDev;User ID=root;Password=root;"/>
 
   <!-- NHibernate SessionFactory configuration -->
