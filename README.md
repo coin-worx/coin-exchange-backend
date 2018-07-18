@@ -19,7 +19,31 @@ Cryptocurrency market has been on rise in the recent years and has become a popu
 
 ## Solution
 To gain profit from cryptocurrency market apart from investing in trading cryptocurrencies itself one can take advantage from market liquidity by creating their own cryptocurrency exchange. Creating a cryptocurrency exchange offers the advantage of being a part of the cyrpto market itself and one can take advantage of the transaction fees to generate revenue.
- 
+
+#### Use Cases
+###### Market Data
+- Limit Order Book management.
+- Currency Depth details.
+- Currency Spread details.
+
+###### Orders
+- Place Limit Orders.
+- Place Market Orders.
+- Manage existing Open Orders.
+- View Closed Orders.
+- View Individual Order Details.
+
+###### Trades
+- Overview of users all executed trades.
+- User Ledger details.
+- Individual Trade details.
+
+###### Deposit & Withdraw
+- Deposit crypto currency funds into user account.
+- Withdraw funds from user account into cyrpto currency wallet.
+
+[Screenshots](https://github.com/coin-worx/coin-exchange-frontend#screen-shots) are available in the frontend repository.
+
 #### Technology Stack
 1. Visual Studio 2012
 2. .NET Framework 4.5
@@ -40,6 +64,7 @@ The project runs as an IIS service.
 
 #### Project Structure
 - Working code directory is coin-exchange-backend\src.
+- Startup project is *CoinExchange.Rest.Webhost*.
 
 #### Install IIS
 - Follow this guide to setup IIS on windows machine: https://msdn.microsoft.com/en-us/Library/ms181052(v=vs.80).aspx
