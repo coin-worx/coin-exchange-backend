@@ -1,3 +1,5 @@
+[![GitHub release](https://img.shields.io/github/release/coin-worx/coin-exchange-backend.svg?style=flat-square)](https://github.com/coin-worx/coin-exchange-backend/releases) [![GitHub (pre-)release](https://img.shields.io/github/release/coin-worx/coin-exchange-backend/all.svg?style=flat-square)](https://github.com/coin-worx/coin-exchange-backend/releases/tag/v0.3) [![GitHub issues](https://img.shields.io/github/issues/coin-worx/coin-exchange-backend.svg?style=flat-square)](https://github.com/coin-worx/coin-exchange-backend/issues) [![GitHub top language](https://img.shields.io/github/languages/top/coin-worx/coin-exchange-backend.svg)](https://github.com/coin-worx/coin-exchange-backend) [![GitHub Watches](https://img.shields.io/github/watchers/coin-worx/coin-exchange-backend.svg?style=social&label=Watch&maxAge=2592000)](https://github.com/coin-worx/coin-exchange-backend/watchers)
+
 # Coin Exchange Backend
 
 ## Introduction
@@ -148,7 +150,7 @@ File a GitHub [issue](https://github.com/coin-worx/coin-exchange-frontend/issues
 
 ### Bug Reports & Feature Requests
 
-Please use the [issue tracker](https://github.com/coin-worx/coin-exchange-frontend/issues) to report any bugs or file feature requests.
+Please use the [issue tracker](https://github.com/coin-worx/coin-exchange-backend/issues) to report any bugs or file feature requests.
 
 #### Developing
 
