@@ -52,42 +52,123 @@ namespace CoinExchange.Trades.Domain.Model.Tests.Performance
     class OrderBookPerformanceTest
     {
         private Exchange _exchange = null;
-        
-        //[Test]
+        private int _orderCount = 5000;
+
+        [SetUp]
+        public void Setup()
+        {
+            // NOTE: Passing in NULL as RavenDB event store is no longer operational
+            //IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
+            Journaler journaler = new Journaler(null);
+            
+            // Initialize the output Disruptor and assign the journaler as the event handler
+            OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] {journaler});
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            OutputDisruptor.ShutDown();
+        }
+
+        [Test]
         public void PerformanceTest()
         {
             // Initialize the output Disruptor and assign the journaler as the event handler
-            IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
-            Journaler journaler = new Journaler(eventStore);
-            OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });
+
+            /*// NOTE: Passing in NULL as RavenDB event store is no longer operational
+            //IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
+            Journaler journaler = new Journaler(null); 
+
+            OutputDisruptor.InitializeDisruptor(new IEventHandler<byte[]>[] { journaler });*/
             IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
-            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
             currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
+            currencyPairs.Add(new CurrencyPair("BTCUSD", "USD", "BTC"));
             currencyPairs.Add(new CurrencyPair("BTCDOGE", "DOGE", "BTC"));
+
             _exchange = new Exchange(currencyPairs);
             List<OrderId> orderIds = new List<OrderId>();
             // Create Orders
-            Order[] orders = new Order[10000];
+            Order[] orders = new Order[_orderCount];
             Random random = new Random();
 
+            var startOrderObjectCreation = DateTime.Now;
             for (int i = 0; i < orders.Length; i++)
             {
                 bool isBuy = ((i % 2) == 0);
                 decimal delta = isBuy ? 1880 : 1884;
-
+                
                 Price price = new Price(random.Next(1, 10) + delta);
-
-                Volume volume = new Volume(random.Next() % 10 + 1 * 100);
+                //Volume volume = new Volume(random.Next() % 10 + 1 * 100);
+                Volume volume = new Volume(1);
 
                 OrderId orderId = new OrderId(random.Next(1, 100).ToString(CultureInfo.InvariantCulture));
                 orderIds.Add(orderId);
-                orders[i] = new Order(orderId, "BTCUSD", price, isBuy ? OrderSide.Buy :
+                orders[i] = new Order(orderId, "BTCLTC", price, isBuy ? OrderSide.Buy :
                 OrderSide.Sell, OrderType.Limit,  volume, new TraderId(random.Next(1,100).ToString()));
             }
-            JustAddOrdersToList(orders);
+
+            var endOrderObjectCreation = DateTime.Now;
+            Console.WriteLine("Order Objects created : {0} | Time elapsed: {1} seconds", _orderCount, (endOrderObjectCreation - startOrderObjectCreation).TotalSeconds);
+
+            //JustAddOrdersToList(orders);
             AddOrdersAndCancel(_exchange.ExchangeEssentials.First().LimitOrderBook, orders, orderIds);
         }
 
+        /**
+         * The test case populates SELL side LIMIT Orders and then send equal number of BUY side MARKET Orders
+         */
+        [Test]
+        public void PerformanceTestForOrderFill()
+        {
+            IList<CurrencyPair> currencyPairs = new List<CurrencyPair>();
+            currencyPairs.Add(new CurrencyPair("BTCLTC", "LTC", "BTC"));
+
+            _exchange = new Exchange(currencyPairs);
+            List<OrderId> orderIds = new List<OrderId>();
+            // Create Orders
+            Order[] sellOrders = new Order[_orderCount];
+            Random random = new Random();
+
+            var startOrderObjectCreation = DateTime.Now;
+            for (int i = 0; i < sellOrders.Length; i++)
+            {
+                decimal delta = 1884;
+                Price price = new Price(1 + delta);
+
+                Volume volume = new Volume(1);
+                OrderId orderId = new OrderId((i + 1).ToString());
+                orderIds.Add(orderId);
+                sellOrders[i] = new Order(orderId, "BTCLTC", price, OrderSide.Sell, OrderType.Limit, volume, new TraderId(random.Next(1, 100).ToString()));
+            }
+
+            Order[] buyOrders = new Order[_orderCount];
+
+            for (int i = 0; i < buyOrders.Length; i++)
+            {
+                Price price = new Price(0);
+                Volume volume = new Volume(1);
+                OrderId orderId = new OrderId((i + 1 + _orderCount).ToString());
+                orderIds.Add(orderId);
+                buyOrders[i] = new Order(orderId, "BTCLTC", price, OrderSide.Buy, OrderType.Market, volume, new TraderId(random.Next(1, 100).ToString()));
+            }
+
+            var endOrderObjectCreation = DateTime.Now;
+            Console.WriteLine("Order Objects created SELL: {0} BUY: {0}| Time elapsed: {1} seconds", _orderCount, (startOrderObjectCreation - endOrderObjectCreation).TotalSeconds);
+
+            // Add SELL side orders to Order Book
+            AddOrders(_exchange.ExchangeEssentials.First().LimitOrderBook, sellOrders);
+
+            // Add BUY side orders for Trade Execution
+            AddOrders(_exchange.ExchangeEssentials.First().LimitOrderBook, buyOrders);
+        }
+
+        /// <summary>
+        /// Addes provided orders to the Limit Order Book
+        /// </summary>
+        /// <param name="orderBook"></param>
+        /// <param name="orders"></param>
+        /// <returns></returns>
         private int AddOrders(LimitOrderBook orderBook, Order[] orders)
         {
             int count = 0;
@@ -106,8 +187,10 @@ namespace CoinExchange.Trades.Domain.Model.Tests.Performance
             }
 
             var end = DateTime.Now;
-            Console.WriteLine("Count: {0} Time elapsed: {1} seconds", count, (end - start).TotalSeconds);
-            Console.WriteLine("Bids: " + orderBook.Bids.Count() + ", Ask: " + orderBook.Asks.Count() + ", Trades: " + _exchange.ExchangeEssentials.First().TradeListener.Trades.Count());
+            Console.WriteLine("Orders Places: {0} Time elapsed: {1} seconds", count, (end - start).TotalSeconds);
+            Console.WriteLine("Bids: " + orderBook.Bids.Count() + ", Ask: " + orderBook.Asks.Count()  + ", Trades: "
+                              + (_exchange.ExchangeEssentials.First().TradeListener.Trades != null 
+                                    ? _exchange.ExchangeEssentials.First().TradeListener.Trades.Count() : 0));
 
             return count;
         }
@@ -121,7 +204,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests.Performance
         /// <returns></returns>
         private void AddOrdersAndCancel(LimitOrderBook orderBook, Order[] orders, List<OrderId> orderIds)
         {
-            Console.WriteLine(orders.Length + " orders received.");
+            Console.WriteLine(orders.Length + " orders received for sending over to exchange.");
             var overallStart = DateTime.Now;
             Console.WriteLine("Start time: " + DateTime.Now);
 
@@ -141,7 +224,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests.Performance
             }
 
             var endAdd = DateTime.Now;
-            Console.WriteLine(count + " orders added. : {0} | Time elapsed: {1} seconds", count, (endAdd - startAdd).TotalSeconds);
+            Console.WriteLine("Orders added. : {0} | Time elapsed: {1} seconds", count, (endAdd - startAdd).TotalSeconds);
             Console.WriteLine("Bids: " + orderBook.Bids.Count() + ", Ask: " + orderBook.Asks.Count() + ", Trades: " + _exchange.ExchangeEssentials.First().TradeListener.Trades.Count());
 
             var startCancel = DateTime.Now;
@@ -162,7 +245,7 @@ namespace CoinExchange.Trades.Domain.Model.Tests.Performance
             }
 
             var endCancel = DateTime.Now;
-            Console.WriteLine(count + " orders cancelled. : {0} | Time elapsed: {1} seconds", count, (endCancel - startCancel).TotalSeconds);
+            Console.WriteLine("Orders cancelled. : {0} | Time elapsed: {1} seconds", count, (endCancel - startCancel).TotalSeconds);
             Console.WriteLine("Bids: " + orderBook.Bids.Count() + ", Ask: " + orderBook.Asks.Count());
             
             var overAllEnd = DateTime.Now;

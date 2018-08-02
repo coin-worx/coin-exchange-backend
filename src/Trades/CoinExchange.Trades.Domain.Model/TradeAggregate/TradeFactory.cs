@@ -55,7 +55,15 @@ namespace CoinExchange.Trades.Domain.Model.TradeAggregate
 
         public static Trade GenerateTrade(string currencyPair, Price executionPrice, Volume executedQuantity,Order matchedOrder, Order inboundOrder)
         {
-            Trade trade=new Trade(TradeIdGenerator.GenerateTradeId(),currencyPair, executionPrice, executedQuantity, DateTime.Now,
+            /*
+             NOTE: Commented this out because:
+             - The service has no significant implementation.
+             - Also Spring adding latency on initialization for Performance Tests (In actual run this will only be a One time small overhead)
+            */ 
+            /*Trade trade=new Trade(TradeIdGenerator.GenerateTradeId(),currencyPair, executionPrice, executedQuantity, DateTime.Now,
+            matchedOrder, inboundOrder);*/
+
+            Trade trade=new Trade(new TradeId(Guid.NewGuid().ToString()), currencyPair, executionPrice, executedQuantity, DateTime.Now,
             matchedOrder, inboundOrder);
             return trade;
         }
