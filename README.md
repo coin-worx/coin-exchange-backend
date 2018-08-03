@@ -140,7 +140,14 @@ Setting up the testnet for dogecoin is similar to the tasks performed for the li
 
 ### Logs
 Log files are created under the directory: **C:\Logs**
-  
+
+### Performance Tests:
+There are two performance test cases available in Project **CoinExchange.Trades.Domain.Model.Tests** under the class **Performance.cs**.
+With current configuration the application manages **5K** order with simultaneous order matching in **~1.3 Seconds** on machine with the following specs:
+- CPU : Intel Core i7 7500U @ 2.70GHz
+- RAM : 8.00GB @ 1063MHz
+- Storage: SSD
+
 ## Help
 
 **Got a question?** 
