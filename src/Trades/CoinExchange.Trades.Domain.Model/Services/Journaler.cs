@@ -103,11 +103,18 @@ namespace CoinExchange.Trades.Domain.Model.Services
             {
                 //NOTE: Commented out due event store issues
                 //_eventStore.StoreEvent(getObject as Order);
+
+                // Raising Event to be handled by OrderEventListener. Moved here from ReceiveCommit.cs
+                OrderEvent.Raise(getObject as Order);
             }
             if (getObject is Trade)
             {
                 //NOTE: Commented out due event store issues
                 //_eventStore.StoreEvent(getObject as Trade);
+
+                // Raising Event to be handled by TradeEventListener. Moved here from ReceiveCommit.cs
+                TradeEvent.Raise(getObject as Trade);
+
             }
             if (getObject is LimitOrderBook)
             {
