@@ -59,9 +59,7 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
         public void OnOrderChanged(Order order)
         {
             OutputDisruptor.Publish(order);
-
-            // Raising Event to be handled by OrderEventListener
-            OrderEvent.Raise(order);
+            
             Log.Debug("Order change received and published. Order: " + order.ToString());
         }
 

@@ -64,7 +64,6 @@ namespace CoinExchange.Trades.Domain.Model.OrderMatchingEngine
             }
             _trades.Add(trade);
             OutputDisruptor.Publish(trade);
-            TradeEvent.Raise(trade);
             Log.Debug("Trade received: " + trade.ToString());
         }
 
