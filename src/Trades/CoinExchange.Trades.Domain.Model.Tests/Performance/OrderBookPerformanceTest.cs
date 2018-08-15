@@ -43,8 +43,10 @@ using CoinExchange.Trades.Domain.Model.OrderMatchingEngine;
 using CoinExchange.Trades.Domain.Model.Services;
 using CoinExchange.Trades.Domain.Model.TradeAggregate;
 using CoinExchange.Trades.Infrastructure.Persistence.RavenDb;
-using Disruptor;
+ using CoinExchange.Trades.ReadModel.EventHandlers;
+ using Disruptor;
 using NUnit.Framework;
+ using Spring.Context.Support;
 
 namespace CoinExchange.Trades.Domain.Model.Tests.Performance
 {
@@ -52,11 +54,13 @@ namespace CoinExchange.Trades.Domain.Model.Tests.Performance
     class OrderBookPerformanceTest
     {
         private Exchange _exchange = null;
-        private int _orderCount = 5000;
+        private int _orderCount = 50;
+        private OrderEventListener _orderEventListener;
 
         [SetUp]
         public void Setup()
         {
+            _orderEventListener = (OrderEventListener)ContextRegistry.GetContext()["OrderEventListener"];
             // NOTE: Passing in NULL as RavenDB event store is no longer operational
             //IEventStore eventStore = new RavenNEventStore(Constants.OUTPUT_EVENT_STORE);
             Journaler journaler = new Journaler(null);
@@ -225,7 +229,9 @@ namespace CoinExchange.Trades.Domain.Model.Tests.Performance
 
             var endAdd = DateTime.Now;
             Console.WriteLine("Orders added. : {0} | Time elapsed: {1} seconds", count, (endAdd - startAdd).TotalSeconds);
-            Console.WriteLine("Bids: " + orderBook.Bids.Count() + ", Ask: " + orderBook.Asks.Count() + ", Trades: " + _exchange.ExchangeEssentials.First().TradeListener.Trades.Count());
+            Console.WriteLine("Bids: " + orderBook.Bids.Count() + ", Ask: " + orderBook.Asks.Count() + ", Trades: "
+                              + (_exchange.ExchangeEssentials.First().TradeListener.Trades != null
+                                  ? _exchange.ExchangeEssentials.First().TradeListener.Trades.Count() : 0));
 
             var startCancel = DateTime.Now;
             count = 0;
