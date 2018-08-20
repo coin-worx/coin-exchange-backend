@@ -83,5 +83,24 @@ insert  into `withdrawfees`(`Id`,`Currency`,`MinimumAmount`,`Fee`) values (3,'BT
 
 insert  into `withdrawlimit`(`Id`,`TierLevel`,`DailyLimit`,`MonthlyLimit`,`LimitsCurrency`) values (1,'Tier 0',0,0,'Default'),(2,'Tier 1',2,10,'Default'),(3,'Tier 2',4,20,'Default'),(4,'Tier 3',40,200,'Default'),(5,'Tier 4',200,1000,'Default');
 
+ALTER TABLE `order` MODIFY `TraderId` int(11);
+
+ALTER TABLE `order`
+ADD CONSTRAINT FK_TraderId
+FOREIGN KEY (`TraderId`) REFERENCES `user`(`Id`);
+
+ALTER TABLE `trade` MODIFY `SellTraderId` int(11);
+ALTER TABLE `trade` MODIFY `BuyTraderId` int(11);
+
+ALTER TABLE `trade`
+ADD CONSTRAINT FK_SellTraderId
+FOREIGN KEY (`SellTraderId`) REFERENCES `user`(`Id`),
+ADD CONSTRAINT FK_BuyTraderId
+FOREIGN KEY (`BuyTraderId`) REFERENCES `user`(`Id`),
+ADD CONSTRAINT FK_SellOrderId
+FOREIGN KEY (`SellOrderId`) REFERENCES `order`(`OrderId`),
+ADD CONSTRAINT FK_BuyOrderId
+FOREIGN KEY (`BuyOrderId`) REFERENCES `order`(`OrderId`);
+
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

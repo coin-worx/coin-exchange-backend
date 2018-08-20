@@ -411,7 +411,7 @@ CREATE TABLE `user` (
 
 /*Data for the table `user` */
 
-insert  into `user`(`Id`,`UserName`,`Password`,`PublicKey`,`Email`,`Language`,`TimeZone`,`AutoLogout`,`LastLogin`,`ActivationKey`,`Country`,`State`,`PhoneNumber`,`Address1`,`Address2`,`IsActivationKeyUsed`,`IsUserBlocked`,`Deleted`,`ForgotPasswordCode`,`ForgotPasswordCodeExpiration`,`City`,`ZipCode`,`SocialSecurityNumber`,`NationalIdentificationNumber`,`FullName`,`DateOfBirth`,`AdminEmailsSubscribed`,`NewsletterEmailsSubscribed`) values (1,'rodholt','$2a$12$AbpwfdY1NbQv2YjGahR44e5jNIMca4UodPVFfDU9uv39rwgd7LYaK','','rodholt@mclaren.com','0',NULL,6000000000,'2014-09-25 12:17:08','sJLbzNhr60KmeC0OUG7uPg','pakistan',NULL,'+1244322222',NULL,NULL,1,0,0,NULL,NULL,NULL,0,NULL,NULL,'Rod Holt','2071-09-25',0,0),(2,'bruce','$2a$12$1AoBuHUrBhz/e/e6Os5SpO2HxLzGZQRPPFxNjFkjCUJ2eyparDj1y','','bruce@wayne.com','0',NULL,6000000000,'2014-09-25 12:19:35','hXDgvQ77KkyxOv7SFPGzGw','pakistan',NULL,'+1244322222',NULL,NULL,1,0,0,NULL,NULL,NULL,0,NULL,NULL,'Rod Holt','2071-09-25',0,0),(3,'thejoker','$2a$12$Z9K1foK9BK3XCcVp5U7dsetf6hb16SpZ0FOVA7dg4leQB.AF4Vfsa','','thejoker@gotham.com','0',NULL,6000000000,'2014-09-25 12:21:53','BfGaI2W7km4CIbv2CsQ','pakistan',NULL,'+1244322222',NULL,NULL,1,0,0,NULL,NULL,NULL,0,NULL,NULL,'Rod Holt','2071-09-25',0,0),(4,'gordon','$2a$12$8xuq6lkWUJefWY210cy0E.nubDAmQNJzhPkw00PG8iJS22DKu4fG6','','gordon@gotham.com','0',NULL,6000000000,'2014-09-25 12:23:22','8irjbYGboUW4BTgeMkHQUQ','pakistan',NULL,'+1244322222',NULL,NULL,1,0,0,NULL,NULL,NULL,0,NULL,NULL,'Rod Holt','2071-09-25',0,0),(5,'bane','$2a$12$4jLZUuNxVS2xwAKOOv4m..UfPEO6XUhUuNev1ytOQM5.3AziLcTIy','','bane@gotham.com','0',NULL,6000000000,'2014-09-25 12:25:19','QwED5Vq7X0KE0kLASb6g','pakistan',NULL,'+1244322222',NULL,NULL,1,0,0,NULL,NULL,NULL,0,NULL,NULL,'Rod Holt','2071-09-25',0,0),(6,'jonsnow','$2a$12$8NJNaUYMjFowEoVoIJNRU.Yf5589PmGVmi4PxXu3p6mKcvYICpDPm','','jonsnow@winter.com','0',NULL,6000000000,'2014-09-25 12:27:51','72eHniVx02K2gQVnYLtkQ','pakistan',NULL,'+1244322222',NULL,NULL,1,0,0,NULL,NULL,NULL,0,NULL,NULL,'Rod Holt','2071-09-25',0,0);
+insert  into `user`(`Id`,`UserName`,`Password`,`PublicKey`,`Email`,`Language`,`TimeZone`,`AutoLogout`,`LastLogin`,`ActivationKey`,`Country`,`State`,`PhoneNumber`,`Address1`,`Address2`,`IsActivationKeyUsed`,`IsUserBlocked`,`Deleted`,`ForgotPasswordCode`,`ForgotPasswordCodeExpiration`,`City`,`ZipCode`,`SocialSecurityNumber`,`NationalIdentificationNumber`,`FullName`,`DateOfBirth`,`AdminEmailsSubscribed`,`NewsletterEmailsSubscribed`) values (1,'rodholt','$2a$12$1AoBuHUrBhz/e/e6Os5SpO2HxLzGZQRPPFxNjFkjCUJ2eyparDj1y','','rodholt@mclaren.com','0',NULL,6000000000,'2014-09-25 12:17:08','sJLbzNhr60KmeC0OUG7uPg','pakistan',NULL,'+1244322222',NULL,NULL,1,0,0,NULL,NULL,NULL,0,NULL,NULL,'Rod Holt','2071-09-25',0,0),(2,'bruce','$2a$12$1AoBuHUrBhz/e/e6Os5SpO2HxLzGZQRPPFxNjFkjCUJ2eyparDj1y','','bruce@wayne.com','0',NULL,6000000000,'2014-09-25 12:19:35','hXDgvQ77KkyxOv7SFPGzGw','pakistan',NULL,'+1244322222',NULL,NULL,1,0,0,NULL,NULL,NULL,0,NULL,NULL,'Rod Holt','2071-09-25',0,0),(3,'thejoker','$2a$12$1AoBuHUrBhz/e/e6Os5SpO2HxLzGZQRPPFxNjFkjCUJ2eyparDj1y','','thejoker@gotham.com','0',NULL,6000000000,'2014-09-25 12:21:53','BfGaI2W7km4CIbv2CsQ','pakistan',NULL,'+1244322222',NULL,NULL,1,0,0,NULL,NULL,NULL,0,NULL,NULL,'Rod Holt','2071-09-25',0,0),(4,'gordon','$2a$12$1AoBuHUrBhz/e/e6Os5SpO2HxLzGZQRPPFxNjFkjCUJ2eyparDj1y','','gordon@gotham.com','0',NULL,6000000000,'2014-09-25 12:23:22','8irjbYGboUW4BTgeMkHQUQ','pakistan',NULL,'+1244322222',NULL,NULL,1,0,0,NULL,NULL,NULL,0,NULL,NULL,'Rod Holt','2071-09-25',0,0),(5,'bane','$2a$12$1AoBuHUrBhz/e/e6Os5SpO2HxLzGZQRPPFxNjFkjCUJ2eyparDj1y','','bane@gotham.com','0',NULL,6000000000,'2014-09-25 12:25:19','QwED5Vq7X0KE0kLASb6g','pakistan',NULL,'+1244322222',NULL,NULL,1,0,0,NULL,NULL,NULL,0,NULL,NULL,'Rod Holt','2071-09-25',0,0),(6,'jonsnow','$2a$12$1AoBuHUrBhz/e/e6Os5SpO2HxLzGZQRPPFxNjFkjCUJ2eyparDj1y','','jonsnow@winter.com','0',NULL,6000000000,'2014-09-25 12:27:51','72eHniVx02K2gQVnYLtkQ','pakistan',NULL,'+1244322222',NULL,NULL,1,0,0,NULL,NULL,NULL,0,NULL,NULL,'Rod Holt','2071-09-25',0,0);
 
 /*Table structure for table `userdocument` */
 
@@ -518,6 +518,25 @@ CREATE TABLE `withdrawlimit` (
 /*Data for the table `withdrawlimit` */
 
 insert  into `withdrawlimit`(`Id`,`TierLevel`,`DailyLimit`,`MonthlyLimit`,`LimitsCurrency`) values (1,'Tier 0',0,0,'Default'),(2,'Tier 1',2,10,'Default'),(3,'Tier 2',4,20,'Default'),(4,'Tier 3',40,200,'Default'),(5,'Tier 4',200,1000,'Default');
+
+ALTER TABLE `order` MODIFY `TraderId` int(11);
+
+ALTER TABLE `order`
+ADD CONSTRAINT FK_TraderId
+FOREIGN KEY (`TraderId`) REFERENCES `user`(`Id`);
+
+ALTER TABLE `trade` MODIFY `SellTraderId` int(11);
+ALTER TABLE `trade` MODIFY `BuyTraderId` int(11);
+
+ALTER TABLE `trade`
+ADD CONSTRAINT FK_SellTraderId
+FOREIGN KEY (`SellTraderId`) REFERENCES `user`(`Id`),
+ADD CONSTRAINT FK_BuyTraderId
+FOREIGN KEY (`BuyTraderId`) REFERENCES `user`(`Id`),
+ADD CONSTRAINT FK_SellOrderId
+FOREIGN KEY (`SellOrderId`) REFERENCES `order`(`OrderId`),
+ADD CONSTRAINT FK_BuyOrderId
+FOREIGN KEY (`BuyOrderId`) REFERENCES `order`(`OrderId`);
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

@@ -443,5 +443,24 @@ CREATE TABLE `withdrawlimit` (
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 
+ALTER TABLE `order` MODIFY `TraderId` int(11);
+
+ALTER TABLE `order`
+ADD CONSTRAINT FK_TraderId
+FOREIGN KEY (`TraderId`) REFERENCES `user`(`Id`);
+
+ALTER TABLE `trade` MODIFY `SellTraderId` int(11);
+ALTER TABLE `trade` MODIFY `BuyTraderId` int(11);
+
+ALTER TABLE `trade`
+ADD CONSTRAINT FK_SellTraderId
+FOREIGN KEY (`SellTraderId`) REFERENCES `user`(`Id`),
+ADD CONSTRAINT FK_BuyTraderId
+FOREIGN KEY (`BuyTraderId`) REFERENCES `user`(`Id`),
+ADD CONSTRAINT FK_SellOrderId
+FOREIGN KEY (`SellOrderId`) REFERENCES `order`(`OrderId`),
+ADD CONSTRAINT FK_BuyOrderId
+FOREIGN KEY (`BuyOrderId`) REFERENCES `order`(`OrderId`);
+
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
