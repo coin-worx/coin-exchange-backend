@@ -1,5 +1,8 @@
 [![GitHub release](https://img.shields.io/github/release/coin-worx/coin-exchange-backend.svg?style=flat-square)](https://github.com/coin-worx/coin-exchange-backend/releases) [![GitHub (pre-)release](https://img.shields.io/github/release/coin-worx/coin-exchange-backend/all.svg?style=flat-square)](https://github.com/coin-worx/coin-exchange-backend/releases/tag/v0.3) [![GitHub issues](https://img.shields.io/github/issues/coin-worx/coin-exchange-backend.svg?style=flat-square)](https://github.com/coin-worx/coin-exchange-backend/issues) [![GitHub top language](https://img.shields.io/github/languages/top/coin-worx/coin-exchange-backend.svg?style=flat-square)](https://github.com/coin-worx/coin-exchange-backend) [![GitHub watchers](https://img.shields.io/github/watchers/coin-worx/coin-exchange-backend.svg?style=flat-square&label=Watch)](https://github.com/coin-worx/coin-exchange-backend/watchers) [![GitHub stars](https://img.shields.io/github/stars/coin-worx/coin-exchange-backend.svg?style=flat-square&label=Stars)](https://github.com/coin-worx/coin-exchange-backend/stargazers) [![GitHub forks](https://img.shields.io/github/forks/coin-worx/coin-exchange-backend.svg?style=flat-square&label=Fork)](https://github.com/coin-worx/coin-exchange-backend/network/members)
 
+## IMPORTANT ##
+This is an old project and isn't being actively maintained. Some of the libraries have since been deprecated and this may cause some of the dependencies to fail. We're not providing any support for this project anymore.
+
 # Coin Exchange Backend
 
 ## Introduction
